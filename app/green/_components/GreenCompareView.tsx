@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 
 import { useLocale } from "@/app/_components/i18n/LocaleProvider";
 import {
@@ -31,6 +31,8 @@ type Props = {
   registryProjects: GreenRegistryProjectRow[];
 };
 
+type PdfState = "idle" | "generating" | "error";
+
 function labelBadgeClass(status: string): string {
   switch (status) {
     case "certified":
@@ -50,12 +52,42 @@ export function GreenCompareView({ registryProjects }: Props) {
   const c = m.compare;
   const r = m.registry;
   const rows = GREEN_COMPARE_ROWS;
+  const [pdfState, setPdfState] = useState<PdfState>("idle");
 
   const handleExportCsv = useCallback(() => {
     if (rows.length === 0) return;
     const csv = greenCompareRowsToCsv(rows, c);
     downloadGreenCompareCsv(csv);
   }, [rows, c]);
+
+  const handleExportPdf = useCallback(async () => {
+    if (rows.length === 0) return;
+    setPdfState("generating");
+    try {
+      const { generateGreenComparePDF, suggestedGreenCompareFilename } =
+        await import("@/lib/green/compare-pdf");
+      const blob = await generateGreenComparePDF(rows, c, locale);
+      const url = URL.createObjectURL(blob);
+      const anchor = document.createElement("a");
+      anchor.href = url;
+      anchor.download = suggestedGreenCompareFilename(locale);
+      document.body.appendChild(anchor);
+      anchor.click();
+      anchor.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 0);
+      setPdfState("idle");
+    } catch (err) {
+      console.error("[green/compare] PDF export failed", err);
+      setPdfState("error");
+    }
+  }, [rows, c, locale]);
+
+  const pdfLabel =
+    pdfState === "generating"
+      ? c.exportPdfGenerating
+      : pdfState === "error"
+        ? c.exportPdfRetry
+        : c.exportPdf;
 
   return (
     <div className="page-inner page-inner--6xl mx-auto px-4 pb-20 pt-12 md:px-6 md:pt-14">
@@ -161,15 +193,25 @@ export function GreenCompareView({ registryProjects }: Props) {
         </div>
       </GreenPanel>
 
-      <div className="mt-8 flex flex-wrap items-center gap-6">
+      <div className="mt-8 flex flex-wrap items-center gap-4">
         {rows.length > 0 ? (
-          <button
-            type="button"
-            onClick={handleExportCsv}
-            className="rounded-lg border border-emerald-500/40 px-4 py-2 font-mono text-[11px] uppercase tracking-wider text-emerald-500 transition hover:border-emerald-400 hover:text-emerald-400"
-          >
-            {c.exportCsv}
-          </button>
+          <>
+            <button
+              type="button"
+              onClick={handleExportCsv}
+              className="rounded-lg border border-emerald-500/40 px-4 py-2 font-mono text-[11px] uppercase tracking-wider text-emerald-500 transition hover:border-emerald-400 hover:text-emerald-400"
+            >
+              {c.exportCsv}
+            </button>
+            <button
+              type="button"
+              onClick={() => void handleExportPdf()}
+              disabled={pdfState === "generating"}
+              className="rounded-lg border border-emerald-500/40 px-4 py-2 font-mono text-[11px] uppercase tracking-wider text-emerald-500 transition hover:border-emerald-400 hover:text-emerald-400 disabled:cursor-wait disabled:opacity-60"
+            >
+              {pdfLabel}
+            </button>
+          </>
         ) : null}
         <Link
           href={AUROS_COMPARE_ROUTE}

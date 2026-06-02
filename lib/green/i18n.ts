@@ -54,6 +54,7 @@ export type GreenMessages = {
       intro: string;
       statusNote: string;
       cta: string;
+      assistantCta: string;
     };
     eligibleAssets: {
       title: string;
@@ -238,6 +239,9 @@ export type GreenMessages = {
     registrySectionTitle: string;
     registrySectionIntro: string;
     exportCsv: string;
+    exportPdf: string;
+    exportPdfGenerating: string;
+    exportPdfRetry: string;
     backLink: string;
   };
   label: {
@@ -470,6 +474,7 @@ const FR: GreenMessages = {
         "Réel · Transparent · Mesurable · Sain — cadre interne AUROS Green pour évaluer un dossier avant label ou listing. Pas un audit tiers (KPMG, EY) ni un agrément régulateur.",
       statusNote: "Statut : cadre méthodologique pilote — critères publiés, revue documentaire sur dossier fourni.",
       cta: "Voir les standards RTMS",
+      assistantCta: "Pré-diagnostic RTMS (bêta)",
     },
     eligibleAssets: {
       title: "Actifs éligibles",
@@ -916,6 +921,9 @@ const FR: GreenMessages = {
     registrySectionIntro:
       "Projets passés revue RTMS — cas pilotes pédagogiques clairement identifiés, distincts des références marché ci-dessous.",
     exportCsv: "Exporter CSV",
+    exportPdf: "Exporter PDF",
+    exportPdfGenerating: "PDF…",
+    exportPdfRetry: "Réessayer PDF",
     backLink: "← Retour AUROS Green",
   },
   label: {
@@ -1205,6 +1213,7 @@ const EN: GreenMessages = {
         "Real · Transparent · Measurable · Sound — AUROS Green internal framework to assess a dossier before label or listing. Not a third-party audit (KPMG, EY) nor a regulatory licence.",
       statusNote: "Status: pilot methodological framework — published criteria, documentary review on submitted dossier.",
       cta: "View RTMS standards",
+      assistantCta: "Preliminary RTMS check (beta)",
     },
     eligibleAssets: {
       title: "Eligible assets",
@@ -1651,6 +1660,9 @@ const EN: GreenMessages = {
     registrySectionIntro:
       "RTMS-reviewed projects — pedagogical pilot cases clearly marked, separate from market references below.",
     exportCsv: "Export CSV",
+    exportPdf: "Export PDF",
+    exportPdfGenerating: "PDF…",
+    exportPdfRetry: "Retry PDF",
     backLink: "← Back to AUROS Green",
   },
   label: {
@@ -1939,6 +1951,7 @@ const ES: GreenMessages = {
         "Real · Transparent · Measurable · Sound — marco interno AUROS Green para evaluar un dossier antes de etiqueta o listado. No una auditoría de terceros (KPMG, EY) ni una licencia regulatoria.",
       statusNote: "Estado: marco metodológico piloto — criterios publicados, revisión documental sobre dossier aportado.",
       cta: "Ver estándares RTMS",
+      assistantCta: "Pre-diagnóstico RTMS (beta)",
     },
     eligibleAssets: {
       title: "Activos elegibles",
@@ -2389,6 +2402,9 @@ const ES: GreenMessages = {
     registrySectionIntro:
       "Proyectos revisados RTMS — casos piloto pedagógicos claramente identificados, distintos de las referencias de mercado abajo.",
     exportCsv: "Exportar CSV",
+    exportPdf: "Exportar PDF",
+    exportPdfGenerating: "PDF…",
+    exportPdfRetry: "Reintentar PDF",
     backLink: "← Volver a AUROS Green",
   },
   label: {

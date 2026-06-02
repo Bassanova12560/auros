@@ -66,7 +66,16 @@
 
 ## Sprint 4+ (deferred)
 
-- NFT Green Proof, oracle, Uniswap pool, PricingCard boost, dark mode, full Clerk lockdown, Lighthouse CI, RTMS Assistant IA.
+- NFT Green Proof, oracle, Uniswap pool, PricingCard boost, dark mode, full Clerk lockdown, Lighthouse CI.
+- RTMS Assistant **IA fine-tune** (Mistral/Gemini sur dossier) — au-delà du MVP rule-based.
+
+
+
+## Sprint 5 — shipped 2026-06-02
+
+- **Compare PDF** — export PDF à côté du CSV sur `/green/compare` (`compare-pdf.tsx`, lazy load).
+- **RTMS Assistant (bêta)** — `/green/rtms-assistant` : résumé + PDF optionnel, scoring rule-based, rate limit, disclaimer indicatif.
+- **Hub** — lien « Pré-diagnostic RTMS » depuis la section méthodologie.
 
 
 

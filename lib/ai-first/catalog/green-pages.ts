@@ -16,6 +16,7 @@ import {
   GREEN_REGISTRY_ROUTE,
   GREEN_REGISTER_ROUTE,
   GREEN_ROUTE,
+  GREEN_RTMS_ASSISTANT_ROUTE,
   GREEN_STANDARDS_ROUTE,
   GREEN_STORERS_ROUTE,
 } from "@/lib/green";
@@ -368,6 +369,28 @@ export const greenRegisterPage = enrichPage({
   relatedPaths: [GREEN_MARKET_ROUTE, GREEN_ROUTE, GREEN_LABEL_ROUTE],
 });
 
+export const greenRtmsAssistantPage = enrichPage({
+  id: "green-rtms-assistant",
+  path: GREEN_RTMS_ASSISTANT_ROUTE,
+  title: "Assistant RTMS préliminaire | AUROS Green",
+  description:
+    "Grille RTMS indicative — résumé projet + PDF optionnel, score rule-based, disclaimer clair.",
+  summary:
+    "Assistant RTMS AUROS Green (bêta) : pré-diagnostic rule-based sur résumé texte, checklist 4 piliers, pas de certification automatique.",
+  contentType: "landing",
+  language: "multi",
+  indexable: true,
+  lastUpdated: "2026-06-02",
+  keywords: ["assistant RTMS", "preliminary green audit", "RWA vert diagnostic"],
+  intents: ["Évaluer mon dossier RTMS avant label", "Checklist conformité green RWA"],
+  audience: ["promoteurs", "consultants ESG"],
+  facts: [
+    { key: "Statut", value: "Indicatif — revue humaine pour label Verified" },
+    { key: "Entrée", value: "Résumé 12+ mots + PDF optionnel (non stocké)" },
+  ],
+  relatedPaths: [GREEN_STANDARDS_ROUTE, GREEN_LABEL_ROUTE, GREEN_ROUTE],
+});
+
 export const greenProducersPage = enrichPage({
   id: "green-producers",
   path: GREEN_PRODUCERS_ROUTE,
@@ -447,6 +470,7 @@ export const greenPages: AiFirstPage[] = [
   greenConsumersPage,
   greenStandardsPage,
   greenComparePage,
+  greenRtmsAssistantPage,
   greenLabelPage,
   greenCertificationPage,
   greenPraticienPage,

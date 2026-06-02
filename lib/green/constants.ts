@@ -14,6 +14,7 @@ export const GREEN_REGISTRY_ROUTE = "/green/registry";
 export const GREEN_GUIDE_ROUTE = "/green/tokenize-surplus";
 export const GREEN_PRATICIEN_ROUTE = "/green/praticien";
 export const GREEN_PRATICIEN_EXAM_ROUTE = "/green/praticien/exam";
+export const GREEN_RTMS_ASSISTANT_ROUTE = "/green/rtms-assistant";
 export const GREEN_VERIFY_ROUTE = "/green/verify";
 
 export const GREEN_PRATICIEN_PASS_SCORE = 7;

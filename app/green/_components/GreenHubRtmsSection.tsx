@@ -4,6 +4,7 @@ import Link from "next/link";
 
 import { useLocale } from "@/app/_components/i18n/LocaleProvider";
 import {
+  GREEN_RTMS_ASSISTANT_ROUTE,
   GREEN_RTMS_PILLARS,
   GREEN_STANDARDS_ROUTE,
   getGreenMessages,
@@ -51,12 +52,20 @@ export function GreenHubRtmsSection() {
         })}
       </div>
 
-      <Link
-        href={GREEN_STANDARDS_ROUTE}
-        className="mt-6 inline-flex min-h-[44px] items-center font-mono text-[11px] uppercase tracking-wider text-green-royal-bright transition hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-royal"
-      >
-        {s.cta} →
-      </Link>
+      <div className="mt-6 flex flex-wrap items-center gap-6">
+        <Link
+          href={GREEN_STANDARDS_ROUTE}
+          className="inline-flex min-h-[44px] items-center font-mono text-[11px] uppercase tracking-wider text-green-royal-bright transition hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-royal"
+        >
+          {s.cta} →
+        </Link>
+        <Link
+          href={GREEN_RTMS_ASSISTANT_ROUTE}
+          className="inline-flex min-h-[44px] items-center font-mono text-[11px] uppercase tracking-wider text-white/50 transition hover:text-green-royal-bright"
+        >
+          {s.assistantCta} →
+        </Link>
+      </div>
     </section>
   );
 }

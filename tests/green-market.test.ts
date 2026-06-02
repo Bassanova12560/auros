@@ -7,6 +7,7 @@ import {
   GREEN_CONSUMERS_ROUTE,
   GREEN_MARKET_ROUTE,
   GREEN_PRODUCERS_ROUTE,
+  GREEN_RTMS_ASSISTANT_ROUTE,
   GREEN_STORERS_ROUTE,
 } from "../lib/green/constants";
 import {
@@ -157,6 +158,48 @@ describe("green/compare-csv", () => {
   });
 });
 
+describe("green/compare-pdf", () => {
+  it("maps compare rows to PDF row data", async () => {
+    const { greenCompareRowsToPdfRows, suggestedGreenCompareFilename } =
+      await import("../lib/green/compare-pdf");
+    const labels = getGreenMessages("fr").compare;
+    const pdfRows = greenCompareRowsToPdfRows(GREEN_COMPARE_ROWS, labels);
+    assert.equal(pdfRows.length, GREEN_COMPARE_ROWS.length);
+    assert.ok(pdfRows[0]?.project.includes("Toucan"));
+    assert.ok(suggestedGreenCompareFilename("fr").endsWith(".pdf"));
+  });
+});
+
+describe("green/rtms-assistant", () => {
+  it("scores preliminary RTMS from summary text", async () => {
+    const { computePreliminaryRtmsFromSummary, countSummaryWords, MIN_SUMMARY_WORDS } =
+      await import("../lib/green/rtms-assistant");
+    const summary =
+      "Parc solaire 2 MWh/an en France, contrat PPA signé, registre carbone et traçabilité on-chain, structure SPV avec revue juridique MiCA.";
+    assert.ok(countSummaryWords(summary) >= MIN_SUMMARY_WORDS);
+    const score = computePreliminaryRtmsFromSummary({
+      projectSummary: summary,
+      country: "France",
+      hasDocument: true,
+    });
+    assert.ok(score.overall >= 40);
+    assert.equal(Object.keys(score.pillars).length, 4);
+    const { extractTopRtmsGapPriorities } = await import("../lib/green/rtms-assistant");
+    const gaps = extractTopRtmsGapPriorities(score, "fr");
+    assert.ok(gaps.length <= 3);
+  });
+});
+
+describe("green/compare-i18n", () => {
+  for (const locale of ["fr", "en", "es"] as const) {
+    it(`exposes compare PDF export labels for ${locale}`, () => {
+      const c = getGreenMessages(locale).compare;
+      assert.ok(c.exportPdf.length > 0);
+      assert.ok(c.exportPdfGenerating.length > 0);
+    });
+  }
+});
+
 describe("green/market-routes", () => {
   it("registers marketplace pages in catalog", () => {
     const pages = getAllAiFirstPages();
@@ -166,6 +209,7 @@ describe("green/market-routes", () => {
       GREEN_STORERS_ROUTE,
       GREEN_CHARGERS_ROUTE,
       GREEN_CONSUMERS_ROUTE,
+      GREEN_RTMS_ASSISTANT_ROUTE,
     ]) {
       const page = pages.find((p) => p.path === path);
       assert.ok(page, `missing ${path}`);
