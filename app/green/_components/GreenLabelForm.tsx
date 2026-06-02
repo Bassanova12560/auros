@@ -74,7 +74,9 @@ export function GreenLabelForm() {
 
   const [step, setStep] = useState(1);
 
-  const [submitted, setSubmitted] = useState<{ projectName: string } | null>(null);
+  const [submitted, setSubmitted] = useState<{ projectName: string; id: string } | null>(
+    null
+  );
 
   const [projectName, setProjectName] = useState("");
 
@@ -182,7 +184,7 @@ export function GreenLabelForm() {
 
       setSubmitting(false);
 
-      setSubmitted({ projectName: projectName.trim() });
+      setSubmitted({ projectName: projectName.trim(), id: result.id });
 
     },
 
@@ -243,6 +245,10 @@ export function GreenLabelForm() {
         <p className="mt-2 text-sm text-neutral-400">{submitted.projectName}</p>
 
         <p className="mt-4 text-xs text-neutral-500">{f.successHint}</p>
+        <p className="mt-2 font-mono text-[10px] text-emerald-500/70">
+          {f.applicationId(submitted.id)}
+        </p>
+        <p className="mt-2 text-xs text-neutral-500">{f.successStatus}</p>
 
         <div className="mt-6 flex flex-wrap justify-center gap-3">
 

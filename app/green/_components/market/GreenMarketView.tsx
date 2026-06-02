@@ -2,9 +2,21 @@
 
 import Link from "next/link";
 import dynamic from "next/dynamic";
-import { useEffect, useMemo, useState } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { matchesGreenMarketSearch } from "@/lib/green/market/search";
+import {
+  buildGreenMarketShareUrl,
+  decodeGreenMarketFilters,
+  encodeGreenMarketFilters,
+} from "@/lib/green/market/market-share";
+import {
+  readGreenMarketSavedSearches,
+  removeGreenMarketSavedSearch,
+  saveGreenMarketSearch,
+  type GreenMarketSavedSearch,
+} from "@/lib/green/market/saved-searches";
 
 import { useLocale } from "@/app/_components/i18n/LocaleProvider";
 import {
@@ -64,6 +76,9 @@ export function GreenMarketView({ snapshot }: Props) {
   const { locale } = useLocale();
   const mm = getGreenMarketMessages(locale).market;
   const disclaimer = getGreenMessages(locale).disclaimer;
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
 
   const [actorFilter, setActorFilter] = useState<GreenMarketActorType | "all">("all");
   const [radiusKm, setRadiusKm] = useState<GreenMarketRadiusKm | 0>(0);
@@ -72,6 +87,71 @@ export function GreenMarketView({ snapshot }: Props) {
   const [searchQuery, setSearchQuery] = useState("");
   const [offersPage, setOffersPage] = useState(1);
   const [localOffers, setLocalOffers] = useState<GreenMarketOffer[]>([]);
+  const [urlReady, setUrlReady] = useState(false);
+  const [shareFeedback, setShareFeedback] = useState<string | null>(null);
+  const [savedSearches, setSavedSearches] = useState<GreenMarketSavedSearch[]>([]);
+  const [savedSearchName, setSavedSearchName] = useState("");
+
+  const currentFilters = useMemo(
+    () => ({
+      actor: actorFilter,
+      radius: radiusKm,
+      energy: energyFilter,
+      side: sideFilter,
+      q: searchQuery,
+    }),
+    [actorFilter, radiusKm, energyFilter, sideFilter, searchQuery]
+  );
+
+  useEffect(() => {
+    setSavedSearches(readGreenMarketSavedSearches());
+  }, []);
+
+  useEffect(() => {
+    const decoded = decodeGreenMarketFilters(searchParams);
+    setActorFilter(decoded.actor ?? "all");
+    setRadiusKm(decoded.radius ?? 0);
+    setEnergyFilter(decoded.energy ?? "all");
+    setSideFilter(decoded.side ?? "all");
+    setSearchQuery(decoded.q ?? "");
+    setUrlReady(true);
+  }, [searchParams]);
+
+  useEffect(() => {
+    if (!urlReady) return;
+    const params = encodeGreenMarketFilters(currentFilters);
+    const next = params.toString();
+    if (next === searchParams.toString()) return;
+    router.replace(next ? `${pathname}?${next}` : pathname, { scroll: false });
+  }, [currentFilters, urlReady, pathname, router, searchParams]);
+
+  const handleShareLink = useCallback(async () => {
+    const url = buildGreenMarketShareUrl(
+      currentFilters,
+      typeof window !== "undefined" ? window.location.origin : ""
+    );
+    try {
+      await navigator.clipboard.writeText(url);
+      setShareFeedback(mm.shareCopied);
+      window.setTimeout(() => setShareFeedback(null), 2500);
+    } catch {
+      setShareFeedback(url);
+    }
+  }, [currentFilters, mm.shareCopied]);
+
+  const handleSaveSearch = useCallback(() => {
+    const next = saveGreenMarketSearch(savedSearchName, currentFilters);
+    setSavedSearches(next);
+    setSavedSearchName("");
+  }, [savedSearchName, currentFilters]);
+
+  const applySavedSearch = useCallback((entry: GreenMarketSavedSearch) => {
+    setActorFilter(entry.filters.actor ?? "all");
+    setRadiusKm(entry.filters.radius ?? 0);
+    setEnergyFilter(entry.filters.energy ?? "all");
+    setSideFilter(entry.filters.side ?? "all");
+    setSearchQuery(entry.filters.q ?? "");
+  }, []);
 
   useEffect(() => {
     if (!snapshot.available) {
@@ -266,6 +346,68 @@ export function GreenMarketView({ snapshot }: Props) {
             </select>
           </label>
         </div>
+        <div className="mt-4 flex flex-wrap items-end gap-3">
+          <button
+            type="button"
+            onClick={() => void handleShareLink()}
+            className="rounded-lg border border-white/[0.12] px-4 py-2 font-mono text-[11px] tracking-wide text-white/60 transition hover:border-white/25 hover:text-white"
+          >
+            {shareFeedback ?? mm.shareLink}
+          </button>
+          <label className="flex min-w-[160px] flex-1 flex-col gap-1 sm:max-w-xs">
+            <span className="font-mono text-[10px] uppercase tracking-wider text-white/40">
+              {mm.savedSearchName}
+            </span>
+            <input
+              value={savedSearchName}
+              onChange={(e) => setSavedSearchName(e.target.value)}
+              className={selectClass}
+            />
+          </label>
+          <button
+            type="button"
+            onClick={handleSaveSearch}
+            disabled={!savedSearchName.trim()}
+            className="rounded-lg border border-green-royal/40 bg-green-royal/10 px-4 py-2 font-mono text-[11px] tracking-wide text-green-royal-bright transition hover:border-green-royal disabled:opacity-40"
+          >
+            {mm.savedSearchSave}
+          </button>
+        </div>
+        {savedSearches.length > 0 ? (
+          <div className="mt-4">
+            <p className="font-mono text-[10px] uppercase tracking-wider text-white/35">
+              {mm.savedSearchesTitle}
+            </p>
+            <ul className="mt-2 flex flex-wrap gap-2">
+              {savedSearches.map((entry) => (
+                <li
+                  key={entry.id}
+                  className="flex items-center gap-2 rounded border border-white/[0.1] px-2 py-1"
+                >
+                  <button
+                    type="button"
+                    onClick={() => applySavedSearch(entry)}
+                    className="font-mono text-[10px] text-emerald-400/90 hover:text-emerald-300"
+                  >
+                    {entry.name} · {mm.savedSearchApply}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setSavedSearches(removeGreenMarketSavedSearch(entry.id))
+                    }
+                    className="font-mono text-[10px] text-white/35 hover:text-white/60"
+                    aria-label={mm.savedSearchRemove}
+                  >
+                    ×
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ) : (
+          <p className="mt-3 font-mono text-[10px] text-white/30">{mm.savedSearchEmpty}</p>
+        )}
         {filteredActors.length === 0 ? (
           <div
             className="mt-4 border border-white/[0.08] bg-white/[0.02] px-4 py-6"
@@ -349,7 +491,7 @@ export function GreenMarketView({ snapshot }: Props) {
         </div>
       </section>
 
-      <section className="mt-14">
+      <section id="offers" className="mt-14 scroll-mt-24">
         <GreenSectionTitle>{mm.listingsTitle}</GreenSectionTitle>
         <div className="mt-4 flex flex-wrap gap-3">
           <label className="flex flex-col gap-1">

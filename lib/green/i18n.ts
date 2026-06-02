@@ -216,6 +216,16 @@ export type GreenMessages = {
       label: string;
       assistant: string;
     };
+    checklistTitle: string;
+    checklistIntro: string;
+    exportChecklist: string;
+    checklistFilename: string;
+    checklistTable: {
+      pillar: string;
+      criterion: string;
+      status: string;
+      notes: string;
+    };
     backLink: string;
   };
   compare: {
@@ -275,6 +285,8 @@ export type GreenMessages = {
       successStandards: string;
       successRegistry: string;
       successMarket: string;
+      successStatus: string;
+      applicationId: (id: string) => string;
       document: string;
       documentHint: string;
       documentErrorType: string;
@@ -284,6 +296,10 @@ export type GreenMessages = {
       errorRateLimit: string;
       projectTypes: Record<GreenProjectType, string>;
     };
+    applicationStatus: Record<
+      "pending" | "in_review" | "approved" | "rejected",
+      string
+    >;
     backLink: string;
   };
   certification: {
@@ -351,6 +367,12 @@ export type GreenMessages = {
     verifyLink: string;
     verifyNote: string;
     pilotNote: string;
+    statsProjects: (n: number) => string;
+    statsExperts: (n: number) => string;
+    statsVerified: (n: number) => string;
+    statsPilots: (n: number) => string;
+    searchPlaceholder: string;
+    searchEmpty: string;
     backLink: string;
   };
   guide: {
@@ -885,6 +907,17 @@ const FR: GreenMessages = {
       label: "Candidature label",
       assistant: "Assistant RTMS (bêta)",
     },
+    checklistTitle: "Checklist RTMS interactive",
+    checklistIntro:
+      "Téléchargez une grille CSV à compléter dossier par dossier — critères par pilier Réel · Transparent · Mesurable · Sain.",
+    exportChecklist: "Télécharger la checklist (.csv)",
+    checklistFilename: "auros-green-rtms-checklist.csv",
+    checklistTable: {
+      pillar: "Pilier RTMS",
+      criterion: "Critère",
+      status: "Statut (à remplir)",
+      notes: "Notes / preuves",
+    },
     backLink: "← Retour AUROS Green",
   },
   compare: {
@@ -969,6 +1002,9 @@ const FR: GreenMessages = {
       successStandards: "Standards RTMS",
       successRegistry: "Registre public",
       successMarket: "Place de marché",
+      successStatus:
+        "Suivez l'avancement dans Espace acteur (/green/my) avec le même e-mail professionnel.",
+      applicationId: (id) => `Référence dossier : ${id.slice(0, 8)}…`,
       document: "PDF justificatif (optionnel)",
       documentHint: "PDF uniquement, 5 Mo max — dossier technique ou synthèse RTMS.",
       documentErrorType: "Format non accepté — PDF uniquement.",
@@ -985,6 +1021,12 @@ const FR: GreenMessages = {
         ppa: "PPA / surplus énergie",
         other: "Autre vert RWA",
       },
+    },
+    applicationStatus: {
+      pending: "En attente de revue",
+      in_review: "Revue documentaire",
+      approved: "Label publié au registre",
+      rejected: "Non retenu — contactez-nous",
     },
     backLink: "← Retour AUROS Green",
   },
@@ -1072,6 +1114,12 @@ const FR: GreenMessages = {
     verifyNote: "Chaque entrée inclut un lien de vérification public.",
     pilotNote:
       "Les cas pilotes RTMS sont des démonstrations méthodologiques anonymisées — distincts des projets « Verified » après audit complet.",
+    statsProjects: (n) => `${n} projet${n > 1 ? "s" : ""} listé${n > 1 ? "s" : ""}`,
+    statsExperts: (n) => `${n} expert${n > 1 ? "s" : ""}`,
+    statsVerified: (n) => `${n} Verified`,
+    statsPilots: (n) => `${n} cas pilote${n > 1 ? "s" : ""}`,
+    searchPlaceholder: "Rechercher un projet (nom, pays)…",
+    searchEmpty: "Aucun projet ne correspond à cette recherche.",
     backLink: "← Retour AUROS Green",
   },
   guide: {
@@ -1626,6 +1674,17 @@ const EN: GreenMessages = {
       label: "Label application",
       assistant: "RTMS assistant (beta)",
     },
+    checklistTitle: "Interactive RTMS checklist",
+    checklistIntro:
+      "Download a CSV grid to complete dossier by dossier — criteria per Real · Transparent · Measurable · Sound pillar.",
+    exportChecklist: "Download checklist (.csv)",
+    checklistFilename: "auros-green-rtms-checklist.csv",
+    checklistTable: {
+      pillar: "RTMS pillar",
+      criterion: "Criterion",
+      status: "Status (fill in)",
+      notes: "Notes / evidence",
+    },
     backLink: "← Back to AUROS Green",
   },
   compare: {
@@ -1709,6 +1768,9 @@ const EN: GreenMessages = {
       successStandards: "RTMS standards",
       successRegistry: "Public registry",
       successMarket: "Marketplace",
+      successStatus:
+        "Track progress in Actor space (/green/my) with the same professional email.",
+      applicationId: (id) => `Dossier reference: ${id.slice(0, 8)}…`,
       document: "Supporting PDF (optional)",
       documentHint: "PDF only, 5 MB max — technical dossier or RTMS summary.",
       documentErrorType: "Unsupported format — PDF only.",
@@ -1725,6 +1787,12 @@ const EN: GreenMessages = {
         ppa: "PPA / energy surplus",
         other: "Other green RWA",
       },
+    },
+    applicationStatus: {
+      pending: "Awaiting review",
+      in_review: "Document review",
+      approved: "Label published in registry",
+      rejected: "Not retained — contact us",
     },
     backLink: "← Back to AUROS Green",
   },
@@ -1812,6 +1880,12 @@ const EN: GreenMessages = {
     verifyNote: "Each entry includes a public verification link.",
     pilotNote:
       "RTMS pilot cases are anonymized methodology demos — distinct from « Verified » projects after full audit.",
+    statsProjects: (n) => `${n} listed project${n === 1 ? "" : "s"}`,
+    statsExperts: (n) => `${n} expert${n === 1 ? "" : "s"}`,
+    statsVerified: (n) => `${n} Verified`,
+    statsPilots: (n) => `${n} pilot case${n === 1 ? "" : "s"}`,
+    searchPlaceholder: "Search a project (name, country)…",
+    searchEmpty: "No project matches this search.",
     backLink: "← Back to AUROS Green",
   },
   guide: {
@@ -2370,6 +2444,17 @@ const ES: GreenMessages = {
       label: "Solicitud etiqueta",
       assistant: "Asistente RTMS (beta)",
     },
+    checklistTitle: "Checklist RTMS interactiva",
+    checklistIntro:
+      "Descargue una cuadrícula CSV para completar dossier a dossier — criterios por pilar Real · Transparente · Medible · Sano.",
+    exportChecklist: "Descargar checklist (.csv)",
+    checklistFilename: "auros-green-rtms-checklist.csv",
+    checklistTable: {
+      pillar: "Pilar RTMS",
+      criterion: "Criterio",
+      status: "Estado (a completar)",
+      notes: "Notas / pruebas",
+    },
     backLink: "← Volver a AUROS Green",
   },
   compare: {
@@ -2454,6 +2539,9 @@ const ES: GreenMessages = {
       successStandards: "Estándares RTMS",
       successRegistry: "Registro público",
       successMarket: "Mercado",
+      successStatus:
+        "Siga el avance en Espacio actor (/green/my) con el mismo e-mail profesional.",
+      applicationId: (id) => `Referencia dossier: ${id.slice(0, 8)}…`,
       document: "PDF justificativo (opcional)",
       documentHint: "Solo PDF, 5 MB máx. — dossier técnico o síntesis RTMS.",
       documentErrorType: "Formato no aceptado — solo PDF.",
@@ -2470,6 +2558,12 @@ const ES: GreenMessages = {
         ppa: "PPA / excedente energético",
         other: "Otro RWA verde",
       },
+    },
+    applicationStatus: {
+      pending: "En espera de revisión",
+      in_review: "Revisión documental",
+      approved: "Etiqueta publicada en registro",
+      rejected: "No retenido — contáctenos",
     },
     backLink: "← Volver a AUROS Green",
   },
@@ -2558,6 +2652,12 @@ const ES: GreenMessages = {
     verifyNote: "Cada entrada incluye un enlace de verificación público.",
     pilotNote:
       "Los casos piloto RTMS son demostraciones metodológicas anonimizadas — distintos de proyectos « Verified » tras auditoría completa.",
+    statsProjects: (n) => `${n} proyecto${n === 1 ? "" : "s"} listado${n === 1 ? "" : "s"}`,
+    statsExperts: (n) => `${n} experto${n === 1 ? "" : "s"}`,
+    statsVerified: (n) => `${n} Verified`,
+    statsPilots: (n) => `${n} caso${n === 1 ? "" : "s"} piloto`,
+    searchPlaceholder: "Buscar un proyecto (nombre, país)…",
+    searchEmpty: "Ningún proyecto coincide con esta búsqueda.",
     backLink: "← Volver a AUROS Green",
   },
   guide: {

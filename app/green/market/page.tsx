@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 
 import { AiFirstPageJsonLd } from "@/app/_components/ai-first/AiFirstPageJsonLd";
 import { absoluteUrl } from "@/lib/comparators/site";
@@ -26,7 +27,15 @@ export default async function GreenMarketPage() {
   return (
     <>
       <AiFirstPageJsonLd path={GREEN_MARKET_ROUTE} />
-      <GreenMarketView snapshot={snapshot} />
+      <Suspense
+        fallback={
+          <div className="page-inner page-inner--6xl mx-auto px-4 py-24 text-sm text-white/50">
+            …
+          </div>
+        }
+      >
+        <GreenMarketView snapshot={snapshot} />
+      </Suspense>
     </>
   );
 }

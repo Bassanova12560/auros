@@ -80,6 +80,14 @@ export type GreenMarketMessages = {
     backLink: string;
     rtmsAssistantCta: string;
     actorPagesTitle: string;
+    shareLink: string;
+    shareCopied: string;
+    savedSearchesTitle: string;
+    savedSearchName: string;
+    savedSearchSave: string;
+    savedSearchApply: string;
+    savedSearchRemove: string;
+    savedSearchEmpty: string;
   };
   actors: Record<
     GreenMarketActorType,
@@ -199,6 +207,14 @@ const FR: GreenMarketMessages = {
     backLink: "← Retour au hub Green",
     rtmsAssistantCta: "Pré-diagnostic RTMS avant listing",
     actorPagesTitle: "Explorer par type d'acteur",
+    shareLink: "Copier le lien filtré",
+    shareCopied: "Lien copié",
+    savedSearchesTitle: "Recherches enregistrées",
+    savedSearchName: "Nom de la recherche",
+    savedSearchSave: "Enregistrer",
+    savedSearchApply: "Appliquer",
+    savedSearchRemove: "Supprimer",
+    savedSearchEmpty: "Aucune recherche enregistrée sur cet appareil.",
   },
   actors: {
     producer: {
@@ -349,6 +365,14 @@ const EN: GreenMarketMessages = {
     backLink: "← Back to Green hub",
     rtmsAssistantCta: "Preliminary RTMS check before listing",
     actorPagesTitle: "Browse by actor type",
+    shareLink: "Copy filtered link",
+    shareCopied: "Link copied",
+    savedSearchesTitle: "Saved searches",
+    savedSearchName: "Search name",
+    savedSearchSave: "Save",
+    savedSearchApply: "Apply",
+    savedSearchRemove: "Remove",
+    savedSearchEmpty: "No saved searches on this device.",
   },
   actors: {
     producer: {
@@ -500,6 +524,14 @@ const ES: GreenMarketMessages = {
     backLink: "← Volver al hub Green",
     rtmsAssistantCta: "Pre-diagnóstico RTMS antes del listing",
     actorPagesTitle: "Explorar por tipo de actor",
+    shareLink: "Copiar enlace filtrado",
+    shareCopied: "Enlace copiado",
+    savedSearchesTitle: "Búsquedas guardadas",
+    savedSearchName: "Nombre de búsqueda",
+    savedSearchSave: "Guardar",
+    savedSearchApply: "Aplicar",
+    savedSearchRemove: "Eliminar",
+    savedSearchEmpty: "No hay búsquedas guardadas en este dispositivo.",
   },
   actors: {
     producer: {

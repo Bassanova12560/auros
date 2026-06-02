@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useCallback } from "react";
 
 import { useLocale } from "@/app/_components/i18n/LocaleProvider";
 import {
@@ -13,6 +14,10 @@ import {
   GREEN_ROUTE,
   getGreenMessages,
 } from "@/lib/green";
+import {
+  downloadGreenRtmsChecklistCsv,
+  greenRtmsChecklistToCsv,
+} from "@/lib/green/rtms-checklist";
 
 import {
   GreenBackLink,
@@ -27,6 +32,11 @@ export function GreenStandardsView() {
   const { locale } = useLocale();
   const m = getGreenMessages(locale);
   const s = m.standards;
+
+  const handleChecklistDownload = useCallback(() => {
+    const csv = greenRtmsChecklistToCsv(s);
+    downloadGreenRtmsChecklistCsv(csv, s.checklistFilename);
+  }, [s]);
 
   return (
     <div className="page-inner page-inner--4xl mx-auto px-4 pb-20 pt-12 md:px-6 md:pt-14">
@@ -55,6 +65,22 @@ export function GreenStandardsView() {
       </nav>
 
       <GreenPanel className="mt-12">
+        <div className="p-6 md:p-8">
+          <GreenSectionTitle>{s.checklistTitle}</GreenSectionTitle>
+          <p className="mt-4 max-w-2xl text-sm leading-relaxed text-neutral-400">
+            {s.checklistIntro}
+          </p>
+          <button
+            type="button"
+            onClick={handleChecklistDownload}
+            className="mt-6 inline-flex min-h-[44px] items-center rounded-full border border-emerald-500/50 px-5 py-2.5 font-mono text-[11px] uppercase tracking-wider text-emerald-400 transition hover:border-emerald-400 hover:bg-emerald-500/10"
+          >
+            {s.exportChecklist}
+          </button>
+        </div>
+      </GreenPanel>
+
+      <GreenPanel className="mt-4">
         <div className="p-6 md:p-8">
           <GreenSectionTitle>{s.methodologyTitle}</GreenSectionTitle>
           <p className="mt-4 max-w-2xl text-sm leading-relaxed text-neutral-400">

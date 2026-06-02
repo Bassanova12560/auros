@@ -9,10 +9,12 @@ import {
   getGreenMyDashboardAction,
   saveGreenMarketAlertAction,
 } from "@/lib/actions/green-market-my";
+import type { GreenLabelApplicationRow } from "@/lib/green/label-applications";
 import type { MyGreenMarketListing } from "@/lib/green/market/green-market-db";
 import type { GreenMarketAlertRow } from "@/lib/green/market/alerts";
 import type { GreenMarketActorType, GreenMarketRadiusKm } from "@/lib/green/market/types";
-import { GREEN_MARKET_ROUTE, GREEN_REGISTER_ROUTE } from "@/lib/green/constants";
+import { getGreenMessages } from "@/lib/green/i18n";
+import { GREEN_LABEL_ROUTE, GREEN_MARKET_ROUTE, GREEN_REGISTER_ROUTE } from "@/lib/green/constants";
 import { formatGreenMarketLocation } from "@/lib/green/market-i18n";
 
 import { GreenBackLink, GreenPanel, greenBtnClass } from "./green-ui";
@@ -56,6 +58,12 @@ const COPY = {
     alertSuccess: "Alerte enregistrée.",
     alertError: "Vérifiez la ville et l'e-mail.",
     listingsTitle: "Mes soumissions",
+    labelTitle: "Candidatures label",
+    labelEmpty: "Aucune candidature label pour cet e-mail.",
+    labelApply: "Candidater au label",
+    editActor: "Mettre à jour l'acteur",
+    newOffer: "Nouvelle annonce",
+    documentAttached: "PDF joint",
   },
   en: {
     eyebrow: "Actor space",
@@ -77,6 +85,12 @@ const COPY = {
     alertSuccess: "Alert saved.",
     alertError: "Check city and email.",
     listingsTitle: "My submissions",
+    labelTitle: "Label applications",
+    labelEmpty: "No label applications for this email.",
+    labelApply: "Apply for label",
+    editActor: "Update actor profile",
+    newOffer: "New listing",
+    documentAttached: "PDF attached",
   },
   es: {
     eyebrow: "Espacio actor",
@@ -98,8 +112,16 @@ const COPY = {
     alertSuccess: "Alerta registrada.",
     alertError: "Verifique ciudad y e-mail.",
     listingsTitle: "Mis envíos",
+    labelTitle: "Solicitudes de etiqueta",
+    labelEmpty: "Sin solicitudes de etiqueta para este e-mail.",
+    labelApply: "Solicitar etiqueta",
+    editActor: "Actualizar actor",
+    newOffer: "Nuevo anuncio",
+    documentAttached: "PDF adjunto",
   },
 } as const;
+
+const LABEL_STATUS_KEYS = ["pending", "in_review", "approved", "rejected"] as const;
 
 const ACTOR_TYPES: GreenMarketActorType[] = [
   "producer",
@@ -113,8 +135,10 @@ export function GreenMyView() {
   const { isSignedIn, isLoaded } = useUser();
   const copy = COPY[locale === "fr" ? "fr" : locale === "es" ? "es" : "en"];
   const statusLabels = STATUS_LABEL[locale === "fr" ? "fr" : locale === "es" ? "es" : "en"];
+  const labelStatusLabels = getGreenMessages(locale).label.applicationStatus;
 
   const [listings, setListings] = useState<MyGreenMarketListing[]>([]);
+  const [labelApplications, setLabelApplications] = useState<GreenLabelApplicationRow[]>([]);
   const [alerts, setAlerts] = useState<GreenMarketAlertRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [alertCity, setAlertCity] = useState("");
@@ -136,6 +160,7 @@ export function GreenMyView() {
     }
     setListings(data.listings);
     setAlerts(data.alerts);
+    setLabelApplications(data.labelApplications);
     setLoading(false);
   }, [isSignedIn]);
 
@@ -185,6 +210,47 @@ export function GreenMyView() {
         </GreenPanel>
       ) : (
         <div className="mt-10 space-y-10">
+          <section id="label-status">
+            <h2 className="text-sm font-medium uppercase tracking-wider text-emerald-500">
+              {copy.labelTitle}
+            </h2>
+            {labelApplications.length === 0 ? (
+              <div className="mt-4 rounded-xl border border-emerald-500/25 bg-black p-6">
+                <p className="text-sm text-neutral-400">{copy.labelEmpty}</p>
+                <Link
+                  href={GREEN_LABEL_ROUTE}
+                  className={`${greenBtnClass} mt-4 inline-flex`}
+                >
+                  {copy.labelApply}
+                </Link>
+              </div>
+            ) : (
+              <ul className="mt-4 space-y-3">
+                {labelApplications.map((app) => (
+                  <li
+                    key={app.id}
+                    className="rounded-xl border border-emerald-500/25 bg-black p-4"
+                  >
+                    <div className="flex flex-wrap items-start justify-between gap-3">
+                      <div>
+                        <p className="font-medium text-emerald-300">{app.projectName}</p>
+                        <p className="mt-1 font-mono text-[10px] text-neutral-500">
+                          {app.id.slice(0, 8)}…
+                          {app.hasDocument ? ` · ${copy.documentAttached}` : ""}
+                        </p>
+                      </div>
+                      <span className="rounded-full border border-emerald-500/40 px-3 py-1 text-xs text-emerald-400">
+                        {LABEL_STATUS_KEYS.includes(app.status)
+                          ? labelStatusLabels[app.status]
+                          : app.status}
+                      </span>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </section>
+
           <section>
             <h2 className="text-sm font-medium uppercase tracking-wider text-emerald-500">
               {copy.listingsTitle}
@@ -218,6 +284,18 @@ export function GreenMyView() {
                         {statusLabels[item.status as keyof typeof statusLabels] ??
                           item.status}
                       </span>
+                    </div>
+                    <div className="mt-3">
+                      <Link
+                        href={
+                          item.kind === "actor"
+                            ? GREEN_REGISTER_ROUTE
+                            : `${GREEN_MARKET_ROUTE}#offers`
+                        }
+                        className="text-xs uppercase tracking-wider text-emerald-500/70 hover:text-emerald-400"
+                      >
+                        {item.kind === "actor" ? copy.editActor : copy.newOffer} →
+                      </Link>
                     </div>
                   </li>
                 ))}

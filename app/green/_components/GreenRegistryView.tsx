@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useMemo, useState } from "react";
 
 import { useLocale } from "@/app/_components/i18n/LocaleProvider";
 import type { GreenRegistrySnapshot } from "@/lib/green/green-registry";
@@ -41,6 +42,26 @@ export function GreenRegistryView({ snapshot }: Props) {
   const r = m.registry;
   const c = m.compare;
   const { projects, experts, available } = snapshot;
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const verifiedCount = projects.filter((p) => p.labelTier === "verified").length;
+  const pilotCount = projects.filter((p) => p.labelTier === "pilot").length;
+
+  const filteredProjects = useMemo(() => {
+    const q = searchQuery.trim().toLowerCase();
+    if (!q) return projects;
+    return projects.filter((proj) => {
+      const hay = [
+        proj.name,
+        proj.country,
+        c.projectTypes[proj.projectType],
+        greenProjectSummary(proj, locale),
+      ]
+        .join(" ")
+        .toLowerCase();
+      return hay.includes(q);
+    });
+  }, [projects, searchQuery, c.projectTypes, locale]);
 
   return (
     <div className="page-inner page-inner--3xl mx-auto px-4 pb-20 pt-12 md:px-6 md:pt-14">
@@ -49,14 +70,43 @@ export function GreenRegistryView({ snapshot }: Props) {
         <p className="mt-4 text-xs text-neutral-500">{r.statsUnavailable}</p>
       ) : null}
 
+      <div className="mt-8 flex flex-wrap gap-3 font-mono text-[10px] uppercase tracking-wider text-emerald-500/70">
+        <span className="rounded-full border border-emerald-500/30 px-3 py-1">
+          {r.statsProjects(projects.length)}
+        </span>
+        <span className="rounded-full border border-emerald-500/30 px-3 py-1">
+          {r.statsVerified(verifiedCount)}
+        </span>
+        <span className="rounded-full border border-emerald-500/30 px-3 py-1">
+          {r.statsPilots(pilotCount)}
+        </span>
+        <span className="rounded-full border border-emerald-500/30 px-3 py-1">
+          {r.statsExperts(experts.length)}
+        </span>
+      </div>
+
       <GreenPanel className="mt-10">
         <div className="p-6 md:p-8">
           <GreenSectionTitle>{r.projectsTitle}</GreenSectionTitle>
+          {projects.length > 0 ? (
+            <label className="mt-4 block max-w-md">
+              <span className="sr-only">{r.searchPlaceholder}</span>
+              <input
+                type="search"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder={r.searchPlaceholder}
+                className="mt-2 w-full rounded-lg border border-emerald-500/30 bg-black px-4 py-3 text-sm text-emerald-200 outline-none focus:border-emerald-400"
+              />
+            </label>
+          ) : null}
           {projects.length === 0 ? (
             <p className="mt-4 text-sm text-neutral-400">{r.projectsEmpty}</p>
+          ) : filteredProjects.length === 0 ? (
+            <p className="mt-4 text-sm text-neutral-400">{r.searchEmpty}</p>
           ) : (
             <ul className="mt-6 divide-y divide-emerald-500/20">
-              {projects.map((proj) => (
+              {filteredProjects.map((proj) => (
                 <li key={proj.id} className="py-5 first:pt-0 last:pb-0">
                   <div className="flex flex-wrap items-baseline justify-between gap-2">
                     <span className="font-medium text-emerald-400">{proj.name}</span>
