@@ -2,28 +2,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 
 import { GREEN_MARKET_ACTORS, GREEN_MARKET_OFFERS } from "./data";
 import { seedGreenReferencedPilots } from "./referenced-seed";
-
-async function upsertByExternalId(
-  supabase: SupabaseClient,
-  table: "green_market_assets" | "green_market_offers",
-  externalId: string,
-  row: Record<string, unknown>
-): Promise<void> {
-  const { data: existing } = await supabase
-    .from(table)
-    .select("id")
-    .eq("external_id", externalId)
-    .maybeSingle();
-
-  if (existing?.id) {
-    const { error } = await supabase.from(table).update(row).eq("external_id", externalId);
-    if (error) throw new Error(`${table} update ${externalId}: ${error.message}`);
-    return;
-  }
-
-  const { error } = await supabase.from(table).insert({ external_id: externalId, ...row });
-  if (error) throw new Error(`${table} insert ${externalId}: ${error.message}`);
-}
+import { upsertByExternalId } from "./upsert-external-id";
 
 export async function seedGreenMarketData(supabase: SupabaseClient): Promise<void> {
   for (const a of GREEN_MARKET_ACTORS) {

@@ -10,9 +10,8 @@
 
 import type { SupabaseClient } from "@supabase/supabase-js";
 
-
-
 import type { GreenMarketActorType, GreenMarketEnergyType } from "./types";
+import { upsertByExternalId } from "./upsert-external-id";
 
 
 
@@ -375,87 +374,26 @@ export const GREEN_REFERENCED_PILOTS: ReferencedPilot[] = [
 
 
 async function upsertReferenced(
-
   supabase: SupabaseClient,
-
   pilot: ReferencedPilot
-
 ): Promise<void> {
-
-  const row = {
-
+  await upsertByExternalId(supabase, "green_market_assets", pilot.externalId, {
     type: pilot.type,
-
     name: pilot.name,
-
     city: pilot.city,
-
     country: pilot.country,
-
     region: pilot.region,
-
     lat: pilot.lat,
-
     lon: pilot.lon,
-
     capacity_kwh: pilot.capacityKwh,
-
     price_per_kwh: pilot.pricePerKwh,
-
     energy_type: pilot.energyType,
-
     description: pilot.description,
-
     contact_email: pilot.contactEmail,
-
     listing_tier: "referenced",
-
     is_certified: false,
-
     status: "available",
-
-  };
-
-
-
-  const { data: existing } = await supabase
-
-    .from("green_market_assets")
-
-    .select("id")
-
-    .eq("external_id", pilot.externalId)
-
-    .maybeSingle();
-
-
-
-  if (existing?.id) {
-
-    const { error } = await supabase
-
-      .from("green_market_assets")
-
-      .update(row)
-
-      .eq("external_id", pilot.externalId);
-
-    if (error) throw new Error(`referenced update ${pilot.externalId}: ${error.message}`);
-
-    return;
-
-  }
-
-
-
-  const { error } = await supabase
-
-    .from("green_market_assets")
-
-    .insert({ external_id: pilot.externalId, ...row });
-
-  if (error) throw new Error(`referenced insert ${pilot.externalId}: ${error.message}`);
-
+  });
 }
 
 
