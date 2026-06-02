@@ -149,6 +149,7 @@ export type GreenMessages = {
         label: string;
         subtitle: string;
         cta: string;
+        assistantCta: string;
       };
     };
   };
@@ -213,6 +214,7 @@ export type GreenMessages = {
       registry: string;
       compare: string;
       label: string;
+      assistant: string;
     };
     backLink: string;
   };
@@ -684,6 +686,7 @@ const FR: GreenMessages = {
         label: "Grille RTMS",
         subtitle: "Réel · Transparent · Mesurable · Sain — le socle de tout dossier Green.",
         cta: "Voir les standards",
+        assistantCta: "Pré-diagnostic RTMS",
       },
     },
   },
@@ -880,6 +883,7 @@ const FR: GreenMessages = {
       registry: "Registre public",
       compare: "Comparateur",
       label: "Candidature label",
+      assistant: "Assistant RTMS (bêta)",
     },
     backLink: "← Retour AUROS Green",
   },
@@ -1423,6 +1427,7 @@ const EN: GreenMessages = {
         label: "RTMS grid",
         subtitle: "Real · Transparent · Measurable · Sound — the foundation of every Green dossier.",
         cta: "View standards",
+        assistantCta: "Preliminary RTMS check",
       },
     },
   },
@@ -1619,6 +1624,7 @@ const EN: GreenMessages = {
       registry: "Public registry",
       compare: "Comparator",
       label: "Label application",
+      assistant: "RTMS assistant (beta)",
     },
     backLink: "← Back to AUROS Green",
   },
@@ -2165,6 +2171,7 @@ const ES: GreenMessages = {
         label: "Cuadrícula RTMS",
         subtitle: "Real · Transparente · Medible · Sano — la base de todo dossier Green.",
         cta: "Ver estándares",
+        assistantCta: "Pre-diagnóstico RTMS",
       },
     },
   },
@@ -2361,6 +2368,7 @@ const ES: GreenMessages = {
       registry: "Registro público",
       compare: "Comparador",
       label: "Solicitud etiqueta",
+      assistant: "Asistente RTMS (beta)",
     },
     backLink: "← Volver a AUROS Green",
   },

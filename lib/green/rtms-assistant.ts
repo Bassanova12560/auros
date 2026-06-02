@@ -10,7 +10,18 @@ export type RtmsAssistantInput = {
   projectSummary: string;
   country?: string;
   hasDocument: boolean;
+  /** Extracted PDF text — processed in-memory only, never stored. */
+  documentText?: string;
 };
+
+/** Combined corpus for keyword checks (summary + optional PDF excerpt). */
+export function buildRtmsAnalysisCorpus(input: RtmsAssistantInput): string {
+  const parts = [input.projectSummary.trim()];
+  const doc = input.documentText?.trim();
+  if (doc) parts.push(doc);
+  if (input.country?.trim()) parts.push(input.country.trim());
+  return parts.join(" ").toLowerCase();
+}
 
 const MIN_SUMMARY_WORDS = 12;
 
@@ -34,9 +45,14 @@ function rtmsTier(overall: number): GreenRtmsScore["tier"] {
 export function computePreliminaryRtmsFromSummary(
   input: RtmsAssistantInput
 ): GreenRtmsScore {
-  const text = input.projectSummary.trim().toLowerCase();
-  const wordCount = countSummaryWords(text);
+  const summaryText = input.projectSummary.trim().toLowerCase();
+  const text = buildRtmsAnalysisCorpus(input);
+  const wordCount = countSummaryWords(input.projectSummary);
   const hasDoc = input.hasDocument;
+  const docWords = input.documentText
+    ? countSummaryWords(input.documentText)
+    : 0;
+  const docSubstantive = docWords >= 40;
 
   const pillarChecks: Record<GreenRtmsPillar, RtmsCheck[]> = {
     real: [
@@ -52,7 +68,7 @@ export function computePreliminaryRtmsFromSummary(
       },
       {
         id: "supporting_doc",
-        pass: hasDoc,
+        pass: hasDoc && (docSubstantive || summaryText.length >= 80),
       },
     ],
     transparent: [
@@ -68,7 +84,7 @@ export function computePreliminaryRtmsFromSummary(
       },
       {
         id: "disclosure",
-        pass: wordCount >= 20,
+        pass: wordCount >= 20 || docSubstantive,
       },
     ],
     measurable: [
@@ -86,7 +102,7 @@ export function computePreliminaryRtmsFromSummary(
       },
       {
         id: "document_upload",
-        pass: hasDoc,
+        pass: hasDoc && (docSubstantive || /mwh|kwh|tco2|metric|mesur/.test(text)),
       },
     ],
     sound: [
@@ -100,7 +116,12 @@ export function computePreliminaryRtmsFromSummary(
       },
       {
         id: "risk_ack",
-        pass: /risque|risk|limitation|disclaimer|incertitude|assumption/.test(text) || wordCount >= 30,
+        pass:
+          /risque|risk|limitation|disclaimer|incertitude|assumption|hypothèse|hypothesis/.test(
+            text
+          ) ||
+          wordCount >= 30 ||
+          docSubstantive,
       },
     ],
   };

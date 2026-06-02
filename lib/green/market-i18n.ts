@@ -78,6 +78,7 @@ export type GreenMarketMessages = {
     verifiedBadge: string;
     contact: string;
     backLink: string;
+    rtmsAssistantCta: string;
     actorPagesTitle: string;
   };
   actors: Record<
@@ -196,6 +197,7 @@ const FR: GreenMarketMessages = {
     verifiedBadge: "Auros Green Verified",
     contact: "Contacter",
     backLink: "← Retour au hub Green",
+    rtmsAssistantCta: "Pré-diagnostic RTMS avant listing",
     actorPagesTitle: "Explorer par type d'acteur",
   },
   actors: {
@@ -345,6 +347,7 @@ const EN: GreenMarketMessages = {
     verifiedBadge: "Auros Green Verified",
     contact: "Contact",
     backLink: "← Back to Green hub",
+    rtmsAssistantCta: "Preliminary RTMS check before listing",
     actorPagesTitle: "Browse by actor type",
   },
   actors: {
@@ -495,6 +498,7 @@ const ES: GreenMarketMessages = {
     verifiedBadge: "Auros Green Verified",
     contact: "Contactar",
     backLink: "← Volver al hub Green",
+    rtmsAssistantCta: "Pre-diagnóstico RTMS antes del listing",
     actorPagesTitle: "Explorar por tipo de actor",
   },
   actors: {

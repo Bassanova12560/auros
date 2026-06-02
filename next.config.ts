@@ -20,6 +20,7 @@ const nextConfig: NextConfig = {
     "@supabase/postgrest-js",
     "@supabase/realtime-js",
     "@supabase/storage-js",
+    "pdf-parse",
   ],
   async headers() {
     return [

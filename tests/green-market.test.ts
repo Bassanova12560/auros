@@ -188,6 +188,56 @@ describe("green/rtms-assistant", () => {
     const gaps = extractTopRtmsGapPriorities(score, "fr");
     assert.ok(gaps.length <= 3);
   });
+
+  it("merges PDF excerpt into rule-based corpus", async () => {
+    const { buildRtmsAnalysisCorpus, computePreliminaryRtmsFromSummary } =
+      await import("../lib/green/rtms-assistant");
+    const summary = "Projet solaire en développement avec partenaires locaux identifiés.";
+    const doc =
+      "Production annuelle 5000 MWh PPA corporate registre carbone méthodologie VCS audit tiers structure SPV Luxembourg compliance MiCA risques climatiques documentés.";
+    const corpus = buildRtmsAnalysisCorpus({
+      projectSummary: summary,
+      country: "Luxembourg",
+      hasDocument: true,
+      documentText: doc,
+    });
+    assert.ok(corpus.includes("ppa"));
+    const withDoc = computePreliminaryRtmsFromSummary({
+      projectSummary: summary,
+      country: "Luxembourg",
+      hasDocument: true,
+      documentText: doc,
+    });
+    const withoutDoc = computePreliminaryRtmsFromSummary({
+      projectSummary: summary,
+      country: "Luxembourg",
+      hasDocument: false,
+    });
+    assert.ok(withDoc.overall >= withoutDoc.overall);
+  });
+
+  it("normalizes PDF text and validates file constraints", async () => {
+    const { normalizeRtmsPdfText, validateRtmsPdfFile, MAX_RTMS_PDF_BYTES } =
+      await import("../lib/green/rtms-pdf");
+    assert.equal(normalizeRtmsPdfText("  hello   world  "), "hello world");
+    assert.equal(
+      validateRtmsPdfFile(new File(["x"], "dossier.pdf", { type: "application/pdf" })),
+      "ok"
+    );
+    assert.equal(
+      validateRtmsPdfFile(
+        new File([new Uint8Array(MAX_RTMS_PDF_BYTES + 1)], "big.pdf", {
+          type: "application/pdf",
+        })
+      ),
+      "file_size"
+    );
+  });
+
+  it("detects when RTMS AI providers are configured", async () => {
+    const { hasRtmsAiProvider } = await import("../lib/green/rtms-ai");
+    assert.equal(typeof hasRtmsAiProvider(), "boolean");
+  });
 });
 
 describe("green/compare-i18n", () => {
@@ -196,6 +246,11 @@ describe("green/compare-i18n", () => {
       const c = getGreenMessages(locale).compare;
       assert.ok(c.exportPdf.length > 0);
       assert.ok(c.exportPdfGenerating.length > 0);
+    });
+
+    it(`exposes RTMS assistant quick-nav for ${locale}`, () => {
+      const s = getGreenMessages(locale).standards.quickNav;
+      assert.ok(s.assistant.length > 0);
     });
   }
 });

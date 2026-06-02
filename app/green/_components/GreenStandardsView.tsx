@@ -8,6 +8,7 @@ import {
   GREEN_LABEL_ROUTE,
   GREEN_MARKET_ROUTE,
   GREEN_REGISTRY_ROUTE,
+  GREEN_RTMS_ASSISTANT_ROUTE,
   GREEN_RTMS_PILLARS,
   GREEN_ROUTE,
   getGreenMessages,
@@ -32,7 +33,7 @@ export function GreenStandardsView() {
       <GreenPageHeader eyebrow={s.eyebrow} title={s.title} intro={s.intro} compact />
 
       <nav
-        className="mt-10 grid gap-px border border-emerald-500/25 bg-emerald-500/10 sm:grid-cols-2 lg:grid-cols-4"
+        className="mt-10 grid gap-px border border-emerald-500/25 bg-emerald-500/10 sm:grid-cols-2 lg:grid-cols-3"
         aria-label={s.quickNavAria}
       >
         {[
@@ -40,6 +41,7 @@ export function GreenStandardsView() {
           { href: GREEN_REGISTRY_ROUTE, title: s.quickNav.registry },
           { href: GREEN_COMPARE_ROUTE, title: s.quickNav.compare },
           { href: GREEN_LABEL_ROUTE, title: s.quickNav.label },
+          { href: GREEN_RTMS_ASSISTANT_ROUTE, title: s.quickNav.assistant },
         ].map((item) => (
           <Link
             key={item.href}

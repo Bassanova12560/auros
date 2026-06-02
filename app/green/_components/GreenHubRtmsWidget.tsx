@@ -3,7 +3,7 @@
 import Link from "next/link";
 
 import { useLocale } from "@/app/_components/i18n/LocaleProvider";
-import { GREEN_RTMS_PILLARS, GREEN_STANDARDS_ROUTE, getGreenMessages } from "@/lib/green";
+import { GREEN_RTMS_ASSISTANT_ROUTE, GREEN_RTMS_PILLARS, GREEN_STANDARDS_ROUTE, getGreenMessages } from "@/lib/green";
 
 const PILLAR_LETTERS: Record<(typeof GREEN_RTMS_PILLARS)[number], string> = {
   real: "R",
@@ -47,12 +47,20 @@ export function GreenHubRtmsWidget() {
         })}
       </div>
 
-      <Link
-        href={GREEN_STANDARDS_ROUTE}
-        className="mt-6 inline-flex items-center font-mono text-[11px] uppercase tracking-wider text-emerald-500 hover:text-emerald-400"
-      >
-        {w.cta} →
-      </Link>
+      <div className="mt-6 flex flex-wrap gap-4">
+        <Link
+          href={GREEN_STANDARDS_ROUTE}
+          className="inline-flex items-center font-mono text-[11px] uppercase tracking-wider text-emerald-500 hover:text-emerald-400"
+        >
+          {w.cta} →
+        </Link>
+        <Link
+          href={GREEN_RTMS_ASSISTANT_ROUTE}
+          className="inline-flex items-center font-mono text-[11px] uppercase tracking-wider text-emerald-500/70 hover:text-emerald-400"
+        >
+          {w.assistantCta} →
+        </Link>
+      </div>
     </div>
   );
 }

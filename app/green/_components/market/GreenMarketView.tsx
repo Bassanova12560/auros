@@ -13,6 +13,7 @@ import {
   GREEN_PRODUCERS_ROUTE,
   GREEN_REGISTER_ROUTE,
   GREEN_ROUTE,
+  GREEN_RTMS_ASSISTANT_ROUTE,
   GREEN_STORERS_ROUTE,
 } from "@/lib/green";
 import type { GreenMarketSnapshot } from "@/lib/green/market/green-market-db";
@@ -199,6 +200,15 @@ export function GreenMarketView({ snapshot }: Props) {
           {mm.liveBadge}
         </p>
       )}
+
+      <p className="mt-4">
+        <Link
+          href={GREEN_RTMS_ASSISTANT_ROUTE}
+          className="inline-flex min-h-[44px] items-center font-mono text-[11px] uppercase tracking-wider text-emerald-500/80 transition hover:text-emerald-400"
+        >
+          {mm.rtmsAssistantCta} →
+        </Link>
+      </p>
 
       <section className="mt-10">
         <GreenSectionTitle>{mm.mapTitle}</GreenSectionTitle>

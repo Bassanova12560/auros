@@ -7,6 +7,7 @@ import { useLocale } from "@/app/_components/i18n/LocaleProvider";
 import { analyzeRtmsPreliminaryAction } from "@/lib/actions/green-rtms-assistant";
 import {
   GREEN_LABEL_ROUTE,
+  GREEN_MARKET_ROUTE,
   GREEN_RTMS_PILLARS,
   GREEN_ROUTE,
   GREEN_STANDARDS_ROUTE,
@@ -17,6 +18,7 @@ import {
   extractTopRtmsGapPriorities,
 } from "@/lib/green/rtms-assistant";
 import type { GreenRtmsScore } from "@/lib/green/rtms-scoring";
+import type { RtmsAnalysisProvider } from "@/lib/actions/green-rtms-assistant";
 
 import {
   GreenBackLink,
@@ -44,6 +46,8 @@ const COPY = {
     minWords: (n: number) => `${n} mots minimum`,
     errorInvalid: "Ajoutez un résumé plus détaillé (12 mots minimum).",
     errorRateLimit: "Trop de requêtes — réessayez dans une heure.",
+    errorFileType: "PDF uniquement — vérifiez le format du fichier.",
+    errorFileSize: "PDF trop volumineux (5 Mo max).",
     resultTitle: "Grille RTMS préliminaire",
     overall: "Score indicatif",
     tierEarly: "Amorçage — complétez les preuves clés",
@@ -51,6 +55,10 @@ const COPY = {
     tierReady: "Solide pour une candidature label — revue AUROS recommandée",
     priorities: "Priorités indicatives (max. 3)",
     prioritiesComplete: "Signaux clés présents — affinez via standards et label.",
+    aiInsight: "Analyse IA (indicative)",
+    rulesMode: "Grille rule-based (sans IA)",
+    pdfExtracted: (n: number) => `${n.toLocaleString("fr-FR")} caractères extraits du PDF (mémoire uniquement).`,
+    marketCta: "Explorer la place de marché",
     checklist: "Checklist par pilier",
     pass: "Signal présent",
     gap: "À compléter",
@@ -76,6 +84,8 @@ const COPY = {
     minWords: (n: number) => `${n} words minimum`,
     errorInvalid: "Add a more detailed summary (12 words minimum).",
     errorRateLimit: "Too many requests — try again in an hour.",
+    errorFileType: "PDF only — check the file format.",
+    errorFileSize: "PDF too large (5 MB max).",
     resultTitle: "Preliminary RTMS grid",
     overall: "Indicative score",
     tierEarly: "Early — complete key evidence",
@@ -83,6 +93,10 @@ const COPY = {
     tierReady: "Strong for label application — AUROS review recommended",
     priorities: "Indicative priorities (max 3)",
     prioritiesComplete: "Key signals present — refine via standards and label.",
+    aiInsight: "AI analysis (indicative)",
+    rulesMode: "Rule-based grid (no AI)",
+    pdfExtracted: (n: number) => `${n.toLocaleString("en-US")} characters extracted from PDF (in-memory only).`,
+    marketCta: "Explore marketplace",
     checklist: "Checklist by pillar",
     pass: "Signal present",
     gap: "To complete",
@@ -108,6 +122,8 @@ const COPY = {
     minWords: (n: number) => `${n} palabras mínimo`,
     errorInvalid: "Añada un resumen más detallado (12 palabras mínimo).",
     errorRateLimit: "Demasiadas solicitudes — intente en una hora.",
+    errorFileType: "Solo PDF — verifique el formato del archivo.",
+    errorFileSize: "PDF demasiado grande (5 MB máx.).",
     resultTitle: "Cuadrícula RTMS preliminar",
     overall: "Puntuación indicativa",
     tierEarly: "Inicio — complete pruebas clave",
@@ -115,6 +131,10 @@ const COPY = {
     tierReady: "Sólido para candidatura label — revisión AUROS recomendada",
     priorities: "Prioridades indicativas (máx. 3)",
     prioritiesComplete: "Señales clave presentes — refine con estándares y label.",
+    aiInsight: "Análisis IA (indicativo)",
+    rulesMode: "Cuadrícula rule-based (sin IA)",
+    pdfExtracted: (n: number) => `${n.toLocaleString("es-ES")} caracteres extraídos del PDF (solo en memoria).`,
+    marketCta: "Explorar mercado",
     checklist: "Checklist por pilar",
     pass: "Señal presente",
     gap: "Por completar",
@@ -145,8 +165,13 @@ export function GreenRtmsAssistantView() {
   const [summary, setSummary] = useState("");
   const [country, setCountry] = useState("");
   const [documentFile, setDocumentFile] = useState<File | null>(null);
-  const [error, setError] = useState<"invalid" | "rate_limit" | null>(null);
+  const [error, setError] = useState<
+    "invalid" | "rate_limit" | "file_type" | "file_size" | null
+  >(null);
   const [result, setResult] = useState<GreenRtmsScore | null>(null);
+  const [provider, setProvider] = useState<RtmsAnalysisProvider | null>(null);
+  const [insight, setInsight] = useState<string | null>(null);
+  const [documentChars, setDocumentChars] = useState<number | null>(null);
   const [pending, startTransition] = useTransition();
 
   const wordCount = summary.trim().split(/\s+/).filter(Boolean).length;
@@ -156,20 +181,29 @@ export function GreenRtmsAssistantView() {
       e.preventDefault();
       setError(null);
       startTransition(async () => {
-        const res = await analyzeRtmsPreliminaryAction({
-          projectSummary: summary,
-          country: country || undefined,
-          hasDocument: Boolean(documentFile && documentFile.size > 0),
-        });
+        const fd = new FormData();
+        fd.set("projectSummary", summary);
+        if (country) fd.set("country", country);
+        fd.set("locale", locale);
+        if (documentFile && documentFile.size > 0) {
+          fd.set("document", documentFile);
+        }
+        const res = await analyzeRtmsPreliminaryAction(fd);
         if (!res.ok) {
           setError(res.error);
           setResult(null);
+          setProvider(null);
+          setInsight(null);
+          setDocumentChars(null);
           return;
         }
         setResult(res.score);
+        setProvider(res.provider);
+        setInsight(res.insight ?? null);
+        setDocumentChars(res.documentChars ?? null);
       });
     },
-    [summary, country, documentFile]
+    [summary, country, documentFile, locale]
   );
 
   return (
@@ -218,7 +252,13 @@ export function GreenRtmsAssistantView() {
 
           {error ? (
             <p className="text-xs text-red-400/80" role="alert">
-              {error === "rate_limit" ? c.errorRateLimit : c.errorInvalid}
+              {error === "rate_limit"
+                ? c.errorRateLimit
+                : error === "file_type"
+                  ? c.errorFileType
+                  : error === "file_size"
+                    ? c.errorFileSize
+                    : c.errorInvalid}
             </p>
           ) : null}
 
@@ -241,6 +281,17 @@ export function GreenRtmsAssistantView() {
               <span className="ml-2 text-sm font-normal text-neutral-500">/ 100 · {c.overall}</span>
             </p>
             <p className="mt-2 text-sm text-neutral-400">{tierLabel(result.tier, c)}</p>
+            {provider ? (
+              <p className="mt-2 font-mono text-[10px] uppercase tracking-wider text-emerald-500/70">
+                {provider === "rules" ? c.rulesMode : `${c.aiInsight} · ${provider}`}
+              </p>
+            ) : null}
+            {insight ? (
+              <p className="mt-3 max-w-2xl text-sm leading-relaxed text-neutral-400">{insight}</p>
+            ) : null}
+            {documentChars && documentChars > 0 ? (
+              <p className="mt-2 text-[11px] text-neutral-500">{c.pdfExtracted(documentChars)}</p>
+            ) : null}
 
             {(() => {
               const priorities = extractTopRtmsGapPriorities(result, locale);
@@ -305,6 +356,12 @@ export function GreenRtmsAssistantView() {
                 className="rounded-lg border border-emerald-500/40 px-4 py-2 font-mono text-[11px] uppercase tracking-wider text-emerald-500 hover:border-emerald-400 hover:text-emerald-400"
               >
                 {c.labelCta} →
+              </Link>
+              <Link
+                href={GREEN_MARKET_ROUTE}
+                className="rounded-lg border border-emerald-500/40 px-4 py-2 font-mono text-[11px] uppercase tracking-wider text-emerald-500 hover:border-emerald-400 hover:text-emerald-400"
+              >
+                {c.marketCta} →
               </Link>
             </div>
           </div>

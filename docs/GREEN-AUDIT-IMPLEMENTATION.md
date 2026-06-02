@@ -67,7 +67,7 @@
 ## Sprint 4+ (deferred)
 
 - NFT Green Proof, oracle, Uniswap pool, PricingCard boost, dark mode, full Clerk lockdown, Lighthouse CI.
-- RTMS Assistant **IA fine-tune** (Mistral/Gemini sur dossier) — au-delà du MVP rule-based.
+- ~~RTMS Assistant **IA fine-tune** (Mistral/Gemini sur dossier) — au-delà du MVP rule-based.~~ → **Sprint 6** : IA indicative livrée (repli rule-based).
 
 
 
@@ -76,6 +76,26 @@
 - **Compare PDF** — export PDF à côté du CSV sur `/green/compare` (`compare-pdf.tsx`, lazy load).
 - **RTMS Assistant (bêta)** — `/green/rtms-assistant` : résumé + PDF optionnel, scoring rule-based, rate limit, disclaimer indicatif.
 - **Hub** — lien « Pré-diagnostic RTMS » depuis la section méthodologie.
+
+## Sprint 6 — shipped 2026-06-02
+
+- **RTMS Assistant upgrade** — extraction texte PDF in-memory (`pdf-parse`, 5 Mo max) ; scoring rule-based enrichi (corpus résumé + PDF) ; analyse IA optionnelle (Gemini → Groq → Mistral) avec repli rule-based ; badge provider + insight ; max 3 priorités conservé.
+- **Cross-links** — assistant RTMS depuis standards (quick-nav), place de marché, widget hub RTMS ; lien marché depuis résultats assistant.
+- **i18n** — `quickNav.assistant`, `hub.widgets.rtms.assistantCta`, `market.rtmsAssistantCta` (FR/EN/ES).
+- **Tests** — corpus PDF, validation fichier, provider IA (`npm run test:green`).
+
+### Vercel env (IA RTMS)
+
+Au moins une clé serveur (jamais `NEXT_PUBLIC_*`) :
+
+| Variable | Usage |
+|----------|--------|
+| `GEMINI_API_KEY` | Provider prioritaire (défaut) |
+| `GROQ_API_KEY` | Fallback |
+| `MISTRAL_API_KEY` | Fallback |
+| `AI_PROVIDER_ORDER` | Optionnel — ex. `gemini,groq,mistral` |
+
+Sans clé IA : scoring rule-based amélioré uniquement (comportement valide).
 
 
 
