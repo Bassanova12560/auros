@@ -6,6 +6,8 @@ import { SITE_URL } from "@/lib/comparators/site";
 const PRIORITY: Record<string, number> = {
   "/": 1,
   "/green": 0.92,
+  "/green/market": 0.91,
+  "/green/register": 0.87,
   "/green/compare": 0.88,
   "/green/standards": 0.86,
   "/green/label": 0.85,

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
@@ -20,6 +20,8 @@ type Props = {
   radiusKm?: number;
   actorTypeLabels?: Record<GreenMarketActorType, string>;
   popupViewSheetLabel?: string;
+  /** Accessible name for the map region (WCAG landmark) */
+  mapAriaLabel?: string;
   /** Fit map to worldwide actor bounds (default for marketplace hub) */
   fitGlobal?: boolean;
   /** @deprecated Use fitGlobal */
@@ -33,6 +35,7 @@ export function GreenMarketMap({
   radiusKm,
   actorTypeLabels,
   popupViewSheetLabel = "View listing",
+  mapAriaLabel = "Green marketplace map",
   fitGlobal: fitGlobalProp,
   fitFrance = false,
   className = "",
@@ -42,6 +45,15 @@ export function GreenMarketMap({
   const mapRef = useRef<L.Map | null>(null);
   const layerRef = useRef<L.LayerGroup | null>(null);
   const circleRef = useRef<L.Circle | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 639px)");
+    const update = () => setIsMobile(mq.matches);
+    update();
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
+  }, []);
 
   const worldBounds = useMemo(() => {
     const [[swLat, swLon], [neLat, neLon]] = globalLatLngBounds();
@@ -70,8 +82,9 @@ export function GreenMarketMap({
       maxZoom: 18,
     }).addTo(map);
 
+    const initPad: [number, number] = isMobile ? [20, 20] : [12, 12];
     if (fitGlobal) {
-      map.fitBounds(worldBounds, { padding: [12, 12], maxZoom: 4 });
+      map.fitBounds(worldBounds, { padding: initPad, maxZoom: 4 });
     }
 
     layerRef.current = L.layerGroup().addTo(map);
@@ -83,7 +96,7 @@ export function GreenMarketMap({
       layerRef.current = null;
       circleRef.current = null;
     };
-  }, [center.lat, center.lon, fitGlobal, worldBounds]);
+  }, [center.lat, center.lon, fitGlobal, worldBounds, isMobile]);
 
   useEffect(() => {
     const map = mapRef.current;
@@ -127,7 +140,14 @@ export function GreenMarketMap({
         `<a href="${escapeHtmlAttr(sheetHref)}" style="display:inline-block;margin-top:8px;font-size:11px;letter-spacing:0.04em;text-transform:uppercase;color:#4ade80">${escapeHtmlAttr(popupViewSheetLabel)} →</a>`,
       ].join("<br/>");
       L.marker([actor.lat, actor.lon], { icon })
-        .bindPopup(popupHtml)
+        .bindPopup(popupHtml, {
+          maxWidth: isMobile ? 280 : 320,
+          minWidth: isMobile ? 200 : 220,
+          closeButton: true,
+          autoPanPaddingTopLeft: isMobile ? [16, 16] : [12, 12],
+          autoPanPaddingBottomRight: isMobile ? [16, 56] : [12, 12],
+          className: "green-market-popup",
+        })
         .addTo(layer);
     }
 
@@ -139,12 +159,14 @@ export function GreenMarketMap({
         const lonSpan = ne.lng - sw.lng;
         const latSpan = ne.lat - sw.lat;
         const worldwide = lonSpan > 50 || latSpan > 35;
+        const pad: [number, number] = isMobile ? [48, 24] : [32, 32];
         map.fitBounds(bounds.pad(worldwide ? 0.2 : 0.15), {
-          padding: [32, 32],
+          padding: pad,
           maxZoom: worldwide ? 3 : 8,
         });
       } else {
-        map.fitBounds(worldBounds, { padding: [16, 16], maxZoom: 4 });
+        const pad: [number, number] = isMobile ? [24, 20] : [16, 16];
+        map.fitBounds(worldBounds, { padding: pad, maxZoom: 4 });
       }
       return;
     }
@@ -154,7 +176,8 @@ export function GreenMarketMap({
       if (radiusKm) {
         bounds.extend([center.lat, center.lon]);
       }
-      map.fitBounds(bounds, { padding: [40, 40], maxZoom: 10 });
+      const pad: [number, number] = isMobile ? [48, 24] : [40, 40];
+      map.fitBounds(bounds, { padding: pad, maxZoom: 10 });
     } else {
       map.setView([center.lat, center.lon], 6);
     }
@@ -168,12 +191,15 @@ export function GreenMarketMap({
     radiusKm,
     actorTypeLabels,
     popupViewSheetLabel,
+    isMobile,
   ]);
 
   return (
     <div
       ref={containerRef}
-      className={`h-[min(420px,55vh)] w-full border border-white/[0.08] ${className}`}
+      role="region"
+      aria-label={mapAriaLabel}
+      className={`h-[min(280px,42vh)] min-h-[240px] w-full touch-pan-x touch-pan-y border border-white/[0.08] sm:h-[min(380px,50vh)] md:h-[min(420px,55vh)] ${className}`}
     />
   );
 }

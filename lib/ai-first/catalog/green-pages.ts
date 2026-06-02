@@ -14,6 +14,7 @@ import {
   GREEN_PRATICIEN_EXAM_ROUTE,
   GREEN_PRODUCERS_ROUTE,
   GREEN_REGISTRY_ROUTE,
+  GREEN_REGISTER_ROUTE,
   GREEN_ROUTE,
   GREEN_STANDARDS_ROUTE,
   GREEN_STORERS_ROUTE,
@@ -337,6 +338,36 @@ export const greenMarketPage = enrichPage({
   relatedPaths: [GREEN_ROUTE, GREEN_PRODUCERS_ROUTE, GREEN_STORERS_ROUTE],
 });
 
+export const greenRegisterPage = enrichPage({
+  id: "green-register",
+  path: GREEN_REGISTER_ROUTE,
+  title: "Référencer un acteur | AUROS Green",
+  description:
+    "Soumettez une fiche producteur, stockeur, rechargeur ou consommateur — revue AUROS sous 48 h, publication sur la carte mondiale.",
+  summary:
+    "Formulaire référencement acteur AUROS Green : géolocalisation ville+pays, type d'acteur, contact — publication sur la marketplace après modération.",
+  contentType: "landing",
+  language: "multi",
+  indexable: true,
+  lastUpdated: "2026-06-02",
+  keywords: [
+    "référencer producteur solaire",
+    "marketplace énergie verte inscription",
+    "register green energy actor",
+  ],
+  intents: [
+    "Publier ma fiche producteur solaire",
+    "Apparaître sur la carte AUROS Green",
+    "Référencer stockage batterie",
+  ],
+  audience: ["producteurs", "stockeurs", "collectivités", "PME énergie"],
+  facts: [
+    { key: "Revue", value: "48 h ouvrées — modération AUROS" },
+    { key: "Carte", value: `${GREEN_MARKET_ROUTE} — vue mondiale Leaflet` },
+  ],
+  relatedPaths: [GREEN_MARKET_ROUTE, GREEN_ROUTE, GREEN_LABEL_ROUTE],
+});
+
 export const greenProducersPage = enrichPage({
   id: "green-producers",
   path: GREEN_PRODUCERS_ROUTE,
@@ -409,6 +440,7 @@ export const greenPages: AiFirstPage[] = [
   greenHomePage,
   greenAboutPage,
   greenMarketPage,
+  greenRegisterPage,
   greenProducersPage,
   greenStorersPage,
   greenChargersPage,

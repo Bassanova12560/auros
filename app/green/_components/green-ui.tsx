@@ -117,6 +117,40 @@ export function GreenFieldLabel({ children }: { children: ReactNode }) {
   );
 }
 
+export function GreenFormStepBar({
+  current,
+  total,
+  label,
+}: {
+  current: number;
+  total: number;
+  label: string;
+}) {
+  const pct = total > 0 ? Math.round((current / total) * 100) : 0;
+  return (
+    <div className="mb-6" aria-label={label}>
+      <div className="flex items-center justify-between gap-3">
+        <p className="font-mono text-[10px] uppercase tracking-wider text-white/45">{label}</p>
+        <p className="font-mono text-[10px] tabular-nums text-green-royal-bright">
+          {current}/{total}
+        </p>
+      </div>
+      <div
+        className="mt-2 h-0.5 w-full bg-white/[0.08]"
+        role="progressbar"
+        aria-valuenow={current}
+        aria-valuemin={1}
+        aria-valuemax={total}
+      >
+        <div
+          className="h-full bg-green-royal transition-[width] duration-300"
+          style={{ width: `${pct}%` }}
+        />
+      </div>
+    </div>
+  );
+}
+
 export function GreenBackLink({
   href,
   children,

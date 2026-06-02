@@ -24,6 +24,13 @@ export type GreenMarketMessages = {
       allEnergy: string;
       side: string;
       allSides: string;
+      search: string;
+      searchPlaceholder: string;
+    };
+    pagination: {
+      prev: string;
+      next: string;
+      page: (page: number, totalPages: number) => string;
     };
     actorTypes: Record<GreenMarketActorType | "all", string>;
     energyTypes: Record<GreenMarketEnergyType | "all", string>;
@@ -32,6 +39,9 @@ export type GreenMarketMessages = {
     listingsTitle: string;
     listingsEmpty: string;
     mapActorsEmpty: string;
+    mapEmptyHint: string;
+    mapEmptyWiden: string;
+    mapEmptyRegister: string;
     actorsListEmpty: string;
     countriesLegend: (count: number) => string;
     liveBadge: string;
@@ -54,6 +64,7 @@ export type GreenMarketMessages = {
       success: string;
       successPending: string;
       errorInvalid: string;
+      errorRateLimit: string;
     };
     table: {
       actor: string;
@@ -104,6 +115,13 @@ const FR: GreenMarketMessages = {
       allEnergy: "Toutes",
       side: "Transaction",
       allSides: "Toutes",
+      search: "Recherche",
+      searchPlaceholder: "Ville, pays ou nom d'acteur…",
+    },
+    pagination: {
+      prev: "Précédent",
+      next: "Suivant",
+      page: (page, totalPages) => `Page ${page} / ${totalPages}`,
     },
     actorTypes: {
       all: "Tous",
@@ -131,8 +149,11 @@ const FR: GreenMarketMessages = {
     },
     listingsTitle: "Offres & demandes",
     listingsEmpty: "Aucune annonce ne correspond aux filtres.",
-    mapActorsEmpty:
-      "Aucun acteur dans ce rayon — élargissez le filtre ou réinitialisez le rayon.",
+    mapActorsEmpty: "Aucun acteur ne correspond aux filtres actuels.",
+    mapEmptyHint:
+      "Élargissez le rayon, réinitialisez la recherche ou référencez votre structure.",
+    mapEmptyWiden: "Réinitialiser les filtres",
+    mapEmptyRegister: "Référencer mon acteur",
     actorsListEmpty: "Aucun acteur de ce type pour l'instant — consultez la carte mondiale.",
     countriesLegend: (count) =>
       count === 1 ? "1 pays sur la carte" : `${count} pays représentés (données indicatives)`,
@@ -161,6 +182,7 @@ const FR: GreenMarketMessages = {
       success: "Annonce publiée.",
       successPending: "Annonce reçue — publication après validation AUROS.",
       errorInvalid: "Vérifiez les champs saisis.",
+      errorRateLimit: "Trop de tentatives — réessayez dans une heure.",
     },
     table: {
       actor: "Acteur",
@@ -243,6 +265,13 @@ const EN: GreenMarketMessages = {
       allEnergy: "All",
       side: "Transaction",
       allSides: "All",
+      search: "Search",
+      searchPlaceholder: "City, country or actor name…",
+    },
+    pagination: {
+      prev: "Previous",
+      next: "Next",
+      page: (page, totalPages) => `Page ${page} / ${totalPages}`,
     },
     actorTypes: {
       all: "All",
@@ -270,8 +299,10 @@ const EN: GreenMarketMessages = {
     },
     listingsTitle: "Offers & requests",
     listingsEmpty: "No listings match your filters.",
-    mapActorsEmpty:
-      "No actors in this radius — widen filters or reset the radius.",
+    mapActorsEmpty: "No actors match your current filters.",
+    mapEmptyHint: "Widen the radius, clear search, or register your organisation.",
+    mapEmptyWiden: "Reset filters",
+    mapEmptyRegister: "Register my actor",
     actorsListEmpty: "No actors of this type yet — see the worldwide map.",
     countriesLegend: (count) =>
       count === 1 ? "1 country on map" : `${count} countries represented (indicative data)`,
@@ -300,6 +331,7 @@ const EN: GreenMarketMessages = {
       success: "Listing published.",
       successPending: "Listing received — published after AUROS validation.",
       errorInvalid: "Check the fields entered.",
+      errorRateLimit: "Too many attempts — try again in one hour.",
     },
     table: {
       actor: "Actor",
@@ -382,6 +414,13 @@ const ES: GreenMarketMessages = {
       allEnergy: "Todas",
       side: "Transacción",
       allSides: "Todas",
+      search: "Búsqueda",
+      searchPlaceholder: "Ciudad, país o nombre del actor…",
+    },
+    pagination: {
+      prev: "Anterior",
+      next: "Siguiente",
+      page: (page, totalPages) => `Página ${page} / ${totalPages}`,
     },
     actorTypes: {
       all: "Todos",
@@ -409,8 +448,11 @@ const ES: GreenMarketMessages = {
     },
     listingsTitle: "Ofertas y demandas",
     listingsEmpty: "Ningún anuncio coincide con los filtros.",
-    mapActorsEmpty:
-      "Ningún actor en este radio — amplíe los filtros o restablezca el radio.",
+    mapActorsEmpty: "Ningún actor coincide con los filtros actuales.",
+    mapEmptyHint:
+      "Amplíe el radio, borre la búsqueda o registre su estructura.",
+    mapEmptyWiden: "Restablecer filtros",
+    mapEmptyRegister: "Registrar mi actor",
     actorsListEmpty: "Ningún actor de este tipo por ahora — consulte el mapa mundial.",
     countriesLegend: (count) =>
       count === 1 ? "1 país en el mapa" : `${count} países representados (datos indicativos)`,
@@ -439,6 +481,7 @@ const ES: GreenMarketMessages = {
       success: "Anuncio publicado.",
       successPending: "Anuncio recibido — publicación tras validación AUROS.",
       errorInvalid: "Revise los campos introducidos.",
+      errorRateLimit: "Demasiados intentos — inténtelo de nuevo en una hora.",
     },
     table: {
       actor: "Actor",

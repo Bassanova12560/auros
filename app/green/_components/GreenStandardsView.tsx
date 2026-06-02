@@ -1,7 +1,17 @@
 "use client";
 
+import Link from "next/link";
+
 import { useLocale } from "@/app/_components/i18n/LocaleProvider";
-import { GREEN_RTMS_PILLARS, GREEN_ROUTE, getGreenMessages } from "@/lib/green";
+import {
+  GREEN_COMPARE_ROUTE,
+  GREEN_LABEL_ROUTE,
+  GREEN_MARKET_ROUTE,
+  GREEN_REGISTRY_ROUTE,
+  GREEN_RTMS_PILLARS,
+  GREEN_ROUTE,
+  getGreenMessages,
+} from "@/lib/green";
 
 import {
   GreenBackLink,
@@ -20,6 +30,27 @@ export function GreenStandardsView() {
   return (
     <div className="page-inner page-inner--4xl mx-auto px-4 pb-20 pt-12 md:px-6 md:pt-14">
       <GreenPageHeader eyebrow={s.eyebrow} title={s.title} intro={s.intro} compact />
+
+      <nav
+        className="mt-10 grid gap-px border border-emerald-500/25 bg-emerald-500/10 sm:grid-cols-2 lg:grid-cols-4"
+        aria-label={s.quickNavAria}
+      >
+        {[
+          { href: GREEN_MARKET_ROUTE, title: s.quickNav.market },
+          { href: GREEN_REGISTRY_ROUTE, title: s.quickNav.registry },
+          { href: GREEN_COMPARE_ROUTE, title: s.quickNav.compare },
+          { href: GREEN_LABEL_ROUTE, title: s.quickNav.label },
+        ].map((item) => (
+          <Link
+            key={item.href}
+            href={item.href}
+            className="flex min-h-[72px] items-center justify-between bg-black px-5 py-4 text-sm text-emerald-400 transition hover:bg-emerald-500/5"
+          >
+            <span>{item.title}</span>
+            <span className="font-mono text-white/30">→</span>
+          </Link>
+        ))}
+      </nav>
 
       <GreenPanel className="mt-12">
         <div className="p-6 md:p-8">

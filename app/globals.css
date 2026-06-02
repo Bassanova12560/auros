@@ -400,3 +400,22 @@ select.jurisdiction-field option[value=""] {
   background: transparent !important;
   border: none !important;
 }
+
+.leaflet-popup.green-market-popup .leaflet-popup-content {
+  margin: 12px 14px;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.leaflet-popup.green-market-popup .leaflet-popup-content a {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.leaflet-popup.green-market-popup .leaflet-popup-close-button {
+  min-width: 44px;
+  min-height: 44px;
+  font-size: 22px;
+  line-height: 44px;
+}

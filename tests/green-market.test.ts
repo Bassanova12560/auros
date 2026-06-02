@@ -24,11 +24,14 @@ import { GREEN_MARKET_CENTER } from "../lib/green/market/types";
 import { GLOBAL_DEMO_ACTORS } from "../lib/green/market/global-demo-data";
 import { getGreenMarketSnapshot, resolveLiveMarketActors } from "../lib/green/market/green-market-db";
 import { geocodeCity } from "../lib/green/market/geocode";
+import { matchesGreenMarketSearch } from "../lib/green/market/search";
 import {
   formatGreenMarketLocation,
   getGreenMarketMessages,
 } from "../lib/green/market-i18n";
 import { getGreenMessages } from "../lib/green/i18n";
+import { greenCompareRowsToCsv } from "../lib/green/compare-csv";
+import { GREEN_COMPARE_ROWS } from "../lib/green/compare-data";
 
 describe("green/market-data", () => {
   it("has mock actors across four types including non-France", () => {
@@ -98,14 +101,60 @@ describe("green/market-data", () => {
   });
 });
 
+describe("green/market-search", () => {
+  it("matches city, country and actor name case-insensitively", () => {
+    assert.ok(
+      matchesGreenMarketSearch("lyon", {
+        name: "Solar Lyon",
+        city: "Lyon",
+        country: "France",
+      })
+    );
+    assert.ok(
+      matchesGreenMarketSearch("casablanca", {
+        name: "Atlas Storage",
+        city: "Casablanca",
+        country: "Morocco",
+      })
+    );
+    assert.ok(!matchesGreenMarketSearch("tokyo", { name: "Paris PV", city: "Paris", country: "France" }));
+    assert.ok(matchesGreenMarketSearch("", { name: "Any", city: "X", country: "Y" }));
+  });
+});
+
 describe("green/market-i18n", () => {
   for (const locale of ["fr", "en", "es"] as const) {
     it(`returns market messages for ${locale}`, () => {
       const m = getGreenMarketMessages(locale);
       assert.ok(m.market.title.length > 0);
+      assert.ok(m.market.filters.searchPlaceholder.length > 0);
+      assert.ok(m.market.form.errorRateLimit.length > 0);
+      assert.ok(m.market.mapEmptyWiden.length > 0);
+      assert.ok(m.market.mapEmptyRegister.length > 0);
       assert.ok(m.actors.producer.title.length > 0);
     });
   }
+});
+
+describe("green/hub-onboarding", () => {
+  for (const locale of ["fr", "en", "es"] as const) {
+    it(`exposes 3 onboarding steps for ${locale}`, () => {
+      const o = getGreenMessages(locale).hub.onboarding;
+      assert.equal(o.steps.length, 3);
+      assert.ok(o.stepLabel(1, 3).includes("1"));
+      assert.ok(o.toggle.length > 0);
+    });
+  }
+});
+
+describe("green/compare-csv", () => {
+  it("builds CSV header and rows from compare data", () => {
+    const labels = getGreenMessages("fr").compare;
+    const csv = greenCompareRowsToCsv(GREEN_COMPARE_ROWS, labels);
+    assert.ok(csv.startsWith(labels.table.project));
+    assert.ok(csv.includes("Toucan Protocol"));
+    assert.ok(csv.split("\n").length >= GREEN_COMPARE_ROWS.length + 1);
+  });
 });
 
 describe("green/market-routes", () => {

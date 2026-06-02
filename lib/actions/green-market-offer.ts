@@ -7,6 +7,7 @@ import type {
   GreenMarketOfferSide,
 } from "@/lib/green/market/types";
 import { geocodeCity } from "@/lib/green/market/geocode";
+import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
 import { insertGreenMarketOffer } from "@/lib/green/market/green-market-db";
 import { notifyGreenMarketSheets } from "@/lib/green/market/sheets-notify";
 import {
@@ -36,11 +37,16 @@ export type SaveGreenMarketOfferInput = {
 export type SaveGreenMarketOfferResult =
   | { ok: true; id: string; pending: boolean }
   | { ok: false; error: "invalid" }
+  | { ok: false; error: "rate_limit" }
   | { ok: false; error: "database"; message: string };
 
 export async function saveGreenMarketOfferAction(
   input: SaveGreenMarketOfferInput
 ): Promise<SaveGreenMarketOfferResult> {
+  const ip = await getClientIp();
+  const { allowed } = checkRateLimit(`green-market-offer:${ip}`, 8, 3_600_000);
+  if (!allowed) return { ok: false, error: "rate_limit" };
+
   const actorName = input.actorName.trim();
   const city = input.city.trim();
   const country = input.country.trim();

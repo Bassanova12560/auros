@@ -100,6 +100,10 @@ export function GreenOfferForm({ onPublished, dbAvailable }: Props) {
           return;
         }
 
+        if (result.error === "rate_limit") {
+          setError(m.form.errorRateLimit);
+          return;
+        }
         if (result.error !== "database") {
           setError(m.form.errorInvalid);
           return;

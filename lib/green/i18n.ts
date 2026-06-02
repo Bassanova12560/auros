@@ -37,6 +37,13 @@ export type GreenMessages = {
     moreSections: {
       toggle: string;
     };
+    onboarding: {
+      toggle: string;
+      intro: string;
+      stepLabel: (current: number, total: number) => string;
+      steps: readonly { title: string; body: string; cta: string }[];
+      wizardHint: string;
+    };
     whyRwa: {
       title: string;
       rtmsBadge: string;
@@ -163,8 +170,12 @@ export type GreenMessages = {
       submitting: string;
       success: string;
       successBody: string;
+      stepOf: (current: number, total: number) => string;
       errorInvalid: string;
+      errorRateLimit: string;
     };
+    successMy: string;
+    successMarket: string;
     backLink: string;
   };
   about: {
@@ -195,6 +206,13 @@ export type GreenMessages = {
     methodologyIntro: string;
     methodologySteps: readonly { step: string; detail: string }[];
     pillars: Record<"real" | "transparent" | "measurable" | "sound", { name: string; tagline: string; bullets: readonly string[] }>;
+    quickNavAria: string;
+    quickNav: {
+      market: string;
+      registry: string;
+      compare: string;
+      label: string;
+    };
     backLink: string;
   };
   compare: {
@@ -219,6 +237,7 @@ export type GreenMessages = {
     registryCta: string;
     registrySectionTitle: string;
     registrySectionIntro: string;
+    exportCsv: string;
     backLink: string;
   };
   label: {
@@ -234,11 +253,29 @@ export type GreenMessages = {
       contactName: string;
       email: string;
       website: string;
+      websitePlaceholder: string;
       country: string;
       description: string;
+      stepOf: (current: number, total: number) => string;
+      step1Title: string;
+      step2Title: string;
+      next: string;
+      back: string;
       submit: string;
       submitting: string;
       success: string;
+      successHint: string;
+      successMy: string;
+      successStandards: string;
+      successRegistry: string;
+      successMarket: string;
+      document: string;
+      documentHint: string;
+      documentErrorType: string;
+      documentErrorSize: string;
+      documentErrorUpload: string;
+      errorInvalid: string;
+      errorRateLimit: string;
       projectTypes: Record<GreenProjectType, string>;
     };
     backLink: string;
@@ -384,6 +421,30 @@ const FR: GreenMessages = {
     },
     moreSections: {
       toggle: "Méthodologie, actifs & registre",
+    },
+    onboarding: {
+      toggle: "Par où commencer ? (3 étapes)",
+      intro:
+        "RTMS pour cadrer un dossier, la place de marché pour trouver des acteurs, l'inscription pour référencer le vôtre — le reste du hub reste accessible ci-dessous.",
+      stepLabel: (current, total) => `Étape ${current} / ${total}`,
+      steps: [
+        {
+          title: "Standards RTMS",
+          body: "Grille Réel · Transparent · Mesurable · Sain — critères publiés, revue documentaire sur dossier fourni.",
+          cta: "Voir RTMS",
+        },
+        {
+          title: "Place de marché",
+          body: "Carte mondiale, filtres par type d'acteur et annonces vente/achat — données indicatives, pas un conseil.",
+          cta: "Ouvrir le marché",
+        },
+        {
+          title: "Référencer un acteur",
+          body: "Producteur, stockeur, rechargeur ou consommateur — revue AUROS sous 48 h ouvrées avant publication.",
+          cta: "S'inscrire",
+        },
+      ],
+      wizardHint: "Structurer un dossier RWA vert (wizard AUROS)",
     },
     whyRwa: {
       title: "Pourquoi un RWA vert ?",
@@ -641,8 +702,12 @@ const FR: GreenMessages = {
       submitting: "Envoi…",
       success: "Fiche reçue",
       successBody: "Revue AUROS sous 48 h ouvrées — vous serez contacté à l'e-mail indiqué.",
+      stepOf: (current, total) => `Étape ${current} sur ${total}`,
       errorInvalid: "Vérifiez les champs obligatoires.",
+      errorRateLimit: "Trop de tentatives — réessayez dans une heure.",
     },
+    successMy: "Mes fiches",
+    successMarket: "Place de marché",
     backLink: "← Retour au hub Green",
   },
   about: {
@@ -804,6 +869,13 @@ const FR: GreenMessages = {
         ],
       },
     },
+    quickNavAria: "Navigation écosystème Green",
+    quickNav: {
+      market: "Place de marché",
+      registry: "Registre public",
+      compare: "Comparateur",
+      label: "Candidature label",
+    },
     backLink: "← Retour AUROS Green",
   },
   compare: {
@@ -843,6 +915,7 @@ const FR: GreenMessages = {
     registrySectionTitle: "Registre AUROS Green",
     registrySectionIntro:
       "Projets passés revue RTMS — cas pilotes pédagogiques clairement identifiés, distincts des références marché ci-dessous.",
+    exportCsv: "Exporter CSV",
     backLink: "← Retour AUROS Green",
   },
   label: {
@@ -867,11 +940,31 @@ const FR: GreenMessages = {
       contactName: "Contact",
       email: "E-mail professionnel",
       website: "Site ou documentation",
+      websitePlaceholder: "https://exemple.com",
       country: "Pays / juridiction",
       description: "Description courte (impact, token, stade)",
+      stepOf: (current, total) => `Étape ${current} sur ${total}`,
+      step1Title: "Identité du projet",
+      step2Title: "Description & pièce jointe",
+      next: "Continuer",
+      back: "Retour",
       submit: "Envoyer la candidature",
       submitting: "Envoi…",
       success: "Candidature reçue — nous revenons vers vous sous 5 jours ouvrés.",
+      successHint:
+        "Consultez les standards RTMS pendant la revue documentaire (5 jours ouvrés).",
+      successMy: "Mes fiches",
+      successStandards: "Standards RTMS",
+      successRegistry: "Registre public",
+      successMarket: "Place de marché",
+      document: "PDF justificatif (optionnel)",
+      documentHint: "PDF uniquement, 5 Mo max — dossier technique ou synthèse RTMS.",
+      documentErrorType: "Format non accepté — PDF uniquement.",
+      documentErrorSize: "Fichier trop volumineux (max. 5 Mo).",
+      documentErrorUpload:
+        "Candidature enregistrée, mais le PDF n'a pas pu être joint — réessayez par e-mail.",
+      errorInvalid: "Vérifiez les champs obligatoires.",
+      errorRateLimit: "Trop de tentatives — réessayez dans une heure.",
       projectTypes: {
         solar: "Solaire",
         wind: "Éolien",
@@ -1063,6 +1156,30 @@ const EN: GreenMessages = {
     },
     moreSections: {
       toggle: "Methodology, assets & registry",
+    },
+    onboarding: {
+      toggle: "Where to start (3 steps)",
+      intro:
+        "RTMS to frame a dossier, marketplace to find actors, registration to list yours — the rest of the hub stays below.",
+      stepLabel: (current, total) => `Step ${current} / ${total}`,
+      steps: [
+        {
+          title: "RTMS standards",
+          body: "Real · Transparent · Measurable · Sound — published criteria, document review on submitted dossier.",
+          cta: "View RTMS",
+        },
+        {
+          title: "Marketplace",
+          body: "World map, actor-type filters and buy/sell listings — indicative data, not advice.",
+          cta: "Open market",
+        },
+        {
+          title: "Register an actor",
+          body: "Producer, storer, charger or consumer — AUROS review within 48 business hours before publication.",
+          cta: "Register",
+        },
+      ],
+      wizardHint: "Structure a green RWA dossier (AUROS wizard)",
     },
     whyRwa: {
       title: "Why a green RWA?",
@@ -1320,8 +1437,12 @@ const EN: GreenMessages = {
       submitting: "Sending…",
       success: "Profile received",
       successBody: "AUROS review within 48 business hours — we will contact you at the email provided.",
+      stepOf: (current, total) => `Step ${current} of ${total}`,
       errorInvalid: "Check required fields.",
+      errorRateLimit: "Too many attempts — try again in one hour.",
     },
+    successMy: "My listings",
+    successMarket: "Marketplace",
     backLink: "← Back to Green hub",
   },
   about: {
@@ -1483,6 +1604,13 @@ const EN: GreenMessages = {
         ],
       },
     },
+    quickNavAria: "Green ecosystem navigation",
+    quickNav: {
+      market: "Marketplace",
+      registry: "Public registry",
+      compare: "Comparator",
+      label: "Label application",
+    },
     backLink: "← Back to AUROS Green",
   },
   compare: {
@@ -1522,6 +1650,7 @@ const EN: GreenMessages = {
     registrySectionTitle: "AUROS Green registry",
     registrySectionIntro:
       "RTMS-reviewed projects — pedagogical pilot cases clearly marked, separate from market references below.",
+    exportCsv: "Export CSV",
     backLink: "← Back to AUROS Green",
   },
   label: {
@@ -1546,11 +1675,30 @@ const EN: GreenMessages = {
       contactName: "Contact name",
       email: "Professional email",
       website: "Website or documentation",
+      websitePlaceholder: "https://example.com",
       country: "Country / jurisdiction",
       description: "Short description (impact, token, stage)",
+      stepOf: (current, total) => `Step ${current} of ${total}`,
+      step1Title: "Project identity",
+      step2Title: "Description & attachment",
+      next: "Continue",
+      back: "Back",
       submit: "Submit application",
       submitting: "Sending…",
       success: "Application received — we will respond within 5 business days.",
+      successHint: "Review RTMS standards while we assess your dossier (5 business days).",
+      successMy: "My listings",
+      successStandards: "RTMS standards",
+      successRegistry: "Public registry",
+      successMarket: "Marketplace",
+      document: "Supporting PDF (optional)",
+      documentHint: "PDF only, 5 MB max — technical dossier or RTMS summary.",
+      documentErrorType: "Unsupported format — PDF only.",
+      documentErrorSize: "File too large (max 5 MB).",
+      documentErrorUpload:
+        "Application saved but PDF could not be attached — retry by email.",
+      errorInvalid: "Check required fields.",
+      errorRateLimit: "Too many attempts — try again in one hour.",
       projectTypes: {
         solar: "Solar",
         wind: "Wind",
@@ -1742,6 +1890,30 @@ const ES: GreenMessages = {
     },
     moreSections: {
       toggle: "Metodología, activos y registro",
+    },
+    onboarding: {
+      toggle: "¿Por dónde empezar? (3 pasos)",
+      intro:
+        "RTMS para encuadrar un dossier, mercado para encontrar actores, registro para referenciar el suyo — el resto del hub sigue abajo.",
+      stepLabel: (current, total) => `Paso ${current} / ${total}`,
+      steps: [
+        {
+          title: "Estándares RTMS",
+          body: "Real · Transparente · Medible · Sano — criterios publicados, revisión documental sobre dossier aportado.",
+          cta: "Ver RTMS",
+        },
+        {
+          title: "Mercado",
+          body: "Mapa mundial, filtros por tipo de actor y anuncios compra/venta — datos indicativos, no consejo.",
+          cta: "Abrir mercado",
+        },
+        {
+          title: "Referenciar un actor",
+          body: "Productor, almacenador, recargador o consumidor — revisión AUROS en 48 h laborables antes de publicación.",
+          cta: "Registrarse",
+        },
+      ],
+      wizardHint: "Estructurar un dossier RWA verde (wizard AUROS)",
     },
     whyRwa: {
       title: "¿Por qué un RWA verde?",
@@ -2003,8 +2175,12 @@ const ES: GreenMessages = {
       submitting: "Enviando…",
       success: "Ficha recibida",
       successBody: "Revisión AUROS en 48 h laborables — contacto al e-mail indicado.",
+      stepOf: (current, total) => `Paso ${current} de ${total}`,
       errorInvalid: "Revise los campos obligatorios.",
+      errorRateLimit: "Demasiados intentos — inténtelo de nuevo en una hora.",
     },
+    successMy: "Mis fichas",
+    successMarket: "Mercado",
     backLink: "← Volver al hub Green",
   },
   about: {
@@ -2166,6 +2342,13 @@ const ES: GreenMessages = {
         ],
       },
     },
+    quickNavAria: "Navegación ecosistema Green",
+    quickNav: {
+      market: "Mercado",
+      registry: "Registro público",
+      compare: "Comparador",
+      label: "Solicitud etiqueta",
+    },
     backLink: "← Volver a AUROS Green",
   },
   compare: {
@@ -2205,6 +2388,7 @@ const ES: GreenMessages = {
     registrySectionTitle: "Registro AUROS Green",
     registrySectionIntro:
       "Proyectos revisados RTMS — casos piloto pedagógicos claramente identificados, distintos de las referencias de mercado abajo.",
+    exportCsv: "Exportar CSV",
     backLink: "← Volver a AUROS Green",
   },
   label: {
@@ -2229,11 +2413,31 @@ const ES: GreenMessages = {
       contactName: "Contacto",
       email: "E-mail profesional",
       website: "Sitio o documentación",
+      websitePlaceholder: "https://ejemplo.com",
       country: "País / jurisdicción",
       description: "Descripción breve (impacto, token, fase)",
+      stepOf: (current, total) => `Paso ${current} de ${total}`,
+      step1Title: "Identidad del proyecto",
+      step2Title: "Descripción y adjunto",
+      next: "Continuar",
+      back: "Volver",
       submit: "Enviar solicitud",
       submitting: "Enviando…",
       success: "Solicitud recibida — respondemos en 5 días hábiles.",
+      successHint:
+        "Consulte los estándares RTMS durante la revisión (5 días hábiles).",
+      successMy: "Mis fichas",
+      successStandards: "Estándares RTMS",
+      successRegistry: "Registro público",
+      successMarket: "Mercado",
+      document: "PDF justificativo (opcional)",
+      documentHint: "Solo PDF, 5 MB máx. — dossier técnico o síntesis RTMS.",
+      documentErrorType: "Formato no aceptado — solo PDF.",
+      documentErrorSize: "Archivo demasiado grande (máx. 5 MB).",
+      documentErrorUpload:
+        "Solicitud guardada pero el PDF no se adjuntó — reintente por e-mail.",
+      errorInvalid: "Revise los campos obligatorios.",
+      errorRateLimit: "Demasiados intentos — inténtelo de nuevo en una hora.",
       projectTypes: {
         solar: "Solar",
         wind: "Eólico",

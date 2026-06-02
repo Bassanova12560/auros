@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useCallback } from "react";
 
 import { useLocale } from "@/app/_components/i18n/LocaleProvider";
 import {
@@ -11,6 +12,10 @@ import {
   getGreenMessages,
   greenVerifyPath,
 } from "@/lib/green";
+import {
+  downloadGreenCompareCsv,
+  greenCompareRowsToCsv,
+} from "@/lib/green/compare-csv";
 import type { GreenRegistryProjectRow } from "@/lib/green/green-registry";
 
 import {
@@ -45,6 +50,12 @@ export function GreenCompareView({ registryProjects }: Props) {
   const c = m.compare;
   const r = m.registry;
   const rows = GREEN_COMPARE_ROWS;
+
+  const handleExportCsv = useCallback(() => {
+    if (rows.length === 0) return;
+    const csv = greenCompareRowsToCsv(rows, c);
+    downloadGreenCompareCsv(csv);
+  }, [rows, c]);
 
   return (
     <div className="page-inner page-inner--6xl mx-auto px-4 pb-20 pt-12 md:px-6 md:pt-14">
@@ -150,7 +161,16 @@ export function GreenCompareView({ registryProjects }: Props) {
         </div>
       </GreenPanel>
 
-      <div className="mt-8 flex flex-wrap gap-6">
+      <div className="mt-8 flex flex-wrap items-center gap-6">
+        {rows.length > 0 ? (
+          <button
+            type="button"
+            onClick={handleExportCsv}
+            className="rounded-lg border border-emerald-500/40 px-4 py-2 font-mono text-[11px] uppercase tracking-wider text-emerald-500 transition hover:border-emerald-400 hover:text-emerald-400"
+          >
+            {c.exportCsv}
+          </button>
+        ) : null}
         <Link
           href={AUROS_COMPARE_ROUTE}
           className="font-mono text-[11px] uppercase tracking-wider text-emerald-500 hover:text-emerald-400"

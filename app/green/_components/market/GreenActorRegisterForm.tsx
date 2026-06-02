@@ -11,7 +11,7 @@ import { GREEN_MARKET_ROUTE } from "@/lib/green/constants";
 import { getGreenMessages } from "@/lib/green/i18n";
 import { getGreenMarketMessages } from "@/lib/green/market-i18n";
 
-import { GreenFieldLabel, GreenPanel, greenBtnClass } from "../green-ui";
+import { GreenFieldLabel, GreenFormStepBar, GreenPanel, greenBtnClass } from "../green-ui";
 
 const ACTOR_TYPES: GreenMarketActorType[] = ["producer", "storer", "charger", "consumer"];
 const ENERGY_TYPES: GreenMarketEnergyType[] = ["solar", "wind", "hydro", "battery", "mixed"];
@@ -19,8 +19,8 @@ const ENERGY_TYPES: GreenMarketEnergyType[] = ["solar", "wind", "hydro", "batter
 export function GreenActorRegisterForm() {
   const { locale } = useLocale();
   const searchParams = useSearchParams();
-  const r = getGreenMessages(locale).register.form;
-  const mm = getGreenMessages(locale);
+  const gm = getGreenMessages(locale);
+  const r = gm.register.form;
   const market = getGreenMarketMessages(locale).market;
 
   const [pending, startTransition] = useTransition();
@@ -43,6 +43,7 @@ export function GreenActorRegisterForm() {
   const [energyType, setEnergyType] = useState<GreenMarketEnergyType>("solar");
   const [done, setDone] = useState(false);
   const [error, setError] = useState(false);
+  const [rateLimited, setRateLimited] = useState(false);
 
   const inputClass =
     "w-full rounded-lg border border-white/[0.12] bg-black px-4 py-3 text-sm text-white outline-none focus:border-white/30";
@@ -50,6 +51,7 @@ export function GreenActorRegisterForm() {
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError(false);
+    setRateLimited(false);
     const cap = Number(capacityKwh);
     const price = pricePerKwh.trim() ? Number(pricePerKwh) : undefined;
     if (!Number.isFinite(cap)) return;
@@ -71,14 +73,19 @@ export function GreenActorRegisterForm() {
         setDone(true);
         return;
       }
+      if (result.error === "rate_limit") {
+        setError(true);
+        setRateLimited(true);
+        return;
+      }
+      setRateLimited(false);
       setError(true);
     });
   }
 
   if (done) {
-    const myLabel =
-      locale === "fr" ? "Mes fiches" : locale === "es" ? "Mis fichas" : "My listings";
-    const marketLabel = mm.hub.map.cta;
+    const myLabel = gm.register.successMy;
+    const marketLabel = gm.register.successMarket;
     return (
       <GreenPanel className="p-8 text-center">
         <p className="font-display text-xl font-semibold text-white">{r.success}</p>
@@ -102,16 +109,23 @@ export function GreenActorRegisterForm() {
   }
 
   const typeLabels: Record<GreenMarketActorType, string> = {
-    producer: mm.hub.actors.find((a) => a.id === "producer")?.title ?? "Producer",
-    storer: mm.hub.actors.find((a) => a.id === "storer")?.title ?? "Storer",
-    charger: mm.hub.actors.find((a) => a.id === "charger")?.title ?? "Charger",
-    consumer: mm.hub.actors.find((a) => a.id === "consumer")?.title ?? "Consumer",
+    producer: gm.hub.actors.find((a) => a.id === "producer")?.title ?? "Producer",
+    storer: gm.hub.actors.find((a) => a.id === "storer")?.title ?? "Storer",
+    charger: gm.hub.actors.find((a) => a.id === "charger")?.title ?? "Charger",
+    consumer: gm.hub.actors.find((a) => a.id === "consumer")?.title ?? "Consumer",
   };
+
+  const registerStepLabel = r.stepOf(1, 1);
 
   return (
     <GreenPanel>
       <form onSubmit={handleSubmit} className="space-y-4 p-6 md:p-8">
-        {error ? <p className="text-sm text-red-400">{r.errorInvalid}</p> : null}
+        <GreenFormStepBar current={1} total={1} label={registerStepLabel} />
+        {error ? (
+          <p className="text-sm text-red-400" role="alert">
+            {rateLimited ? r.errorRateLimit : r.errorInvalid}
+          </p>
+        ) : null}
         <div className="grid gap-4 md:grid-cols-2">
           <label className="block md:col-span-2">
             <GreenFieldLabel>{r.type}</GreenFieldLabel>

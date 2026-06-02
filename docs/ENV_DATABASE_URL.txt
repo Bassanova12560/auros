@@ -1,0 +1,5 @@
+# Remplir le mot de passe Supabase (Dashboard > Project Settings > Database) puis copier dans .env.local :
+# DATABASE_URL=postgresql://postgres:YOUR_PASSWORD_HERE@db.pvxfvdvuomgancflhmji.supabase.co:5432/postgres
+
+Ou definir une ligne active (sans #) :
+DATABASE_URL=postgresql://postgres:YOUR_PASSWORD_HERE@db.pvxfvdvuomgancflhmji.supabase.co:5432/postgres

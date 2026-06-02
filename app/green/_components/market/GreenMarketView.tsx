@@ -4,11 +4,14 @@ import Link from "next/link";
 import dynamic from "next/dynamic";
 import { useEffect, useMemo, useState } from "react";
 
+import { matchesGreenMarketSearch } from "@/lib/green/market/search";
+
 import { useLocale } from "@/app/_components/i18n/LocaleProvider";
 import {
   GREEN_CHARGERS_ROUTE,
   GREEN_CONSUMERS_ROUTE,
   GREEN_PRODUCERS_ROUTE,
+  GREEN_REGISTER_ROUTE,
   GREEN_ROUTE,
   GREEN_STORERS_ROUTE,
 } from "@/lib/green";
@@ -40,12 +43,14 @@ import {
 } from "../green-ui";
 import { GreenOfferForm } from "./GreenOfferForm";
 
+const OFFERS_PAGE_SIZE = 10;
+
 const GreenMarketMap = dynamic(
   () => import("./GreenMarketMap").then((m) => m.GreenMarketMap),
   {
     ssr: false,
-    loading: () => (
-      <div className="h-[min(420px,55vh)] animate-pulse bg-white/[0.04]" />
+      loading: () => (
+      <div className="min-h-[240px] h-[min(280px,42vh)] animate-pulse bg-white/[0.04] sm:h-[min(380px,50vh)] md:h-[min(420px,55vh)]" />
     ),
   }
 );
@@ -63,6 +68,8 @@ export function GreenMarketView({ snapshot }: Props) {
   const [radiusKm, setRadiusKm] = useState<GreenMarketRadiusKm | 0>(0);
   const [energyFilter, setEnergyFilter] = useState<GreenMarketEnergyType | "all">("all");
   const [sideFilter, setSideFilter] = useState<GreenMarketOfferSide | "all">("all");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [offersPage, setOffersPage] = useState(1);
   const [localOffers, setLocalOffers] = useState<GreenMarketOffer[]>([]);
 
   useEffect(() => {
@@ -85,9 +92,23 @@ export function GreenMarketView({ snapshot }: Props) {
     [snapshot.actors]
   );
 
+  useEffect(() => {
+    setOffersPage(1);
+  }, [actorFilter, radiusKm, energyFilter, sideFilter, searchQuery]);
+
   const filteredActors = useMemo(() => {
     return snapshot.actors.filter((a) => {
       if (actorFilter !== "all" && a.type !== actorFilter) return false;
+      if (
+        !matchesGreenMarketSearch(searchQuery, {
+          name: a.name,
+          city: a.city,
+          country: a.country,
+          region: a.region,
+        })
+      ) {
+        return false;
+      }
       if (
         radiusKm &&
         !withinRadiusKm(a.lat, a.lon, mapCenter.lat, mapCenter.lon, radiusKm)
@@ -96,7 +117,14 @@ export function GreenMarketView({ snapshot }: Props) {
       }
       return true;
     });
-  }, [snapshot.actors, actorFilter, radiusKm, mapCenter.lat, mapCenter.lon]);
+  }, [
+    snapshot.actors,
+    actorFilter,
+    radiusKm,
+    mapCenter.lat,
+    mapCenter.lon,
+    searchQuery,
+  ]);
 
   const mapCountryCount = useMemo(
     () =>
@@ -111,6 +139,15 @@ export function GreenMarketView({ snapshot }: Props) {
       if (energyFilter !== "all" && o.energyType !== energyFilter) return false;
       if (sideFilter !== "all" && o.side !== sideFilter) return false;
       if (
+        !matchesGreenMarketSearch(searchQuery, {
+          name: o.actorName,
+          city: o.city,
+          country: o.country,
+        })
+      ) {
+        return false;
+      }
+      if (
         radiusKm &&
         !withinRadiusKm(o.lat, o.lon, mapCenter.lat, mapCenter.lon, radiusKm)
       ) {
@@ -118,7 +155,26 @@ export function GreenMarketView({ snapshot }: Props) {
       }
       return true;
     });
-  }, [allOffers, energyFilter, sideFilter, radiusKm, mapCenter.lat, mapCenter.lon]);
+  }, [
+    allOffers,
+    energyFilter,
+    sideFilter,
+    radiusKm,
+    mapCenter.lat,
+    mapCenter.lon,
+    searchQuery,
+  ]);
+
+  const offersTotalPages = Math.max(1, Math.ceil(filteredOffers.length / OFFERS_PAGE_SIZE));
+  const safeOffersPage = Math.min(offersPage, offersTotalPages);
+  const paginatedOffers = useMemo(
+    () =>
+      filteredOffers.slice(
+        (safeOffersPage - 1) * OFFERS_PAGE_SIZE,
+        safeOffersPage * OFFERS_PAGE_SIZE
+      ),
+    [filteredOffers, safeOffersPage]
+  );
 
   const selectClass =
     "rounded-lg border border-white/[0.12] bg-black px-3 py-2 text-sm text-white outline-none focus:border-white/30";
@@ -169,6 +225,19 @@ export function GreenMarketView({ snapshot }: Props) {
           })}
         </div>
         <div className="mt-3 flex flex-wrap gap-3">
+          <label className="flex min-w-[200px] flex-1 flex-col gap-1 sm:max-w-md">
+            <span className="font-mono text-[10px] uppercase tracking-wider text-white/40">
+              {mm.filters.search}
+            </span>
+            <input
+              type="search"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder={mm.filters.searchPlaceholder}
+              className={selectClass}
+              aria-label={mm.filters.search}
+            />
+          </label>
           <label className="flex flex-col gap-1">
             <span className="font-mono text-[10px] uppercase tracking-wider text-white/40">
               {mm.filters.radius}
@@ -188,9 +257,32 @@ export function GreenMarketView({ snapshot }: Props) {
           </label>
         </div>
         {filteredActors.length === 0 ? (
-          <p className="mt-4 border border-white/[0.08] bg-white/[0.02] px-4 py-6 text-sm text-white/50">
-            {mm.mapActorsEmpty}
-          </p>
+          <div
+            className="mt-4 border border-white/[0.08] bg-white/[0.02] px-4 py-6"
+            role="status"
+          >
+            <p className="text-sm text-white/50">{mm.mapActorsEmpty}</p>
+            <p className="mt-2 text-sm text-white/40">{mm.mapEmptyHint}</p>
+            <div className="mt-4 flex flex-wrap gap-3">
+              <button
+                type="button"
+                onClick={() => {
+                  setActorFilter("all");
+                  setRadiusKm(0);
+                  setSearchQuery("");
+                }}
+                className="rounded-lg border border-white/[0.12] px-4 py-2 font-mono text-[11px] tracking-wide text-white/60 transition hover:border-white/25 hover:text-white"
+              >
+                {mm.mapEmptyWiden}
+              </button>
+              <Link
+                href={GREEN_REGISTER_ROUTE}
+                className="rounded-lg border border-green-royal/40 bg-green-royal/10 px-4 py-2 font-mono text-[11px] tracking-wide text-green-royal-bright transition hover:border-green-royal hover:text-white"
+              >
+                {mm.mapEmptyRegister} →
+              </Link>
+            </div>
+          </div>
         ) : null}
         <div className="mt-4">
           <GreenMarketMap
@@ -205,6 +297,7 @@ export function GreenMarketView({ snapshot }: Props) {
               consumer: mm.actorTypes.consumer,
             }}
             popupViewSheetLabel={mm.popupViewSheet}
+            mapAriaLabel={mm.mapTitle}
           />
         </div>
         {filteredActors.length > 0 ? (
@@ -304,7 +397,7 @@ export function GreenMarketView({ snapshot }: Props) {
                   </td>
                 </tr>
               ) : (
-                filteredOffers.map((offer) => (
+                paginatedOffers.map((offer) => (
                   <tr key={offer.id} className="border-b border-white/[0.06] text-white/80">
                     <td className="px-4 py-3 font-medium text-white">
                       <span className="inline-flex flex-wrap items-center gap-2">
@@ -330,6 +423,32 @@ export function GreenMarketView({ snapshot }: Props) {
             </tbody>
           </table>
         </GreenPanel>
+        {filteredOffers.length > OFFERS_PAGE_SIZE ? (
+          <nav
+            className="mt-4 flex flex-wrap items-center justify-between gap-3"
+            aria-label={mm.pagination.page(safeOffersPage, offersTotalPages)}
+          >
+            <button
+              type="button"
+              disabled={safeOffersPage <= 1}
+              onClick={() => setOffersPage((p) => Math.max(1, p - 1))}
+              className="rounded-lg border border-white/[0.12] px-4 py-2 font-mono text-[11px] tracking-wide text-white/60 transition hover:border-white/25 hover:text-white disabled:opacity-40"
+            >
+              {mm.pagination.prev}
+            </button>
+            <p className="font-mono text-[10px] uppercase tracking-wider text-white/45">
+              {mm.pagination.page(safeOffersPage, offersTotalPages)}
+            </p>
+            <button
+              type="button"
+              disabled={safeOffersPage >= offersTotalPages}
+              onClick={() => setOffersPage((p) => Math.min(offersTotalPages, p + 1))}
+              className="rounded-lg border border-white/[0.12] px-4 py-2 font-mono text-[11px] tracking-wide text-white/60 transition hover:border-white/25 hover:text-white disabled:opacity-40"
+            >
+              {mm.pagination.next}
+            </button>
+          </nav>
+        ) : null}
       </section>
 
       <div className="mt-10">

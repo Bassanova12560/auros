@@ -6,6 +6,7 @@ import {
   sendGreenLabelReceived,
 } from "@/lib/emails/send";
 import type { GreenProjectType } from "@/lib/green/constants";
+import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 
 const VALID_TYPES: GreenProjectType[] = [
@@ -30,11 +31,16 @@ export type SaveGreenLabelInput = {
 export type SaveGreenLabelResult =
   | { ok: true; id: string }
   | { ok: false; error: "invalid" }
+  | { ok: false; error: "rate_limit" }
   | { ok: false; error: "database"; message: string };
 
 export async function saveGreenLabelAction(
   input: SaveGreenLabelInput
 ): Promise<SaveGreenLabelResult> {
+  const ip = await getClientIp();
+  const { allowed } = checkRateLimit(`green-label:${ip}`, 5, 3_600_000);
+  if (!allowed) return { ok: false, error: "rate_limit" };
+
   const email = input.email.trim().toLowerCase();
   if (
     !input.projectName.trim() ||
