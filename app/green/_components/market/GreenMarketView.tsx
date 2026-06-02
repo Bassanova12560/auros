@@ -55,6 +55,7 @@ import {
   GreenSectionTitle,
 } from "../green-ui";
 import { GreenOfferForm } from "./GreenOfferForm";
+import { greenMarketOfferPath } from "@/lib/green/market/offer-routes";
 
 const OFFERS_PAGE_SIZE = 10;
 
@@ -552,10 +553,13 @@ export function GreenMarketView({ snapshot }: Props) {
                 paginatedOffers.map((offer) => (
                   <tr key={offer.id} className="border-b border-white/[0.06] text-white/80">
                     <td className="px-4 py-3 font-medium text-white">
-                      <span className="inline-flex flex-wrap items-center gap-2">
+                      <Link
+                        href={greenMarketOfferPath(offer.id)}
+                        className="inline-flex flex-wrap items-center gap-2 transition hover:text-green-royal-bright"
+                      >
                         {offer.actorName}
                         <GreenListingBadge tier={offer.listingTier} labels={mm.listingTier} />
-                      </span>
+                      </Link>
                     </td>
                     <td className="px-4 py-3">{mm.sides[offer.side]}</td>
                     <td className="px-4 py-3 tabular-nums">
@@ -568,7 +572,17 @@ export function GreenMarketView({ snapshot }: Props) {
                       {formatGreenMarketLocation(offer.city, offer.country)}
                     </td>
                     <td className="px-4 py-3">{formatMarketDate(offer.createdAt, locale)}</td>
-                    <td className="px-4 py-3">{mm.status[offer.status]}</td>
+                    <td className="px-4 py-3">
+                      <span className="inline-flex flex-col gap-1">
+                        <span>{mm.status[offer.status]}</span>
+                        <Link
+                          href={greenMarketOfferPath(offer.id)}
+                          className="font-mono text-[10px] uppercase tracking-wider text-emerald-500/70 hover:text-emerald-400"
+                        >
+                          {mm.viewOffer} →
+                        </Link>
+                      </span>
+                    </td>
                   </tr>
                 ))
               )}

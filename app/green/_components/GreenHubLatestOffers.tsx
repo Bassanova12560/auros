@@ -4,6 +4,7 @@ import Link from "next/link";
 
 import { useLocale } from "@/app/_components/i18n/LocaleProvider";
 import { GREEN_MARKET_ROUTE, getGreenMessages } from "@/lib/green";
+import { greenMarketOfferPath } from "@/lib/green/market/offer-routes";
 import type { GreenMarketOffer } from "@/lib/green/market/types";
 import {
   formatGreenMarketLocation,
@@ -31,19 +32,23 @@ export function GreenHubLatestOffers({ offers }: Props) {
       <ul className="mt-6 grid gap-px border border-white/[0.08] bg-white/[0.08] md:grid-cols-3">
         {latest.map((offer) => (
           <li key={offer.id} className="flex flex-col bg-black px-5 py-5 md:px-6 md:py-6">
-            <div className="flex flex-wrap items-center gap-2">
-              <p className="font-display text-base font-semibold text-white">{offer.actorName}</p>
-              <GreenListingBadge tier={offer.listingTier} labels={mm.listingTier} />
-            </div>
-            <p className="mt-2 font-mono text-[10px] uppercase tracking-wider text-white/40">
-              {mm.sides[offer.side]} · {mm.energyTypes[offer.energyType]}
-            </p>
-            <p className="mt-2 text-sm text-white/55">
-              {formatMarketNumber(offer.volumeKwh, locale)} kWh · {offer.pricePerKwh.toFixed(3)} €/kWh
-            </p>
-            <p className="mt-1 text-sm text-white/40">
-              {formatGreenMarketLocation(offer.city, offer.country)}
-            </p>
+            <Link href={greenMarketOfferPath(offer.id)} className="group flex flex-1 flex-col">
+              <div className="flex flex-wrap items-center gap-2">
+                <p className="font-display text-base font-semibold text-white transition group-hover:text-green-royal-bright">
+                  {offer.actorName}
+                </p>
+                <GreenListingBadge tier={offer.listingTier} labels={mm.listingTier} />
+              </div>
+              <p className="mt-2 font-mono text-[10px] uppercase tracking-wider text-white/40">
+                {mm.sides[offer.side]} · {mm.energyTypes[offer.energyType]}
+              </p>
+              <p className="mt-2 text-sm text-white/55">
+                {formatMarketNumber(offer.volumeKwh, locale)} kWh · {offer.pricePerKwh.toFixed(3)} €/kWh
+              </p>
+              <p className="mt-1 text-sm text-white/40">
+                {formatGreenMarketLocation(offer.city, offer.country)}
+              </p>
+            </Link>
           </li>
         ))}
       </ul>

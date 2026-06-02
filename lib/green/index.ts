@@ -2,6 +2,7 @@ export {
   GREEN_ROUTE,
   GREEN_ABOUT_ROUTE,
   GREEN_MARKET_ROUTE,
+  GREEN_MARKET_OFFER_ROUTE,
   GREEN_PRODUCERS_ROUTE,
   GREEN_REGISTER_ROUTE,
   GREEN_STORERS_ROUTE,
@@ -53,6 +54,20 @@ export type { GreenHubImpact } from "./hub-impact";
 export { withinRadiusKm, haversineKm } from "./market/geo";
 export { getGreenMarketSnapshot } from "./market/green-market-db";
 export type { GreenMarketSnapshot, GreenMarketMode } from "./market/green-market-db";
+export {
+  getGreenMarketOfferById,
+  listGreenMarketOfferSitemapIds,
+} from "./market/green-market-db";
+export type { GreenMarketOfferDetail } from "./market/offer-detail";
+export {
+  greenMarketOfferPath,
+  buildGreenMarketOfferShareUrl,
+  buildGreenMarketActorFocusUrl,
+  findDemoGreenMarketOfferById,
+  normalizeGreenMarketOfferId,
+  isGreenMarketOfferUuid,
+} from "./market/offer-routes";
+export { formatGreenMarketOfferTitle } from "./market/offer-detail";
 export { saveGreenMarketOfferAction } from "../actions/green-market-offer";
 export { saveGreenMarketActorAction } from "../actions/green-market-actor";
 export type { GreenMessages } from "./i18n";

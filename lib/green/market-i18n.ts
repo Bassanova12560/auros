@@ -88,6 +88,33 @@ export type GreenMarketMessages = {
     savedSearchApply: string;
     savedSearchRemove: string;
     savedSearchEmpty: string;
+    viewOffer: string;
+  };
+  offerDetail: {
+    eyebrow: string;
+    mapTitle: string;
+    descriptionTitle: string;
+    actorTitle: string;
+    viewActorOnMap: string;
+    datesTitle: string;
+    publishedAt: string;
+    validFrom: string;
+    validUntil: string;
+    noEndDate: string;
+    shareOffer: string;
+    shareCopied: string;
+    backToMarket: string;
+    notFoundTitle: string;
+    notFoundBody: string;
+    indicativeNote: string;
+    defaultDescription: (
+      side: string,
+      energy: string,
+      city: string,
+      country: string,
+      volumeKwh: number,
+      pricePerKwh: number
+    ) => string;
   };
   actors: Record<
     GreenMarketActorType,
@@ -215,6 +242,29 @@ const FR: GreenMarketMessages = {
     savedSearchApply: "Appliquer",
     savedSearchRemove: "Supprimer",
     savedSearchEmpty: "Aucune recherche enregistrée sur cet appareil.",
+    viewOffer: "Voir l'annonce",
+  },
+  offerDetail: {
+    eyebrow: "Annonce marketplace",
+    mapTitle: "Localisation",
+    descriptionTitle: "Description",
+    actorTitle: "Acteur",
+    viewActorOnMap: "Voir sur la carte",
+    datesTitle: "Dates",
+    publishedAt: "Publiée le",
+    validFrom: "Début",
+    validUntil: "Fin",
+    noEndDate: "Non précisée",
+    shareOffer: "Copier le lien de l'annonce",
+    shareCopied: "Lien copié",
+    backToMarket: "← Retour à la place de marché",
+    notFoundTitle: "Annonce introuvable",
+    notFoundBody:
+      "Cette annonce n'existe pas ou n'est plus disponible. Consultez la place de marché pour les offres actuelles.",
+    indicativeNote:
+      "Données indicatives MVP — sans engagement ni conseil. Contactez l'acteur pour toute transaction.",
+    defaultDescription: (side, energy, city, country, volumeKwh, pricePerKwh) =>
+      `Annonce ${side.toLowerCase()} — ${energy.toLowerCase()} à ${city}, ${country}. Volume indicatif ${volumeKwh.toLocaleString("fr-FR")} kWh · ${pricePerKwh.toFixed(3)} €/kWh.`,
   },
   actors: {
     producer: {
@@ -373,6 +423,29 @@ const EN: GreenMarketMessages = {
     savedSearchApply: "Apply",
     savedSearchRemove: "Remove",
     savedSearchEmpty: "No saved searches on this device.",
+    viewOffer: "View listing",
+  },
+  offerDetail: {
+    eyebrow: "Marketplace listing",
+    mapTitle: "Location",
+    descriptionTitle: "Description",
+    actorTitle: "Actor",
+    viewActorOnMap: "View on map",
+    datesTitle: "Dates",
+    publishedAt: "Published",
+    validFrom: "Start",
+    validUntil: "End",
+    noEndDate: "Not specified",
+    shareOffer: "Copy listing link",
+    shareCopied: "Link copied",
+    backToMarket: "← Back to marketplace",
+    notFoundTitle: "Listing not found",
+    notFoundBody:
+      "This listing does not exist or is no longer available. Browse the marketplace for current offers.",
+    indicativeNote:
+      "Indicative MVP data — not advice or commitment. Contact the actor for any transaction.",
+    defaultDescription: (side, energy, city, country, volumeKwh, pricePerKwh) =>
+      `${side} listing — ${energy.toLowerCase()} in ${city}, ${country}. Indicative volume ${volumeKwh.toLocaleString("en-GB")} kWh · ${pricePerKwh.toFixed(3)} €/kWh.`,
   },
   actors: {
     producer: {
@@ -532,6 +605,29 @@ const ES: GreenMarketMessages = {
     savedSearchApply: "Aplicar",
     savedSearchRemove: "Eliminar",
     savedSearchEmpty: "No hay búsquedas guardadas en este dispositivo.",
+    viewOffer: "Ver anuncio",
+  },
+  offerDetail: {
+    eyebrow: "Anuncio marketplace",
+    mapTitle: "Ubicación",
+    descriptionTitle: "Descripción",
+    actorTitle: "Actor",
+    viewActorOnMap: "Ver en el mapa",
+    datesTitle: "Fechas",
+    publishedAt: "Publicado",
+    validFrom: "Inicio",
+    validUntil: "Fin",
+    noEndDate: "No especificada",
+    shareOffer: "Copiar enlace del anuncio",
+    shareCopied: "Enlace copiado",
+    backToMarket: "← Volver al mercado",
+    notFoundTitle: "Anuncio no encontrado",
+    notFoundBody:
+      "Este anuncio no existe o ya no está disponible. Consulte el mercado para ofertas actuales.",
+    indicativeNote:
+      "Datos indicativos MVP — sin compromiso ni consejo. Contacte al actor para cualquier transacción.",
+    defaultDescription: (side, energy, city, country, volumeKwh, pricePerKwh) =>
+      `Anuncio ${side.toLowerCase()} — ${energy.toLowerCase()} en ${city}, ${country}. Volumen indicativo ${volumeKwh.toLocaleString("es-ES")} kWh · ${pricePerKwh.toFixed(3)} €/kWh.`,
   },
   actors: {
     producer: {

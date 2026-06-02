@@ -106,9 +106,14 @@ Sans clé IA : scoring rule-based amélioré uniquement (comportement valide).
 - **Registre** — bandeau stats (projets, Verified, pilotes, experts) ; recherche client sur les projets.
 - **Tests** — `tests/green-sprint7.test.ts` (`npm run test:green`).
 
-### Après Sprint 7 (backlog)
+## Sprint 8 — shipped 2026-06-03
 
-- Pages détail annonce `/green/market/offer/[id]`
+- **Pages détail annonce** — `/green/market/offer/[id]` : titre, énergie, vente/achat, prix, volume, lieu, acteur (lien + carte), description, dates ; 404 si introuvable ; i18n FR/EN/ES ; SEO + sitemap dynamique + entrée catalogue AI-first.
+- **Place de marché** — lignes et hub « dernières annonces » liées vers la fiche ; **Copier le lien de l'annonce** sur la fiche.
+- **Tests** — `tests/green-sprint8.test.ts` (routes, résolution id, catalogue, i18n).
+
+### Après Sprint 8 (backlog)
+
 - NFT, oracle, Uniswap, PricingCard boost, dark mode, Clerk sur tout `/green/*`, Lighthouse CI
 
 

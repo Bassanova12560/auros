@@ -10,6 +10,7 @@ import {
   GREEN_GUIDE_ROUTE,
   GREEN_LABEL_ROUTE,
   GREEN_MARKET_ROUTE,
+  GREEN_MARKET_OFFER_ROUTE,
   GREEN_PRATICIEN_ROUTE,
   GREEN_PRATICIEN_EXAM_ROUTE,
   GREEN_PRODUCERS_ROUTE,
@@ -336,7 +337,36 @@ export const greenMarketPage = enrichPage({
     { key: "Géolocalisation", value: "Ville + pays — Nominatim avec repli registre" },
     { key: "Annonces", value: "localStorage MVP + seed JSON + soumission registre" },
   ],
-  relatedPaths: [GREEN_ROUTE, GREEN_PRODUCERS_ROUTE, GREEN_STORERS_ROUTE],
+  relatedPaths: [GREEN_ROUTE, GREEN_PRODUCERS_ROUTE, GREEN_STORERS_ROUTE, GREEN_MARKET_OFFER_ROUTE],
+});
+
+export const greenMarketOfferPage = enrichPage({
+  id: "green-market-offer",
+  path: GREEN_MARKET_OFFER_ROUTE,
+  title: "Détail annonce marketplace | AUROS Green",
+  description:
+    "Fiche annonce énergie locale — volume, prix, acteur, localisation et carte. Données indicatives MVP.",
+  summary:
+    "Pages détail des annonces AUROS Green marketplace : offre vente/achat, acteur lié, carte Leaflet, lien retour marché avec acteur focalisé.",
+  contentType: "landing",
+  language: "multi",
+  indexable: true,
+  lastUpdated: "2026-06-03",
+  keywords: [
+    "annonce énergie verte",
+    "offre solaire marketplace",
+    "green energy listing detail",
+  ],
+  intents: [
+    "Consulter une annonce énergie avant contact",
+    "Partager une offre marketplace Green",
+  ],
+  audience: ["producteurs", "consommateurs", "fonds impact"],
+  facts: [
+    { key: "URL", value: `${GREEN_MARKET_OFFER_ROUTE}/{id}` },
+    { key: "Retour carte", value: `${GREEN_MARKET_ROUTE}?q={acteur}` },
+  ],
+  relatedPaths: [GREEN_MARKET_ROUTE, GREEN_REGISTER_ROUTE],
 });
 
 export const greenRegisterPage = enrichPage({
@@ -463,6 +493,7 @@ export const greenPages: AiFirstPage[] = [
   greenHomePage,
   greenAboutPage,
   greenMarketPage,
+  greenMarketOfferPage,
   greenRegisterPage,
   greenProducersPage,
   greenStorersPage,

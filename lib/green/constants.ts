@@ -2,6 +2,7 @@ export const GREEN_REGISTER_ROUTE = "/green/register";
 export const GREEN_ROUTE = "/green";
 export const GREEN_ABOUT_ROUTE = "/green/about";
 export const GREEN_MARKET_ROUTE = "/green/market";
+export const GREEN_MARKET_OFFER_ROUTE = "/green/market/offer";
 export const GREEN_PRODUCERS_ROUTE = "/green/producers";
 export const GREEN_STORERS_ROUTE = "/green/storers";
 export const GREEN_CHARGERS_ROUTE = "/green/chargers";

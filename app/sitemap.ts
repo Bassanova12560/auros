@@ -2,11 +2,14 @@ import type { MetadataRoute } from "next";
 
 import { getIndexablePages } from "@/lib/ai-first";
 import { SITE_URL } from "@/lib/comparators/site";
+import { listGreenMarketOfferSitemapIds } from "@/lib/green/market/green-market-db";
+import { greenMarketOfferPath } from "@/lib/green/market/offer-routes";
 
 const PRIORITY: Record<string, number> = {
   "/": 1,
   "/green": 0.92,
   "/green/market": 0.91,
+  "/green/market/offer": 0.89,
   "/green/register": 0.87,
   "/green/compare": 0.88,
   "/green/rtms-assistant": 0.84,
@@ -36,11 +39,11 @@ const FREQUENCY: Record<string, MetadataRoute.Sitemap[number]["changeFrequency"]
   "/": "weekly",
 };
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();
   const pages = getIndexablePages();
 
-  return pages.map((page) => ({
+  const staticEntries: MetadataRoute.Sitemap = pages.map((page) => ({
     url: `${SITE_URL}${page.path === "/" ? "" : page.path}`,
     lastModified: now,
     changeFrequency:
@@ -48,4 +51,19 @@ export default function sitemap(): MetadataRoute.Sitemap {
       (page.contentType === "landing" ? "monthly" : "weekly"),
     priority: PRIORITY[page.path] ?? (page.contentType === "landing" ? 0.75 : 0.7),
   }));
+
+  let offerEntries: MetadataRoute.Sitemap = [];
+  try {
+    const offers = await listGreenMarketOfferSitemapIds();
+    offerEntries = offers.slice(0, 100).map((o) => ({
+      url: `${SITE_URL}${greenMarketOfferPath(o.id)}`,
+      lastModified: new Date(o.createdAt),
+      changeFrequency: "weekly" as const,
+      priority: PRIORITY["/green/market/offer"] ?? 0.8,
+    }));
+  } catch {
+    /* demo / build without DB */
+  }
+
+  return [...staticEntries, ...offerEntries];
 }

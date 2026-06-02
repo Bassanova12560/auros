@@ -4,6 +4,11 @@ import {
   GREEN_MARKET_ACTORS,
   GREEN_MARKET_OFFERS,
 } from "./data";
+import {
+  defaultGreenMarketOfferDescription,
+  type GreenMarketOfferDetail,
+} from "./offer-detail";
+import { findDemoGreenMarketOfferById, isGreenMarketOfferUuid, normalizeGreenMarketOfferId } from "./offer-routes";
 import type {
   GreenMarketActor,
   GreenMarketListingTier,
@@ -224,6 +229,120 @@ export async function insertGreenMarketOffer(
   }
 
   return { ok: true, id: String(data.id), pending };
+}
+
+function resolveOfferActor(
+  offer: GreenMarketOffer,
+  actors: GreenMarketActor[]
+): GreenMarketActor | null {
+  if (offer.actorId && offer.actorId !== "db") {
+    const byId = actors.find((a) => a.id === offer.actorId);
+    if (byId) return byId;
+  }
+  return actors.find((a) => a.name === offer.actorName) ?? null;
+}
+
+function toOfferDetail(
+  offer: GreenMarketOffer,
+  actor: GreenMarketActor | null,
+  extras: { description?: string; startDate?: string | null; endDate?: string | null }
+): GreenMarketOfferDetail {
+  const description =
+    extras.description?.trim() ||
+    actor?.description?.trim() ||
+    defaultGreenMarketOfferDescription(offer, "fr");
+  return {
+    ...offer,
+    description,
+    startDate: extras.startDate ?? null,
+    endDate: extras.endDate ?? null,
+    actor,
+  };
+}
+
+export async function getGreenMarketOfferById(
+  rawId: string
+): Promise<GreenMarketOfferDetail | null> {
+  const id = normalizeGreenMarketOfferId(rawId);
+  if (!id) return null;
+
+  const supabase = getAdminClient();
+
+  if (supabase) {
+    try {
+      let row: Record<string, unknown> | null = null;
+
+      const byExternal = await supabase
+        .from("green_market_offers")
+        .select("*")
+        .eq("external_id", id)
+        .in("status", ["available", "pending"])
+        .maybeSingle();
+
+      if (byExternal.data) {
+        row = byExternal.data as Record<string, unknown>;
+      } else if (isGreenMarketOfferUuid(id)) {
+        const byUuid = await supabase
+          .from("green_market_offers")
+          .select("*")
+          .eq("id", id)
+          .in("status", ["available", "pending"])
+          .maybeSingle();
+        if (byUuid.data) row = byUuid.data as Record<string, unknown>;
+      }
+
+      if (row) {
+        const offer = mapOfferRow(row);
+        if (!offer) return null;
+
+        let actor: GreenMarketActor | null = null;
+        const assetId = row.asset_id ? String(row.asset_id) : null;
+
+        if (assetId) {
+          const assetRes = await supabase
+            .from("green_market_assets")
+            .select("*")
+            .eq("id", assetId)
+            .maybeSingle();
+          if (assetRes.data) {
+            actor = mapAssetRow(assetRes.data as Record<string, unknown>);
+          }
+        }
+
+        if (!actor) {
+          const snap = await getGreenMarketSnapshot();
+          actor = resolveOfferActor(offer, snap.actors);
+        }
+
+        return toOfferDetail(offer, actor, {
+          startDate: row.start_date ? String(row.start_date) : null,
+          endDate: row.end_date ? String(row.end_date) : null,
+          description: actor?.description,
+        });
+      }
+    } catch {
+      /* fall through to demo */
+    }
+  }
+
+  const demo = findDemoGreenMarketOfferById(id);
+  if (!demo) return null;
+
+  const actor =
+    GREEN_MARKET_ACTORS.find((a) => a.id === demo.actorId) ??
+    GREEN_MARKET_ACTORS.find((a) => a.name === demo.actorName) ??
+    null;
+
+  return toOfferDetail(demo, actor, { description: actor?.description });
+}
+
+export async function listGreenMarketOfferSitemapIds(): Promise<
+  Array<{ id: string; createdAt: string }>
+> {
+  const snap = await getGreenMarketSnapshot();
+  return snap.offers
+    .filter((o) => o.status === "available")
+    .map((o) => ({ id: o.id, createdAt: o.createdAt }));
 }
 
 export type InsertGreenMarketAssetInput = {
