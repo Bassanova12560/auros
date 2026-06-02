@@ -9,6 +9,10 @@ import {
   type GreenMarketAlertRow,
 } from "@/lib/green/market/alerts";
 import {
+  listGreenLabelApplicationsByEmail,
+  type GreenLabelApplicationRow,
+} from "@/lib/green/label-applications";
+import {
   listMyGreenMarketListings,
   type MyGreenMarketListing,
 } from "@/lib/green/market/green-market-db";
@@ -21,6 +25,7 @@ import { isValidCaptureEmail } from "@/lib/email-capture";
 export type GreenMyDashboard = {
   listings: MyGreenMarketListing[];
   alerts: GreenMarketAlertRow[];
+  labelApplications: GreenLabelApplicationRow[];
   email: string | null;
 };
 
@@ -34,12 +39,13 @@ export async function getGreenMyDashboardAction(): Promise<
   const email =
     user?.primaryEmailAddress?.emailAddress?.trim().toLowerCase() ?? null;
 
-  const [listings, alerts] = await Promise.all([
+  const [listings, alerts, labelApplications] = await Promise.all([
     listMyGreenMarketListings({ ownerClerkId: userId, email }),
     listGreenMarketAlertsForUser({ ownerClerkId: userId, email }),
+    email ? listGreenLabelApplicationsByEmail(email) : Promise.resolve([]),
   ]);
 
-  return { listings, alerts, email };
+  return { listings, alerts, labelApplications, email };
 }
 
 export type SaveGreenMarketAlertActionInput = {

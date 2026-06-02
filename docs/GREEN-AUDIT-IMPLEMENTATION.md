@@ -97,6 +97,20 @@ Au moins une clé serveur (jamais `NEXT_PUBLIC_*`) :
 
 Sans clé IA : scoring rule-based amélioré uniquement (comportement valide).
 
+## Sprint 7 — shipped 2026-06-02
+
+- **Espace acteur (/green/my)** — candidatures label par e-mail Clerk ; statuts `pending` / `in_review` / `approved` / `rejected` ; liens mise à jour acteur (`/green/register`) et nouvelle annonce (`/green/market#offers`).
+- **Suivi candidature label** — référence dossier après envoi ; consultation dans `/green/my#label-status` (même e-mail).
+- **Place de marché** — filtres synchronisés dans l’URL (`?actor=&radius=&energy=&side=&q=`) ; **Copier le lien filtré** ; recherches enregistrées (localStorage, max 5).
+- **Standards** — checklist RTMS interactive en **export CSV** (piliers + critères).
+- **Registre** — bandeau stats (projets, Verified, pilotes, experts) ; recherche client sur les projets.
+- **Tests** — `tests/green-sprint7.test.ts` (`npm run test:green`).
+
+### Après Sprint 7 (backlog)
+
+- Pages détail annonce `/green/market/offer/[id]`
+- NFT, oracle, Uniswap, PricingCard boost, dark mode, Clerk sur tout `/green/*`, Lighthouse CI
+
 
 
 ## Out of scope (unchanged)

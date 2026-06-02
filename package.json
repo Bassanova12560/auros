@@ -11,7 +11,7 @@
     "simulate:http": "npx tsx scripts/simulate-all.ts --http",
     "simulate:prod": "npx tsx scripts/simulate-all.ts --http --prod",
     "test": "node --import tsx --test tests/**/*.test.ts",
-    "test:green": "node --import tsx --test tests/green-market.test.ts tests/green-sprint2.test.ts",
+    "test:green": "node --import tsx --test tests/green-market.test.ts tests/green-sprint2.test.ts tests/green-sprint7.test.ts",
     "test:purchase": "npx tsx scripts/test-starter-purchase.ts",
     "test:purchase:live": "npx tsx scripts/test-starter-purchase.ts --db --http --prod",
     "test:stripe-purchase": "npx tsx scripts/test-stripe-purchase.ts",
