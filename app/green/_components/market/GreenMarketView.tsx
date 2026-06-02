@@ -1,0 +1,346 @@
+"use client";
+
+import Link from "next/link";
+import dynamic from "next/dynamic";
+import { useEffect, useMemo, useState } from "react";
+
+import { useLocale } from "@/app/_components/i18n/LocaleProvider";
+import {
+  GREEN_CHARGERS_ROUTE,
+  GREEN_CONSUMERS_ROUTE,
+  GREEN_PRODUCERS_ROUTE,
+  GREEN_ROUTE,
+  GREEN_STORERS_ROUTE,
+} from "@/lib/green";
+import type { GreenMarketSnapshot } from "@/lib/green/market/green-market-db";
+import { greenMarketCentroid, withinRadiusKm } from "@/lib/green/market/geo";
+import { readStoredGreenMarketOffers } from "@/lib/green/market/offers-storage";
+import type {
+  GreenMarketActorType,
+  GreenMarketEnergyType,
+  GreenMarketOffer,
+  GreenMarketOfferSide,
+  GreenMarketRadiusKm,
+} from "@/lib/green/market/types";
+import {
+  formatGreenMarketLocation,
+  formatMarketDate,
+  formatMarketNumber,
+  getGreenMarketMessages,
+} from "@/lib/green/market-i18n";
+import { getGreenMessages } from "@/lib/green/i18n";
+
+import {
+  GreenBackLink,
+  GreenDisclaimer,
+  GreenListingBadge,
+  GreenPageHeader,
+  GreenPanel,
+  GreenSectionTitle,
+} from "../green-ui";
+import { GreenOfferForm } from "./GreenOfferForm";
+
+const GreenMarketMap = dynamic(
+  () => import("./GreenMarketMap").then((m) => m.GreenMarketMap),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="h-[min(420px,55vh)] animate-pulse bg-white/[0.04]" />
+    ),
+  }
+);
+
+type Props = {
+  snapshot: GreenMarketSnapshot;
+};
+
+export function GreenMarketView({ snapshot }: Props) {
+  const { locale } = useLocale();
+  const mm = getGreenMarketMessages(locale).market;
+  const disclaimer = getGreenMessages(locale).disclaimer;
+
+  const [actorFilter, setActorFilter] = useState<GreenMarketActorType | "all">("all");
+  const [radiusKm, setRadiusKm] = useState<GreenMarketRadiusKm | 0>(0);
+  const [energyFilter, setEnergyFilter] = useState<GreenMarketEnergyType | "all">("all");
+  const [sideFilter, setSideFilter] = useState<GreenMarketOfferSide | "all">("all");
+  const [localOffers, setLocalOffers] = useState<GreenMarketOffer[]>([]);
+
+  useEffect(() => {
+    if (!snapshot.available) {
+      setLocalOffers(readStoredGreenMarketOffers());
+    }
+  }, [snapshot.available]);
+
+  const allOffers = useMemo(() => {
+    const byId = new Map<string, GreenMarketOffer>();
+    for (const o of snapshot.offers) byId.set(o.id, o);
+    for (const o of localOffers) byId.set(o.id, o);
+    return [...byId.values()].sort(
+      (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    );
+  }, [snapshot.offers, localOffers]);
+
+  const mapCenter = useMemo(
+    () => greenMarketCentroid(snapshot.actors),
+    [snapshot.actors]
+  );
+
+  const filteredActors = useMemo(() => {
+    return snapshot.actors.filter((a) => {
+      if (actorFilter !== "all" && a.type !== actorFilter) return false;
+      if (
+        radiusKm &&
+        !withinRadiusKm(a.lat, a.lon, mapCenter.lat, mapCenter.lon, radiusKm)
+      ) {
+        return false;
+      }
+      return true;
+    });
+  }, [snapshot.actors, actorFilter, radiusKm, mapCenter.lat, mapCenter.lon]);
+
+  const mapCountryCount = useMemo(
+    () =>
+      new Set(filteredActors.map((a) => a.country.trim()).filter(Boolean)).size,
+    [filteredActors]
+  );
+
+  const actorFilterKeys = ["all", "producer", "storer", "charger", "consumer"] as const;
+
+  const filteredOffers = useMemo(() => {
+    return allOffers.filter((o) => {
+      if (energyFilter !== "all" && o.energyType !== energyFilter) return false;
+      if (sideFilter !== "all" && o.side !== sideFilter) return false;
+      if (
+        radiusKm &&
+        !withinRadiusKm(o.lat, o.lon, mapCenter.lat, mapCenter.lon, radiusKm)
+      ) {
+        return false;
+      }
+      return true;
+    });
+  }, [allOffers, energyFilter, sideFilter, radiusKm, mapCenter.lat, mapCenter.lon]);
+
+  const selectClass =
+    "rounded-lg border border-white/[0.12] bg-black px-3 py-2 text-sm text-white outline-none focus:border-white/30";
+
+  const actorLinks = [
+    { href: GREEN_PRODUCERS_ROUTE, label: mm.actorTypes.producer },
+    { href: GREEN_STORERS_ROUTE, label: mm.actorTypes.storer },
+    { href: GREEN_CHARGERS_ROUTE, label: mm.actorTypes.charger },
+    { href: GREEN_CONSUMERS_ROUTE, label: mm.actorTypes.consumer },
+  ];
+
+  return (
+    <div className="page-inner page-inner--6xl mx-auto px-4 pb-24 pt-12 md:px-6 md:pt-16">
+      <GreenPageHeader eyebrow={mm.eyebrow} title={mm.title} intro={mm.intro} compact />
+
+      {snapshot.mode === "demo" ? (
+        <p className="mt-4 max-w-2xl border border-amber-500/20 bg-amber-500/5 px-4 py-3 text-sm leading-relaxed text-amber-200/80">
+          {mm.demoBanner}
+        </p>
+      ) : (
+        <p className="mt-4 font-mono text-[10px] tracking-wide text-green-royal-bright">
+          {mm.liveBadge}
+        </p>
+      )}
+
+      <section className="mt-10">
+        <GreenSectionTitle>{mm.mapTitle}</GreenSectionTitle>
+        <p className="mt-3 font-mono text-[10px] uppercase tracking-wider text-white/40">
+          {mm.mapActorsCountries(filteredActors.length, mapCountryCount)}
+        </p>
+        <div className="mt-4 flex flex-wrap items-center gap-2" role="group" aria-label={mm.filters.actorType}>
+          {actorFilterKeys.map((key) => {
+            const active = actorFilter === key;
+            return (
+              <button
+                key={key}
+                type="button"
+                onClick={() => setActorFilter(key)}
+                className={
+                  active
+                    ? "border border-green-royal bg-green-royal/10 px-3 py-1.5 font-mono text-[10px] uppercase tracking-wider text-green-royal-bright"
+                    : "border border-white/[0.12] px-3 py-1.5 font-mono text-[10px] uppercase tracking-wider text-white/50 transition hover:border-white/25 hover:text-white"
+                }
+              >
+                {mm.actorTypes[key]}
+              </button>
+            );
+          })}
+        </div>
+        <div className="mt-3 flex flex-wrap gap-3">
+          <label className="flex flex-col gap-1">
+            <span className="font-mono text-[10px] uppercase tracking-wider text-white/40">
+              {mm.filters.radius}
+            </span>
+            <select
+              className={selectClass}
+              value={radiusKm}
+              onChange={(e) => setRadiusKm(Number(e.target.value) as GreenMarketRadiusKm | 0)}
+            >
+              <option value={0}>{mm.filters.allActors}</option>
+              {([5, 10, 20] as const).map((km) => (
+                <option key={km} value={km}>
+                  {mm.filters.radiusKm(km)}
+                </option>
+              ))}
+            </select>
+          </label>
+        </div>
+        {filteredActors.length === 0 ? (
+          <p className="mt-4 border border-white/[0.08] bg-white/[0.02] px-4 py-6 text-sm text-white/50">
+            {mm.mapActorsEmpty}
+          </p>
+        ) : null}
+        <div className="mt-4">
+          <GreenMarketMap
+            actors={filteredActors}
+            center={mapCenter}
+            radiusKm={radiusKm || undefined}
+            fitGlobal
+            actorTypeLabels={{
+              producer: mm.actorTypes.producer,
+              storer: mm.actorTypes.storer,
+              charger: mm.actorTypes.charger,
+              consumer: mm.actorTypes.consumer,
+            }}
+            popupViewSheetLabel={mm.popupViewSheet}
+          />
+        </div>
+        {filteredActors.length > 0 ? (
+          <div className="mt-4">
+            <p className="font-mono text-[10px] uppercase tracking-wider text-white/35">
+              {mm.countriesLegend(
+                new Set(filteredActors.map((a) => a.country.trim()).filter(Boolean)).size
+              )}
+            </p>
+            <ul className="mt-2 flex flex-wrap gap-2">
+              {[...new Set(filteredActors.map((a) => a.country.trim()).filter(Boolean))]
+                .sort((a, b) => a.localeCompare(b))
+                .slice(0, 16)
+                .map((country) => (
+                  <li
+                    key={country}
+                    className="rounded border border-white/[0.1] px-2.5 py-1 font-mono text-[10px] text-white/50"
+                  >
+                    {country}
+                  </li>
+                ))}
+            </ul>
+          </div>
+        ) : null}
+      </section>
+
+      <section className="mt-12">
+        <GreenSectionTitle>{mm.actorPagesTitle}</GreenSectionTitle>
+        <div className="mt-4 flex flex-wrap gap-3">
+          {actorLinks.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              className="rounded-lg border border-white/[0.12] px-4 py-2 font-mono text-[11px] tracking-wide text-white/60 transition hover:border-white/25 hover:text-white"
+            >
+              {link.label} →
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      <section className="mt-14">
+        <GreenSectionTitle>{mm.listingsTitle}</GreenSectionTitle>
+        <div className="mt-4 flex flex-wrap gap-3">
+          <label className="flex flex-col gap-1">
+            <span className="font-mono text-[10px] uppercase tracking-wider text-white/40">
+              {mm.filters.energyType}
+            </span>
+            <select
+              className={selectClass}
+              value={energyFilter}
+              onChange={(e) => setEnergyFilter(e.target.value as GreenMarketEnergyType | "all")}
+            >
+              {(Object.keys(mm.energyTypes) as Array<GreenMarketEnergyType | "all">).map((k) => (
+                <option key={k} value={k}>
+                  {mm.energyTypes[k]}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label className="flex flex-col gap-1">
+            <span className="font-mono text-[10px] uppercase tracking-wider text-white/40">
+              {mm.filters.side}
+            </span>
+            <select
+              className={selectClass}
+              value={sideFilter}
+              onChange={(e) => setSideFilter(e.target.value as GreenMarketOfferSide | "all")}
+            >
+              {(Object.keys(mm.sides) as Array<GreenMarketOfferSide | "all">).map((k) => (
+                <option key={k} value={k}>
+                  {mm.sides[k]}
+                </option>
+              ))}
+            </select>
+          </label>
+        </div>
+
+        <GreenPanel className="mt-6 overflow-x-auto">
+          <table className="w-full min-w-[640px] text-left text-sm">
+            <thead>
+              <tr className="border-b border-white/[0.08] font-mono text-[10px] uppercase tracking-wider text-white/40">
+                <th className="px-4 py-3">{mm.table.actor}</th>
+                <th className="px-4 py-3">{mm.table.side}</th>
+                <th className="px-4 py-3">{mm.table.volume}</th>
+                <th className="px-4 py-3">{mm.table.price}</th>
+                <th className="px-4 py-3">{mm.table.location}</th>
+                <th className="px-4 py-3">{mm.table.date}</th>
+                <th className="px-4 py-3">{mm.table.status}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredOffers.length === 0 ? (
+                <tr>
+                  <td colSpan={7} className="px-4 py-8 text-muted">
+                    {mm.listingsEmpty}
+                  </td>
+                </tr>
+              ) : (
+                filteredOffers.map((offer) => (
+                  <tr key={offer.id} className="border-b border-white/[0.06] text-white/80">
+                    <td className="px-4 py-3 font-medium text-white">
+                      <span className="inline-flex flex-wrap items-center gap-2">
+                        {offer.actorName}
+                        <GreenListingBadge tier={offer.listingTier} labels={mm.listingTier} />
+                      </span>
+                    </td>
+                    <td className="px-4 py-3">{mm.sides[offer.side]}</td>
+                    <td className="px-4 py-3 tabular-nums">
+                      {formatMarketNumber(offer.volumeKwh, locale)} kWh
+                    </td>
+                    <td className="px-4 py-3 tabular-nums">
+                      {offer.pricePerKwh.toFixed(3)} €/kWh
+                    </td>
+                    <td className="px-4 py-3">
+                      {formatGreenMarketLocation(offer.city, offer.country)}
+                    </td>
+                    <td className="px-4 py-3">{formatMarketDate(offer.createdAt, locale)}</td>
+                    <td className="px-4 py-3">{mm.status[offer.status]}</td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </GreenPanel>
+      </section>
+
+      <div className="mt-10">
+        <GreenOfferForm
+          dbAvailable={snapshot.mode === "live"}
+          onPublished={(offer) => setLocalOffers((prev) => [offer, ...prev])}
+        />
+      </div>
+
+      <GreenDisclaimer>{disclaimer}</GreenDisclaimer>
+      <GreenBackLink href={GREEN_ROUTE}>{mm.backLink}</GreenBackLink>
+    </div>
+  );
+}

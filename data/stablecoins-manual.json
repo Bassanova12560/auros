@@ -1,0 +1,28 @@
+[
+  {
+    "id": "mountain-usdm",
+    "project": "mountain-protocol",
+    "platform": "Mountain Protocol",
+    "product": "USDM",
+    "apy": 5.0,
+    "tvlUsd": 0,
+    "chains": ["Ethereum", "Arbitrum"],
+    "link": "https://mountainprotocol.com",
+    "affiliate_link": "",
+    "logo": "/logos/mountain.png",
+    "category": "treasury"
+  },
+  {
+    "id": "backed-bib01",
+    "project": "backed-finance",
+    "platform": "Backed Finance",
+    "product": "bIB01",
+    "apy": 4.2,
+    "tvlUsd": 0,
+    "chains": ["Ethereum"],
+    "link": "https://backed.fi",
+    "affiliate_link": "",
+    "logo": "/logos/backed.png",
+    "category": "treasury"
+  }
+]

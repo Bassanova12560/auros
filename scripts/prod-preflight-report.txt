@@ -1,0 +1,21 @@
+AUROS prod preflight — 2026-05-29T14:26:10.062Z
+
+## Environment
+[OK] NEXT_PUBLIC_SUPABASE_URL is set
+[OK] NEXT_PUBLIC_SUPABASE_ANON_KEY is set
+[OK] SUPABASE_SECRET_KEY is set
+[OK] NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY is set
+[OK] CLERK_SECRET_KEY is set
+[OK] NEXT_PUBLIC_SITE_URL is set
+[OK] RESEND_API_KEY is set
+[OK] RESEND_FROM_EMAIL is set
+[OK] RESEND_INTERNAL_EMAIL is set
+[OK] At least one AI provider key is set
+[OK] NEXT_PUBLIC_SITE_URL uses https
+[OK] AUROS_SIMULATION is off
+[WARN] Clerk publishable key is pk_test_ — use production keys for real launch
+
+(Skip HTTP: run with --http or BASE_URL=... npm run prod:check -- --http)
+
+Summary: 12 ok, 1 warn, 0 fail
+→ Ready for deploy smoke test.

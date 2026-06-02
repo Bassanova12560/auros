@@ -1,0 +1,18 @@
+---
+description: UX psychologie AUROS — simplicité perçue + sérieux pro
+globs:
+  - app/**/*
+  - lib/**/*-i18n.ts
+  - lib/readiness-ease.ts
+  - lib/wizard-journey-i18n.ts
+---
+
+# UX psychologie AUROS
+
+Lire `docs/UX-PSYCHOLOGY.md` avant tout changement landing, wizard ou dossier.
+
+- Montrer **4 parties** wizard, pas stresser avec « 15 étapes » en gros.
+- Toujours rassurer : indicatif, réversible, data room plus tard.
+- **Maximum 3** priorités / alertes visibles ensemble.
+- Ton : banque privée moderne, pas startup hype ni audit fiscal.
+- Ne pas ajouter de sections home sans les mettre dans `LandingExplore` (replié).

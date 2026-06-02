@@ -1,0 +1,249 @@
+"use client";
+
+import Link from "next/link";
+import { useSearchParams } from "next/navigation";
+import { useEffect, useState, useTransition } from "react";
+
+import { useLocale } from "@/app/_components/i18n/LocaleProvider";
+import { saveGreenMarketActorAction } from "@/lib/actions/green-market-actor";
+import type { GreenMarketActorType, GreenMarketEnergyType } from "@/lib/green/market/types";
+import { GREEN_MARKET_ROUTE } from "@/lib/green/constants";
+import { getGreenMessages } from "@/lib/green/i18n";
+import { getGreenMarketMessages } from "@/lib/green/market-i18n";
+
+import { GreenFieldLabel, GreenPanel, greenBtnClass } from "../green-ui";
+
+const ACTOR_TYPES: GreenMarketActorType[] = ["producer", "storer", "charger", "consumer"];
+const ENERGY_TYPES: GreenMarketEnergyType[] = ["solar", "wind", "hydro", "battery", "mixed"];
+
+export function GreenActorRegisterForm() {
+  const { locale } = useLocale();
+  const searchParams = useSearchParams();
+  const r = getGreenMessages(locale).register.form;
+  const mm = getGreenMessages(locale);
+  const market = getGreenMarketMessages(locale).market;
+
+  const [pending, startTransition] = useTransition();
+  const [type, setType] = useState<GreenMarketActorType>("producer");
+
+  useEffect(() => {
+    const param = searchParams.get("type");
+    if (param && ACTOR_TYPES.includes(param as GreenMarketActorType)) {
+      setType(param as GreenMarketActorType);
+    }
+  }, [searchParams]);
+  const [name, setName] = useState("");
+  const [city, setCity] = useState("");
+  const [country, setCountry] = useState("");
+  const [region, setRegion] = useState("");
+  const [description, setDescription] = useState("");
+  const [contactEmail, setContactEmail] = useState("");
+  const [capacityKwh, setCapacityKwh] = useState("");
+  const [pricePerKwh, setPricePerKwh] = useState("");
+  const [energyType, setEnergyType] = useState<GreenMarketEnergyType>("solar");
+  const [done, setDone] = useState(false);
+  const [error, setError] = useState(false);
+
+  const inputClass =
+    "w-full rounded-lg border border-white/[0.12] bg-black px-4 py-3 text-sm text-white outline-none focus:border-white/30";
+
+  function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setError(false);
+    const cap = Number(capacityKwh);
+    const price = pricePerKwh.trim() ? Number(pricePerKwh) : undefined;
+    if (!Number.isFinite(cap)) return;
+
+    startTransition(async () => {
+      const result = await saveGreenMarketActorAction({
+        type,
+        name,
+        city,
+        country,
+        region: region || undefined,
+        description,
+        contactEmail,
+        capacityKwh: cap,
+        pricePerKwh: price,
+        energyType,
+      });
+      if (result.ok) {
+        setDone(true);
+        return;
+      }
+      setError(true);
+    });
+  }
+
+  if (done) {
+    const myLabel =
+      locale === "fr" ? "Mes fiches" : locale === "es" ? "Mis fichas" : "My listings";
+    const marketLabel = mm.hub.map.cta;
+    return (
+      <GreenPanel className="p-8 text-center">
+        <p className="font-display text-xl font-semibold text-white">{r.success}</p>
+        <p className="mt-3 text-sm text-white/55">{r.successBody}</p>
+        <div className="mt-6 flex flex-wrap justify-center gap-4">
+          <Link
+            href="/green/my"
+            className={`rounded-lg px-5 py-2.5 text-sm font-medium ${greenBtnClass}`}
+          >
+            {myLabel} →
+          </Link>
+          <Link
+            href={GREEN_MARKET_ROUTE}
+            className="rounded-lg border border-white/[0.12] px-5 py-2.5 text-sm text-white/70 transition hover:border-white/30 hover:text-white"
+          >
+            {marketLabel} →
+          </Link>
+        </div>
+      </GreenPanel>
+    );
+  }
+
+  const typeLabels: Record<GreenMarketActorType, string> = {
+    producer: mm.hub.actors.find((a) => a.id === "producer")?.title ?? "Producer",
+    storer: mm.hub.actors.find((a) => a.id === "storer")?.title ?? "Storer",
+    charger: mm.hub.actors.find((a) => a.id === "charger")?.title ?? "Charger",
+    consumer: mm.hub.actors.find((a) => a.id === "consumer")?.title ?? "Consumer",
+  };
+
+  return (
+    <GreenPanel>
+      <form onSubmit={handleSubmit} className="space-y-4 p-6 md:p-8">
+        {error ? <p className="text-sm text-red-400">{r.errorInvalid}</p> : null}
+        <div className="grid gap-4 md:grid-cols-2">
+          <label className="block md:col-span-2">
+            <GreenFieldLabel>{r.type}</GreenFieldLabel>
+            <select
+              className={`mt-2 ${inputClass}`}
+              value={type}
+              onChange={(e) => setType(e.target.value as GreenMarketActorType)}
+              disabled={pending}
+            >
+              {ACTOR_TYPES.map((t) => (
+                <option key={t} value={t}>
+                  {typeLabels[t]}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label className="block md:col-span-2">
+            <GreenFieldLabel>{r.name}</GreenFieldLabel>
+            <input
+              className={`mt-2 ${inputClass}`}
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+              disabled={pending}
+            />
+          </label>
+          <label className="block">
+            <GreenFieldLabel>{r.city}</GreenFieldLabel>
+            <input
+              className={`mt-2 ${inputClass}`}
+              value={city}
+              onChange={(e) => setCity(e.target.value)}
+              required
+              disabled={pending}
+            />
+          </label>
+          <label className="block">
+            <GreenFieldLabel>{r.country}</GreenFieldLabel>
+            <input
+              className={`mt-2 ${inputClass}`}
+              value={country}
+              onChange={(e) => setCountry(e.target.value)}
+              required
+              disabled={pending}
+              placeholder={
+                locale === "fr"
+                  ? "ex. France, Maroc, États-Unis"
+                  : locale === "es"
+                    ? "ej. España, Marruecos, Estados Unidos"
+                    : "e.g. France, Morocco, United States"
+              }
+            />
+          </label>
+          <label className="block md:col-span-2">
+            <GreenFieldLabel>{r.region}</GreenFieldLabel>
+            <input
+              className={`mt-2 ${inputClass}`}
+              value={region}
+              onChange={(e) => setRegion(e.target.value)}
+              disabled={pending}
+            />
+          </label>
+          <label className="block md:col-span-2">
+            <GreenFieldLabel>{r.description}</GreenFieldLabel>
+            <textarea
+              className={`mt-2 min-h-[100px] resize-y ${inputClass}`}
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              required
+              minLength={20}
+              disabled={pending}
+            />
+          </label>
+          <label className="block md:col-span-2">
+            <GreenFieldLabel>{r.contactEmail}</GreenFieldLabel>
+            <input
+              type="email"
+              className={`mt-2 ${inputClass}`}
+              value={contactEmail}
+              onChange={(e) => setContactEmail(e.target.value)}
+              required
+              disabled={pending}
+            />
+          </label>
+          <label className="block">
+            <GreenFieldLabel>{r.capacityKwh}</GreenFieldLabel>
+            <input
+              type="number"
+              min={1}
+              className={`mt-2 ${inputClass}`}
+              value={capacityKwh}
+              onChange={(e) => setCapacityKwh(e.target.value)}
+              required
+              disabled={pending}
+            />
+          </label>
+          <label className="block">
+            <GreenFieldLabel>{r.pricePerKwh}</GreenFieldLabel>
+            <input
+              type="number"
+              min={0}
+              step={0.001}
+              className={`mt-2 ${inputClass}`}
+              value={pricePerKwh}
+              onChange={(e) => setPricePerKwh(e.target.value)}
+              disabled={pending}
+            />
+          </label>
+          <label className="block md:col-span-2">
+            <GreenFieldLabel>{r.energyType}</GreenFieldLabel>
+            <select
+              className={`mt-2 ${inputClass}`}
+              value={energyType}
+              onChange={(e) => setEnergyType(e.target.value as GreenMarketEnergyType)}
+              disabled={pending}
+            >
+              {ENERGY_TYPES.map((t) => (
+                <option key={t} value={t}>
+                  {market.energyTypes[t]}
+                </option>
+              ))}
+            </select>
+          </label>
+        </div>
+        <button
+          type="submit"
+          disabled={pending}
+          className={`rounded-lg px-6 py-3 text-sm font-medium disabled:opacity-50 ${greenBtnClass}`}
+        >
+          {pending ? r.submitting : r.submit}
+        </button>
+      </form>
+    </GreenPanel>
+  );
+}

@@ -1,0 +1,21 @@
+AUROS Starter Kit purchase test — 2026-05-30T14:28:01.480Z
+base=http://localhost:3000
+  [OK] starter product 5000€ — 5000€ · eur
+  [OK] checkout metadata parse — starter
+  [OK] checkout metadata reject — invalid tier rejected
+  [OK] starter kit generation (post-payment) — provider=simulation · checklist=8
+  [OK] portal executive summary — 138 chars
+  [OK] portal structure block — recommendedStructure
+  [OK] portal jurisdiction rationale — jurisdictionRationale
+  [OK] portal regulatory checklist — 8 items
+  [OK] portal timeline — 4 phases
+  [OK] portal tech providers — 3 providers
+  [OK] portal next steps — 4 steps
+  [OK] portal disclaimer — disclaimer present
+  [OK] readiness card (max 3 priorities) — score=94 · 3 priorities
+  [OK] wizard prefill from purchase — Real estate · UAE · 2500000€
+  [OK] wizard seed from purchase — SimAchat
+  [OK] starter kit PDF render — 4002 bytes
+  [OK] value overview PDF render — 4466 bytes
+=== Résumé 17/17 ===
+→ Purchase pipeline OK

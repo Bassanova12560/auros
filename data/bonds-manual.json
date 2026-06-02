@@ -1,0 +1,28 @@
+[
+  {
+    "id": "backed-bib01",
+    "project": "backed-finance",
+    "platform": "Backed Finance",
+    "product": "bIB01",
+    "apy": 4.2,
+    "tvlUsd": 45000000,
+    "chains": ["Ethereum"],
+    "link": "https://backed.fi",
+    "affiliate_link": "",
+    "logo": "/logos/backed.png",
+    "category": "sovereign"
+  },
+  {
+    "id": "republic-note",
+    "project": "republic-note",
+    "platform": "Republic",
+    "product": "Republic Note",
+    "apy": 5.5,
+    "tvlUsd": 0,
+    "chains": ["Avalanche"],
+    "link": "https://republic.com/note",
+    "affiliate_link": "",
+    "logo": "/logos/republic.png",
+    "category": "corporate"
+  }
+]

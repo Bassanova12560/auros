@@ -1,0 +1,9 @@
+AUROS — achat test Stripe Starter Kit 5 000 €
+  [OK] stripe test mode — sk_test_
+  [OK] create test lead — 21a3b05a-86a4-4cd1-98cf-5da31d82635d
+  [OK] checkout session 5000€ — cs_test_b1NX0uD8EPuVaw7whBAamssRt0bpSrIA6w3cNY5wk0blTuI3MeGlJ381Ux · 5000€
+  [FAIL] stripe payment completed — timeout 600s — session cs_test_b1NX0uD8EPuVaw7whBAamssRt0bpSrIA6w3cNY5wk0blTuI3MeGlJ381Ux
+Checkout: https://checkout.stripe.com/c/pay/cs_test_b1NX0uD8EPuVaw7whBAamssRt0bpSrIA6w3cNY5wk0blTuI3MeGlJ381Ux#fidnandhYHdWcXxpYCc%2FJ2FgY2RwaXEnKSdicGRmZGhqaWBTZHdsZGtxJz8nZmprcXdqaScpJ2R1bE5gfCc%2FJ3VuWnFgdnFaMDRRZlJtSUZUY0ZLTFVWNUZzUTJmNE1nfWRrSmw1bVZKdmxRQ39wU3Rxf0A1NnRjS0wxMTRPcUhid2I0cUtpVnBrV25iMkBcX0xsMWtcTEhJV1x2QjRTbE01NX03c2pEbT19JyknY3dqaFZgd3Ngdyc%2FcXdwYCknZ2RmbmJ3anBrYUZqaWp3Jz8nJmNjY2NjYycpJ2lkfGpwcVF8dWAnPydocGlxbFpscWBoJyknYGtkZ2lgVWlkZmBtamlhYHd2Jz9xd3BgeCUl
+Ready: https://auros-delta.vercel.app/starter/ready?session_id=cs_test_b1NX0uD8EPuVaw7whBAamssRt0bpSrIA6w3cNY5wk0blTuI3MeGlJ381Ux
+Lead: 21a3b05a-86a4-4cd1-98cf-5da31d82635d
+→ Achat test incomplet

@@ -1,0 +1,41 @@
+[
+  {
+    "id": "paxos-paxg",
+    "project": "paxos-gold",
+    "platform": "Paxos",
+    "product": "PAXG",
+    "apy": 0,
+    "tvlUsd": 500000000,
+    "chains": ["Ethereum"],
+    "link": "https://paxos.com/paxgold",
+    "affiliate_link": "",
+    "logo": "/logos/paxos.png",
+    "category": "precious_metals"
+  },
+  {
+    "id": "tether-xaut",
+    "project": "tether-gold",
+    "platform": "Tether",
+    "product": "XAUT",
+    "apy": 0,
+    "tvlUsd": 650000000,
+    "chains": ["Ethereum"],
+    "link": "https://gold.tether.to",
+    "affiliate_link": "",
+    "logo": "/logos/tether.png",
+    "category": "precious_metals"
+  },
+  {
+    "id": "matrixdock-xaum",
+    "project": "matrixdock-xaum",
+    "platform": "Matrixdock",
+    "product": "XAUM",
+    "apy": 0,
+    "tvlUsd": 120000000,
+    "chains": ["Ethereum"],
+    "link": "https://matrixdock.com",
+    "affiliate_link": "",
+    "logo": "/logos/matrixdock.png",
+    "category": "precious_metals"
+  }
+]

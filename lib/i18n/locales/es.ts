@@ -1,0 +1,273 @@
+import type { Messages } from "../types";
+
+export const es: Messages = {
+  nav: {
+    score: "Puntuación",
+    tokenize: "Tokenizar",
+    dossiers: "Expedientes",
+    jurisdictions: "Jurisdicciones",
+    partners: "Plataformas",
+    login: "Acceder",
+    start: "Empezar",
+    menu: "Menú",
+  },
+  hero: {
+    eyebrow: "Activos del mundo real",
+    title: "Tokenizar el mundo real.",
+    subtitle:
+      "Puntuación, data room y estudio regulatorio — prepare su expediente antes de la plataforma RWA.",
+    ctaPrimary: "Crear mi expediente",
+    ctaEstimate: "Valorar mi activo",
+    metricAssets: "Clases de activos",
+    metricJurisdictions: "Jurisdicciones",
+    metricDossier: "Expediente medio",
+  },
+  platforms: {
+    caption: "Preparación de expediente RWA — sin comparador de plataformas",
+  },
+  score: {
+    eyebrow: "Puntuación",
+    title: "¿Su activo está listo?",
+    subtitle: "Una frase basta. Resultado al instante, sin cuenta.",
+    placeholder: "Ej. Casa de piedra 180 m² en Burdeos, 1,2 M€…",
+    submit: "Calcular puntuación",
+    emailPlaceholder: "Email (opcional)",
+    saveEmail: "Guardar",
+    emailSaved: "Guardado ✓",
+    linkCopied: "Enlace copiado",
+    linkFailed: "Error",
+    share: "Compartir puntuación",
+    reset: "Nueva estimación",
+    calculate: "Calcular",
+    shareBtn: "Compartir",
+    fullDossier: "Expediente completo",
+    otherAsset: "Otro activo",
+    disclaimer: "Puntuación indicativa — no es asesoramiento regulado",
+    indicativeNote:
+      "Puntuación indicativa según la información proporcionada. No es asesoramiento jurídico ni financiero.",
+    emptyQuery: "Describa su activo en una frase para calcular la puntuación.",
+    tierHigh: "Alto potencial de tokenización",
+    tierMid: "Buen potencial",
+    tierLow: "Preparación recomendada",
+  },
+  regulatory: {
+    eyebrow: "Cumplimiento",
+    title: "Marco regulatorio transparente",
+    subtitle:
+      "AUROS ofrece análisis indicativo — no asesoramiento legal ni financiero.",
+    kyc: "KYC / AML",
+    kycDesc:
+      "Recorrido de identidad alineado con estándares KYC/AML habituales en tokenización.",
+    jurisdictions: "Jurisdicciones cubiertas",
+    jurisdictionsDesc:
+      "Más de 40 jurisdicciones modeladas — análisis adaptado al país y marcos MiCA / locales.",
+    indicative: "Puntuación indicativa",
+    indicativeDesc:
+      "Estimación de preparación — validación final por sus asesores y el equipo AUROS.",
+    partners: "Acompañamiento AUROS",
+    partnersDesc:
+      "Estructuración del expediente y revisión humana — sin imponer una plataforma externa.",
+    disclaimer:
+      "Los resultados de AUROS son solo informativos y no constituyen asesoramiento de inversión, legal o fiscal.",
+  },
+  socialProof: {
+    eyebrow: "Pruebas",
+    title: "Propietarios de activos y operadores",
+    statDossiers: "2.400+",
+    statDossiersLabel: "Expedientes generados (piloto)",
+    statJurisdictions: "40+",
+    statJurisdictionsLabel: "Jurisdicciones modeladas",
+    statTime: "~12 min",
+    statTimeLabel: "Tiempo medio expediente",
+    statPlatforms: "5",
+    statPlatformsLabel: "Fases data room",
+    t1quote:
+      "Puntuación y expediente en una tarde — sin idas y venidas jurídicas previas.",
+    t1name: "Sofia M.",
+    t1role: "Inmobiliario · Lyon",
+    t2quote: "El expediente estructurado nos ahorró semanas.",
+    t2name: "James K.",
+    t2role: "Crédito privado · Londres",
+    t3quote: "Presentación clara para nuestros LPs.",
+    t3name: "Elena R.",
+    t3role: "Arte · Ginebra",
+  },
+  dossierPreview: {
+    eyebrow: "Entregables",
+    title: "Un estudio de preparación — no un PDF de maqueta",
+    subtitle:
+      "Tras el wizard: espacio en línea: madurez del expediente, estudio regulatorio, data room — y export PDF si hace falta.",
+    disclaimer:
+      "Esquema de las secciones reales en /dossier — su contenido y puntuación, no un viñedo de ejemplo fijo.",
+    ctaWizard: "Crear mi dossier",
+    ctaDemo: "Ver dossier demo",
+    blocks: [
+      {
+        tag: "01",
+        title: "Puntuación y admisión",
+        description:
+          "Puntuación indicativa, % admisión, máximo 3 prioridades.",
+      },
+      {
+        tag: "02",
+        title: "Estudio de tokenización",
+        description:
+          "Ruta regulatoria, tokenomics, roadmap y proveedores.",
+      },
+      {
+        tag: "03",
+        title: "Data room (15 docs)",
+        description:
+          "Prioridades + subida progresiva; lista completa plegada por defecto.",
+      },
+      {
+        tag: "04",
+        title: "Solicitud a AUROS",
+        description:
+          "Envío al equipo en 48 h — sin comparador ni logos de terceros.",
+      },
+      {
+        tag: "05",
+        title: "Exportar y compartir",
+        description: "PDF, pack legal .md, enlace — además del espacio en línea.",
+      },
+    ],
+  },
+  quickScore: {
+    title: "Estimación rápida",
+    close: "Cerrar",
+    stepAsset: "Tipo de activo",
+    stepValue: "Valor estimado",
+    stepCountry: "País del activo",
+    next: "Siguiente",
+    back: "Volver",
+    seeScore: "Ver puntuación",
+    ctaFull: "Obtener informe completo",
+    prefillNote: "El wizard se rellenará con sus 3 respuestas.",
+    resultStep: "Resultado",
+  },
+  stats: {
+    scoreMax: "Puntuación máx. (indicativa)",
+    jurisdictions: "Jurisdicciones",
+    sections: "Secciones expediente",
+    avgTime: "Tiempo medio",
+  },
+  trust: {
+    mica: "MiCA",
+    gdpr: "RGPD",
+    kyc: "KYC / AML",
+    jurisdictions: "jurisdicciones",
+  },
+  tiers: {
+    high: "Alto potencial de tokenización",
+    mid: "Buen potencial",
+    low: "Preparación recomendada",
+  },
+  quickScoreExplain: {
+    default:
+      "Puntuación indicativa según tipo de activo, valor declarado y jurisdicción.",
+    high:
+      "Perfil sólido para tokenización — expediente bien posicionado para revisión AUROS.",
+    mid:
+      "Buen potencial — complete el expediente (títulos, cumplimiento, ingresos) para maximizar elegibilidad.",
+    low:
+      "Preparación recomendada — aclare documentación y estructura jurídica.",
+  },
+  story: {
+    act1Title: "Usted posee activos reales",
+    act1Body:
+      "Inmobiliario, arte, metales, vehículos — patrimonio tangible que los mercados digitales aún no leen bien.",
+    act2Title: "El mundo digital aún no los ve",
+    act2Body:
+      "Regulación, iliquidez, documentación dispersa: la tokenización exige un lenguaje que pocos activos tienen.",
+    act3Title: "AUROS traduce el activo para on-chain",
+    act3Body:
+      "Puntuación, expediente institucional y hoja de ruta — en minutos, sin compromiso.",
+  },
+  progress: {
+    title: "Preparación para tokenización",
+    subtitle: "Complete el expediente para subir la puntuación",
+    itemAsset: "Tipo de activo identificado",
+    itemValue: "Valor estimado",
+    itemLocation: "Jurisdicción",
+    itemDescription: "Descripción detallada (20+ palabras)",
+    itemDocuments: "Documentación disponible",
+    itemDossier: "Expediente completo generado",
+  },
+  scoreReveal: {
+    tierHigh: "ALTO POTENCIAL DE TOKENIZACIÓN",
+    tierStrong: "BUEN POTENCIAL DE TOKENIZACIÓN",
+    tierModerate: "POTENCIAL MODERADO",
+    tierPrep: "PREPARACIÓN RECOMENDADA",
+    microHigh: "Top 12 % de activos en esta categoría",
+    microStrong: "Top 28 % de activos en esta categoría",
+    microModerate: "Rango mediano para esta clase de activo",
+    microPrep: "Orientación de estructuración disponible",
+  },
+  howItWorks: {
+    eyebrow: "Recorrido",
+    title: "Tres pasos hasta su expediente",
+    step1Title: "Describa el activo",
+    step1Desc: "15 pasos guiados: tipo, valor, estructura, ingresos, cumplimiento.",
+    step2Title: "Puntuación y expediente IA",
+    step2Desc: "Informe institucional, estudio regulatorio, exportación PDF.",
+    step3Title: "Envío",
+    step3Desc: "Envío al equipo AUROS, marco MiCA, próximos pasos.",
+  },
+  finalCta: {
+    title: "Avance a la tokenización con un expediente listo",
+    subtitle: "Gratis para empezar. Puntuación, expediente IA, PDF.",
+    wizard: "Iniciar wizard",
+    score: "Probar puntuación",
+  },
+  greenPromo: {
+    eyebrow: "AUROS Green",
+    title: "Ecosistema energía verde y RWA tokenizado",
+    subtitle:
+      "Mercado mundial, estándar RTMS, registro público y etiqueta Verified — estados honestos, sin greenwashing.",
+    cta: "Hub del ecosistema",
+    marketCta: "Mercado",
+    registerCta: "Vender mi excedente",
+  },
+  assetUniverse: {
+    eyebrow: "Universo RWA",
+    title: "Cada activo real, listo para tokenizar",
+    subtitle:
+      "Admisión, data room y estudio regulatorio — despliegue on-chain en fase 2.",
+    cards: [
+      {
+        title: "Inmobiliario",
+        desc: "Residencial, comercial, suelo tokenizable.",
+        stat: "€2.4T",
+        statLabel: "mercado UE (indicativo)",
+      },
+      {
+        title: "Arte y coleccionables",
+        desc: "Obras, relojes, vinos.",
+        stat: "48h",
+        statLabel: "expediente tipo",
+      },
+      {
+        title: "Crédito privado",
+        desc: "Pools institucionales estructurados.",
+        stat: "MiCA",
+        statLabel: "marco UE",
+      },
+      {
+        title: "Metales y energía",
+        desc: "Oro, infraestructura productiva.",
+        stat: "12+",
+        statLabel: "clases",
+      },
+    ],
+  },
+  footer: {
+    tagline: "Inteligencia de tokenización para activos reales.",
+    product: "Producto",
+    legal: "Legal",
+    terms: "Términos",
+    privacy: "Privacidad",
+    legalNotice: "Aviso legal",
+    rights: "AUROS · Todos los derechos reservados.",
+  },
+};

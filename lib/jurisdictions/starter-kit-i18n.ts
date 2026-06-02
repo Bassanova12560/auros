@@ -1,0 +1,148 @@
+import type { Locale } from "@/lib/i18n";
+
+export type StarterKitUiMessages = {
+  readyTitle: string;
+  readySubtitle: string;
+  pendingTitle: string;
+  pendingSubtitle: string;
+  failedTitle: string;
+  failedSubtitle: string;
+  phaseBadge: string;
+  portalTitle: string;
+  portalSubtitle: string;
+  jurisdictionHeroEyebrow: string;
+  jurisdictionHeroTitle: string;
+  jurisdictionPrimaryLabel: string;
+  jurisdictionCompareLabel: string;
+  jurisdictionUnsureNote: string;
+  sectionSummary: string;
+  sectionStructure: string;
+  sectionJurisdiction: string;
+  sectionChecklist: string;
+  sectionTimeline: string;
+  sectionTech: string;
+  sectionNext: string;
+  downloadPdf: string;
+  openWizard: string;
+  phase0Done: string;
+  phase1Title: string;
+  phase1Body: string;
+  phase1Cta: string;
+  notSameAsDossier: string;
+  disclaimer: string;
+  generatedBy: (provider: string) => string;
+};
+
+const FR: StarterKitUiMessages = {
+  readyTitle: "Paiement confirmé",
+  readySubtitle: "Ouverture de votre memo juridiction…",
+  pendingTitle: "Génération en cours",
+  pendingSubtitle:
+    "Votre memo phase 0 (juridiction, SPV, régulateur, calendrier) est en cours. Cette page se mettra à jour automatiquement.",
+  failedTitle: "Livraison en attente",
+  failedSubtitle:
+    "Le paiement est bien enregistré. Vous recevrez votre memo par email sous quelques minutes. Contact : adrien.balitrand@gmail.com en cas de retard.",
+  phaseBadge: "Phase 0 · Juridiction",
+  portalTitle: "Votre décision juridiction",
+  portalSubtitle:
+    "Memo personnalisé pour structurer votre programme — SPV, régulateur, checklist et shortlist tech. Ce n’est pas le dossier actif AUROS (gratuit, phase 1).",
+  jurisdictionHeroEyebrow: "Arbitrage retenu",
+  jurisdictionHeroTitle: "Juridiction(s) cible(s)",
+  jurisdictionPrimaryLabel: "Principale",
+  jurisdictionCompareLabel: "Comparée(s)",
+  jurisdictionUnsureNote:
+    "Vous aviez indiqué hésiter entre juridictions — ce memo tranche avec une recommandation principale.",
+  sectionSummary: "Synthèse exécutive",
+  sectionStructure: "Structure SPV recommandée",
+  sectionJurisdiction: "Pourquoi cette juridiction",
+  sectionChecklist: "Checklist réglementaire",
+  sectionTimeline: "Calendrier indicatif",
+  sectionTech: "Prestataires tech (shortlist)",
+  sectionNext: "Prochaines étapes juridiques",
+  downloadPdf: "Télécharger le memo PDF",
+  openWizard: "Phase 1 — dossier actif (gratuit)",
+  phase0Done: "Phase 0 livrée",
+  phase1Title: "Ensuite : dossier actif AUROS",
+  phase1Body:
+    "Le wizard gratuit prépare l’admission de votre actif (description, valorisation, data room). Votre juridiction reste celle validée ci-dessus — pas un second parcours payant.",
+  phase1Cta: "Ouvrir le dossier actif",
+  notSameAsDossier:
+    "Le Starter Kit répond à « où structurer ? ». Le dossier /wizard répond à « mon actif est-il tokenisable ? » — deux phases distinctes.",
+  disclaimer: "Analyse indicative — validez avec un avocat RWA avant toute décision.",
+  generatedBy: (p) => `Généré par AUROS · moteur ${p}`,
+};
+
+const EN: StarterKitUiMessages = {
+  readyTitle: "Payment confirmed",
+  readySubtitle: "Opening your jurisdiction memo…",
+  pendingTitle: "Generating your memo",
+  pendingSubtitle:
+    "Your phase 0 memo (jurisdiction, SPV, regulator, timeline) is being created. This page will refresh automatically.",
+  failedTitle: "Delivery pending",
+  failedSubtitle:
+    "Payment recorded. You will receive your memo by email shortly.",
+  phaseBadge: "Phase 0 · Jurisdiction",
+  portalTitle: "Your jurisdiction decision",
+  portalSubtitle:
+    "Personalized memo to structure your program — SPV, regulator, checklist and tech shortlist. This is not the free AUROS asset dossier (phase 1).",
+  jurisdictionHeroEyebrow: "Selected framing",
+  jurisdictionHeroTitle: "Target jurisdiction(s)",
+  jurisdictionPrimaryLabel: "Primary",
+  jurisdictionCompareLabel: "Compared",
+  jurisdictionUnsureNote:
+    "You were unsure between jurisdictions — this memo recommends a primary choice.",
+  sectionSummary: "Executive summary",
+  sectionStructure: "Recommended SPV structure",
+  sectionJurisdiction: "Why this jurisdiction",
+  sectionChecklist: "Regulatory checklist",
+  sectionTimeline: "Indicative timeline",
+  sectionTech: "Tech providers (shortlist)",
+  sectionNext: "Legal next steps",
+  downloadPdf: "Download memo PDF",
+  openWizard: "Phase 1 — asset dossier (free)",
+  phase0Done: "Phase 0 delivered",
+  phase1Title: "Next: AUROS asset dossier",
+  phase1Body:
+    "The free wizard prepares asset admission (description, valuation, data room). Your jurisdiction stays as validated above — not a second paid journey.",
+  phase1Cta: "Open asset dossier",
+  notSameAsDossier:
+    "The Starter Kit answers “where to structure?”. /wizard answers “is my asset tokenizable?” — two separate phases.",
+  disclaimer: "Indicative analysis — validate with RWA counsel before any offering.",
+  generatedBy: (p) => `Generated by AUROS · ${p} engine`,
+};
+
+const ES: StarterKitUiMessages = {
+  ...EN,
+  readySubtitle: "Abriendo su memo de jurisdicción…",
+  pendingSubtitle:
+    "Su memo fase 0 se está creando. Esta página se actualizará sola.",
+  phaseBadge: "Fase 0 · Jurisdicción",
+  portalTitle: "Su decisión de jurisdicción",
+  portalSubtitle:
+    "Memo personalizado — SPV, regulador, checklist y proveedores tech. No es el dossier de activo AUROS (gratuito, fase 1).",
+  jurisdictionHeroEyebrow: "Arbitraje retenido",
+  jurisdictionHeroTitle: "Jurisdicción(es) objetivo",
+  jurisdictionPrimaryLabel: "Principal",
+  jurisdictionCompareLabel: "Comparada(s)",
+  sectionSummary: "Resumen ejecutivo",
+  sectionStructure: "Estructura SPV recomendada",
+  sectionJurisdiction: "Por qué esta jurisdicción",
+  sectionNext: "Próximos pasos jurídicos",
+  downloadPdf: "Descargar memo PDF",
+  openWizard: "Fase 1 — dossier activo (gratis)",
+  phase0Done: "Fase 0 entregada",
+  phase1Title: "Después: dossier activo AUROS",
+  phase1Body:
+    "El wizard gratuito prepara la admisión del activo. Su jurisdicción se mantiene como arriba.",
+  phase1Cta: "Abrir dossier activo",
+  notSameAsDossier:
+    "El Starter Kit responde «¿dónde estructurar?». /wizard responde «¿tokenizable mi activo?».",
+  disclaimer: "Análisis indicativo — valide con abogado RWA.",
+  generatedBy: (p) => `Generado por AUROS · motor ${p}`,
+};
+
+export function getStarterKitUiMessages(locale: Locale): StarterKitUiMessages {
+  if (locale === "en") return EN;
+  if (locale === "es") return ES;
+  return FR;
+}

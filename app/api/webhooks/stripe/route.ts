@@ -1,0 +1,71 @@
+import { NextResponse } from "next/server";
+import Stripe from "stripe";
+
+import { fulfillJurisdictionPayment, fulfillWalkInPayment, parseCheckoutMetadata } from "@/lib/jurisdictions/fulfill-payment";
+import { fulfillAcademyDiplomaPayment } from "@/lib/academy/fulfill-diploma-payment";
+import { parseAcademyDiplomaMetadata } from "@/lib/academy/diploma-checkout";
+import { getStripe, stripeWebhookSecret } from "@/lib/stripe/jurisdiction-checkout";
+
+export const runtime = "nodejs";
+
+export async function POST(request: Request) {
+  const stripe = getStripe();
+  const secret = stripeWebhookSecret();
+
+  if (!stripe || !secret) {
+    return NextResponse.json({ error: "stripe_unconfigured" }, { status: 503 });
+  }
+
+  const body = await request.text();
+  const signature = request.headers.get("stripe-signature");
+
+  if (!signature) {
+    return NextResponse.json({ error: "missing_signature" }, { status: 400 });
+  }
+
+  let event: Stripe.Event;
+  try {
+    event = stripe.webhooks.constructEvent(body, signature, secret);
+  } catch (err) {
+    console.error("[stripe-webhook]", err);
+    return NextResponse.json({ error: "invalid_signature" }, { status: 400 });
+  }
+
+  if (event.type === "checkout.session.completed") {
+    const session = event.data.object as Stripe.Checkout.Session;
+
+    const academyMeta = parseAcademyDiplomaMetadata(
+      (session.metadata ?? {}) as Record<string, string>
+    );
+    if (academyMeta) {
+      await fulfillAcademyDiplomaPayment(session);
+      return NextResponse.json({ received: true });
+    }
+
+    const meta = parseCheckoutMetadata(
+      (session.metadata ?? {}) as Record<string, string>
+    );
+
+    if (meta?.leadId) {
+      await fulfillJurisdictionPayment({
+        leadId: meta.leadId,
+        tier: meta.tier,
+        locale: meta.locale,
+        sessionId: session.id,
+        paymentIntentId:
+          typeof session.payment_intent === "string"
+            ? session.payment_intent
+            : session.payment_intent?.id,
+        amountCents: session.amount_total ?? undefined,
+      });
+    } else if (meta) {
+      await fulfillWalkInPayment({
+        session,
+        tier: meta.tier,
+        locale: meta.locale,
+      });
+    }
+  }
+
+  return NextResponse.json({ received: true });
+}

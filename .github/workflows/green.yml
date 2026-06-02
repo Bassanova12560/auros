@@ -1,0 +1,91 @@
+name: Green marketplace
+
+on:
+  push:
+    branches: [main, master]
+    paths:
+      - "app/green/**"
+      - "lib/green/**"
+      - "supabase/migrations/0014_green_market.sql"
+      - "supabase/migrations/0015_green_market_mvp.sql"
+      - "supabase/migrations/0016_green_market_listings.sql"
+      - "supabase/migrations/0017_green_market_owners_alerts.sql"
+      - "supabase/migrations/0018_green_market_country.sql"
+      - "tests/green-market.test.ts"
+      - "tests/green-sprint2.test.ts"
+      - "scripts/run-green-market-bootstrap.ts"
+      - "app/api/admin/bootstrap-green-market/**"
+      - ".github/workflows/green.yml"
+  pull_request:
+    branches: [main, master]
+    paths:
+      - "app/green/**"
+      - "lib/green/**"
+      - "supabase/migrations/0014_green_market.sql"
+      - "supabase/migrations/0015_green_market_mvp.sql"
+      - "supabase/migrations/0016_green_market_listings.sql"
+      - "supabase/migrations/0017_green_market_owners_alerts.sql"
+      - "supabase/migrations/0018_green_market_country.sql"
+      - "tests/green-market.test.ts"
+      - "tests/green-sprint2.test.ts"
+      - "scripts/run-green-market-bootstrap.ts"
+      - "app/api/admin/bootstrap-green-market/**"
+      - ".github/workflows/green.yml"
+  workflow_dispatch:
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+      - run: npm ci
+      - run: npm run test:green
+      - run: npm run build
+        env:
+          NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: pk_test_ci_placeholder
+          CLERK_SECRET_KEY: sk_test_ci_placeholder
+          NEXT_PUBLIC_SUPABASE_URL: https://placeholder.supabase.co
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: placeholder_anon
+          SUPABASE_SECRET_KEY: placeholder_secret
+
+  bootstrap-prod:
+    needs: ci
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+      - run: npm ci
+      - name: Apply migrations 0014–0018 and seed (prod Supabase)
+        run: npm run db:bootstrap:green-market
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+
+  bootstrap-prod-http:
+    needs: ci
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - name: POST bootstrap-green-market on production
+        env:
+          AUROS_PROD_URL: ${{ secrets.AUROS_PROD_URL }}
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+        run: |
+          if [ -z "$AUROS_PROD_URL" ] || [ -z "$CRON_SECRET" ]; then
+            echo "::error::Set AUROS_PROD_URL and CRON_SECRET repository secrets for HTTP bootstrap."
+            exit 1
+          fi
+          curl -fsS -X POST \
+            -H "Authorization: Bearer ${CRON_SECRET}" \
+            "${AUROS_PROD_URL%/}/api/admin/bootstrap-green-market"

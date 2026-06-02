@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Comparateur juridictions RWA — AUROS</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #f7f9fc;
+      --surface: #ffffff;
+      --text: #1a2332;
+      --muted: #5c6b7f;
+      --border: #e2e8f0;
+      --primary: #1e4d8c;
+      --primary-soft: #eef4fb;
+      --green: #0d7a4f;
+      --green-bg: #e6f5ee;
+      --green-border: #b8e0cc;
+      --amber: #b45309;
+      --amber-bg: #fff7ed;
+      --radius: 10px;
+      --shadow: 0 1px 3px rgba(26,35,50,.06);
+    }
+    body {
+      font-family: system-ui, -apple-system, "Segoe UI", Inter, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.55;
+      font-size: 15px;
+    }
+    a { color: var(--primary); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .wrap { max-width: 1120px; margin: 0 auto; padding: 0 20px; }
+
+    /* Header */
+    header { padding: 48px 0 32px; border-bottom: 1px solid var(--border); background: var(--surface); }
+    .eyebrow { font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; }
+    h1 { font-size: clamp(1.5rem, 4vw, 2rem); font-weight: 650; letter-spacing: -.02em; max-width: 640px; }
+    .subtitle { margin-top: 12px; color: var(--muted); max-width: 560px; font-size: 1rem; }
+    .trust-row { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 24px; align-items: center; }
+    .trust-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 8px 14px; border-radius: 999px;
+      background: var(--green-bg); border: 1px solid var(--green-border);
+      color: var(--green); font-size: 13px; font-weight: 600;
+    }
+    .testimonial {
+      flex: 1; min-width: 240px; font-size: 13px; color: var(--muted);
+      border-left: 3px solid var(--border); padding-left: 14px;
+    }
+    .testimonial strong { color: var(--text); display: block; font-size: 12px; margin-top: 4px; }
+
+    /* Filters */
+    .filters { padding: 28px 0 8px; }
+    .filters fieldset { border: none; }
+    .filters legend { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin-bottom: 12px; }
+    .filter-group { display: flex; flex-wrap: wrap; gap: 8px; }
+    .filter-group label {
+      cursor: pointer; padding: 10px 18px; border-radius: 999px;
+      border: 1px solid var(--border); background: var(--surface);
+      font-size: 14px; transition: .15s;
+    }
+    .filter-group input { position: absolute; opacity: 0; pointer-events: none; }
+    .filter-group input:checked + span { /* handled via JS class */ }
+    .filter-group label.is-active {
+      background: var(--primary); color: #fff; border-color: var(--primary);
+    }
+    .filter-count { font-size: 13px; color: var(--muted); margin-top: 10px; }
+
+    /* Table */
+    .table-wrap {
+      margin: 20px 0 48px; overflow-x: auto;
+      border: 1px solid var(--border); border-radius: var(--radius);
+      background: var(--surface); box-shadow: var(--shadow);
+      -webkit-overflow-scrolling: touch;
+    }
+    table { width: 100%; min-width: 960px; border-collapse: collapse; font-size: 13px; }
+    thead { background: var(--primary-soft); }
+    th {
+      text-align: left; padding: 14px 12px; font-weight: 600;
+      font-size: 11px; text-transform: uppercase; letter-spacing: .06em;
+      color: var(--muted); border-bottom: 1px solid var(--border);
+    }
+    td { padding: 16px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: #fafbfd; }
+    .j-name { font-weight: 600; font-size: 14px; }
+    .badges { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+    .badge {
+      font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .04em;
+      padding: 3px 8px; border-radius: 999px;
+    }
+    .badge-rec { background: var(--green-bg); color: var(--green); border: 1px solid var(--green-border); }
+    .badge-fast { background: #eff6ff; color: var(--primary); border: 1px solid #bfdbfe; }
+    .fee-split { display: grid; gap: 4px; }
+    .fee-split span { color: var(--muted); font-size: 12px; }
+    .fee-split strong { color: var(--text); font-weight: 600; }
+    .tax-key { font-weight: 650; color: var(--green); font-size: 14px; }
+    .tax-alert {
+      display: inline-flex; align-items: center; gap: 4px;
+      margin-top: 4px; font-size: 11px; color: var(--amber);
+      background: var(--amber-bg); padding: 2px 6px; border-radius: 4px;
+      cursor: help; position: relative;
+    }
+    .tax-alert[data-tip]:hover::after,
+    .tax-alert[data-tip]:focus::after {
+      content: attr(data-tip);
+      position: absolute; left: 0; top: calc(100% + 6px); z-index: 10;
+      width: max-content; max-width: 220px; padding: 8px 10px;
+      background: var(--text); color: #fff; font-size: 11px; font-weight: 400;
+      border-radius: 6px; line-height: 1.4; pointer-events: none;
+    }
+    .stability { display: flex; align-items: center; gap: 8px; }
+    .dots { letter-spacing: 2px; font-size: 12px; color: var(--green); }
+    .dots .off { color: #cbd5e1; }
+    .stab-label { font-size: 12px; color: var(--muted); }
+    .actions { display: flex; flex-direction: column; gap: 6px; min-width: 120px; }
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+      padding: 8px 12px; border-radius: 8px; font-size: 12px; font-weight: 600;
+      border: 1px solid var(--border); background: var(--surface); color: var(--text);
+      cursor: pointer; transition: .15s; white-space: nowrap;
+    }
+    .btn:hover { border-color: var(--primary); color: var(--primary); }
+    .btn-primary { background: var(--primary); color: #fff; border-color: var(--primary); }
+    .btn-primary:hover { background: #163d6f; color: #fff; }
+
+    /* Sections */
+    section { padding: 48px 0; border-top: 1px solid var(--border); }
+    h2 { font-size: 1.35rem; font-weight: 650; letter-spacing: -.02em; }
+    .section-sub { color: var(--muted); margin-top: 8px; max-width: 520px; font-size: 14px; }
+
+    /* Guide */
+    .guide-form {
+      margin-top: 28px; padding: 24px; background: var(--surface);
+      border: 1px solid var(--border); border-radius: var(--radius);
+      display: grid; gap: 16px; max-width: 560px;
+    }
+    .guide-form label { display: grid; gap: 6px; font-size: 12px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
+    .guide-form select {
+      padding: 12px 14px; border: 1px solid var(--border); border-radius: 8px;
+      font-size: 14px; background: var(--bg); color: var(--text);
+    }
+    .guide-form select:focus { outline: 2px solid var(--primary); outline-offset: 1px; }
+
+    /* Pricing */
+    .pricing-grid { display: grid; gap: 16px; margin-top: 28px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+    .pricing-card {
+      padding: 24px; background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); display: flex; flex-direction: column;
+    }
+    .pricing-card.featured { border-color: var(--primary); box-shadow: 0 0 0 1px var(--primary); }
+    .pricing-card h3 { font-size: 13px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+    .pricing-card .price { font-size: 1.75rem; font-weight: 700; margin: 12px 0; letter-spacing: -.02em; }
+    .pricing-card p { flex: 1; font-size: 14px; color: var(--muted); margin-bottom: 20px; }
+    .pricing-card .btn { width: 100%; }
+
+    /* Footer */
+    footer {
+      padding: 32px 0 48px; border-top: 1px solid var(--border);
+      font-size: 12px; color: var(--muted);
+    }
+    footer p { max-width: 720px; line-height: 1.6; }
+    .footer-links { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 16px; }
+
+    .hidden { display: none !important; }
+
+    @media (max-width: 640px) {
+      header { padding: 32px 0 24px; }
+      .trust-row { flex-direction: column; align-items: flex-start; }
+      .testimonial { border-left: none; padding-left: 0; border-top: 1px solid var(--border); padding-top: 12px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <p class="eyebrow">Comparateur B2B · Tokenisation RWA</p>
+      <h1>Où tokeniser votre actif ? Comparez 8 juridictions en un coup d'œil</h1>
+      <p class="subtitle">Frais d'État vs conseil, délais licence vs production, fiscalité investisseur et stabilité réglementaire — données indicatives pour décider avant l'avocat.</p>
+      <div class="trust-row">
+        <span class="trust-badge" aria-label="150 projets accompagnés">✓ 150+ porteurs de projet accompagnés</span>
+        <blockquote class="testimonial">
+          « Comparateur clair — nous avons arbitré DIFC vs Bahreïn en une matinée, puis lancé le Starter Kit. »
+          <strong>— Directeur financier, foncière tokenisée (MENA)</strong>
+        </blockquote>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <div class="filters">
+      <fieldset>
+        <legend id="filter-legend">Filtres rapides</legend>
+        <div class="filter-group" role="radiogroup" aria-labelledby="filter-legend">
+          <label class="is-active"><input type="radio" name="filter" value="all" checked><span>Toutes</span></label>
+          <label><input type="radio" name="filter" value="cost"><span>Meilleur coût global</span></label>
+          <label><input type="radio" name="filter" value="delay"><span>Délai &lt; 6 mois</span></label>
+        </div>
+        <p class="filter-count" id="filter-count" aria-live="polite">8 juridictions affichées</p>
+      </fieldset>
+    </div>
+
+    <div class="table-wrap" role="region" aria-label="Tableau comparatif des juridictions" tabindex="0">
+      <table id="jurisdiction-table">
+        <thead>
+          <tr>
+            <th scope="col">Juridiction</th>
+            <th scope="col">Frais d'émission</th>
+            <th scope="col">Délai</th>
+            <th scope="col">Fiscalité investisseur</th>
+            <th scope="col">Stabilité rég.</th>
+            <th scope="col">Langue</th>
+            <th scope="col">Action</th>
+          </tr>
+        </thead>
+        <tbody id="table-body"></tbody>
+      </table>
+    </div>
+
+    <section id="guide" aria-labelledby="guide-title">
+      <h2 id="guide-title">Guide personnalisé</h2>
+      <p class="section-sub">Sélectionnez deux juridictions — recevez une étude comparative sur mesure (PDF + brief IA).</p>
+      <form class="guide-form" id="guide-form" novalidate>
+        <label for="guide-a">Juridiction A
+          <select id="guide-a" required aria-required="true"></select>
+        </label>
+        <label for="guide-b">Juridiction B
+          <select id="guide-b" required aria-required="true"></select>
+        </label>
+        <label for="guide-email">Email professionnel
+          <input type="email" id="guide-email" required placeholder="vous@entreprise.com" style="padding:12px 14px;border:1px solid var(--border);border-radius:8px;font-size:14px;background:var(--bg);">
+        </label>
+        <button type="submit" class="btn btn-primary">Télécharger l'étude comparative</button>
+      </form>
+    </section>
+
+    <section id="devis" aria-labelledby="pricing-title">
+      <h2 id="pricing-title">Vous avez un projet ?</h2>
+      <p class="section-sub">Trois niveaux d'accompagnement — de l'analyse gratuite au launch complet.</p>
+      <div class="pricing-grid">
+        <article class="pricing-card">
+          <h3>Analyse juridique</h3>
+          <p class="price">Gratuit</p>
+          <p>Mise en relation avec un cabinet partenaire spécialisé RWA. Sans engagement.</p>
+          <button type="button" class="btn btn-primary" data-offer="legal">Demander un devis</button>
+        </article>
+        <article class="pricing-card featured">
+          <h3>Starter Kit</h3>
+          <p class="price">5 000 €</p>
+          <p>Structure juridique + prestataire tech recommandé. Paiement en ligne, confirmation immédiate.</p>
+          <button type="button" class="btn btn-primary" data-offer="starter">Demander un devis</button>
+        </article>
+        <article class="pricing-card">
+          <h3>Accompagnement Launch</h3>
+          <p class="price">Sur devis</p>
+          <p>Suivi complet jusqu'à l'émission du token et mise en relation investisseurs.</p>
+          <button type="button" class="btn btn-primary" data-offer="launch">Demander un devis</button>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <p>Ce comparateur est fourni à titre informatif uniquement. Les montants, délais et régimes fiscaux varient selon la structure, le type d'actif et le profil investisseur. Consultez un avocat et un fiscaliste spécialisés RWA avant toute décision.</p>
+      <nav class="footer-links" aria-label="Liens légaux">
+        <a href="#" onclick="event.preventDefault();alert('Politique de confidentialité — document en cours de publication.');">Politique de confidentialité</a>
+        <a href="#" onclick="event.preventDefault();alert('Préférences cookies enregistrées (simulation).');">Gérer les cookies</a>
+        <a href="mailto:contact@auros.app?subject=Juridictions%20RWA">Contact</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script>
+    const JURISDICTIONS = [
+      {
+        id: "luxembourg", name: "Luxembourg",
+        badges: [],
+        stateFees: "8–15 k€", advisoryFees: "7–35 k€",
+        licenseDelay: "6–9 mois", productionDelay: "+2–3 mois",
+        taxKey: "0 % PV", taxAlert: "Structure holding", taxTip: "Exonération PV via holding — analyse substance & substance économique requise.",
+        stability: 4, stabilityLabel: "Haute",
+        language: "FR / EN / DE",
+        totalCostMid: 35000, licenseMaxMonths: 9, productionMaxMonths: 12
+      },
+      {
+        id: "dubai", name: "Dubai DIFC",
+        badges: ["rec"],
+        stateFees: "3–8 k€", advisoryFees: "5–22 k€",
+        licenseDelay: "2–3 mois", productionDelay: "+1–2 mois",
+        taxKey: "0 % PV", taxAlert: null, taxTip: null,
+        stability: 3, stabilityLabel: "Moyenne",
+        language: "EN (officiel)",
+        totalCostMid: 19000, licenseMaxMonths: 3, productionMaxMonths: 5
+      },
+      {
+        id: "singapore", name: "Singapour",
+        badges: [],
+        stateFees: "10–25 k€", advisoryFees: "10–35 k€",
+        licenseDelay: "3–5 mois", productionDelay: "+2–4 mois",
+        taxKey: "0 % PV*", taxAlert: "17 % IS émetteur", taxTip: "Plus-value investisseur souvent exonérée ; IS 17 % au niveau société émettrice selon structure.",
+        stability: 5, stabilityLabel: "Haute",
+        language: "EN",
+        totalCostMid: 40000, licenseMaxMonths: 5, productionMaxMonths: 9
+      },
+      {
+        id: "switzerland", name: "Suisse",
+        badges: [],
+        stateFees: "5–15 k€", advisoryFees: "5–25 k€",
+        licenseDelay: "3–5 mois", productionDelay: "+2–3 mois",
+        taxKey: "Variable", taxAlert: "Selon canton", taxTip: "Taux effectif 11–21 % selon canton, type de titre et statut investisseur.",
+        stability: 5, stabilityLabel: "Haute",
+        language: "DE / FR / EN",
+        totalCostMid: 25000, licenseMaxMonths: 5, productionMaxMonths: 8
+      },
+      {
+        id: "france", name: "France",
+        badges: [],
+        stateFees: "2–6 k€", advisoryFees: "3–14 k€",
+        licenseDelay: "4–6 mois", productionDelay: "+2–4 mois",
+        taxKey: "30 % flat", taxAlert: "Retail possible", taxTip: "PFU 30 % sur plus-values ; régime pro / société peut différer.",
+        stability: 4, stabilityLabel: "Haute",
+        language: "FR",
+        totalCostMid: 12500, licenseMaxMonths: 6, productionMaxMonths: 10
+      },
+      {
+        id: "ireland", name: "Irlande",
+        badges: [],
+        stateFees: "5–12 k€", advisoryFees: "5–23 k€",
+        licenseDelay: "4–6 mois", productionDelay: "+2–4 mois",
+        taxKey: "12,5 % IS", taxAlert: "Passeport EU", taxTip: "MiCA / CBI — fiscalité société 12,5 % ; traitement investisseur à valider.",
+        stability: 4, stabilityLabel: "Haute",
+        language: "EN",
+        totalCostMid: 22500, licenseMaxMonths: 6, productionMaxMonths: 10
+      },
+      {
+        id: "bahrain", name: "Bahreïn",
+        badges: ["fast"],
+        stateFees: "2–5 k€", advisoryFees: "3–10 k€",
+        licenseDelay: "2–3 mois", productionDelay: "+1–2 mois",
+        taxKey: "0 % IS / PV", taxAlert: null, taxTip: null,
+        stability: 3, stabilityLabel: "Moyenne",
+        language: "EN / AR",
+        totalCostMid: 10000, licenseMaxMonths: 3, productionMaxMonths: 5
+      },
+      {
+        id: "gibraltar", name: "Gibraltar",
+        badges: [],
+        stateFees: "2–6 k€", advisoryFees: "3–14 k€",
+        licenseDelay: "2–3 mois", productionDelay: "+1–3 mois",
+        taxKey: "10 % IS", taxAlert: "Cadre DLT", taxTip: "Régime DLT favorable crypto-natif ; IS 10 % — structuration holding possible.",
+        stability: 3, stabilityLabel: "Moyenne",
+        language: "EN",
+        totalCostMid: 12500, licenseMaxMonths: 3, productionMaxMonths: 6
+      }
+    ];
+
+    function renderDots(n) {
+      let s = "";
+      for (let i = 1; i <= 5; i++) {
+        s += i <= n ? "●" : '<span class="off">○</span>';
+      }
+      return s;
+    }
+
+    function renderBadges(badges) {
+      return badges.map(b => {
+        if (b === "rec") return '<span class="badge badge-rec">Recommandé</span>';
+        if (b === "fast") return '<span class="badge badge-fast">Meilleur coût/délai</span>';
+        return "";
+      }).join("");
+    }
+
+    function renderRow(j) {
+      const taxAlert = j.taxAlert
+        ? `<span class="tax-alert" tabindex="0" data-tip="${j.taxTip || j.taxAlert}" aria-label="${j.taxTip || j.taxAlert}">⚠ ${j.taxAlert}</span>`
+        : "";
+      return `<tr data-id="${j.id}" data-cost="${j.totalCostMid}" data-license="${j.licenseMaxMonths}">
+        <td>
+          <div class="j-name">${j.name}</div>
+          <div class="badges">${renderBadges(j.badges)}</div>
+        </td>
+        <td>
+          <div class="fee-split">
+            <span>État <strong>${j.stateFees}</strong></span>
+            <span>Conseil <strong>${j.advisoryFees}</strong></span>
+          </div>
+        </td>
+        <td>
+          <div class="fee-split">
+            <span>Licence <strong>${j.licenseDelay}</strong></span>
+            <span>Production <strong>${j.productionDelay}</strong></span>
+          </div>
+        </td>
+        <td>
+          <div class="tax-key">${j.taxKey}</div>
+          ${taxAlert}
+        </td>
+        <td>
+          <div class="stability">
+            <span class="dots" aria-hidden="true">${renderDots(j.stability)}</span>
+            <span class="stab-label">${j.stabilityLabel}</span>
+          </div>
+        </td>
+        <td>${j.language}</td>
+        <td>
+          <div class="actions">
+            <button type="button" class="btn" data-action="checklist" data-j="${j.id}">📄 Check-list</button>
+            <button type="button" class="btn btn-primary" data-action="devis" data-j="${j.id}">📞 Devis</button>
+          </div>
+        </td>
+      </tr>`;
+    }
+
+    function renderTable(list) {
+      document.getElementById("table-body").innerHTML = list.map(renderRow).join("");
+      document.getElementById("filter-count").textContent =
+        list.length + " juridiction" + (list.length > 1 ? "s" : "") + " affichée" + (list.length > 1 ? "s" : "");
+    }
+
+    function applyFilter(mode) {
+      let list = [...JURISDICTIONS];
+      if (mode === "cost") {
+        list.sort((a, b) => a.totalCostMid - b.totalCostMid);
+      } else if (mode === "delay") {
+        list = list.filter(j => j.licenseMaxMonths < 6);
+      }
+      renderTable(list);
+    }
+
+    // Init table
+    renderTable(JURISDICTIONS);
+
+    // Filter radios
+    document.querySelectorAll('.filter-group label').forEach(label => {
+      label.addEventListener('click', () => {
+        document.querySelectorAll('.filter-group label').forEach(l => l.classList.remove('is-active'));
+        label.classList.add('is-active');
+        const input = label.querySelector('input');
+        if (input) input.checked = true;
+        applyFilter(input.value);
+      });
+    });
+
+    // Populate guide selects
+    const selA = document.getElementById("guide-a");
+    const selB = document.getElementById("guide-b");
+    JURISDICTIONS.forEach(j => {
+      selA.innerHTML += `<option value="${j.id}">${j.name}</option>`;
+      selB.innerHTML += `<option value="${j.id}">${j.name}</option>`;
+    });
+    selA.value = "dubai";
+    selB.value = "singapore";
+
+    // Guide form
+    document.getElementById("guide-form").addEventListener("submit", e => {
+      e.preventDefault();
+      const a = selA.options[selA.selectedIndex].text;
+      const b = selB.options[selB.selectedIndex].text;
+      const email = document.getElementById("guide-email").value.trim();
+      if (!email) return;
+      console.log("[AUROS Guide]", { compare: [a, b], email, at: new Date().toISOString() });
+      alert("Lien vers PDF – votre email a été enregistré.\n\nÉtude : " + a + " vs " + b);
+    });
+
+    // Table actions (delegation)
+    document.getElementById("table-body").addEventListener("click", e => {
+      const btn = e.target.closest("button");
+      if (!btn) return;
+      const j = JURISDICTIONS.find(x => x.id === btn.dataset.j);
+      if (!j) return;
+      if (btn.dataset.action === "checklist") {
+        console.log("[AUROS Checklist]", j.name);
+        alert("Check-list " + j.name + " — téléchargement simulé.\n\nIntégration PDF à venir.");
+      } else {
+        console.log("[AUROS Devis]", j.name);
+        window.location.href = "mailto:contact@auros.app?subject=Devis%20" + encodeURIComponent(j.name) + "%20RWA";
+      }
+    });
+
+    // Pricing buttons
+    document.querySelectorAll("[data-offer]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const offer = btn.dataset.offer;
+        const labels = { legal: "Analyse juridique gratuite", starter: "Starter Kit 5 000 €", launch: "Accompagnement Launch" };
+        console.log("[AUROS Devis offre]", offer);
+        alert("Formulaire Typeform simulé — " + labels[offer] + ".\n\nRedirection mailto…");
+        window.location.href = "mailto:contact@auros.app?subject=" + encodeURIComponent(labels[offer]);
+      });
+    });
+  </script>
+</body>
+</html>

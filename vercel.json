@@ -1,0 +1,16 @@
+{
+  "crons": [
+    {
+      "path": "/api/cron/jurisdiction-nurture",
+      "schedule": "0 8 * * *"
+    },
+    {
+      "path": "/api/cron/academy-reminders",
+      "schedule": "0 9 * * *"
+    },
+    {
+      "path": "/api/admin/bootstrap-green-market",
+      "schedule": "0 4 * * 0"
+    }
+  ]
+}

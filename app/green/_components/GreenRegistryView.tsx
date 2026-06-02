@@ -1,0 +1,121 @@
+"use client";
+
+import Link from "next/link";
+
+import { useLocale } from "@/app/_components/i18n/LocaleProvider";
+import type { GreenRegistrySnapshot } from "@/lib/green/green-registry";
+import {
+  GREEN_ROUTE,
+  getGreenMessages,
+  greenProjectSummary,
+  greenVerifyPath,
+} from "@/lib/green";
+
+import {
+  GreenBackLink,
+  GreenDisclaimer,
+  GreenPageHeader,
+  GreenPanel,
+  GreenSectionTitle,
+  GreenTierBadge,
+} from "./green-ui";
+
+type Props = {
+  snapshot: GreenRegistrySnapshot;
+};
+
+function formatDate(iso: string, locale: string): string {
+  try {
+    return new Date(iso).toLocaleDateString(
+      locale === "en" ? "en-GB" : locale === "es" ? "es-ES" : "fr-FR",
+      { year: "numeric", month: "short", day: "numeric" }
+    );
+  } catch {
+    return iso;
+  }
+}
+
+export function GreenRegistryView({ snapshot }: Props) {
+  const { locale } = useLocale();
+  const m = getGreenMessages(locale);
+  const r = m.registry;
+  const c = m.compare;
+  const { projects, experts, available } = snapshot;
+
+  return (
+    <div className="page-inner page-inner--3xl mx-auto px-4 pb-20 pt-12 md:px-6 md:pt-14">
+      <GreenPageHeader eyebrow={r.eyebrow} title={r.title} intro={r.intro} compact />
+      {!available ? (
+        <p className="mt-4 text-xs text-neutral-500">{r.statsUnavailable}</p>
+      ) : null}
+
+      <GreenPanel className="mt-10">
+        <div className="p-6 md:p-8">
+          <GreenSectionTitle>{r.projectsTitle}</GreenSectionTitle>
+          {projects.length === 0 ? (
+            <p className="mt-4 text-sm text-neutral-400">{r.projectsEmpty}</p>
+          ) : (
+            <ul className="mt-6 divide-y divide-emerald-500/20">
+              {projects.map((proj) => (
+                <li key={proj.id} className="py-5 first:pt-0 last:pb-0">
+                  <div className="flex flex-wrap items-baseline justify-between gap-2">
+                    <span className="font-medium text-emerald-400">{proj.name}</span>
+                    <GreenTierBadge
+                      tier={proj.labelTier}
+                      verifiedLabel={r.tierVerified}
+                      pilotLabel={r.tierPilot}
+                    />
+                  </div>
+                  <p className="mt-2 text-xs text-neutral-500">
+                    {c.projectTypes[proj.projectType]} · {proj.country} ·{" "}
+                    {formatDate(proj.certifiedAt, locale)}
+                  </p>
+                  <p className="mt-3 text-sm leading-relaxed text-neutral-400">
+                    {greenProjectSummary(proj, locale)}
+                  </p>
+                  <Link
+                    href={greenVerifyPath(proj.verifyToken)}
+                    className="mt-3 inline-block font-mono text-[10px] uppercase tracking-wider text-emerald-500 hover:text-emerald-400"
+                  >
+                    {r.verifyLink} →
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      </GreenPanel>
+
+      <GreenPanel className="mt-4">
+        <div className="p-6 md:p-8">
+          <GreenSectionTitle>{r.expertsTitle}</GreenSectionTitle>
+          {experts.length === 0 ? (
+            <p className="mt-4 text-sm text-neutral-400">{r.expertsEmpty}</p>
+          ) : (
+            <ul className="mt-6 divide-y divide-emerald-500/20">
+              {experts.map((ex) => (
+                <li
+                  key={ex.id}
+                  className="flex flex-wrap items-baseline justify-between gap-2 py-3 first:pt-0 last:pb-0"
+                >
+                  <span className="text-sm text-neutral-300">{ex.displayName}</span>
+                  <Link
+                    href={greenVerifyPath(ex.verifyToken)}
+                    className="font-mono text-[10px] uppercase tracking-wider text-emerald-500 hover:text-emerald-400"
+                  >
+                    {r.verifyLink} →
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      </GreenPanel>
+
+      <p className="mt-6 text-xs leading-relaxed text-neutral-600">{r.pilotNote}</p>
+      <p className="mt-3 text-xs leading-relaxed text-neutral-600">{r.verifyNote}</p>
+      <GreenDisclaimer>{m.disclaimer}</GreenDisclaimer>
+      <GreenBackLink href={GREEN_ROUTE}>{r.backLink}</GreenBackLink>
+    </div>
+  );
+}

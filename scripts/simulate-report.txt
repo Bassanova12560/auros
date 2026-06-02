@@ -1,0 +1,105 @@
+AUROS ecosystem simulation — 2026-05-31T11:16:09.685Z
+base=https://auros-delta.vercel.app · simulationMode=true
+
+=== Wizard & dossier (wizard) ===
+  [OK] asset slug mapping — Real estate
+  [OK] uuid validation — valid
+  [OK] share token validation — valid
+  [OK] wizard score range — 77/100
+  [OK] admission readiness — 72%
+  [OK] compliance blocks — 3 blocks
+  [OK] tokenization studio — 5 phases
+  [OK] wizard journey phases — 4 parties
+
+=== Juridictions & Starter Kit (jurisdictions) ===
+  [OK] eight jurisdictions — 8
+  [OK] real estate filter — 5 rows
+  [OK] seo landing slugs — 22 pages
+  [OK] setup calculator — 13000€ min
+  [OK] value stack total — 19000€ market
+  [OK] stripe metadata parse — starter
+  [OK] stripe metadata reject — invalid tier rejected
+  [OK] starter price — 5000€
+  [OK] lead scoring hot — hot
+  [OK] i18n labels — fr catalog
+  [OK] enterprise copy — en value stack
+  [OK] asset use cases — 4 assets
+  [OK] wizard bridge url — /jurisdictions?compareA=luxembourg&from=wizard#guide
+  [OK] delivery email template — Votre Starter Kit AUROS est prêt
+  [OK] tech intro email template — Votre shortlist tech RWA — intro AUROS
+  [OK] starter kit generation — provider=simulation, checklist=8
+  [OK] starter readiness — score=94
+  [OK] overview pdf — 4673 bytes
+
+=== Comparateurs RWA (comparators) ===
+  [OK] comparator routes — /compare, /stablecoins, /real-estate, /bonds, /commodities, /private-credit, /private-equity, /art-collectibles
+  [OK] path registry — /compare + /stablecoins
+  [OK] i18n fr — fr
+  [OK] i18n en — en
+  [OK] i18n es — es
+  [OK] pool filter — 1 row
+  [OK] group pools — 1 group
+  [OK] tvl format — $12M
+
+=== AUROS Academy (sécurité & intégrité) (academy) ===
+  [OK] cert secret configured — ACADEMY_CERT_SECRET ok
+  [OK] legacy certify blocked in prod — allowed (dev or ACADEMY_LEGACY_CERTIFY=1)
+  [OK] cert token round-trip — HMAC sign/verify
+  [OK] tampered cert rejected — signature mismatch
+  [OK] quiz session starts — 10 questions
+  [OK] answers not exposed — no correctOptionId in public questions
+  [OK] forged session rejected — invalid HMAC
+  [OK] not dev default secret — ok
+  [OK] quiz submit valid — score 10
+  [OK] challenge grade valid — cert 60E9C45263
+  [OK] challenge replay blocked — session_already_used
+
+=== Intégrations (Supabase, Stripe, Resend) (integrations) ===
+  [OK] supabase dossiers table — count=5
+  [OK] supabase jurisdiction_leads — count=7
+  [OK] starter kit columns — deliverable_token + starter_kit ok
+  [OK] stripe secret — sk_live_51Tc…
+  [OK] stripe webhook secret — set
+  [OK] resend api key — set
+  [OK] cron secret — set
+  [WARN] academy cert secret — missing — certs forgeable
+  [OK] academy reminder prefs table — ok
+  [OK] academy consumed sessions table — ok
+
+=== HTTP smoke (https://auros-delta.vercel.app) (http) ===
+  [OK] home — HTTP 200
+  [OK] wizard — HTTP 200 · text/html
+  [OK] dossier — HTTP 200 · text/html
+  [OK] jurisdictions — HTTP 200
+  [OK] starter-kit page — HTTP 200
+  [OK] seo landing sample — HTTP 200
+  [OK] compare hub — HTTP 200 · text/html
+  [OK] stablecoins — HTTP 200 · text/html
+  [OK] real-estate — HTTP 200 · text/html
+  [OK] bonds — HTTP 200 · text/html
+  [OK] private-credit — HTTP 200 · text/html
+  [OK] commodities — HTTP 200 · text/html
+  [OK] sitemap — HTTP 200
+  [OK] robots — HTTP 200 · text/plain
+  [OK] llms.txt — HTTP 200
+  [OK] ai-first index — HTTP 200
+  [OK] ai-first page — HTTP 200
+  [OK] starter overview pdf — HTTP 200 · application/pdf
+  [OK] api simulate — HTTP 403 (enable AUROS_SIMULATION on server for prod API)
+  [OK] seo:luxembourg-real-estate — HTTP 200
+  [OK] seo:luxembourg-funds — HTTP 200
+  [OK] seo:luxembourg-bonds — HTTP 200
+  [OK] sitemap starter-kit — present
+  [OK] sitemap seo depth — 23 jurisdiction urls
+  [OK] api/generate simulation — skipped (remote base — set AUROS_SIMULATION on server)
+  [OK] cron route protected — HTTP 401 (expect 401 without secret)
+  [OK] GET /academy — HTTP 200
+  [OK] GET /academy/fondamentaux — HTTP 200
+  [OK] GET /academy/reminders/unsubscribe — HTTP 200
+  [OK] legacy certify blocked (prod) — HTTP 410 (expect 410)
+  [OK] bogus challenge rejected — HTTP 422
+  [OK] academy cron protected — HTTP 401
+  [OK] session start API — HTTP 200
+
+=== Résumé 87/88 OK · 1 warnings ===
+→ Ecosystem healthy
