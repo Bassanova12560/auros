@@ -133,10 +133,17 @@ export function GreenRegistryView({ snapshot }: Props) {
     try {
       const { generateGreenRegistryPDF, suggestedGreenRegistryPdfFilename } =
         await import("@/lib/green/registry-pdf");
-      const blob = await generateGreenRegistryPDF(filteredProjects, r, c, locale, {
-        tierFilter,
-        disclaimer: m.disclaimer,
-      });
+      const blob = await generateGreenRegistryPDF(
+        filteredProjects,
+        experts,
+        r,
+        c,
+        locale,
+        {
+          tierFilter,
+          disclaimer: m.disclaimer,
+        }
+      );
       const url = URL.createObjectURL(blob);
       const anchor = document.createElement("a");
       anchor.href = url;

@@ -148,11 +148,18 @@ Sans clé IA : scoring rule-based amélioré uniquement (comportement valide).
 - **Label — 2e relance après 7 jours** — si dossier toujours incomplet 7 jours après la 1re relance (`reminder_sent_at`), e-mail de rappel final ; max 2 relances (`second_reminder_sent_at`, migration `0022`) ; cron `/api/cron/green-label-reminders` ; locale `preferred_locale`.
 - **Tests** — `tests/green-sprint13.test.ts` (`npm run test:green`).
 
-### Après Sprint 13 (backlog Sprint 14)
+## Sprint 14 — shipped 2026-06-03
 
-- Registre : export PDF incluant experts / métadonnées enrichies
-- Compare : snapshot serveur du comparateur (au-delà de l’URL)
-- Label : tableau de bord ops relances (stats)
+- **Registre — export PDF enrichi** — métadonnées (projets, Verified, pilotes, experts) ; colonnes localisation, niveau RTMS, extrait description ; section experts certifiés ; `registry-pdf.tsx` ; i18n FR/EN/ES.
+- **Compare — snapshot serveur** — `POST /api/green/compare-snapshot` (rate limit) ; table `green_compare_snapshots` (migration `0023`, TTL 30 j) ; `/green/compare/s/[id]` restaure pays + offres + lignes RWA ; bouton « Lien snapshot » ; repli URL params inchangé.
+- **Label — stats relances ops** — tableau de bord sur `/green/admin` : incomplet sans relance, relance 1, relance 2, dossier complet ; `GET /api/admin/green-label-reminder-stats`.
+- **Tests** — `tests/green-sprint14.test.ts` (`npm run test:green`).
+
+### Après Sprint 14 (backlog Sprint 15)
+
+- Registre : export PDF signé / watermark ops
+- Compare : snapshot avec sélection lignes RWA côté UI
+- Label : export CSV candidatures pour ops
 - NFT, oracle, Uniswap, PricingCard boost, dark mode, Clerk sur tout `/green/*`, Lighthouse CI
 
 ### Après Sprint 11 (backlog Sprint 12 — traité)

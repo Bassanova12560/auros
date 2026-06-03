@@ -33,6 +33,14 @@ type LabelItem = {
   secondReminderSentAt: string | null;
 };
 
+type LabelReminderStats = {
+  pendingIncomplete: number;
+  remindedOnce: number;
+  remindedTwice: number;
+  complete: number;
+  total: number;
+};
+
 function authHeader(secret: string): HeadersInit {
   return { Authorization: `Bearer ${secret}` };
 }
@@ -46,14 +54,16 @@ export function GreenAdminView() {
   const [labels, setLabels] = useState<LabelItem[]>([]);
   const [busyId, setBusyId] = useState<string | null>(null);
   const [summaries, setSummaries] = useState<Record<string, string>>({});
+  const [reminderStats, setReminderStats] = useState<LabelReminderStats | null>(null);
 
   const refresh = useCallback(async (token: string) => {
     setLoading(true);
     setError(null);
     try {
-      const [marketRes, labelRes] = await Promise.all([
+      const [marketRes, labelRes, statsRes] = await Promise.all([
         fetch("/api/admin/green-market-pending", { headers: authHeader(token) }),
         fetch("/api/admin/green-label-pending", { headers: authHeader(token) }),
+        fetch("/api/admin/green-label-reminder-stats", { headers: authHeader(token) }),
       ]);
       if (!marketRes.ok || !labelRes.ok) {
         setError("Accès refusé — vérifiez CRON_SECRET.");
@@ -64,6 +74,12 @@ export function GreenAdminView() {
       const labelJson = (await labelRes.json()) as { items: LabelItem[] };
       setMarket(marketJson.items ?? []);
       setLabels(labelJson.items ?? []);
+      if (statsRes.ok) {
+        const statsJson = (await statsRes.json()) as { stats?: LabelReminderStats };
+        setReminderStats(statsJson.stats ?? null);
+      } else {
+        setReminderStats(null);
+      }
       setAuthed(true);
     } catch {
       setError("Impossible de charger les files d'attente.");
@@ -257,6 +273,55 @@ export function GreenAdminView() {
                 Actualiser
               </button>
             </div>
+
+            <section>
+              <h2 className="text-sm font-medium uppercase tracking-wider text-emerald-500">
+                Label — relances dossier (stats)
+              </h2>
+              {reminderStats ? (
+                <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+                  <div className="rounded-xl border border-emerald-500/30 bg-black p-4">
+                    <p className="font-mono text-[10px] uppercase tracking-wider text-emerald-500/60">
+                      Incomplet · pas de relance
+                    </p>
+                    <p className="mt-2 text-2xl font-medium text-emerald-300">
+                      {reminderStats.pendingIncomplete}
+                    </p>
+                  </div>
+                  <div className="rounded-xl border border-amber-500/30 bg-black p-4">
+                    <p className="font-mono text-[10px] uppercase tracking-wider text-amber-500/60">
+                      Relance 1 envoyée
+                    </p>
+                    <p className="mt-2 text-2xl font-medium text-amber-200/90">
+                      {reminderStats.remindedOnce}
+                    </p>
+                  </div>
+                  <div className="rounded-xl border border-amber-600/40 bg-black p-4">
+                    <p className="font-mono text-[10px] uppercase tracking-wider text-amber-600/70">
+                      Relance 2 envoyée
+                    </p>
+                    <p className="mt-2 text-2xl font-medium text-amber-100/80">
+                      {reminderStats.remindedTwice}
+                    </p>
+                  </div>
+                  <div className="rounded-xl border border-emerald-500/40 bg-black p-4">
+                    <p className="font-mono text-[10px] uppercase tracking-wider text-emerald-400/70">
+                      Dossier complet
+                    </p>
+                    <p className="mt-2 text-2xl font-medium text-emerald-200">
+                      {reminderStats.complete}
+                    </p>
+                    <p className="mt-1 text-xs text-neutral-500">
+                      {reminderStats.total} candidature{reminderStats.total > 1 ? "s" : ""} au total
+                    </p>
+                  </div>
+                </div>
+              ) : (
+                <p className="mt-3 text-sm text-neutral-500">
+                  Stats indisponibles (migration 0021+ ou base non connectée).
+                </p>
+              )}
+            </section>
 
             <section>
               <h2 className="text-sm font-medium uppercase tracking-wider text-emerald-500">

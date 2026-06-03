@@ -264,6 +264,11 @@ export type GreenMessages = {
     removeFromCompare: string;
     copyCompareLink: string;
     shareCopied: string;
+    saveSnapshotLink: string;
+    snapshotSaving: string;
+    snapshotCopied: string;
+    snapshotError: string;
+    snapshotLoaded: (id: string) => string;
     countryFilterLabel: string;
     countryFilterClear: string;
     countryFilterEmpty: string;
@@ -1014,6 +1019,11 @@ const FR: GreenMessages = {
     removeFromCompare: "Retirer",
     copyCompareLink: "Copier le lien de comparaison",
     shareCopied: "Lien copié",
+    saveSnapshotLink: "Lien snapshot (30 j)",
+    snapshotSaving: "Snapshot…",
+    snapshotCopied: "Lien snapshot copié",
+    snapshotError: "Snapshot indisponible — utilisez le lien URL",
+    snapshotLoaded: (id) => `Comparaison partagée · snapshot ${id}`,
     countryFilterLabel: "Filtrer par pays",
     countryFilterClear: "Tous les pays",
     countryFilterEmpty: "Aucun projet pour ces pays.",
@@ -1828,6 +1838,11 @@ const EN: GreenMessages = {
     removeFromCompare: "Remove",
     copyCompareLink: "Copy comparison link",
     shareCopied: "Link copied",
+    saveSnapshotLink: "Snapshot link (30d)",
+    snapshotSaving: "Saving snapshot…",
+    snapshotCopied: "Snapshot link copied",
+    snapshotError: "Snapshot unavailable — use URL link",
+    snapshotLoaded: (id) => `Shared comparison · snapshot ${id}`,
     countryFilterLabel: "Filter by country",
     countryFilterClear: "All countries",
     countryFilterEmpty: "No projects for these countries.",
@@ -2644,6 +2659,11 @@ const ES: GreenMessages = {
     removeFromCompare: "Quitar",
     copyCompareLink: "Copiar enlace de comparación",
     shareCopied: "Enlace copiado",
+    saveSnapshotLink: "Enlace snapshot (30 d)",
+    snapshotSaving: "Snapshot…",
+    snapshotCopied: "Enlace snapshot copiado",
+    snapshotError: "Snapshot no disponible — use el enlace URL",
+    snapshotLoaded: (id) => `Comparación compartida · snapshot ${id}`,
     countryFilterLabel: "Filtrar por país",
     countryFilterClear: "Todos los países",
     countryFilterEmpty: "Ningún proyecto para estos países.",
