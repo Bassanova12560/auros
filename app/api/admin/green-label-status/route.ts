@@ -49,7 +49,7 @@ export async function POST(req: NextRequest) {
       contactName: result.contactName,
       projectName: result.projectName,
       myUrl: `${siteOrigin()}/green/my#label-status`,
-      locale: "fr",
+      locale: result.preferredLocale,
     });
   }
 

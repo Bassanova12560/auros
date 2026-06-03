@@ -37,11 +37,13 @@ import {
 type Props = {
   initialOfferIds: string[];
   resolvedOffers: GreenMarketOfferDetail[];
+  onSelectedOffersChange?: (offers: GreenMarketOfferDetail[]) => void;
 };
 
 export function GreenCompareOffersSection({
   initialOfferIds,
   resolvedOffers,
+  onSelectedOffersChange,
 }: Props) {
   const { locale } = useLocale();
   const c = getGreenMessages(locale).compare;
@@ -79,6 +81,10 @@ export function GreenCompareOffersSection({
         .filter((offer): offer is GreenMarketOfferDetail => Boolean(offer)),
     [selectedIds, offerMap]
   );
+
+  useEffect(() => {
+    onSelectedOffersChange?.(selectedOffers);
+  }, [selectedOffers, onSelectedOffersChange]);
 
   const handleRemove = useCallback((id: string) => {
     const next = removeCompareOfferId(id);

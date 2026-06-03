@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { useLocale } from "@/app/_components/i18n/LocaleProvider";
 import type { GreenRegistrySnapshot } from "@/lib/green/green-registry";
@@ -11,7 +12,12 @@ import {
   greenProjectSummary,
   greenVerifyPath,
 } from "@/lib/green";
-import { greenRegistryProjectPath } from "@/lib/green/registry-routes";
+import {
+  GREEN_REGISTRY_TIER_URL_PARAM,
+  greenRegistryProjectPath,
+  parseRegistryTierParam,
+  type GreenRegistryTierFilter,
+} from "@/lib/green/registry-routes";
 
 import {
   GreenBackLink,
@@ -37,6 +43,8 @@ function formatDate(iso: string, locale: string): string {
   }
 }
 
+const TIER_FILTERS: GreenRegistryTierFilter[] = ["all", "verified", "pilot"];
+
 export function GreenRegistryView({ snapshot }: Props) {
   const { locale } = useLocale();
   const m = getGreenMessages(locale);
@@ -44,14 +52,42 @@ export function GreenRegistryView({ snapshot }: Props) {
   const c = m.compare;
   const { projects, experts, available } = snapshot;
   const [searchQuery, setSearchQuery] = useState("");
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const router = useRouter();
+  const [tierFilter, setTierFilter] = useState<GreenRegistryTierFilter>(() =>
+    parseRegistryTierParam(searchParams.get(GREEN_REGISTRY_TIER_URL_PARAM))
+  );
+
+  useEffect(() => {
+    setTierFilter(parseRegistryTierParam(searchParams.get(GREEN_REGISTRY_TIER_URL_PARAM)));
+  }, [searchParams]);
+
+  const setTier = useCallback(
+    (tier: GreenRegistryTierFilter) => {
+      setTierFilter(tier);
+      const params = new URLSearchParams(searchParams.toString());
+      if (tier === "all") {
+        params.delete(GREEN_REGISTRY_TIER_URL_PARAM);
+      } else {
+        params.set(GREEN_REGISTRY_TIER_URL_PARAM, tier);
+      }
+      const next = params.toString();
+      if (next !== searchParams.toString()) {
+        router.replace(next ? `${pathname}?${next}` : pathname, { scroll: false });
+      }
+    },
+    [pathname, router, searchParams]
+  );
 
   const verifiedCount = projects.filter((p) => p.labelTier === "verified").length;
   const pilotCount = projects.filter((p) => p.labelTier === "pilot").length;
 
   const filteredProjects = useMemo(() => {
     const q = searchQuery.trim().toLowerCase();
-    if (!q) return projects;
     return projects.filter((proj) => {
+      if (tierFilter !== "all" && proj.labelTier !== tierFilter) return false;
+      if (!q) return true;
       const hay = [
         proj.name,
         proj.country,
@@ -62,7 +98,16 @@ export function GreenRegistryView({ snapshot }: Props) {
         .toLowerCase();
       return hay.includes(q);
     });
-  }, [projects, searchQuery, c.projectTypes, locale]);
+  }, [projects, searchQuery, tierFilter, c.projectTypes, locale]);
+
+  const tierLabel = (tier: GreenRegistryTierFilter): string => {
+    if (tier === "verified") return r.tierFilterVerified;
+    if (tier === "pilot") return r.tierFilterPilot;
+    return r.tierFilterAll;
+  };
+
+  const emptyMessage =
+    searchQuery.trim().length > 0 ? r.searchEmpty : r.tierFilterEmpty;
 
   return (
     <div className="page-inner page-inner--3xl mx-auto px-4 pb-20 pt-12 md:px-6 md:pt-14">
@@ -90,21 +135,45 @@ export function GreenRegistryView({ snapshot }: Props) {
         <div className="p-6 md:p-8">
           <GreenSectionTitle>{r.projectsTitle}</GreenSectionTitle>
           {projects.length > 0 ? (
-            <label className="mt-4 block max-w-md">
-              <span className="sr-only">{r.searchPlaceholder}</span>
-              <input
-                type="search"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder={r.searchPlaceholder}
-                className="mt-2 w-full rounded-lg border border-emerald-500/30 bg-black px-4 py-3 text-sm text-emerald-200 outline-none focus:border-emerald-400"
-              />
-            </label>
+            <>
+              <div
+                className="mt-4 flex flex-wrap gap-2"
+                role="tablist"
+                aria-label={r.tierFilterAll}
+              >
+                {TIER_FILTERS.map((tier) => (
+                  <button
+                    key={tier}
+                    type="button"
+                    role="tab"
+                    aria-selected={tierFilter === tier}
+                    onClick={() => setTier(tier)}
+                    className={`rounded-full border px-3 py-1.5 font-mono text-[10px] uppercase tracking-wider transition ${
+                      tierFilter === tier
+                        ? "border-emerald-400 bg-emerald-500/10 text-emerald-400"
+                        : "border-emerald-500/30 text-emerald-500/70 hover:border-emerald-400/60 hover:text-emerald-400"
+                    }`}
+                  >
+                    {tierLabel(tier)}
+                  </button>
+                ))}
+              </div>
+              <label className="mt-4 block max-w-md">
+                <span className="sr-only">{r.searchPlaceholder}</span>
+                <input
+                  type="search"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder={r.searchPlaceholder}
+                  className="mt-2 w-full rounded-lg border border-emerald-500/30 bg-black px-4 py-3 text-sm text-emerald-200 outline-none focus:border-emerald-400"
+                />
+              </label>
+            </>
           ) : null}
           {projects.length === 0 ? (
             <p className="mt-4 text-sm text-neutral-400">{r.projectsEmpty}</p>
           ) : filteredProjects.length === 0 ? (
-            <p className="mt-4 text-sm text-neutral-400">{r.searchEmpty}</p>
+            <p className="mt-4 text-sm text-neutral-400">{emptyMessage}</p>
           ) : (
             <ul className="mt-6 divide-y divide-emerald-500/20">
               {filteredProjects.map((proj) => (

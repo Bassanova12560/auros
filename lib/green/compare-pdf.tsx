@@ -15,6 +15,15 @@ import {
 
 import type { GreenCompareRow } from "./compare-data";
 import type { GreenMessages } from "./i18n";
+import type { GreenMarketOfferDetail } from "./market/offer-detail";
+import { formatGreenMarketOfferTitle } from "./market/offer-detail";
+import type { GreenMarketMessages } from "./market-i18n";
+import {
+  formatGreenMarketLocation,
+  formatMarketDate,
+  formatMarketNumber,
+} from "./market-i18n";
+import type { Locale } from "@/lib/i18n";
 
 Font.register({
   family: "Space Mono",
@@ -71,6 +80,21 @@ const styles = StyleSheet.create({
   colImpact: { width: "16%" },
   colLabel: { width: "12%" },
   colSource: { width: "14%" },
+  colMarketActor: { width: "22%" },
+  colMarketEnergy: { width: "10%" },
+  colMarketSide: { width: "8%" },
+  colMarketVolume: { width: "12%" },
+  colMarketPrice: { width: "12%" },
+  colMarketLocation: { width: "14%" },
+  colMarketTier: { width: "10%" },
+  colMarketDate: { width: "12%" },
+  sectionTitle: {
+    fontSize: 9,
+    fontWeight: 700,
+    color: GREEN,
+    marginTop: 14,
+    marginBottom: 8,
+  },
   th: {
     fontSize: 6,
     letterSpacing: 1,
@@ -92,6 +116,36 @@ const styles = StyleSheet.create({
     lineHeight: 1.4,
   },
 });
+
+export type GreenCompareMarketPdfRow = {
+  actor: string;
+  energy: string;
+  side: string;
+  volume: string;
+  price: string;
+  location: string;
+  tier: string;
+  date: string;
+};
+
+/** Pure mapping for tests and PDF generation. */
+export function greenCompareMarketOffersToPdfRows(
+  offers: GreenMarketOfferDetail[],
+  compareLabels: GreenMessages["compare"],
+  marketLabels: GreenMarketMessages["market"],
+  locale: Locale
+): GreenCompareMarketPdfRow[] {
+  return offers.map((offer) => ({
+    actor: formatGreenMarketOfferTitle(offer, locale),
+    energy: marketLabels.energyTypes[offer.energyType],
+    side: marketLabels.sides[offer.side],
+    volume: `${formatMarketNumber(offer.volumeKwh, locale)} kWh`,
+    price: `${offer.pricePerKwh.toFixed(3)} €/kWh`,
+    location: formatGreenMarketLocation(offer.city, offer.country),
+    tier: marketLabels.listingTier[offer.listingTier],
+    date: formatMarketDate(offer.createdAt, locale),
+  }));
+}
 
 export type GreenComparePdfRow = {
   project: string;
@@ -124,10 +178,14 @@ export function greenCompareRowsToPdfRows(
 function CompareDocument({
   labels,
   pdfRows,
+  marketPdfRows,
+  marketLabels,
   generatedAt,
 }: {
   labels: GreenMessages["compare"];
   pdfRows: GreenComparePdfRow[];
+  marketPdfRows: GreenCompareMarketPdfRow[];
+  marketLabels: GreenMarketMessages["market"] | null;
   generatedAt: string;
 }) {
   const docProps: DocumentProps = {
@@ -183,6 +241,50 @@ function CompareDocument({
           </View>
         ))}
 
+        {marketPdfRows.length > 0 && marketLabels ? (
+          <>
+            <Text style={styles.sectionTitle}>{labels.marketExport.sectionTitle}</Text>
+            <View style={styles.tableHead}>
+              <Text style={[styles.th, styles.colMarketActor]}>{marketLabels.table.actor}</Text>
+              <Text style={[styles.th, styles.colMarketEnergy]}>{labels.marketExport.energy}</Text>
+              <Text style={[styles.th, styles.colMarketSide]}>{marketLabels.table.side}</Text>
+              <Text style={[styles.th, styles.colMarketVolume]}>{marketLabels.table.volume}</Text>
+              <Text style={[styles.th, styles.colMarketPrice]}>{marketLabels.table.price}</Text>
+              <Text style={[styles.th, styles.colMarketLocation]}>{marketLabels.table.location}</Text>
+              <Text style={[styles.th, styles.colMarketTier]}>{labels.marketExport.tier}</Text>
+              <Text style={[styles.th, styles.colMarketDate]}>{marketLabels.table.date}</Text>
+            </View>
+            {marketPdfRows.map((row) => (
+              <View key={`${row.actor}-${row.date}`} style={styles.tableRow}>
+                <View style={styles.colMarketActor}>
+                  <Text style={styles.td}>{row.actor}</Text>
+                </View>
+                <View style={styles.colMarketEnergy}>
+                  <Text style={styles.td}>{row.energy}</Text>
+                </View>
+                <View style={styles.colMarketSide}>
+                  <Text style={styles.td}>{row.side}</Text>
+                </View>
+                <View style={styles.colMarketVolume}>
+                  <Text style={styles.td}>{row.volume}</Text>
+                </View>
+                <View style={styles.colMarketPrice}>
+                  <Text style={styles.td}>{row.price}</Text>
+                </View>
+                <View style={styles.colMarketLocation}>
+                  <Text style={styles.td}>{row.location}</Text>
+                </View>
+                <View style={styles.colMarketTier}>
+                  <Text style={styles.td}>{row.tier}</Text>
+                </View>
+                <View style={styles.colMarketDate}>
+                  <Text style={styles.td}>{row.date}</Text>
+                </View>
+              </View>
+            ))}
+          </>
+        ) : null}
+
         <Text style={styles.footer}>{labels.disclaimer}</Text>
       </Page>
     </Document>
@@ -192,12 +294,25 @@ function CompareDocument({
 export async function generateGreenComparePDF(
   rows: GreenCompareRow[],
   labels: GreenMessages["compare"],
-  locale: string = "fr"
+  locale: string = "fr",
+  offers: GreenMarketOfferDetail[] = [],
+  marketLabels?: GreenMarketMessages["market"]
 ): Promise<Blob> {
   const pdfRows = greenCompareRowsToPdfRows(rows, labels);
+  const loc = locale === "en" || locale === "es" ? locale : "fr";
+  const marketPdfRows =
+    offers.length > 0 && marketLabels
+      ? greenCompareMarketOffersToPdfRows(offers, labels, marketLabels, loc)
+      : [];
   const generatedAt = new Date().toISOString().slice(0, 10);
   return pdf(
-    <CompareDocument labels={labels} pdfRows={pdfRows} generatedAt={generatedAt} />
+    <CompareDocument
+      labels={labels}
+      pdfRows={pdfRows}
+      marketPdfRows={marketPdfRows}
+      marketLabels={marketLabels ?? null}
+      generatedAt={generatedAt}
+    />
   ).toBlob();
 }
 

@@ -138,6 +138,8 @@ export function GreenLabelForm() {
 
         description: description.trim(),
 
+        preferredLocale: locale,
+
       });
 
       if (!result.ok) {
@@ -188,7 +190,7 @@ export function GreenLabelForm() {
 
     },
 
-    [projectName, projectType, contactName, email, website, country, description, documentFile]
+    [projectName, projectType, contactName, email, website, country, description, documentFile, locale]
 
   );
 

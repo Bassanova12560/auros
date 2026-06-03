@@ -1,6 +1,8 @@
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 
+import type { Locale } from "@/lib/i18n";
 import type { GreenProjectType } from "./constants";
+import { normalizeGreenLabelPreferredLocale } from "./label-locale";
 
 function getAdminClient(): SupabaseClient | null {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL?.trim();
@@ -36,6 +38,7 @@ export type PublishGreenLabelResult =
       email: string;
       contactName: string;
       projectName: string;
+      preferredLocale: Locale;
     }
   | { ok: false; error: "not_found" | "already_published" | "database" };
 
@@ -101,6 +104,9 @@ export async function publishGreenLabelApplication(
     email: String(app.email),
     contactName: String(app.contact_name),
     projectName: String(app.project_name),
+    preferredLocale: normalizeGreenLabelPreferredLocale(
+      app.preferred_locale as string | null | undefined
+    ),
   };
 }
 

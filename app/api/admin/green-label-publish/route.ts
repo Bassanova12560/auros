@@ -61,7 +61,7 @@ export async function POST(req: NextRequest) {
       projectName: result.projectName,
       verifyUrl,
       registryUrl,
-      locale: "fr",
+      locale: result.preferredLocale,
     });
   }
 

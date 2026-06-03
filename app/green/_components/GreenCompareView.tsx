@@ -14,10 +14,11 @@ import {
 } from "@/lib/green";
 import {
   downloadGreenCompareCsv,
-  greenCompareRowsToCsv,
+  greenCompareFullToCsv,
 } from "@/lib/green/compare-csv";
 import type { GreenRegistryProjectRow } from "@/lib/green/green-registry";
 import type { GreenMarketOfferDetail } from "@/lib/green/market/offer-detail";
+import { getGreenMarketMessages } from "@/lib/green/market-i18n";
 
 import { GreenCompareOffersSection } from "./market/GreenCompareOffersSection";
 import {
@@ -61,20 +62,24 @@ export function GreenCompareView({
   const r = m.registry;
   const rows = GREEN_COMPARE_ROWS;
   const [pdfState, setPdfState] = useState<PdfState>("idle");
+  const [selectedOffers, setSelectedOffers] = useState<GreenMarketOfferDetail[]>([]);
+  const mm = getGreenMarketMessages(locale).market;
+
+  const canExport = rows.length > 0 || selectedOffers.length > 0;
 
   const handleExportCsv = useCallback(() => {
-    if (rows.length === 0) return;
-    const csv = greenCompareRowsToCsv(rows, c);
+    if (!canExport) return;
+    const csv = greenCompareFullToCsv(rows, selectedOffers, c, mm, locale);
     downloadGreenCompareCsv(csv);
-  }, [rows, c]);
+  }, [canExport, rows, selectedOffers, c, mm, locale]);
 
   const handleExportPdf = useCallback(async () => {
-    if (rows.length === 0) return;
+    if (!canExport) return;
     setPdfState("generating");
     try {
       const { generateGreenComparePDF, suggestedGreenCompareFilename } =
         await import("@/lib/green/compare-pdf");
-      const blob = await generateGreenComparePDF(rows, c, locale);
+      const blob = await generateGreenComparePDF(rows, c, locale, selectedOffers, mm);
       const url = URL.createObjectURL(blob);
       const anchor = document.createElement("a");
       anchor.href = url;
@@ -88,7 +93,7 @@ export function GreenCompareView({
       console.error("[green/compare] PDF export failed", err);
       setPdfState("error");
     }
-  }, [rows, c, locale]);
+  }, [canExport, rows, c, locale, selectedOffers, mm]);
 
   const pdfLabel =
     pdfState === "generating"
@@ -107,6 +112,7 @@ export function GreenCompareView({
       <GreenCompareOffersSection
         initialOfferIds={initialOfferIds}
         resolvedOffers={resolvedOffers}
+        onSelectedOffersChange={setSelectedOffers}
       />
 
       {registryProjects.length > 0 ? (
@@ -207,7 +213,7 @@ export function GreenCompareView({
       </GreenPanel>
 
       <div className="mt-8 flex flex-wrap items-center gap-4">
-        {rows.length > 0 ? (
+        {canExport ? (
           <>
             <button
               type="button"

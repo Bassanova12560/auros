@@ -1,6 +1,8 @@
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 
 import type { GreenLabelApplicationStatus } from "./label-applications";
+import { normalizeGreenLabelPreferredLocale } from "./label-locale";
+import type { Locale } from "@/lib/i18n";
 
 function getAdminClient(): SupabaseClient | null {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL?.trim();
@@ -24,6 +26,7 @@ export type UpdateGreenLabelStatusResult =
       email: string;
       contactName: string;
       projectName: string;
+      preferredLocale: Locale;
       changed: boolean;
     }
   | { ok: false; error: "not_found" | "invalid_transition" | "database" };
@@ -46,7 +49,7 @@ export async function updateGreenLabelApplicationStatus(
 
   const { data: app, error: fetchErr } = await supabase
     .from("green_label_applications")
-    .select("id,status,email,contact_name,project_name")
+    .select("id,status,email,contact_name,project_name,preferred_locale")
     .eq("id", input.applicationId)
     .maybeSingle();
 
@@ -54,6 +57,10 @@ export async function updateGreenLabelApplicationStatus(
 
   const previousStatus = app.status as GreenLabelApplicationStatus;
   const nextStatus = input.status;
+
+  const preferredLocale = normalizeGreenLabelPreferredLocale(
+    app.preferred_locale as string | null | undefined
+  );
 
   if (previousStatus === nextStatus) {
     return {
@@ -63,6 +70,7 @@ export async function updateGreenLabelApplicationStatus(
       email: String(app.email),
       contactName: String(app.contact_name),
       projectName: String(app.project_name),
+      preferredLocale,
       changed: false,
     };
   }
@@ -94,6 +102,7 @@ export async function updateGreenLabelApplicationStatus(
     email: String(app.email),
     contactName: String(app.contact_name),
     projectName: String(app.project_name),
+    preferredLocale,
     changed: true,
   };
 }

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 
 import { AiFirstPageJsonLd } from "@/app/_components/ai-first/AiFirstPageJsonLd";
 import { absoluteUrl } from "@/lib/comparators/site";
@@ -27,7 +28,15 @@ export default async function GreenRegistryPage() {
   return (
     <>
       <AiFirstPageJsonLd path={GREEN_REGISTRY_ROUTE} />
-      <GreenRegistryView snapshot={snapshot} />
+      <Suspense
+        fallback={
+          <div className="page-inner page-inner--3xl mx-auto px-4 py-24 text-sm text-neutral-500">
+            …
+          </div>
+        }
+      >
+        <GreenRegistryView snapshot={snapshot} />
+      </Suspense>
     </>
   );
 }

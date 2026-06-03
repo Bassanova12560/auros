@@ -91,6 +91,7 @@ export async function POST(req: NextRequest) {
     "0017_green_market_owners_alerts.sql",
     "0018_green_market_country.sql",
     "0019_green_label_document.sql",
+    "0020_green_label_preferred_locale.sql",
   ];
 
   try {

@@ -127,11 +127,25 @@ Sans clé IA : scoring rule-based amélioré uniquement (comportement valide).
 - **Registre — fiches projet** — `/green/registry/project/[id]` : nom, statut, lieu, description, niveau RTMS ; liens depuis la liste registre ; SEO + sitemap + catalogue AI-first.
 - **Tests** — `tests/green-sprint10.test.ts` (`npm run test:green`).
 
-### Après Sprint 10 (backlog Sprint 11)
+## Sprint 11 — shipped 2026-06-03
 
-- Compare : export CSV/PDF incluant les annonces marketplace sélectionnées
-- Label : e-mail locale préférée candidat (si champ ajouté)
-- Registre : filtre par tier Verified / pilote
+- **Compare export CSV/PDF + annonces** — export CSV/PDF sur `/green/compare` inclut les annonces marketplace sélectionnées (localStorage + `?offers=`) ; colonnes acteur, énergie, côté, volume, prix, lieu, tier, date ; i18n FR/EN/ES.
+- **Label — locale e-mail candidat** — colonne `preferred_locale` sur `green_label_applications` (migration `0020`) ; inférée depuis la locale site à la soumission ; e-mails reçu / statut / publication utilisent la locale candidat (FR/EN/ES).
+- **Registre — filtre tier** — onglets Tous / Verified / Cas pilote sur `/green/registry` ; param URL `?tier=verified|pilot` ; i18n FR/EN/ES.
+- **Tests** — `tests/green-sprint11.test.ts` (`npm run test:green`).
+
+### Après Sprint 11 (backlog Sprint 12)
+
+- Registre : export CSV des projets filtrés
+- Compare : partage public du comparateur (lien signé ou snapshot)
+- Label : relance e-mail candidat si dossier incomplet
+- NFT, oracle, Uniswap, PricingCard boost, dark mode, Clerk sur tout `/green/*`, Lighthouse CI
+
+### Après Sprint 10 (backlog Sprint 11 — traité)
+
+- ~~Compare : export CSV/PDF incluant les annonces marketplace sélectionnées~~ → Sprint 11
+- ~~Label : e-mail locale préférée candidat (si champ ajouté)~~ → Sprint 11
+- ~~Registre : filtre par tier Verified / pilote~~ → Sprint 11
 - NFT, oracle, Uniswap, PricingCard boost, dark mode, Clerk sur tout `/green/*`, Lighthouse CI
 
 ### Après Sprint 9 (backlog Sprint 10 — traité)
@@ -164,6 +178,7 @@ NFT SBT, Uniswap, oracle, PricingCard, dark mode, full Clerk middleware on all `
 
 
 - Run migration `0019_green_label_document.sql` on Supabase.
+- Run migration `0020_green_label_preferred_locale.sql` on Supabase (or `npm run db:bootstrap:green-market`).
 
 - Create storage bucket `green-label-documents` (private) if not present.
 

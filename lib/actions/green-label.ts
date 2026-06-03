@@ -1,11 +1,13 @@
 "use server";
 
+import type { Locale } from "@/lib/i18n";
 import { isValidCaptureEmail } from "@/lib/email-capture";
 import {
   sendGreenLabelInternal,
   sendGreenLabelReceived,
 } from "@/lib/emails/send";
 import type { GreenProjectType } from "@/lib/green/constants";
+import { normalizeGreenLabelPreferredLocale } from "@/lib/green/label-locale";
 import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 
@@ -26,6 +28,7 @@ export type SaveGreenLabelInput = {
   website: string;
   country: string;
   description: string;
+  preferredLocale?: Locale;
 };
 
 export type SaveGreenLabelResult =
@@ -55,6 +58,7 @@ export async function saveGreenLabelAction(
   }
 
   const supabase = getSupabaseServerClient();
+  const preferredLocale = normalizeGreenLabelPreferredLocale(input.preferredLocale);
   const { data, error } = await supabase
     .from("green_label_applications")
     .insert({
@@ -65,6 +69,7 @@ export async function saveGreenLabelAction(
       website: input.website.trim(),
       country: input.country.trim(),
       description: input.description.trim(),
+      preferred_locale: preferredLocale,
     })
     .select("id")
     .single();
@@ -82,7 +87,7 @@ export async function saveGreenLabelAction(
   void sendGreenLabelReceived(email, {
     contactName: input.contactName.trim(),
     projectName: input.projectName.trim(),
-    locale: "fr",
+    locale: preferredLocale,
   });
   void sendGreenLabelInternal({
     id,

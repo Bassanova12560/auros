@@ -263,6 +263,11 @@ export type GreenMessages = {
     marketOffersActions: string;
     removeFromCompare: string;
     copyCompareLink: string;
+    marketExport: {
+      sectionTitle: string;
+      energy: string;
+      tier: string;
+    };
   };
   label: {
     eyebrow: string;
@@ -381,6 +386,10 @@ export type GreenMessages = {
     statsPilots: (n: number) => string;
     searchPlaceholder: string;
     searchEmpty: string;
+    tierFilterAll: string;
+    tierFilterVerified: string;
+    tierFilterPilot: string;
+    tierFilterEmpty: string;
     backLink: string;
     viewProject: string;
     projectDetail: {
@@ -996,6 +1005,11 @@ const FR: GreenMessages = {
     marketOffersActions: "Actions",
     removeFromCompare: "Retirer",
     copyCompareLink: "Copier le lien comparateur",
+    marketExport: {
+      sectionTitle: "Annonces marketplace sélectionnées",
+      energy: "Énergie",
+      tier: "Niveau listing",
+    },
   },
   label: {
     eyebrow: "Candidature",
@@ -1154,6 +1168,10 @@ const FR: GreenMessages = {
     statsPilots: (n) => `${n} cas pilote${n > 1 ? "s" : ""}`,
     searchPlaceholder: "Rechercher un projet (nom, pays)…",
     searchEmpty: "Aucun projet ne correspond à cette recherche.",
+    tierFilterAll: "Tous",
+    tierFilterVerified: "Verified",
+    tierFilterPilot: "Cas pilote",
+    tierFilterEmpty: "Aucun projet ne correspond à ce filtre.",
     backLink: "← Retour AUROS Green",
     viewProject: "Voir la fiche projet",
     projectDetail: {
@@ -1793,6 +1811,11 @@ const EN: GreenMessages = {
     marketOffersActions: "Actions",
     removeFromCompare: "Remove",
     copyCompareLink: "Copy comparator link",
+    marketExport: {
+      sectionTitle: "Selected marketplace listings",
+      energy: "Energy",
+      tier: "Listing tier",
+    },
   },
   label: {
     eyebrow: "Application",
@@ -1950,6 +1973,10 @@ const EN: GreenMessages = {
     statsPilots: (n) => `${n} pilot case${n === 1 ? "" : "s"}`,
     searchPlaceholder: "Search a project (name, country)…",
     searchEmpty: "No project matches this search.",
+    tierFilterAll: "All",
+    tierFilterVerified: "Verified",
+    tierFilterPilot: "Pilot cases",
+    tierFilterEmpty: "No project matches this filter.",
     backLink: "← Back to AUROS Green",
     viewProject: "View project page",
     projectDetail: {
@@ -2592,6 +2619,11 @@ const ES: GreenMessages = {
     marketOffersActions: "Acciones",
     removeFromCompare: "Quitar",
     copyCompareLink: "Copiar enlace comparador",
+    marketExport: {
+      sectionTitle: "Anuncios del marketplace seleccionados",
+      energy: "Energía",
+      tier: "Nivel listing",
+    },
   },
   label: {
     eyebrow: "Solicitud",
@@ -2751,6 +2783,10 @@ const ES: GreenMessages = {
     statsPilots: (n) => `${n} caso${n === 1 ? "" : "s"} piloto`,
     searchPlaceholder: "Buscar un proyecto (nombre, país)…",
     searchEmpty: "Ningún proyecto coincide con esta búsqueda.",
+    tierFilterAll: "Todos",
+    tierFilterVerified: "Verified",
+    tierFilterPilot: "Casos piloto",
+    tierFilterEmpty: "Ningún proyecto coincide con este filtro.",
     backLink: "← Volver a AUROS Green",
     viewProject: "Ver ficha del proyecto",
     projectDetail: {
