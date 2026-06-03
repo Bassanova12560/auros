@@ -18,6 +18,10 @@ import {
 } from "@/lib/green/compare-csv";
 import type { GreenRegistryProjectRow } from "@/lib/green/green-registry";
 import type { GreenMarketOfferDetail } from "@/lib/green/market/offer-detail";
+import {
+  buildGreenCompareShareUrl,
+  normalizeCompareCountries,
+} from "@/lib/green/market/compare-selection";
 import { getGreenMarketMessages } from "@/lib/green/market-i18n";
 
 import { GreenCompareOffersSection } from "./market/GreenCompareOffersSection";
@@ -63,6 +67,7 @@ export function GreenCompareView({
   const rows = GREEN_COMPARE_ROWS;
   const [pdfState, setPdfState] = useState<PdfState>("idle");
   const [selectedOffers, setSelectedOffers] = useState<GreenMarketOfferDetail[]>([]);
+  const [shareFeedback, setShareFeedback] = useState<string | null>(null);
   const mm = getGreenMarketMessages(locale).market;
 
   const canExport = rows.length > 0 || selectedOffers.length > 0;
@@ -94,6 +99,24 @@ export function GreenCompareView({
       setPdfState("error");
     }
   }, [canExport, rows, c, locale, selectedOffers, mm]);
+
+  const handleShareLink = useCallback(async () => {
+    const countries = normalizeCompareCountries(
+      selectedOffers.map((offer) => offer.country)
+    );
+    const url = buildGreenCompareShareUrl({
+      offerIds: selectedOffers.map((offer) => offer.id),
+      countries,
+      origin: typeof window !== "undefined" ? window.location.origin : "",
+    });
+    try {
+      await navigator.clipboard.writeText(url);
+      setShareFeedback(c.shareCopied);
+      window.setTimeout(() => setShareFeedback(null), 2500);
+    } catch {
+      setShareFeedback(url);
+    }
+  }, [selectedOffers, c.shareCopied]);
 
   const pdfLabel =
     pdfState === "generating"
@@ -231,6 +254,18 @@ export function GreenCompareView({
               {pdfLabel}
             </button>
           </>
+        ) : null}
+        {selectedOffers.length > 0 ? (
+          <button
+            type="button"
+            onClick={() => void handleShareLink()}
+            className="rounded-lg border border-emerald-500/40 px-4 py-2 font-mono text-[11px] uppercase tracking-wider text-emerald-500 transition hover:border-emerald-400 hover:text-emerald-400"
+          >
+            {c.copyCompareLink}
+          </button>
+        ) : null}
+        {shareFeedback ? (
+          <span className="font-mono text-[10px] text-neutral-500">{shareFeedback}</span>
         ) : null}
         <Link
           href={AUROS_COMPARE_ROUTE}

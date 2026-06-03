@@ -3,7 +3,10 @@ import type { Metadata } from "next";
 import { AiFirstPageJsonLd } from "@/app/_components/ai-first/AiFirstPageJsonLd";
 import { absoluteUrl } from "@/lib/comparators/site";
 import { GREEN_COMPARE_ROUTE } from "@/lib/green";
-import { parseCompareOfferIdsParam } from "@/lib/green/market/compare-selection";
+import {
+  parseCompareCountriesParam,
+  parseCompareOfferIdsParam,
+} from "@/lib/green/market/compare-selection";
 import { getGreenMarketOfferById } from "@/lib/green/market/green-market-db";
 
 import { getGreenRegistrySnapshot } from "@/lib/green/green-registry";
@@ -35,12 +38,13 @@ export const metadata: Metadata = {
 };
 
 type PageProps = {
-  searchParams: Promise<{ offers?: string }>;
+  searchParams: Promise<{ offers?: string; countries?: string }>;
 };
 
 export default async function GreenComparePage({ searchParams }: PageProps) {
   const params = await searchParams;
   const initialOfferIds = parseCompareOfferIdsParam(params.offers);
+  void parseCompareCountriesParam(params.countries);
   const resolvedOffers = (
     await Promise.all(initialOfferIds.map((id) => getGreenMarketOfferById(id)))
   ).filter((offer) => offer != null);

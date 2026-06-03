@@ -5,7 +5,6 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { useLocale } from "@/app/_components/i18n/LocaleProvider";
 import {
-  GREEN_COMPARE_ROUTE,
   GREEN_ROUTE,
   getGreenMessages,
 } from "@/lib/green";
@@ -13,8 +12,9 @@ import type { GreenMarketOfferDetail } from "@/lib/green/market/offer-detail";
 import { formatGreenMarketOfferTitle } from "@/lib/green/market/offer-detail";
 import { greenMarketOfferPath } from "@/lib/green/market/offer-routes";
 import {
-  buildGreenCompareUrl,
+  buildGreenCompareShareUrl,
   mergeCompareOfferIds,
+  normalizeCompareCountries,
   parseCompareOfferIdsParam,
   readCompareOfferIds,
   removeCompareOfferId,
@@ -49,6 +49,7 @@ export function GreenCompareOffersSection({
   const c = getGreenMessages(locale).compare;
   const mm = getGreenMarketMessages(locale).market;
   const [selectedIds, setSelectedIds] = useState<string[]>(initialOfferIds);
+  const [shareFeedback, setShareFeedback] = useState<string | null>(null);
   const [offerMap, setOfferMap] = useState<Record<string, GreenMarketOfferDetail>>(() => {
     const map: Record<string, GreenMarketOfferDetail> = {};
     for (const offer of resolvedOffers) {
@@ -90,6 +91,24 @@ export function GreenCompareOffersSection({
     const next = removeCompareOfferId(id);
     setSelectedIds(next);
   }, []);
+
+  const handleShareLink = useCallback(async () => {
+    const countries = normalizeCompareCountries(
+      selectedOffers.map((offer) => offer.country)
+    );
+    const url = buildGreenCompareShareUrl({
+      offerIds: selectedIds,
+      countries,
+      origin: typeof window !== "undefined" ? window.location.origin : "",
+    });
+    try {
+      await navigator.clipboard.writeText(url);
+      setShareFeedback(c.shareCopied);
+      window.setTimeout(() => setShareFeedback(null), 2500);
+    } catch {
+      setShareFeedback(url);
+    }
+  }, [selectedIds, selectedOffers, c.shareCopied]);
 
   if (selectedIds.length === 0) {
     return (
@@ -171,12 +190,16 @@ export function GreenCompareOffersSection({
         </table>
       </div>
       <div className="border-t border-emerald-500/20 px-6 py-4">
-        <Link
-          href={buildGreenCompareUrl(selectedIds)}
+        <button
+          type="button"
+          onClick={() => void handleShareLink()}
           className="font-mono text-[11px] uppercase tracking-wider text-emerald-500 hover:text-emerald-400"
         >
-          {c.copyCompareLink} →
-        </Link>
+          {c.copyCompareLink}
+        </button>
+        {shareFeedback ? (
+          <p className="mt-2 font-mono text-[10px] text-neutral-500">{shareFeedback}</p>
+        ) : null}
       </div>
     </GreenPanel>
   );

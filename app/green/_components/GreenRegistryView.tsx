@@ -13,6 +13,11 @@ import {
   greenVerifyPath,
 } from "@/lib/green";
 import {
+  downloadGreenRegistryCsv,
+  greenRegistryProjectsToCsv,
+  suggestedGreenRegistryCsvFilename,
+} from "@/lib/green/registry-csv";
+import {
   GREEN_REGISTRY_TIER_URL_PARAM,
   greenRegistryProjectPath,
   parseRegistryTierParam,
@@ -109,6 +114,18 @@ export function GreenRegistryView({ snapshot }: Props) {
   const emptyMessage =
     searchQuery.trim().length > 0 ? r.searchEmpty : r.tierFilterEmpty;
 
+  const handleExportCsv = useCallback(() => {
+    if (filteredProjects.length === 0) return;
+    const csv = greenRegistryProjectsToCsv(
+      filteredProjects,
+      r,
+      c,
+      locale,
+      { tierFilter }
+    );
+    downloadGreenRegistryCsv(csv, suggestedGreenRegistryCsvFilename(tierFilter));
+  }, [filteredProjects, r, c, locale, tierFilter]);
+
   return (
     <div className="page-inner page-inner--3xl mx-auto px-4 pb-20 pt-12 md:px-6 md:pt-14">
       <GreenPageHeader eyebrow={r.eyebrow} title={r.title} intro={r.intro} compact />
@@ -168,6 +185,15 @@ export function GreenRegistryView({ snapshot }: Props) {
                   className="mt-2 w-full rounded-lg border border-emerald-500/30 bg-black px-4 py-3 text-sm text-emerald-200 outline-none focus:border-emerald-400"
                 />
               </label>
+              {filteredProjects.length > 0 ? (
+                <button
+                  type="button"
+                  onClick={handleExportCsv}
+                  className="mt-4 rounded-lg border border-emerald-500/40 px-4 py-2 font-mono text-[11px] uppercase tracking-wider text-emerald-500 transition hover:border-emerald-400 hover:text-emerald-400"
+                >
+                  {r.exportCsv}
+                </button>
+              ) : null}
             </>
           ) : null}
           {projects.length === 0 ? (

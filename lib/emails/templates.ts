@@ -1039,6 +1039,70 @@ export function greenLabelStatusEmail(
   return { subject: copy.subject, html };
 }
 
+export type GreenLabelIncompleteReminderEmailData = {
+  contactName: string;
+  projectName: string;
+  missingDocument: boolean;
+  labelUrl: string;
+  myUrl: string;
+  locale?: Locale;
+};
+
+export function greenLabelIncompleteReminderEmail(
+  data: GreenLabelIncompleteReminderEmailData
+) {
+  const locale = data.locale ?? "fr";
+  const name = escapeHtml(data.contactName || "—");
+  const project = escapeHtml(data.projectName);
+  const copy = {
+    fr: {
+      subject: "AUROS Green — complétez votre dossier label",
+      greet: `Bonjour ${name},`,
+      line: `Votre candidature au label AUROS Green Verified pour <strong>${project}</strong> est incomplète.`,
+      missingDoc:
+        "Il manque la pièce jointe PDF (dossier RTMS ou documentation projet).",
+      missingFields: "Certaines informations obligatoires sont manquantes.",
+      next: "Complétez votre dossier pour accélérer la revue documentaire.",
+      ctaLabel: "Compléter le dossier",
+      ctaMy: "Suivre ma candidature",
+    },
+    en: {
+      subject: "AUROS Green — complete your label dossier",
+      greet: `Hi ${name},`,
+      line: `Your AUROS Green Verified label application for <strong>${project}</strong> is incomplete.`,
+      missingDoc:
+        "The PDF attachment is missing (RTMS dossier or project documentation).",
+      missingFields: "Some required information is missing.",
+      next: "Complete your dossier to speed up document review.",
+      ctaLabel: "Complete dossier",
+      ctaMy: "Track my application",
+    },
+    es: {
+      subject: "AUROS Green — complete su dossier label",
+      greet: `Hola ${name},`,
+      line: `Su candidatura al label AUROS Green Verified para <strong>${project}</strong> está incompleta.`,
+      missingDoc:
+        "Falta el PDF adjunto (dossier RTMS o documentación del proyecto).",
+      missingFields: "Faltan datos obligatorios.",
+      next: "Complete el dossier para acelerar la revisión documental.",
+      ctaLabel: "Completar dossier",
+      ctaMy: "Seguir mi candidatura",
+    },
+  }[locale === "fr" ? "fr" : locale === "es" ? "es" : "en"];
+
+  const missingLine = data.missingDocument ? copy.missingDoc : copy.missingFields;
+
+  const html = layout(
+    `<p style="margin:0 0 16px;">${copy.greet}</p>
+    <p style="margin:0 0 16px;color:${BRAND_MUTED};">${copy.line}</p>
+    <p style="margin:0 0 16px;color:${BRAND_MUTED};">${missingLine}</p>
+    <p style="margin:0 0 20px;color:${BRAND_MUTED};">${copy.next}</p>` +
+      cta(data.labelUrl, copy.ctaLabel) +
+      `<p style="margin:12px 0 0;"><a href="${escapeHtml(data.myUrl)}" style="color:${BRAND_MUTED};font-size:13px;">${copy.ctaMy}</a></p>`
+  );
+  return { subject: copy.subject, html };
+}
+
 export type GreenLabelInternalEmailData = {
   projectName: string;
   email: string;

@@ -28,6 +28,8 @@ type LabelItem = {
   website: string;
   description: string;
   createdAt: string;
+  hasDocument: boolean;
+  reminderSentAt: string | null;
 };
 
 function authHeader(secret: string): HeadersInit {
@@ -119,6 +121,47 @@ export function GreenAdminView() {
         const json = (await res.json()) as { ok?: boolean; error?: string };
         if (!res.ok || !json.ok) {
           setError(json.error ?? "Mise à jour statut label échouée.");
+          return;
+        }
+        await refresh(secret);
+      } finally {
+        setBusyId(null);
+      }
+    },
+    [refresh, secret]
+  );
+
+  const sendLabelReminder = useCallback(
+    async (item: LabelItem) => {
+      setBusyId(item.id);
+      setError(null);
+      try {
+        const res = await fetch("/api/admin/green-label-reminder", {
+          method: "POST",
+          headers: {
+            ...authHeader(secret),
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ applicationId: item.id }),
+        });
+        const json = (await res.json()) as {
+          ok?: boolean;
+          sent?: boolean;
+          reason?: string;
+          error?: string;
+        };
+        if (!res.ok || !json.ok) {
+          setError(json.error ?? "Relance dossier échouée.");
+          return;
+        }
+        if (!json.sent) {
+          setError(
+            json.reason === "already_sent"
+              ? "Relance déjà envoyée pour ce dossier."
+              : json.reason === "complete"
+                ? "Dossier déjà complet."
+                : "Relance non envoyée."
+          );
           return;
         }
         await refresh(secret);
@@ -279,6 +322,8 @@ export function GreenAdminView() {
                       <p className="font-medium text-emerald-300">{item.projectName}</p>
                       <p className="mt-1 text-xs text-neutral-500">
                         {item.projectType} · {item.country} · {item.contactName} · {item.email}
+                        {!item.hasDocument ? " · PDF manquant" : " · PDF joint"}
+                        {item.reminderSentAt ? " · Relance envoyée" : ""}
                       </p>
                       <p className="mt-2 text-sm text-neutral-400 line-clamp-3">
                         {item.description}
@@ -312,6 +357,14 @@ export function GreenAdminView() {
                           className="rounded-full border border-neutral-600 px-4 py-1.5 text-xs text-neutral-300 hover:border-neutral-400 disabled:opacity-50"
                         >
                           Rejeter
+                        </button>
+                        <button
+                          type="button"
+                          disabled={busyId === item.id || Boolean(item.reminderSentAt)}
+                          onClick={() => void sendLabelReminder(item)}
+                          className="rounded-full border border-amber-500/40 px-4 py-1.5 text-xs text-amber-200/90 hover:border-amber-400 disabled:opacity-50"
+                        >
+                          Relance dossier
                         </button>
                         <button
                           type="button"

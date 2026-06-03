@@ -263,6 +263,7 @@ export type GreenMessages = {
     marketOffersActions: string;
     removeFromCompare: string;
     copyCompareLink: string;
+    shareCopied: string;
     marketExport: {
       sectionTitle: string;
       energy: string;
@@ -390,6 +391,7 @@ export type GreenMessages = {
     tierFilterVerified: string;
     tierFilterPilot: string;
     tierFilterEmpty: string;
+    exportCsv: string;
     backLink: string;
     viewProject: string;
     projectDetail: {
@@ -1004,7 +1006,8 @@ const FR: GreenMessages = {
     marketOffersCount: (n) => `${n} annonce${n > 1 ? "s" : ""} sélectionnée${n > 1 ? "s" : ""} (max 4)`,
     marketOffersActions: "Actions",
     removeFromCompare: "Retirer",
-    copyCompareLink: "Copier le lien comparateur",
+    copyCompareLink: "Copier le lien de comparaison",
+    shareCopied: "Lien copié",
     marketExport: {
       sectionTitle: "Annonces marketplace sélectionnées",
       energy: "Énergie",
@@ -1172,6 +1175,7 @@ const FR: GreenMessages = {
     tierFilterVerified: "Verified",
     tierFilterPilot: "Cas pilote",
     tierFilterEmpty: "Aucun projet ne correspond à ce filtre.",
+    exportCsv: "Exporter CSV",
     backLink: "← Retour AUROS Green",
     viewProject: "Voir la fiche projet",
     projectDetail: {
@@ -1810,7 +1814,8 @@ const EN: GreenMessages = {
     marketOffersCount: (n) => `${n} listing${n === 1 ? "" : "s"} selected (max 4)`,
     marketOffersActions: "Actions",
     removeFromCompare: "Remove",
-    copyCompareLink: "Copy comparator link",
+    copyCompareLink: "Copy comparison link",
+    shareCopied: "Link copied",
     marketExport: {
       sectionTitle: "Selected marketplace listings",
       energy: "Energy",
@@ -1977,6 +1982,7 @@ const EN: GreenMessages = {
     tierFilterVerified: "Verified",
     tierFilterPilot: "Pilot cases",
     tierFilterEmpty: "No project matches this filter.",
+    exportCsv: "Export CSV",
     backLink: "← Back to AUROS Green",
     viewProject: "View project page",
     projectDetail: {
@@ -2618,7 +2624,8 @@ const ES: GreenMessages = {
     marketOffersCount: (n) => `${n} anuncio${n === 1 ? "" : "s"} seleccionado${n === 1 ? "" : "s"} (máx. 4)`,
     marketOffersActions: "Acciones",
     removeFromCompare: "Quitar",
-    copyCompareLink: "Copiar enlace comparador",
+    copyCompareLink: "Copiar enlace de comparación",
+    shareCopied: "Enlace copiado",
     marketExport: {
       sectionTitle: "Anuncios del marketplace seleccionados",
       energy: "Energía",
@@ -2787,6 +2794,7 @@ const ES: GreenMessages = {
     tierFilterVerified: "Verified",
     tierFilterPilot: "Casos piloto",
     tierFilterEmpty: "Ningún proyecto coincide con este filtro.",
+    exportCsv: "Exportar CSV",
     backLink: "← Volver a AUROS Green",
     viewProject: "Ver ficha del proyecto",
     projectDetail: {

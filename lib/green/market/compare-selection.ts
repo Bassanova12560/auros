@@ -3,6 +3,26 @@ import { GREEN_COMPARE_ROUTE } from "../constants";
 export const GREEN_COMPARE_OFFERS_KEY = "auros_green_compare_offers";
 export const GREEN_COMPARE_OFFERS_MAX = 4;
 export const GREEN_COMPARE_OFFERS_URL_PARAM = "offers";
+export const GREEN_COMPARE_COUNTRIES_URL_PARAM = "countries";
+
+export function normalizeCompareCountries(countries: string[]): string[] {
+  const seen = new Set<string>();
+  const out: string[] = [];
+  for (const raw of countries) {
+    const c = raw.trim();
+    if (!c || seen.has(c.toLowerCase())) continue;
+    seen.add(c.toLowerCase());
+    out.push(c);
+  }
+  return out;
+}
+
+export function parseCompareCountriesParam(
+  value: string | null | undefined
+): string[] {
+  if (!value?.trim()) return [];
+  return normalizeCompareCountries(value.split(","));
+}
 
 function hasStorage(): boolean {
   return typeof localStorage !== "undefined";
@@ -80,12 +100,33 @@ export function buildGreenCompareUrl(
   ids: string[],
   origin = ""
 ): string {
-  const normalized = normalizeCompareOfferIds(ids);
+  return buildGreenCompareShareUrl({ offerIds: ids, origin });
+}
+
+export type GreenCompareShareParams = {
+  offerIds: string[];
+  countries?: string[];
+  origin?: string;
+};
+
+/** Public share URL for /green/compare — offers + optional countries filter context. */
+export function buildGreenCompareShareUrl({
+  offerIds,
+  countries = [],
+  origin = "",
+}: GreenCompareShareParams): string {
+  const normalizedIds = normalizeCompareOfferIds(offerIds);
+  const normalizedCountries = normalizeCompareCountries(countries);
   const base = `${origin}${GREEN_COMPARE_ROUTE}`;
-  if (normalized.length === 0) return base;
   const params = new URLSearchParams();
-  params.set(GREEN_COMPARE_OFFERS_URL_PARAM, normalized.join(","));
-  return `${base}?${params.toString()}`;
+  if (normalizedIds.length > 0) {
+    params.set(GREEN_COMPARE_OFFERS_URL_PARAM, normalizedIds.join(","));
+  }
+  if (normalizedCountries.length > 0) {
+    params.set(GREEN_COMPARE_COUNTRIES_URL_PARAM, normalizedCountries.join(","));
+  }
+  const query = params.toString();
+  return query ? `${base}?${query}` : base;
 }
 
 export function isOfferInCompareSelection(id: string): boolean {
