@@ -30,6 +30,7 @@ type LabelItem = {
   createdAt: string;
   hasDocument: boolean;
   reminderSentAt: string | null;
+  secondReminderSentAt: string | null;
 };
 
 function authHeader(secret: string): HeadersInit {
@@ -323,7 +324,8 @@ export function GreenAdminView() {
                       <p className="mt-1 text-xs text-neutral-500">
                         {item.projectType} · {item.country} · {item.contactName} · {item.email}
                         {!item.hasDocument ? " · PDF manquant" : " · PDF joint"}
-                        {item.reminderSentAt ? " · Relance envoyée" : ""}
+                        {item.reminderSentAt ? " · Relance 1" : ""}
+                        {item.secondReminderSentAt ? " · Relance 2" : ""}
                       </p>
                       <p className="mt-2 text-sm text-neutral-400 line-clamp-3">
                         {item.description}
@@ -360,7 +362,10 @@ export function GreenAdminView() {
                         </button>
                         <button
                           type="button"
-                          disabled={busyId === item.id || Boolean(item.reminderSentAt)}
+                          disabled={
+                            busyId === item.id ||
+                            Boolean(item.reminderSentAt && item.secondReminderSentAt)
+                          }
                           onClick={() => void sendLabelReminder(item)}
                           className="rounded-full border border-amber-500/40 px-4 py-1.5 text-xs text-amber-200/90 hover:border-amber-400 disabled:opacity-50"
                         >

@@ -1,12 +1,16 @@
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 
-import { sendGreenLabelIncompleteReminder } from "@/lib/emails/send";
+import {
+  sendGreenLabelIncompleteReminder,
+  sendGreenLabelIncompleteSecondReminder,
+} from "@/lib/emails/send";
 import { absoluteUrl } from "@/lib/comparators/site";
 import { GREEN_LABEL_ROUTE } from "./constants";
 import { normalizeGreenLabelPreferredLocale } from "./label-locale";
 import type { Locale } from "@/lib/i18n";
 
-const REMINDER_AFTER_MS = 24 * 60 * 60 * 1000;
+const FIRST_REMINDER_AFTER_MS = 24 * 60 * 60 * 1000;
+const SECOND_REMINDER_AFTER_MS = 7 * 24 * 60 * 60 * 1000;
 
 function getAdminClient(): SupabaseClient | null {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL?.trim();
@@ -26,6 +30,7 @@ export type GreenLabelApplicationIncompleteRow = {
   createdAt: string;
   missingDocument: boolean;
   missingFields: string[];
+  reminderRound: 1 | 2;
 };
 
 export function isGreenLabelApplicationIncomplete(row: {
@@ -53,7 +58,10 @@ export function isGreenLabelApplicationIncomplete(row: {
   };
 }
 
-function mapIncompleteRow(row: Record<string, unknown>): GreenLabelApplicationIncompleteRow {
+function mapIncompleteRow(
+  row: Record<string, unknown>,
+  reminderRound: 1 | 2
+): GreenLabelApplicationIncompleteRow {
   const check = isGreenLabelApplicationIncomplete(row);
   return {
     id: String(row.id),
@@ -66,7 +74,28 @@ function mapIncompleteRow(row: Record<string, unknown>): GreenLabelApplicationIn
     createdAt: String(row.created_at),
     missingDocument: check.missingDocument,
     missingFields: check.missingFields,
+    reminderRound,
   };
+}
+
+function isEligibleForReminder(
+  row: Record<string, unknown>,
+  reminderRound: 1 | 2,
+  options?: { force?: boolean }
+): boolean {
+  const check = isGreenLabelApplicationIncomplete(row);
+  if (!check.incomplete) return false;
+  if (options?.force) return true;
+
+  if (reminderRound === 1) {
+    if (row.reminder_sent_at) return false;
+    const cutoff = Date.now() - FIRST_REMINDER_AFTER_MS;
+    return new Date(String(row.created_at)).getTime() <= cutoff;
+  }
+
+  if (!row.reminder_sent_at || row.second_reminder_sent_at) return false;
+  const cutoff = Date.now() - SECOND_REMINDER_AFTER_MS;
+  return new Date(String(row.reminder_sent_at)).getTime() <= cutoff;
 }
 
 export async function listIncompleteLabelApplicationsForReminder(options?: {
@@ -75,35 +104,57 @@ export async function listIncompleteLabelApplicationsForReminder(options?: {
   const supabase = getAdminClient();
   if (!supabase) return [];
 
-  const { data, error } = await supabase
-    .from("green_label_applications")
-    .select(
-      "id,project_name,contact_name,email,website,country,description,document_path,preferred_locale,created_at,reminder_sent_at,status"
-    )
-    .eq("status", "pending")
-    .is("reminder_sent_at", null)
-    .is("registry_project_id", null)
-    .order("created_at", { ascending: true });
+  const select =
+    "id,project_name,contact_name,email,website,country,description,document_path,preferred_locale,created_at,reminder_sent_at,second_reminder_sent_at,status";
 
-  if (error || !data) {
-    console.error("[listIncompleteLabelApplicationsForReminder]", error);
-    return [];
+  const [firstRes, secondRes] = await Promise.all([
+    supabase
+      .from("green_label_applications")
+      .select(select)
+      .eq("status", "pending")
+      .is("reminder_sent_at", null)
+      .is("registry_project_id", null)
+      .order("created_at", { ascending: true }),
+    supabase
+      .from("green_label_applications")
+      .select(select)
+      .eq("status", "pending")
+      .not("reminder_sent_at", "is", null)
+      .is("second_reminder_sent_at", null)
+      .is("registry_project_id", null)
+      .order("reminder_sent_at", { ascending: true }),
+  ]);
+
+  if (firstRes.error) {
+    console.error("[listIncompleteLabelApplicationsForReminder:first]", firstRes.error);
+  }
+  if (secondRes.error) {
+    console.error("[listIncompleteLabelApplicationsForReminder:second]", secondRes.error);
   }
 
-  const cutoff = Date.now() - REMINDER_AFTER_MS;
+  const out: GreenLabelApplicationIncompleteRow[] = [];
 
-  return data
-    .filter((row) => {
-      const check = isGreenLabelApplicationIncomplete(row);
-      if (!check.incomplete) return false;
-      if (options?.force) return true;
-      return new Date(String(row.created_at)).getTime() <= cutoff;
-    })
-    .map((row) => mapIncompleteRow(row));
+  for (const row of firstRes.data ?? []) {
+    if (isEligibleForReminder(row, 1, options)) {
+      out.push(mapIncompleteRow(row, 1));
+    }
+  }
+  for (const row of secondRes.data ?? []) {
+    if (isEligibleForReminder(row, 2, options)) {
+      out.push(mapIncompleteRow(row, 2));
+    }
+  }
+
+  return out;
 }
 
 export type SendGreenLabelReminderResult =
-  | { ok: true; sent: boolean; reason?: "already_sent" | "complete" | "too_early" }
+  | {
+      ok: true;
+      sent: boolean;
+      reminderRound?: 1 | 2;
+      reason?: "already_sent" | "complete" | "too_early";
+    }
   | { ok: false; error: "not_found" | "database" | "email" };
 
 export async function sendGreenLabelIncompleteReminderForApplication(
@@ -116,16 +167,12 @@ export async function sendGreenLabelIncompleteReminderForApplication(
   const { data: row, error } = await supabase
     .from("green_label_applications")
     .select(
-      "id,project_name,contact_name,email,website,country,description,document_path,preferred_locale,created_at,reminder_sent_at,status,registry_project_id"
+      "id,project_name,contact_name,email,website,country,description,document_path,preferred_locale,created_at,reminder_sent_at,second_reminder_sent_at,status,registry_project_id"
     )
     .eq("id", applicationId)
     .maybeSingle();
 
   if (error || !row) return { ok: false, error: "not_found" };
-
-  if (row.reminder_sent_at) {
-    return { ok: true, sent: false, reason: "already_sent" };
-  }
 
   if (row.status !== "pending" || row.registry_project_id) {
     return { ok: true, sent: false, reason: "complete" };
@@ -136,43 +183,74 @@ export async function sendGreenLabelIncompleteReminderForApplication(
     return { ok: true, sent: false, reason: "complete" };
   }
 
-  if (!options?.force) {
-    const cutoff = Date.now() - REMINDER_AFTER_MS;
-    if (new Date(String(row.created_at)).getTime() > cutoff) {
-      return { ok: true, sent: false, reason: "too_early" };
-    }
-  }
-
   const locale = normalizeGreenLabelPreferredLocale(
     row.preferred_locale as string | null | undefined
   );
   const labelUrl = absoluteUrl(GREEN_LABEL_ROUTE);
   const myUrl = absoluteUrl("/green/my");
 
-  const emailed = await sendGreenLabelIncompleteReminder(String(row.email), {
+  const emailPayload = {
     contactName: String(row.contact_name),
     projectName: String(row.project_name),
     missingDocument: check.missingDocument,
     labelUrl,
     myUrl,
     locale,
-  });
+  };
 
+  if (!row.reminder_sent_at) {
+    if (!options?.force) {
+      const cutoff = Date.now() - FIRST_REMINDER_AFTER_MS;
+      if (new Date(String(row.created_at)).getTime() > cutoff) {
+        return { ok: true, sent: false, reason: "too_early", reminderRound: 1 };
+      }
+    }
+
+    const emailed = await sendGreenLabelIncompleteReminder(String(row.email), emailPayload);
+    if (!emailed) return { ok: false, error: "email" };
+
+    const now = new Date().toISOString();
+    const { error: updateErr } = await supabase
+      .from("green_label_applications")
+      .update({ reminder_sent_at: now })
+      .eq("id", applicationId)
+      .is("reminder_sent_at", null);
+
+    if (updateErr) {
+      console.error("[sendGreenLabelIncompleteReminderForApplication:first]", updateErr);
+      return { ok: false, error: "database" };
+    }
+
+    return { ok: true, sent: true, reminderRound: 1 };
+  }
+
+  if (row.second_reminder_sent_at) {
+    return { ok: true, sent: false, reason: "already_sent", reminderRound: 2 };
+  }
+
+  if (!options?.force) {
+    const cutoff = Date.now() - SECOND_REMINDER_AFTER_MS;
+    if (new Date(String(row.reminder_sent_at)).getTime() > cutoff) {
+      return { ok: true, sent: false, reason: "too_early", reminderRound: 2 };
+    }
+  }
+
+  const emailed = await sendGreenLabelIncompleteSecondReminder(String(row.email), emailPayload);
   if (!emailed) return { ok: false, error: "email" };
 
   const now = new Date().toISOString();
   const { error: updateErr } = await supabase
     .from("green_label_applications")
-    .update({ reminder_sent_at: now })
+    .update({ second_reminder_sent_at: now })
     .eq("id", applicationId)
-    .is("reminder_sent_at", null);
+    .is("second_reminder_sent_at", null);
 
   if (updateErr) {
-    console.error("[sendGreenLabelIncompleteReminderForApplication]", updateErr);
+    console.error("[sendGreenLabelIncompleteReminderForApplication:second]", updateErr);
     return { ok: false, error: "database" };
   }
 
-  return { ok: true, sent: true };
+  return { ok: true, sent: true, reminderRound: 2 };
 }
 
 export async function runGreenLabelIncompleteReminderCron(): Promise<{
@@ -180,11 +258,15 @@ export async function runGreenLabelIncompleteReminderCron(): Promise<{
   sent: number;
   skipped: number;
   errors: number;
+  firstSent: number;
+  secondSent: number;
 }> {
   const candidates = await listIncompleteLabelApplicationsForReminder();
   let sent = 0;
   let skipped = 0;
   let errors = 0;
+  let firstSent = 0;
+  let secondSent = 0;
 
   for (const app of candidates) {
     const result = await sendGreenLabelIncompleteReminderForApplication(app.id);
@@ -192,9 +274,12 @@ export async function runGreenLabelIncompleteReminderCron(): Promise<{
       errors += 1;
       continue;
     }
-    if (result.sent) sent += 1;
-    else skipped += 1;
+    if (result.sent) {
+      sent += 1;
+      if (result.reminderRound === 2) secondSent += 1;
+      else firstSent += 1;
+    } else skipped += 1;
   }
 
-  return { scanned: candidates.length, sent, skipped, errors };
+  return { scanned: candidates.length, sent, skipped, errors, firstSent, secondSent };
 }

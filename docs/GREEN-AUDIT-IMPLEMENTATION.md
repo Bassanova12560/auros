@@ -141,11 +141,18 @@ Sans clé IA : scoring rule-based amélioré uniquement (comportement valide).
 - **Label — relance dossier incomplet** — e-mail candidat si PDF manquant ou champs requis absents après 24 h (cron `/api/cron/green-label-reminders`) ; max 1 relance par candidature (`reminder_sent_at`, migration `0021`) ; locale `preferred_locale` ; bouton ops « Relance dossier » dans `/green/admin`.
 - **Tests** — `tests/green-sprint12.test.ts` (`npm run test:green`).
 
-### Après Sprint 12 (backlog Sprint 13)
+## Sprint 13 — shipped 2026-06-03
 
-- Registre : export PDF des projets filtrés
-- Compare : filtre pays depuis param URL `?countries=`
-- Label : relance automatique si dossier toujours incomplet après 7 jours
+- **Registre — export PDF filtré** — bouton « Exporter PDF » à côté du CSV sur `/green/registry` ; mêmes projets visibles (`?tier=` + recherche) ; `registry-pdf.tsx` (@react-pdf/renderer) ; i18n FR/EN/ES.
+- **Compare — filtre pays depuis URL** — `?countries=France,Portugal` restaure la sélection pays dans l’UI ; filtre la section registre du comparateur ; synchronisation URL + lien de partage.
+- **Label — 2e relance après 7 jours** — si dossier toujours incomplet 7 jours après la 1re relance (`reminder_sent_at`), e-mail de rappel final ; max 2 relances (`second_reminder_sent_at`, migration `0022`) ; cron `/api/cron/green-label-reminders` ; locale `preferred_locale`.
+- **Tests** — `tests/green-sprint13.test.ts` (`npm run test:green`).
+
+### Après Sprint 13 (backlog Sprint 14)
+
+- Registre : export PDF incluant experts / métadonnées enrichies
+- Compare : snapshot serveur du comparateur (au-delà de l’URL)
+- Label : tableau de bord ops relances (stats)
 - NFT, oracle, Uniswap, PricingCard boost, dark mode, Clerk sur tout `/green/*`, Lighthouse CI
 
 ### Après Sprint 11 (backlog Sprint 12 — traité)
@@ -194,6 +201,7 @@ NFT SBT, Uniswap, oracle, PricingCard, dark mode, full Clerk middleware on all `
 - Run migration `0019_green_label_document.sql` on Supabase.
 - Run migration `0020_green_label_preferred_locale.sql` on Supabase (or `npm run db:bootstrap:green-market`).
 - Run migration `0021_green_label_reminder_sent_at.sql` on Supabase.
+- Run migration `0022_green_label_second_reminder_sent_at.sql` on Supabase.
 
 - Create storage bucket `green-label-documents` (private) if not present.
 

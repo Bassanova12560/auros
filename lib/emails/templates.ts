@@ -1103,6 +1103,59 @@ export function greenLabelIncompleteReminderEmail(
   return { subject: copy.subject, html };
 }
 
+export function greenLabelIncompleteSecondReminderEmail(
+  data: GreenLabelIncompleteReminderEmailData
+) {
+  const locale = data.locale ?? "fr";
+  const name = escapeHtml(data.contactName || "—");
+  const project = escapeHtml(data.projectName);
+  const copy = {
+    fr: {
+      subject: "AUROS Green — rappel : dossier label à compléter",
+      greet: `Bonjour ${name},`,
+      line: `Il y a une semaine, nous vous avions signalé que votre candidature label pour <strong>${project}</strong> est toujours incomplète.`,
+      missingDoc:
+        "Le PDF (dossier RTMS ou documentation) est toujours manquant.",
+      missingFields: "Des informations obligatoires sont toujours manquantes.",
+      next: "Dernière relance automatique — complétez le dossier pour lancer la revue.",
+      ctaLabel: "Compléter le dossier",
+      ctaMy: "Suivre ma candidature",
+    },
+    en: {
+      subject: "AUROS Green — reminder: complete your label dossier",
+      greet: `Hi ${name},`,
+      line: `One week ago we noted that your label application for <strong>${project}</strong> is still incomplete.`,
+      missingDoc: "The PDF attachment is still missing.",
+      missingFields: "Required information is still missing.",
+      next: "Final automatic reminder — complete your dossier to start review.",
+      ctaLabel: "Complete dossier",
+      ctaMy: "Track my application",
+    },
+    es: {
+      subject: "AUROS Green — recordatorio: complete su dossier label",
+      greet: `Hola ${name},`,
+      line: `Hace una semana le indicamos que su candidatura label para <strong>${project}</strong> sigue incompleta.`,
+      missingDoc: "El PDF adjunto sigue faltando.",
+      missingFields: "Siguen faltando datos obligatorios.",
+      next: "Último recordatorio automático — complete el dossier para iniciar la revisión.",
+      ctaLabel: "Completar dossier",
+      ctaMy: "Seguir mi candidatura",
+    },
+  }[locale === "fr" ? "fr" : locale === "es" ? "es" : "en"];
+
+  const missingLine = data.missingDocument ? copy.missingDoc : copy.missingFields;
+
+  const html = layout(
+    `<p style="margin:0 0 16px;">${copy.greet}</p>
+    <p style="margin:0 0 16px;color:${BRAND_MUTED};">${copy.line}</p>
+    <p style="margin:0 0 16px;color:${BRAND_MUTED};">${missingLine}</p>
+    <p style="margin:0 0 20px;color:${BRAND_MUTED};">${copy.next}</p>` +
+      cta(data.labelUrl, copy.ctaLabel) +
+      `<p style="margin:12px 0 0;"><a href="${escapeHtml(data.myUrl)}" style="color:${BRAND_MUTED};font-size:13px;">${copy.ctaMy}</a></p>`
+  );
+  return { subject: copy.subject, html };
+}
+
 export type GreenLabelInternalEmailData = {
   projectName: string;
   email: string;

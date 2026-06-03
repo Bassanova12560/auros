@@ -37,6 +37,7 @@ import {
   greenLabelInternalEmail,
   greenLabelStatusEmail,
   greenLabelIncompleteReminderEmail,
+  greenLabelIncompleteSecondReminderEmail,
   greenMarketAlertEmail,
   greenOfferInterestInternalEmail,
   greenOfferInterestActorEmail,
@@ -361,6 +362,14 @@ export async function sendGreenLabelIncompleteReminder(
   data: GreenLabelIncompleteReminderEmailData
 ): Promise<boolean> {
   const { subject, html } = greenLabelIncompleteReminderEmail(data);
+  return sendSafe({ to, subject, html });
+}
+
+export async function sendGreenLabelIncompleteSecondReminder(
+  to: string,
+  data: GreenLabelIncompleteReminderEmailData
+): Promise<boolean> {
+  const { subject, html } = greenLabelIncompleteSecondReminderEmail(data);
   return sendSafe({ to, subject, html });
 }
 

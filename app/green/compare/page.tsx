@@ -44,7 +44,7 @@ type PageProps = {
 export default async function GreenComparePage({ searchParams }: PageProps) {
   const params = await searchParams;
   const initialOfferIds = parseCompareOfferIdsParam(params.offers);
-  void parseCompareCountriesParam(params.countries);
+  const initialCountries = parseCompareCountriesParam(params.countries);
   const resolvedOffers = (
     await Promise.all(initialOfferIds.map((id) => getGreenMarketOfferById(id)))
   ).filter((offer) => offer != null);
@@ -56,6 +56,7 @@ export default async function GreenComparePage({ searchParams }: PageProps) {
       <GreenCompareView
         registryProjects={snapshot.projects}
         initialOfferIds={initialOfferIds}
+        initialCountries={initialCountries}
         resolvedOffers={resolvedOffers}
       />
     </>

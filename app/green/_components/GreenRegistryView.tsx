@@ -57,6 +57,7 @@ export function GreenRegistryView({ snapshot }: Props) {
   const c = m.compare;
   const { projects, experts, available } = snapshot;
   const [searchQuery, setSearchQuery] = useState("");
+  const [pdfState, setPdfState] = useState<"idle" | "generating" | "error">("idle");
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const router = useRouter();
@@ -126,6 +127,38 @@ export function GreenRegistryView({ snapshot }: Props) {
     downloadGreenRegistryCsv(csv, suggestedGreenRegistryCsvFilename(tierFilter));
   }, [filteredProjects, r, c, locale, tierFilter]);
 
+  const handleExportPdf = useCallback(async () => {
+    if (filteredProjects.length === 0) return;
+    setPdfState("generating");
+    try {
+      const { generateGreenRegistryPDF, suggestedGreenRegistryPdfFilename } =
+        await import("@/lib/green/registry-pdf");
+      const blob = await generateGreenRegistryPDF(filteredProjects, r, c, locale, {
+        tierFilter,
+        disclaimer: m.disclaimer,
+      });
+      const url = URL.createObjectURL(blob);
+      const anchor = document.createElement("a");
+      anchor.href = url;
+      anchor.download = suggestedGreenRegistryPdfFilename(tierFilter, locale);
+      document.body.appendChild(anchor);
+      anchor.click();
+      anchor.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 0);
+      setPdfState("idle");
+    } catch (err) {
+      console.error("[green/registry] PDF export failed", err);
+      setPdfState("error");
+    }
+  }, [filteredProjects, r, c, locale, tierFilter, m.disclaimer]);
+
+  const pdfLabel =
+    pdfState === "generating"
+      ? r.exportPdfGenerating
+      : pdfState === "error"
+        ? r.exportPdfRetry
+        : r.exportPdf;
+
   return (
     <div className="page-inner page-inner--3xl mx-auto px-4 pb-20 pt-12 md:px-6 md:pt-14">
       <GreenPageHeader eyebrow={r.eyebrow} title={r.title} intro={r.intro} compact />
@@ -186,13 +219,23 @@ export function GreenRegistryView({ snapshot }: Props) {
                 />
               </label>
               {filteredProjects.length > 0 ? (
-                <button
-                  type="button"
-                  onClick={handleExportCsv}
-                  className="mt-4 rounded-lg border border-emerald-500/40 px-4 py-2 font-mono text-[11px] uppercase tracking-wider text-emerald-500 transition hover:border-emerald-400 hover:text-emerald-400"
-                >
-                  {r.exportCsv}
-                </button>
+                <div className="mt-4 flex flex-wrap gap-3">
+                  <button
+                    type="button"
+                    onClick={handleExportCsv}
+                    className="rounded-lg border border-emerald-500/40 px-4 py-2 font-mono text-[11px] uppercase tracking-wider text-emerald-500 transition hover:border-emerald-400 hover:text-emerald-400"
+                  >
+                    {r.exportCsv}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => void handleExportPdf()}
+                    disabled={pdfState === "generating"}
+                    className="rounded-lg border border-emerald-500/40 px-4 py-2 font-mono text-[11px] uppercase tracking-wider text-emerald-500 transition hover:border-emerald-400 hover:text-emerald-400 disabled:cursor-wait disabled:opacity-60"
+                  >
+                    {pdfLabel}
+                  </button>
+                </div>
               ) : null}
             </>
           ) : null}

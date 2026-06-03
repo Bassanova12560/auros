@@ -24,6 +24,21 @@ export function parseCompareCountriesParam(
   return normalizeCompareCountries(value.split(","));
 }
 
+/** Case-insensitive country match for compare/registry filters. Empty selection = no filter. */
+export function projectMatchesCompareCountries(
+  country: string,
+  selectedCountries: string[]
+): boolean {
+  if (selectedCountries.length === 0) return true;
+  const normalized = country.trim().toLowerCase();
+  if (!normalized) return false;
+  return selectedCountries.some((c) => c.trim().toLowerCase() === normalized);
+}
+
+export function encodeCompareCountriesParam(countries: string[]): string {
+  return normalizeCompareCountries(countries).join(",");
+}
+
 function hasStorage(): boolean {
   return typeof localStorage !== "undefined";
 }

@@ -264,6 +264,9 @@ export type GreenMessages = {
     removeFromCompare: string;
     copyCompareLink: string;
     shareCopied: string;
+    countryFilterLabel: string;
+    countryFilterClear: string;
+    countryFilterEmpty: string;
     marketExport: {
       sectionTitle: string;
       energy: string;
@@ -392,6 +395,9 @@ export type GreenMessages = {
     tierFilterPilot: string;
     tierFilterEmpty: string;
     exportCsv: string;
+    exportPdf: string;
+    exportPdfGenerating: string;
+    exportPdfRetry: string;
     backLink: string;
     viewProject: string;
     projectDetail: {
@@ -1008,6 +1014,9 @@ const FR: GreenMessages = {
     removeFromCompare: "Retirer",
     copyCompareLink: "Copier le lien de comparaison",
     shareCopied: "Lien copié",
+    countryFilterLabel: "Filtrer par pays",
+    countryFilterClear: "Tous les pays",
+    countryFilterEmpty: "Aucun projet pour ces pays.",
     marketExport: {
       sectionTitle: "Annonces marketplace sélectionnées",
       energy: "Énergie",
@@ -1176,6 +1185,9 @@ const FR: GreenMessages = {
     tierFilterPilot: "Cas pilote",
     tierFilterEmpty: "Aucun projet ne correspond à ce filtre.",
     exportCsv: "Exporter CSV",
+    exportPdf: "Exporter PDF",
+    exportPdfGenerating: "PDF…",
+    exportPdfRetry: "Réessayer PDF",
     backLink: "← Retour AUROS Green",
     viewProject: "Voir la fiche projet",
     projectDetail: {
@@ -1816,6 +1828,9 @@ const EN: GreenMessages = {
     removeFromCompare: "Remove",
     copyCompareLink: "Copy comparison link",
     shareCopied: "Link copied",
+    countryFilterLabel: "Filter by country",
+    countryFilterClear: "All countries",
+    countryFilterEmpty: "No projects for these countries.",
     marketExport: {
       sectionTitle: "Selected marketplace listings",
       energy: "Energy",
@@ -1983,6 +1998,9 @@ const EN: GreenMessages = {
     tierFilterPilot: "Pilot cases",
     tierFilterEmpty: "No project matches this filter.",
     exportCsv: "Export CSV",
+    exportPdf: "Export PDF",
+    exportPdfGenerating: "PDF…",
+    exportPdfRetry: "Retry PDF",
     backLink: "← Back to AUROS Green",
     viewProject: "View project page",
     projectDetail: {
@@ -2626,6 +2644,9 @@ const ES: GreenMessages = {
     removeFromCompare: "Quitar",
     copyCompareLink: "Copiar enlace de comparación",
     shareCopied: "Enlace copiado",
+    countryFilterLabel: "Filtrar por país",
+    countryFilterClear: "Todos los países",
+    countryFilterEmpty: "Ningún proyecto para estos países.",
     marketExport: {
       sectionTitle: "Anuncios del marketplace seleccionados",
       energy: "Energía",
@@ -2795,6 +2816,9 @@ const ES: GreenMessages = {
     tierFilterPilot: "Casos piloto",
     tierFilterEmpty: "Ningún proyecto coincide con este filtro.",
     exportCsv: "Exportar CSV",
+    exportPdf: "Exportar PDF",
+    exportPdfGenerating: "PDF…",
+    exportPdfRetry: "Reintentar PDF",
     backLink: "← Volver a AUROS Green",
     viewProject: "Ver ficha del proyecto",
     projectDetail: {

@@ -122,6 +122,7 @@ export type PendingGreenLabelApplication = {
   createdAt: string;
   hasDocument: boolean;
   reminderSentAt: string | null;
+  secondReminderSentAt: string | null;
 };
 
 export async function listPendingGreenLabelApplications(): Promise<
@@ -133,7 +134,7 @@ export async function listPendingGreenLabelApplications(): Promise<
   const { data, error } = await supabase
     .from("green_label_applications")
     .select(
-      "id,project_name,project_type,contact_name,email,country,website,description,created_at,document_path,reminder_sent_at"
+      "id,project_name,project_type,contact_name,email,country,website,description,created_at,document_path,reminder_sent_at,second_reminder_sent_at"
     )
     .eq("status", "pending")
     .is("registry_project_id", null)
@@ -156,5 +157,8 @@ export async function listPendingGreenLabelApplications(): Promise<
     createdAt: String(row.created_at),
     hasDocument: Boolean(row.document_path),
     reminderSentAt: row.reminder_sent_at ? String(row.reminder_sent_at) : null,
+    secondReminderSentAt: row.second_reminder_sent_at
+      ? String(row.second_reminder_sent_at)
+      : null,
   }));
 }

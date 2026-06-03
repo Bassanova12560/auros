@@ -38,12 +38,14 @@ type Props = {
   initialOfferIds: string[];
   resolvedOffers: GreenMarketOfferDetail[];
   onSelectedOffersChange?: (offers: GreenMarketOfferDetail[]) => void;
+  shareCountries?: string[];
 };
 
 export function GreenCompareOffersSection({
   initialOfferIds,
   resolvedOffers,
   onSelectedOffersChange,
+  shareCountries = [],
 }: Props) {
   const { locale } = useLocale();
   const c = getGreenMessages(locale).compare;
@@ -93,9 +95,10 @@ export function GreenCompareOffersSection({
   }, []);
 
   const handleShareLink = useCallback(async () => {
-    const countries = normalizeCompareCountries(
-      selectedOffers.map((offer) => offer.country)
-    );
+    const countries =
+      shareCountries.length > 0
+        ? normalizeCompareCountries(shareCountries)
+        : normalizeCompareCountries(selectedOffers.map((offer) => offer.country));
     const url = buildGreenCompareShareUrl({
       offerIds: selectedIds,
       countries,
@@ -108,7 +111,7 @@ export function GreenCompareOffersSection({
     } catch {
       setShareFeedback(url);
     }
-  }, [selectedIds, selectedOffers, c.shareCopied]);
+  }, [selectedIds, selectedOffers, shareCountries, c.shareCopied]);
 
   if (selectedIds.length === 0) {
     return (

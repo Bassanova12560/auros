@@ -42,6 +42,10 @@ const GREEN_MARKET_MIGRATIONS = [
 
   "0020_green_label_preferred_locale.sql",
 
+  "0021_green_label_reminder_sent_at.sql",
+
+  "0022_green_label_second_reminder_sent_at.sql",
+
 ] as const;
 
 
