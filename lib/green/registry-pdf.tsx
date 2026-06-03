@@ -43,8 +43,7 @@ import type { GreenMessages } from "./i18n";
 import type { GreenRegistryTierFilter } from "./registry-routes";
 import {
   registryPdfCertifiedLabel,
-  registryPdfContentSha256,
-  registryPdfIntegrityLine,
+  resolveRegistryPdfIntegrityLine,
 } from "./registry-pdf-integrity";
 
 import type { Locale } from "@/lib/i18n";
@@ -726,7 +725,11 @@ export async function generateGreenRegistryPDF(
   const generatedAt = exportedAtIso.slice(0, 10);
   const projectIds = projects.map((project) => project.id);
   const expertIds = experts.map((expert) => expert.id);
-  const contentHash = await registryPdfContentSha256(projectIds, expertIds);
+  const integrityLine = await resolveRegistryPdfIntegrityLine(
+    projectIds,
+    expertIds,
+    locale
+  );
 
   return pdf(
 
@@ -750,7 +753,7 @@ export async function generateGreenRegistryPDF(
 
       certifiedLabel={registryPdfCertifiedLabel(exportedAtIso, locale)}
 
-      integrityLine={registryPdfIntegrityLine(contentHash, locale)}
+      integrityLine={integrityLine}
 
       exportFooter={registryPdfExportFooter(generatedAt, locale)}
 

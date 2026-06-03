@@ -169,11 +169,35 @@ Sans clé IA : scoring rule-based amélioré uniquement (comportement valide).
 - **Label — export CSV filtré ops** — filtre sur `/green/admin` (all, pending, in_review, approved, rejected, incomplete, reminded_1, reminded_2) ; `GET /api/admin/green-label-export?filter=` ; i18n FR/EN/ES.
 - **Tests** — `tests/green-sprint16.test.ts` (`npm run test:green`).
 
-### Après Sprint 16 (backlog Sprint 17)
+## Sprint 17 — shipped 2026-06-03
 
-- Registre : export PDF signature clé serveur (au-delà SHA256 indicatif)
-- Compare : snapshot expiré — page dédiée « lien expiré »
-- Label : export CSV planifié (cron ops)
+- **Registre — export PDF signature serveur HMAC** — pied de page `sig={hmac}` via `GREEN_EXPORT_SIGNING_KEY` ou `CRON_SECRET` ; repli SHA256 seul sans clé ; `GET /api/green/sign-registry-export?hash=` + `GET /api/green/verify-registry-export?hash=&sig=` ; i18n FR/EN/ES.
+- **Compare — page snapshot expiré / introuvable** — `/green/compare/s/[id]` affiche une page dédiée (pas 404 générique) avec CTA vers `/green/compare` si TTL dépassé ou id absent ; i18n FR/EN/ES.
+- **Label — export CSV hebdomadaire ops (cron)** — `GET /api/cron/green-label-export-weekly` (lundi 07:00 UTC, `vercel.json`) ; CSV candidatures par e-mail Resend vers `OPS_EMAIL` ou `RESEND_INTERNAL_EMAIL` ; filtre `all` ou `incomplete` (`GREEN_LABEL_WEEKLY_EXPORT_FILTER`) ; auth `CRON_SECRET`.
+- **Tests** — `tests/green-sprint17.test.ts` (`npm run test:green`).
+
+### Vercel env (Sprint 17)
+
+| Variable | Usage |
+|----------|--------|
+| `GREEN_EXPORT_SIGNING_KEY` | Signature HMAC footer PDF registre (optionnel — repli `CRON_SECRET`) |
+| `CRON_SECRET` | Auth cron + repli signature PDF |
+| `OPS_EMAIL` | Destinataire export CSV hebdo label (repli `RESEND_INTERNAL_EMAIL`) |
+| `RESEND_API_KEY` | Envoi e-mail export hebdo |
+| `GREEN_LABEL_WEEKLY_EXPORT_FILTER` | Optionnel — `all` (défaut) ou `incomplete` |
+
+### Après Sprint 17 (backlog Sprint 18)
+
+- Registre : vérification PDF côté UI (lien vers `/api/green/verify-registry-export`)
+- Compare : prolongation TTL snapshot ou renouvellement automatique
+- Label : export CSV hebdo avec résumé stats relances dans le corps e-mail
+- NFT, oracle, Uniswap, PricingCard boost, dark mode, Clerk sur tout `/green/*`, Lighthouse CI
+
+### Après Sprint 16 (backlog Sprint 17 — traité)
+
+- ~~Registre : export PDF signature clé serveur (au-delà SHA256 indicatif)~~ → Sprint 17 (HMAC-SHA256)
+- ~~Compare : snapshot expiré — page dédiée « lien expiré »~~ → Sprint 17
+- ~~Label : export CSV planifié (cron ops)~~ → Sprint 17
 - NFT, oracle, Uniswap, PricingCard boost, dark mode, Clerk sur tout `/green/*`, Lighthouse CI
 
 ### Après Sprint 15 (backlog Sprint 16 — traité)

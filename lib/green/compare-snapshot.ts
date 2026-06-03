@@ -121,14 +121,19 @@ export async function createGreenCompareSnapshot(
   return { ok: true, id, expiresAt };
 }
 
-export async function getGreenCompareSnapshot(
+export type GreenCompareSnapshotLookup =
+  | { status: "active"; snapshot: GreenCompareSnapshotRecord }
+  | { status: "expired"; id: string; expiresAt: string }
+  | { status: "not_found" };
+
+export async function lookupGreenCompareSnapshot(
   id: string
-): Promise<GreenCompareSnapshotRecord | null> {
+): Promise<GreenCompareSnapshotLookup> {
   const trimmed = id.trim();
-  if (!trimmed || trimmed.length > 32) return null;
+  if (!trimmed || trimmed.length > 32) return { status: "not_found" };
 
   const supabase = getAdminClient();
-  if (!supabase) return null;
+  if (!supabase) return { status: "not_found" };
 
   const { data, error } = await supabase
     .from("green_compare_snapshots")
@@ -137,25 +142,37 @@ export async function getGreenCompareSnapshot(
     .maybeSingle();
 
   if (error) {
-    if (isMissingTable(error)) return null;
-    console.error("[green/compare-snapshot] fetch", error);
-    return null;
+    if (isMissingTable(error)) return { status: "not_found" };
+    console.error("[green/compare-snapshot] lookup", error);
+    return { status: "not_found" };
   }
 
-  if (!data) return null;
+  if (!data) return { status: "not_found" };
 
   const expiresAt = String(data.expires_at);
-  if (new Date(expiresAt).getTime() < Date.now()) return null;
+  if (new Date(expiresAt).getTime() < Date.now()) {
+    return { status: "expired", id: String(data.id), expiresAt };
+  }
 
   const payload = normalizeCompareSnapshotPayload(data.payload);
-  if (!payload) return null;
+  if (!payload) return { status: "not_found" };
 
   return {
-    id: String(data.id),
-    payload,
-    createdAt: String(data.created_at),
-    expiresAt,
+    status: "active",
+    snapshot: {
+      id: String(data.id),
+      payload,
+      createdAt: String(data.created_at),
+      expiresAt,
+    },
   };
+}
+
+export async function getGreenCompareSnapshot(
+  id: string
+): Promise<GreenCompareSnapshotRecord | null> {
+  const lookup = await lookupGreenCompareSnapshot(id);
+  return lookup.status === "active" ? lookup.snapshot : null;
 }
 
 export function filterCompareRowsBySnapshot(

@@ -269,6 +269,11 @@ export type GreenMessages = {
     snapshotCopied: string;
     snapshotError: string;
     snapshotLoaded: (id: string) => string;
+    snapshotExpiredTitle: string;
+    snapshotExpiredBody: string;
+    snapshotNotFoundTitle: string;
+    snapshotNotFoundBody: string;
+    snapshotExpiredCta: string;
     countryFilterLabel: string;
     countryFilterClear: string;
     countryFilterEmpty: string;
@@ -1041,6 +1046,13 @@ const FR: GreenMessages = {
     snapshotCopied: "Lien snapshot copié",
     snapshotError: "Snapshot indisponible — utilisez le lien URL",
     snapshotLoaded: (id) => `Comparaison partagée · snapshot ${id}`,
+    snapshotExpiredTitle: "Lien de comparaison expiré",
+    snapshotExpiredBody:
+      "Ce snapshot partagé a dépassé sa durée de validité (30 jours). Créez une nouvelle comparaison ou copiez un lien URL depuis le comparateur.",
+    snapshotNotFoundTitle: "Comparaison introuvable",
+    snapshotNotFoundBody:
+      "Ce lien snapshot n'existe pas ou a été supprimé. Retournez au comparateur pour en créer un nouveau.",
+    snapshotExpiredCta: "Retour au comparateur",
     countryFilterLabel: "Filtrer par pays",
     countryFilterClear: "Tous les pays",
     countryFilterEmpty: "Aucun projet pour ces pays.",
@@ -1219,7 +1231,7 @@ const FR: GreenMessages = {
     exportPdfGenerating: "PDF…",
     exportPdfRetry: "Réessayer PDF",
     exportOpsNote:
-      "Export registre AUROS Green certifié — horodatage UTC et empreinte SHA256 des lignes exportées (intégrité indicative, non signature électronique qualifiée).",
+      "Export registre AUROS Green certifié — horodatage UTC, empreinte SHA256 et signature HMAC serveur des lignes exportées (intégrité indicative, non signature électronique qualifiée). Sans clé serveur : SHA256 seul.",
     backLink: "← Retour AUROS Green",
     viewProject: "Voir la fiche projet",
     projectDetail: {
@@ -1878,6 +1890,13 @@ const EN: GreenMessages = {
     snapshotCopied: "Snapshot link copied",
     snapshotError: "Snapshot unavailable — use URL link",
     snapshotLoaded: (id) => `Shared comparison · snapshot ${id}`,
+    snapshotExpiredTitle: "Comparison link expired",
+    snapshotExpiredBody:
+      "This shared snapshot has passed its validity period (30 days). Start a new comparison or copy a URL link from the comparator.",
+    snapshotNotFoundTitle: "Comparison not found",
+    snapshotNotFoundBody:
+      "This snapshot link does not exist or was removed. Return to the comparator to create a new one.",
+    snapshotExpiredCta: "Back to comparator",
     countryFilterLabel: "Filter by country",
     countryFilterClear: "All countries",
     countryFilterEmpty: "No projects for these countries.",
@@ -2055,7 +2074,7 @@ const EN: GreenMessages = {
     exportPdfGenerating: "PDF…",
     exportPdfRetry: "Retry PDF",
     exportOpsNote:
-      "AUROS Green registry certified export — UTC timestamp and SHA256 fingerprint of exported rows (indicative integrity, not a qualified e-signature).",
+      "AUROS Green registry certified export — UTC timestamp, SHA256 fingerprint and server HMAC signature of exported rows (indicative integrity, not a qualified e-signature). Without server key: SHA256 only.",
     backLink: "← Back to AUROS Green",
     viewProject: "View project page",
     projectDetail: {
@@ -2717,6 +2736,13 @@ const ES: GreenMessages = {
     snapshotCopied: "Enlace snapshot copiado",
     snapshotError: "Snapshot no disponible — use el enlace URL",
     snapshotLoaded: (id) => `Comparación compartida · snapshot ${id}`,
+    snapshotExpiredTitle: "Enlace de comparación caducado",
+    snapshotExpiredBody:
+      "Este snapshot compartido superó su periodo de validez (30 días). Cree una nueva comparación o copie un enlace URL desde el comparador.",
+    snapshotNotFoundTitle: "Comparación no encontrada",
+    snapshotNotFoundBody:
+      "Este enlace snapshot no existe o fue eliminado. Vuelva al comparador para crear uno nuevo.",
+    snapshotExpiredCta: "Volver al comparador",
     countryFilterLabel: "Filtrar por país",
     countryFilterClear: "Todos los países",
     countryFilterEmpty: "Ningún proyecto para estos países.",
@@ -2896,7 +2922,7 @@ const ES: GreenMessages = {
     exportPdfGenerating: "PDF…",
     exportPdfRetry: "Reintentar PDF",
     exportOpsNote:
-      "Exportación certificada del registro AUROS Green — marca temporal UTC y huella SHA256 de las filas exportadas (integridad indicativa, sin firma electrónica cualificada).",
+      "Exportación certificada del registro AUROS Green — marca temporal UTC, huella SHA256 y firma HMAC servidor de las filas exportadas (integridad indicativa, sin firma electrónica cualificada). Sin clave servidor: solo SHA256.",
     backLink: "← Volver a AUROS Green",
     viewProject: "Ver ficha del proyecto",
     projectDetail: {

@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
-import { redirect } from "next/navigation";
 
 import { AiFirstPageJsonLd } from "@/app/_components/ai-first/AiFirstPageJsonLd";
 import { GREEN_COMPARE_ROUTE } from "@/lib/green";
-import { getGreenCompareSnapshot } from "@/lib/green/compare-snapshot";
+import { lookupGreenCompareSnapshot } from "@/lib/green/compare-snapshot";
 import { getGreenRegistrySnapshot } from "@/lib/green/green-registry";
 import { getGreenMarketOfferById } from "@/lib/green/market/green-market-db";
 
 import { GreenCompareView } from "../../../_components/GreenCompareView";
+import { GreenCompareSnapshotExpiredView } from "../../../_components/GreenCompareSnapshotExpiredView";
 
 export const dynamic = "force-dynamic";
 
@@ -22,13 +22,17 @@ type PageProps = {
 
 export default async function GreenCompareSnapshotPage({ params }: PageProps) {
   const { id } = await params;
-  const snapshot = await getGreenCompareSnapshot(id);
+  const lookup = await lookupGreenCompareSnapshot(id);
 
-  if (!snapshot) {
-    const fallback = new URLSearchParams();
-    redirect(`${GREEN_COMPARE_ROUTE}${fallback.toString() ? `?${fallback}` : ""}`);
+  if (lookup.status === "expired") {
+    return <GreenCompareSnapshotExpiredView reason="expired" />;
   }
 
+  if (lookup.status === "not_found") {
+    return <GreenCompareSnapshotExpiredView reason="not_found" />;
+  }
+
+  const { snapshot } = lookup;
   const { countries, offerIds, rwaRowIds } = snapshot.payload;
   const resolvedOffers = (
     await Promise.all(offerIds.map((offerId) => getGreenMarketOfferById(offerId)))
