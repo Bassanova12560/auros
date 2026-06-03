@@ -18,6 +18,10 @@ import {
   suggestedGreenRegistryCsvFilename,
 } from "@/lib/green/registry-csv";
 import {
+  fetchRegistryExportSignature,
+  registryPdfContentSha256,
+} from "@/lib/green/registry-pdf-integrity";
+import {
   GREEN_REGISTRY_TIER_URL_PARAM,
   greenRegistryProjectPath,
   parseRegistryTierParam,
@@ -32,6 +36,7 @@ import {
   GreenSectionTitle,
   GreenTierBadge,
 } from "./green-ui";
+import { GreenRegistryExportVerifyPanel } from "./GreenRegistryExportVerifyPanel";
 
 type Props = {
   snapshot: GreenRegistrySnapshot;
@@ -58,6 +63,8 @@ export function GreenRegistryView({ snapshot }: Props) {
   const { projects, experts, available } = snapshot;
   const [searchQuery, setSearchQuery] = useState("");
   const [pdfState, setPdfState] = useState<"idle" | "generating" | "error">("idle");
+  const [lastExportHash, setLastExportHash] = useState("");
+  const [lastExportSig, setLastExportSig] = useState("");
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const router = useRouter();
@@ -152,6 +159,12 @@ export function GreenRegistryView({ snapshot }: Props) {
       anchor.click();
       anchor.remove();
       setTimeout(() => URL.revokeObjectURL(url), 0);
+      const projectIds = filteredProjects.map((p) => p.id);
+      const expertIds = experts.map((e) => e.id);
+      const contentHash = await registryPdfContentSha256(projectIds, expertIds);
+      const sig = (await fetchRegistryExportSignature(contentHash)) ?? "";
+      setLastExportHash(contentHash);
+      setLastExportSig(sig);
       setPdfState("idle");
     } catch (err) {
       console.error("[green/registry] PDF export failed", err);
@@ -323,6 +336,12 @@ export function GreenRegistryView({ snapshot }: Props) {
 
       <p className="mt-6 text-xs leading-relaxed text-neutral-600">{r.pilotNote}</p>
       <p className="mt-3 text-xs leading-relaxed text-neutral-600">{r.verifyNote}</p>
+
+      <GreenRegistryExportVerifyPanel
+        initialHash={lastExportHash}
+        initialSig={lastExportSig}
+      />
+
       <GreenDisclaimer>{m.disclaimer}</GreenDisclaimer>
       <GreenBackLink href={GREEN_ROUTE}>{r.backLink}</GreenBackLink>
     </div>

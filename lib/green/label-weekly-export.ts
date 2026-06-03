@@ -7,6 +7,8 @@ import {
   listGreenLabelApplicationsForExport,
   type GreenLabelExportFilter,
 } from "@/lib/green/label-applications-export";
+import { getGreenLabelReminderStats } from "@/lib/green/label-reminder-stats";
+import { buildGreenLabelWeeklyExportEmailHtml } from "@/lib/green/label-weekly-export-email";
 import { Resend } from "resend";
 
 export type GreenLabelWeeklyExportResult = {
@@ -42,6 +44,7 @@ export async function runGreenLabelWeeklyExportCron(): Promise<GreenLabelWeeklyE
   }
 
   const rows = await listGreenLabelApplicationsForExport(filter);
+  const stats = await getGreenLabelReminderStats();
   const csv = greenLabelApplicationsToCsv(rows);
   const filename = suggestedGreenLabelApplicationsCsvFilename(filter);
   const date = new Date().toISOString().slice(0, 10);
@@ -51,11 +54,13 @@ export async function runGreenLabelWeeklyExportCron(): Promise<GreenLabelWeeklyE
     from: resendFrom(),
     to: [to],
     subject: `[AUROS Green] Export candidatures label — ${date} (${filter})`,
-    html: `
-      <p>Export hebdomadaire des candidatures label AUROS Green.</p>
-      <p>Filtre : <strong>${filter}</strong> · ${rows.length} ligne(s).</p>
-      <p>Pièce jointe : ${filename}</p>
-    `,
+    html: buildGreenLabelWeeklyExportEmailHtml({
+      filter,
+      rowCount: rows.length,
+      filename,
+      date,
+      stats,
+    }),
     attachments: [
       {
         filename,

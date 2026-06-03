@@ -176,6 +176,19 @@ Sans clé IA : scoring rule-based amélioré uniquement (comportement valide).
 - **Label — export CSV hebdomadaire ops (cron)** — `GET /api/cron/green-label-export-weekly` (lundi 07:00 UTC, `vercel.json`) ; CSV candidatures par e-mail Resend vers `OPS_EMAIL` ou `RESEND_INTERNAL_EMAIL` ; filtre `all` ou `incomplete` (`GREEN_LABEL_WEEKLY_EXPORT_FILTER`) ; auth `CRON_SECRET`.
 - **Tests** — `tests/green-sprint17.test.ts` (`npm run test:green`).
 
+## Sprint 18 — shipped 2026-06-03
+
+- **Registre — vérification PDF côté UI** — panneau « Vérifier un export PDF » sur `/green/registry` ; hash + sig ou collage ligne d'intégrité ; appel `/api/green/verify-registry-export` ; préremplissage après export PDF ; i18n FR/EN/ES.
+- **Compare — renouvellement TTL snapshot** — `POST /api/green/compare-snapshot/renew` ; bouton « Renouveler 30 j » sur snapshot actif et page expirée ; i18n FR/EN/ES.
+- **Label — export CSV hebdo avec stats relances** — corps e-mail cron inclut tableau incomplet / relance 1 / relance 2 / complet (`getGreenLabelReminderStats`) ; `buildGreenLabelWeeklyExportEmailHtml`.
+- **Tests** — `tests/green-sprint18.test.ts` (`npm run test:green`).
+
+## Sprint 19 — shipped 2026-06-03
+
+- **Compare — renouvellement auto si < 7 j avant expiration** — visite `/green/compare/s/[id]` prolonge silencieusement le TTL si fenêtre `GREEN_COMPARE_SNAPSHOT_AUTO_RENEW_DAYS` ; affichage date d'expiration sur snapshot actif.
+- **Registre — préremplissage verify après export** — hash SHA256 + sig HMAC injectés dans le panneau verify post-export PDF.
+- **Tests** — couverture i18n renew/expiry dans `tests/green-sprint18.test.ts`.
+
 ### Vercel env (Sprint 17)
 
 | Variable | Usage |
@@ -186,11 +199,15 @@ Sans clé IA : scoring rule-based amélioré uniquement (comportement valide).
 | `RESEND_API_KEY` | Envoi e-mail export hebdo |
 | `GREEN_LABEL_WEEKLY_EXPORT_FILTER` | Optionnel — `all` (défaut) ou `incomplete` |
 
-### Après Sprint 17 (backlog Sprint 18)
+### Après Sprint 19 (backlog Sprint 20)
 
-- Registre : vérification PDF côté UI (lien vers `/api/green/verify-registry-export`)
-- Compare : prolongation TTL snapshot ou renouvellement automatique
-- Label : export CSV hebdo avec résumé stats relances dans le corps e-mail
+- NFT, oracle, Uniswap, PricingCard boost, dark mode, Clerk sur tout `/green/*`, Lighthouse CI
+
+### Après Sprint 17 (backlog Sprint 18 — traité)
+
+- ~~Registre : vérification PDF côté UI (lien vers `/api/green/verify-registry-export`)~~ → Sprint 18
+- ~~Compare : prolongation TTL snapshot ou renouvellement automatique~~ → Sprint 18 + 19
+- ~~Label : export CSV hebdo avec résumé stats relances dans le corps e-mail~~ → Sprint 18
 - NFT, oracle, Uniswap, PricingCard boost, dark mode, Clerk sur tout `/green/*`, Lighthouse CI
 
 ### Après Sprint 16 (backlog Sprint 17 — traité)
@@ -244,6 +261,19 @@ Sans clé IA : scoring rule-based amélioré uniquement (comportement valide).
 - ~~Mobile polish on offer detail + market~~ → Sprint 9 (fiches détail)
 
 
+
+## État restant (honest inventory — 2026-06-03)
+
+| Catégorie | Count | Détail |
+|-----------|-------|--------|
+| **Fait (Sprints 1–19)** | **~120+ livrables** | Step 0 audit + Sprints 2–19 (voir sections ci-dessus) |
+| **Backlog actionnable MVP** | **0** | Tous les items Sprint 18–19 traités ; aucun P0–P3 audit ouvert |
+| **Hors scope / monétisation / externe** | **7** | NFT SBT, oracle, Uniswap pool, PricingCard boost, dark mode, Clerk lockdown `/green/*`, Lighthouse CI |
+| **TODO/FIXME code** | **0** | Aucun dans `app/green` ni `lib/green` |
+
+**Verdict MVP fonctionnel :** le parcours Green (hub, marché, registre, compare, label, RTMS assistant, `/green/my`, admin ops) est complet pour une beta publique. Les 7 items restants sont des extensions produit / infra, pas des blockers MVP.
+
+**Estimation sprints restants pour « MVP complet » :** **0 sprint** côté features MVP. Pour une V1 « premium » incluant monétisation et infra (Clerk global, Lighthouse CI, dark mode) : **3–5 sprints** selon priorités business — non requis pour lancer.
 
 ## Out of scope (unchanged)
 

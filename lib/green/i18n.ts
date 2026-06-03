@@ -274,6 +274,11 @@ export type GreenMessages = {
     snapshotNotFoundTitle: string;
     snapshotNotFoundBody: string;
     snapshotExpiredCta: string;
+    snapshotRenewCta: string;
+    snapshotRenewing: string;
+    snapshotRenewError: string;
+    snapshotRenewed: string;
+    snapshotExpiresAt: (date: string) => string;
     countryFilterLabel: string;
     countryFilterClear: string;
     countryFilterEmpty: string;
@@ -412,6 +417,23 @@ export type GreenMessages = {
     exportPdfGenerating: string;
     exportPdfRetry: string;
     exportOpsNote: string;
+    exportVerify: {
+      title: string;
+      intro: string;
+      hashLabel: string;
+      hashPlaceholder: string;
+      sigLabel: string;
+      sigPlaceholder: string;
+      pasteLabel: string;
+      pastePlaceholder: string;
+      submit: string;
+      checking: string;
+      resultValid: string;
+      resultInvalid: string;
+      resultNoKey: string;
+      resultError: string;
+      hint: string;
+    };
     backLink: string;
     viewProject: string;
     projectDetail: {
@@ -1053,6 +1075,11 @@ const FR: GreenMessages = {
     snapshotNotFoundBody:
       "Ce lien snapshot n'existe pas ou a été supprimé. Retournez au comparateur pour en créer un nouveau.",
     snapshotExpiredCta: "Retour au comparateur",
+    snapshotRenewCta: "Renouveler 30 j",
+    snapshotRenewing: "Renouvellement…",
+    snapshotRenewError: "Échec — réessayer",
+    snapshotRenewed: "Snapshot prolongé de 30 jours",
+    snapshotExpiresAt: (date) => `Expire le ${date}`,
     countryFilterLabel: "Filtrer par pays",
     countryFilterClear: "Tous les pays",
     countryFilterEmpty: "Aucun projet pour ces pays.",
@@ -1232,6 +1259,25 @@ const FR: GreenMessages = {
     exportPdfRetry: "Réessayer PDF",
     exportOpsNote:
       "Export registre AUROS Green certifié — horodatage UTC, empreinte SHA256 et signature HMAC serveur des lignes exportées (intégrité indicative, non signature électronique qualifiée). Sans clé serveur : SHA256 seul.",
+    exportVerify: {
+      title: "Vérifier un export PDF",
+      intro:
+        "Collez l'empreinte SHA256 et la signature HMAC du pied de page PDF, ou la ligne d'intégrité complète, pour valider l'export auprès du serveur AUROS.",
+      hashLabel: "Empreinte SHA256",
+      hashPlaceholder: "64 caractères hexadécimaux",
+      sigLabel: "Signature HMAC (sig=)",
+      sigPlaceholder: "64 caractères hexadécimaux",
+      pasteLabel: "Coller la ligne d'intégrité du PDF",
+      pastePlaceholder: "Intégrité SHA256 : … · sig=…",
+      submit: "Vérifier l'export",
+      checking: "Vérification…",
+      resultValid: "Signature valide — l'export correspond aux lignes signées par le serveur AUROS.",
+      resultInvalid: "Signature invalide — vérifiez hash et sig, ou l'export a été modifié.",
+      resultNoKey:
+        "Clé de signature serveur absente — vérification HMAC indisponible (SHA256 seul sur le PDF).",
+      resultError: "Vérification impossible — vérifiez le format hash/sig.",
+      hint: "API : GET /api/green/verify-registry-export?hash=&sig=",
+    },
     backLink: "← Retour AUROS Green",
     viewProject: "Voir la fiche projet",
     projectDetail: {
@@ -1897,6 +1943,11 @@ const EN: GreenMessages = {
     snapshotNotFoundBody:
       "This snapshot link does not exist or was removed. Return to the comparator to create a new one.",
     snapshotExpiredCta: "Back to comparator",
+    snapshotRenewCta: "Renew 30 days",
+    snapshotRenewing: "Renewing…",
+    snapshotRenewError: "Failed — retry",
+    snapshotRenewed: "Snapshot extended by 30 days",
+    snapshotExpiresAt: (date) => `Expires ${date}`,
     countryFilterLabel: "Filter by country",
     countryFilterClear: "All countries",
     countryFilterEmpty: "No projects for these countries.",
@@ -2075,6 +2126,25 @@ const EN: GreenMessages = {
     exportPdfRetry: "Retry PDF",
     exportOpsNote:
       "AUROS Green registry certified export — UTC timestamp, SHA256 fingerprint and server HMAC signature of exported rows (indicative integrity, not a qualified e-signature). Without server key: SHA256 only.",
+    exportVerify: {
+      title: "Verify a PDF export",
+      intro:
+        "Paste the SHA256 fingerprint and HMAC signature from the PDF footer, or the full integrity line, to validate the export against the AUROS server.",
+      hashLabel: "SHA256 fingerprint",
+      hashPlaceholder: "64 hexadecimal characters",
+      sigLabel: "HMAC signature (sig=)",
+      sigPlaceholder: "64 hexadecimal characters",
+      pasteLabel: "Paste PDF integrity line",
+      pastePlaceholder: "Integrity SHA256: … · sig=…",
+      submit: "Verify export",
+      checking: "Checking…",
+      resultValid: "Valid signature — export matches rows signed by the AUROS server.",
+      resultInvalid: "Invalid signature — check hash and sig, or the export was altered.",
+      resultNoKey:
+        "No server signing key — HMAC verification unavailable (SHA256 only on PDF).",
+      resultError: "Verification failed — check hash/sig format.",
+      hint: "API: GET /api/green/verify-registry-export?hash=&sig=",
+    },
     backLink: "← Back to AUROS Green",
     viewProject: "View project page",
     projectDetail: {
@@ -2743,6 +2813,11 @@ const ES: GreenMessages = {
     snapshotNotFoundBody:
       "Este enlace snapshot no existe o fue eliminado. Vuelva al comparador para crear uno nuevo.",
     snapshotExpiredCta: "Volver al comparador",
+    snapshotRenewCta: "Renovar 30 d",
+    snapshotRenewing: "Renovando…",
+    snapshotRenewError: "Error — reintentar",
+    snapshotRenewed: "Snapshot prolongado 30 días",
+    snapshotExpiresAt: (date) => `Expira el ${date}`,
     countryFilterLabel: "Filtrar por país",
     countryFilterClear: "Todos los países",
     countryFilterEmpty: "Ningún proyecto para estos países.",
@@ -2923,6 +2998,25 @@ const ES: GreenMessages = {
     exportPdfRetry: "Reintentar PDF",
     exportOpsNote:
       "Exportación certificada del registro AUROS Green — marca temporal UTC, huella SHA256 y firma HMAC servidor de las filas exportadas (integridad indicativa, sin firma electrónica cualificada). Sin clave servidor: solo SHA256.",
+    exportVerify: {
+      title: "Verificar una exportación PDF",
+      intro:
+        "Pegue la huella SHA256 y la firma HMAC del pie de página PDF, o la línea de integridad completa, para validar la exportación con el servidor AUROS.",
+      hashLabel: "Huella SHA256",
+      hashPlaceholder: "64 caracteres hexadecimales",
+      sigLabel: "Firma HMAC (sig=)",
+      sigPlaceholder: "64 caracteres hexadecimales",
+      pasteLabel: "Pegar línea de integridad del PDF",
+      pastePlaceholder: "Integridad SHA256: … · sig=…",
+      submit: "Verificar exportación",
+      checking: "Verificando…",
+      resultValid: "Firma válida — la exportación coincide con las filas firmadas por el servidor AUROS.",
+      resultInvalid: "Firma inválida — compruebe hash y sig, o la exportación fue alterada.",
+      resultNoKey:
+        "Sin clave de firma servidor — verificación HMAC no disponible (solo SHA256 en el PDF).",
+      resultError: "Verificación imposible — compruebe el formato hash/sig.",
+      hint: "API: GET /api/green/verify-registry-export?hash=&sig=",
+    },
     backLink: "← Volver a AUROS Green",
     viewProject: "Ver ficha del proyecto",
     projectDetail: {

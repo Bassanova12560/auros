@@ -175,6 +175,67 @@ export async function getGreenCompareSnapshot(
   return lookup.status === "active" ? lookup.snapshot : null;
 }
 
+/** Days before expiry when an active snapshot view triggers silent TTL renewal. */
+export const GREEN_COMPARE_SNAPSHOT_AUTO_RENEW_DAYS = 7;
+
+export function isCompareSnapshotNearExpiry(expiresAt: string, now = Date.now()): boolean {
+  const msLeft = new Date(expiresAt).getTime() - now;
+  if (msLeft <= 0) return false;
+  return msLeft <= GREEN_COMPARE_SNAPSHOT_AUTO_RENEW_DAYS * 24 * 60 * 60 * 1000;
+}
+
+export type GreenCompareSnapshotRenewResult =
+  | { ok: true; id: string; expiresAt: string; renewed: boolean }
+  | { ok: false; error: "not_found" | "unavailable" };
+
+/** Extend snapshot TTL by 30 days from now (works even if currently expired). */
+export async function renewGreenCompareSnapshot(
+  id: string
+): Promise<GreenCompareSnapshotRenewResult> {
+  const trimmed = id.trim();
+  if (!trimmed || trimmed.length > 32) return { ok: false, error: "not_found" };
+
+  const supabase = getAdminClient();
+  if (!supabase) return { ok: false, error: "unavailable" };
+
+  const { data, error: fetchError } = await supabase
+    .from("green_compare_snapshots")
+    .select("id,expires_at")
+    .eq("id", trimmed)
+    .maybeSingle();
+
+  if (fetchError) {
+    if (isMissingTable(fetchError)) return { ok: false, error: "unavailable" };
+    console.error("[green/compare-snapshot] renew lookup", fetchError);
+    return { ok: false, error: "unavailable" };
+  }
+
+  if (!data) return { ok: false, error: "not_found" };
+
+  const previousExpiresAt = String(data.expires_at);
+  const stillActive = new Date(previousExpiresAt).getTime() >= Date.now();
+  if (stillActive && !isCompareSnapshotNearExpiry(previousExpiresAt)) {
+    return { ok: true, id: trimmed, expiresAt: previousExpiresAt, renewed: false };
+  }
+
+  const expiresAt = new Date(
+    Date.now() + GREEN_COMPARE_SNAPSHOT_TTL_DAYS * 24 * 60 * 60 * 1000
+  ).toISOString();
+
+  const { error: updateError } = await supabase
+    .from("green_compare_snapshots")
+    .update({ expires_at: expiresAt })
+    .eq("id", trimmed);
+
+  if (updateError) {
+    if (isMissingTable(updateError)) return { ok: false, error: "unavailable" };
+    console.error("[green/compare-snapshot] renew update", updateError);
+    return { ok: false, error: "unavailable" };
+  }
+
+  return { ok: true, id: trimmed, expiresAt, renewed: true };
+}
+
 export function filterCompareRowsBySnapshot(
   rwaRowIds: string[]
 ): typeof GREEN_COMPARE_ROWS {

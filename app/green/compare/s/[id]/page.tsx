@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 import { AiFirstPageJsonLd } from "@/app/_components/ai-first/AiFirstPageJsonLd";
 import { GREEN_COMPARE_ROUTE } from "@/lib/green";
-import { lookupGreenCompareSnapshot } from "@/lib/green/compare-snapshot";
+import { lookupGreenCompareSnapshot, renewGreenCompareSnapshot } from "@/lib/green/compare-snapshot";
 import { getGreenRegistrySnapshot } from "@/lib/green/green-registry";
 import { getGreenMarketOfferById } from "@/lib/green/market/green-market-db";
 
@@ -25,14 +25,21 @@ export default async function GreenCompareSnapshotPage({ params }: PageProps) {
   const lookup = await lookupGreenCompareSnapshot(id);
 
   if (lookup.status === "expired") {
-    return <GreenCompareSnapshotExpiredView reason="expired" />;
+    return <GreenCompareSnapshotExpiredView reason="expired" snapshotId={lookup.id} />;
   }
 
   if (lookup.status === "not_found") {
     return <GreenCompareSnapshotExpiredView reason="not_found" />;
   }
 
-  const { snapshot } = lookup;
+  let { snapshot } = lookup;
+  const renewResult = await renewGreenCompareSnapshot(snapshot.id);
+  if (renewResult.ok && renewResult.renewed) {
+    snapshot = {
+      ...snapshot,
+      expiresAt: renewResult.expiresAt,
+    };
+  }
   const { countries, offerIds, rwaRowIds } = snapshot.payload;
   const resolvedOffers = (
     await Promise.all(offerIds.map((offerId) => getGreenMarketOfferById(offerId)))
@@ -50,6 +57,7 @@ export default async function GreenCompareSnapshotPage({ params }: PageProps) {
         initialRwaRowIds={rwaRowIds}
         resolvedOffers={resolvedOffers}
         snapshotId={snapshot.id}
+        snapshotExpiresAt={snapshot.expiresAt}
       />
     </>
   );

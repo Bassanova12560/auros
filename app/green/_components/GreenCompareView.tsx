@@ -110,11 +110,35 @@ type Props = {
 
   snapshotId?: string;
 
+  snapshotExpiresAt?: string;
+
 };
 
 
 
 type PdfState = "idle" | "generating" | "error";
+
+
+
+function formatSnapshotExpiry(iso: string, locale: string): string {
+
+  try {
+
+    return new Date(iso).toLocaleDateString(
+
+      locale === "en" ? "en-GB" : locale === "es" ? "es-ES" : "fr-FR",
+
+      { year: "numeric", month: "short", day: "numeric" }
+
+    );
+
+  } catch {
+
+    return iso.slice(0, 10);
+
+  }
+
+}
 
 
 
@@ -158,6 +182,8 @@ export function GreenCompareView({
 
   snapshotId,
 
+  snapshotExpiresAt,
+
 }: Props) {
 
   const { locale } = useLocale();
@@ -195,6 +221,12 @@ export function GreenCompareView({
   const [shareFeedback, setShareFeedback] = useState<string | null>(null);
 
   const [snapshotState, setSnapshotState] = useState<"idle" | "saving" | "error">("idle");
+
+  const [snapshotRenewState, setSnapshotRenewState] = useState<"idle" | "renewing" | "error">("idle");
+
+  const [snapshotExpiryLabel, setSnapshotExpiryLabel] = useState<string | null>(
+    snapshotExpiresAt ?? null
+  );
 
   const searchParams = useSearchParams();
 
@@ -586,6 +618,52 @@ export function GreenCompareView({
 
 
 
+  const handleRenewSnapshot = useCallback(async () => {
+
+    if (!snapshotId) return;
+
+    setSnapshotRenewState("renewing");
+
+    try {
+
+      const res = await fetch("/api/green/compare-snapshot/renew", {
+
+        method: "POST",
+
+        headers: { "Content-Type": "application/json" },
+
+        body: JSON.stringify({ id: snapshotId }),
+
+      });
+
+      const json = (await res.json()) as { ok?: boolean; expiresAt?: string };
+
+      if (!res.ok || !json.ok || !json.expiresAt) {
+
+        setSnapshotRenewState("error");
+
+        return;
+
+      }
+
+      setSnapshotExpiryLabel(json.expiresAt);
+
+      setSnapshotRenewState("idle");
+
+      setShareFeedback(c.snapshotRenewed);
+
+      window.setTimeout(() => setShareFeedback(null), 2500);
+
+    } catch {
+
+      setSnapshotRenewState("error");
+
+    }
+
+  }, [snapshotId, c.snapshotRenewed]);
+
+
+
   const pdfLabel =
 
     pdfState === "generating"
@@ -608,11 +686,49 @@ export function GreenCompareView({
 
       {snapshotId ? (
 
-        <p className="mt-4 font-mono text-[10px] uppercase tracking-wider text-emerald-500/80">
+        <div className="mt-4 flex flex-wrap items-center gap-3">
 
-          {c.snapshotLoaded(snapshotId)}
+          <p className="font-mono text-[10px] uppercase tracking-wider text-emerald-500/80">
 
-        </p>
+            {c.snapshotLoaded(snapshotId)}
+
+          </p>
+
+          {snapshotExpiryLabel ? (
+
+            <p className="font-mono text-[10px] uppercase tracking-wider text-neutral-500">
+
+              {c.snapshotExpiresAt(formatSnapshotExpiry(snapshotExpiryLabel, locale))}
+
+            </p>
+
+          ) : null}
+
+          <button
+
+            type="button"
+
+            onClick={() => void handleRenewSnapshot()}
+
+            disabled={snapshotRenewState === "renewing"}
+
+            className="rounded-full border border-emerald-500/30 px-3 py-1 font-mono text-[10px] uppercase tracking-wider text-emerald-500 transition hover:border-emerald-400 hover:text-emerald-400 disabled:cursor-wait disabled:opacity-60"
+
+          >
+
+            {snapshotRenewState === "renewing"
+
+              ? c.snapshotRenewing
+
+              : snapshotRenewState === "error"
+
+                ? c.snapshotRenewError
+
+                : c.snapshotRenewCta}
+
+          </button>
+
+        </div>
 
       ) : null}
 
