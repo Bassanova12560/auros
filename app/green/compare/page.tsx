@@ -6,6 +6,7 @@ import { GREEN_COMPARE_ROUTE } from "@/lib/green";
 import {
   parseCompareCountriesParam,
   parseCompareOfferIdsParam,
+  parseCompareRwaRowIdsParam,
 } from "@/lib/green/market/compare-selection";
 import { getGreenMarketOfferById } from "@/lib/green/market/green-market-db";
 
@@ -38,13 +39,14 @@ export const metadata: Metadata = {
 };
 
 type PageProps = {
-  searchParams: Promise<{ offers?: string; countries?: string }>;
+  searchParams: Promise<{ offers?: string; countries?: string; rwa?: string }>;
 };
 
 export default async function GreenComparePage({ searchParams }: PageProps) {
   const params = await searchParams;
   const initialOfferIds = parseCompareOfferIdsParam(params.offers);
   const initialCountries = parseCompareCountriesParam(params.countries);
+  const initialRwaRowIds = parseCompareRwaRowIdsParam(params.rwa);
   const resolvedOffers = (
     await Promise.all(initialOfferIds.map((id) => getGreenMarketOfferById(id)))
   ).filter((offer) => offer != null);
@@ -57,6 +59,7 @@ export default async function GreenComparePage({ searchParams }: PageProps) {
         registryProjects={snapshot.projects}
         initialOfferIds={initialOfferIds}
         initialCountries={initialCountries}
+        initialRwaRowIds={initialRwaRowIds}
         resolvedOffers={resolvedOffers}
       />
     </>

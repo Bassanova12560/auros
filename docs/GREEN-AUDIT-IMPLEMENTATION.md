@@ -155,11 +155,25 @@ Sans clé IA : scoring rule-based amélioré uniquement (comportement valide).
 - **Label — stats relances ops** — tableau de bord sur `/green/admin` : incomplet sans relance, relance 1, relance 2, dossier complet ; `GET /api/admin/green-label-reminder-stats`.
 - **Tests** — `tests/green-sprint14.test.ts` (`npm run test:green`).
 
-### Après Sprint 14 (backlog Sprint 15)
+## Sprint 15 — shipped 2026-06-03
 
-- Registre : export PDF signé / watermark ops
-- Compare : snapshot avec sélection lignes RWA côté UI
-- Label : export CSV candidatures pour ops
+- **Registre — export PDF watermark / ops** — filigrane « AUROS GREEN » discret ; pied de page « AUROS Green Registre — export {date} » ; bandeau ops `exportOpsNote` ; i18n FR/EN/ES.
+- **Compare — sélection lignes RWA** — cases à cocher sur le tableau comparateur ; persistance `?rwa=` dans le lien de partage + payload snapshot ; restauration sur `/green/compare/s/[id]` ; i18n FR/EN/ES.
+- **Label — export CSV ops** — bouton « Exporter CSV (toutes) » sur `/green/admin` ; `GET /api/admin/green-label-export` (CRON_SECRET) ; colonnes id, org, email, status, preferred_locale, relances, document_path (yes/no), created_at.
+- **Tests** — `tests/green-sprint15.test.ts` (`npm run test:green`).
+
+### Après Sprint 15 (backlog Sprint 16)
+
+- Registre : signature PDF ops (clé serveur / horodatage signé)
+- Compare : snapshot avec filtres pays + RWA combinés en une vue partagée
+- Label : export CSV filtré par statut / relance
+- NFT, oracle, Uniswap, PricingCard boost, dark mode, Clerk sur tout `/green/*`, Lighthouse CI
+
+### Après Sprint 14 (backlog Sprint 15 — traité)
+
+- ~~Registre : export PDF signé / watermark ops~~ → Sprint 15
+- ~~Compare : snapshot avec sélection lignes RWA côté UI~~ → Sprint 15
+- ~~Label : export CSV candidatures pour ops~~ → Sprint 15
 - NFT, oracle, Uniswap, PricingCard boost, dark mode, Clerk sur tout `/green/*`, Lighthouse CI
 
 ### Après Sprint 11 (backlog Sprint 12 — traité)

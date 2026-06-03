@@ -3,10 +3,7 @@ import { redirect } from "next/navigation";
 
 import { AiFirstPageJsonLd } from "@/app/_components/ai-first/AiFirstPageJsonLd";
 import { GREEN_COMPARE_ROUTE } from "@/lib/green";
-import {
-  filterCompareRowsBySnapshot,
-  getGreenCompareSnapshot,
-} from "@/lib/green/compare-snapshot";
+import { getGreenCompareSnapshot } from "@/lib/green/compare-snapshot";
 import { getGreenRegistrySnapshot } from "@/lib/green/green-registry";
 import { getGreenMarketOfferById } from "@/lib/green/market/green-market-db";
 
@@ -38,7 +35,6 @@ export default async function GreenCompareSnapshotPage({ params }: PageProps) {
   ).filter((offer) => offer != null);
 
   const registrySnapshot = await getGreenRegistrySnapshot();
-  const compareRows = filterCompareRowsBySnapshot(rwaRowIds);
 
   return (
     <>
@@ -47,8 +43,8 @@ export default async function GreenCompareSnapshotPage({ params }: PageProps) {
         registryProjects={registrySnapshot.projects}
         initialOfferIds={offerIds}
         initialCountries={countries}
+        initialRwaRowIds={rwaRowIds}
         resolvedOffers={resolvedOffers}
-        compareRows={compareRows}
         snapshotId={snapshot.id}
       />
     </>

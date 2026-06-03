@@ -256,6 +256,38 @@ const styles = StyleSheet.create({
 
   },
 
+  watermark: {
+
+    position: "absolute",
+
+    top: "42%",
+
+    left: "18%",
+
+    fontSize: 48,
+
+    color: "#059669",
+
+    opacity: 0.06,
+
+    letterSpacing: 6,
+
+    transform: "rotate(-32deg)",
+
+  },
+
+  opsNote: {
+
+    fontSize: 6,
+
+    color: MUTED,
+
+    marginTop: 4,
+
+    fontStyle: "italic",
+
+  },
+
 });
 
 
@@ -378,6 +410,13 @@ export function greenRegistryExpertsToPdfRows(
 
 
 
+/** Footer line for registry PDF exports — used in document and tests. */
+export function registryPdfExportFooter(date: string, locale: Locale = "fr"): string {
+  if (locale === "es") return `AUROS Green Registro — exportación ${date}`;
+  if (locale === "en") return `AUROS Green Registry — export ${date}`;
+  return `AUROS Green Registre — export ${date}`;
+}
+
 export function greenRegistryPdfMeta(
 
   projects: GreenRegistryProjectRow[],
@@ -420,6 +459,10 @@ function RegistryDocument({
 
   disclaimer,
 
+  exportFooter,
+
+  opsNote,
+
 }: {
 
   labels: GreenMessages["registry"];
@@ -437,6 +480,10 @@ function RegistryDocument({
   generatedAt: string;
 
   disclaimer: string;
+
+  exportFooter: string;
+
+  opsNote: string;
 
 }) {
 
@@ -464,6 +511,10 @@ function RegistryDocument({
 
       <Page size="A4" orientation="landscape" style={styles.page}>
 
+        <Text style={styles.watermark} fixed>
+          AUROS GREEN
+        </Text>
+
         <View style={styles.header}>
 
           <Text style={styles.brand}>AUROS GREEN · REGISTRY</Text>
@@ -487,6 +538,8 @@ function RegistryDocument({
             <Text style={styles.metaChip}>{labels.statsExperts(meta.expertCount)}</Text>
 
           </View>
+
+          <Text style={styles.opsNote}>{opsNote}</Text>
 
         </View>
 
@@ -594,7 +647,11 @@ function RegistryDocument({
 
 
 
-        <Text style={styles.footer}>{disclaimer}</Text>
+        <Text style={styles.footer} fixed>
+          {exportFooter}
+          {"\n"}
+          {disclaimer}
+        </Text>
 
       </Page>
 
@@ -669,6 +726,10 @@ export async function generateGreenRegistryPDF(
       generatedAt={generatedAt}
 
       disclaimer={options.disclaimer ?? labels.pilotNote}
+
+      exportFooter={registryPdfExportFooter(generatedAt, locale)}
+
+      opsNote={labels.exportOpsNote}
 
     />
 

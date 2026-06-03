@@ -55,6 +55,7 @@ export function GreenAdminView() {
   const [busyId, setBusyId] = useState<string | null>(null);
   const [summaries, setSummaries] = useState<Record<string, string>>({});
   const [reminderStats, setReminderStats] = useState<LabelReminderStats | null>(null);
+  const [exportingLabels, setExportingLabels] = useState(false);
 
   const refresh = useCallback(async (token: string) => {
     setLoading(true);
@@ -223,6 +224,36 @@ export function GreenAdminView() {
     [refresh, secret, summaries]
   );
 
+  const exportLabelCsv = useCallback(async () => {
+    setExportingLabels(true);
+    setError(null);
+    try {
+      const res = await fetch("/api/admin/green-label-export", {
+        headers: authHeader(secret),
+      });
+      if (!res.ok) {
+        setError("Export CSV candidatures échoué.");
+        return;
+      }
+      const blob = await res.blob();
+      const disposition = res.headers.get("Content-Disposition") ?? "";
+      const match = disposition.match(/filename="([^"]+)"/);
+      const filename = match?.[1] ?? "auros-green-label-applications.csv";
+      const url = URL.createObjectURL(blob);
+      const anchor = document.createElement("a");
+      anchor.href = url;
+      anchor.download = filename;
+      document.body.appendChild(anchor);
+      anchor.click();
+      anchor.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 0);
+    } catch {
+      setError("Export CSV candidatures échoué.");
+    } finally {
+      setExportingLabels(false);
+    }
+  }, [secret]);
+
   return (
     <div className="page-inner page-inner--3xl mx-auto min-h-screen px-4 pb-20 pt-12 md:px-6 md:pt-14">
         <p className="text-xs uppercase tracking-[0.2em] text-emerald-500/60">
@@ -373,9 +404,19 @@ export function GreenAdminView() {
             </section>
 
             <section>
-              <h2 className="text-sm font-medium uppercase tracking-wider text-emerald-500">
-                Candidatures label (pending)
-              </h2>
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <h2 className="text-sm font-medium uppercase tracking-wider text-emerald-500">
+                  Candidatures label (pending)
+                </h2>
+                <button
+                  type="button"
+                  disabled={exportingLabels}
+                  onClick={() => void exportLabelCsv()}
+                  className="rounded-full border border-emerald-500/40 px-4 py-1.5 text-xs text-emerald-300 hover:border-emerald-400 disabled:opacity-50"
+                >
+                  {exportingLabels ? "Export…" : "Exporter CSV (toutes)"}
+                </button>
+              </div>
               {labels.length === 0 ? (
                 <p className="mt-3 text-sm text-neutral-500">Aucune candidature en attente.</p>
               ) : (

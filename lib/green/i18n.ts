@@ -272,6 +272,9 @@ export type GreenMessages = {
     countryFilterLabel: string;
     countryFilterClear: string;
     countryFilterEmpty: string;
+    rwaRowInclude: string;
+    rwaRowSelectAll: string;
+    rwaRowSelectClear: string;
     marketExport: {
       sectionTitle: string;
       energy: string;
@@ -403,6 +406,7 @@ export type GreenMessages = {
     exportPdf: string;
     exportPdfGenerating: string;
     exportPdfRetry: string;
+    exportOpsNote: string;
     backLink: string;
     viewProject: string;
     projectDetail: {
@@ -1027,6 +1031,9 @@ const FR: GreenMessages = {
     countryFilterLabel: "Filtrer par pays",
     countryFilterClear: "Tous les pays",
     countryFilterEmpty: "Aucun projet pour ces pays.",
+    rwaRowInclude: "Inclure",
+    rwaRowSelectAll: "Toutes les références",
+    rwaRowSelectClear: "Aucune référence",
     marketExport: {
       sectionTitle: "Annonces marketplace sélectionnées",
       energy: "Énergie",
@@ -1198,6 +1205,8 @@ const FR: GreenMessages = {
     exportPdf: "Exporter PDF",
     exportPdfGenerating: "PDF…",
     exportPdfRetry: "Réessayer PDF",
+    exportOpsNote:
+      "Export registre public AUROS Green — document indicatif, non signé électroniquement.",
     backLink: "← Retour AUROS Green",
     viewProject: "Voir la fiche projet",
     projectDetail: {
@@ -1846,6 +1855,9 @@ const EN: GreenMessages = {
     countryFilterLabel: "Filter by country",
     countryFilterClear: "All countries",
     countryFilterEmpty: "No projects for these countries.",
+    rwaRowInclude: "Include",
+    rwaRowSelectAll: "All references",
+    rwaRowSelectClear: "No references",
     marketExport: {
       sectionTitle: "Selected marketplace listings",
       energy: "Energy",
@@ -2016,6 +2028,8 @@ const EN: GreenMessages = {
     exportPdf: "Export PDF",
     exportPdfGenerating: "PDF…",
     exportPdfRetry: "Retry PDF",
+    exportOpsNote:
+      "AUROS Green public registry export — indicative document, not electronically signed.",
     backLink: "← Back to AUROS Green",
     viewProject: "View project page",
     projectDetail: {
@@ -2667,6 +2681,9 @@ const ES: GreenMessages = {
     countryFilterLabel: "Filtrar por país",
     countryFilterClear: "Todos los países",
     countryFilterEmpty: "Ningún proyecto para estos países.",
+    rwaRowInclude: "Incluir",
+    rwaRowSelectAll: "Todas las referencias",
+    rwaRowSelectClear: "Ninguna referencia",
     marketExport: {
       sectionTitle: "Anuncios del marketplace seleccionados",
       energy: "Energía",
@@ -2839,6 +2856,8 @@ const ES: GreenMessages = {
     exportPdf: "Exportar PDF",
     exportPdfGenerating: "PDF…",
     exportPdfRetry: "Reintentar PDF",
+    exportOpsNote:
+      "Exportación del registro público AUROS Green — documento indicativo, sin firma electrónica.",
     backLink: "← Volver a AUROS Green",
     viewProject: "Ver ficha del proyecto",
     projectDetail: {

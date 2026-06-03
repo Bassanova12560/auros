@@ -28,8 +28,6 @@ import {
 
 } from "@/lib/green";
 
-import type { GreenCompareRow } from "@/lib/green/compare-data";
-
 import {
 
   buildGreenCompareSnapshotUrl,
@@ -52,13 +50,23 @@ import {
 
   GREEN_COMPARE_COUNTRIES_URL_PARAM,
 
+  GREEN_COMPARE_RWA_URL_PARAM,
+
   buildGreenCompareShareUrl,
+
+  compareRwaRowIdsForShare,
 
   encodeCompareCountriesParam,
 
+  encodeCompareRwaRowIdsParam,
+
   normalizeCompareCountries,
 
+  normalizeCompareRwaRowIds,
+
   parseCompareCountriesParam,
+
+  parseCompareRwaRowIdsParam,
 
   projectMatchesCompareCountries,
 
@@ -96,9 +104,9 @@ type Props = {
 
   initialCountries?: string[];
 
-  resolvedOffers?: GreenMarketOfferDetail[];
+  initialRwaRowIds?: string[];
 
-  compareRows?: GreenCompareRow[];
+  resolvedOffers?: GreenMarketOfferDetail[];
 
   snapshotId?: string;
 
@@ -144,9 +152,9 @@ export function GreenCompareView({
 
   initialCountries = [],
 
-  resolvedOffers = [],
+  initialRwaRowIds = [],
 
-  compareRows = GREEN_COMPARE_ROWS,
+  resolvedOffers = [],
 
   snapshotId,
 
@@ -160,7 +168,25 @@ export function GreenCompareView({
 
   const r = m.registry;
 
-  const rows = compareRows;
+  const allRwaIds = useMemo(() => GREEN_COMPARE_ROWS.map((row) => row.id), []);
+
+  const [selectedRwaIds, setSelectedRwaIds] = useState<string[]>(() => {
+
+    const fromInitial = normalizeCompareRwaRowIds(initialRwaRowIds);
+
+    if (fromInitial.length > 0) return fromInitial;
+
+    return allRwaIds;
+
+  });
+
+  const visibleRows = useMemo(
+
+    () => GREEN_COMPARE_ROWS.filter((row) => selectedRwaIds.includes(row.id)),
+
+    [selectedRwaIds]
+
+  );
 
   const [pdfState, setPdfState] = useState<PdfState>("idle");
 
@@ -196,9 +222,21 @@ export function GreenCompareView({
 
     );
 
+    const fromUrl = parseCompareRwaRowIdsParam(searchParams.get(GREEN_COMPARE_RWA_URL_PARAM));
+
+    if (fromUrl.length > 0) {
+
+      setSelectedRwaIds(fromUrl);
+
+    } else if (initialRwaRowIds.length > 0) {
+
+      setSelectedRwaIds(normalizeCompareRwaRowIds(initialRwaRowIds));
+
+    }
+
     setUrlReady(true);
 
-  }, [searchParams]);
+  }, [searchParams, initialRwaRowIds]);
 
 
 
@@ -229,6 +267,66 @@ export function GreenCompareView({
     }
 
   }, [selectedCountries, urlReady, pathname, router, searchParams]);
+
+
+
+  useEffect(() => {
+
+    if (!urlReady) return;
+
+    const params = new URLSearchParams(searchParams.toString());
+
+    const encodedRwa = encodeCompareRwaRowIdsParam(compareRwaRowIdsForShare(selectedRwaIds));
+
+    if (encodedRwa) {
+
+      params.set(GREEN_COMPARE_RWA_URL_PARAM, encodedRwa);
+
+    } else {
+
+      params.delete(GREEN_COMPARE_RWA_URL_PARAM);
+
+    }
+
+    const next = params.toString();
+
+    if (next !== searchParams.toString()) {
+
+      router.replace(next ? `${pathname}?${next}` : pathname, { scroll: false });
+
+    }
+
+  }, [selectedRwaIds, urlReady, pathname, router, searchParams]);
+
+
+
+  const toggleRwaRow = useCallback((id: string) => {
+
+    setSelectedRwaIds((prev) => {
+
+      if (prev.includes(id)) return prev.filter((entry) => entry !== id);
+
+      return normalizeCompareRwaRowIds([...prev, id]);
+
+    });
+
+  }, []);
+
+
+
+  const selectAllRwaRows = useCallback(() => {
+
+    setSelectedRwaIds(allRwaIds);
+
+  }, [allRwaIds]);
+
+
+
+  const clearRwaRows = useCallback(() => {
+
+    setSelectedRwaIds([]);
+
+  }, []);
 
 
 
@@ -304,7 +402,19 @@ export function GreenCompareView({
 
 
 
-  const canExport = rows.length > 0 || selectedOffers.length > 0;
+  const canExport = visibleRows.length > 0 || selectedOffers.length > 0;
+
+  const rwaForShare = useMemo(
+
+    () => compareRwaRowIdsForShare(selectedRwaIds),
+
+    [selectedRwaIds]
+
+  );
+
+  const hasShareableState =
+
+    selectedOffers.length > 0 || shareCountries.length > 0 || rwaForShare.length > 0;
 
 
 
@@ -312,11 +422,11 @@ export function GreenCompareView({
 
     if (!canExport) return;
 
-    const csv = greenCompareFullToCsv(rows, selectedOffers, c, mm, locale);
+    const csv = greenCompareFullToCsv(visibleRows, selectedOffers, c, mm, locale);
 
     downloadGreenCompareCsv(csv);
 
-  }, [canExport, rows, selectedOffers, c, mm, locale]);
+  }, [canExport, visibleRows, selectedOffers, c, mm, locale]);
 
 
 
@@ -332,7 +442,7 @@ export function GreenCompareView({
 
         await import("@/lib/green/compare-pdf");
 
-      const blob = await generateGreenComparePDF(rows, c, locale, selectedOffers, mm);
+      const blob = await generateGreenComparePDF(visibleRows, c, locale, selectedOffers, mm);
 
       const url = URL.createObjectURL(blob);
 
@@ -360,7 +470,7 @@ export function GreenCompareView({
 
     }
 
-  }, [canExport, rows, c, locale, selectedOffers, mm]);
+  }, [canExport, visibleRows, c, locale, selectedOffers, mm]);
 
 
 
@@ -371,6 +481,8 @@ export function GreenCompareView({
       offerIds: selectedOffers.map((offer) => offer.id),
 
       countries: shareCountries,
+
+      rwaRowIds: selectedRwaIds,
 
       origin: typeof window !== "undefined" ? window.location.origin : "",
 
@@ -390,13 +502,13 @@ export function GreenCompareView({
 
     }
 
-  }, [selectedOffers, shareCountries, c.shareCopied]);
+  }, [selectedOffers, shareCountries, selectedRwaIds, c.shareCopied]);
 
 
 
   const handleSaveSnapshot = useCallback(async () => {
 
-    if (selectedOffers.length === 0 && shareCountries.length === 0) return;
+    if (!hasShareableState) return;
 
     setSnapshotState("saving");
 
@@ -414,7 +526,7 @@ export function GreenCompareView({
 
           offerIds: selectedOffers.map((offer) => offer.id),
 
-          rwaRowIds: rows.map((row) => row.id),
+          rwaRowIds: rwaForShare,
 
         }),
 
@@ -456,7 +568,7 @@ export function GreenCompareView({
 
     }
 
-  }, [selectedOffers, shareCountries, rows, c.snapshotCopied, c.snapshotError]);
+  }, [hasShareableState, selectedOffers, shareCountries, rwaForShare, c.snapshotCopied, c.snapshotError]);
 
 
 
@@ -680,6 +792,64 @@ export function GreenCompareView({
 
       <GreenPanel className="mt-10 overflow-hidden">
 
+        <div className="border-b border-emerald-500/20 px-6 py-4 md:px-8">
+
+          <div className="flex flex-wrap items-center gap-3">
+
+            <p className="font-mono text-[10px] uppercase tracking-wider text-emerald-500">
+
+              {c.rwaRowInclude}
+
+            </p>
+
+            <button
+
+              type="button"
+
+              onClick={selectAllRwaRows}
+
+              className={`rounded-full border px-3 py-1.5 font-mono text-[10px] uppercase tracking-wider transition ${
+
+                selectedRwaIds.length === allRwaIds.length
+
+                  ? "border-emerald-400 bg-emerald-500/10 text-emerald-400"
+
+                  : "border-emerald-500/30 text-emerald-500/70 hover:border-emerald-400/60 hover:text-emerald-400"
+
+              }`}
+
+            >
+
+              {c.rwaRowSelectAll}
+
+            </button>
+
+            <button
+
+              type="button"
+
+              onClick={clearRwaRows}
+
+              className={`rounded-full border px-3 py-1.5 font-mono text-[10px] uppercase tracking-wider transition ${
+
+                selectedRwaIds.length === 0
+
+                  ? "border-emerald-400 bg-emerald-500/10 text-emerald-400"
+
+                  : "border-emerald-500/30 text-emerald-500/70 hover:border-emerald-400/60 hover:text-emerald-400"
+
+              }`}
+
+            >
+
+              {c.rwaRowSelectClear}
+
+            </button>
+
+          </div>
+
+        </div>
+
         <div className="overflow-x-auto">
 
           <table className="w-full min-w-[720px] border-collapse text-left text-sm">
@@ -688,7 +858,13 @@ export function GreenCompareView({
 
               <tr className="border-b border-emerald-500 font-mono text-[10px] uppercase tracking-wider text-emerald-500">
 
-                <th className="px-6 py-4 pr-4">{c.table.project}</th>
+                <th className="w-10 px-4 py-4">
+
+                  <span className="sr-only">{c.rwaRowInclude}</span>
+
+                </th>
+
+                <th className="py-4 pr-4">{c.table.project}</th>
 
                 <th className="py-4 pr-4">{c.table.type}</th>
 
@@ -708,11 +884,11 @@ export function GreenCompareView({
 
             <tbody>
 
-              {rows.length === 0 ? (
+              {visibleRows.length === 0 ? (
 
                 <tr>
 
-                  <td colSpan={7} className="px-6 py-8 text-neutral-500">
+                  <td colSpan={8} className="px-6 py-8 text-neutral-500">
 
                     {c.emptyNote}
 
@@ -722,7 +898,7 @@ export function GreenCompareView({
 
               ) : (
 
-                rows.map((row) => (
+                visibleRows.map((row) => (
 
                   <tr
 
@@ -732,7 +908,25 @@ export function GreenCompareView({
 
                   >
 
-                    <td className="px-6 py-4 pr-4 font-medium text-emerald-400">{row.name}</td>
+                    <td className="px-4 py-4">
+
+                      <input
+
+                        type="checkbox"
+
+                        checked={selectedRwaIds.includes(row.id)}
+
+                        onChange={() => toggleRwaRow(row.id)}
+
+                        aria-label={`${c.rwaRowInclude} ${row.name}`}
+
+                        className="size-4 rounded border-emerald-500/40 bg-black accent-emerald-500"
+
+                      />
+
+                    </td>
+
+                    <td className="py-4 pr-4 font-medium text-emerald-400">{row.name}</td>
 
                     <td className="py-4 pr-4 text-neutral-400">{c.projectTypes[row.type]}</td>
 
@@ -838,7 +1032,7 @@ export function GreenCompareView({
 
         ) : null}
 
-        {selectedOffers.length > 0 || shareCountries.length > 0 ? (
+        {hasShareableState ? (
 
           <>
 
