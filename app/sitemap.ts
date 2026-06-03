@@ -5,6 +5,8 @@ import { SITE_URL } from "@/lib/comparators/site";
 import { listGreenMarketActorSitemapIds, listGreenMarketOfferSitemapIds } from "@/lib/green/market/green-market-db";
 import { greenMarketActorPath } from "@/lib/green/market/actor-routes";
 import { greenMarketOfferPath } from "@/lib/green/market/offer-routes";
+import { listGreenRegistryProjectSitemapIds } from "@/lib/green/green-registry";
+import { greenRegistryProjectPath } from "@/lib/green/registry-routes";
 
 const PRIORITY: Record<string, number> = {
   "/": 1,
@@ -14,6 +16,7 @@ const PRIORITY: Record<string, number> = {
   "/green/market/actor": 0.88,
   "/green/register": 0.87,
   "/green/compare": 0.88,
+  "/green/registry/project": 0.84,
   "/green/rtms-assistant": 0.84,
   "/green/standards": 0.86,
   "/green/label": 0.85,
@@ -56,6 +59,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   let offerEntries: MetadataRoute.Sitemap = [];
   let actorEntries: MetadataRoute.Sitemap = [];
+  let registryProjectEntries: MetadataRoute.Sitemap = [];
   try {
     const offers = await listGreenMarketOfferSitemapIds();
     offerEntries = offers.slice(0, 100).map((o) => ({
@@ -71,9 +75,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "weekly" as const,
       priority: PRIORITY["/green/market/actor"] ?? 0.78,
     }));
+    const registryProjects = await listGreenRegistryProjectSitemapIds();
+    registryProjectEntries = registryProjects.slice(0, 100).map((p) => ({
+      url: `${SITE_URL}${greenRegistryProjectPath(p.id)}`,
+      lastModified: new Date(p.certifiedAt),
+      changeFrequency: "monthly" as const,
+      priority: PRIORITY["/green/registry/project"] ?? 0.82,
+    }));
   } catch {
     /* demo / build without DB */
   }
 
-  return [...staticEntries, ...offerEntries, ...actorEntries];
+  return [...staticEntries, ...offerEntries, ...actorEntries, ...registryProjectEntries];
 }

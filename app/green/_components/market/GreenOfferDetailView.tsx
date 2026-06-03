@@ -31,6 +31,7 @@ import {
   GreenSectionTitle,
 } from "../green-ui";
 import { GreenOfferInterestForm } from "./GreenOfferInterestForm";
+import { GreenOfferCompareButton } from "./GreenOfferCompareButton";
 
 const GreenMarketMap = dynamic(
   () => import("./GreenMarketMap").then((m) => m.GreenMarketMap),
@@ -193,6 +194,10 @@ export function GreenOfferDetailView({ offer }: Props) {
         actorName={offer.actorName}
         actorEmail={offer.actor?.contactEmail}
       />
+
+      <section className="mt-10">
+        <GreenOfferCompareButton offerId={offer.id} />
+      </section>
 
       <section className="mt-12">
         <GreenSectionTitle>{od.mapTitle}</GreenSectionTitle>

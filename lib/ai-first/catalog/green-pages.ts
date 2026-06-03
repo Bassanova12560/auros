@@ -16,6 +16,7 @@ import {
   GREEN_PRATICIEN_EXAM_ROUTE,
   GREEN_PRODUCERS_ROUTE,
   GREEN_REGISTRY_ROUTE,
+  GREEN_REGISTRY_PROJECT_ROUTE,
   GREEN_REGISTER_ROUTE,
   GREEN_ROUTE,
   GREEN_RTMS_ASSISTANT_ROUTE,
@@ -244,7 +245,26 @@ export const greenRegistryPage = enrichPage({
   intents: ["Liste projets Auros Green Verified"],
   audience: ["investisseurs", "presse"],
   facts: [{ key: "Statut Phase 3", value: "Premier Verified + cas pilotes RTMS + verify public" }],
-  relatedPaths: [GREEN_LABEL_ROUTE, GREEN_ROUTE],
+  relatedPaths: [GREEN_LABEL_ROUTE, GREEN_ROUTE, GREEN_REGISTRY_PROJECT_ROUTE],
+});
+
+export const greenRegistryProjectPage = enrichPage({
+  id: "green-registry-project",
+  path: GREEN_REGISTRY_PROJECT_ROUTE,
+  title: "Fiche projet registre | AUROS Green",
+  description:
+    "Détail projet labellisé AUROS Green — statut RTMS, localisation, description et lien verify.",
+  summary:
+    "Pages détail des projets du registre public AUROS Green : Verified ou cas pilote RTMS, avec synthèse localisée FR/EN/ES.",
+  contentType: "landing",
+  language: "multi",
+  indexable: true,
+  lastUpdated: "2026-06-03",
+  keywords: ["projet Auros Green Verified", "registre RWA vert détail"],
+  intents: ["Consulter un projet labellisé AUROS Green"],
+  audience: ["investisseurs", "presse", "promoteurs"],
+  facts: [{ key: "URL", value: `${GREEN_REGISTRY_PROJECT_ROUTE}/{id}` }],
+  relatedPaths: [GREEN_REGISTRY_ROUTE, GREEN_LABEL_ROUTE, GREEN_ROUTE],
 });
 
 export const greenPraticienPage = enrichPage({
@@ -538,5 +558,6 @@ export const greenPages: AiFirstPage[] = [
   greenPraticienPage,
   greenPraticienExamPage,
   greenRegistryPage,
+  greenRegistryProjectPage,
   greenGuidePage,
 ];

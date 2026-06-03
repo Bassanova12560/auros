@@ -17,7 +17,9 @@ import {
   greenCompareRowsToCsv,
 } from "@/lib/green/compare-csv";
 import type { GreenRegistryProjectRow } from "@/lib/green/green-registry";
+import type { GreenMarketOfferDetail } from "@/lib/green/market/offer-detail";
 
+import { GreenCompareOffersSection } from "./market/GreenCompareOffersSection";
 import {
   GreenBackLink,
   GreenDisclaimer,
@@ -29,6 +31,8 @@ import {
 
 type Props = {
   registryProjects: GreenRegistryProjectRow[];
+  initialOfferIds?: string[];
+  resolvedOffers?: GreenMarketOfferDetail[];
 };
 
 type PdfState = "idle" | "generating" | "error";
@@ -46,7 +50,11 @@ function labelBadgeClass(status: string): string {
   }
 }
 
-export function GreenCompareView({ registryProjects }: Props) {
+export function GreenCompareView({
+  registryProjects,
+  initialOfferIds = [],
+  resolvedOffers = [],
+}: Props) {
   const { locale } = useLocale();
   const m = getGreenMessages(locale);
   const c = m.compare;
@@ -95,6 +103,11 @@ export function GreenCompareView({ registryProjects }: Props) {
       <p className="mt-4 max-w-3xl border-l border-emerald-500/40 pl-5 text-xs leading-relaxed text-neutral-500">
         {c.disclaimer}
       </p>
+
+      <GreenCompareOffersSection
+        initialOfferIds={initialOfferIds}
+        resolvedOffers={resolvedOffers}
+      />
 
       {registryProjects.length > 0 ? (
         <GreenPanel className="mt-10">

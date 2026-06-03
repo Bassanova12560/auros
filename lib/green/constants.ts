@@ -13,6 +13,7 @@ export const GREEN_STANDARDS_ROUTE = "/green/standards";
 export const GREEN_LABEL_ROUTE = "/green/label";
 export const GREEN_CERTIFICATION_ROUTE = "/green/certification";
 export const GREEN_REGISTRY_ROUTE = "/green/registry";
+export const GREEN_REGISTRY_PROJECT_ROUTE = "/green/registry/project";
 export const GREEN_GUIDE_ROUTE = "/green/tokenize-surplus";
 export const GREEN_PRATICIEN_ROUTE = "/green/praticien";
 export const GREEN_PRATICIEN_EXAM_ROUTE = "/green/praticien/exam";

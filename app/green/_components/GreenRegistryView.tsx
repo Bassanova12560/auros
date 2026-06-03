@@ -11,6 +11,7 @@ import {
   greenProjectSummary,
   greenVerifyPath,
 } from "@/lib/green";
+import { greenRegistryProjectPath } from "@/lib/green/registry-routes";
 
 import {
   GreenBackLink,
@@ -109,7 +110,12 @@ export function GreenRegistryView({ snapshot }: Props) {
               {filteredProjects.map((proj) => (
                 <li key={proj.id} className="py-5 first:pt-0 last:pb-0">
                   <div className="flex flex-wrap items-baseline justify-between gap-2">
-                    <span className="font-medium text-emerald-400">{proj.name}</span>
+                    <Link
+                      href={greenRegistryProjectPath(proj.id)}
+                      className="font-medium text-emerald-400 hover:text-emerald-300"
+                    >
+                      {proj.name}
+                    </Link>
                     <GreenTierBadge
                       tier={proj.labelTier}
                       verifiedLabel={r.tierVerified}
@@ -123,12 +129,20 @@ export function GreenRegistryView({ snapshot }: Props) {
                   <p className="mt-3 text-sm leading-relaxed text-neutral-400">
                     {greenProjectSummary(proj, locale)}
                   </p>
-                  <Link
-                    href={greenVerifyPath(proj.verifyToken)}
-                    className="mt-3 inline-block font-mono text-[10px] uppercase tracking-wider text-emerald-500 hover:text-emerald-400"
-                  >
-                    {r.verifyLink} →
-                  </Link>
+                  <div className="mt-3 flex flex-wrap gap-4">
+                    <Link
+                      href={greenRegistryProjectPath(proj.id)}
+                      className="font-mono text-[10px] uppercase tracking-wider text-emerald-500 hover:text-emerald-400"
+                    >
+                      {r.viewProject} →
+                    </Link>
+                    <Link
+                      href={greenVerifyPath(proj.verifyToken)}
+                      className="font-mono text-[10px] uppercase tracking-wider text-emerald-500 hover:text-emerald-400"
+                    >
+                      {r.verifyLink} →
+                    </Link>
+                  </div>
                 </li>
               ))}
             </ul>

@@ -120,11 +120,25 @@ Sans clé IA : scoring rule-based amélioré uniquement (comportement valide).
 - **Mobile polish** — espacements et typo responsive sur fiches annonce et acteur.
 - **Tests** — `tests/green-sprint9.test.ts` (`npm run test:green`).
 
-### Après Sprint 9 (backlog Sprint 10)
+## Sprint 10 — shipped 2026-06-03
 
-- Compare : ajouter des offres depuis la fiche annonce
-- Label : notifications e-mail statut candidature
-- Registre : pages détail projet
+- **Compare depuis fiche annonce** — bouton « Ajouter au comparateur » sur `/green/market/offer/[id]` ; sélection persistée localStorage + URL `?offers=` (max 4) ; section annonces marketplace sur `/green/compare` ; i18n FR/EN/ES.
+- **Notifications e-mail statut label** — e-mail candidat sur transition `pending → in_review` et `in_review → rejected` (Resend) ; API admin `/api/admin/green-label-status` ; boutons ops « Mettre en revue » / « Rejeter » ; une notification par transition (approved déjà couvert à la publication).
+- **Registre — fiches projet** — `/green/registry/project/[id]` : nom, statut, lieu, description, niveau RTMS ; liens depuis la liste registre ; SEO + sitemap + catalogue AI-first.
+- **Tests** — `tests/green-sprint10.test.ts` (`npm run test:green`).
+
+### Après Sprint 10 (backlog Sprint 11)
+
+- Compare : export CSV/PDF incluant les annonces marketplace sélectionnées
+- Label : e-mail locale préférée candidat (si champ ajouté)
+- Registre : filtre par tier Verified / pilote
+- NFT, oracle, Uniswap, PricingCard boost, dark mode, Clerk sur tout `/green/*`, Lighthouse CI
+
+### Après Sprint 9 (backlog Sprint 10 — traité)
+
+- ~~Compare : ajouter des offres depuis la fiche annonce~~ → Sprint 10
+- ~~Label : notifications e-mail statut candidature~~ → Sprint 10
+- ~~Registre : pages détail projet~~ → Sprint 10
 - NFT, oracle, Uniswap, PricingCard boost, dark mode, Clerk sur tout `/green/*`, Lighthouse CI
 
 ### Après Sprint 8 (backlog — partiellement traité Sprint 9)

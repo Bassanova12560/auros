@@ -35,6 +35,7 @@ import {
   greenLabelReceivedEmail,
   greenLabelApprovedEmail,
   greenLabelInternalEmail,
+  greenLabelStatusEmail,
   greenMarketAlertEmail,
   greenOfferInterestInternalEmail,
   greenOfferInterestActorEmail,
@@ -62,6 +63,8 @@ import {
   type GreenLabelReceivedEmailData,
   type GreenLabelApprovedEmailData,
   type GreenLabelInternalEmailData,
+  type GreenLabelStatusEmailData,
+  type GreenLabelStatusEmailKind,
   type GreenMarketAlertEmailData,
   type GreenOfferInterestEmailData,
 } from "./templates";
@@ -339,6 +342,15 @@ export async function sendGreenLabelApproved(
   data: GreenLabelApprovedEmailData
 ): Promise<boolean> {
   const { subject, html } = greenLabelApprovedEmail(data);
+  return sendSafe({ to, subject, html });
+}
+
+export async function sendGreenLabelStatusUpdate(
+  to: string,
+  kind: GreenLabelStatusEmailKind,
+  data: GreenLabelStatusEmailData
+): Promise<boolean> {
+  const { subject, html } = greenLabelStatusEmail(kind, data);
   return sendSafe({ to, subject, html });
 }
 

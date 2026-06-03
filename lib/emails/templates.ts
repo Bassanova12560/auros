@@ -958,6 +958,87 @@ export function greenLabelApprovedEmail(data: GreenLabelApprovedEmailData) {
   return { subject: copy.subject, html };
 }
 
+export type GreenLabelStatusEmailKind = "in_review" | "rejected";
+
+export type GreenLabelStatusEmailData = {
+  contactName: string;
+  projectName: string;
+  myUrl: string;
+  locale?: Locale;
+};
+
+export function greenLabelStatusEmail(
+  kind: GreenLabelStatusEmailKind,
+  data: GreenLabelStatusEmailData
+) {
+  const locale = data.locale ?? "fr";
+  const name = escapeHtml(data.contactName || "—");
+  const project = escapeHtml(data.projectName);
+  const copyByKind = {
+    in_review: {
+      fr: {
+        subject: "AUROS Green — candidature label en revue",
+        greet: `Bonjour ${name},`,
+        line: `Votre candidature au label AUROS Green Verified pour <strong>${project}</strong> est passée en revue documentaire.`,
+        next: "Nous revenons vers vous sous 5 jours ouvrés avec la suite du dossier.",
+        cta: "Suivre ma candidature",
+      },
+      en: {
+        subject: "AUROS Green — label application under review",
+        greet: `Hi ${name},`,
+        line: `Your AUROS Green Verified label application for <strong>${project}</strong> is now under document review.`,
+        next: "We will follow up within 5 business days with next steps.",
+        cta: "Track my application",
+      },
+      es: {
+        subject: "AUROS Green — candidatura label en revisión",
+        greet: `Hola ${name},`,
+        line: `Su candidatura al label AUROS Green Verified para <strong>${project}</strong> está en revisión documental.`,
+        next: "Le contactaremos en 5 días hábiles con los próximos pasos.",
+        cta: "Seguir mi candidatura",
+      },
+    },
+    rejected: {
+      fr: {
+        subject: "AUROS Green — candidature label non retenue",
+        greet: `Bonjour ${name},`,
+        line: `Après revue, votre candidature au label AUROS Green Verified pour <strong>${project}</strong> n'a pas été retenue à ce stade.`,
+        next: "Vous pouvez consulter les standards RTMS et soumettre une nouvelle candidature après mise à jour du dossier.",
+        cta: "Standards RTMS",
+      },
+      en: {
+        subject: "AUROS Green — label application not retained",
+        greet: `Hi ${name},`,
+        line: `After review, your AUROS Green Verified label application for <strong>${project}</strong> was not retained at this stage.`,
+        next: "You may review RTMS standards and submit a new application after updating your dossier.",
+        cta: "RTMS standards",
+      },
+      es: {
+        subject: "AUROS Green — candidatura label no retenida",
+        greet: `Hola ${name},`,
+        line: `Tras la revisión, su candidatura al label AUROS Green Verified para <strong>${project}</strong> no fue retenida en esta etapa.`,
+        next: "Puede consultar los estándares RTMS y presentar una nueva candidatura tras actualizar el dossier.",
+        cta: "Estándares RTMS",
+      },
+    },
+  } as const;
+
+  const loc = locale === "fr" ? "fr" : locale === "es" ? "es" : "en";
+  const copy = copyByKind[kind][loc];
+  const ctaUrl =
+    kind === "in_review"
+      ? data.myUrl
+      : `${siteOrigin()}/green/standards`;
+
+  const html = layout(
+    `<p style="margin:0 0 16px;">${copy.greet}</p>
+    <p style="margin:0 0 16px;color:${BRAND_MUTED};">${copy.line}</p>
+    <p style="margin:0 0 20px;color:${BRAND_MUTED};">${copy.next}</p>` +
+      cta(ctaUrl, copy.cta)
+  );
+  return { subject: copy.subject, html };
+}
+
 export type GreenLabelInternalEmailData = {
   projectName: string;
   email: string;

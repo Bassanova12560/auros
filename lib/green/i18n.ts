@@ -255,6 +255,14 @@ export type GreenMessages = {
     exportPdfGenerating: string;
     exportPdfRetry: string;
     backLink: string;
+    marketOffersSectionTitle: string;
+    marketOffersSectionIntro: string;
+    marketOffersEmpty: string;
+    marketOffersBrowse: string;
+    marketOffersCount: (n: number) => string;
+    marketOffersActions: string;
+    removeFromCompare: string;
+    copyCompareLink: string;
   };
   label: {
     eyebrow: string;
@@ -374,6 +382,22 @@ export type GreenMessages = {
     searchPlaceholder: string;
     searchEmpty: string;
     backLink: string;
+    viewProject: string;
+    projectDetail: {
+      eyebrow: string;
+      intro: string;
+      locationTitle: string;
+      statusTitle: string;
+      rtmsTierTitle: string;
+      rtmsTierBody: (tier: "verified" | "pilot") => string;
+      certifiedAtTitle: string;
+      descriptionTitle: string;
+      websiteTitle: string;
+      verifyCta: string;
+      backLink: string;
+      notFoundTitle: string;
+      notFoundBody: string;
+    };
   };
   guide: {
     eyebrow: string;
@@ -962,6 +986,16 @@ const FR: GreenMessages = {
     exportPdfGenerating: "PDF…",
     exportPdfRetry: "Réessayer PDF",
     backLink: "← Retour AUROS Green",
+    marketOffersSectionTitle: "Annonces marketplace sélectionnées",
+    marketOffersSectionIntro:
+      "Comparez côte à côte des annonces de la place de marché — données indicatives MVP, pas un conseil.",
+    marketOffersEmpty:
+      "Aucune annonce sélectionnée — ouvrez une fiche annonce et cliquez « Ajouter au comparateur ».",
+    marketOffersBrowse: "Parcourir la place de marché",
+    marketOffersCount: (n) => `${n} annonce${n > 1 ? "s" : ""} sélectionnée${n > 1 ? "s" : ""} (max 4)`,
+    marketOffersActions: "Actions",
+    removeFromCompare: "Retirer",
+    copyCompareLink: "Copier le lien comparateur",
   },
   label: {
     eyebrow: "Candidature",
@@ -1121,6 +1155,26 @@ const FR: GreenMessages = {
     searchPlaceholder: "Rechercher un projet (nom, pays)…",
     searchEmpty: "Aucun projet ne correspond à cette recherche.",
     backLink: "← Retour AUROS Green",
+    viewProject: "Voir la fiche projet",
+    projectDetail: {
+      eyebrow: "Registre public",
+      intro: "Fiche projet labellisé AUROS Green — statut RTMS explicite, sans promesse de rendement.",
+      locationTitle: "Localisation",
+      statusTitle: "Statut label",
+      rtmsTierTitle: "Niveau RTMS",
+      rtmsTierBody: (tier) =>
+        tier === "verified"
+          ? "Label Auros Green Verified — revue documentaire RTMS complète validée par AUROS."
+          : "Cas pilote RTMS — démonstration méthodologique anonymisée, distinct d'un audit investisseur.",
+      certifiedAtTitle: "Date d'inscription",
+      descriptionTitle: "Description",
+      websiteTitle: "Site web",
+      verifyCta: "Page de vérification",
+      backLink: "← Retour au registre",
+      notFoundTitle: "Projet introuvable",
+      notFoundBody:
+        "Ce projet n'existe pas dans le registre public ou n'est plus disponible.",
+    },
   },
   guide: {
     eyebrow: "Guide éducatif",
@@ -1729,6 +1783,16 @@ const EN: GreenMessages = {
     exportPdfGenerating: "PDF…",
     exportPdfRetry: "Retry PDF",
     backLink: "← Back to AUROS Green",
+    marketOffersSectionTitle: "Selected marketplace listings",
+    marketOffersSectionIntro:
+      "Compare marketplace listings side by side — indicative MVP data, not advice.",
+    marketOffersEmpty:
+      "No listings selected — open a listing page and click « Add to comparator ».",
+    marketOffersBrowse: "Browse marketplace",
+    marketOffersCount: (n) => `${n} listing${n === 1 ? "" : "s"} selected (max 4)`,
+    marketOffersActions: "Actions",
+    removeFromCompare: "Remove",
+    copyCompareLink: "Copy comparator link",
   },
   label: {
     eyebrow: "Application",
@@ -1887,6 +1951,25 @@ const EN: GreenMessages = {
     searchPlaceholder: "Search a project (name, country)…",
     searchEmpty: "No project matches this search.",
     backLink: "← Back to AUROS Green",
+    viewProject: "View project page",
+    projectDetail: {
+      eyebrow: "Public registry",
+      intro: "AUROS Green labelled project — explicit RTMS status, no return promise.",
+      locationTitle: "Location",
+      statusTitle: "Label status",
+      rtmsTierTitle: "RTMS tier",
+      rtmsTierBody: (tier) =>
+        tier === "verified"
+          ? "Auros Green Verified label — full RTMS document review validated by AUROS."
+          : "RTMS pilot case — anonymized methodology demo, distinct from investor audit.",
+      certifiedAtTitle: "Listed on",
+      descriptionTitle: "Description",
+      websiteTitle: "Website",
+      verifyCta: "Verification page",
+      backLink: "← Back to registry",
+      notFoundTitle: "Project not found",
+      notFoundBody: "This project is not in the public registry or is no longer available.",
+    },
   },
   guide: {
     eyebrow: "Educational guide",
@@ -2499,6 +2582,16 @@ const ES: GreenMessages = {
     exportPdfGenerating: "PDF…",
     exportPdfRetry: "Reintentar PDF",
     backLink: "← Volver a AUROS Green",
+    marketOffersSectionTitle: "Anuncios del marketplace seleccionados",
+    marketOffersSectionIntro:
+      "Compare anuncios del marketplace lado a lado — datos MVP indicativos, no asesoramiento.",
+    marketOffersEmpty:
+      "Ningún anuncio seleccionado — abra una ficha y pulse « Añadir al comparador ».",
+    marketOffersBrowse: "Explorar marketplace",
+    marketOffersCount: (n) => `${n} anuncio${n === 1 ? "" : "s"} seleccionado${n === 1 ? "" : "s"} (máx. 4)`,
+    marketOffersActions: "Acciones",
+    removeFromCompare: "Quitar",
+    copyCompareLink: "Copiar enlace comparador",
   },
   label: {
     eyebrow: "Solicitud",
@@ -2659,6 +2752,26 @@ const ES: GreenMessages = {
     searchPlaceholder: "Buscar un proyecto (nombre, país)…",
     searchEmpty: "Ningún proyecto coincide con esta búsqueda.",
     backLink: "← Volver a AUROS Green",
+    viewProject: "Ver ficha del proyecto",
+    projectDetail: {
+      eyebrow: "Registro público",
+      intro: "Proyecto etiquetado AUROS Green — estado RTMS explícito, sin promesa de rendimiento.",
+      locationTitle: "Ubicación",
+      statusTitle: "Estado de etiqueta",
+      rtmsTierTitle: "Nivel RTMS",
+      rtmsTierBody: (tier) =>
+        tier === "verified"
+          ? "Etiqueta Auros Green Verified — revisión documental RTMS completa validada por AUROS."
+          : "Caso piloto RTMS — demostración metodológica anonimizada, distinta de una auditoría inversor.",
+      certifiedAtTitle: "Fecha de inscripción",
+      descriptionTitle: "Descripción",
+      websiteTitle: "Sitio web",
+      verifyCta: "Página de verificación",
+      backLink: "← Volver al registro",
+      notFoundTitle: "Proyecto no encontrado",
+      notFoundBody:
+        "Este proyecto no figura en el registro público o ya no está disponible.",
+    },
   },
   guide: {
     eyebrow: "Guía educativa",

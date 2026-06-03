@@ -107,6 +107,11 @@ export type GreenMarketMessages = {
     noEndDate: string;
     shareOffer: string;
     shareCopied: string;
+    addToCompare: string;
+    addedToCompare: string;
+    alreadyInCompare: string;
+    compareFull: string;
+    openCompare: string;
     backToMarket: string;
     notFoundTitle: string;
     notFoundBody: string;
@@ -292,6 +297,11 @@ const FR: GreenMarketMessages = {
     noEndDate: "Non précisée",
     shareOffer: "Copier le lien de l'annonce",
     shareCopied: "Lien copié",
+    addToCompare: "Ajouter au comparateur",
+    addedToCompare: "Ajoutée au comparateur",
+    alreadyInCompare: "Déjà dans le comparateur",
+    compareFull: "Comparateur plein (4 max)",
+    openCompare: "Ouvrir le comparateur",
     backToMarket: "← Retour à la place de marché",
     notFoundTitle: "Annonce introuvable",
     notFoundBody:
@@ -506,6 +516,11 @@ const EN: GreenMarketMessages = {
     noEndDate: "Not specified",
     shareOffer: "Copy listing link",
     shareCopied: "Link copied",
+    addToCompare: "Add to comparator",
+    addedToCompare: "Added to comparator",
+    alreadyInCompare: "Already in comparator",
+    compareFull: "Comparator full (4 max)",
+    openCompare: "Open comparator",
     backToMarket: "← Back to marketplace",
     notFoundTitle: "Listing not found",
     notFoundBody:
@@ -721,6 +736,11 @@ const ES: GreenMarketMessages = {
     noEndDate: "No especificada",
     shareOffer: "Copiar enlace del anuncio",
     shareCopied: "Enlace copiado",
+    addToCompare: "Añadir al comparador",
+    addedToCompare: "Añadida al comparador",
+    alreadyInCompare: "Ya en el comparador",
+    compareFull: "Comparador lleno (máx. 4)",
+    openCompare: "Abrir comparador",
     backToMarket: "← Volver al mercado",
     notFoundTitle: "Anuncio no encontrado",
     notFoundBody:

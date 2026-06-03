@@ -215,6 +215,23 @@ export async function getGreenRegistryProjectByToken(
   return snapshot.projects.find((p) => p.verifyToken === token) ?? null;
 }
 
+export async function getGreenRegistryProjectById(
+  id: string
+): Promise<GreenRegistryProjectRow | null> {
+  const snapshot = await getGreenRegistrySnapshot();
+  return snapshot.projects.find((p) => p.id === id) ?? null;
+}
+
+export async function listGreenRegistryProjectSitemapIds(): Promise<
+  { id: string; certifiedAt: string }[]
+> {
+  const snapshot = await getGreenRegistrySnapshot();
+  return snapshot.projects.map((p) => ({
+    id: p.id,
+    certifiedAt: p.certifiedAt,
+  }));
+}
+
 export async function getGreenRegistryExpertByToken(
   token: string
 ): Promise<GreenRegistryExpertRow | null> {

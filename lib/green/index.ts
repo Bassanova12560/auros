@@ -14,6 +14,7 @@ export {
   GREEN_LABEL_ROUTE,
   GREEN_CERTIFICATION_ROUTE,
   GREEN_REGISTRY_ROUTE,
+  GREEN_REGISTRY_PROJECT_ROUTE,
   GREEN_GUIDE_ROUTE,
   GREEN_PRATICIEN_ROUTE,
   GREEN_PRATICIEN_EXAM_ROUTE,
@@ -96,11 +97,31 @@ export type { GreenCompareRow, GreenRegistryProject } from "./compare-data";
 export {
   getGreenRegistrySnapshot,
   getGreenRegistryProjectByToken,
+  getGreenRegistryProjectById,
   getGreenRegistryExpertByToken,
   greenVerifyPath,
   greenProjectSummary,
   registerGreenExpert,
+  listGreenRegistryProjectSitemapIds,
 } from "./green-registry";
+export {
+  greenRegistryProjectPath,
+  normalizeGreenRegistryProjectId,
+} from "./registry-routes";
+export {
+  GREEN_COMPARE_OFFERS_KEY,
+  GREEN_COMPARE_OFFERS_MAX,
+  GREEN_COMPARE_OFFERS_URL_PARAM,
+  addCompareOfferId,
+  buildGreenCompareUrl,
+  mergeCompareOfferIds,
+  normalizeCompareOfferIds,
+  parseCompareOfferIdsParam,
+  readCompareOfferIds,
+  removeCompareOfferId,
+  writeCompareOfferIds,
+} from "./market/compare-selection";
+export { updateGreenLabelApplicationStatus } from "./update-label-status";
 export { publishGreenLabelApplication, listPendingGreenLabelApplications } from "./publish-label";
 export type { PendingGreenLabelApplication } from "./publish-label";
 export {

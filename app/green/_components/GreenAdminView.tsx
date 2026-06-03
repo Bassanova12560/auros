@@ -103,6 +103,32 @@ export function GreenAdminView() {
     [refresh, secret]
   );
 
+  const updateLabelStatus = useCallback(
+    async (item: LabelItem, status: "in_review" | "rejected") => {
+      setBusyId(item.id);
+      setError(null);
+      try {
+        const res = await fetch("/api/admin/green-label-status", {
+          method: "POST",
+          headers: {
+            ...authHeader(secret),
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ applicationId: item.id, status }),
+        });
+        const json = (await res.json()) as { ok?: boolean; error?: string };
+        if (!res.ok || !json.ok) {
+          setError(json.error ?? "Mise à jour statut label échouée.");
+          return;
+        }
+        await refresh(secret);
+      } finally {
+        setBusyId(null);
+      }
+    },
+    [refresh, secret]
+  );
+
   const publishLabel = useCallback(
     async (item: LabelItem) => {
       const summaryFr = summaries[item.id]?.trim() || item.description.slice(0, 280);
@@ -270,14 +296,32 @@ export function GreenAdminView() {
                           className="mt-2 w-full rounded-lg border border-emerald-500/30 bg-black px-3 py-2 text-sm text-emerald-200 outline-none focus:border-emerald-400"
                         />
                       </label>
-                      <button
-                        type="button"
-                        disabled={busyId === item.id}
-                        onClick={() => publishLabel(item)}
-                        className="mt-3 rounded-full bg-emerald-500 px-4 py-1.5 text-xs font-medium text-emerald-950 hover:bg-emerald-400 disabled:opacity-50"
-                      >
-                        Publier Verified
-                      </button>
+                      <div className="mt-3 flex flex-wrap gap-2">
+                        <button
+                          type="button"
+                          disabled={busyId === item.id}
+                          onClick={() => void updateLabelStatus(item, "in_review")}
+                          className="rounded-full border border-emerald-500/50 px-4 py-1.5 text-xs text-emerald-300 hover:border-emerald-400 disabled:opacity-50"
+                        >
+                          Mettre en revue
+                        </button>
+                        <button
+                          type="button"
+                          disabled={busyId === item.id}
+                          onClick={() => void updateLabelStatus(item, "rejected")}
+                          className="rounded-full border border-neutral-600 px-4 py-1.5 text-xs text-neutral-300 hover:border-neutral-400 disabled:opacity-50"
+                        >
+                          Rejeter
+                        </button>
+                        <button
+                          type="button"
+                          disabled={busyId === item.id}
+                          onClick={() => publishLabel(item)}
+                          className="rounded-full bg-emerald-500 px-4 py-1.5 text-xs font-medium text-emerald-950 hover:bg-emerald-400 disabled:opacity-50"
+                        >
+                          Publier Verified
+                        </button>
+                      </div>
                     </li>
                   ))}
                 </ul>
