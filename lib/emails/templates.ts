@@ -1016,3 +1016,57 @@ export function greenMarketAlertEmail(data: GreenMarketAlertEmailData) {
   );
   return { subject: copy.subject, html };
 }
+
+export type GreenOfferInterestEmailData = {
+  offerId: string;
+  offerTitle: string;
+  actorName: string;
+  visitorName: string;
+  visitorEmail: string;
+  message: string;
+  locale?: Locale;
+};
+
+export function greenOfferInterestInternalEmail(data: GreenOfferInterestEmailData) {
+  const subject = `[Green] Intérêt annonce: ${data.offerTitle}`;
+  const html = layout(
+    `<h1 style="margin:0 0 16px;font-size:18px;">Green marketplace — intérêt annonce</h1>
+    <table style="width:100%;font-size:13px;color:${BRAND_MUTED};">
+      <tr><td style="padding:4px 0;">Annonce</td><td>${escapeHtml(data.offerTitle)}</td></tr>
+      <tr><td style="padding:4px 0;">ID</td><td>${escapeHtml(data.offerId)}</td></tr>
+      <tr><td style="padding:4px 0;">Acteur</td><td>${escapeHtml(data.actorName)}</td></tr>
+      <tr><td style="padding:4px 0;">Visiteur</td><td>${escapeHtml(data.visitorName)}</td></tr>
+      <tr><td style="padding:4px 0;">Email</td><td>${escapeHtml(data.visitorEmail)}</td></tr>
+      <tr><td style="padding:4px 0;">Message</td><td>${escapeHtml(data.message)}</td></tr>
+    </table>`,
+    "AUROS internal · Green marketplace"
+  );
+  return { subject, html };
+}
+
+export function greenOfferInterestActorEmail(data: GreenOfferInterestEmailData) {
+  const locale = data.locale ?? "fr";
+  const copy = {
+    fr: {
+      subject: `AUROS Green — intérêt pour votre annonce`,
+      line: `<strong>${escapeHtml(data.visitorName)}</strong> (${escapeHtml(data.visitorEmail)}) a manifesté un intérêt pour votre annonce <strong>${escapeHtml(data.offerTitle)}</strong> sur AUROS Green.`,
+      msg: data.message !== "—" ? `Message : ${escapeHtml(data.message)}` : "",
+    },
+    en: {
+      subject: `AUROS Green — interest in your listing`,
+      line: `<strong>${escapeHtml(data.visitorName)}</strong> (${escapeHtml(data.visitorEmail)}) expressed interest in your listing <strong>${escapeHtml(data.offerTitle)}</strong> on AUROS Green.`,
+      msg: data.message !== "—" ? `Message: ${escapeHtml(data.message)}` : "",
+    },
+    es: {
+      subject: `AUROS Green — interés por su anuncio`,
+      line: `<strong>${escapeHtml(data.visitorName)}</strong> (${escapeHtml(data.visitorEmail)}) manifestó interés por su anuncio <strong>${escapeHtml(data.offerTitle)}</strong> en AUROS Green.`,
+      msg: data.message !== "—" ? `Mensaje: ${escapeHtml(data.message)}` : "",
+    },
+  }[locale === "fr" ? "fr" : locale === "es" ? "es" : "en"];
+
+  const html = layout(
+    `<p style="margin:0 0 16px;color:${BRAND_MUTED};">${copy.line}</p>` +
+      (copy.msg ? `<p style="margin:0;color:${BRAND_MUTED};">${copy.msg}</p>` : "")
+  );
+  return { subject: copy.subject, html };
+}

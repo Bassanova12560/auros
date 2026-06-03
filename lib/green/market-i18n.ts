@@ -89,6 +89,7 @@ export type GreenMarketMessages = {
     savedSearchRemove: string;
     savedSearchEmpty: string;
     viewOffer: string;
+    viewActorProfile: string;
   };
   offerDetail: {
     eyebrow: string;
@@ -96,6 +97,9 @@ export type GreenMarketMessages = {
     descriptionTitle: string;
     actorTitle: string;
     viewActorOnMap: string;
+    viewActorProfile: string;
+    contactTitle: string;
+    contactEmailCta: string;
     datesTitle: string;
     publishedAt: string;
     validFrom: string;
@@ -115,6 +119,33 @@ export type GreenMarketMessages = {
       volumeKwh: number,
       pricePerKwh: number
     ) => string;
+  };
+  offerInterest: {
+    title: string;
+    intro: string;
+    name: string;
+    email: string;
+    message: string;
+    messagePlaceholder: string;
+    submit: string;
+    submitting: string;
+    success: string;
+    errorInvalid: string;
+    errorRateLimit: string;
+  };
+  actorDetail: {
+    eyebrow: string;
+    mapTitle: string;
+    descriptionTitle: string;
+    offersTitle: string;
+    offersEmpty: string;
+    viewOffer: string;
+    shareProfile: string;
+    shareCopied: string;
+    backToMarket: string;
+    contactTitle: string;
+    notFoundTitle: string;
+    notFoundBody: string;
   };
   actors: Record<
     GreenMarketActorType,
@@ -141,7 +172,7 @@ const FR: GreenMarketMessages = {
     mapTitle: "Carte des acteurs",
     mapActorsCountries: (actors, countries) =>
       `${actors} acteurs · ${countries} pays`,
-    popupViewSheet: "Voir la fiche",
+    popupViewSheet: "Voir la fiche acteur",
     filters: {
       actorType: "Type d'acteur",
       allActors: "Tous",
@@ -243,6 +274,7 @@ const FR: GreenMarketMessages = {
     savedSearchRemove: "Supprimer",
     savedSearchEmpty: "Aucune recherche enregistrée sur cet appareil.",
     viewOffer: "Voir l'annonce",
+    viewActorProfile: "Voir la fiche acteur",
   },
   offerDetail: {
     eyebrow: "Annonce marketplace",
@@ -250,6 +282,9 @@ const FR: GreenMarketMessages = {
     descriptionTitle: "Description",
     actorTitle: "Acteur",
     viewActorOnMap: "Voir sur la carte",
+    viewActorProfile: "Voir la fiche acteur",
+    contactTitle: "Contacter l'acteur",
+    contactEmailCta: "Envoyer un e-mail",
     datesTitle: "Dates",
     publishedAt: "Publiée le",
     validFrom: "Début",
@@ -265,6 +300,35 @@ const FR: GreenMarketMessages = {
       "Données indicatives MVP — sans engagement ni conseil. Contactez l'acteur pour toute transaction.",
     defaultDescription: (side, energy, city, country, volumeKwh, pricePerKwh) =>
       `Annonce ${side.toLowerCase()} — ${energy.toLowerCase()} à ${city}, ${country}. Volume indicatif ${volumeKwh.toLocaleString("fr-FR")} kWh · ${pricePerKwh.toFixed(3)} €/kWh.`,
+  },
+  offerInterest: {
+    title: "Manifester un intérêt",
+    intro:
+      "Signalez votre intérêt pour cette annonce — l'acteur ou AUROS vous recontactera si un e-mail est disponible. Données indicatives, sans engagement.",
+    name: "Votre nom",
+    email: "Votre e-mail",
+    message: "Message (optionnel)",
+    messagePlaceholder: "Volume souhaité, calendrier, questions…",
+    submit: "Envoyer",
+    submitting: "Envoi…",
+    success: "Intérêt enregistré — nous vous recontacterons si possible.",
+    errorInvalid: "Vérifiez votre e-mail.",
+    errorRateLimit: "Trop de tentatives — réessayez dans une heure.",
+  },
+  actorDetail: {
+    eyebrow: "Fiche acteur",
+    mapTitle: "Localisation",
+    descriptionTitle: "Présentation",
+    offersTitle: "Annonces de cet acteur",
+    offersEmpty: "Aucune annonce publiée pour cet acteur.",
+    viewOffer: "Voir l'annonce",
+    shareProfile: "Copier le lien de la fiche",
+    shareCopied: "Lien copié",
+    backToMarket: "← Retour à la place de marché",
+    contactTitle: "Contacter",
+    notFoundTitle: "Acteur introuvable",
+    notFoundBody:
+      "Cette fiche n'existe pas ou n'est plus disponible. Consultez la place de marché.",
   },
   actors: {
     producer: {
@@ -323,7 +387,7 @@ const EN: GreenMarketMessages = {
     mapTitle: "Actor map",
     mapActorsCountries: (actors, countries) =>
       `${actors} actors · ${countries} countries`,
-    popupViewSheet: "View listing",
+    popupViewSheet: "View actor profile",
     filters: {
       actorType: "Actor type",
       allActors: "All",
@@ -424,6 +488,7 @@ const EN: GreenMarketMessages = {
     savedSearchRemove: "Remove",
     savedSearchEmpty: "No saved searches on this device.",
     viewOffer: "View listing",
+    viewActorProfile: "View actor profile",
   },
   offerDetail: {
     eyebrow: "Marketplace listing",
@@ -431,6 +496,9 @@ const EN: GreenMarketMessages = {
     descriptionTitle: "Description",
     actorTitle: "Actor",
     viewActorOnMap: "View on map",
+    viewActorProfile: "View actor profile",
+    contactTitle: "Contact actor",
+    contactEmailCta: "Send email",
     datesTitle: "Dates",
     publishedAt: "Published",
     validFrom: "Start",
@@ -446,6 +514,35 @@ const EN: GreenMarketMessages = {
       "Indicative MVP data — not advice or commitment. Contact the actor for any transaction.",
     defaultDescription: (side, energy, city, country, volumeKwh, pricePerKwh) =>
       `${side} listing — ${energy.toLowerCase()} in ${city}, ${country}. Indicative volume ${volumeKwh.toLocaleString("en-GB")} kWh · ${pricePerKwh.toFixed(3)} €/kWh.`,
+  },
+  offerInterest: {
+    title: "Express interest",
+    intro:
+      "Signal interest in this listing — the actor or AUROS may follow up if an email is available. Indicative data, not a commitment.",
+    name: "Your name",
+    email: "Your email",
+    message: "Message (optional)",
+    messagePlaceholder: "Desired volume, timeline, questions…",
+    submit: "Send",
+    submitting: "Sending…",
+    success: "Interest recorded — we will follow up when possible.",
+    errorInvalid: "Check your email address.",
+    errorRateLimit: "Too many attempts — try again in one hour.",
+  },
+  actorDetail: {
+    eyebrow: "Actor profile",
+    mapTitle: "Location",
+    descriptionTitle: "Overview",
+    offersTitle: "Listings from this actor",
+    offersEmpty: "No listings published for this actor.",
+    viewOffer: "View listing",
+    shareProfile: "Copy profile link",
+    shareCopied: "Link copied",
+    backToMarket: "← Back to marketplace",
+    contactTitle: "Contact",
+    notFoundTitle: "Actor not found",
+    notFoundBody:
+      "This profile does not exist or is no longer available. Browse the marketplace.",
   },
   actors: {
     producer: {
@@ -504,7 +601,7 @@ const ES: GreenMarketMessages = {
     mapTitle: "Mapa de actores",
     mapActorsCountries: (actors, countries) =>
       `${actors} actores · ${countries} países`,
-    popupViewSheet: "Ver ficha",
+    popupViewSheet: "Ver ficha actor",
     filters: {
       actorType: "Tipo de actor",
       allActors: "Todos",
@@ -606,6 +703,7 @@ const ES: GreenMarketMessages = {
     savedSearchRemove: "Eliminar",
     savedSearchEmpty: "No hay búsquedas guardadas en este dispositivo.",
     viewOffer: "Ver anuncio",
+    viewActorProfile: "Ver ficha actor",
   },
   offerDetail: {
     eyebrow: "Anuncio marketplace",
@@ -613,6 +711,9 @@ const ES: GreenMarketMessages = {
     descriptionTitle: "Descripción",
     actorTitle: "Actor",
     viewActorOnMap: "Ver en el mapa",
+    viewActorProfile: "Ver ficha actor",
+    contactTitle: "Contactar actor",
+    contactEmailCta: "Enviar e-mail",
     datesTitle: "Fechas",
     publishedAt: "Publicado",
     validFrom: "Inicio",
@@ -628,6 +729,35 @@ const ES: GreenMarketMessages = {
       "Datos indicativos MVP — sin compromiso ni consejo. Contacte al actor para cualquier transacción.",
     defaultDescription: (side, energy, city, country, volumeKwh, pricePerKwh) =>
       `Anuncio ${side.toLowerCase()} — ${energy.toLowerCase()} en ${city}, ${country}. Volumen indicativo ${volumeKwh.toLocaleString("es-ES")} kWh · ${pricePerKwh.toFixed(3)} €/kWh.`,
+  },
+  offerInterest: {
+    title: "Manifestar interés",
+    intro:
+      "Indique su interés por este anuncio — el actor o AUROS le contactará si hay e-mail disponible. Datos indicativos, sin compromiso.",
+    name: "Su nombre",
+    email: "Su e-mail",
+    message: "Mensaje (opcional)",
+    messagePlaceholder: "Volumen deseado, calendario, preguntas…",
+    submit: "Enviar",
+    submitting: "Enviando…",
+    success: "Interés registrado — le contactaremos si es posible.",
+    errorInvalid: "Revise su e-mail.",
+    errorRateLimit: "Demasiados intentos — inténtelo de nuevo en una hora.",
+  },
+  actorDetail: {
+    eyebrow: "Ficha actor",
+    mapTitle: "Ubicación",
+    descriptionTitle: "Presentación",
+    offersTitle: "Anuncios de este actor",
+    offersEmpty: "Ningún anuncio publicado para este actor.",
+    viewOffer: "Ver anuncio",
+    shareProfile: "Copiar enlace de la ficha",
+    shareCopied: "Enlace copiado",
+    backToMarket: "← Volver al mercado",
+    contactTitle: "Contactar",
+    notFoundTitle: "Actor no encontrado",
+    notFoundBody:
+      "Esta ficha no existe o ya no está disponible. Consulte el mercado.",
   },
   actors: {
     producer: {

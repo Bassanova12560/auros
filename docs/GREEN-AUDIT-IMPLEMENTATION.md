@@ -112,9 +112,28 @@ Sans clé IA : scoring rule-based amélioré uniquement (comportement valide).
 - **Place de marché** — lignes et hub « dernières annonces » liées vers la fiche ; **Copier le lien de l'annonce** sur la fiche.
 - **Tests** — `tests/green-sprint8.test.ts` (routes, résolution id, catalogue, i18n).
 
-### Après Sprint 8 (backlog)
+## Sprint 9 — shipped 2026-06-03
 
+- **Fiches acteur** — `/green/market/actor/[id]` : profil (type, capacité, prix, énergie, lieu), description, carte, annonces liées, contact mailto, copier le lien ; popup carte → fiche acteur ; i18n FR/EN/ES ; sitemap dynamique + catalogue AI-first.
+- **Contact / intérêt sur annonce** — fiche annonce : bouton e-mail si contact acteur + formulaire « manifester un intérêt » (rate limit 5/h, notification interne + relais acteur si e-mail).
+- **SEO entités** — JSON-LD `Offer` sur fiches annonce, `LocalBusiness` sur fiches acteur (en plus du catalogue AI-first).
+- **Mobile polish** — espacements et typo responsive sur fiches annonce et acteur.
+- **Tests** — `tests/green-sprint9.test.ts` (`npm run test:green`).
+
+### Après Sprint 9 (backlog Sprint 10)
+
+- Compare : ajouter des offres depuis la fiche annonce
+- Label : notifications e-mail statut candidature
+- Registre : pages détail projet
 - NFT, oracle, Uniswap, PricingCard boost, dark mode, Clerk sur tout `/green/*`, Lighthouse CI
+
+### Après Sprint 8 (backlog — partiellement traité Sprint 9)
+
+- ~~Actor profile pages~~ → Sprint 9
+- ~~Contact/interested CTA on offer detail~~ → Sprint 9
+- ~~Market: actor filter from map popup → detail~~ → Sprint 9 (popup → fiche acteur)
+- ~~SEO: structured data JSON-LD for offers/actors~~ → Sprint 9
+- ~~Mobile polish on offer detail + market~~ → Sprint 9 (fiches détail)
 
 
 

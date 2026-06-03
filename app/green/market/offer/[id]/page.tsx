@@ -5,6 +5,7 @@ import { AiFirstPageJsonLd } from "@/app/_components/ai-first/AiFirstPageJsonLd"
 import { absoluteUrl } from "@/lib/comparators/site";
 import { getGreenMarketOfferById } from "@/lib/green/market/green-market-db";
 import { formatGreenMarketOfferTitle } from "@/lib/green/market/offer-detail";
+import { buildGreenMarketOfferJsonLd } from "@/lib/green/market/json-ld";
 import { greenMarketOfferPath } from "@/lib/green/market/offer-routes";
 
 import { GreenOfferDetailView } from "@/app/green/_components/market/GreenOfferDetailView";
@@ -47,10 +48,15 @@ export default async function GreenMarketOfferPage({ params }: PageProps) {
   if (!offer) notFound();
 
   const path = greenMarketOfferPath(offer.id);
+  const entityJsonLd = buildGreenMarketOfferJsonLd(offer, "fr");
 
   return (
     <>
       <AiFirstPageJsonLd path={path} />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(entityJsonLd) }}
+      />
       <GreenOfferDetailView offer={offer} />
     </>
   );

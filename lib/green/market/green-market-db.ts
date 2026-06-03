@@ -8,7 +8,13 @@ import {
   defaultGreenMarketOfferDescription,
   type GreenMarketOfferDetail,
 } from "./offer-detail";
+import type { GreenMarketActorDetail } from "./actor-detail";
 import { findDemoGreenMarketOfferById, isGreenMarketOfferUuid, normalizeGreenMarketOfferId } from "./offer-routes";
+import {
+  findDemoGreenMarketActorById,
+  isGreenMarketActorUuid,
+  normalizeGreenMarketActorId,
+} from "./actor-routes";
 import type {
   GreenMarketActor,
   GreenMarketListingTier,
@@ -343,6 +349,80 @@ export async function listGreenMarketOfferSitemapIds(): Promise<
   return snap.offers
     .filter((o) => o.status === "available")
     .map((o) => ({ id: o.id, createdAt: o.createdAt }));
+}
+
+function offersForActor(
+  actor: GreenMarketActor,
+  offers: GreenMarketOffer[]
+): GreenMarketOffer[] {
+  return offers.filter(
+    (o) =>
+      o.status === "available" &&
+      (o.actorId === actor.id || o.actorName === actor.name)
+  );
+}
+
+export async function getGreenMarketActorById(
+  rawId: string
+): Promise<GreenMarketActorDetail | null> {
+  const id = normalizeGreenMarketActorId(rawId);
+  if (!id) return null;
+
+  const supabase = getAdminClient();
+
+  if (supabase) {
+    try {
+      let row: Record<string, unknown> | null = null;
+
+      const byExternal = await supabase
+        .from("green_market_assets")
+        .select("*")
+        .eq("external_id", id)
+        .in("status", ["available", "pending"])
+        .maybeSingle();
+
+      if (byExternal.data) {
+        row = byExternal.data as Record<string, unknown>;
+      } else if (isGreenMarketActorUuid(id)) {
+        const byUuid = await supabase
+          .from("green_market_assets")
+          .select("*")
+          .eq("id", id)
+          .in("status", ["available", "pending"])
+          .maybeSingle();
+        if (byUuid.data) row = byUuid.data as Record<string, unknown>;
+      }
+
+      if (row) {
+        const actor = mapAssetRow(row);
+        const snap = await getGreenMarketSnapshot();
+        return {
+          ...actor,
+          offers: offersForActor(actor, snap.offers),
+        };
+      }
+    } catch {
+      /* fall through to demo */
+    }
+  }
+
+  const demo = findDemoGreenMarketActorById(id);
+  if (!demo) return null;
+
+  const snap = await getGreenMarketSnapshot();
+  return {
+    ...demo,
+    offers: offersForActor(demo, snap.offers),
+  };
+}
+
+export async function listGreenMarketActorSitemapIds(): Promise<
+  Array<{ id: string }>
+> {
+  const snap = await getGreenMarketSnapshot();
+  return snap.actors
+    .filter((a) => a.status === "available")
+    .map((a) => ({ id: a.id }));
 }
 
 export type InsertGreenMarketAssetInput = {

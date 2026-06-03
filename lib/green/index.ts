@@ -3,6 +3,7 @@ export {
   GREEN_ABOUT_ROUTE,
   GREEN_MARKET_ROUTE,
   GREEN_MARKET_OFFER_ROUTE,
+  GREEN_MARKET_ACTOR_ROUTE,
   GREEN_PRODUCERS_ROUTE,
   GREEN_REGISTER_ROUTE,
   GREEN_STORERS_ROUTE,
@@ -36,7 +37,6 @@ export {
   GREEN_MARKET_ACTORS,
   GREEN_MARKET_OFFERS,
   getGreenMarketActorsByType,
-  getGreenMarketActorById,
 } from "./market/data";
 export type {
   GreenMarketActor,
@@ -56,9 +56,12 @@ export { getGreenMarketSnapshot } from "./market/green-market-db";
 export type { GreenMarketSnapshot, GreenMarketMode } from "./market/green-market-db";
 export {
   getGreenMarketOfferById,
+  getGreenMarketActorById,
   listGreenMarketOfferSitemapIds,
+  listGreenMarketActorSitemapIds,
 } from "./market/green-market-db";
 export type { GreenMarketOfferDetail } from "./market/offer-detail";
+export type { GreenMarketActorDetail } from "./market/actor-detail";
 export {
   greenMarketOfferPath,
   buildGreenMarketOfferShareUrl,
@@ -67,7 +70,22 @@ export {
   normalizeGreenMarketOfferId,
   isGreenMarketOfferUuid,
 } from "./market/offer-routes";
+export {
+  greenMarketActorPath,
+  buildGreenMarketActorShareUrl,
+  findDemoGreenMarketActorById,
+  greenMarketActorSheetHref,
+  greenMarketActorMailtoHref,
+  normalizeGreenMarketActorId,
+  isGreenMarketActorUuid,
+} from "./market/actor-routes";
 export { formatGreenMarketOfferTitle } from "./market/offer-detail";
+export { formatGreenMarketActorTitle } from "./market/actor-detail";
+export {
+  buildGreenMarketOfferJsonLd,
+  buildGreenMarketActorJsonLd,
+} from "./market/json-ld";
+export { submitGreenOfferInterestAction } from "../actions/green-offer-interest";
 export { saveGreenMarketOfferAction } from "../actions/green-market-offer";
 export { saveGreenMarketActorAction } from "../actions/green-market-actor";
 export type { GreenMessages } from "./i18n";

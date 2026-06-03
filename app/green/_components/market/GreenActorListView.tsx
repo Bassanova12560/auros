@@ -1,9 +1,14 @@
 "use client";
 
+import Link from "next/link";
+
 import { useLocale } from "@/app/_components/i18n/LocaleProvider";
 import { GREEN_MARKET_ROUTE } from "@/lib/green";
-import type { GreenMarketActor } from "@/lib/green/market/types";
-import type { GreenMarketActorType } from "@/lib/green/market/types";
+import {
+  greenMarketActorMailtoHref,
+  greenMarketActorPath,
+} from "@/lib/green/market/actor-routes";
+import type { GreenMarketActor, GreenMarketActorType } from "@/lib/green/market/types";
 import {
   formatGreenMarketLocation,
   formatMarketNumber,
@@ -19,7 +24,6 @@ import {
   GreenPanel,
   GreenSectionTitle,
 } from "../green-ui";
-
 type Props = {
   type: GreenMarketActorType;
   actors: GreenMarketActor[];
@@ -42,13 +46,20 @@ export function GreenActorListView({ type, actors }: Props) {
             <p className="text-sm text-muted">{mm.actorsListEmpty}</p>
           </GreenPanel>
         ) : null}
-        {actors.map((actor) => (
+        {actors.map((actor) => {
+          const mailto = greenMarketActorMailtoHref(actor);
+          return (
           <GreenPanel key={actor.id} className="border-0">
             <div className="p-6 md:p-8">
               <div className="flex flex-wrap items-start justify-between gap-4">
                 <div>
                   <h2 className="font-display text-xl font-semibold tracking-[-0.01em] text-white">
-                    {actor.name}
+                    <Link
+                      href={greenMarketActorPath(actor.id)}
+                      className="transition hover:text-green-royal-bright"
+                    >
+                      {actor.name}
+                    </Link>
                   </h2>
                   <div className="mt-2">
                     <GreenListingBadge tier={actor.listingTier} labels={listingLabels} />
@@ -63,12 +74,22 @@ export function GreenActorListView({ type, actors }: Props) {
                     </span>
                   ) : null}
                 </div>
-                <a
-                  href={`mailto:${actor.contactEmail}?subject=AUROS%20Green%20—%20${encodeURIComponent(actor.name)}`}
-                  className="shrink-0 rounded-lg border border-white/[0.12] px-4 py-2 font-mono text-[11px] tracking-wide text-white/70 transition hover:border-white/30 hover:text-white"
-                >
-                  {am.contact} →
-                </a>
+                <div className="flex shrink-0 flex-wrap gap-2">
+                  <Link
+                    href={greenMarketActorPath(actor.id)}
+                    className="rounded-lg border border-green-royal/40 bg-green-royal/10 px-4 py-2 font-mono text-[11px] tracking-wide text-green-royal-bright transition hover:border-green-royal hover:text-white"
+                  >
+                    {mm.viewActorProfile} →
+                  </Link>
+                  {mailto ? (
+                    <a
+                      href={mailto}
+                      className="rounded-lg border border-white/[0.12] px-4 py-2 font-mono text-[11px] tracking-wide text-white/70 transition hover:border-white/30 hover:text-white"
+                    >
+                      {am.contact} →
+                    </a>
+                  ) : null}
+                </div>
               </div>
               <p className="mt-4 max-w-2xl text-sm leading-relaxed text-muted">{actor.description}</p>
               <dl className="mt-6 grid gap-4 sm:grid-cols-2 md:grid-cols-4">
@@ -97,7 +118,8 @@ export function GreenActorListView({ type, actors }: Props) {
               </dl>
             </div>
           </GreenPanel>
-        ))}
+          );
+        })}
       </div>
 
       <GreenDisclaimer>{disclaimer}</GreenDisclaimer>

@@ -36,6 +36,8 @@ import {
   greenLabelApprovedEmail,
   greenLabelInternalEmail,
   greenMarketAlertEmail,
+  greenOfferInterestInternalEmail,
+  greenOfferInterestActorEmail,
   type ConciergeInternalEmailData,
   type SubmitDossierEmailData,
   type ConciergeUserEmailData,
@@ -61,6 +63,7 @@ import {
   type GreenLabelApprovedEmailData,
   type GreenLabelInternalEmailData,
   type GreenMarketAlertEmailData,
+  type GreenOfferInterestEmailData,
 } from "./templates";
 
 function getResend(): Resend | null {
@@ -353,5 +356,22 @@ export async function sendGreenMarketAlert(
   data: GreenMarketAlertEmailData
 ): Promise<boolean> {
   const { subject, html } = greenMarketAlertEmail(data);
+  return sendSafe({ to, subject, html });
+}
+
+export async function sendGreenOfferInterestInternal(
+  data: GreenOfferInterestEmailData
+): Promise<boolean> {
+  const internal = internalNotifyEmail();
+  if (!internal) return false;
+  const { subject, html } = greenOfferInterestInternalEmail(data);
+  return sendSafe({ to: internal, subject, html });
+}
+
+export async function sendGreenOfferInterestActor(
+  to: string,
+  data: GreenOfferInterestEmailData
+): Promise<boolean> {
+  const { subject, html } = greenOfferInterestActorEmail(data);
   return sendSafe({ to, subject, html });
 }

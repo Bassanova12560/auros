@@ -7,7 +7,7 @@ import { useCallback, useMemo, useState } from "react";
 import { useLocale } from "@/app/_components/i18n/LocaleProvider";
 import { getGreenMessages } from "@/lib/green/i18n";
 import { GREEN_MARKET_ROUTE } from "@/lib/green/constants";
-import { greenMarketActorSheetHref } from "@/lib/green/market/actor-routes";
+import { greenMarketActorPath } from "@/lib/green/market/actor-routes";
 import type { GreenMarketOfferDetail } from "@/lib/green/market/offer-detail";
 import { formatGreenMarketOfferTitle } from "@/lib/green/market/offer-detail";
 import {
@@ -30,6 +30,7 @@ import {
   GreenPanel,
   GreenSectionTitle,
 } from "../green-ui";
+import { GreenOfferInterestForm } from "./GreenOfferInterestForm";
 
 const GreenMarketMap = dynamic(
   () => import("./GreenMarketMap").then((m) => m.GreenMarketMap),
@@ -77,8 +78,8 @@ export function GreenOfferDetailView({ offer }: Props) {
   const title = formatGreenMarketOfferTitle(offer, locale);
   const mapActor = useMemo(() => mapActorFromOffer(offer), [offer]);
   const actorMapHref = buildGreenMarketActorFocusUrl(offer.actorName);
-  const actorHref = offer.actor
-    ? greenMarketActorSheetHref(offer.actor)
+  const actorProfileHref = offer.actor
+    ? greenMarketActorPath(offer.actor.id)
     : actorMapHref;
 
   const handleShare = useCallback(async () => {
@@ -96,7 +97,7 @@ export function GreenOfferDetailView({ offer }: Props) {
   }, [offer.id, od.shareCopied]);
 
   return (
-    <div className="page-inner page-inner--4xl mx-auto px-4 pb-24 pt-12 md:px-6 md:pt-16">
+    <div className="page-inner page-inner--4xl mx-auto px-4 pb-24 pt-10 sm:pt-12 md:px-6 md:pt-16">
       <GreenPageHeader
         eyebrow={od.eyebrow}
         title={title}
@@ -104,7 +105,7 @@ export function GreenOfferDetailView({ offer }: Props) {
         compact
       />
 
-      <div className="mt-6 flex flex-wrap items-center gap-3">
+      <div className="mt-5 flex flex-wrap items-center gap-2 sm:mt-6 sm:gap-3">
         <GreenListingBadge tier={offer.listingTier} labels={mm.listingTier} />
         <span className="font-mono text-[10px] uppercase tracking-wider text-white/45">
           {mm.sides[offer.side]} · {mm.energyTypes[offer.energyType]}
@@ -114,12 +115,12 @@ export function GreenOfferDetailView({ offer }: Props) {
         </span>
       </div>
 
-      <GreenPanel className="mt-8 grid gap-6 p-6 md:grid-cols-2 md:p-8">
+      <GreenPanel className="mt-6 grid gap-5 p-5 sm:mt-8 sm:grid-cols-2 sm:gap-6 sm:p-8">
         <div>
           <p className="font-mono text-[10px] uppercase tracking-wider text-white/40">
             {mm.table.volume}
           </p>
-          <p className="mt-1 font-display text-2xl font-semibold tabular-nums text-white">
+          <p className="mt-1 font-display text-xl font-semibold tabular-nums text-white sm:text-2xl">
             {formatMarketNumber(offer.volumeKwh, locale)} kWh
           </p>
         </div>
@@ -127,7 +128,7 @@ export function GreenOfferDetailView({ offer }: Props) {
           <p className="font-mono text-[10px] uppercase tracking-wider text-white/40">
             {mm.table.price}
           </p>
-          <p className="mt-1 font-display text-2xl font-semibold tabular-nums text-white">
+          <p className="mt-1 font-display text-xl font-semibold tabular-nums text-white sm:text-2xl">
             {offer.pricePerKwh.toFixed(3)} €/kWh
           </p>
         </div>
@@ -164,12 +165,12 @@ export function GreenOfferDetailView({ offer }: Props) {
       <section className="mt-10">
         <GreenSectionTitle>{od.actorTitle}</GreenSectionTitle>
         <p className="mt-3 text-lg font-medium text-white">{offer.actorName}</p>
-        <div className="mt-4 flex flex-wrap gap-3">
+        <div className="mt-4 flex flex-wrap gap-2 sm:gap-3">
           <Link
-            href={actorHref}
+            href={actorProfileHref}
             className="rounded-lg border border-green-royal/40 bg-green-royal/10 px-4 py-2 font-mono text-[11px] tracking-wide text-green-royal-bright transition hover:border-green-royal hover:text-white"
           >
-            {offer.actor?.contactEmail ? mm.contact : od.viewActorOnMap} →
+            {od.viewActorProfile} →
           </Link>
           <Link
             href={actorMapHref}
@@ -185,6 +186,13 @@ export function GreenOfferDetailView({ offer }: Props) {
         <p className="mt-4 max-w-2xl text-sm leading-relaxed text-white/65">{offer.description}</p>
         <p className="mt-4 max-w-2xl text-xs leading-relaxed text-white/40">{od.indicativeNote}</p>
       </section>
+
+      <GreenOfferInterestForm
+        offerId={offer.id}
+        offerTitle={title}
+        actorName={offer.actorName}
+        actorEmail={offer.actor?.contactEmail}
+      />
 
       <section className="mt-12">
         <GreenSectionTitle>{od.mapTitle}</GreenSectionTitle>
