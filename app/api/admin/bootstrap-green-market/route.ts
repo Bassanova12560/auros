@@ -94,18 +94,33 @@ export async function POST(req: NextRequest) {
     "0020_green_label_preferred_locale.sql",
   ];
 
+  const seedOnly = req.nextUrl.searchParams.get("seedOnly") === "1";
+
   try {
+    let migrationsApplied = false;
     if (process.env.SUPABASE_ACCESS_TOKEN?.trim()) {
       await runMigrationBatch(runViaManagementApi, migrationFiles);
+      migrationsApplied = true;
     } else if (
       process.env.DATABASE_URL?.trim() ||
       process.env.SUPABASE_DB_URL?.trim()
     ) {
       await runMigrationBatch(runViaPostgres, migrationFiles);
+      migrationsApplied = true;
+    } else if (!seedOnly) {
+      return NextResponse.json(
+        {
+          ok: false,
+          error:
+            "No SQL credentials (SUPABASE_ACCESS_TOKEN or DATABASE_URL). Migrations skipped. Use ?seedOnly=1 for seed-only.",
+        },
+        { status: 500 }
+      );
     }
 
     const url = process.env.NEXT_PUBLIC_SUPABASE_URL?.trim();
     const key = process.env.SUPABASE_SECRET_KEY?.trim();
+    let seeded = false;
     if (url && key) {
       const { createClient } = await import("@supabase/supabase-js");
       const supabase = createClient(url, key, {
@@ -113,9 +128,17 @@ export async function POST(req: NextRequest) {
         },
       });
       await seedGreenMarketData(supabase);
+      seeded = true;
     }
 
-    return NextResponse.json({ ok: true, message: "green marketplace bootstrap applied" });
+    return NextResponse.json({
+      ok: true,
+      migrationsApplied,
+      seeded,
+      message: migrationsApplied
+        ? "green marketplace bootstrap applied"
+        : "green marketplace seed only (no SQL credentials)",
+    });
   } catch (err) {
     const message = err instanceof Error ? err.message : "bootstrap failed";
     console.error("[bootstrap-green-market]", message);
