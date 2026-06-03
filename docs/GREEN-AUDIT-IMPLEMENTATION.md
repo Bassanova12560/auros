@@ -162,11 +162,25 @@ Sans clé IA : scoring rule-based amélioré uniquement (comportement valide).
 - **Label — export CSV ops** — bouton « Exporter CSV (toutes) » sur `/green/admin` ; `GET /api/admin/green-label-export` (CRON_SECRET) ; colonnes id, org, email, status, preferred_locale, relances, document_path (yes/no), created_at.
 - **Tests** — `tests/green-sprint15.test.ts` (`npm run test:green`).
 
-### Après Sprint 15 (backlog Sprint 16)
+## Sprint 16 — shipped 2026-06-03
 
-- Registre : signature PDF ops (clé serveur / horodatage signé)
-- Compare : snapshot avec filtres pays + RWA combinés en une vue partagée
-- Label : export CSV filtré par statut / relance
+- **Registre — export PDF horodaté certifié** — pied de page « Export certifié AUROS — {ISO UTC} » + empreinte SHA256 des ids projets/experts exportés ; bandeau ops mis à jour ; i18n FR/EN/ES.
+- **Compare — snapshot combiné pays + RWA + offres** — restauration complète sur `/green/compare/s/[id]` (pays, offres snapshot, lignes RWA) ; lien de partage encode les trois dimensions ; correctifs restauration initiale vs localStorage/URL.
+- **Label — export CSV filtré ops** — filtre sur `/green/admin` (all, pending, in_review, approved, rejected, incomplete, reminded_1, reminded_2) ; `GET /api/admin/green-label-export?filter=` ; i18n FR/EN/ES.
+- **Tests** — `tests/green-sprint16.test.ts` (`npm run test:green`).
+
+### Après Sprint 16 (backlog Sprint 17)
+
+- Registre : export PDF signature clé serveur (au-delà SHA256 indicatif)
+- Compare : snapshot expiré — page dédiée « lien expiré »
+- Label : export CSV planifié (cron ops)
+- NFT, oracle, Uniswap, PricingCard boost, dark mode, Clerk sur tout `/green/*`, Lighthouse CI
+
+### Après Sprint 15 (backlog Sprint 16 — traité)
+
+- ~~Registre : signature PDF ops (clé serveur / horodatage signé)~~ → Sprint 16 (horodatage UTC + SHA256)
+- ~~Compare : snapshot avec filtres pays + RWA combinés en une vue partagée~~ → Sprint 16
+- ~~Label : export CSV filtré par statut / relance~~ → Sprint 16
 - NFT, oracle, Uniswap, PricingCard boost, dark mode, Clerk sur tout `/green/*`, Lighthouse CI
 
 ### Après Sprint 14 (backlog Sprint 15 — traité)

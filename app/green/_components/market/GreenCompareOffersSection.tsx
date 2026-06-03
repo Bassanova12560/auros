@@ -15,6 +15,7 @@ import {
   buildGreenCompareShareUrl,
   mergeCompareOfferIds,
   normalizeCompareCountries,
+  normalizeCompareOfferIds,
   parseCompareOfferIdsParam,
   readCompareOfferIds,
   removeCompareOfferId,
@@ -39,6 +40,7 @@ type Props = {
   resolvedOffers: GreenMarketOfferDetail[];
   onSelectedOffersChange?: (offers: GreenMarketOfferDetail[]) => void;
   shareCountries?: string[];
+  shareRwaRowIds?: string[];
 };
 
 export function GreenCompareOffersSection({
@@ -46,6 +48,7 @@ export function GreenCompareOffersSection({
   resolvedOffers,
   onSelectedOffersChange,
   shareCountries = [],
+  shareRwaRowIds = [],
 }: Props) {
   const { locale } = useLocale();
   const c = getGreenMessages(locale).compare;
@@ -63,9 +66,14 @@ export function GreenCompareOffersSection({
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const urlIds = parseCompareOfferIdsParam(params.get("offers"));
-    const merged = urlIds.length > 0 ? mergeCompareOfferIds(urlIds) : readCompareOfferIds();
-    setSelectedIds(merged);
-  }, []);
+    if (urlIds.length > 0) {
+      setSelectedIds(mergeCompareOfferIds(urlIds));
+    } else if (initialOfferIds.length > 0) {
+      setSelectedIds(normalizeCompareOfferIds(initialOfferIds));
+    } else {
+      setSelectedIds(readCompareOfferIds());
+    }
+  }, [initialOfferIds]);
 
   useEffect(() => {
     setOfferMap((prev) => {
@@ -102,6 +110,7 @@ export function GreenCompareOffersSection({
     const url = buildGreenCompareShareUrl({
       offerIds: selectedIds,
       countries,
+      rwaRowIds: shareRwaRowIds,
       origin: typeof window !== "undefined" ? window.location.origin : "",
     });
     try {
@@ -111,7 +120,7 @@ export function GreenCompareOffersSection({
     } catch {
       setShareFeedback(url);
     }
-  }, [selectedIds, selectedOffers, shareCountries, c.shareCopied]);
+  }, [selectedIds, selectedOffers, shareCountries, shareRwaRowIds, c.shareCopied]);
 
   if (selectedIds.length === 0) {
     return (

@@ -216,17 +216,31 @@ export function GreenCompareView({
 
   useEffect(() => {
 
-    setSelectedCountries(
+    const fromUrlCountries = parseCompareCountriesParam(
 
-      parseCompareCountriesParam(searchParams.get(GREEN_COMPARE_COUNTRIES_URL_PARAM))
+      searchParams.get(GREEN_COMPARE_COUNTRIES_URL_PARAM)
 
     );
 
-    const fromUrl = parseCompareRwaRowIdsParam(searchParams.get(GREEN_COMPARE_RWA_URL_PARAM));
+    if (fromUrlCountries.length > 0) {
 
-    if (fromUrl.length > 0) {
+      setSelectedCountries(fromUrlCountries);
 
-      setSelectedRwaIds(fromUrl);
+    } else if (initialCountries.length > 0) {
+
+      setSelectedCountries(normalizeCompareCountries(initialCountries));
+
+    } else {
+
+      setSelectedCountries([]);
+
+    }
+
+    const fromUrlRwa = parseCompareRwaRowIdsParam(searchParams.get(GREEN_COMPARE_RWA_URL_PARAM));
+
+    if (fromUrlRwa.length > 0) {
+
+      setSelectedRwaIds(fromUrlRwa);
 
     } else if (initialRwaRowIds.length > 0) {
 
@@ -236,7 +250,7 @@ export function GreenCompareView({
 
     setUrlReady(true);
 
-  }, [searchParams, initialRwaRowIds]);
+  }, [searchParams, initialRwaRowIds, initialCountries]);
 
 
 
@@ -619,6 +633,8 @@ export function GreenCompareView({
         onSelectedOffersChange={setSelectedOffers}
 
         shareCountries={shareCountries}
+
+        shareRwaRowIds={selectedRwaIds}
 
       />
 

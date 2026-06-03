@@ -1,7 +1,11 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 
+import { useLocale } from "@/app/_components/i18n/LocaleProvider";
+import { getGreenMessages } from "@/lib/green";
+import type { GreenLabelExportFilter } from "@/lib/green/label-export-filter";
+import { GREEN_LABEL_EXPORT_FILTERS } from "@/lib/green/label-export-filter";
 import { formatGreenMarketLocation } from "@/lib/green/market-i18n";
 
 import { GreenBackLink } from "./green-ui";
@@ -46,6 +50,21 @@ function authHeader(secret: string): HeadersInit {
 }
 
 export function GreenAdminView() {
+  const { locale } = useLocale();
+  const adminLabels = getGreenMessages(locale).admin;
+  const exportFilterLabels = useMemo(
+    (): Record<GreenLabelExportFilter, string> => ({
+      all: adminLabels.exportFilterAll,
+      pending: adminLabels.exportFilterPending,
+      in_review: adminLabels.exportFilterInReview,
+      approved: adminLabels.exportFilterApproved,
+      rejected: adminLabels.exportFilterRejected,
+      incomplete: adminLabels.exportFilterIncomplete,
+      reminded_1: adminLabels.exportFilterReminded1,
+      reminded_2: adminLabels.exportFilterReminded2,
+    }),
+    [adminLabels]
+  );
   const [secret, setSecret] = useState("");
   const [authed, setAuthed] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -56,6 +75,7 @@ export function GreenAdminView() {
   const [summaries, setSummaries] = useState<Record<string, string>>({});
   const [reminderStats, setReminderStats] = useState<LabelReminderStats | null>(null);
   const [exportingLabels, setExportingLabels] = useState(false);
+  const [labelExportFilter, setLabelExportFilter] = useState<GreenLabelExportFilter>("all");
 
   const refresh = useCallback(async (token: string) => {
     setLoading(true);
@@ -228,9 +248,17 @@ export function GreenAdminView() {
     setExportingLabels(true);
     setError(null);
     try {
-      const res = await fetch("/api/admin/green-label-export", {
-        headers: authHeader(secret),
-      });
+      const params = new URLSearchParams();
+      if (labelExportFilter !== "all") {
+        params.set("filter", labelExportFilter);
+      }
+      const query = params.toString();
+      const res = await fetch(
+        `/api/admin/green-label-export${query ? `?${query}` : ""}`,
+        {
+          headers: authHeader(secret),
+        }
+      );
       if (!res.ok) {
         setError("Export CSV candidatures échoué.");
         return;
@@ -252,7 +280,7 @@ export function GreenAdminView() {
     } finally {
       setExportingLabels(false);
     }
-  }, [secret]);
+  }, [secret, labelExportFilter]);
 
   return (
     <div className="page-inner page-inner--3xl mx-auto min-h-screen px-4 pb-20 pt-12 md:px-6 md:pt-14">
@@ -408,14 +436,38 @@ export function GreenAdminView() {
                 <h2 className="text-sm font-medium uppercase tracking-wider text-emerald-500">
                   Candidatures label (pending)
                 </h2>
-                <button
-                  type="button"
-                  disabled={exportingLabels}
-                  onClick={() => void exportLabelCsv()}
-                  className="rounded-full border border-emerald-500/40 px-4 py-1.5 text-xs text-emerald-300 hover:border-emerald-400 disabled:opacity-50"
-                >
-                  {exportingLabels ? "Export…" : "Exporter CSV (toutes)"}
-                </button>
+                <div className="flex flex-wrap items-center gap-3">
+                  <label className="flex items-center gap-2">
+                    <span className="font-mono text-[10px] uppercase tracking-wider text-emerald-500/60">
+                      {adminLabels.exportFilterLabel}
+                    </span>
+                    <select
+                      value={labelExportFilter}
+                      onChange={(e) =>
+                        setLabelExportFilter(e.target.value as GreenLabelExportFilter)
+                      }
+                      className="rounded-lg border border-emerald-500/30 bg-black px-3 py-1.5 text-xs text-emerald-200 outline-none focus:border-emerald-400"
+                    >
+                      {GREEN_LABEL_EXPORT_FILTERS.map((filter) => (
+                        <option key={filter} value={filter}>
+                          {exportFilterLabels[filter]}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+                  <button
+                    type="button"
+                    disabled={exportingLabels}
+                    onClick={() => void exportLabelCsv()}
+                    className="rounded-full border border-emerald-500/40 px-4 py-1.5 text-xs text-emerald-300 hover:border-emerald-400 disabled:opacity-50"
+                  >
+                    {exportingLabels
+                      ? "Export…"
+                      : labelExportFilter === "all"
+                        ? adminLabels.exportCsvAll
+                        : adminLabels.exportCsv}
+                  </button>
+                </div>
               </div>
               {labels.length === 0 ? (
                 <p className="mt-3 text-sm text-neutral-500">Aucune candidature en attente.</p>

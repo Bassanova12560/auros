@@ -41,6 +41,11 @@ import { greenProjectSummary } from "./green-registry";
 import type { GreenMessages } from "./i18n";
 
 import type { GreenRegistryTierFilter } from "./registry-routes";
+import {
+  registryPdfCertifiedLabel,
+  registryPdfContentSha256,
+  registryPdfIntegrityLine,
+} from "./registry-pdf-integrity";
 
 import type { Locale } from "@/lib/i18n";
 
@@ -459,6 +464,10 @@ function RegistryDocument({
 
   disclaimer,
 
+  certifiedLabel,
+
+  integrityLine,
+
   exportFooter,
 
   opsNote,
@@ -480,6 +489,10 @@ function RegistryDocument({
   generatedAt: string;
 
   disclaimer: string;
+
+  certifiedLabel: string;
+
+  integrityLine: string;
 
   exportFooter: string;
 
@@ -648,6 +661,10 @@ function RegistryDocument({
 
 
         <Text style={styles.footer} fixed>
+          {certifiedLabel}
+          {"\n"}
+          {integrityLine}
+          {"\n"}
           {exportFooter}
           {"\n"}
           {disclaimer}
@@ -705,7 +722,11 @@ export async function generateGreenRegistryPDF(
 
   const filterNote = registryPdfFilterNote(labels, options.tierFilter ?? "all");
 
-  const generatedAt = new Date().toISOString().slice(0, 10);
+  const exportedAtIso = new Date().toISOString();
+  const generatedAt = exportedAtIso.slice(0, 10);
+  const projectIds = projects.map((project) => project.id);
+  const expertIds = experts.map((expert) => expert.id);
+  const contentHash = await registryPdfContentSha256(projectIds, expertIds);
 
   return pdf(
 
@@ -726,6 +747,10 @@ export async function generateGreenRegistryPDF(
       generatedAt={generatedAt}
 
       disclaimer={options.disclaimer ?? labels.pilotNote}
+
+      certifiedLabel={registryPdfCertifiedLabel(exportedAtIso, locale)}
+
+      integrityLine={registryPdfIntegrityLine(contentHash, locale)}
 
       exportFooter={registryPdfExportFooter(generatedAt, locale)}
 

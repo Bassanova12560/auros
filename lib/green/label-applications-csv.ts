@@ -1,4 +1,5 @@
 import type { GreenLabelApplicationExportRow } from "./label-applications-export";
+import type { GreenLabelExportFilter } from "./label-export-filter";
 
 function csvEscape(value: string): string {
   if (/[",\n\r]/.test(value)) {
@@ -41,7 +42,10 @@ export function greenLabelApplicationsToCsv(
   return [header, ...body].join("\n");
 }
 
-export function suggestedGreenLabelApplicationsCsvFilename(): string {
+export function suggestedGreenLabelApplicationsCsvFilename(
+  filter: GreenLabelExportFilter = "all"
+): string {
   const date = new Date().toISOString().slice(0, 10);
-  return `auros-green-label-applications_${date}.csv`;
+  const suffix = filter === "all" ? "" : `_${filter}`;
+  return `auros-green-label-applications${suffix}_${date}.csv`;
 }

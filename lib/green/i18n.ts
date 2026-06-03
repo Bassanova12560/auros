@@ -425,6 +425,19 @@ export type GreenMessages = {
       notFoundBody: string;
     };
   };
+  admin: {
+    exportFilterLabel: string;
+    exportFilterAll: string;
+    exportFilterPending: string;
+    exportFilterInReview: string;
+    exportFilterApproved: string;
+    exportFilterRejected: string;
+    exportFilterIncomplete: string;
+    exportFilterReminded1: string;
+    exportFilterReminded2: string;
+    exportCsv: string;
+    exportCsvAll: string;
+  };
   guide: {
     eyebrow: string;
     title: string;
@@ -1206,7 +1219,7 @@ const FR: GreenMessages = {
     exportPdfGenerating: "PDF…",
     exportPdfRetry: "Réessayer PDF",
     exportOpsNote:
-      "Export registre public AUROS Green — document indicatif, non signé électroniquement.",
+      "Export registre AUROS Green certifié — horodatage UTC et empreinte SHA256 des lignes exportées (intégrité indicative, non signature électronique qualifiée).",
     backLink: "← Retour AUROS Green",
     viewProject: "Voir la fiche projet",
     projectDetail: {
@@ -1228,6 +1241,19 @@ const FR: GreenMessages = {
       notFoundBody:
         "Ce projet n'existe pas dans le registre public ou n'est plus disponible.",
     },
+  },
+  admin: {
+    exportFilterLabel: "Filtrer l'export CSV",
+    exportFilterAll: "Toutes",
+    exportFilterPending: "En attente",
+    exportFilterInReview: "En revue",
+    exportFilterApproved: "Approuvées",
+    exportFilterRejected: "Rejetées",
+    exportFilterIncomplete: "Dossier incomplet",
+    exportFilterReminded1: "Relance 1",
+    exportFilterReminded2: "Relance 2",
+    exportCsv: "Exporter CSV",
+    exportCsvAll: "Exporter CSV (toutes)",
   },
   guide: {
     eyebrow: "Guide éducatif",
@@ -2029,7 +2055,7 @@ const EN: GreenMessages = {
     exportPdfGenerating: "PDF…",
     exportPdfRetry: "Retry PDF",
     exportOpsNote:
-      "AUROS Green public registry export — indicative document, not electronically signed.",
+      "AUROS Green registry certified export — UTC timestamp and SHA256 fingerprint of exported rows (indicative integrity, not a qualified e-signature).",
     backLink: "← Back to AUROS Green",
     viewProject: "View project page",
     projectDetail: {
@@ -2050,6 +2076,19 @@ const EN: GreenMessages = {
       notFoundTitle: "Project not found",
       notFoundBody: "This project is not in the public registry or is no longer available.",
     },
+  },
+  admin: {
+    exportFilterLabel: "Filter CSV export",
+    exportFilterAll: "All",
+    exportFilterPending: "Pending",
+    exportFilterInReview: "In review",
+    exportFilterApproved: "Approved",
+    exportFilterRejected: "Rejected",
+    exportFilterIncomplete: "Incomplete dossier",
+    exportFilterReminded1: "Reminder 1",
+    exportFilterReminded2: "Reminder 2",
+    exportCsv: "Export CSV",
+    exportCsvAll: "Export CSV (all)",
   },
   guide: {
     eyebrow: "Educational guide",
@@ -2857,7 +2896,7 @@ const ES: GreenMessages = {
     exportPdfGenerating: "PDF…",
     exportPdfRetry: "Reintentar PDF",
     exportOpsNote:
-      "Exportación del registro público AUROS Green — documento indicativo, sin firma electrónica.",
+      "Exportación certificada del registro AUROS Green — marca temporal UTC y huella SHA256 de las filas exportadas (integridad indicativa, sin firma electrónica cualificada).",
     backLink: "← Volver a AUROS Green",
     viewProject: "Ver ficha del proyecto",
     projectDetail: {
@@ -2879,6 +2918,19 @@ const ES: GreenMessages = {
       notFoundBody:
         "Este proyecto no figura en el registro público o ya no está disponible.",
     },
+  },
+  admin: {
+    exportFilterLabel: "Filtrar exportación CSV",
+    exportFilterAll: "Todas",
+    exportFilterPending: "Pendientes",
+    exportFilterInReview: "En revisión",
+    exportFilterApproved: "Aprobadas",
+    exportFilterRejected: "Rechazadas",
+    exportFilterIncomplete: "Expediente incompleto",
+    exportFilterReminded1: "Recordatorio 1",
+    exportFilterReminded2: "Recordatorio 2",
+    exportCsv: "Exportar CSV",
+    exportCsvAll: "Exportar CSV (todas)",
   },
   guide: {
     eyebrow: "Guía educativa",

@@ -4,7 +4,10 @@ import {
   greenLabelApplicationsToCsv,
   suggestedGreenLabelApplicationsCsvFilename,
 } from "@/lib/green/label-applications-csv";
-import { listAllGreenLabelApplicationsForExport } from "@/lib/green/label-applications-export";
+import {
+  listGreenLabelApplicationsForExport,
+  parseGreenLabelExportFilter,
+} from "@/lib/green/label-applications-export";
 
 export const runtime = "nodejs";
 
@@ -20,9 +23,10 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ ok: false, error: "unauthorized" }, { status: 401 });
   }
 
-  const rows = await listAllGreenLabelApplicationsForExport();
+  const filter = parseGreenLabelExportFilter(req.nextUrl.searchParams.get("filter"));
+  const rows = await listGreenLabelApplicationsForExport(filter);
   const csv = greenLabelApplicationsToCsv(rows);
-  const filename = suggestedGreenLabelApplicationsCsvFilename();
+  const filename = suggestedGreenLabelApplicationsCsvFilename(filter);
 
   return new NextResponse(csv, {
     status: 200,
