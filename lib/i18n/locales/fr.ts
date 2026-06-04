@@ -64,6 +64,7 @@ export const fr: Messages = {
     exampleCard: {
       title: "Exemple de résultat",
       readiness: "Dossier prêt à 72%",
+      maturity: "Maturité · 72% · dossier prêt",
       badgeLegal: "Legal ✓",
       badgeKyc: "KYC ✓",
       badgeMica: "MiCA ⚠",

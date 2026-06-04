@@ -199,6 +199,9 @@ export function ScoreWidget() {
           title={t.score.title}
           subtitle={t.score.subtitle}
         />
+        <p className="mx-auto mt-2 max-w-3xl text-center text-sm text-muted">
+          {t.score.inputHint}
+        </p>
 
         <AnimatePresence mode="wait">
           {phase === "idle" ? (
@@ -241,9 +244,6 @@ export function ScoreWidget() {
                     placeholder={t.score.placeholder}
                     className="mt-6 w-full rounded-xl border border-white/[0.1] bg-white/[0.03] px-5 py-4 text-white placeholder:text-white/30 outline-none transition focus:border-white/40 focus-visible:ring-2 focus-visible:ring-white/20"
                   />
-                  <p className="mt-3 text-center font-mono text-[10px] text-white/35 sm:text-left">
-                    {t.score.inputHint}
-                  </p>
                   {queryError ? (
                     <p className="mt-3 text-center text-xs text-accent sm:text-left" role="alert">
                       {queryError}
@@ -404,27 +404,31 @@ function EstimateExampleCard() {
           </div>
 
           <div className="mt-6 rounded-xl border border-white/[0.08] bg-white/[0.02] p-4">
-            <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-white/40">
-              Score tokenisation
-            </p>
-            <p className="mt-2 font-display text-4xl font-semibold tabular-nums text-white">
-              78
-              <span className="text-xl text-white/30">/100</span>
-            </p>
-            <p className="mt-1 text-sm text-white/70">{card.readiness}</p>
-            <div className="mt-3 h-1 overflow-hidden rounded-full bg-white/[0.06]">
+            <div className="flex items-baseline justify-between gap-4 text-sm">
+              <span className="text-white/70">Score tokenisation</span>
+              <span className="font-display font-semibold tabular-nums text-white">
+                78 / 100
+              </span>
+            </div>
+            <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-white/[0.06]">
               <div className="h-full w-[78%] rounded-full bg-white/70" />
             </div>
           </div>
 
-          <div className="mt-4 grid grid-cols-2 gap-2">
+          <p className="mt-4 text-sm text-white/55">{card.maturity}</p>
+
+          <div className="mt-4 flex flex-wrap gap-2">
             {badges.map((badge) => (
-              <div
+              <span
                 key={badge}
-                className="rounded-lg border border-white/[0.06] px-2.5 py-2 font-mono text-[9px] uppercase tracking-wider text-white/45"
+                className={`rounded border px-2 py-1 text-xs ${
+                  badge.includes("MiCA")
+                    ? "border-amber-400/30 text-amber-300/90"
+                    : "border-white/[0.12] text-white/55"
+                }`}
               >
                 {badge}
-              </div>
+              </span>
             ))}
           </div>
 

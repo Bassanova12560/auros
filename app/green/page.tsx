@@ -1,6 +1,9 @@
+import type { Metadata } from "next";
+
 import { AiFirstPageJsonLd } from "@/app/_components/ai-first/AiFirstPageJsonLd";
 import { GREEN_ROUTE } from "@/lib/green";
 import { metadataFromPath } from "@/lib/seo/metadata";
+import { withOgImage } from "@/lib/seo/og";
 
 import { computeGreenHubImpact } from "@/lib/green/hub-impact";
 
@@ -16,7 +19,11 @@ import { GreenHubView } from "./_components/GreenHubView";
 
 export const dynamic = "force-dynamic";
 
-export const metadata = metadataFromPath(GREEN_ROUTE);
+export const metadata: Metadata = withOgImage(
+  metadataFromPath(GREEN_ROUTE),
+  GREEN_ROUTE,
+  "AUROS Green — Énergie locale"
+);
 
 
 

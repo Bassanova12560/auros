@@ -4,8 +4,13 @@ import { FocusPageHero } from "@/app/_components/FocusPageHero";
 import { FocusPageShell } from "@/app/_components/FocusPageShell";
 import { HowItWorks } from "@/app/_components/HowItWorks";
 import { metadataFromPath } from "@/lib/seo/metadata";
+import { withOgImage } from "@/lib/seo/og";
 
-export const metadata: Metadata = metadataFromPath("/how-it-works");
+export const metadata: Metadata = withOgImage(
+  metadataFromPath("/how-it-works"),
+  "/how-it-works",
+  "Comment ça marche"
+);
 
 export default function HowItWorksPage() {
   return (

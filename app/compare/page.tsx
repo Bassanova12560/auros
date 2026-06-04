@@ -5,8 +5,13 @@ import { DossierCtaStrip } from "@/app/comparators/_components/DossierCtaStrip";
 import { COMPARATOR_ROUTES } from "@/lib/comparators";
 import { getCompareHubPayload } from "@/lib/comparators/compare-hub";
 import { metadataFromPath } from "@/lib/seo/metadata";
+import { withOgImage } from "@/lib/seo/og";
 
-export const metadata: Metadata = metadataFromPath(COMPARATOR_ROUTES.compare);
+export const metadata: Metadata = withOgImage(
+  metadataFromPath(COMPARATOR_ROUTES.compare),
+  COMPARATOR_ROUTES.compare,
+  "Rendements RWA par profil de risque"
+);
 
 export const revalidate = 3600;
 

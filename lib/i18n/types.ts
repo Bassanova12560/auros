@@ -62,6 +62,7 @@ export type Messages = {
     exampleCard: {
       title: string;
       readiness: string;
+      maturity: string;
       badgeLegal: string;
       badgeKyc: string;
       badgeMica: string;
