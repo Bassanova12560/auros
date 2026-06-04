@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 
 import { AiFirstPageJsonLd } from "@/app/_components/ai-first/AiFirstPageJsonLd";
 import { GREEN_ROUTE } from "@/lib/green";
+import { auditOgImage, mergeAuditOg } from "@/lib/seo/audit-og";
 import { metadataFromPath } from "@/lib/seo/metadata";
-import { withOgImage } from "@/lib/seo/og";
 
 import { computeGreenHubImpact } from "@/lib/green/hub-impact";
 
@@ -19,10 +19,14 @@ import { GreenHubView } from "./_components/GreenHubView";
 
 export const dynamic = "force-dynamic";
 
-export const metadata: Metadata = withOgImage(
+export const metadata: Metadata = mergeAuditOg(
   metadataFromPath(GREEN_ROUTE),
-  GREEN_ROUTE,
-  "AUROS Green — Énergie locale"
+  auditOgImage(
+    "/green",
+    "AUROS+Green+%E2%80%94+%C3%89nergie+locale",
+    "AUROS Green"
+  ),
+  { siteName: "AUROS" }
 );
 
 

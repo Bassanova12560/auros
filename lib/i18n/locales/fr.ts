@@ -22,7 +22,7 @@ export const fr: Messages = {
     subtitle:
       "Score, data room et studio réglementaire — préparez votre dossier avant toute plateforme RWA.",
     ctaPrimary: "Créer mon dossier",
-    ctaEstimate: "Estimer mon actif",
+    ctaEstimate: "Estimer d'abord",
     metricAssets: "Classes d'actifs",
     metricJurisdictions: "Juridictions",
     metricDossier: "Dossier moyen",

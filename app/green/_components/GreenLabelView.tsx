@@ -20,6 +20,7 @@ export function GreenLabelView() {
   return (
     <div className="page-inner page-inner--3xl mx-auto px-4 pb-24 pt-10 md:px-6 md:pt-12">
       <GreenPageHeader eyebrow={l.eyebrow} title={l.title} intro={l.intro} compact />
+      <p className="mt-2 text-sm text-neutral-400">{l.pricingNote}</p>
 
       <div className="mt-6" id="label-form">
         <GreenLabelForm />

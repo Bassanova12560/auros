@@ -51,7 +51,6 @@ export function GreenStandardsView() {
           { href: GREEN_REGISTRY_ROUTE, title: s.quickNav.registry },
           { href: GREEN_COMPARE_ROUTE, title: s.quickNav.compare },
           { href: GREEN_LABEL_ROUTE, title: s.quickNav.label },
-          { href: GREEN_RTMS_ASSISTANT_ROUTE, title: s.quickNav.assistant },
         ].map((item) => (
           <Link
             key={item.href}
@@ -62,6 +61,20 @@ export function GreenStandardsView() {
             <span className="font-mono text-white/30">→</span>
           </Link>
         ))}
+        <Link
+          href={GREEN_RTMS_ASSISTANT_ROUTE}
+          className="flex flex-col gap-2 bg-black px-5 py-4 text-sm text-emerald-400 transition hover:bg-emerald-500/5 sm:col-span-2 lg:col-span-3"
+        >
+          <span className="flex flex-wrap items-center gap-2">
+            <span>{s.quickNav.assistantTitle}</span>
+            <span className="rounded-full border border-emerald-500/40 px-2 py-0.5 font-mono text-[9px] uppercase tracking-wider text-emerald-500/90">
+              {s.quickNav.assistantBeta}
+            </span>
+          </span>
+          <p className="text-sm leading-relaxed text-neutral-400">
+            {s.quickNav.assistantDesc}
+          </p>
+        </Link>
       </nav>
 
       <GreenPanel className="mt-12">

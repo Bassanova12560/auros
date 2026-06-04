@@ -6,7 +6,6 @@ import { motion } from "framer-motion";
 import { ProductPreview } from "./ProductPreview";
 import { useLocale, useTranslations } from "./i18n/LocaleProvider";
 import { getEaseMessages } from "@/lib/ease-i18n";
-import { getWizardExpertMessages } from "@/lib/wizard-expert-i18n";
 import { Eyebrow } from "./ui/Eyebrow";
 import { PrimaryButton } from "./ui/PrimaryButton";
 import { EASE_OUT_EXPO, fadeUp, staggerContainer } from "@/lib/motion";
@@ -15,7 +14,6 @@ export function Hero() {
   const t = useTranslations();
   const { locale } = useLocale();
   const ease = getEaseMessages(locale);
-  const expert = getWizardExpertMessages(locale);
 
   const metrics = [
     { label: t.hero.metricAssets, value: "12+" },
@@ -61,23 +59,9 @@ export function Hero() {
             className="mt-10 flex flex-col items-start gap-4 sm:flex-row sm:flex-wrap sm:items-center"
           >
             <PrimaryButton href="/wizard">{t.hero.ctaPrimary}</PrimaryButton>
-            <nav
-              className="flex flex-wrap items-center gap-x-5 gap-y-2"
-              aria-label={locale === "fr" ? "Accès secondaires" : locale === "es" ? "Accesos secundarios" : "Secondary access"}
-            >
-              <Link
-                href="/estimate"
-                className="auros-btn auros-btn--link"
-              >
-                {t.hero.ctaEstimate} →
-              </Link>
-              <Link href="/how-it-works" className="auros-btn auros-btn--link">
-                {locale === "fr" ? "Comment ça marche" : locale === "es" ? "Cómo funciona" : "How it works"} →
-              </Link>
-              <Link href="/wizard?expert=1" className="auros-btn auros-btn--link opacity-90">
-                {expert.expressTitle} →
-              </Link>
-            </nav>
+            <Link href="/estimate" className="auros-btn auros-btn--link">
+              {t.hero.ctaEstimate} →
+            </Link>
           </motion.div>
 
           <div className="mt-14 flex flex-wrap gap-8 border-t border-white/[0.06] pt-8">

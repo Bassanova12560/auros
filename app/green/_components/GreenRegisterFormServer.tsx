@@ -66,7 +66,7 @@ export function GreenRegisterFormServer() {
           />
         </label>
       </div>
-      <p className="mt-4 text-xs text-white/35">
+      <p className="mt-4 text-xs text-white/35" aria-hidden="true">
         Version interactive chargée ci-dessous si JavaScript est activé.
       </p>
     </form>

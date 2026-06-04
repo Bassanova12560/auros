@@ -2,7 +2,6 @@ import { AmbientShell } from "./_components/ui/AmbientShell";
 import { AiFirstPageJsonLd } from "./_components/ai-first/AiFirstPageJsonLd";
 import { Footer } from "./_components/Footer";
 import { Hero } from "./_components/Hero";
-import { LandingDepthLinks } from "./_components/LandingDepthLinks";
 import { LandingReferral } from "./_components/LandingReferral";
 import { Nav } from "./_components/Nav";
 import { TrustStrip } from "./_components/TrustStrip";
@@ -23,7 +22,6 @@ export default function HomePage() {
       <main>
         <Hero />
         <TrustStrip />
-        <LandingDepthLinks />
       </main>
       <Footer />
     </AmbientShell>

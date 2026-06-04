@@ -4,13 +4,18 @@ import { CompareHubContent } from "@/app/comparators/_components/CompareHubConte
 import { DossierCtaStrip } from "@/app/comparators/_components/DossierCtaStrip";
 import { COMPARATOR_ROUTES } from "@/lib/comparators";
 import { getCompareHubPayload } from "@/lib/comparators/compare-hub";
+import { auditOgImage, mergeAuditOg } from "@/lib/seo/audit-og";
 import { metadataFromPath } from "@/lib/seo/metadata";
-import { withOgImage } from "@/lib/seo/og";
 
-export const metadata: Metadata = withOgImage(
+const compareOg = auditOgImage(
+  "/compare",
+  "Rendements+RWA+par+profil+de+risque",
+  "Rendements RWA — AUROS Compare"
+);
+
+export const metadata: Metadata = mergeAuditOg(
   metadataFromPath(COMPARATOR_ROUTES.compare),
-  COMPARATOR_ROUTES.compare,
-  "Rendements RWA par profil de risque"
+  compareOg
 );
 
 export const revalidate = 3600;

@@ -216,6 +216,9 @@ export type GreenMessages = {
       compare: string;
       label: string;
       assistant: string;
+      assistantTitle: string;
+      assistantBeta: string;
+      assistantDesc: string;
     };
     checklistTitle: string;
     checklistIntro: string;
@@ -295,6 +298,7 @@ export type GreenMessages = {
   label: {
     eyebrow: string;
     title: string;
+    pricingNote: string;
     intro: string;
     scopeTitle: string;
     scopeMeasures: readonly string[];
@@ -1014,6 +1018,10 @@ const FR: GreenMessages = {
       compare: "Comparateur",
       label: "Candidature label",
       assistant: "Assistant RTMS (bêta)",
+      assistantTitle: "Assistant RTMS",
+      assistantBeta: "bêta",
+      assistantDesc:
+        "Évaluez votre projet vert contre la grille RTMS en quelques questions — résultat indicatif instantané.",
     },
     checklistTitle: "Checklist RTMS interactive",
     checklistIntro:
@@ -1113,6 +1121,7 @@ const FR: GreenMessages = {
   label: {
     eyebrow: "Candidature",
     title: "Label Auros Green Verified",
+    pricingNote: "Candidature gratuite · Retour écrit sous 5 jours ouvrés",
     intro:
       "Soumettez votre projet pour une revue documentaire. Le label public n'est accordé qu'après validation RTMS — pas de badge automatique.",
     scopeTitle: "Ce que la candidature couvre",
@@ -1899,6 +1908,10 @@ const EN: GreenMessages = {
       compare: "Comparator",
       label: "Label application",
       assistant: "RTMS assistant (beta)",
+      assistantTitle: "RTMS assistant",
+      assistantBeta: "beta",
+      assistantDesc:
+        "Assess your green project against the RTMS grid in a few questions — instant indicative result.",
     },
     checklistTitle: "Interactive RTMS checklist",
     checklistIntro:
@@ -1998,6 +2011,7 @@ const EN: GreenMessages = {
   label: {
     eyebrow: "Application",
     title: "Auros Green Verified label",
+    pricingNote: "Free application · Written response within 5 business days",
     intro:
       "Submit your project for document review. Public label is granted only after RTMS validation — no automatic badge.",
     scopeTitle: "What the application covers",
@@ -2786,6 +2800,10 @@ const ES: GreenMessages = {
       compare: "Comparador",
       label: "Solicitud etiqueta",
       assistant: "Asistente RTMS (beta)",
+      assistantTitle: "Asistente RTMS",
+      assistantBeta: "beta",
+      assistantDesc:
+        "Evalúe su proyecto verde frente a la cuadrícula RTMS en pocas preguntas — resultado indicativo al instante.",
     },
     checklistTitle: "Checklist RTMS interactiva",
     checklistIntro:
@@ -2885,6 +2903,7 @@ const ES: GreenMessages = {
   label: {
     eyebrow: "Solicitud",
     title: "Etiqueta Auros Green Verified",
+    pricingNote: "Solicitud gratuita · Respuesta escrita en 5 días hábiles",
     intro:
       "Envíe su proyecto para revisión documental. La etiqueta pública se concede solo tras validación RTMS — sin badge automático.",
     scopeTitle: "Qué cubre la solicitud",
