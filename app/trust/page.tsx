@@ -4,6 +4,7 @@ import { FocusPageHero } from "@/app/_components/FocusPageHero";
 import { FocusPageShell } from "@/app/_components/FocusPageShell";
 import { ProfessionalTrustBar } from "@/app/_components/ProfessionalTrustBar";
 import { RegulatoryTrust } from "@/app/_components/RegulatoryTrust";
+import { TrustEnrichment } from "@/app/_components/TrustEnrichment";
 import { metadataFromPath } from "@/lib/seo/metadata";
 
 export const metadata: Metadata = metadataFromPath("/trust");
@@ -16,6 +17,7 @@ export default function TrustPage() {
         <ProfessionalTrustBar variant="panel" />
       </section>
       <RegulatoryTrust />
+      <TrustEnrichment />
     </FocusPageShell>
   );
 }

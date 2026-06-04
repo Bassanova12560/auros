@@ -31,7 +31,7 @@ function FaqAccordion({
                 {item.question}
               </span>
               <span className="mt-1 shrink-0 font-mono text-sm text-white/35" aria-hidden>
-                {isOpen ? "−" : "+"}
+                {isOpen ? "▲" : "▼"}
               </span>
             </button>
             <div

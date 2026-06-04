@@ -6,6 +6,8 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { matchesGreenMarketSearch } from "@/lib/green/market/search";
+import { GREEN_MARKET_COUNTRIES } from "@/lib/green/market/countries";
+import { GREEN_MARKET_PILOT_LISTINGS } from "@/lib/green/market/pilot-listings";
 import {
   buildGreenMarketShareUrl,
   decodeGreenMarketFilters,
@@ -60,9 +62,18 @@ import { greenMarketOfferPath } from "@/lib/green/market/offer-routes";
 
 const OFFERS_PAGE_SIZE = 10;
 
+function GreenMarketMapSkeleton() {
+  return (
+    <div
+      className="h-[min(420px,55vh)] w-full animate-pulse rounded-lg bg-white/[0.06]"
+      aria-hidden
+    />
+  );
+}
+
 const GreenMarketMap = dynamic(
   () => import("./GreenMarketMap").then((m) => m.GreenMarketMap),
-  { ssr: false }
+  { ssr: false, loading: () => <GreenMarketMapSkeleton /> }
 );
 
 type Props = {
@@ -82,6 +93,7 @@ export function GreenMarketView({ snapshot }: Props) {
   const [energyFilter, setEnergyFilter] = useState<GreenMarketEnergyType | "all">("all");
   const [sideFilter, setSideFilter] = useState<GreenMarketOfferSide | "all">("all");
   const [searchQuery, setSearchQuery] = useState("");
+  const [countryFilter, setCountryFilter] = useState("");
   const [offersPage, setOffersPage] = useState(1);
   const [localOffers, setLocalOffers] = useState<GreenMarketOffer[]>([]);
   const [urlReady, setUrlReady] = useState(false);
@@ -156,7 +168,7 @@ export function GreenMarketView({ snapshot }: Props) {
     }
   }, [snapshot.available]);
 
-  const allOffers = useMemo(() => {
+  const realOffers = useMemo(() => {
     const byId = new Map<string, GreenMarketOffer>();
     for (const o of snapshot.offers) byId.set(o.id, o);
     for (const o of localOffers) byId.set(o.id, o);
@@ -165,6 +177,10 @@ export function GreenMarketView({ snapshot }: Props) {
     );
   }, [snapshot.offers, localOffers]);
 
+  const showPilotListings = realOffers.length === 0;
+
+  const allOffers = realOffers;
+
   const mapCenter = useMemo(
     () => greenMarketCentroid(snapshot.actors),
     [snapshot.actors]
@@ -172,10 +188,11 @@ export function GreenMarketView({ snapshot }: Props) {
 
   useEffect(() => {
     setOffersPage(1);
-  }, [actorFilter, radiusKm, energyFilter, sideFilter, searchQuery]);
+  }, [actorFilter, radiusKm, energyFilter, sideFilter, searchQuery, countryFilter]);
 
   const filteredActors = useMemo(() => {
     return snapshot.actors.filter((a) => {
+      if (countryFilter && a.country.trim() !== countryFilter) return false;
       if (actorFilter !== "all" && a.type !== actorFilter) return false;
       if (
         !matchesGreenMarketSearch(searchQuery, {
@@ -197,6 +214,7 @@ export function GreenMarketView({ snapshot }: Props) {
     });
   }, [
     snapshot.actors,
+    countryFilter,
     actorFilter,
     radiusKm,
     mapCenter.lat,
@@ -214,6 +232,7 @@ export function GreenMarketView({ snapshot }: Props) {
 
   const filteredOffers = useMemo(() => {
     return allOffers.filter((o) => {
+      if (countryFilter && o.country.trim() !== countryFilter) return false;
       if (energyFilter !== "all" && o.energyType !== energyFilter) return false;
       if (sideFilter !== "all" && o.side !== sideFilter) return false;
       if (
@@ -235,6 +254,7 @@ export function GreenMarketView({ snapshot }: Props) {
     });
   }, [
     allOffers,
+    countryFilter,
     energyFilter,
     sideFilter,
     radiusKm,
@@ -243,16 +263,26 @@ export function GreenMarketView({ snapshot }: Props) {
     searchQuery,
   ]);
 
-  const offersTotalPages = Math.max(1, Math.ceil(filteredOffers.length / OFFERS_PAGE_SIZE));
+  const offersTotalPages = showPilotListings
+    ? 1
+    : Math.max(1, Math.ceil(filteredOffers.length / OFFERS_PAGE_SIZE));
   const safeOffersPage = Math.min(offersPage, offersTotalPages);
   const paginatedOffers = useMemo(
     () =>
-      filteredOffers.slice(
-        (safeOffersPage - 1) * OFFERS_PAGE_SIZE,
-        safeOffersPage * OFFERS_PAGE_SIZE
-      ),
-    [filteredOffers, safeOffersPage]
+      showPilotListings
+        ? []
+        : filteredOffers.slice(
+            (safeOffersPage - 1) * OFFERS_PAGE_SIZE,
+            safeOffersPage * OFFERS_PAGE_SIZE
+          ),
+    [filteredOffers, safeOffersPage, showPilotListings]
   );
+
+  const marketCountries = useMemo(() => {
+    const fromActors = snapshot.actors.map((a) => a.country.trim()).filter(Boolean);
+    const merged = new Set([...GREEN_MARKET_COUNTRIES, ...fromActors]);
+    return [...merged].sort((a, b) => a.localeCompare(b, "fr"));
+  }, [snapshot.actors]);
 
   const selectClass =
     "rounded-lg border border-white/[0.12] bg-black px-3 py-2 text-sm text-white outline-none focus:border-white/30";
@@ -324,6 +354,24 @@ export function GreenMarketView({ snapshot }: Props) {
               className={selectClass}
               aria-label={mm.filters.search}
             />
+          </label>
+          <label className="flex flex-col gap-1">
+            <span className="font-mono text-[10px] uppercase tracking-wider text-white/40">
+              {mm.filters.country}
+            </span>
+            <select
+              className={selectClass}
+              value={countryFilter}
+              onChange={(e) => setCountryFilter(e.target.value)}
+              aria-label={mm.filters.country}
+            >
+              <option value="">{mm.filters.allCountries}</option>
+              {marketCountries.map((country) => (
+                <option key={country} value={country}>
+                  {country}
+                </option>
+              ))}
+            </select>
           </label>
           <label className="flex flex-col gap-1">
             <span className="font-mono text-[10px] uppercase tracking-wider text-white/40">
@@ -419,6 +467,7 @@ export function GreenMarketView({ snapshot }: Props) {
                   setActorFilter("all");
                   setRadiusKm(0);
                   setSearchQuery("");
+                  setCountryFilter("");
                 }}
                 className="rounded-lg border border-white/[0.12] px-4 py-2 font-mono text-[11px] tracking-wide text-white/60 transition hover:border-white/25 hover:text-white"
               >
@@ -457,28 +506,6 @@ export function GreenMarketView({ snapshot }: Props) {
             }}
           />
         </div>
-        {filteredActors.length > 0 ? (
-          <div className="mt-4">
-            <p className="font-mono text-[10px] uppercase tracking-wider text-white/35">
-              {mm.countriesLegend(
-                new Set(filteredActors.map((a) => a.country.trim()).filter(Boolean)).size
-              )}
-            </p>
-            <ul className="mt-2 flex flex-wrap gap-2">
-              {[...new Set(filteredActors.map((a) => a.country.trim()).filter(Boolean))]
-                .sort((a, b) => a.localeCompare(b))
-                .slice(0, 16)
-                .map((country) => (
-                  <li
-                    key={country}
-                    className="rounded border border-white/[0.1] px-2.5 py-1 font-mono text-[10px] text-white/50"
-                  >
-                    {country}
-                  </li>
-                ))}
-            </ul>
-          </div>
-        ) : null}
       </section>
 
       <section className="mt-12">
@@ -547,7 +574,28 @@ export function GreenMarketView({ snapshot }: Props) {
               </tr>
             </thead>
             <tbody>
-              {filteredOffers.length === 0 ? (
+              {showPilotListings ? (
+                GREEN_MARKET_PILOT_LISTINGS.map((listing) => (
+                  <tr key={listing.id} className="border-b border-white/[0.06] text-white/70">
+                    <td className="px-4 py-3 font-medium text-white/80">
+                      <span className="inline-flex flex-wrap items-center gap-2">
+                        {listing.actorName}
+                        <span className="inline-block border border-amber-500/30 px-2 py-0.5 font-mono text-[9px] uppercase tracking-wide text-amber-200/70">
+                          {mm.pilotBadge}
+                        </span>
+                      </span>
+                    </td>
+                    <td className="px-4 py-3">
+                      {listing.side === "sell" ? mm.sides.sell : mm.sides.buy}
+                    </td>
+                    <td className="px-4 py-3 tabular-nums">{listing.volumeLabel}</td>
+                    <td className="px-4 py-3 tabular-nums">{listing.priceLabel}</td>
+                    <td className="px-4 py-3">{listing.location}</td>
+                    <td className="px-4 py-3 text-white/40">—</td>
+                    <td className="px-4 py-3 text-white/40">{mm.pilotBadge}</td>
+                  </tr>
+                ))
+              ) : filteredOffers.length === 0 ? (
                 <tr>
                   <td colSpan={7} className="px-4 py-8 text-muted">
                     {mm.listingsEmpty}
@@ -593,7 +641,10 @@ export function GreenMarketView({ snapshot }: Props) {
             </tbody>
           </table>
         </GreenPanel>
-        {filteredOffers.length > OFFERS_PAGE_SIZE ? (
+        {showPilotListings ? (
+          <p className="mt-3 text-sm text-white/45">{mm.pilotDataNote}</p>
+        ) : null}
+        {!showPilotListings && filteredOffers.length > OFFERS_PAGE_SIZE ? (
           <nav
             className="mt-4 flex flex-wrap items-center justify-between gap-3"
             aria-label={mm.pagination.page(safeOffersPage, offersTotalPages)}

@@ -84,6 +84,13 @@ export type Messages = {
     partnersDesc: string;
     disclaimer: string;
   };
+  trustPage: {
+    infrastructureTitle: string;
+    infrastructureItems: readonly string[];
+    faqTitle: string;
+    faq: readonly { question: string; answer: string }[];
+    badges: readonly string[];
+  };
   socialProof: {
     eyebrow: string;
     title: string;

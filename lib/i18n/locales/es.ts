@@ -92,6 +92,57 @@ export const es: Messages = {
     disclaimer:
       "Los resultados de AUROS son solo informativos y no constituyen asesoramiento de inversión, legal o fiscal.",
   },
+  trustPage: {
+    infrastructureTitle: "Infraestructura y datos",
+    infrastructureItems: [
+      "Alojamiento: Vercel Edge Network — datacenters UE",
+      "Cifrado en tránsito: TLS 1.3",
+      "Cifrado en reposo: AES-256",
+      "Conservación: datos eliminados bajo solicitud, máx. 3 años de inactividad",
+    ],
+    faqTitle: "FAQ privacidad y DPO",
+    badges: ["MiCA-ready", "RGPD", "KYC/AML", "Alojamiento UE", "TLS 1.3"],
+    faq: [
+      {
+        question: "¿Quién accede a los datos de mi expediente?",
+        answer:
+          "Solo el equipo AUROS, en el marco de la revisión de su expediente. Sin transmisión a terceros sin consentimiento explícito.",
+      },
+      {
+        question: "¿Se venden mis datos o se usan para publicidad?",
+        answer: "No. AUROS no vende datos ni muestra publicidad.",
+      },
+      {
+        question: "¿Dónde se alojan mis datos?",
+        answer:
+          "En Vercel Edge Network con datacenters en Europa (Fráncfort, París). Sin transferencia fuera de la UE sin base legal RGPD.",
+      },
+      {
+        question: "¿Puedo eliminar mi cuenta y mis datos?",
+        answer:
+          "Sí. Envíe una solicitud a privacy@auros.app — eliminación efectiva en 30 días.",
+      },
+      {
+        question: "¿AUROS está sujeto al RGPD?",
+        answer:
+          "Sí. AUROS trata datos personales conforme al RGPD (Reglamento UE 2016/679).",
+      },
+      {
+        question: "¿Quién es el DPO de AUROS?",
+        answer: "El responsable del tratamiento está en privacy@auros.app.",
+      },
+      {
+        question: "¿Los resultados del score son confidenciales?",
+        answer:
+          "Sí. Su puntuación y expediente son privados por defecto. Usted controla el intercambio mediante el enlace generado.",
+      },
+      {
+        question: "¿Cuánto tiempo se conserva mi expediente?",
+        answer:
+          "Mientras su cuenta esté activa, más 3 años de inactividad. Puede solicitar la eliminación en cualquier momento.",
+      },
+    ],
+  },
   socialProof: {
     eyebrow: "Pruebas",
     title: "Propietarios de activos y operadores",
@@ -242,24 +293,29 @@ export const es: Messages = {
     faqTitle: "Preguntas frecuentes",
     faq: [
       {
-        question: "¿El wizard AUROS es gratuito?",
-        answer: "Sí. Wizard, expediente activo y puntuación de admisión son gratuitos. El Starter Kit de jurisdicción es un producto de pago aparte.",
+        question: "¿Debo preparar documentos antes de empezar?",
+        answer:
+          "No. El wizard guía cada paso. Los documentos (título, valoración, KYC) se solicitan al final del recorrido, no al inicio.",
       },
       {
-        question: "¿AUROS sustituye a un abogado o asesor de inversiones?",
-        answer: "No. Todos los análisis AUROS son indicativos. Valide su estructura con un counsel cualificado antes de cualquier emisión.",
+        question: "¿Qué pasa si mi puntuación es baja?",
+        answer:
+          "AUROS proporciona 3 prioridades concretas a corregir — no una lista de 15 carencias. Puede mejorar el expediente y recalcular.",
       },
       {
-        question: "¿Qué tipos de activos puedo tokenizar con AUROS?",
-        answer: "Inmobiliario, bonos, crédito privado, stablecoins respaldados, materias primas, fondos y energía renovable.",
+        question: "¿Necesito un abogado antes de rellenar el expediente?",
+        answer:
+          "No. El expediente AUROS es una preparación, no un acto jurídico. El abogado interviene después, con un brief ya estructurado (~40% menos horas facturables).",
       },
       {
-        question: "¿Qué es la puntuación de admisión?",
-        answer: "Un índice 0–100 basado en la completitud del expediente — madurez de preparación, no garantía de emisión.",
+        question: "¿En qué plazo responde el equipo AUROS?",
+        answer:
+          "En 48 horas laborables tras el envío. Los Starter Kits de jurisdicción se entregan inmediatamente tras el pago.",
       },
       {
-        question: "¿Cuánto tarda la preparación de un expediente?",
-        answer: "Wizard ~12 min de media. Puntuación instantánea ~30 s. Revisión AUROS en 48 h tras el envío.",
+        question: "¿El expediente me compromete a algo?",
+        answer:
+          "No. Ningún compromiso, ninguna tarifa en esta fase. La decisión de tokenizar sigue siendo enteramente suya.",
       },
     ],
   },

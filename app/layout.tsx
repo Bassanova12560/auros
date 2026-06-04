@@ -7,6 +7,16 @@ import { Providers } from "./_components/Providers";
 import { SITE_URL } from "@/lib/comparators/site";
 import "./globals.css";
 
+const organizationJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: "AUROS",
+  url: SITE_URL,
+  description:
+    "Plateforme B2B de tokenisation d'actifs réels — score d'admission, data room, studio réglementaire.",
+  sameAs: [] as string[],
+};
+
 export const viewport = {
   width: "device-width",
   initialScale: 1,
@@ -62,6 +72,10 @@ export default function RootLayout({
     >
       <head>
         <AiFirstDiscoveryHead />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
+        />
       </head>
       <body className="min-h-dvh bg-void font-sans text-white">
         <Providers>{children}</Providers>

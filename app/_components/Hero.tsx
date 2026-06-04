@@ -76,6 +76,38 @@ export function Hero() {
               </div>
             ))}
           </div>
+
+          <div className="mt-8 flex items-start gap-4 rounded-lg border border-white/[0.08] p-5">
+            <div className="flex-1">
+              <p className="mb-1 text-sm text-muted">
+                {locale === "fr"
+                  ? "Actif énergétique ?"
+                  : locale === "es"
+                    ? "¿Activo energético?"
+                    : "Energy asset?"}
+              </p>
+              <p className="font-medium text-white">
+                {locale === "fr"
+                  ? "AUROS Green — énergie locale & RWA tokenisé"
+                  : locale === "es"
+                    ? "AUROS Green — energía local y RWA tokenizado"
+                    : "AUROS Green — local energy & tokenized RWA"}
+              </p>
+              <p className="mt-1 text-sm text-muted">
+                {locale === "fr"
+                  ? "Producteurs, stockeurs, rechargeurs — place de marché, standard RTMS, label Verified."
+                  : locale === "es"
+                    ? "Productores, almacenadores, recargadores — marketplace, estándar RTMS, label Verified."
+                    : "Producers, storers, chargers — marketplace, RTMS standard, Verified label."}
+              </p>
+            </div>
+            <Link
+              href="/green"
+              className="mt-1 shrink-0 text-sm font-medium text-white transition hover:text-white/80"
+            >
+              {locale === "fr" ? "Explorer →" : locale === "es" ? "Explorar →" : "Explore →"}
+            </Link>
+          </div>
         </motion.div>
 
         <ProductPreview />

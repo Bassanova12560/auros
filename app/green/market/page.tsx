@@ -7,6 +7,7 @@ import { GREEN_MARKET_ROUTE } from "@/lib/green";
 import { auditOgImage, mergeAuditOg } from "@/lib/seo/audit-og";
 import { getGreenMarketSnapshot } from "@/lib/green/market/green-market-db";
 
+import { GreenMarketSkeleton } from "../_components/market/GreenMarketSkeleton";
 import { GreenMarketView } from "../_components/market/GreenMarketView";
 
 export const dynamic = "force-dynamic";
@@ -31,13 +32,7 @@ export default async function GreenMarketPage() {
   return (
     <>
       <AiFirstPageJsonLd path={GREEN_MARKET_ROUTE} />
-      <Suspense
-        fallback={
-          <div className="page-inner page-inner--6xl mx-auto px-4 py-24 text-sm text-white/50">
-            …
-          </div>
-        }
-      >
+      <Suspense fallback={<GreenMarketSkeleton />}>
         <GreenMarketView snapshot={snapshot} />
       </Suspense>
     </>

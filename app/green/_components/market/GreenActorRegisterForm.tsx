@@ -84,26 +84,35 @@ export function GreenActorRegisterForm() {
   }
 
   if (done) {
-    const myLabel = gm.register.successMy;
-    const marketLabel = gm.register.successMarket;
     return (
-      <GreenPanel className="p-8 text-center">
-        <p className="font-display text-xl font-semibold text-white">{r.success}</p>
-        <p className="mt-3 text-sm text-white/55">{r.successBody}</p>
-        <div className="mt-6 flex flex-wrap justify-center gap-4">
-          <Link
-            href="/green/my"
-            className={`rounded-lg px-5 py-2.5 text-sm font-medium ${greenBtnClass}`}
-          >
-            {myLabel} →
-          </Link>
-          <Link
-            href={GREEN_MARKET_ROUTE}
-            className="rounded-lg border border-white/[0.12] px-5 py-2.5 text-sm text-white/70 transition hover:border-white/30 hover:text-white"
-          >
-            {marketLabel} →
-          </Link>
+      <GreenPanel className="space-y-3 p-6 text-center md:p-8">
+        <div className="text-2xl text-green-royal-bright" aria-hidden>
+          ✓
         </div>
+        <p className="font-display text-lg font-medium text-white">
+          {locale === "fr"
+            ? "Demande reçue"
+            : locale === "es"
+              ? "Solicitud recibida"
+              : "Request received"}
+        </p>
+        <p className="text-sm text-white/55">
+          {locale === "fr"
+            ? "L'équipe AUROS Green reviendra vers vous sous 48h ouvrées pour confirmer la publication de votre fiche sur la carte."
+            : locale === "es"
+              ? "El equipo AUROS Green se pondrá en contacto en 48 horas laborables para confirmar la publicación de su ficha en el mapa."
+              : "The AUROS Green team will get back to you within 48 business hours to confirm publishing your profile on the map."}
+        </p>
+        <Link
+          href={GREEN_MARKET_ROUTE}
+          className="inline-block text-sm text-green-royal-bright underline underline-offset-4 transition hover:text-white"
+        >
+          {locale === "fr"
+            ? "Voir la place de marché →"
+            : locale === "es"
+              ? "Ver el marketplace →"
+              : "View marketplace →"}
+        </Link>
       </GreenPanel>
     );
   }

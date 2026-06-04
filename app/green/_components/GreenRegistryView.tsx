@@ -204,6 +204,9 @@ export function GreenRegistryView({ snapshot }: Props) {
       <GreenPanel className="mt-10">
         <div className="p-6 md:p-8">
           <GreenSectionTitle>{r.projectsTitle}</GreenSectionTitle>
+          <p className="mt-2 font-mono text-[10px] uppercase tracking-wider text-emerald-500/70">
+            {r.pilotSectionHeader}
+          </p>
           {projects.length > 0 ? (
             <>
               <div

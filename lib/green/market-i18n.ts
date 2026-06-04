@@ -26,6 +26,8 @@ export type GreenMarketMessages = {
       allSides: string;
       search: string;
       searchPlaceholder: string;
+      country: string;
+      allCountries: string;
     };
     pagination: {
       prev: string;
@@ -38,6 +40,8 @@ export type GreenMarketMessages = {
     status: Record<GreenMarketStatus, string>;
     listingsTitle: string;
     listingsEmpty: string;
+    pilotBadge: string;
+    pilotDataNote: string;
     mapActorsEmpty: string;
     mapEmptyHint: string;
     mapEmptyWiden: string;
@@ -189,6 +193,8 @@ const FR: GreenMarketMessages = {
       allSides: "Toutes",
       search: "Recherche",
       searchPlaceholder: "Ville, pays ou nom d'acteur…",
+      country: "Pays",
+      allCountries: "Tous les pays",
     },
     pagination: {
       prev: "Précédent",
@@ -221,6 +227,8 @@ const FR: GreenMarketMessages = {
     },
     listingsTitle: "Offres & demandes",
     listingsEmpty: "Aucune annonce ne correspond aux filtres.",
+    pilotBadge: "Exemple pilote",
+    pilotDataNote: "Données pilotes — publiez une annonce pour apparaître ici.",
     mapActorsEmpty: "Aucun acteur ne correspond aux filtres actuels.",
     mapEmptyHint:
       "Élargissez le rayon, réinitialisez la recherche ou référencez votre structure.",
@@ -409,6 +417,8 @@ const EN: GreenMarketMessages = {
       allSides: "All",
       search: "Search",
       searchPlaceholder: "City, country or actor name…",
+      country: "Country",
+      allCountries: "All countries",
     },
     pagination: {
       prev: "Previous",
@@ -441,6 +451,8 @@ const EN: GreenMarketMessages = {
     },
     listingsTitle: "Offers & requests",
     listingsEmpty: "No listings match your filters.",
+    pilotBadge: "Pilot example",
+    pilotDataNote: "Pilot data — publish a listing to appear here.",
     mapActorsEmpty: "No actors match your current filters.",
     mapEmptyHint: "Widen the radius, clear search, or register your organisation.",
     mapEmptyWiden: "Reset filters",
@@ -628,6 +640,8 @@ const ES: GreenMarketMessages = {
       allSides: "Todas",
       search: "Búsqueda",
       searchPlaceholder: "Ciudad, país o nombre del actor…",
+      country: "País",
+      allCountries: "Todos los países",
     },
     pagination: {
       prev: "Anterior",
@@ -660,6 +674,8 @@ const ES: GreenMarketMessages = {
     },
     listingsTitle: "Ofertas y demandas",
     listingsEmpty: "Ningún anuncio coincide con los filtros.",
+    pilotBadge: "Ejemplo piloto",
+    pilotDataNote: "Datos piloto — publique un anuncio para aparecer aquí.",
     mapActorsEmpty: "Ningún actor coincide con los filtros actuales.",
     mapEmptyHint:
       "Amplíe el radio, borre la búsqueda o registre su estructura.",

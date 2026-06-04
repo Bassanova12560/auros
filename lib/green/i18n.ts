@@ -407,6 +407,7 @@ export type GreenMessages = {
     verifyLink: string;
     verifyNote: string;
     pilotNote: string;
+    pilotSectionHeader: string;
     statsProjects: (n: number) => string;
     statsExperts: (n: number) => string;
     statsVerified: (n: number) => string;
@@ -1270,6 +1271,7 @@ const FR: GreenMessages = {
     verifyNote: "Chaque entrée inclut un lien de vérification public.",
     pilotNote:
       "Les cas pilotes RTMS sont des démonstrations méthodologiques anonymisées — distincts des projets « Verified » après audit complet.",
+    pilotSectionHeader: "Projets pilotes AUROS Green · Candidatures ouvertes",
     statsProjects: (n) => `${n} projet${n > 1 ? "s" : ""} listé${n > 1 ? "s" : ""}`,
     statsExperts: (n) => `${n} expert${n > 1 ? "s" : ""}`,
     statsVerified: (n) => `${n} Verified`,
@@ -2159,6 +2161,7 @@ const EN: GreenMessages = {
     verifyNote: "Each entry includes a public verification link.",
     pilotNote:
       "RTMS pilot cases are anonymized methodology demos — distinct from « Verified » projects after full audit.",
+    pilotSectionHeader: "AUROS Green pilot projects · Open applications",
     statsProjects: (n) => `${n} listed project${n === 1 ? "" : "s"}`,
     statsExperts: (n) => `${n} expert${n === 1 ? "" : "s"}`,
     statsVerified: (n) => `${n} Verified`,
@@ -3053,6 +3056,7 @@ const ES: GreenMessages = {
     verifyNote: "Cada entrada incluye un enlace de verificación público.",
     pilotNote:
       "Los casos piloto RTMS son demostraciones metodológicas anonimizadas — distintos de proyectos « Verified » tras auditoría completa.",
+    pilotSectionHeader: "Proyectos piloto AUROS Green · Candidaturas abiertas",
     statsProjects: (n) => `${n} proyecto${n === 1 ? "" : "s"} listado${n === 1 ? "" : "s"}`,
     statsExperts: (n) => `${n} experto${n === 1 ? "" : "s"}`,
     statsVerified: (n) => `${n} Verified`,

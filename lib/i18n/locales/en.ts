@@ -92,6 +92,55 @@ export const en: Messages = {
     disclaimer:
       "AUROS results are for informational purposes only and do not constitute investment, legal, or tax advice.",
   },
+  trustPage: {
+    infrastructureTitle: "Infrastructure & data",
+    infrastructureItems: [
+      "Hosting: Vercel Edge Network — EU datacenters",
+      "Encryption in transit: TLS 1.3",
+      "Encryption at rest: AES-256",
+      "Retention: data deleted on request, max 3 years inactivity",
+    ],
+    faqTitle: "Privacy & DPO FAQ",
+    badges: ["MiCA-ready", "GDPR", "KYC/AML", "EU hosting", "TLS 1.3"],
+    faq: [
+      {
+        question: "Who can access my dossier data?",
+        answer:
+          "The AUROS team only, within the scope of reviewing your dossier. No transfer to third parties without explicit consent.",
+      },
+      {
+        question: "Are my data sold or used for advertising?",
+        answer: "No. AUROS does not sell data or display advertising.",
+      },
+      {
+        question: "Where is my data hosted?",
+        answer:
+          "On Vercel Edge Network with datacenters in Europe (Frankfurt, Paris). No transfer outside the EU without a GDPR legal basis.",
+      },
+      {
+        question: "Can I delete my account and data?",
+        answer: "Yes. Send a request to privacy@auros.app — deletion within 30 days.",
+      },
+      {
+        question: "Is AUROS subject to GDPR?",
+        answer: "Yes. AUROS processes personal data in accordance with GDPR (EU Regulation 2016/679).",
+      },
+      {
+        question: "Who is AUROS's DPO?",
+        answer: "The data controller can be reached at privacy@auros.app.",
+      },
+      {
+        question: "Are score results confidential?",
+        answer:
+          "Yes. Your score and dossier are private by default. You control sharing via the generated share link.",
+      },
+      {
+        question: "How long is my dossier retained?",
+        answer:
+          "While your account is active, plus 3 years of inactivity. You can request deletion at any time.",
+      },
+    ],
+  },
   socialProof: {
     eyebrow: "Proof",
     title: "Asset owners & operators",
@@ -243,24 +292,29 @@ export const en: Messages = {
     faqTitle: "Frequently asked questions",
     faq: [
       {
-        question: "Is the AUROS wizard free?",
-        answer: "Yes. Wizard, active dossier and admission score are free. The jurisdiction Starter Kit is a separate paid product at €5,000 excl. VAT.",
+        question: "Do I need documents before starting?",
+        answer:
+          "No. The wizard guides each step. Documents (title, valuation, KYC) are requested at the end of the journey, not at the start.",
       },
       {
-        question: "Does AUROS replace a lawyer or investment advisor?",
-        answer: "No. All AUROS analyses are indicative. Validate your structure with qualified counsel before any issuance.",
+        question: "What if my score is low?",
+        answer:
+          "AUROS provides 3 concrete priorities to fix — not a list of 15 gaps. You can improve the dossier and recalculate.",
       },
       {
-        question: "What asset types can I tokenize with AUROS?",
-        answer: "Real estate, bonds, private credit, backed stablecoins, commodities, funds and renewable energy.",
+        question: "Do I need a lawyer before filling the dossier?",
+        answer:
+          "No. The AUROS dossier is preparation, not a legal act. Counsel steps in afterwards with an already structured brief (~40% fewer billable hours).",
       },
       {
-        question: "What is the admission score?",
-        answer: "A 0–100 index based on dossier completeness — preparation maturity, not a guarantee of issuance.",
+        question: "How quickly does the AUROS team respond?",
+        answer:
+          "Within 48 business hours after submission. Jurisdiction Starter Kits are delivered immediately after payment.",
       },
       {
-        question: "How long does dossier preparation take?",
-        answer: "Wizard ~12 min on average. Instant score ~30 s. AUROS review within 48h after submission.",
+        question: "Does the dossier commit me to anything?",
+        answer:
+          "No. No commitment, no fees at this stage. The decision to tokenize remains entirely yours.",
       },
     ],
   },

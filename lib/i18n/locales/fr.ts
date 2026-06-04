@@ -92,6 +92,57 @@ export const fr: Messages = {
     disclaimer:
       "Les résultats AUROS sont fournis à titre informatif uniquement et ne constituent pas un conseil en investissement, juridique ou fiscal.",
   },
+  trustPage: {
+    infrastructureTitle: "Infrastructure & données",
+    infrastructureItems: [
+      "Hébergement : Vercel Edge Network — datacenters UE",
+      "Chiffrement en transit : TLS 1.3",
+      "Chiffrement au repos : AES-256",
+      "Durée de conservation : données supprimées sur demande, max 3 ans inactivité",
+    ],
+    faqTitle: "FAQ confidentialité & DPO",
+    badges: ["MiCA-ready", "RGPD", "KYC/AML", "Hébergement UE", "TLS 1.3"],
+    faq: [
+      {
+        question: "Qui a accès à mes données de dossier ?",
+        answer:
+          "L'équipe AUROS uniquement, dans le cadre de la revue de votre dossier. Aucune transmission à des tiers sans accord explicite.",
+      },
+      {
+        question: "Mes données sont-elles vendues ou utilisées pour de la publicité ?",
+        answer: "Non. AUROS ne vend pas de données et n'affiche pas de publicité.",
+      },
+      {
+        question: "Où sont hébergées mes données ?",
+        answer:
+          "Sur Vercel Edge Network avec datacenters en Europe (Frankfurt, Paris). Aucun transfert hors UE sans base légale RGPD.",
+      },
+      {
+        question: "Puis-je supprimer mon compte et mes données ?",
+        answer:
+          "Oui. Envoyez une demande à privacy@auros.app — suppression effective sous 30 jours.",
+      },
+      {
+        question: "AUROS est-il soumis au RGPD ?",
+        answer:
+          "Oui. AUROS traite les données personnelles conformément au RGPD (Règlement UE 2016/679).",
+      },
+      {
+        question: "Qui est le DPO d'AUROS ?",
+        answer: "Le responsable de traitement est joignable à privacy@auros.app.",
+      },
+      {
+        question: "Les résultats du score sont-ils confidentiels ?",
+        answer:
+          "Oui. Votre score et votre dossier sont privés par défaut. Vous contrôlez le partage via le lien de partage généré.",
+      },
+      {
+        question: "Combien de temps mon dossier est-il conservé ?",
+        answer:
+          "Tant que votre compte est actif, plus 3 ans d'inactivité. Vous pouvez demander la suppression à tout moment.",
+      },
+    ],
+  },
   socialProof: {
     eyebrow: "Preuves",
     title: "Propriétaires d'actifs & opérateurs",
@@ -243,29 +294,29 @@ export const fr: Messages = {
     faqTitle: "Questions fréquentes",
     faq: [
       {
-        question: "Le wizard AUROS est-il gratuit ?",
+        question: "Dois-je préparer des documents avant de commencer ?",
         answer:
-          "Oui. Le parcours wizard, le dossier actif et le score d'admission sont gratuits. Le Starter Kit juridiction est un produit payant distinct à 5 000 € HT.",
+          "Non. Le wizard guide chaque étape. Les documents (titre, évaluation, KYC) sont demandés en fin de parcours, pas au départ.",
       },
       {
-        question: "AUROS remplace-t-il un avocat ou un conseil en investissement ?",
+        question: "Que se passe-t-il si mon score est bas ?",
         answer:
-          "Non. Toutes les analyses AUROS sont indicatives et éducatives. Validez votre structuration avec un counsel qualifié avant toute émission.",
+          "AUROS fournit 3 priorités concrètes à corriger — pas une liste de 15 manques. Vous pouvez améliorer le dossier et recalculer.",
       },
       {
-        question: "Quels types d'actifs puis-je tokeniser avec AUROS ?",
+        question: "Ai-je besoin d'un avocat avant de remplir le dossier ?",
         answer:
-          "Immobilier, obligations, crédit privé, stablecoins adossés, matières premières, fonds et énergie renouvelable.",
+          "Non. Le dossier AUROS est une préparation, pas un acte juridique. L'avocat intervient après, avec un brief déjà structuré (-40% d'heures facturables).",
       },
       {
-        question: "Qu'est-ce que le score d'admission ?",
+        question: "Sous quel délai l'équipe AUROS répond-elle ?",
         answer:
-          "Un indice 0–100 basé sur la complétude du dossier — maturité de préparation, pas garantie d'émission.",
+          "Sous 48h ouvrées après soumission. Les Starter Kits juridictions sont livrés immédiatement après paiement.",
       },
       {
-        question: "Combien de temps prend la préparation d'un dossier ?",
+        question: "Le dossier m'engage-t-il à quelque chose ?",
         answer:
-          "Wizard ~12 min en moyenne. Score instantané ~30 s. Revue AUROS sous 48 h après soumission.",
+          "Non. Aucun engagement, aucun frais à ce stade. La décision de tokeniser reste entièrement la vôtre.",
       },
     ],
   },

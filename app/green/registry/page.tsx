@@ -7,6 +7,7 @@ import { GREEN_REGISTRY_ROUTE } from "@/lib/green";
 import { auditOgImage, mergeAuditOg } from "@/lib/seo/audit-og";
 
 import { getGreenRegistrySnapshot } from "@/lib/green/green-registry";
+import { mergeGreenRegistryPilotEntries } from "@/lib/green/registry-pilot-entries";
 
 import { GreenRegistryView } from "../_components/GreenRegistryView";
 
@@ -29,6 +30,10 @@ export const metadata: Metadata = mergeAuditOg(
 
 export default async function GreenRegistryPage() {
   const snapshot = await getGreenRegistrySnapshot();
+  const mergedSnapshot = {
+    ...snapshot,
+    projects: mergeGreenRegistryPilotEntries(snapshot.projects),
+  };
   return (
     <>
       <AiFirstPageJsonLd path={GREEN_REGISTRY_ROUTE} />
@@ -39,7 +44,7 @@ export default async function GreenRegistryPage() {
           </div>
         }
       >
-        <GreenRegistryView snapshot={snapshot} />
+        <GreenRegistryView snapshot={mergedSnapshot} />
       </Suspense>
     </>
   );
