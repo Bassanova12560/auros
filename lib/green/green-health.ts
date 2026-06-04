@@ -1,5 +1,6 @@
 /** Public Green pages probed by cron and `npm run green:health`. */
 export const GREEN_HEALTH_PATHS = [
+  "/green",
   "/green/register",
   "/green/market",
   "/green/label",
@@ -21,9 +22,12 @@ export type GreenHealthResult = {
   checkedAt: string;
 };
 
+const GREEN_HEALTH_FETCH_MS = 25_000;
+
 export function resolveGreenHealthBase(): string {
   const fromEnv =
     process.env.AUROS_PROD_URL?.trim() ||
+    process.env.VERCEL_PROJECT_PRODUCTION_URL?.trim() ||
     process.env.BASE_URL?.trim() ||
     process.env.NEXT_PUBLIC_SITE_URL?.trim() ||
     (process.env.VERCEL_URL
@@ -31,7 +35,10 @@ export function resolveGreenHealthBase(): string {
       : "");
 
   if (!fromEnv) return "http://localhost:3000";
-  return fromEnv.replace(/\/$/, "");
+  const normalized = fromEnv.replace(/\/$/, "");
+  return normalized.startsWith("http")
+    ? normalized
+    : `https://${normalized}`;
 }
 
 export async function runGreenHealthChecks(
@@ -45,9 +52,14 @@ export async function runGreenHealthChecks(
     try {
       const res = await fetch(url, {
         redirect: "follow",
-        headers: { Accept: "text/html" },
+        signal: AbortSignal.timeout(GREEN_HEALTH_FETCH_MS),
+        headers: {
+          // Avoid Clerk dev-browser handshake loops (Accept: text/html).
+          Accept: "*/*",
+          "User-Agent": "Auros-Green-Health/1",
+        },
       });
-      const ok = res.status >= 200 && res.status < 400;
+      const ok = res.status >= 200 && res.status < 300;
       checks.push({ path, status: res.status, ok });
     } catch (err) {
       checks.push({

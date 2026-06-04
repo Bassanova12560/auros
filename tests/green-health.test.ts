@@ -1,4 +1,4 @@
-import assert from "node:assert/strict";
+﻿import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 
 import { isCronAuthorized } from "@/lib/cron-auth";
@@ -8,7 +8,8 @@ describe("green/health-paths", () => {
   it("lists key public Green routes", () => {
     assert.ok(GREEN_HEALTH_PATHS.includes("/green/market"));
     assert.ok(GREEN_HEALTH_PATHS.includes("/green/rtms-assistant"));
-    assert.equal(GREEN_HEALTH_PATHS.length, 5);
+    assert.equal(GREEN_HEALTH_PATHS.length, 6);
+    assert.ok(GREEN_HEALTH_PATHS.includes("/green"));
   });
 });
 
@@ -40,3 +41,4 @@ describe("cron-auth", () => {
     else process.env.NODE_ENV = priorNode;
   });
 });
+
