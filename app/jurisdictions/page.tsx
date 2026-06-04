@@ -21,25 +21,10 @@ import { JurisdictionPaymentBanner } from "@/app/jurisdictions/_components/Juris
 import { PricingSection } from "@/app/jurisdictions/_components/PricingSection";
 import { MobilePageShell } from "@/app/_components/ui/MobilePageShell";
 import { AiFirstPageJsonLd } from "@/app/_components/ai-first/AiFirstPageJsonLd";
-import { absoluteUrl } from "@/lib/comparators/site";
 import { JURISDICTIONS_ROUTE } from "@/lib/jurisdictions";
+import { metadataFromPath } from "@/lib/seo/metadata";
 
-export const metadata: Metadata = {
-  title: "RWA Jurisdiction Comparator | AUROS",
-  description:
-    "Compare 8 tokenization jurisdictions — fees, timelines, licences, tax and KYC. B2B tool for real estate sponsors and asset owners.",
-  alternates: {
-    canonical: JURISDICTIONS_ROUTE,
-  },
-  openGraph: {
-    title: "RWA Jurisdiction Comparator | AUROS",
-    description:
-      "Where to tokenize your asset? Compare Luxembourg, Dubai, Singapore, Switzerland and more.",
-    url: absoluteUrl(JURISDICTIONS_ROUTE),
-    siteName: "AUROS",
-    type: "website",
-  },
-};
+export const metadata: Metadata = metadataFromPath(JURISDICTIONS_ROUTE);
 
 export default function JurisdictionsPage() {
   return (

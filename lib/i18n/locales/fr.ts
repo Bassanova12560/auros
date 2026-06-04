@@ -54,6 +54,22 @@ export const fr: Messages = {
     tierHigh: "Fort potentiel de tokenisation",
     tierMid: "Bon potentiel",
     tierLow: "Préparation recommandée",
+    quickExamplesLabel: "3 exemples rapides",
+    quickExamples: [
+      "Appartement T3 Paris 15e, valeur 450 000 €",
+      "Portefeuille art contemporain, 3 œuvres, 180 000 €",
+      "Créance commerciale, PME Lyon, 250 000 €",
+    ],
+    inputHint: "~30 secondes · Sans compte · Résultat indicatif",
+    exampleCard: {
+      title: "Exemple de résultat",
+      readiness: "Dossier prêt à 72%",
+      badgeLegal: "Legal ✓",
+      badgeKyc: "KYC ✓",
+      badgeMica: "MiCA ⚠",
+      badgeDataRoom: "Data room ✓",
+      disclaimer: "Exemple illustratif — votre score sera calculé en temps réel",
+    },
   },
   regulatory: {
     eyebrow: "Conformité",
@@ -219,6 +235,38 @@ export const fr: Messages = {
     step2Desc: "Rapport institutionnel, studio réglementaire, export PDF.",
     step3Title: "Soumission",
     step3Desc: "Envoi à l'équipe AUROS, MiCA, prochaines étapes concrètes.",
+    step1Duration: "~2 min",
+    step2Duration: "~8 min",
+    step3Duration: "sous 48h",
+    screenshotPlaceholder: "Capture écran wizard",
+    faqTitle: "Questions fréquentes",
+    faq: [
+      {
+        question: "Le wizard AUROS est-il gratuit ?",
+        answer:
+          "Oui. Le parcours wizard, le dossier actif et le score d'admission sont gratuits. Le Starter Kit juridiction est un produit payant distinct à 5 000 € HT.",
+      },
+      {
+        question: "AUROS remplace-t-il un avocat ou un conseil en investissement ?",
+        answer:
+          "Non. Toutes les analyses AUROS sont indicatives et éducatives. Validez votre structuration avec un counsel qualifié avant toute émission.",
+      },
+      {
+        question: "Quels types d'actifs puis-je tokeniser avec AUROS ?",
+        answer:
+          "Immobilier, obligations, crédit privé, stablecoins adossés, matières premières, fonds et énergie renouvelable.",
+      },
+      {
+        question: "Qu'est-ce que le score d'admission ?",
+        answer:
+          "Un indice 0–100 basé sur la complétude du dossier — maturité de préparation, pas garantie d'émission.",
+      },
+      {
+        question: "Combien de temps prend la préparation d'un dossier ?",
+        answer:
+          "Wizard ~12 min en moyenne. Score instantané ~30 s. Revue AUROS sous 48 h après soumission.",
+      },
+    ],
   },
   finalCta: {
     title: "Passez à la tokenisation avec un dossier prêt",

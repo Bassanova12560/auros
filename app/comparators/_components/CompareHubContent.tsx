@@ -22,6 +22,7 @@ import {
 } from "@/lib/comparators";
 import type { CompareHubPayload, HubProduct } from "@/lib/comparators/compare-hub";
 import type { ComparatorMessages } from "@/lib/comparators/i18n";
+import { RISK_TIER_ORDER, type RiskTier } from "@/lib/comparators/risk";
 import { track } from "@/lib/analytics";
 
 type CompareHubContentProps = {
@@ -29,28 +30,74 @@ type CompareHubContentProps = {
 };
 
 type MinInvestmentFilter = "all" | "under500" | "under5000";
-type SortMode = "apy" | "liquidity";
+type SortColumn = "apy" | "minInvestment" | "liquidity" | "fees";
+type SortDirection = "asc" | "desc";
+
+function parseFeesSortValue(fees: string): number {
+  const matches = fees.replace(",", ".").match(/[\d.]+/g);
+  if (!matches?.length) return Number.POSITIVE_INFINITY;
+  const values = matches.map(Number).filter(Number.isFinite);
+  if (!values.length) return Number.POSITIVE_INFINITY;
+  return Math.min(...values);
+}
+
+function multiProfileBadge(
+  product: HubProduct,
+  riskLabels: ComparatorMessages["risk"]
+): string | null {
+  const tiers: RiskTier[] = product.riskTiers ?? [product.riskTier];
+  if (tiers.length <= 1) return null;
+  const ordered = [...tiers].sort(
+    (a, b) => RISK_TIER_ORDER.indexOf(a) - RISK_TIER_ORDER.indexOf(b)
+  );
+  return ordered.map((tier) => riskLabels[tier]).join(" · ");
+}
+
+function productRowKey(product: HubProduct): string {
+  return `${product.row.platform}::${product.row.product}`;
+}
 
 export function CompareHubContent({ payload }: CompareHubContentProps) {
   const { messages, locale } = useComparatorPage();
   const copy = messages.compareHub;
+  const riskLabels = messages.risk;
   const [minFilter, setMinFilter] = useState<MinInvestmentFilter>("all");
-  const [sortMode, setSortMode] = useState<SortMode>("apy");
+  const [sortColumn, setSortColumn] = useState<SortColumn>("apy");
+  const [sortDirection, setSortDirection] = useState<SortDirection>("desc");
 
   const formattedDate = formatComparatorDate(payload.fetchedAt, locale);
+
+  function toggleSort(column: SortColumn) {
+    if (sortColumn === column) {
+      setSortDirection((direction) => (direction === "asc" ? "desc" : "asc"));
+    } else {
+      setSortColumn(column);
+      setSortDirection(column === "apy" ? "desc" : "asc");
+    }
+  }
 
   const filteredProducts = useMemo(() => {
     const list = payload.products.filter((product) =>
       matchesMinInvestmentFilter(product.meta, minFilter)
     );
 
+    const dir = sortDirection === "asc" ? 1 : -1;
     return [...list].sort((a, b) => {
-      if (sortMode === "liquidity") {
-        return a.meta.liquidityDays - b.meta.liquidityDays;
+      switch (sortColumn) {
+        case "minInvestment":
+          return (a.meta.minInvestmentUsd - b.meta.minInvestmentUsd) * dir;
+        case "liquidity":
+          return (a.meta.liquidityDays - b.meta.liquidityDays) * dir;
+        case "fees":
+          return (
+            (parseFeesSortValue(a.meta.fees) - parseFeesSortValue(b.meta.fees)) *
+            dir
+          );
+        default:
+          return (a.row.apy - b.row.apy) * dir;
       }
-      return b.row.apy - a.row.apy;
     });
-  }, [payload.products, minFilter, sortMode]);
+  }, [payload.products, minFilter, sortColumn, sortDirection]);
 
   return (
     <>
@@ -186,30 +233,6 @@ export function CompareHubContent({ payload }: CompareHubContentProps) {
               ))}
             </div>
           </fieldset>
-
-          <fieldset>
-            <legend className="mb-2 font-mono text-[10px] uppercase tracking-wider text-white/35">
-              {copy.sort.label}
-            </legend>
-            <div className="flex flex-wrap gap-2">
-              {(
-                [
-                  ["apy", copy.sort.apy],
-                  ["liquidity", copy.sort.liquidity],
-                ] as const
-              ).map(([value, label]) => (
-                <FilterRadio
-                  key={value}
-                  name="sort-mode"
-                  value={value}
-                  checked={sortMode === value}
-                  onChange={() => setSortMode(value)}
-                >
-                  {label}
-                </FilterRadio>
-              ))}
-            </div>
-          </fieldset>
         </div>
 
         <p className="mb-5 font-mono text-[10px] leading-relaxed text-white/30">
@@ -226,18 +249,35 @@ export function CompareHubContent({ payload }: CompareHubContentProps) {
                 <th className="pb-3 font-mono text-[10px] uppercase tracking-wider text-white/35">
                   {copy.table.product}
                 </th>
-                <th className="pb-3 text-right font-mono text-[10px] uppercase tracking-wider text-white/35">
-                  {copy.table.apy}
-                </th>
-                <th className="pb-3 font-mono text-[10px] uppercase tracking-wider text-white/35">
-                  {copy.table.minInvestment}
-                </th>
-                <th className="pb-3 font-mono text-[10px] uppercase tracking-wider text-white/35">
-                  {copy.table.liquidity}
-                </th>
-                <th className="pb-3 font-mono text-[10px] uppercase tracking-wider text-white/35">
-                  {copy.table.fees}
-                </th>
+                <SortableHeader
+                  label={copy.table.apy}
+                  column="apy"
+                  activeColumn={sortColumn}
+                  direction={sortDirection}
+                  onSort={toggleSort}
+                  align="right"
+                />
+                <SortableHeader
+                  label={copy.table.minInvestment}
+                  column="minInvestment"
+                  activeColumn={sortColumn}
+                  direction={sortDirection}
+                  onSort={toggleSort}
+                />
+                <SortableHeader
+                  label={copy.table.liquidity}
+                  column="liquidity"
+                  activeColumn={sortColumn}
+                  direction={sortDirection}
+                  onSort={toggleSort}
+                />
+                <SortableHeader
+                  label={copy.table.fees}
+                  column="fees"
+                  activeColumn={sortColumn}
+                  direction={sortDirection}
+                  onSort={toggleSort}
+                />
                 <th className="pb-3 font-mono text-[10px] uppercase tracking-wider text-white/35">
                   {copy.table.risk}
                 </th>
@@ -249,10 +289,11 @@ export function CompareHubContent({ payload }: CompareHubContentProps) {
             <tbody>
               {filteredProducts.map((product) => (
                 <HubDesktopRow
-                  key={`${product.comparatorId}-${product.row.id}`}
+                  key={productRowKey(product)}
                   product={product}
                   assetType={assetTypeForId(messages, product.comparatorId)}
                   copy={copy}
+                  riskLabels={riskLabels}
                 />
               ))}
             </tbody>
@@ -262,10 +303,11 @@ export function CompareHubContent({ payload }: CompareHubContentProps) {
         <div className="space-y-3 lg:hidden">
           {filteredProducts.map((product) => (
             <HubMobileRow
-              key={`${product.comparatorId}-${product.row.id}`}
+              key={productRowKey(product)}
               product={product}
               assetType={assetTypeForId(messages, product.comparatorId)}
               copy={copy}
+              riskLabels={riskLabels}
             />
           ))}
         </div>
@@ -312,6 +354,42 @@ function FilterRadio({
   );
 }
 
+function SortableHeader({
+  label,
+  column,
+  activeColumn,
+  direction,
+  onSort,
+  align = "left",
+}: {
+  label: string;
+  column: SortColumn;
+  activeColumn: SortColumn;
+  direction: SortDirection;
+  onSort: (column: SortColumn) => void;
+  align?: "left" | "right";
+}) {
+  const isActive = activeColumn === column;
+  return (
+    <th className={`pb-3 ${align === "right" ? "text-right" : ""}`}>
+      <button
+        type="button"
+        onClick={() => onSort(column)}
+        className={`rounded-sm font-mono text-[10px] uppercase tracking-wider transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white/40 ${
+          isActive ? "text-white" : "text-white/35 hover:text-white/60"
+        }`}
+      >
+        {label}
+        {isActive ? (
+          <span className="ml-1" aria-hidden>
+            {direction === "asc" ? "↑" : "↓"}
+          </span>
+        ) : null}
+      </button>
+    </th>
+  );
+}
+
 function openProductLink(product: HubProduct) {
   const href = resolveComparatorProductLink(product.comparatorId, product.row);
   track("comparator_platform_click", {
@@ -326,11 +404,15 @@ function HubDesktopRow({
   product,
   assetType,
   copy,
+  riskLabels,
 }: {
   product: HubProduct;
   assetType: string;
   copy: ComparatorMessages["compareHub"];
+  riskLabels: ComparatorMessages["risk"];
 }) {
+  const profileBadge = multiProfileBadge(product, riskLabels);
+
   return (
     <tr
       role="link"
@@ -351,7 +433,17 @@ function HubDesktopRow({
           <span className="font-medium text-white">{product.row.platform}</span>
         </div>
       </td>
-      <td className="py-4 pr-4 font-mono text-white/70">{product.row.product}</td>
+      <td className="py-4 pr-4">
+        <div className="font-mono text-white/70">{product.row.product}</div>
+        {profileBadge ? (
+          <span
+            className="mt-1 inline-flex rounded-full border border-white/15 bg-white/[0.06] px-2 py-0.5 font-mono text-[9px] uppercase tracking-wider text-white/55"
+            title={riskLabels.badgeHint}
+          >
+            {profileBadge}
+          </span>
+        ) : null}
+      </td>
       <td className="py-4 pr-4 text-right">
         <div className="flex flex-col items-end gap-1">
           <span className="font-display text-xl tabular-nums text-white">
@@ -384,12 +476,15 @@ function HubMobileRow({
   product,
   assetType,
   copy,
+  riskLabels,
 }: {
   product: HubProduct;
   assetType: string;
   copy: ComparatorMessages["compareHub"];
+  riskLabels: ComparatorMessages["risk"];
 }) {
   const href = resolveComparatorProductLink(product.comparatorId, product.row);
+  const profileBadge = multiProfileBadge(product, riskLabels);
 
   return (
     <ProductRowLink
@@ -410,6 +505,14 @@ function HubMobileRow({
           <p className="mt-0.5 font-mono text-sm text-white/55">
             {product.row.product}
           </p>
+          {profileBadge ? (
+            <span
+              className="mt-1 inline-flex rounded-full border border-white/15 bg-white/[0.06] px-2 py-0.5 font-mono text-[9px] uppercase tracking-wider text-white/55"
+              title={riskLabels.badgeHint}
+            >
+              {profileBadge}
+            </span>
+          ) : null}
           <div className="mt-2 flex flex-wrap items-center gap-2">
             <RiskBadge
               comparatorId={product.comparatorId}

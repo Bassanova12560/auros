@@ -5,16 +5,15 @@ import { motion } from "framer-motion";
 
 import { useTranslations } from "./i18n/LocaleProvider";
 import { SPRING_GENTLE } from "@/lib/motion";
-import { WIZARD_JURISDICTION_COUNT } from "@/lib/wizard-countries";
 
 export function Stats() {
   const t = useTranslations();
   const stats = useMemo(
     () => [
-      { value: 97, suffix: "/100", label: t.stats.scoreMax },
-      { value: WIZARD_JURISDICTION_COUNT, suffix: "", label: t.stats.jurisdictions },
-      { value: 6, suffix: "", label: t.stats.sections },
-      { value: 12, suffix: " min", label: t.stats.avgTime },
+      { value: 100, suffix: "/100", prefix: "", label: t.stats.scoreMax },
+      { value: 40, suffix: "+", prefix: "", label: t.stats.jurisdictions },
+      { value: 5, suffix: "", prefix: "", label: t.stats.sections },
+      { value: 12, suffix: " min", prefix: "~", label: t.stats.avgTime },
     ],
     [t]
   );
@@ -54,7 +53,7 @@ function StatCell({
   index,
   triggered,
 }: {
-  stat: { value: number; suffix: string; label: string };
+  stat: { value: number; suffix: string; prefix: string; label: string };
   index: number;
   triggered: boolean;
 }) {
@@ -89,6 +88,7 @@ function StatCell({
       transition={{ ...SPRING_GENTLE, delay: index * 0.05 }}
     >
       <p className="font-display text-4xl font-semibold text-white md:text-5xl">
+        {stat.prefix}
         {display}
         <span className="text-xl text-white/30">{stat.suffix}</span>
       </p>

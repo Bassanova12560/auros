@@ -54,6 +54,22 @@ export const es: Messages = {
     tierHigh: "Alto potencial de tokenización",
     tierMid: "Buen potencial",
     tierLow: "Preparación recomendada",
+    quickExamplesLabel: "3 ejemplos rápidos",
+    quickExamples: [
+      "Apartamento T3 París 15.º, valor 450 000 €",
+      "Cartera arte contemporáneo, 3 obras, 180 000 €",
+      "Crédito comercial, PYME Lyon, 250 000 €",
+    ],
+    inputHint: "~30 segundos · Sin cuenta · Resultado indicativo",
+    exampleCard: {
+      title: "Ejemplo de resultado",
+      readiness: "Expediente listo al 72%",
+      badgeLegal: "Legal ✓",
+      badgeKyc: "KYC ✓",
+      badgeMica: "MiCA ⚠",
+      badgeDataRoom: "Data room ✓",
+      disclaimer: "Ejemplo ilustrativo — su puntuación se calculará en tiempo real",
+    },
   },
   regulatory: {
     eyebrow: "Cumplimiento",
@@ -218,6 +234,33 @@ export const es: Messages = {
     step2Desc: "Informe institucional, estudio regulatorio, exportación PDF.",
     step3Title: "Envío",
     step3Desc: "Envío al equipo AUROS, marco MiCA, próximos pasos.",
+    step1Duration: "~2 min",
+    step2Duration: "~8 min",
+    step3Duration: "en 48 h",
+    screenshotPlaceholder: "Captura de pantalla wizard",
+    faqTitle: "Preguntas frecuentes",
+    faq: [
+      {
+        question: "¿El wizard AUROS es gratuito?",
+        answer: "Sí. Wizard, expediente activo y puntuación de admisión son gratuitos. El Starter Kit de jurisdicción es un producto de pago aparte.",
+      },
+      {
+        question: "¿AUROS sustituye a un abogado o asesor de inversiones?",
+        answer: "No. Todos los análisis AUROS son indicativos. Valide su estructura con un counsel cualificado antes de cualquier emisión.",
+      },
+      {
+        question: "¿Qué tipos de activos puedo tokenizar con AUROS?",
+        answer: "Inmobiliario, bonos, crédito privado, stablecoins respaldados, materias primas, fondos y energía renovable.",
+      },
+      {
+        question: "¿Qué es la puntuación de admisión?",
+        answer: "Un índice 0–100 basado en la completitud del expediente — madurez de preparación, no garantía de emisión.",
+      },
+      {
+        question: "¿Cuánto tarda la preparación de un expediente?",
+        answer: "Wizard ~12 min de media. Puntuación instantánea ~30 s. Revisión AUROS en 48 h tras el envío.",
+      },
+    ],
   },
   finalCta: {
     title: "Avance a la tokenización con un expediente listo",

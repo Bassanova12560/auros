@@ -54,6 +54,22 @@ export const en: Messages = {
     tierHigh: "High tokenization potential",
     tierMid: "Good potential",
     tierLow: "Needs preparation",
+    quickExamplesLabel: "3 quick examples",
+    quickExamples: [
+      "T3 apartment Paris 15th, value €450,000",
+      "Contemporary art portfolio, 3 works, €180,000",
+      "Trade receivable, SME Lyon, €250,000",
+    ],
+    inputHint: "~30 seconds · No account · Indicative result",
+    exampleCard: {
+      title: "Sample result",
+      readiness: "Dossier ready at 72%",
+      badgeLegal: "Legal ✓",
+      badgeKyc: "KYC ✓",
+      badgeMica: "MiCA ⚠",
+      badgeDataRoom: "Data room ✓",
+      disclaimer: "Illustrative example — your score will be calculated in real time",
+    },
   },
   regulatory: {
     eyebrow: "Compliance",
@@ -219,6 +235,33 @@ export const en: Messages = {
     step2Desc: "Institutional report, regulatory studio, PDF export.",
     step3Title: "Submission",
     step3Desc: "Send to AUROS team, MiCA framing, concrete next steps.",
+    step1Duration: "~2 min",
+    step2Duration: "~8 min",
+    step3Duration: "within 48h",
+    screenshotPlaceholder: "Wizard screenshot",
+    faqTitle: "Frequently asked questions",
+    faq: [
+      {
+        question: "Is the AUROS wizard free?",
+        answer: "Yes. Wizard, active dossier and admission score are free. The jurisdiction Starter Kit is a separate paid product at €5,000 excl. VAT.",
+      },
+      {
+        question: "Does AUROS replace a lawyer or investment advisor?",
+        answer: "No. All AUROS analyses are indicative. Validate your structure with qualified counsel before any issuance.",
+      },
+      {
+        question: "What asset types can I tokenize with AUROS?",
+        answer: "Real estate, bonds, private credit, backed stablecoins, commodities, funds and renewable energy.",
+      },
+      {
+        question: "What is the admission score?",
+        answer: "A 0–100 index based on dossier completeness — preparation maturity, not a guarantee of issuance.",
+      },
+      {
+        question: "How long does dossier preparation take?",
+        answer: "Wizard ~12 min on average. Instant score ~30 s. AUROS review within 48h after submission.",
+      },
+    ],
   },
   finalCta: {
     title: "Move to tokenization with a ready dossier",

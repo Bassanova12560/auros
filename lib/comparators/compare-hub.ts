@@ -14,6 +14,7 @@ export type HubProduct = {
   comparatorId: ComparatorId;
   comparatorHref: string;
   riskTier: RiskTier;
+  riskTiers?: RiskTier[];
   meta: ResolvedProductMeta;
 };
 
@@ -51,6 +52,29 @@ function toHubProducts(
   }));
 }
 
+function productDedupeKey(product: HubProduct): string {
+  return `${product.row.platform.trim().toLowerCase()}::${product.row.product.trim().toLowerCase()}`;
+}
+
+function dedupeHubProducts(products: HubProduct[]): HubProduct[] {
+  const map = new Map<string, HubProduct>();
+  for (const product of products) {
+    const key = productDedupeKey(product);
+    const existing = map.get(key);
+    if (!existing) {
+      map.set(key, { ...product, riskTiers: [product.riskTier] });
+      continue;
+    }
+    const riskTiers = [...new Set([...(existing.riskTiers ?? [existing.riskTier]), product.riskTier])];
+    if (product.row.apy > existing.row.apy) {
+      map.set(key, { ...product, riskTiers });
+    } else {
+      map.set(key, { ...existing, riskTiers });
+    }
+  }
+  return [...map.values()];
+}
+
 function buildTierHighlights(products: HubProduct[]): TierHighlight[] {
   return RISK_TIER_ORDER.map((tier) => {
     const scoped = products.filter((p) => p.riskTier === tier);
@@ -86,13 +110,13 @@ export async function getCompareHubPayload(): Promise<CompareHubPayload> {
     privateCredit.fetchedAt,
   ].sort((a, b) => b.localeCompare(a))[0];
 
-  const products = [
+  const products = dedupeHubProducts([
     ...toHubProducts(stablecoins.rows, "stablecoins"),
     ...toHubProducts(immobilier.rows, "immobilier"),
     ...toHubProducts(bonds.rows, "obligations"),
     ...toHubProducts(commodities.rows, "matieres-premieres"),
     ...toHubProducts(privateCredit.rows, "private-credit"),
-  ].sort((a, b) => b.row.apy - a.row.apy);
+  ]).sort((a, b) => b.row.apy - a.row.apy);
 
   return {
     products,

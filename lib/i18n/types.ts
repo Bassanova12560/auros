@@ -56,6 +56,18 @@ export type Messages = {
     tierHigh: string;
     tierMid: string;
     tierLow: string;
+    quickExamplesLabel: string;
+    quickExamples: readonly [string, string, string];
+    inputHint: string;
+    exampleCard: {
+      title: string;
+      readiness: string;
+      badgeLegal: string;
+      badgeKyc: string;
+      badgeMica: string;
+      badgeDataRoom: string;
+      disclaimer: string;
+    };
   };
   regulatory: {
     eyebrow: string;
@@ -178,6 +190,12 @@ export type Messages = {
     step2Desc: string;
     step3Title: string;
     step3Desc: string;
+    step1Duration: string;
+    step2Duration: string;
+    step3Duration: string;
+    screenshotPlaceholder: string;
+    faqTitle: string;
+    faq: readonly { question: string; answer: string }[];
   };
   finalCta: {
     title: string;

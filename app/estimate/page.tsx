@@ -8,7 +8,7 @@ export const metadata: Metadata = metadataFromPath("/estimate");
 
 export default function EstimatePage() {
   return (
-    <FocusPageShell path="/estimate" width="3xl">
+    <FocusPageShell path="/estimate" width="6xl">
       <ScoreWidget />
     </FocusPageShell>
   );

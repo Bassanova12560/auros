@@ -13,6 +13,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { BezelCard } from "./ui/BezelCard";
 import { SectionHeader } from "./ui/SectionHeader";
 import { PrimaryButton } from "./ui/PrimaryButton";
+import { AurosButton } from "./AurosButton";
 import { track } from "@/lib/analytics";
 import {
   AUROS_EMAIL_CAPTURE_KEY,
@@ -193,7 +194,7 @@ export function ScoreWidget() {
 
   return (
     <section id="score" className="scroll-mt-28 px-6 py-24 md:py-32">
-      <div className="mx-auto max-w-3xl">
+      <div className="mx-auto max-w-6xl">
         <SectionHeader
           eyebrow={t.score.eyebrow}
           title={t.score.title}
@@ -210,24 +211,52 @@ export function ScoreWidget() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0 }}
             >
-              <input
-                type="text"
-                value={query}
-                onChange={(e) => {
-                  setQuery(e.target.value);
-                  if (queryError) setQueryError(null);
-                }}
-                aria-invalid={queryError ? true : undefined}
-                placeholder={t.score.placeholder}
-                className="w-full rounded-xl border border-white/[0.1] bg-white/[0.03] px-5 py-4 text-white placeholder:text-white/30 outline-none transition focus:border-white/40"
-              />
-              {queryError ? (
-                <p className="mt-3 text-center text-xs text-accent" role="alert">
-                  {queryError}
-                </p>
-              ) : null}
-              <div className="mt-5 flex justify-center">
-                <PrimaryButton type="submit">{t.score.calculate}</PrimaryButton>
+              <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(280px,340px)] lg:items-start lg:gap-10">
+                <div>
+                  <p className="font-mono text-[10px] uppercase tracking-wider text-white/35">
+                    {t.score.quickExamplesLabel}
+                  </p>
+                  <div className="mt-3 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
+                    {t.score.quickExamples.map((example) => (
+                      <AurosButton
+                        key={example}
+                        type="button"
+                        variant="ghost"
+                        showArrow={false}
+                        className="!justify-start !px-4 !py-2.5 text-left text-xs sm:min-w-[200px] sm:flex-1"
+                        onClick={() => {
+                          setQuery(example);
+                          setQueryError(null);
+                        }}
+                      >
+                        {example}
+                      </AurosButton>
+                    ))}
+                  </div>
+                  <input
+                    type="text"
+                    value={query}
+                    onChange={(e) => {
+                      setQuery(e.target.value);
+                      if (queryError) setQueryError(null);
+                    }}
+                    aria-invalid={queryError ? true : undefined}
+                    placeholder={t.score.placeholder}
+                    className="mt-6 w-full rounded-xl border border-white/[0.1] bg-white/[0.03] px-5 py-4 text-white placeholder:text-white/30 outline-none transition focus:border-white/40 focus-visible:ring-2 focus-visible:ring-white/20"
+                  />
+                  <p className="mt-3 text-center font-mono text-[10px] text-white/35 sm:text-left">
+                    {t.score.inputHint}
+                  </p>
+                  {queryError ? (
+                    <p className="mt-3 text-center text-xs text-accent sm:text-left" role="alert">
+                      {queryError}
+                    </p>
+                  ) : null}
+                  <div className="mt-5 flex justify-center sm:justify-start">
+                    <PrimaryButton type="submit">{t.score.calculate}</PrimaryButton>
+                  </div>
+                </div>
+                <EstimateExampleCard />
               </div>
             </motion.form>
           ) : (
@@ -356,6 +385,31 @@ export function ScoreWidget() {
         </AnimatePresence>
       </div>
     </section>
+  );
+}
+
+function EstimateExampleCard() {
+  const t = useTranslations();
+  const card = t.score.exampleCard;
+  const badges = [card.badgeLegal, card.badgeKyc, card.badgeMica, card.badgeDataRoom];
+
+  return (
+    <aside className="rounded-2xl border border-white/[0.08] bg-white/[0.02] p-5 md:p-6" aria-label={card.title}>
+      <p className="font-mono text-[10px] uppercase tracking-wider text-white/35">{card.title}</p>
+      <div className="mt-4 flex items-baseline gap-2">
+        <span className="font-display text-4xl font-semibold tabular-nums text-white">78</span>
+        <span className="font-display text-xl text-white/30">/100</span>
+      </div>
+      <p className="mt-2 text-sm text-white/70">{card.readiness}</p>
+      <div className="mt-4 flex flex-wrap gap-2">
+        {badges.map((badge) => (
+          <span key={badge} className="rounded-full border border-white/[0.1] bg-white/[0.03] px-3 py-1 font-mono text-[10px] text-white/55">
+            {badge}
+          </span>
+        ))}
+      </div>
+      <p className="mt-5 text-xs leading-relaxed text-white/35">{card.disclaimer}</p>
+    </aside>
   );
 }
 
