@@ -6,6 +6,9 @@ import { LandingDepthLinks } from "./_components/LandingDepthLinks";
 import { LandingReferral } from "./_components/LandingReferral";
 import { Nav } from "./_components/Nav";
 import { TrustStrip } from "./_components/TrustStrip";
+import { metadataFromPath } from "@/lib/seo/metadata";
+
+export const metadata = metadataFromPath("/");
 
 /**
  * Landing: one primary path — hero CTA → wizard.

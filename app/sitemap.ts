@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 
 import { getIndexablePages } from "@/lib/ai-first";
+import { getAllGreenBlogSlugs, greenBlogArticlePath } from "@/lib/green/blog/articles";
 import { SITE_URL } from "@/lib/comparators/site";
 import { listGreenMarketActorSitemapIds, listGreenMarketOfferSitemapIds } from "@/lib/green/market/green-market-db";
 import { greenMarketActorPath } from "@/lib/green/market/actor-routes";
@@ -29,7 +30,15 @@ const PRIORITY: Record<string, number> = {
   "/bonds": 0.95,
   "/commodities": 0.95,
   "/private-credit": 0.95,
-  "/wizard": 0.8,
+  "/green/blog": 0.86,
+  "/green/faq": 0.85,
+  "/green/comment-ca-marche": 0.84,
+  "/faq": 0.82,
+  "/ressources": 0.81,
+  "/how-it-works": 0.8,
+  "/discover": 0.78,
+  "/trust": 0.78,
+  "/estimate": 0.77,
   "/partners": 0.6,
 };
 
@@ -86,5 +95,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     /* demo / build without DB */
   }
 
-  return [...staticEntries, ...offerEntries, ...actorEntries, ...registryProjectEntries];
+  const blogEntries: MetadataRoute.Sitemap = getAllGreenBlogSlugs().map((slug) => ({
+    url: `${SITE_URL}${greenBlogArticlePath(slug)}`,
+    lastModified: now,
+    changeFrequency: "monthly" as const,
+    priority: PRIORITY["/green/blog"] ?? 0.8,
+  }));
+
+  return [...staticEntries, ...offerEntries, ...actorEntries, ...registryProjectEntries, ...blogEntries];
 }

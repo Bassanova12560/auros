@@ -15,6 +15,7 @@ import {
 } from "./jurisdictions-pages";
 import { miscPages } from "./misc-pages";
 import { buildSeoLandingPages } from "./seo-landing-pages";
+import { contentPages } from "./content-pages";
 import { AUROS_ORG } from "../org";
 import { catalogVersion } from "../enrich";
 import type { AiFirstCatalog, AiFirstPage } from "../types";
@@ -34,6 +35,7 @@ export function getAllAiFirstPages(): AiFirstPage[] {
     ...buildSeoLandingPages(),
     ...academyPages,
     ...greenPages,
+    ...contentPages,
     ...miscPages,
   ];
   return cachedPages;

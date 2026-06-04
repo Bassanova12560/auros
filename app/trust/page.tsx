@@ -4,21 +4,9 @@ import { FocusPageHero } from "@/app/_components/FocusPageHero";
 import { FocusPageShell } from "@/app/_components/FocusPageShell";
 import { ProfessionalTrustBar } from "@/app/_components/ProfessionalTrustBar";
 import { RegulatoryTrust } from "@/app/_components/RegulatoryTrust";
-import { absoluteUrl } from "@/lib/comparators/site";
+import { metadataFromPath } from "@/lib/seo/metadata";
 
-export const metadata: Metadata = {
-  title: "Confiance & conformité | AUROS",
-  description:
-    "MiCA, RGPD, KYC/AML — cadre réglementaire transparent pour la préparation de dossiers RWA.",
-  alternates: { canonical: "/trust" },
-  openGraph: {
-    title: "Trust & compliance | AUROS",
-    description: "MiCA, GDPR, KYC/AML — transparent regulatory framing for RWA dossier preparation.",
-    url: absoluteUrl("/trust"),
-    siteName: "AUROS",
-    type: "website",
-  },
-};
+export const metadata: Metadata = metadataFromPath("/trust");
 
 export default function TrustPage() {
   return (

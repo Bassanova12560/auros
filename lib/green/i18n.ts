@@ -173,6 +173,7 @@ export type GreenMessages = {
       success: string;
       successBody: string;
       stepOf: (current: number, total: number) => string;
+      introHint: string;
       errorInvalid: string;
       errorRateLimit: string;
     };
@@ -759,6 +760,21 @@ const FR: GreenMessages = {
       title: "Standard & conformité",
       links: [
         {
+          title: "Comment ça marche",
+          description: "Parcours RTMS, marketplace, label et registre en 4 étapes.",
+          href: "/green/comment-ca-marche",
+        },
+        {
+          title: "FAQ Green",
+          description: "14 réponses sur RTMS, label Verified et marketplace.",
+          href: "/green/faq",
+        },
+        {
+          title: "Blog & guides",
+          description: "Articles RTMS, PPA, producteurs vs stockeurs.",
+          href: "/green/blog",
+        },
+        {
           title: "Standards RTMS",
           description: "Réel, transparent, mesurable, sain — la grille de référence.",
           href: "/green/standards",
@@ -823,6 +839,8 @@ const FR: GreenMessages = {
       success: "Fiche reçue",
       successBody: "Revue AUROS sous 48 h ouvrées — vous serez contacté à l'e-mail indiqué.",
       stepOf: (current, total) => `Étape ${current} sur ${total}`,
+      introHint:
+        "Les champs marqués sont requis. Revue AUROS avant publication sur la carte.",
       errorInvalid: "Vérifiez les champs obligatoires.",
       errorRateLimit: "Trop de tentatives — réessayez dans une heure.",
     },
@@ -1627,6 +1645,21 @@ const EN: GreenMessages = {
       title: "Standard & compliance",
       links: [
         {
+          title: "How it works",
+          description: "RTMS, marketplace, label and registry in 4 steps.",
+          href: "/green/comment-ca-marche",
+        },
+        {
+          title: "Green FAQ",
+          description: "14 answers on RTMS, Verified label and marketplace.",
+          href: "/green/faq",
+        },
+        {
+          title: "Blog & guides",
+          description: "RTMS articles, PPAs, producers vs storers.",
+          href: "/green/blog",
+        },
+        {
           title: "RTMS standards",
           description: "Real, transparent, measurable, sound — the reference grid.",
           href: "/green/standards",
@@ -1691,6 +1724,8 @@ const EN: GreenMessages = {
       success: "Profile received",
       successBody: "AUROS review within 48 business hours — we will contact you at the email provided.",
       stepOf: (current, total) => `Step ${current} of ${total}`,
+      introHint:
+        "Required fields are marked. AUROS review before map publication.",
       errorInvalid: "Check required fields.",
       errorRateLimit: "Too many attempts — try again in one hour.",
     },
@@ -2497,6 +2532,21 @@ const ES: GreenMessages = {
       title: "Estándar y conformidad",
       links: [
         {
+          title: "Cómo funciona",
+          description: "RTMS, marketplace, etiqueta y registro en 4 pasos.",
+          href: "/green/comment-ca-marche",
+        },
+        {
+          title: "FAQ Green",
+          description: "14 respuestas sobre RTMS, etiqueta Verified y marketplace.",
+          href: "/green/faq",
+        },
+        {
+          title: "Blog y guías",
+          description: "Artículos RTMS, PPA, productores vs almacenadores.",
+          href: "/green/blog",
+        },
+        {
           title: "Estándares RTMS",
           description: "Real, transparente, medible, sano — la cuadrícula de referencia.",
           href: "/green/standards",
@@ -2561,6 +2611,8 @@ const ES: GreenMessages = {
       success: "Ficha recibida",
       successBody: "Revisión AUROS en 48 h laborables — contacto al e-mail indicado.",
       stepOf: (current, total) => `Paso ${current} de ${total}`,
+      introHint:
+        "Los campos obligatorios están marcados. Revisión AUROS antes de publicar en el mapa.",
       errorInvalid: "Revise los campos obligatorios.",
       errorRateLimit: "Demasiados intentos — inténtelo de nuevo en una hora.",
     },

@@ -7,7 +7,21 @@ export type AiFirstContentType =
   | "landing"
   | "legal"
   | "app"
-  | "academy";
+  | "academy"
+  | "article";
+
+export type AiFirstBreadcrumb = {
+  name: string;
+  path: string;
+};
+
+export type AiFirstArticleMeta = {
+  slug: string;
+  publishedAt: string;
+  modifiedAt: string;
+  author: string;
+  readingTimeMinutes: number;
+};
 
 export type AiFirstFact = {
   key: string;
@@ -46,6 +60,10 @@ export type AiFirstPage = {
   facts: AiFirstFact[];
   faq?: AiFirstFaq[];
   offers?: AiFirstOffer[];
+  /** Breadcrumb trail for structured data (excludes current page). */
+  breadcrumbs?: AiFirstBreadcrumb[];
+  /** Article metadata when contentType is "article". */
+  article?: AiFirstArticleMeta;
   relatedPaths: string[];
   /** Optional live-data endpoint (comparators). */
   liveDataUrl?: string;

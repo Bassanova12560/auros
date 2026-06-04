@@ -18,8 +18,14 @@ export const GREEN_GUIDE_ROUTE = "/green/tokenize-surplus";
 export const GREEN_PRATICIEN_ROUTE = "/green/praticien";
 export const GREEN_PRATICIEN_EXAM_ROUTE = "/green/praticien/exam";
 export const GREEN_RTMS_ASSISTANT_ROUTE = "/green/rtms-assistant";
+export const GREEN_FAQ_ROUTE = "/green/faq";
+export const GREEN_HOW_IT_WORKS_ROUTE = "/green/comment-ca-marche";
+export const GREEN_BLOG_ROUTE = "/green/blog";
 export const GREEN_VERIFY_ROUTE = "/green/verify";
 export const GREEN_MY_ROUTE = "/green/my";
+
+export const AUROS_FAQ_ROUTE = "/faq";
+export const AUROS_RESOURCES_ROUTE = "/ressources";
 
 /** Legacy audit URLs → canonical Green routes */
 export const GREEN_LEGACY_REDIRECTS = [

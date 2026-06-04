@@ -1,3 +1,5 @@
+import { absoluteUrl } from "@/lib/comparators/site";
+
 import { AUROS_ORG } from "./org";
 import type { AiFirstPage } from "./types";
 
@@ -98,6 +100,48 @@ export function productJsonLd(page: AiFirstPage): Record<string, unknown> | null
   };
 }
 
+export function breadcrumbJsonLd(
+  items: { name: string; url: string }[]
+): Record<string, unknown> {
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: items.map((item, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      name: item.name,
+      item: item.url,
+    })),
+  };
+}
+
+export function articleJsonLd(page: AiFirstPage): Record<string, unknown> | null {
+  if (page.contentType !== "article" || !page.article) return null;
+  return {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: page.title,
+    description: page.description,
+    url: page.canonicalUrl,
+    datePublished: page.article.publishedAt,
+    dateModified: page.article.modifiedAt,
+    author: {
+      "@type": "Organization",
+      name: page.article.author,
+      url: AUROS_ORG.url,
+    },
+    publisher: {
+      "@type": "Organization",
+      name: AUROS_ORG.name,
+      url: AUROS_ORG.url,
+      logo: { "@type": "ImageObject", url: AUROS_ORG.logo },
+    },
+    inLanguage: page.language === "multi" ? "fr" : page.language,
+    keywords: page.keywords.join(", "),
+    mainEntityOfPage: { "@type": "WebPage", "@id": page.canonicalUrl },
+  };
+}
+
 export function buildPageJsonLd(page: AiFirstPage): Record<string, unknown>[] {
   const blocks: Record<string, unknown>[] = [webPageJsonLd(page)];
   const faq = faqJsonLd(page);
@@ -106,5 +150,18 @@ export function buildPageJsonLd(page: AiFirstPage): Record<string, unknown>[] {
   if (course) blocks.push(course);
   const product = productJsonLd(page);
   if (product) blocks.push(product);
+  const article = articleJsonLd(page);
+  if (article) blocks.push(article);
+  if (page.breadcrumbs?.length) {
+    const crumbs = [
+      { name: "AUROS", url: AUROS_ORG.url },
+      ...page.breadcrumbs.map((b) => ({
+        name: b.name,
+        url: absoluteUrl(b.path),
+      })),
+      { name: page.title.split("|")[0]?.trim() ?? page.title, url: page.canonicalUrl },
+    ];
+    blocks.push(breadcrumbJsonLd(crumbs));
+  }
   return blocks;
 }
