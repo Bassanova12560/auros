@@ -20,25 +20,27 @@ export function LandingGreenPromo() {
           </h2>
           <p className="mt-3 text-sm leading-relaxed text-muted">{g.subtitle}</p>
         </div>
-        <div className="flex shrink-0 flex-col gap-3 sm:flex-row sm:items-center">
+        <div className="flex shrink-0 flex-col gap-3">
           <PrimaryButton
             href={GREEN_MARKET_ROUTE}
             className="!border !border-green-royal !bg-green-royal !text-white hover:!bg-green-royal-bright"
           >
             {g.marketCta}
           </PrimaryButton>
-          <Link
-            href={GREEN_ROUTE}
-            className="inline-flex min-h-[44px] items-center justify-center border border-white/20 px-5 font-mono text-[11px] uppercase tracking-wider text-white/70 transition hover:border-white/40 hover:text-white"
-          >
-            {g.cta}
-          </Link>
-          <Link
-            href={`${GREEN_REGISTER_ROUTE}?type=producer`}
-            className="inline-flex min-h-[44px] items-center font-mono text-[11px] tracking-wide text-green-royal-bright transition hover:text-white"
-          >
-            {g.registerCta} →
-          </Link>
+          <nav className="flex flex-wrap items-center gap-x-4 gap-y-2">
+            <Link
+              href={GREEN_ROUTE}
+              className="font-mono text-[11px] tracking-wide text-white/40 transition hover:text-white/70"
+            >
+              {g.cta} →
+            </Link>
+            <Link
+              href={`${GREEN_REGISTER_ROUTE}?type=producer`}
+              className="font-mono text-[11px] tracking-wide text-white/35 transition hover:text-white/55"
+            >
+              {g.registerCta} →
+            </Link>
+          </nav>
         </div>
       </div>
     </section>

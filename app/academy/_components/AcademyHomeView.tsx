@@ -34,6 +34,9 @@ export function AcademyHomeView() {
           {m.home.title}
         </h1>
         <p className="mt-5 text-lg leading-relaxed text-white/55">{m.home.intro}</p>
+        <div className="mt-10">
+          <PrimaryButton href={ACADEMY_FUNDAMENTALS_ROUTE}>{m.home.startFree}</PrimaryButton>
+        </div>
       </header>
 
       <div className="mt-14 grid gap-5 lg:grid-cols-3">
@@ -49,25 +52,22 @@ export function AcademyHomeView() {
               <p className="mt-3 flex-1 text-sm leading-relaxed text-white/45">
                 {tier.description}
               </p>
-              <div className="mt-8 space-y-3">
+              <div className="mt-8">
                 {status === "soon" ? (
                   <a
                     href={`mailto:${AUROS_ORG.contactEmail}?subject=${encodeURIComponent(m.mailto.praticienSubject)}`}
-                    className="inline-flex items-center rounded-full border border-white/15 px-6 py-3 text-sm text-white/60 hover:border-white/25 hover:text-white/80"
+                    className="font-mono text-[11px] tracking-wide text-white/40 transition hover:text-white/70"
                   >
-                    {tier.cta}
+                    {tier.cta} →
                   </a>
                 ) : (
-                  <PrimaryButton href={path}>{tier.cta}</PrimaryButton>
-                )}
-                {status === "soon" ? (
                   <Link
                     href={path}
-                    className="block text-xs text-white/35 hover:text-white/55"
+                    className="font-mono text-[11px] tracking-wide text-white/40 transition hover:text-white/70"
                   >
-                    {m.home.viewProgram}
+                    {tier.cta} →
                   </Link>
-                ) : null}
+                )}
               </div>
             </BezelCard>
           );
@@ -115,14 +115,6 @@ export function AcademyHomeView() {
       </BezelCard>
 
       <p className="mt-10 max-w-2xl text-xs leading-relaxed text-white/35">{m.disclaimer}</p>
-      <p className="mt-4">
-        <Link
-          href={ACADEMY_FUNDAMENTALS_ROUTE}
-          className="text-sm text-white/55 hover:text-white/80"
-        >
-          {m.home.startFree}
-        </Link>
-      </p>
     </div>
   );
 }

@@ -1,13 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import Link from "next/link";
 import { motion } from "framer-motion";
 
 import { ProductPreview } from "./ProductPreview";
 import { useLocale, useTranslations } from "./i18n/LocaleProvider";
 import { getEaseMessages } from "@/lib/ease-i18n";
 import { getWizardExpertMessages } from "@/lib/wizard-expert-i18n";
-import { QuickScoreSheet } from "./QuickScoreSheet";
 import { Eyebrow } from "./ui/Eyebrow";
 import { PrimaryButton } from "./ui/PrimaryButton";
 import { EASE_OUT_EXPO, fadeUp, staggerContainer } from "@/lib/motion";
@@ -17,7 +16,6 @@ export function Hero() {
   const { locale } = useLocale();
   const ease = getEaseMessages(locale);
   const expert = getWizardExpertMessages(locale);
-  const [quickScoreOpen, setQuickScoreOpen] = useState(false);
 
   const metrics = [
     { label: t.hero.metricAssets, value: "12+" },
@@ -27,10 +25,6 @@ export function Hero() {
 
   return (
     <section className="relative flex min-h-[88dvh] flex-col justify-center px-4 pb-16 pt-[calc(5.5rem+env(safe-area-inset-top))] md:px-6 md:pt-32">
-      <QuickScoreSheet
-        open={quickScoreOpen}
-        onClose={() => setQuickScoreOpen(false)}
-      />
       <div className="mx-auto flex w-full max-w-6xl flex-col gap-12 lg:flex-row lg:items-center lg:justify-between">
         <motion.div
           key="hero-content"
@@ -64,22 +58,32 @@ export function Hero() {
 
           <motion.div
             variants={fadeUp}
-            className="mt-10 flex flex-wrap items-center gap-4"
+            className="mt-10 flex flex-col items-start gap-4 sm:flex-row sm:flex-wrap sm:items-center"
           >
             <PrimaryButton href="/wizard">{t.hero.ctaPrimary}</PrimaryButton>
-            <button
-              type="button"
-              onClick={() => setQuickScoreOpen(true)}
-              className="text-sm text-muted underline-offset-4 transition hover:text-white hover:underline"
+            <nav
+              className="flex flex-wrap items-center gap-x-5 gap-y-2"
+              aria-label={locale === "fr" ? "Accès secondaires" : locale === "es" ? "Accesos secundarios" : "Secondary access"}
             >
-              {t.hero.ctaEstimate}
-            </button>
-            <a
-              href="/wizard?expert=1"
-              className="w-full text-sm text-white/35 underline-offset-4 transition hover:text-white/55 hover:underline sm:w-auto"
-            >
-              {expert.expressTitle} →
-            </a>
+              <Link
+                href="/estimate"
+                className="font-mono text-[11px] tracking-wide text-white/40 transition hover:text-white/70"
+              >
+                {t.hero.ctaEstimate} →
+              </Link>
+              <Link
+                href="/how-it-works"
+                className="font-mono text-[11px] tracking-wide text-white/35 transition hover:text-white/55"
+              >
+                {locale === "fr" ? "Comment ça marche" : locale === "es" ? "Cómo funciona" : "How it works"} →
+              </Link>
+              <Link
+                href="/wizard?expert=1"
+                className="font-mono text-[11px] tracking-wide text-white/30 transition hover:text-white/50"
+              >
+                {expert.expressTitle} →
+              </Link>
+            </nav>
           </motion.div>
 
           <div className="mt-14 flex flex-wrap gap-8 border-t border-white/[0.06] pt-8">

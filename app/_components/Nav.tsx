@@ -17,7 +17,7 @@ export function Nav() {
   const [scrolled, setScrolled] = useState(false);
 
   const links = [
-    { href: "#score", label: t.nav.score },
+    { href: "/estimate", label: t.nav.score },
     { href: "/wizard", label: t.nav.tokenize },
     { href: "/dashboard", label: t.nav.dossiers },
     { href: "/jurisdictions?from=nav", label: t.nav.jurisdictions },

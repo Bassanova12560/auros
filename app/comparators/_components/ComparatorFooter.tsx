@@ -92,7 +92,7 @@ export function ComparatorFooter() {
                 {messages.compareHub.ecosystem.dashboard}
               </Link>
               <Link
-                href="/#score"
+                href="/estimate"
                 className="font-mono text-[10px] text-white/40 transition hover:text-white"
               >
                 {messages.compareHub.ecosystem.score}

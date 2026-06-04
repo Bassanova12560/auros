@@ -33,6 +33,16 @@ export type EaseMessages = {
     exploreSubtitle: string;
     scorePath: string;
   };
+  depthLinks: {
+    ariaLabel: string;
+    eyebrow: string;
+    links: readonly { href: string; label: string }[];
+  };
+  focusPages: {
+    discover: { title: string; subtitle: string; cta: string };
+    howItWorks: { title: string; subtitle: string; cta: string; secondary: string };
+    trust: { title: string; subtitle: string; cta: string; secondary: string };
+  };
   score: {
     reassurance: string;
     wizardCta: string;
@@ -76,7 +86,39 @@ const FR: EaseMessages = {
     exploreTitle: "En savoir plus",
     exploreSubtitle:
       "Plateformes, conformité, exemples — ouvrez seulement si vous voulez approfondir.",
-    scorePath: "Le plus simple : une phrase ci-dessous, résultat en quelques secondes.",
+    scorePath: "Estimez d'abord en une phrase, ou lancez le wizard directement.",
+  },
+  depthLinks: {
+    ariaLabel: "Approfondir AUROS",
+    eyebrow: "Aller plus loin",
+    links: [
+      { href: "/estimate", label: "Score indicatif" },
+      { href: "/how-it-works", label: "Comment ça marche" },
+      { href: "/discover", label: "Découvrir AUROS" },
+      { href: "/trust", label: "Confiance & conformité" },
+      { href: "/green", label: "AUROS Green" },
+    ],
+  },
+  focusPages: {
+    discover: {
+      title: "Découvrir AUROS",
+      subtitle:
+        "Plateformes, conformité, exemples — explorez à votre rythme, puis lancez le wizard.",
+      cta: "Créer mon dossier",
+    },
+    howItWorks: {
+      title: "Comment ça marche",
+      subtitle: "Un parcours guidé de la description d'actif au dossier institutionnel.",
+      cta: "Lancer le wizard",
+      secondary: "Tester le score d'abord",
+    },
+    trust: {
+      title: "Confiance & conformité",
+      subtitle:
+        "Studio de préparation sérieux — scores indicatifs, data room structurée, pas de conseil juridique.",
+      cta: "Créer mon dossier",
+      secondary: "Comparateur juridictions",
+    },
   },
   score: {
     reassurance:
@@ -121,7 +163,39 @@ const EN: EaseMessages = {
     exploreTitle: "Learn more",
     exploreSubtitle:
       "Platforms, compliance, examples — open only if you want depth.",
-    scorePath: "Simplest path: one sentence below, result in seconds.",
+    scorePath: "Estimate in one sentence first, or start the wizard directly.",
+  },
+  depthLinks: {
+    ariaLabel: "Explore AUROS",
+    eyebrow: "Go deeper",
+    links: [
+      { href: "/estimate", label: "Indicative score" },
+      { href: "/how-it-works", label: "How it works" },
+      { href: "/discover", label: "Discover AUROS" },
+      { href: "/trust", label: "Trust & compliance" },
+      { href: "/green", label: "AUROS Green" },
+    ],
+  },
+  focusPages: {
+    discover: {
+      title: "Discover AUROS",
+      subtitle:
+        "Platforms, compliance, examples — explore at your pace, then start when ready.",
+      cta: "Create my dossier",
+    },
+    howItWorks: {
+      title: "How it works",
+      subtitle: "One guided path from asset description to institutional dossier.",
+      cta: "Start the wizard",
+      secondary: "Try the score first",
+    },
+    trust: {
+      title: "Trust & compliance",
+      subtitle:
+        "Serious preparation studio — indicative scores, structured data room, no legal advice.",
+      cta: "Create my dossier",
+      secondary: "Jurisdiction comparator",
+    },
   },
   score: {
     reassurance:
@@ -167,7 +241,39 @@ const ES: EaseMessages = {
     exploreTitle: "Saber más",
     exploreSubtitle:
       "Plataformas, cumplimiento, ejemplos — solo si quiere profundizar.",
-    scorePath: "Lo más simple: una frase abajo, resultado al instante.",
+    scorePath: "Estime primero en una frase, o inicie el wizard directamente.",
+  },
+  depthLinks: {
+    ariaLabel: "Explorar AUROS",
+    eyebrow: "Profundizar",
+    links: [
+      { href: "/estimate", label: "Puntuación indicativa" },
+      { href: "/how-it-works", label: "Cómo funciona" },
+      { href: "/discover", label: "Descubrir AUROS" },
+      { href: "/trust", label: "Confianza y cumplimiento" },
+      { href: "/green", label: "AUROS Green" },
+    ],
+  },
+  focusPages: {
+    discover: {
+      title: "Descubrir AUROS",
+      subtitle:
+        "Plataformas, cumplimiento, ejemplos — explore a su ritmo, luego inicie el wizard.",
+      cta: "Crear mi dossier",
+    },
+    howItWorks: {
+      title: "Cómo funciona",
+      subtitle: "Un recorrido guiado desde la descripción del activo al dossier institucional.",
+      cta: "Iniciar el wizard",
+      secondary: "Probar la puntuación primero",
+    },
+    trust: {
+      title: "Confianza y cumplimiento",
+      subtitle:
+        "Estudio de preparación serio — puntuaciones indicativas, data room estructurada, sin asesoramiento legal.",
+      cta: "Crear mi dossier",
+      secondary: "Comparador de jurisdicciones",
+    },
   },
   score: {
     reassurance:

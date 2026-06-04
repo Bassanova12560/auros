@@ -107,25 +107,27 @@ export default function AboutPage() {
             ))}
           </dl>
 
-          <div className="mt-12 flex flex-wrap gap-4">
-            <Link
-              href="/jurisdictions"
-              className="text-sm text-white/70 hover:text-white hover:underline"
-            >
-              Jurisdiction comparator →
-            </Link>
+          <div className="mt-12">
             <Link
               href="/wizard"
-              className="text-sm text-white/70 hover:text-white hover:underline"
+              className="inline-flex min-h-[44px] items-center rounded-full bg-white px-8 py-3 text-sm font-semibold text-black transition hover:bg-neutral-200"
             >
               Free wizard →
             </Link>
-            <Link
-              href="/humans.txt"
-              className="text-sm text-white/70 hover:text-white hover:underline"
-            >
-              humans.txt
-            </Link>
+            <nav className="mt-6 flex flex-wrap gap-x-5 gap-y-2">
+              <Link
+                href="/jurisdictions"
+                className="font-mono text-[11px] tracking-wide text-white/40 transition hover:text-white/70"
+              >
+                Jurisdiction comparator →
+              </Link>
+              <Link
+                href="/humans.txt"
+                className="font-mono text-[11px] tracking-wide text-white/35 transition hover:text-white/55"
+              >
+                humans.txt
+              </Link>
+            </nav>
           </div>
 
           <Link

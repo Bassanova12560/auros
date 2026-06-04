@@ -12,8 +12,11 @@ export function Footer() {
   const year = new Date().getFullYear();
 
   const product = [
-    { href: "#score", label: t.nav.score },
+    { href: "/estimate", label: t.nav.score },
     { href: "/wizard", label: t.nav.tokenize },
+    { href: "/how-it-works", label: "How it works" },
+    { href: "/discover", label: "Discover" },
+    { href: "/trust", label: "Trust" },
     { href: "/dashboard", label: t.nav.dossiers },
     { href: COMPARATOR_ROUTES.compare, label: "Compare all RWA yields" },
     { href: "/jurisdictions", label: "Jurisdiction comparator" },

@@ -29,14 +29,14 @@ export function FinalCta() {
             <motion.p variants={fadeUp} className="mx-auto mt-4 max-w-md text-muted">
               {t.finalCta.subtitle}
             </motion.p>
-            <motion.div
-              variants={fadeUp}
-              className="mt-8 flex flex-wrap justify-center gap-4"
-            >
+            <motion.div variants={fadeUp} className="mt-8 flex flex-col items-center gap-4">
               <PrimaryButton href="/wizard">{t.finalCta.wizard}</PrimaryButton>
-              <PrimaryButton href="#score" variant="ghost">
-                {t.finalCta.score}
-              </PrimaryButton>
+              <a
+                href="/estimate"
+                className="font-mono text-[11px] tracking-wide text-white/40 transition hover:text-white/70"
+              >
+                {t.finalCta.score} →
+              </a>
             </motion.div>
           </BezelCard>
         </motion.div>
