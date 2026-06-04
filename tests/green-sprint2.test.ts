@@ -1,7 +1,14 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 
-import { GREEN_RTMS_PILLARS, GREEN_WIZARD_ASSET_TYPE, GREEN_MIN_REFERENCED_TO_HIDE_DEMO } from "../lib/green/constants";
+import {
+  GREEN_LEGACY_REDIRECTS,
+  GREEN_MARKET_ROUTE,
+  GREEN_MY_ROUTE,
+  GREEN_RTMS_PILLARS,
+  GREEN_WIZARD_ASSET_TYPE,
+  GREEN_MIN_REFERENCED_TO_HIDE_DEMO,
+} from "../lib/green/constants";
 import {
   computeGreenRtmsScore,
   isGreenWizardAsset,
@@ -99,5 +106,15 @@ describe("green/emails", () => {
     });
     assert.ok(subject.includes("label"));
     assert.ok(html.includes("Wind Farm PT"));
+  });
+});
+
+describe("green/legacy-redirects", () => {
+  it("maps audit URLs to canonical Green routes", () => {
+    const map = Object.fromEntries(
+      GREEN_LEGACY_REDIRECTS.map((r) => [r.source, r.destination])
+    );
+    assert.equal(map["/green/map"], GREEN_MARKET_ROUTE);
+    assert.equal(map["/green/dashboard"], GREEN_MY_ROUTE);
   });
 });

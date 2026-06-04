@@ -31,19 +31,30 @@ export function GreenHubHeroSection() {
       <p className="mt-4 max-w-2xl text-base leading-relaxed text-white/55">
         {h.hero.valueProp}
       </p>
-      <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
-        <PrimaryButton href={GREEN_MARKET_ROUTE} className={greenBtnClass}>
-          {h.hero.primaryCta}
-        </PrimaryButton>
+      <div className="mt-8 flex w-full min-w-0 max-w-full flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
+        <div className="w-full min-w-0 max-w-full sm:w-auto">
+          <PrimaryButton
+            href={GREEN_MARKET_ROUTE}
+            className={`w-full max-w-full justify-center sm:w-auto ${greenBtnClass}`}
+          >
+            {h.hero.primaryCta}
+          </PrimaryButton>
+        </div>
         <Link
           href={`${GREEN_REGISTER_ROUTE}?type=producer`}
-          className="inline-flex min-h-[44px] items-center justify-center border border-white/20 px-5 font-mono text-[11px] uppercase tracking-wider text-white/70 transition hover:border-white/40 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+          className="inline-flex min-h-[44px] w-full max-w-full items-center justify-center border border-white/20 px-4 font-mono text-[10px] uppercase tracking-wider text-white/70 transition hover:border-white/40 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:w-auto sm:max-w-none sm:px-5 sm:text-[11px]"
         >
           {h.hero.producerSurplusCta}
         </Link>
         <Link
+          href={GREEN_REGISTER_ROUTE}
+          className="inline-flex min-h-[44px] w-full max-w-full items-center justify-center font-mono text-[11px] tracking-wide text-white/55 transition hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:w-auto sm:max-w-none sm:justify-start"
+        >
+          {h.hero.secondaryRegisterCta} →
+        </Link>
+        <Link
           href={GREEN_REGISTRY_ROUTE}
-          className="inline-flex min-h-[44px] items-center font-mono text-[11px] tracking-wide text-green-royal-bright transition hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-royal"
+          className="inline-flex min-h-[44px] w-full max-w-full items-center font-mono text-[11px] tracking-wide text-green-royal-bright transition hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-royal sm:w-auto sm:max-w-none"
         >
           {h.hero.tertiaryCta} →
         </Link>

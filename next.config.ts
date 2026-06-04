@@ -1,6 +1,7 @@
 import type { NextConfig } from "next";
 
 import { LEGACY_COMPARATOR_REDIRECTS } from "./lib/comparators/constants";
+import { GREEN_LEGACY_REDIRECTS } from "./lib/green/constants";
 
 const securityHeaders = [
   { key: "X-DNS-Prefetch-Control", value: "on" },
@@ -31,11 +32,18 @@ const nextConfig: NextConfig = {
     ];
   },
   async redirects() {
-    return LEGACY_COMPARATOR_REDIRECTS.map(({ source, destination }) => ({
-      source,
-      destination,
-      permanent: true,
-    }));
+    return [
+      ...LEGACY_COMPARATOR_REDIRECTS.map(({ source, destination }) => ({
+        source,
+        destination,
+        permanent: true,
+      })),
+      ...GREEN_LEGACY_REDIRECTS.map(({ source, destination, permanent }) => ({
+        source,
+        destination,
+        permanent,
+      })),
+    ];
   },
 };
 

@@ -19,6 +19,13 @@ export const GREEN_PRATICIEN_ROUTE = "/green/praticien";
 export const GREEN_PRATICIEN_EXAM_ROUTE = "/green/praticien/exam";
 export const GREEN_RTMS_ASSISTANT_ROUTE = "/green/rtms-assistant";
 export const GREEN_VERIFY_ROUTE = "/green/verify";
+export const GREEN_MY_ROUTE = "/green/my";
+
+/** Legacy audit URLs → canonical Green routes */
+export const GREEN_LEGACY_REDIRECTS = [
+  { source: "/green/map", destination: GREEN_MARKET_ROUTE, permanent: true },
+  { source: "/green/dashboard", destination: GREEN_MY_ROUTE, permanent: true },
+] as const;
 
 export const GREEN_PRATICIEN_PASS_SCORE = 7;
 export const GREEN_PRATICIEN_QUIZ_LENGTH = 8;
