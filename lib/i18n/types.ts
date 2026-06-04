@@ -15,6 +15,11 @@ export type Messages = {
     start: string;
     menu: string;
   };
+  breadcrumb: {
+    ariaLabel: string;
+    green: string;
+    compare: string;
+  };
   hero: {
     eyebrow: string;
     title: string;

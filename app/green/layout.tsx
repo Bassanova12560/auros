@@ -2,7 +2,7 @@ import "leaflet/dist/leaflet.css";
 
 import { Footer } from "@/app/_components/Footer";
 
-import { GreenHeader } from "./_components/GreenHeader";
+import { GreenSiteHeader } from "./_components/GreenSiteHeader";
 
 export default function GreenLayout({
   children,
@@ -11,7 +11,7 @@ export default function GreenLayout({
 }) {
   return (
     <div className="green-zone min-h-screen bg-green-page font-sans font-light text-white">
-      <GreenHeader />
+      <GreenSiteHeader />
       <main className="page-main">{children}</main>
       <Footer />
     </div>

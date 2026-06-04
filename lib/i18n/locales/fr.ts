@@ -11,6 +11,11 @@ export const fr: Messages = {
     start: "Démarrer",
     menu: "Menu",
   },
+  breadcrumb: {
+    ariaLabel: "Fil d'Ariane",
+    green: "Green",
+    compare: "Compare",
+  },
   hero: {
     eyebrow: "Real World Assets",
     title: "Tokeniser le monde réel.",

@@ -11,6 +11,11 @@ export const es: Messages = {
     start: "Empezar",
     menu: "Menú",
   },
+  breadcrumb: {
+    ariaLabel: "Ruta de navegación",
+    green: "Green",
+    compare: "Compare",
+  },
   hero: {
     eyebrow: "Activos del mundo real",
     title: "Tokenizar el mundo real.",
