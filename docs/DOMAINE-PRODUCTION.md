@@ -12,7 +12,9 @@ Document de référence pour l'équipe produit (PM, QA) et l'administration DNS.
 
 **Consigne PM / QA :** tester **https://auros-delta.vercel.app** (et non `auros.app`) jusqu'à bascule DNS terminée et validation Vercel **Valid**.
 
-## Vérification automatique (2026-06-04)
+## Vérification automatique (2026-06-05 — re-contrôle post Group B)
+
+**Re-vérification :** inchangé — `Server: Squarespace`, A `@` → IP Squarespace (`198.x`), CNAME `www` → `ext-sq.squarespace.com`. Pas de bascule DNS.
 
 ### DNS public (Google 8.8.8.8)
 
