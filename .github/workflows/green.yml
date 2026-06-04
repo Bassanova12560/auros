@@ -1,3 +1,7 @@
+# Optionnel — GitHub n'est pas requis pour AUROS Green en prod.
+# Sans GitHub : scripts/green-autopilot.ps1 | .sh et crons Vercel (vercel.json).
+# Voir docs/GREEN_SANS_GITHUB.md
+
 name: Green marketplace
 
 on:

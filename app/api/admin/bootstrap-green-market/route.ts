@@ -3,15 +3,10 @@ import { join } from "node:path";
 
 import { NextRequest, NextResponse } from "next/server";
 
+import { isCronAuthorized } from "@/lib/cron-auth";
 import { seedGreenMarketData } from "@/lib/green/market/seed";
 
 export const runtime = "nodejs";
-
-function authorized(req: NextRequest): boolean {
-  const secret = process.env.CRON_SECRET?.trim();
-  if (!secret) return false;
-  return req.headers.get("authorization") === `Bearer ${secret}`;
-}
 
 async function runViaPostgres(sql: string): Promise<void> {
   const dbUrl =
@@ -80,7 +75,7 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
-  if (!authorized(req)) {
+  if (!isCronAuthorized(req, { allowDevWithoutSecret: false })) {
     return NextResponse.json({ ok: false, error: "unauthorized" }, { status: 401 });
   }
 
