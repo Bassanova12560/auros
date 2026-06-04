@@ -349,13 +349,13 @@ select.jurisdiction-field option[value=""] {
 
 .page-main--sticky {
   padding-bottom: max(6.5rem, calc(5rem + env(safe-area-inset-bottom)));
-  padding-top: max(5.5rem, calc(4.5rem + env(safe-area-inset-top)));
+  padding-top: 0;
 }
 
 @media (min-width: 768px) {
   .page-main--sticky {
     padding-bottom: 4rem;
-    padding-top: 7rem;
+    padding-top: 0;
   }
 }
 
@@ -601,10 +601,24 @@ select.jurisdiction-field option[value=""] {
   background-size: 120px 120px;
 }
 
-.leaflet-container {
-  background: #0c1210;
+.green-market-map .leaflet-container {
+  background: #e8ece9;
   font-family: var(--font-sans);
   z-index: 1;
+}
+
+.green-market-map .leaflet-tile-pane img {
+  filter: none;
+}
+
+.green-market-map .leaflet-control-zoom a {
+  color: #1a1a1a;
+  background: rgba(255, 255, 255, 0.92);
+  border-color: rgba(0, 0, 0, 0.12);
+}
+
+.green-market-map .leaflet-control-zoom a:hover {
+  background: #fff;
 }
 
 .green-market-marker {

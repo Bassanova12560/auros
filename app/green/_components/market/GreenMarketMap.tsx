@@ -28,7 +28,17 @@ type Props = {
 };
 
 const MAP_SHELL_CLASS =
-  "h-[min(280px,42vh)] min-h-[240px] w-full touch-pan-x touch-pan-y border border-white/[0.08] sm:h-[min(380px,50vh)] md:h-[min(420px,55vh)]";
+  "green-market-map h-[min(420px,55vh)] min-h-[400px] w-full touch-pan-x touch-pan-y border border-white/[0.08]";
+
+const TILE_URL = "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png";
+const TILE_ATTRIBUTION =
+  '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/attributions">CARTO</a>';
+
+function scheduleInvalidateSize(map: import("leaflet").Map) {
+  requestAnimationFrame(() => {
+    map.invalidateSize({ animate: false });
+  });
+}
 
 export function GreenMarketMap({
   actors,
@@ -46,13 +56,17 @@ export function GreenMarketMap({
   const mapRef = useRef<import("leaflet").Map | null>(null);
   const layerRef = useRef<import("leaflet").LayerGroup | null>(null);
   const circleRef = useRef<import("leaflet").Circle | null>(null);
+  const isMobileRef = useRef(false);
   const [isMobile, setIsMobile] = useState(false);
   const [mapReady, setMapReady] = useState(false);
   const [mapFailed, setMapFailed] = useState(false);
 
   useEffect(() => {
     const mq = window.matchMedia("(max-width: 639px)");
-    const update = () => setIsMobile(mq.matches);
+    const update = () => {
+      isMobileRef.current = mq.matches;
+      setIsMobile(mq.matches);
+    };
     update();
     mq.addEventListener("change", update);
     return () => mq.removeEventListener("change", update);
@@ -74,7 +88,6 @@ export function GreenMarketMap({
 
     void (async () => {
       try {
-        await import("leaflet/dist/leaflet.css");
         const L = (await import("leaflet")).default;
         if (cancelled || !containerRef.current) return;
 
@@ -86,19 +99,25 @@ export function GreenMarketMap({
           zoom: fitGlobal ? 3 : 6,
           scrollWheelZoom: true,
           attributionControl: true,
+          zoomControl: false,
           minZoom: fitGlobal ? 2 : 4,
+          maxZoom: 18,
           worldCopyJump: true,
         });
 
-        const tiles = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-          attribution:
-            '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a>',
-          maxZoom: 18,
+        L.control
+          .zoom({ position: isMobileRef.current ? "bottomright" : "topright" })
+          .addTo(map);
+
+        const tiles = L.tileLayer(TILE_URL, {
+          attribution: TILE_ATTRIBUTION,
+          subdomains: "abcd",
+          maxZoom: 19,
         });
 
         tiles.on("tileerror", () => {
           tileErrors += 1;
-          if (tileErrors >= 3 && !cancelled) {
+          if (tileErrors >= 12 && !cancelled) {
             setMapFailed(true);
             map.remove();
             mapRef.current = null;
@@ -107,23 +126,28 @@ export function GreenMarketMap({
 
         tiles.addTo(map);
 
-        const initPad: [number, number] = isMobile ? [20, 20] : [12, 12];
+        const initPad: [number, number] = isMobileRef.current ? [20, 20] : [12, 12];
         if (fitGlobal) {
           map.fitBounds(worldBounds, { padding: initPad, maxZoom: 4 });
         }
 
         layerRef.current = L.layerGroup().addTo(map);
         mapRef.current = map;
-        setMapReady(true);
+
+        map.whenReady(() => {
+          if (cancelled) return;
+          scheduleInvalidateSize(map);
+          setMapReady(true);
+        });
 
         loadTimeout = setTimeout(() => {
-          if (!cancelled && tileErrors > 0) {
+          if (!cancelled && tileErrors >= 12) {
             setMapFailed(true);
             map.remove();
             mapRef.current = null;
             layerRef.current = null;
           }
-        }, 8000);
+        }, 12000);
       } catch {
         if (!cancelled) setMapFailed(true);
       }
@@ -138,7 +162,27 @@ export function GreenMarketMap({
       circleRef.current = null;
       setMapReady(false);
     };
-  }, [center.lat, center.lon, fitGlobal, worldBoundsKey, isMobile, mapFailed]);
+  }, [center.lat, center.lon, fitGlobal, worldBoundsKey, mapFailed]);
+
+  useEffect(() => {
+    if (!mapReady || mapFailed || !containerRef.current) return;
+
+    const map = mapRef.current;
+    if (!map) return;
+
+    const ro = new ResizeObserver(() => {
+      map.invalidateSize({ animate: false });
+    });
+    ro.observe(containerRef.current);
+
+    const onResize = () => map.invalidateSize({ animate: false });
+    window.addEventListener("resize", onResize);
+
+    return () => {
+      ro.disconnect();
+      window.removeEventListener("resize", onResize);
+    };
+  }, [mapReady, mapFailed]);
 
   useEffect(() => {
     if (!mapReady || mapFailed) return;
@@ -219,6 +263,7 @@ export function GreenMarketMap({
           const pad: [number, number] = isMobile ? [24, 20] : [16, 16];
           map.fitBounds(worldBounds, { padding: pad, maxZoom: 4 });
         }
+        scheduleInvalidateSize(map);
         return;
       }
 
@@ -234,6 +279,7 @@ export function GreenMarketMap({
       } else {
         map.setView([center.lat, center.lon], 6);
       }
+      scheduleInvalidateSize(map);
     })();
   }, [
     mapReady,
@@ -262,20 +308,20 @@ export function GreenMarketMap({
 
   return (
     <div className={`relative ${MAP_SHELL_CLASS} ${className}`}>
+      <div
+        ref={containerRef}
+        role="region"
+        aria-label={mapAriaLabel}
+        className="absolute inset-0 z-10 h-full w-full"
+      />
       {!mapReady ? (
         <GreenMarketMapStaticFallback
           actors={actors}
           actorTypeLabels={actorTypeLabels}
           mapAriaLabel={mapAriaLabel}
-          className="absolute inset-0 z-0"
+          className="absolute inset-0 z-20"
         />
       ) : null}
-      <div
-        ref={containerRef}
-        role="region"
-        aria-label={mapAriaLabel}
-        className={`h-full w-full ${mapReady ? "relative z-10" : "absolute inset-0 z-10 opacity-0"}`}
-      />
     </div>
   );
 }
