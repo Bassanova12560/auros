@@ -3,10 +3,52 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 
-import { ContentFaqList } from "@/app/_components/ContentPageLayout";
 import { useTranslations } from "@/app/_components/i18n/LocaleProvider";
 import { SectionHeader } from "@/app/_components/ui/SectionHeader";
 import { fadeUp, staggerContainer } from "@/lib/motion";
+
+function FaqAccordion({
+  items,
+}: {
+  items: ReadonlyArray<{ question: string; answer: string }>;
+}) {
+  const [openIndex, setOpenIndex] = useState<number | null>(0);
+
+  return (
+    <div className="divide-y divide-white/[0.06]">
+      {items.map((item, index) => {
+        const isOpen = openIndex === index;
+        return (
+          <div key={item.question}>
+            <button
+              type="button"
+              onClick={() => setOpenIndex(isOpen ? null : index)}
+              aria-expanded={isOpen}
+              aria-controls={`how-faq-panel-${index}`}
+              className="flex w-full items-start justify-between gap-4 py-5 text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
+            >
+              <span className="font-display text-base font-medium text-white md:text-lg">
+                {item.question}
+              </span>
+              <span className="mt-1 shrink-0 font-mono text-sm text-white/35" aria-hidden>
+                {isOpen ? "−" : "+"}
+              </span>
+            </button>
+            <div
+              id={`how-faq-panel-${index}`}
+              className={`overflow-hidden transition-all duration-300 ${
+                isOpen ? "max-h-96 pb-5 opacity-100" : "max-h-0 opacity-0"
+              }`}
+              aria-hidden={!isOpen}
+            >
+              <p className="text-sm leading-relaxed text-muted">{item.answer}</p>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
 
 export function HowItWorksTimeline() {
   const t = useTranslations();
@@ -84,7 +126,7 @@ export function HowItWorksTimeline() {
         <div className="mt-16 border-t border-white/[0.06] pt-16">
           <h2 className="font-display text-xl font-semibold text-white">{t.howItWorks.faqTitle}</h2>
           <div className="mt-8">
-            <ContentFaqList items={[...t.howItWorks.faq]} />
+            <FaqAccordion items={[...t.howItWorks.faq]} />
           </div>
         </div>
       </div>

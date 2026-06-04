@@ -13,7 +13,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import { BezelCard } from "./ui/BezelCard";
 import { SectionHeader } from "./ui/SectionHeader";
 import { PrimaryButton } from "./ui/PrimaryButton";
-import { AurosButton } from "./AurosButton";
 import { track } from "@/lib/analytics";
 import {
   AUROS_EMAIL_CAPTURE_KEY,
@@ -218,19 +217,17 @@ export function ScoreWidget() {
                   </p>
                   <div className="mt-3 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
                     {t.score.quickExamples.map((example) => (
-                      <AurosButton
+                      <button
                         key={example}
                         type="button"
-                        variant="ghost"
-                        showArrow={false}
-                        className="!justify-start !px-4 !py-2.5 text-left text-xs sm:min-w-[200px] sm:flex-1"
                         onClick={() => {
                           setQuery(example);
                           setQueryError(null);
                         }}
+                        className="rounded-full border border-white/10 px-4 py-2.5 text-left font-mono text-[11px] text-white/55 transition hover:border-white/25 hover:bg-white/[0.04] hover:text-white/80 sm:min-w-[200px] sm:flex-1"
                       >
                         {example}
-                      </AurosButton>
+                      </button>
                     ))}
                   </div>
                   <input
@@ -394,21 +391,46 @@ function EstimateExampleCard() {
   const badges = [card.badgeLegal, card.badgeKyc, card.badgeMica, card.badgeDataRoom];
 
   return (
-    <aside className="rounded-2xl border border-white/[0.08] bg-white/[0.02] p-5 md:p-6" aria-label={card.title}>
-      <p className="font-mono text-[10px] uppercase tracking-wider text-white/35">{card.title}</p>
-      <div className="mt-4 flex items-baseline gap-2">
-        <span className="font-display text-4xl font-semibold tabular-nums text-white">78</span>
-        <span className="font-display text-xl text-white/30">/100</span>
+    <aside className="w-full lg:max-w-md" aria-label={card.title}>
+      <div className="bezel-outer">
+        <div className="bezel-inner p-5 md:p-6">
+          <div className="flex items-center justify-between">
+            <p className="font-mono text-[9px] uppercase tracking-[0.24em] text-white/45">
+              {card.title}
+            </p>
+            <span className="rounded-full border border-white/15 px-2 py-0.5 font-mono text-[8px] uppercase tracking-wider text-white/50">
+              Preview
+            </span>
+          </div>
+
+          <div className="mt-6 rounded-xl border border-white/[0.08] bg-white/[0.02] p-4">
+            <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-white/40">
+              Score tokenisation
+            </p>
+            <p className="mt-2 font-display text-4xl font-semibold tabular-nums text-white">
+              78
+              <span className="text-xl text-white/30">/100</span>
+            </p>
+            <p className="mt-1 text-sm text-white/70">{card.readiness}</p>
+            <div className="mt-3 h-1 overflow-hidden rounded-full bg-white/[0.06]">
+              <div className="h-full w-[78%] rounded-full bg-white/70" />
+            </div>
+          </div>
+
+          <div className="mt-4 grid grid-cols-2 gap-2">
+            {badges.map((badge) => (
+              <div
+                key={badge}
+                className="rounded-lg border border-white/[0.06] px-2.5 py-2 font-mono text-[9px] uppercase tracking-wider text-white/45"
+              >
+                {badge}
+              </div>
+            ))}
+          </div>
+
+          <p className="mt-5 text-xs leading-relaxed text-white/35">{card.disclaimer}</p>
+        </div>
       </div>
-      <p className="mt-2 text-sm text-white/70">{card.readiness}</p>
-      <div className="mt-4 flex flex-wrap gap-2">
-        {badges.map((badge) => (
-          <span key={badge} className="rounded-full border border-white/[0.1] bg-white/[0.03] px-3 py-1 font-mono text-[10px] text-white/55">
-            {badge}
-          </span>
-        ))}
-      </div>
-      <p className="mt-5 text-xs leading-relaxed text-white/35">{card.disclaimer}</p>
     </aside>
   );
 }

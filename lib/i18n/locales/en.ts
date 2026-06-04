@@ -237,7 +237,7 @@ export const en: Messages = {
     step3Desc: "Send to AUROS team, MiCA framing, concrete next steps.",
     step1Duration: "~2 min",
     step2Duration: "~8 min",
-    step3Duration: "within 48h",
+    step3Duration: "Response within 48h",
     screenshotPlaceholder: "Wizard screenshot",
     faqTitle: "Frequently asked questions",
     faq: [

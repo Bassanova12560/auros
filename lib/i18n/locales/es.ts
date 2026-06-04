@@ -236,7 +236,7 @@ export const es: Messages = {
     step3Desc: "Envío al equipo AUROS, marco MiCA, próximos pasos.",
     step1Duration: "~2 min",
     step2Duration: "~8 min",
-    step3Duration: "en 48 h",
+    step3Duration: "Respuesta en 48 h",
     screenshotPlaceholder: "Captura de pantalla wizard",
     faqTitle: "Preguntas frecuentes",
     faq: [

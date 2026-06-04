@@ -38,7 +38,7 @@ function parseFeesSortValue(fees: string): number {
   if (!matches?.length) return Number.POSITIVE_INFINITY;
   const values = matches.map(Number).filter(Number.isFinite);
   if (!values.length) return Number.POSITIVE_INFINITY;
-  return Math.min(...values);
+  return values.reduce((sum, value) => sum + value, 0) / values.length;
 }
 
 function multiProfileBadge(
@@ -54,7 +54,7 @@ function multiProfileBadge(
 }
 
 function productRowKey(product: HubProduct): string {
-  return `${product.row.platform}::${product.row.product}`;
+  return `${product.row.platform}::${product.row.product}::${product.row.apy}`;
 }
 
 export function CompareHubContent({ payload }: CompareHubContentProps) {

@@ -53,7 +53,10 @@ function toHubProducts(
 }
 
 function productDedupeKey(product: HubProduct): string {
-  return `${product.row.platform.trim().toLowerCase()}::${product.row.product.trim().toLowerCase()}`;
+  const platform = product.row.platform.trim().toLowerCase();
+  const name = product.row.product.trim().toLowerCase();
+  const apy = product.row.apy.toFixed(4);
+  return `${platform}::${name}::${apy}`;
 }
 
 function dedupeHubProducts(products: HubProduct[]): HubProduct[] {
