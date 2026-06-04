@@ -11,7 +11,7 @@ import { valueInEur } from "@/lib/platform-match";
 import type { Currency } from "@/lib/wizard-types";
 
 const inputClass =
-  "w-full rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-sm text-white placeholder:text-white/40 outline-none focus:border-white/40";
+  "auros-input bg-black/40";
 
 type ConciergeSectionProps = {
   score: number | undefined;

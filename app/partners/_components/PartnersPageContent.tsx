@@ -22,13 +22,11 @@ export function PartnersPageContent() {
       <main className="page-main page-main--nav min-h-dvh pt-24 text-white">
         <section className="border-b border-white/[0.06] px-4 py-16 md:px-6 md:py-28 lg:py-36">
           <div className="page-inner page-inner--6xl mx-auto">
-            <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-white">
-              {m.eyebrow}
-            </p>
-            <h1 className="mt-6 max-w-3xl font-display text-4xl font-semibold tracking-tight md:text-6xl">
+            <p className="page-eyebrow">{m.eyebrow}</p>
+            <h1 className="page-title mt-5 max-w-3xl text-4xl md:text-5xl">
               {m.title}
             </h1>
-            <p className="mt-6 max-w-xl text-lg text-muted">{m.subtitle}</p>
+            <p className="page-intro mt-6 max-w-xl text-lg">{m.subtitle}</p>
             <div className="mt-10">
               <PrimaryButton href="#contact">{m.cta}</PrimaryButton>
             </div>

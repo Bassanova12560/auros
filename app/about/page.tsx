@@ -65,13 +65,11 @@ export default function AboutPage() {
       <Nav />
       <main className="page-main page-main--nav text-white">
         <div className="page-inner page-inner--2xl mx-auto">
-          <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-emerald-300/80">
-            About
-          </p>
-          <h1 className="mt-4 font-display text-3xl font-semibold md:text-4xl">
+          <p className="page-eyebrow">About</p>
+          <h1 className="page-title">
             AUROS — RWA tokenization, jurisdiction-first
           </h1>
-          <p className="mt-6 max-w-2xl text-sm leading-relaxed text-muted">
+          <p className="page-intro text-sm">
             AUROS is a B2B platform for issuers structuring real-world asset
             tokenization. Compare eight jurisdictions on fees, licence timelines,
             investor tax and KYC — then prepare your asset dossier with a free
@@ -86,7 +84,7 @@ export default function AboutPage() {
             {CREDENTIALS.map((row) => (
               <div
                 key={row.label}
-                className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-5"
+                className="card-flat p-5"
               >
                 <dt className="font-mono text-[10px] uppercase tracking-[0.18em] text-white/35">
                   {row.label}
@@ -110,14 +108,14 @@ export default function AboutPage() {
           <div className="mt-12">
             <Link
               href="/wizard"
-              className="inline-flex min-h-[44px] items-center rounded-full bg-white px-8 py-3 text-sm font-semibold text-black transition hover:bg-neutral-200"
+              className="auros-btn auros-btn--primary"
             >
               Free wizard →
             </Link>
             <nav className="mt-6 flex flex-wrap gap-x-5 gap-y-2">
               <Link
                 href="/jurisdictions"
-                className="font-mono text-[11px] tracking-wide text-white/40 transition hover:text-white/70"
+                className="auros-btn auros-btn--link"
               >
                 Jurisdiction comparator →
               </Link>

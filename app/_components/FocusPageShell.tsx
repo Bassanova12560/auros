@@ -32,7 +32,7 @@ export function FocusPageShell({
       <main
         className={`page-main page-main--nav text-white ${className}`}
       >
-        <div className={`page-inner ${WIDTH_CLASS[width]} mx-auto px-4 pb-20 md:px-6`}>
+        <div className={`page-inner ${WIDTH_CLASS[width]} mx-auto px-4 pb-20 pt-4 md:px-6 md:pt-6`}>
           {children}
         </div>
       </main>

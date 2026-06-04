@@ -15,7 +15,7 @@ export function AcademyHeader({ compact = false }: { compact?: boolean }) {
       }
     >
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4">
-        <Link href={ACADEMY_ROUTE} className="group min-w-0">
+        <Link href={ACADEMY_ROUTE} className="interactive-subtle group min-w-0">
           <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-white/40">
             AUROS
           </p>
@@ -27,7 +27,7 @@ export function AcademyHeader({ compact = false }: { compact?: boolean }) {
           <LanguageSwitcher ariaLabel="Language" />
           <Link
             href="/"
-            className="font-mono text-[10px] uppercase tracking-wider text-white/40 hover:text-white/70"
+            className="auros-btn auros-btn--link uppercase tracking-wider"
           >
             auros.app →
           </Link>

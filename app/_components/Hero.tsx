@@ -67,20 +67,14 @@ export function Hero() {
             >
               <Link
                 href="/estimate"
-                className="font-mono text-[11px] tracking-wide text-white/40 transition hover:text-white/70"
+                className="auros-btn auros-btn--link"
               >
                 {t.hero.ctaEstimate} →
               </Link>
-              <Link
-                href="/how-it-works"
-                className="font-mono text-[11px] tracking-wide text-white/35 transition hover:text-white/55"
-              >
+              <Link href="/how-it-works" className="auros-btn auros-btn--link">
                 {locale === "fr" ? "Comment ça marche" : locale === "es" ? "Cómo funciona" : "How it works"} →
               </Link>
-              <Link
-                href="/wizard?expert=1"
-                className="font-mono text-[11px] tracking-wide text-white/30 transition hover:text-white/50"
-              >
+              <Link href="/wizard?expert=1" className="auros-btn auros-btn--link opacity-90">
                 {expert.expressTitle} →
               </Link>
             </nav>

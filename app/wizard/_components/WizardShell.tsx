@@ -129,14 +129,14 @@ export function WizardShell({
       ) : null}
 
       <div
-        className="mb-10 h-px w-full overflow-hidden rounded-full bg-white/[0.06]"
+        className="mb-10 h-0.5 w-full overflow-hidden rounded-full bg-white/[0.05]"
         role="progressbar"
         aria-valuemin={0}
         aria-valuemax={totalSteps}
         aria-valuenow={step}
       >
         <div
-          className="h-full bg-white/70 transition-[width] duration-500 ease-out"
+          className="h-full rounded-full bg-[color-mix(in_srgb,var(--auros-green-warm)_75%,white)] transition-[width] duration-300 ease-out"
           style={{ width: `${progressPct}%` }}
         />
       </div>
@@ -160,7 +160,7 @@ export function WizardShell({
           type="button"
           onClick={onBack}
           disabled={disableBack}
-          className="min-h-[44px] rounded-xl border border-white/10 px-4 py-2.5 font-mono text-xs uppercase tracking-wider text-white/70 transition hover:border-white/25 hover:text-white disabled:pointer-events-none disabled:opacity-30"
+          className="auros-focus interactive-subtle min-h-[44px] rounded-xl border border-white/10 px-4 py-2.5 font-mono text-xs uppercase tracking-wider text-white/70 hover:border-white/25 hover:text-white disabled:pointer-events-none disabled:opacity-30"
         >
           {shell.back}
         </button>
@@ -188,7 +188,7 @@ export function WizardShell({
               onNext();
             }}
             aria-disabled={!isStepValid}
-            className={`min-h-[44px] rounded-xl border px-5 py-2.5 font-mono text-xs uppercase tracking-wider transition ${
+            className={`auros-focus interactive-subtle min-h-[44px] rounded-xl border px-5 py-2.5 font-mono text-xs uppercase tracking-wider ${
               isStepValid
                 ? "border-white bg-white text-void hover:bg-white/90"
                 : "border-white/20 bg-white/20 text-white/40"
