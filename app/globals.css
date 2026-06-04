@@ -360,6 +360,45 @@ select.jurisdiction-field option[value=""] {
   }
 }
 
+/* AUROS Green hub — subtle entrance */
+@keyframes green-hub-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Focus page fade — same motion as green hub */
+.focus-fade-in,
+.green-hub-fade-in {
+  animation: green-hub-fade-in 0.65s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.focus-fade-in-delay,
+.green-hub-fade-in-delay {
+  animation: green-hub-fade-in 0.65s cubic-bezier(0.16, 1, 0.3, 1) 0.12s both;
+}
+
+.focus-fade-in-delay-2,
+.green-hub-fade-in-delay-2 {
+  animation: green-hub-fade-in 0.65s cubic-bezier(0.16, 1, 0.3, 1) 0.24s both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .focus-fade-in,
+  .focus-fade-in-delay,
+  .focus-fade-in-delay-2,
+  .green-hub-fade-in,
+  .green-hub-fade-in-delay,
+  .green-hub-fade-in-delay-2 {
+    animation: none;
+  }
+}
+
 /* AUROS Green — photo forêt vue du ciel, incrustée dans le mot Green */
 .green-forest-text {
   background-image: url("/green/forest-canopy.jpg");

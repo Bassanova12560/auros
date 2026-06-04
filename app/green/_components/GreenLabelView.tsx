@@ -18,13 +18,13 @@ export function GreenLabelView() {
   const l = m.label;
 
   return (
-    <div className="page-inner page-inner--3xl mx-auto px-4 pb-20 pt-12 md:px-6 md:pt-14">
+    <div className="page-inner page-inner--3xl mx-auto px-4 pb-24 pt-16 md:px-6 md:pt-20">
       <GreenPageHeader eyebrow={l.eyebrow} title={l.title} intro={l.intro} compact />
 
-      <GreenPanel className="mt-10">
+      <GreenPanel className="mt-12">
         <div className="p-6 md:p-8">
           <GreenSectionTitle>{l.scopeTitle}</GreenSectionTitle>
-          <div className="mt-6 grid gap-8 md:grid-cols-2">
+          <div className="mt-8 grid gap-10 md:grid-cols-2 md:gap-12">
             <ul className="space-y-2 text-sm text-neutral-300">
               {l.scopeMeasures.map((item) => (
                 <li key={item} className="flex gap-2">
@@ -45,7 +45,7 @@ export function GreenLabelView() {
         </div>
       </GreenPanel>
 
-      <div className="mt-10">
+      <div className="mt-12">
         <GreenLabelForm />
       </div>
 

@@ -91,23 +91,25 @@ export function GreenPageHeader({
   compact?: boolean;
 }) {
   return (
-    <header className="max-w-3xl border-l border-white/[0.08] pl-6 md:pl-8">
-      <p className="font-mono text-[11px] tracking-wide text-accent-muted">{eyebrow}</p>
+    <header className="max-w-3xl">
+      <p className="font-mono text-[11px] tracking-wide text-white/45">{eyebrow}</p>
       <h1
-        className={`mt-3 font-display font-semibold tracking-[-0.02em] text-white ${
+        className={`mt-4 font-display font-semibold tracking-[-0.02em] text-white ${
           compact ? "text-3xl md:text-4xl" : "text-4xl md:text-5xl"
         }`}
       >
         {title}
       </h1>
-      <p className="mt-5 max-w-2xl text-base leading-relaxed text-muted md:text-lg">{intro}</p>
+      <p className="mt-6 max-w-2xl text-base font-light leading-relaxed text-white/55 md:text-lg">
+        {intro}
+      </p>
     </header>
   );
 }
 
 export function GreenSectionTitle({ children }: { children: ReactNode }) {
   return (
-    <h2 className="font-mono text-[11px] tracking-wide text-accent-muted">{children}</h2>
+    <h2 className="font-mono text-[11px] tracking-wide text-white/45">{children}</h2>
   );
 }
 

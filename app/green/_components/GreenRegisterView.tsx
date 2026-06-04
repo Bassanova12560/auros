@@ -14,9 +14,9 @@ export function GreenRegisterView() {
   const r = m.register;
 
   return (
-    <div className="page-inner page-inner--3xl mx-auto px-4 pb-24 pt-12 md:px-6 md:pt-16">
+    <div className="page-inner page-inner--3xl mx-auto px-4 pb-24 pt-16 md:px-6 md:pt-20">
       <GreenPageHeader eyebrow={r.eyebrow} title={r.title} intro={r.intro} compact />
-      <div className="mt-10">
+      <div className="mt-12">
         <Suspense
           fallback={
             <div className="h-48 animate-pulse border border-white/[0.08] bg-white/[0.02]" />

@@ -35,7 +35,7 @@ export function GreenHubEngagementSection({ registry }: Props) {
       <GreenSectionTitle>{label}</GreenSectionTitle>
       <div
         id="green-engagement"
-        className="mt-6 border border-white/[0.08] bg-black"
+        className="mt-6"
       >
         <GreenHubRegistryWidget stats={registryStats(registry)} />
       </div>

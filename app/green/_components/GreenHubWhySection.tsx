@@ -22,13 +22,13 @@ export function GreenHubWhySection() {
           {w.rtmsBadge}
         </Link>
       </div>
-      <ul className="mt-6 grid gap-px border border-white/[0.08] bg-white/[0.08] md:grid-cols-3">
+      <ul className="mt-6 space-y-8 md:grid md:grid-cols-3 md:gap-10 md:space-y-0">
         {w.items.map((item) => (
-          <li key={item.title} className="bg-black px-5 py-6 md:px-6 md:py-7">
-            <p className="font-display text-base font-semibold tracking-[-0.01em] text-white">
+          <li key={item.title}>
+            <p className="font-display text-base font-medium tracking-[-0.01em] text-white">
               {item.title}
             </p>
-            <p className="mt-2 text-sm leading-relaxed text-white/45">{item.body}</p>
+            <p className="mt-2 text-sm font-light leading-relaxed text-white/45">{item.body}</p>
           </li>
         ))}
       </ul>

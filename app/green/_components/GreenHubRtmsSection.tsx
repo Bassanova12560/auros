@@ -28,18 +28,18 @@ export function GreenHubRtmsSection() {
   return (
     <section aria-labelledby="green-rtms">
       <GreenSectionTitle>{s.title}</GreenSectionTitle>
-      <p id="green-rtms" className="mt-3 max-w-2xl text-base leading-relaxed text-white/55">
+      <p id="green-rtms" className="mt-4 max-w-2xl text-base font-light leading-relaxed text-white/50">
         {s.intro}
       </p>
-      <p className="mt-2 font-mono text-[10px] uppercase tracking-wider text-white/35">
+      <p className="mt-2 font-mono text-[10px] uppercase tracking-wider text-white/30">
         {s.statusNote}
       </p>
 
-      <div className="mt-8 grid grid-cols-2 gap-px border border-white/[0.08] bg-white/[0.08] md:grid-cols-4">
+      <div className="mt-8 grid grid-cols-2 gap-8 md:grid-cols-4 md:gap-10">
         {GREEN_RTMS_PILLARS.map((key) => {
           const pillar = pillars[key];
           return (
-            <div key={key} className="bg-black px-4 py-5 md:px-5 md:py-6">
+            <div key={key}>
               <span className="font-display text-2xl font-semibold text-green-royal-bright md:text-3xl">
                 {PILLAR_LETTERS[key]}
               </span>

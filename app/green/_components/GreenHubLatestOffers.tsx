@@ -27,25 +27,26 @@ export function GreenHubLatestOffers({ offers }: Props) {
   if (latest.length === 0) return null;
 
   return (
-    <section className="mt-14 md:mt-16" aria-labelledby="green-latest-offers">
+    <section aria-labelledby="green-latest-offers">
       <GreenSectionTitle>{h.title}</GreenSectionTitle>
-      <ul className="mt-6 grid gap-px border border-white/[0.08] bg-white/[0.08] md:grid-cols-3">
+      <ul className="mt-6 divide-y divide-white/[0.06]">
         {latest.map((offer) => (
-          <li key={offer.id} className="flex flex-col bg-black px-5 py-5 md:px-6 md:py-6">
-            <Link href={greenMarketOfferPath(offer.id)} className="group flex flex-1 flex-col">
+          <li key={offer.id} className="py-5 first:pt-0 md:py-6">
+            <Link href={greenMarketOfferPath(offer.id)} className="group block max-w-xl">
               <div className="flex flex-wrap items-center gap-2">
-                <p className="font-display text-base font-semibold text-white transition group-hover:text-green-royal-bright">
+                <p className="font-display text-base font-medium text-white transition-colors duration-300 group-hover:text-green-royal-bright">
                   {offer.actorName}
                 </p>
                 <GreenListingBadge tier={offer.listingTier} labels={mm.listingTier} />
               </div>
-              <p className="mt-2 font-mono text-[10px] uppercase tracking-wider text-white/40">
+              <p className="mt-2 font-mono text-[10px] uppercase tracking-wider text-white/35">
                 {mm.sides[offer.side]} · {mm.energyTypes[offer.energyType]}
               </p>
-              <p className="mt-2 text-sm text-white/55">
-                {formatMarketNumber(offer.volumeKwh, locale)} kWh · {offer.pricePerKwh.toFixed(3)} €/kWh
+              <p className="mt-2 text-sm font-light text-white/50">
+                {formatMarketNumber(offer.volumeKwh, locale)} kWh · {offer.pricePerKwh.toFixed(3)}{" "}
+                €/kWh
               </p>
-              <p className="mt-1 text-sm text-white/40">
+              <p className="mt-1 text-sm font-light text-white/35">
                 {formatGreenMarketLocation(offer.city, offer.country)}
               </p>
             </Link>
@@ -55,7 +56,7 @@ export function GreenHubLatestOffers({ offers }: Props) {
       <Link
         id="green-latest-offers"
         href={GREEN_MARKET_ROUTE}
-        className="mt-5 inline-flex min-h-[44px] items-center font-mono text-[11px] uppercase tracking-wider text-green-royal-bright transition hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-royal"
+        className="mt-6 inline-flex min-h-[44px] items-center font-mono text-[11px] tracking-wide text-white/45 transition-colors duration-300 hover:text-green-royal-bright focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-royal"
       >
         {h.viewAll} →
       </Link>
