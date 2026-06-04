@@ -25,6 +25,7 @@ import { GREEN_MARKET_CENTER } from "../lib/green/market/types";
 import { GLOBAL_DEMO_ACTORS } from "../lib/green/market/global-demo-data";
 import { getGreenMarketSnapshot, resolveLiveMarketActors } from "../lib/green/market/green-market-db";
 import { geocodeCity } from "../lib/green/market/geocode";
+import { greenMarketMarkerHtml } from "../lib/green/market/markers";
 import { matchesGreenMarketSearch } from "../lib/green/market/search";
 import {
   formatGreenMarketLocation,
@@ -99,6 +100,19 @@ describe("green/market-data", () => {
 
   it("exports geocodeCity for worldwide registration", () => {
     assert.equal(typeof geocodeCity, "function");
+  });
+});
+
+describe("green/market-markers", () => {
+  it("uses SVG markers instead of unicode symbols", () => {
+    const forbidden = ["☀", "⚡", "▣", "⌂"];
+    for (const type of ["producer", "storer", "charger", "consumer"] as const) {
+      const html = greenMarketMarkerHtml(type);
+      for (const ch of forbidden) {
+        assert.equal(html.includes(ch), false, `${type} must not include ${ch}`);
+      }
+      assert.ok(html.includes("<svg"), type);
+    }
   });
 });
 
@@ -253,6 +267,21 @@ describe("green/compare-i18n", () => {
       assert.ok(s.assistant.length > 0);
     });
   }
+});
+
+describe("green/register-form-ssr", () => {
+  it("register page source includes server input elements", async () => {
+    const { readFile } = await import("node:fs/promises");
+    const page = await readFile("app/green/register/page.tsx", "utf8");
+    const serverForm = await readFile("app/green/_components/GreenRegisterFormServer.tsx", "utf8");
+    const clientForm = await readFile(
+      "app/green/_components/market/GreenActorRegisterForm.tsx",
+      "utf8"
+    );
+    assert.ok(page.includes("GreenRegisterFormServer"));
+    assert.ok(serverForm.includes('type="email"'));
+    assert.ok(clientForm.includes("<input"));
+  });
 });
 
 describe("green/market-routes", () => {

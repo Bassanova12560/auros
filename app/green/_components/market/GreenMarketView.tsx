@@ -55,18 +55,14 @@ import {
   GreenSectionTitle,
 } from "../green-ui";
 import { GreenOfferForm } from "./GreenOfferForm";
+import { GreenMarketMapLegend } from "./GreenMarketMapLegend";
 import { greenMarketOfferPath } from "@/lib/green/market/offer-routes";
 
 const OFFERS_PAGE_SIZE = 10;
 
 const GreenMarketMap = dynamic(
   () => import("./GreenMarketMap").then((m) => m.GreenMarketMap),
-  {
-    ssr: false,
-      loading: () => (
-      <div className="min-h-[240px] h-[min(280px,42vh)] animate-pulse bg-white/[0.04] sm:h-[min(380px,50vh)] md:h-[min(420px,55vh)]" />
-    ),
-  }
+  { ssr: false }
 );
 
 type Props = {
@@ -451,6 +447,14 @@ export function GreenMarketView({ snapshot }: Props) {
             }}
             popupViewSheetLabel={mm.popupViewSheet}
             mapAriaLabel={mm.mapTitle}
+          />
+          <GreenMarketMapLegend
+            labels={{
+              producer: mm.actorTypes.producer,
+              storer: mm.actorTypes.storer,
+              charger: mm.actorTypes.charger,
+              consumer: mm.actorTypes.consumer,
+            }}
           />
         </div>
         {filteredActors.length > 0 ? (

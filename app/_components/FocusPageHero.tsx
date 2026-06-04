@@ -18,11 +18,12 @@ export function FocusPageHero({ page, secondaryHref }: Props) {
   const copy = getEaseMessages(locale).focusPages[page];
 
   return (
-    <header className="green-hub-fade-in mx-auto max-w-3xl px-4 pb-12 pt-4 md:px-6 md:pb-16 md:pt-8">
-      <h1 className="font-display text-[clamp(2rem,5vw,3.25rem)] font-semibold leading-[1.08] tracking-[-0.03em] text-white">
+    <header className="green-hub-fade-in section-y mx-auto max-w-3xl px-4 pb-8 pt-4 md:px-6 md:pb-12 md:pt-6">
+      <p className="page-eyebrow">AUROS</p>
+      <h1 className="page-title mt-4 text-[clamp(2rem,5vw,3.25rem)] leading-[1.08] tracking-[-0.03em] md:mt-5">
         {copy.title}
       </h1>
-      <p className="mt-6 max-w-xl text-lg font-light leading-relaxed text-white/55">
+      <p className="page-intro mt-6 max-w-xl text-lg">
         {copy.subtitle}
       </p>
       <div className="green-hub-fade-in-delay mt-10">
@@ -32,7 +33,7 @@ export function FocusPageHero({ page, secondaryHref }: Props) {
         <nav className="green-hub-fade-in-delay-2 mt-8">
           <Link
             href={secondaryHref}
-            className="font-mono text-[11px] tracking-wide text-white/40 transition hover:text-white/70"
+            className="auros-btn auros-btn--link"
           >
             {copy.secondary} →
           </Link>

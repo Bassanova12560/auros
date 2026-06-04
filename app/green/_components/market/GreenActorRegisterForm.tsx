@@ -46,7 +46,7 @@ export function GreenActorRegisterForm() {
   const [rateLimited, setRateLimited] = useState(false);
 
   const inputClass =
-    "w-full rounded-lg border border-white/[0.12] bg-black px-4 py-3 text-sm text-white outline-none focus:border-white/30";
+    "green-form-input w-full rounded-lg px-4 py-3 text-sm text-white outline-none";
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -117,10 +117,21 @@ export function GreenActorRegisterForm() {
 
   const registerStepLabel = r.stepOf(1, 1);
 
+  const sectionTitle =
+    locale === "fr"
+      ? "Vos informations"
+      : locale === "es"
+        ? "Sus datos"
+        : "Your details";
+
   return (
     <GreenPanel>
       <form onSubmit={handleSubmit} className="space-y-4 p-6 md:p-8">
         <GreenFormStepBar current={1} total={1} label={registerStepLabel} />
+        <h2 className="font-display text-lg font-semibold tracking-[-0.02em] text-white">
+          {sectionTitle}
+        </h2>
+        <p className="text-sm text-white/45">{r.introHint}</p>
         {error ? (
           <p className="text-sm text-red-400" role="alert">
             {rateLimited ? r.errorRateLimit : r.errorInvalid}
@@ -253,7 +264,7 @@ export function GreenActorRegisterForm() {
         <button
           type="submit"
           disabled={pending}
-          className={`rounded-lg px-6 py-3 text-sm font-medium disabled:opacity-50 ${greenBtnClass}`}
+          className={`green-btn-primary mt-2 w-full rounded-lg px-6 py-3.5 text-sm font-semibold disabled:opacity-50 sm:w-auto ${greenBtnClass}`}
         >
           {pending ? r.submitting : r.submit}
         </button>

@@ -29,10 +29,11 @@ export function GreenHubHeroSection() {
 
   return (
     <header
-      className="flex min-h-[calc(100dvh-4.5rem)] flex-col justify-center pb-16 pt-6 md:pb-24 md:pt-10"
+      className="relative flex min-h-[calc(100dvh-4.5rem)] flex-col justify-center overflow-hidden pb-16 pt-6 md:pb-24 md:pt-10"
       aria-labelledby="green-hub-title"
     >
-      <div className="green-hub-fade-in max-w-3xl">
+      <div className="green-hero-mesh" aria-hidden />
+      <div className="green-hub-fade-in relative z-10 max-w-3xl">
         <h1
           id="green-hub-title"
           className="font-display text-[clamp(2.25rem,6.5vw,4.5rem)] font-semibold leading-[1.06] tracking-[-0.03em] text-white"

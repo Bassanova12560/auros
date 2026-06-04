@@ -14,12 +14,15 @@ export function GreenRegisterView() {
   const r = m.register;
 
   return (
-    <div className="page-inner page-inner--3xl mx-auto px-4 pb-24 pt-16 md:px-6 md:pt-20">
+    <div className="page-inner page-inner--3xl mx-auto px-4 pb-24 pt-10 md:px-6 md:pt-12">
       <GreenPageHeader eyebrow={r.eyebrow} title={r.title} intro={r.intro} compact />
-      <div className="mt-12">
+      <div className="mt-6">
         <Suspense
           fallback={
-            <div className="h-48 animate-pulse border border-white/[0.08] bg-white/[0.02]" />
+            <div
+              className="green-form-panel min-h-[320px] animate-pulse border p-6 md:p-8"
+              aria-busy="true"
+            />
           }
         >
           <GreenActorRegisterForm />

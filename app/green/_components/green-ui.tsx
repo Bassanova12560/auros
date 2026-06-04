@@ -9,7 +9,7 @@ export const greenAccentHoverClass = "hover:text-green-royal-bright";
 
 /** Primary CTA — white on black, AUROS editorial. */
 export const greenBtnClass =
-  "!border !border-white !bg-white !text-black hover:!bg-neutral-200";
+  "green-btn-primary !border !border-white !bg-white !text-black hover:!bg-[#fafaf8] hover:!border-green-royal/30";
 
 /** Mot Green rempli de la photo forêt vue du dessus. */
 export function GreenForestWord({
@@ -54,12 +54,13 @@ export function GreenListingBadge({
 export function GreenPanel({
   children,
   className = "",
+  ...rest
 }: {
   children: ReactNode;
   className?: string;
-}) {
+} & React.ComponentPropsWithoutRef<"div">) {
   return (
-    <div className={`border border-white/[0.08] bg-black ${className}`}>
+    <div className={`green-form-panel border bg-black ${className}`} {...rest}>
       {children}
     </div>
   );
@@ -211,7 +212,7 @@ export function GreenNavTile({
   return (
     <Link
       href={href}
-      className="group flex min-h-[88px] items-center justify-between border border-white/[0.08] bg-black px-5 py-4 transition-colors hover:border-white/20 hover:bg-white/[0.02]"
+      className="green-hub-card-hover group flex min-h-[88px] items-center justify-between border border-white/[0.08] bg-black px-5 py-4 hover:bg-white/[0.02]"
       style={{ animationDelay: `${index * 60}ms` }}
     >
       <span className="font-display text-base font-semibold tracking-[-0.01em] text-white group-hover:text-accent">
