@@ -2,6 +2,7 @@ import "leaflet/dist/leaflet.css";
 
 import { Footer } from "@/app/_components/Footer";
 
+/** Site header: GreenSiteHeader → AurosHeader (not inline in page.tsx). */
 import { GreenSiteHeader } from "./_components/GreenSiteHeader";
 
 export default function GreenLayout({
