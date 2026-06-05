@@ -66,20 +66,6 @@ export function GreenPanel({
   );
 }
 
-export function GreenHubHero({ tagline }: { tagline: string }) {
-  return (
-    <header className="max-w-3xl">
-      <h1 className="font-display text-[clamp(2.5rem,7vw,4.75rem)] font-semibold leading-[1.05] tracking-[-0.03em] text-white">
-        AUROS{" "}
-        <GreenForestWord />
-      </h1>
-      <p className="mt-6 max-w-2xl text-lg leading-relaxed text-white/70 md:text-xl">
-        {tagline}
-      </p>
-    </header>
-  );
-}
-
 export function GreenPageHeader({
   eyebrow,
   title,

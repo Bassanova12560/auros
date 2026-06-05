@@ -1,4 +1,4 @@
-# UX audit live checks — https://auros-delta.vercel.app
+﻿# UX audit live checks — https://auros-delta.vercel.app
 param([string]$Base = "https://auros-delta.vercel.app")
 
 $headers = @{ "Cache-Control" = "no-cache" }
@@ -26,13 +26,15 @@ $html = Fetch "/how-it-works"
 Write-Host "4 /how-it-works: ~2min=$(Test-Html $html '~2 min') ~8min=$(Test-Html $html '~8 min') 48h=$(Test-Html $html '48h') faq=$(Test-Html $html 'how-faq-panel-0')"
 
 $html = Fetch "/compare"
-$twitter = if ($html -match "twitter:card`" content=`"([^`"]*)`"") { $matches[1] } else { "missing" }
+$twitterPattern = 'twitter:card" content="([^"]*)"'
+$twitter = if ($html -match $twitterPattern) { $matches[1] } else { "missing" }
 Write-Host "5 og: compare=$(Test-Html $html 'og:image.*compare') twitter=$twitter"
 $html = Fetch "/green"
 Write-Host "   green og:image=$(Test-Html $html 'og:image.*green')"
 
 $html = Fetch "/green"
-$siteName = if ($html -match "og:site_name`" content=`"([^`"]*)`"") { $matches[1] } else { "missing" }
+$siteNamePattern = 'og:site_name" content="([^"]*)"'
+$siteName = if ($html -match $siteNamePattern) { $matches[1] } else { "missing" }
 Write-Host "6 green hub og: siteName=$siteName descFR=$(Test-Html $html 'Place de march')"
 
 $html = Fetch "/trust"
