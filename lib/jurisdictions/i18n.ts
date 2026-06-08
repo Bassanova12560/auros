@@ -134,6 +134,7 @@ export type JurisdictionMessages = {
     ctaStarterStart: string;
     ctaStarterDetail: string;
     ctaLaunch: string;
+    pricingOverviewLink: string;
   };
   forms: {
     firstName: string;
@@ -448,6 +449,7 @@ const FR: JurisdictionMessages = {
     ctaStarterStart: "Commencer par l'étude gratuite",
     ctaStarterDetail: "Voir le détail Starter Kit →",
     ctaLaunch: "Demander un devis Launch",
+    pricingOverviewLink: "Voir tous les tarifs →",
   },
   forms: {
     firstName: "Prénom",
@@ -761,6 +763,7 @@ const EN: JurisdictionMessages = {
     ctaStarterStart: "Start with the free study",
     ctaStarterDetail: "Starter Kit details →",
     ctaLaunch: "Request Launch quote",
+    pricingOverviewLink: "View all pricing →",
   },
   forms: {
     firstName: "First name",
@@ -1023,6 +1026,7 @@ const ES: JurisdictionMessages = {
     ctaStarterStart: "Empezar por el estudio gratuito",
     ctaStarterDetail: "Detalle Starter Kit →",
     ctaLaunch: "Solicitar presupuesto Launch",
+    pricingOverviewLink: "Ver todos los precios →",
   },
   forms: {
     firstName: "Nombre",

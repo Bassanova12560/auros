@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { UserButton } from "@clerk/nextjs";
+import type { ReactNode } from "react";
 
 import { useLocale } from "@/app/_components/i18n/LocaleProvider";
 import { AmbientShell } from "@/app/_components/ui/AmbientShell";
@@ -14,36 +15,57 @@ import { getDashboardMessages } from "@/lib/dashboard-i18n";
 import { DeleteAccountSection } from "./DeleteAccountSection";
 import { DossierList, type DossierRow } from "./DossierList";
 
-export function DashboardGuest() {
+export function DashboardGuest({ preview }: { preview?: ReactNode }) {
   const { locale } = useLocale();
   const m = getDashboardMessages(locale).guest;
 
   return (
     <AmbientShell>
       <Nav />
-      <main className="page-main page-main--nav page-inner page-inner--lg text-center text-white">
-        <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-white/45">
-          {m.eyebrow}
-        </p>
-        <h1 className="mt-4 font-display text-3xl font-semibold">{m.title}</h1>
-        <p className="mt-4 text-sm leading-relaxed text-muted">{m.body}</p>
-        <div className="mt-10 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
-          <PrimaryButton href="/sign-up?redirect_url=/dashboard">
-            {m.signUp}
-          </PrimaryButton>
-          <Link
-            href="/sign-in?redirect_url=/dashboard"
-            className="font-mono text-xs uppercase tracking-wider text-white/70 hover:text-white"
-          >
-            {m.signIn}
-          </Link>
+      <main className="page-main page-main--nav text-white">
+        <div className="page-inner page-inner--lg mx-auto px-4 pb-16 pt-6 md:px-6 md:pt-8">
+          <div className="flex flex-col gap-10 lg:flex-row lg:items-start lg:gap-12">
+            <div className="flex-1 text-center lg:text-left">
+              {preview ? (
+                <div className="mb-8 flex justify-center lg:justify-start">{preview}</div>
+              ) : null}
+              <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-white/45">
+                {m.eyebrow}
+              </p>
+              <h1 className="mt-4 font-display text-3xl font-semibold md:text-4xl">
+                {m.title}
+              </h1>
+              <p className="mx-auto mt-3 max-w-lg text-sm leading-relaxed text-muted lg:mx-0">
+                {m.socialProof}
+              </p>
+              <Link
+                href="/wizard"
+                className="mt-6 inline-flex min-h-[44px] items-center justify-center rounded-xl border border-white bg-white px-5 py-3 font-mono text-xs uppercase tracking-wider text-void transition hover:bg-white/90"
+                data-dashboard-teaser-cta=""
+              >
+                {m.continueWizard}
+              </Link>
+            </div>
+
+            <div className="w-full max-w-sm shrink-0 rounded-2xl border border-white/[0.08] bg-white/[0.02] p-6 md:p-8 lg:mx-0 lg:ml-auto">
+              <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/40">
+                {m.eyebrow}
+              </p>
+              <p className="mt-3 text-sm leading-relaxed text-white/55">{m.body}</p>
+              <div className="mt-6 flex flex-col gap-3">
+                <PrimaryButton href="/sign-up?redirect_url=/dashboard">
+                  {m.signUp}
+                </PrimaryButton>
+                <Link
+                  href="/sign-in?redirect_url=/dashboard"
+                  className="min-h-[44px] rounded-xl border border-white/15 px-4 py-3 text-center font-mono text-xs uppercase tracking-wider text-white/70 transition hover:border-white/30 hover:text-white"
+                >
+                  {m.signIn}
+                </Link>
+              </div>
+            </div>
+          </div>
         </div>
-        <Link
-          href="/wizard"
-          className="mt-8 inline-block text-sm text-white/50 hover:text-white"
-        >
-          {m.continueWizard}
-        </Link>
       </main>
       <Footer />
     </AmbientShell>

@@ -19,6 +19,7 @@ export type Messages = {
     ariaLabel: string;
     green: string;
     compare: string;
+    academy: string;
   };
   hero: {
     eyebrow: string;
@@ -238,5 +239,21 @@ export type Messages = {
     privacy: string;
     legalNotice: string;
     rights: string;
+    howItWorks: string;
+    discover: string;
+    trust: string;
+    compareAll: string;
+    jurisdictionComparator: string;
+    stablecoins: string;
+    realEstate: string;
+    bonds: string;
+    commodities: string;
+    privateCredit: string;
+    academy: string;
+    green: string;
+    faq: string;
+    resources: string;
+    about: string;
+    pricing: string;
   };
 };

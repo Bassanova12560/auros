@@ -68,7 +68,7 @@ export function WizardShell({
 
   return (
     <main className="page-main page-main--nav mx-auto flex min-h-dvh max-w-3xl flex-col md:px-6 md:py-12">
-      <div className="mb-4 flex flex-wrap items-center justify-between gap-2 font-mono text-[10px] uppercase tracking-[0.2em] text-white/40">
+      <div className="mb-3 flex flex-wrap items-center justify-between gap-2 font-mono text-[10px] uppercase tracking-[0.2em] text-white/40">
         <span>{shell.title}</span>
         <span className="tabular-nums tracking-[0.12em] text-white/55">
           {expertMode ? (
@@ -86,26 +86,80 @@ export function WizardShell({
       </div>
 
       {!expertMode ? (
-      <div className="scroll-x-touch mb-6 flex flex-nowrap gap-2 pb-1 md:flex-wrap">
-        {WIZARD_PHASES.map((p, i) => {
-          const active = i === phaseIdx;
-          const done = i < phaseIdx;
-          return (
-            <span
-              key={p.id}
-              className={`shrink-0 rounded-full border px-2.5 py-1 text-[9px] tracking-[0.18em] transition ${
-                active
-                  ? "border-white/35 bg-white/[0.08] text-white"
-                  : done
-                    ? "border-white/15 text-white/50"
-                    : "border-white/[0.06] text-white/30"
-              }`}
-            >
-              {p.labels[locale]}
-            </span>
-          );
-        })}
-      </div>
+        <>
+          <div
+            className="mb-4 flex gap-1"
+            role="progressbar"
+            aria-valuemin={1}
+            aria-valuemax={WIZARD_PHASES.length}
+            aria-valuenow={phaseIdx + 1}
+            aria-label={`${journey.moment} ${phaseIdx + 1}/${phaseCount()}`}
+          >
+            {WIZARD_PHASES.map((p, i) => {
+              const active = i === phaseIdx;
+              const done = i < phaseIdx;
+              return (
+                <div
+                  key={p.id}
+                  className="h-0.5 flex-1 overflow-hidden rounded-full bg-white/[0.05]"
+                >
+                  <div
+                    className={`h-full rounded-full transition-[width] duration-300 ease-out ${
+                      done || active
+                        ? "bg-[color-mix(in_srgb,var(--auros-green-warm)_75%,white)]"
+                        : "w-0 bg-transparent"
+                    }`}
+                    style={
+                      active && !done
+                        ? {
+                            width: `${Math.max(20, (inPhase.indexInPhase / inPhase.totalInPhase) * 100)}%`,
+                          }
+                        : done
+                          ? { width: "100%" }
+                          : { width: "0%" }
+                    }
+                  />
+                </div>
+              );
+            })}
+          </div>
+
+          <div className="scroll-x-touch mb-4 flex flex-nowrap gap-2 pb-1 md:flex-wrap">
+            {WIZARD_PHASES.map((p, i) => {
+              const active = i === phaseIdx;
+              const done = i < phaseIdx;
+              return (
+                <span
+                  key={p.id}
+                  aria-current={active ? "step" : undefined}
+                  className={`shrink-0 rounded-full border px-2.5 py-1 text-[9px] tracking-[0.18em] transition ${
+                    active
+                      ? "border-[color-mix(in_srgb,var(--auros-green-warm)_45%,white)] bg-[color-mix(in_srgb,var(--auros-green-warm)_12%,transparent)] text-white"
+                      : done
+                        ? "border-white/15 text-white/50"
+                        : "border-white/[0.06] text-white/30"
+                  }`}
+                >
+                  {p.labels[locale]}
+                </span>
+              );
+            })}
+          </div>
+
+          <div
+            className="mb-6 h-0.5 w-full overflow-hidden rounded-full bg-white/[0.05]"
+            role="progressbar"
+            aria-valuemin={0}
+            aria-valuemax={totalSteps}
+            aria-valuenow={step}
+            aria-label={`${shell.title} ${Math.round(progressPct)}%`}
+          >
+            <div
+              className="h-full rounded-full bg-[color-mix(in_srgb,var(--auros-green-warm)_75%,white)] transition-[width] duration-300 ease-out"
+              style={{ width: `${progressPct}%` }}
+            />
+          </div>
+        </>
       ) : null}
 
       {expertMode || phase ? (
@@ -127,19 +181,6 @@ export function WizardShell({
           </p>
         </div>
       ) : null}
-
-      <div
-        className="mb-10 h-0.5 w-full overflow-hidden rounded-full bg-white/[0.05]"
-        role="progressbar"
-        aria-valuemin={0}
-        aria-valuemax={totalSteps}
-        aria-valuenow={step}
-      >
-        <div
-          className="h-full rounded-full bg-[color-mix(in_srgb,var(--auros-green-warm)_75%,white)] transition-[width] duration-300 ease-out"
-          style={{ width: `${progressPct}%` }}
-        />
-      </div>
 
       <div className="relative min-h-[min(36dvh,380px)] flex-1 md:min-h-[min(52vh,480px)]">
         {children}

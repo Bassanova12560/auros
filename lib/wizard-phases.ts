@@ -38,7 +38,7 @@ export const WIZARD_PHASES: WizardPhase[] = [
     id: "summary",
     steps: [15],
     labels: {
-      fr: "Récapitulatif",
+      fr: "Récap",
       en: "Summary",
       es: "Resumen",
     },

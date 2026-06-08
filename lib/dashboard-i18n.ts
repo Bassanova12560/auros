@@ -8,6 +8,15 @@ export type DashboardMessages = {
     signUp: string;
     signIn: string;
     continueWizard: string;
+    socialProof: string;
+    teaser: {
+      previewLabel: string;
+      previewTag: string;
+      scoreLabel: string;
+      readiness: string;
+      badgeLegal: string;
+      badgeKyc: string;
+    };
   };
   auth: {
     label: string;
@@ -56,7 +65,17 @@ const FR: DashboardMessages = {
     body: "Créez un compte gratuit pour sauvegarder vos profils, télécharger le PDF et accéder à l'historique depuis cet espace.",
     signUp: "Créer un compte",
     signIn: "Se connecter",
-    continueWizard: "Continuer sans compte → wizard",
+    continueWizard: "Créer mon dossier sans compte",
+    socialProof:
+      "Des producteurs et fondateurs utilisent AUROS pour structurer leur dossier",
+    teaser: {
+      previewLabel: "Aperçu dossier",
+      previewTag: "Exemple",
+      scoreLabel: "Score tokenisation",
+      readiness: "Maturité · 78% · dossier prêt",
+      badgeLegal: "Legal ✓",
+      badgeKyc: "KYC ✓",
+    },
   },
   auth: {
     label: "Dashboard",
@@ -106,7 +125,17 @@ const EN: DashboardMessages = {
     body: "Create a free account to save profiles, download PDFs, and access your history here.",
     signUp: "Create account",
     signIn: "Sign in",
-    continueWizard: "Continue without account → wizard",
+    continueWizard: "Create my dossier without account",
+    socialProof:
+      "Producers and founders use AUROS to structure their dossier",
+    teaser: {
+      previewLabel: "Dossier preview",
+      previewTag: "Sample",
+      scoreLabel: "Tokenization score",
+      readiness: "Readiness · 78% · dossier ready",
+      badgeLegal: "Legal ✓",
+      badgeKyc: "KYC ✓",
+    },
   },
   auth: {
     label: "Dashboard",
@@ -156,7 +185,17 @@ const ES: DashboardMessages = {
     body: "Cree una cuenta gratuita para guardar perfiles, descargar el PDF y ver su historial.",
     signUp: "Crear cuenta",
     signIn: "Iniciar sesión",
-    continueWizard: "Continuar sin cuenta → wizard",
+    continueWizard: "Crear mi dossier sin cuenta",
+    socialProof:
+      "Productores y fundadores usan AUROS para estructurar su dossier",
+    teaser: {
+      previewLabel: "Vista previa dossier",
+      previewTag: "Ejemplo",
+      scoreLabel: "Puntuación tokenización",
+      readiness: "Madurez · 78% · dossier listo",
+      badgeLegal: "Legal ✓",
+      badgeKyc: "KYC ✓",
+    },
   },
   auth: {
     label: "Dashboard",

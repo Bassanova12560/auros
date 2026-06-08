@@ -6,6 +6,7 @@ import {
   DashboardAuthenticated,
   DashboardGuest,
 } from "./_components/DashboardView";
+import { DashboardDossierPreview } from "./_components/DashboardDossierPreview";
 import { normalizeDossierStatus } from "@/lib/dossier-status";
 import type { DossierRow } from "./_components/DossierList";
 
@@ -14,7 +15,9 @@ export const dynamic = "force-dynamic";
 export default async function DashboardPage() {
   const { userId } = await auth();
   if (!userId) {
-    return <DashboardGuest />;
+    return (
+      <DashboardGuest preview={<DashboardDossierPreview locale="fr" />} />
+    );
   }
 
   const supabase = getSupabaseServerClient();

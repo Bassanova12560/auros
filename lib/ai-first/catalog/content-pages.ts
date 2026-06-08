@@ -175,6 +175,34 @@ export const estimatePage = enrichPage({
   relatedPaths: ["/wizard", "/how-it-works"],
 });
 
+export const pricingPage = enrichPage({
+  id: "pricing",
+  path: "/pricing",
+  title: "Tarifs | AUROS — Gratuit, Starter Kit, Launch",
+  description:
+    "Trois offres AUROS : wizard et score gratuits, Starter Kit juridiction 5 000 €, accompagnement Launch sur devis.",
+  summary:
+    "Page tarifs AUROS — tier gratuit (wizard + score), Starter Kit 5 000 € (juridictions), Launch sur devis.",
+  contentType: "guide",
+  language: "multi",
+  indexable: true,
+  lastUpdated: "2026-06-08",
+  keywords: [
+    "tarifs AUROS",
+    "Starter Kit prix",
+    "wizard gratuit RWA",
+    "tokenisation pricing",
+  ],
+  intents: ["Combien coûte AUROS", "Prix Starter Kit RWA"],
+  audience: ["émetteurs", "CFO", "promoteurs"],
+  facts: [
+    { key: "Gratuit", value: "Wizard + score — /wizard" },
+    { key: "Starter Kit", value: "5 000 € — /jurisdictions/starter-kit" },
+    { key: "Launch", value: "Sur devis — /jurisdictions#quote-form" },
+  ],
+  relatedPaths: ["/wizard", "/jurisdictions", "/jurisdictions/starter-kit"],
+});
+
 export const greenFaqPage = enrichPage({
   id: "green-faq",
   path: GREEN_FAQ_ROUTE,
@@ -322,6 +350,7 @@ export const contentPages: AiFirstPage[] = [
   discoverPage,
   trustPage,
   estimatePage,
+  pricingPage,
   greenFaqPage,
   greenHowItWorksPage,
   greenBlogIndexPage,

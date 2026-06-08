@@ -1,7 +1,7 @@
 import { AmbientShell } from "@/app/_components/ui/AmbientShell";
 import { Footer } from "@/app/_components/Footer";
 
-import { AcademyHeader } from "./_components/AcademyHeader";
+import { AcademySiteHeader } from "./_components/AcademySiteHeader";
 
 export default function AcademyLayout({
   children,
@@ -10,8 +10,8 @@ export default function AcademyLayout({
 }) {
   return (
     <AmbientShell>
-      <AcademyHeader />
-      <main className="page-main text-white">{children}</main>
+      <AcademySiteHeader />
+      <main className="page-main page-main--nav text-white">{children}</main>
       <Footer />
     </AmbientShell>
   );

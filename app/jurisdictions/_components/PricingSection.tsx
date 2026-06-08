@@ -32,6 +32,14 @@ export function PricingSection() {
         subtitle={p.subtitle}
         align="left"
       />
+      <p className="mt-4">
+        <Link
+          href="/pricing"
+          className="font-mono text-[10px] uppercase tracking-wider text-white/35 transition hover:text-white/55"
+        >
+          {p.pricingOverviewLink}
+        </Link>
+      </p>
 
       <div className="mt-10 grid min-w-0 gap-4 lg:grid-cols-12 lg:gap-5">
         <BezelCard

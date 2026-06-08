@@ -1,20 +1,21 @@
 import type { Metadata } from "next";
 
-import { AboutPageContent } from "./_components/AboutPageContent";
 import { FocusPageShell } from "@/app/_components/FocusPageShell";
 import { metadataFromPath } from "@/lib/seo/metadata";
 import { withOgImage } from "@/lib/seo/og";
 
+import { PricingPageContent } from "./_components/PricingPageContent";
+
 export const metadata: Metadata = withOgImage(
-  metadataFromPath("/about"),
-  "/about",
-  "À propos d'AUROS"
+  metadataFromPath("/pricing"),
+  "/pricing",
+  "Tarifs AUROS"
 );
 
-export default function AboutPage() {
+export default function PricingPage() {
   return (
-    <FocusPageShell path="/about" width="2xl">
-      <AboutPageContent />
+    <FocusPageShell path="/pricing" width="6xl">
+      <PricingPageContent />
     </FocusPageShell>
   );
 }
