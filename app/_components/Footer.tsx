@@ -26,6 +26,7 @@ export function Footer() {
     { href: COMPARATOR_ROUTES.commodities, label: f.commodities },
     { href: COMPARATOR_ROUTES.privateCredit, label: f.privateCredit },
     { href: "/partners", label: t.nav.partners },
+    { href: "/pricing", label: f.pricing },
   ] as const;
 
   const legal = [
@@ -50,12 +51,6 @@ export function Footer() {
             AUROS
           </p>
           <p className="mt-2 max-w-xs text-sm leading-relaxed text-muted">{f.tagline}</p>
-          <Link
-            href="/pricing"
-            className="mt-3 inline-block font-mono text-[10px] uppercase tracking-wider text-white/30 transition hover:text-white/55"
-          >
-            {f.pricing}
-          </Link>
         </div>
         <div className="flex gap-12 sm:gap-16">
           <div>

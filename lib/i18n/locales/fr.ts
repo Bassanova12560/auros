@@ -96,6 +96,48 @@ export const fr: Messages = {
       "Les résultats AUROS sont fournis à titre informatif uniquement et ne constituent pas un conseil en investissement, juridique ou fiscal.",
   },
   trustPage: {
+    howWeWorkEyebrow: "Processus",
+    howWeWorkTitle: "Comment nous travaillons",
+    howWeWorkIntro:
+      "Trois étapes concrètes — sans promesse d'agrément, sans intermédiaire imposé. Vous gardez vos conseils ; AUROS structure la préparation.",
+    howWeWorkSteps: [
+      {
+        number: "01",
+        title: "Diagnostic gratuit",
+        description:
+          "Wizard et score indicatif (~12 min) : vous décrivez l'actif, AUROS génère un dossier structuré et une première lecture de préparation.",
+      },
+      {
+        number: "02",
+        title: "Arbitrage juridiction",
+        description:
+          "Comparateur 8 juridictions ou Starter Kit 5 000 € : memo SPV + régulateur cible, livré sous 5 jours ouvrés — à valider avec votre counsel.",
+      },
+      {
+        number: "03",
+        title: "Revue humaine AUROS",
+        description:
+          "Soumission du dossier à l'équipe : complétude data room, cohérence réglementaire indicative, prochaines étapes — sans placement produit tiers.",
+      },
+    ],
+    caseStudiesEyebrow: "Retours anonymisés",
+    caseStudiesTitle: "Exemples de parcours",
+    caseStudiesNote:
+      "Témoignages illustratifs, secteurs et libellés modifiés — pas des références clients certifiées.",
+    caseStudies: [
+      {
+        sector: "Immobilier · France",
+        quote:
+          "Le dossier PDF nous a permis d'aligner avocat et banque sur la même base en une semaine.",
+        context: "Score 72 · comparateur Luxembourg vs France · counsel externe",
+      },
+      {
+        sector: "Énergie renouvelable · UE",
+        quote:
+          "RTMS Green + wizard renouvelable : première structuration avant due diligence investisseur.",
+        context: "Actif solaire · label en candidature · pas d'émission finalisée",
+      },
+    ],
     infrastructureTitle: "Infrastructure & données",
     infrastructureItems: [
       "Hébergement : Vercel Edge Network — datacenters UE",

@@ -96,6 +96,48 @@ export const es: Messages = {
       "Los resultados de AUROS son solo informativos y no constituyen asesoramiento de inversión, legal o fiscal.",
   },
   trustPage: {
+    howWeWorkEyebrow: "Proceso",
+    howWeWorkTitle: "Cómo trabajamos",
+    howWeWorkIntro:
+      "Tres pasos concretos — sin promesa de licencia, sin intermediario impuesto. Usted conserva sus asesores; AUROS estructura la preparación.",
+    howWeWorkSteps: [
+      {
+        number: "01",
+        title: "Diagnóstico gratuito",
+        description:
+          "Wizard y score indicativo (~12 min): describe el activo, AUROS genera un dossier estructurado y una primera lectura de preparación.",
+      },
+      {
+        number: "02",
+        title: "Elección de jurisdicción",
+        description:
+          "Comparador 8 jurisdicciones o Starter Kit 5 000 €: memo SPV + regulador objetivo, entregado en 5 días hábiles — a validar con su counsel.",
+      },
+      {
+        number: "03",
+        title: "Revisión humana AUROS",
+        description:
+          "Envío del dossier al equipo: completitud data room, coherencia regulatoria indicativa, próximos pasos — sin colocación de producto tercero.",
+      },
+    ],
+    caseStudiesEyebrow: "Retorno anonimizado",
+    caseStudiesTitle: "Ejemplos de recorridos",
+    caseStudiesNote:
+      "Testimonios ilustrativos, sectores y etiquetas modificados — no referencias de clientes certificadas.",
+    caseStudies: [
+      {
+        sector: "Inmobiliario · Francia",
+        quote:
+          "El dossier PDF nos permitió alinear abogado y banco en la misma base en una semana.",
+        context: "Score 72 · comparador Luxemburgo vs Francia · counsel externo",
+      },
+      {
+        sector: "Energía renovable · UE",
+        quote:
+          "RTMS Green + wizard renovable: primera estructuración antes de due diligence inversor.",
+        context: "Activo solar · etiqueta en candidatura · sin emisión finalizada",
+      },
+    ],
     infrastructureTitle: "Infraestructura y datos",
     infrastructureItems: [
       "Alojamiento: Vercel Edge Network — datacenters UE",

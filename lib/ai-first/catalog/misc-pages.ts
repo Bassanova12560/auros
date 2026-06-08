@@ -3,15 +3,15 @@ import { enrichPage } from "../enrich";
 export const partnersPage = enrichPage({
   id: "partners",
   path: "/partners",
-  title: "Partenaires AUROS | Intégrations RWA",
+  title: "Partenaires plateformes | Intégrations RWA AUROS",
   description:
-    "Programme partenaires AUROS — intégrations plateformes RWA, counsel, custodians et prestataires tech.",
+    "Programme partenaires AUROS pour plateformes RWA — dossiers pré-formatés, onboarding qualifié, intégrations counsel et custodians.",
   summary:
     "Programme partenaires AUROS pour acteurs RWA : plateformes d'émission, cabinets, custodians, intégrations tech. Contact via formulaire.",
   contentType: "guide",
   language: "multi",
   indexable: true,
-  lastUpdated: "2026-05-29",
+  lastUpdated: "2026-06-09",
   keywords: ["AUROS partners", "RWA ecosystem", "tokenization platform partner"],
   intents: ["Devenir partenaire AUROS", "Intégration plateforme RWA"],
   audience: ["plateformes RWA", "cabinet avocats", "custodians", "tech providers"],

@@ -15,14 +15,18 @@ export function PartnersPageContent() {
 
   return (
     <main className="page-main page-main--nav min-h-dvh text-white">
-        <section className="border-b border-white/[0.06] px-4 py-16 md:px-6 md:py-28 lg:py-36">
-          <div className="page-inner page-inner--6xl mx-auto">
+        <section className="relative overflow-hidden border-b border-white/[0.06] px-4 py-16 md:px-6 md:py-28 lg:py-36">
+          <div
+            className="pointer-events-none absolute inset-y-0 left-0 w-1 bg-gradient-to-b from-white/40 via-white/10 to-transparent"
+            aria-hidden
+          />
+          <div className="page-inner page-inner--6xl mx-auto green-hub-fade-in">
             <p className="page-eyebrow">{m.eyebrow}</p>
             <h1 className="page-title mt-5 max-w-3xl text-4xl md:text-5xl">
               {m.title}
             </h1>
             <p className="page-intro mt-6 max-w-xl text-lg">{m.subtitle}</p>
-            <div className="mt-10">
+            <div className="green-hub-fade-in-delay mt-10">
               <PrimaryButton href="#contact">{m.cta}</PrimaryButton>
             </div>
           </div>

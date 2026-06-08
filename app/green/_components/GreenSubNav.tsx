@@ -4,6 +4,7 @@ import Link from "next/link";
 
 import { useLocale } from "@/app/_components/i18n/LocaleProvider";
 import {
+  AUROS_WIZARD_ROUTE,
   GREEN_LABEL_ROUTE,
   GREEN_MARKET_ROUTE,
   GREEN_REGISTRY_ROUTE,
@@ -16,6 +17,10 @@ const NAV_ROUTES = [
   { href: GREEN_STANDARDS_ROUTE, key: "standards" as const },
   { href: GREEN_REGISTRY_ROUTE, key: "registry" as const },
   { href: GREEN_LABEL_ROUTE, key: "label" as const },
+  {
+    href: `${AUROS_WIZARD_ROUTE}?asset=renewable`,
+    key: "tokenize" as const,
+  },
 ];
 
 export function GreenSubNav() {

@@ -96,6 +96,48 @@ export const en: Messages = {
       "AUROS results are for informational purposes only and do not constitute investment, legal, or tax advice.",
   },
   trustPage: {
+    howWeWorkEyebrow: "Process",
+    howWeWorkTitle: "How we work",
+    howWeWorkIntro:
+      "Three concrete steps — no licence promise, no imposed intermediary. You keep your counsel; AUROS structures preparation.",
+    howWeWorkSteps: [
+      {
+        number: "01",
+        title: "Free diagnostic",
+        description:
+          "Wizard and indicative score (~12 min): you describe the asset, AUROS generates a structured dossier and first readiness read.",
+      },
+      {
+        number: "02",
+        title: "Jurisdiction choice",
+        description:
+          "8-jurisdiction comparator or €5,000 Starter Kit: SPV + target regulator memo, delivered within 5 business days — to validate with your counsel.",
+      },
+      {
+        number: "03",
+        title: "AUROS human review",
+        description:
+          "Dossier submission to the team: data room completeness, indicative regulatory coherence, next steps — no third-party product placement.",
+      },
+    ],
+    caseStudiesEyebrow: "Anonymous feedback",
+    caseStudiesTitle: "Example journeys",
+    caseStudiesNote:
+      "Illustrative testimonials, sectors and labels modified — not certified client references.",
+    caseStudies: [
+      {
+        sector: "Real estate · France",
+        quote:
+          "The PDF dossier let us align lawyer and bank on the same basis within a week.",
+        context: "Score 72 · Luxembourg vs France comparator · external counsel",
+      },
+      {
+        sector: "Renewable energy · EU",
+        quote:
+          "RTMS Green + renewable wizard: first structuring before investor due diligence.",
+        context: "Solar asset · label application · no finalized issuance",
+      },
+    ],
     infrastructureTitle: "Infrastructure & data",
     infrastructureItems: [
       "Hosting: Vercel Edge Network — EU datacenters",

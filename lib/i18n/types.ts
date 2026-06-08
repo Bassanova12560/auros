@@ -88,6 +88,22 @@ export type Messages = {
     disclaimer: string;
   };
   trustPage: {
+    howWeWorkEyebrow: string;
+    howWeWorkTitle: string;
+    howWeWorkIntro: string;
+    howWeWorkSteps: readonly {
+      number: string;
+      title: string;
+      description: string;
+    }[];
+    caseStudiesEyebrow: string;
+    caseStudiesTitle: string;
+    caseStudiesNote: string;
+    caseStudies: readonly {
+      sector: string;
+      quote: string;
+      context: string;
+    }[];
     infrastructureTitle: string;
     infrastructureItems: readonly string[];
     faqTitle: string;

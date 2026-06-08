@@ -12,6 +12,7 @@ export type GreenMessages = {
       standards: string;
       registry: string;
       label: string;
+      tokenize: string;
     };
   };
   disclaimer: string;
@@ -517,6 +518,7 @@ const FR: GreenMessages = {
       standards: "Standards",
       registry: "Registre",
       label: "Label",
+      tokenize: "Tokeniser",
     },
   },
   disclaimer:
@@ -1408,6 +1410,7 @@ const EN: GreenMessages = {
       standards: "Standards",
       registry: "Registry",
       label: "Label",
+      tokenize: "Tokenize",
     },
   },
   disclaimer:
@@ -2297,6 +2300,7 @@ const ES: GreenMessages = {
       standards: "Estándares",
       registry: "Registro",
       label: "Etiqueta",
+      tokenize: "Tokenizar",
     },
   },
   disclaimer:

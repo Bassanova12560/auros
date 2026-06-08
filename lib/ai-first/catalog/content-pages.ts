@@ -139,21 +139,22 @@ export const trustPage = enrichPage({
   path: "/trust",
   title: "Confiance & conformité | AUROS",
   description:
-    "MiCA, RGPD, KYC/AML — cadre réglementaire transparent pour la préparation de dossiers RWA.",
+    "MiCA, RGPD, KYC/AML — cadre réglementaire transparent, processus en 3 étapes et retours anonymisés pour la préparation de dossiers RWA.",
   summary:
-    "Transparence réglementaire AUROS : MiCA, RGPD UE, KYC/AML, analyses indicatives — counsel requis avant émission.",
+    "Transparence réglementaire AUROS : MiCA, RGPD UE, KYC/AML, processus diagnostic → juridiction → revue humaine, analyses indicatives — counsel requis avant émission.",
   contentType: "guide",
   language: "multi",
   indexable: true,
-  lastUpdated: "2026-06-04",
+  lastUpdated: "2026-06-09",
   keywords: ["MiCA RWA", "RGPD tokenisation", "conformité AUROS"],
   intents: ["AUROS est-il conforme MiCA", "Sécurité données RWA"],
   audience: ["compliance", "CFO", "investisseurs"],
   facts: [
     { key: "Hébergement", value: "UE" },
+    { key: "Processus", value: "3 étapes — diagnostic, juridiction, revue" },
     { key: "Disclaimer", value: "Analyses indicatives — pas conseil juridique" },
   ],
-  relatedPaths: ["/privacy", "/legal", "/jurisdictions"],
+  relatedPaths: ["/privacy", "/legal", "/jurisdictions", "/pricing"],
 });
 
 export const estimatePage = enrichPage({

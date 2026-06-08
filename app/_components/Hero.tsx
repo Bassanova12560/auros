@@ -8,8 +8,9 @@ import { useLocale, useTranslations } from "./i18n/LocaleProvider";
 import { getEaseMessages } from "@/lib/ease-i18n";
 import { Eyebrow } from "./ui/Eyebrow";
 import { PrimaryButton } from "./ui/PrimaryButton";
-import { EASE_OUT_EXPO, fadeUp, staggerContainer } from "@/lib/motion";
+import { EASE_OUT_EXPO } from "@/lib/motion";
 
+/** SSR-safe hero — main copy visible on first paint; decorative scroll cue only uses motion. */
 export function Hero() {
   const t = useTranslations();
   const { locale } = useLocale();
@@ -24,45 +25,26 @@ export function Hero() {
   return (
     <section className="relative flex min-h-[88dvh] flex-col justify-center px-4 pb-16 pt-[calc(5.5rem+env(safe-area-inset-top))] md:px-6 md:pt-32">
       <div className="mx-auto flex w-full max-w-6xl flex-col gap-12 lg:flex-row lg:items-center lg:justify-between">
-        <motion.div
-          key="hero-content"
-          className="flex-1"
-          initial="hidden"
-          animate="visible"
-          variants={staggerContainer(0.12, 0.08)}
-        >
-          <motion.div variants={fadeUp}>
-            <Eyebrow>{t.hero.eyebrow}</Eyebrow>
-          </motion.div>
+        <div className="green-hub-fade-in flex-1">
+          <Eyebrow>{t.hero.eyebrow}</Eyebrow>
 
           <h1 className="mt-6 font-display text-[clamp(2.5rem,7vw,4.75rem)] font-semibold leading-[1.05] tracking-[-0.03em] text-white">
-            <motion.span variants={fadeUp} className="block">
-              {t.hero.title}
-            </motion.span>
+            {t.hero.title}
           </h1>
 
-          <motion.p
-            variants={fadeUp}
-            className="mt-6 max-w-lg text-lg leading-relaxed text-muted"
-          >
+          <p className="mt-6 max-w-lg text-lg leading-relaxed text-muted">
             {t.hero.subtitle}
-          </motion.p>
-          <motion.p
-            variants={fadeUp}
-            className="mt-3 max-w-lg font-mono text-[11px] leading-relaxed text-white/40"
-          >
+          </p>
+          <p className="mt-3 max-w-lg font-mono text-[11px] leading-relaxed text-white/40">
             {ease.landing.scorePath}
-          </motion.p>
+          </p>
 
-          <motion.div
-            variants={fadeUp}
-            className="mt-10 flex flex-col items-start gap-4 sm:flex-row sm:flex-wrap sm:items-center"
-          >
+          <div className="green-hub-fade-in-delay mt-10 flex flex-col items-start gap-4 sm:flex-row sm:flex-wrap sm:items-center">
             <PrimaryButton href="/wizard">{t.hero.ctaPrimary}</PrimaryButton>
             <Link href="/estimate" className="auros-btn auros-btn--link">
               {t.hero.ctaEstimate} →
             </Link>
-          </motion.div>
+          </div>
 
           <div className="mt-14 flex flex-wrap gap-8 border-t border-white/[0.06] pt-8">
             {metrics.map((m) => (
@@ -108,7 +90,7 @@ export function Hero() {
               {locale === "fr" ? "Explorer →" : locale === "es" ? "Explorar →" : "Explore →"}
             </Link>
           </div>
-        </motion.div>
+        </div>
 
         <ProductPreview />
       </div>
