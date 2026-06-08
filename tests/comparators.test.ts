@@ -9,6 +9,7 @@ import {
   buildPrivateCreditPayload,
   buildImmobilierPayload,
   computeComparatorSummary,
+  dedupeHubProducts,
   filterRwaPools,
   formatTvl,
   getComparatorMessages,
@@ -17,11 +18,13 @@ import {
   isComparatorPath,
   parseManualPools,
   parseManualProducts,
+  productDedupeKey,
   resolveRiskTier,
   matchesMinInvestmentFilter,
   resolveProductMeta,
   tabLabelForId,
   type DefiLlamaPool,
+  type HubProduct,
 } from "../lib/comparators";
 
 describe("comparators/defillama", () => {
@@ -419,6 +422,51 @@ describe("comparators/product-meta", () => {
       }).accreditedOnly,
       true
     );
+  });
+});
+
+describe("comparators/compare-hub", () => {
+  const baseRow = {
+    id: "goldfinch::USDC",
+    project: "goldfinch",
+    platform: "Goldfinch",
+    product: "USDC",
+    apyBase: null,
+    apyReward: null,
+    tvlUsd: 1_000_000,
+    chains: ["Ethereum"],
+    link: "https://goldfinch.finance",
+    affiliate_link: "",
+    logo: "",
+    live: true,
+    category: "emerging",
+  };
+
+  function hubProduct(
+    comparatorId: HubProduct["comparatorId"],
+    apy: number
+  ): HubProduct {
+    return {
+      row: { ...baseRow, apy },
+      comparatorId,
+      comparatorHref: "/private-credit",
+      riskTier: resolveRiskTier(comparatorId, baseRow.category),
+      meta: resolveProductMeta(comparatorId, { ...baseRow, apy }),
+    };
+  }
+
+  it("dedupes same protocol+product across comparators", () => {
+    const stable = hubProduct("stablecoins", 4.2);
+    const credit = hubProduct("private-credit", 8.1);
+    const keyA = productDedupeKey(stable);
+    const keyB = productDedupeKey(credit);
+    assert.equal(keyA, keyB);
+
+    const merged = dedupeHubProducts([stable, credit]);
+    assert.equal(merged.length, 1);
+    assert.equal(merged[0]!.row.apy, 8.1);
+    assert.deepEqual(merged[0]!.comparatorIds, ["stablecoins", "private-credit"]);
+    assert.equal(merged[0]!.riskTiers?.length, 2);
   });
 });
 

@@ -6,6 +6,10 @@ import { ACADEMY_ROUTE } from "@/lib/academy";
 
 import { AcademyHomeView } from "./_components/AcademyHomeView";
 
+function academyTallyUrl(): string | null {
+  return process.env.TALLY_URL?.trim() || null;
+}
+
 export const metadata: Metadata = {
   title: "AUROS Academy | Certification RWA & formation tokenisation",
   description:
@@ -24,7 +28,7 @@ export default function AcademyPage() {
   return (
     <>
       <AiFirstPageJsonLd path={ACADEMY_ROUTE} />
-      <AcademyHomeView />
+      <AcademyHomeView tallyUrl={academyTallyUrl()} />
     </>
   );
 }

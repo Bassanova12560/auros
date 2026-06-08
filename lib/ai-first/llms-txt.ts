@@ -21,6 +21,7 @@ export function buildLlmsTxt(pages: AiFirstPage[], full = false): string {
     "- **Gratuit** — Wizard + dossier actif (/wizard) : « Mon actif est-il tokenisable ? »",
     "- **Gratuit** — Comparateur 8 juridictions (/jurisdictions) : « Où structurer mon émission RWA ? »",
     "- **5 000 €** — Starter Kit phase 0 (/jurisdictions/starter-kit) : memo juridiction SPV + régulateur",
+    "- **Tarifs** — /pricing : grille Gratuit · Starter Kit 5 000 € · Launch sur devis",
     "- **Comparateurs rendements** — /compare, /stablecoins, /real-estate, /bonds, /commodities, /private-credit",
     "",
     "## Key pages",

@@ -32,6 +32,7 @@ type Props = {
   onBack: () => void;
   onNext: () => void;
   onNextBlocked?: () => void;
+  onPhaseClick?: (phaseIndex: number) => void;
   showValidationHint?: boolean;
   children: ReactNode;
   navExtra?: ReactNode;
@@ -49,6 +50,7 @@ export function WizardShell({
   onBack,
   onNext,
   onNextBlocked,
+  onPhaseClick,
   showValidationHint = false,
   children,
   navExtra,
@@ -128,17 +130,31 @@ export function WizardShell({
             {WIZARD_PHASES.map((p, i) => {
               const active = i === phaseIdx;
               const done = i < phaseIdx;
+              const clickable = done && onPhaseClick;
+              const pillClass = `shrink-0 rounded-full border px-2.5 py-1 text-[9px] tracking-[0.18em] transition ${
+                active
+                  ? "border-[color-mix(in_srgb,var(--auros-green-warm)_45%,white)] bg-[color-mix(in_srgb,var(--auros-green-warm)_12%,transparent)] text-white"
+                  : done
+                    ? "border-white/15 text-white/50"
+                    : "border-white/[0.06] text-white/30"
+              }`;
+              if (clickable) {
+                return (
+                  <button
+                    key={p.id}
+                    type="button"
+                    onClick={() => onPhaseClick(i)}
+                    className={`${pillClass} auros-focus interactive-subtle hover:border-white/25 hover:text-white/70`}
+                  >
+                    {p.labels[locale]}
+                  </button>
+                );
+              }
               return (
                 <span
                   key={p.id}
                   aria-current={active ? "step" : undefined}
-                  className={`shrink-0 rounded-full border px-2.5 py-1 text-[9px] tracking-[0.18em] transition ${
-                    active
-                      ? "border-[color-mix(in_srgb,var(--auros-green-warm)_45%,white)] bg-[color-mix(in_srgb,var(--auros-green-warm)_12%,transparent)] text-white"
-                      : done
-                        ? "border-white/15 text-white/50"
-                        : "border-white/[0.06] text-white/30"
-                  }`}
+                  className={pillClass}
                 >
                   {p.labels[locale]}
                 </span>

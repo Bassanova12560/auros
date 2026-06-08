@@ -21,12 +21,12 @@ export function PricingPageContent() {
         align="left"
       />
 
-      <div className="mt-10 grid gap-4 md:grid-cols-3 md:gap-5">
+      <div className="mt-10 grid min-w-0 gap-4 md:grid-cols-3 md:gap-5">
         {m.tiers.map((tier) => (
           <BezelCard
             key={tier.id}
-            className={tier.featured ? "md:-mt-1 md:mb-1" : undefined}
-            innerClassName="flex h-full flex-col p-6 md:p-7"
+            className={`min-w-0 ${tier.featured ? "md:-mt-1 md:mb-1" : undefined}`}
+            innerClassName="flex h-full min-w-0 flex-col p-5 md:p-7"
             animate
           >
             <div className="flex flex-wrap items-center gap-2">
@@ -39,7 +39,7 @@ export function PricingPageContent() {
                 </span>
               ) : null}
             </div>
-            <p className="mt-4 font-display text-3xl font-semibold tracking-tight text-white">
+            <p className="mt-4 font-display text-2xl font-semibold tracking-tight text-white sm:text-3xl">
               {tier.price}
             </p>
             <p className="mt-3 text-sm leading-relaxed text-white/55">

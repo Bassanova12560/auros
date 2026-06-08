@@ -32,14 +32,14 @@ export function PricingSection() {
         subtitle={p.subtitle}
         align="left"
       />
-      <p className="mt-4">
+      <div className="mt-6">
         <Link
           href="/pricing"
-          className="font-mono text-[10px] uppercase tracking-wider text-white/35 transition hover:text-white/55"
+          className="inline-flex min-h-[44px] items-center rounded-full border border-white/20 bg-white/[0.04] px-5 py-2.5 text-sm text-white/70 transition hover:border-white/35 hover:text-white active:scale-[0.98]"
         >
           {p.pricingOverviewLink}
         </Link>
-      </p>
+      </div>
 
       <div className="mt-10 grid min-w-0 gap-4 lg:grid-cols-12 lg:gap-5">
         <BezelCard

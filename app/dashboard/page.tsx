@@ -1,5 +1,7 @@
+import type { Metadata } from "next";
 import { auth } from "@clerk/nextjs/server";
 
+import { metadataFromPath } from "@/lib/seo/metadata";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 
 import {
@@ -9,6 +11,8 @@ import {
 import { DashboardDossierPreview } from "./_components/DashboardDossierPreview";
 import { normalizeDossierStatus } from "@/lib/dossier-status";
 import type { DossierRow } from "./_components/DossierList";
+
+export const metadata: Metadata = metadataFromPath("/dashboard");
 
 export const dynamic = "force-dynamic";
 

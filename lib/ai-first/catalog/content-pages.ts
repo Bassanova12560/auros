@@ -201,6 +201,7 @@ export const pricingPage = enrichPage({
     { key: "Launch", value: "Sur devis — /jurisdictions#quote-form" },
   ],
   relatedPaths: ["/wizard", "/jurisdictions", "/jurisdictions/starter-kit"],
+  breadcrumbs: [{ name: "AUROS", path: "/" }],
 });
 
 export const greenFaqPage = enrichPage({

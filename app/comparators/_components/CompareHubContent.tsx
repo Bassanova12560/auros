@@ -18,6 +18,7 @@ import {
   formatLiquidity,
   formatMinInvestment,
   matchesMinInvestmentFilter,
+  productDedupeKey,
   resolveComparatorProductLink,
 } from "@/lib/comparators";
 import type { CompareHubPayload, HubProduct } from "@/lib/comparators/compare-hub";
@@ -54,7 +55,19 @@ function multiProfileBadge(
 }
 
 function productRowKey(product: HubProduct): string {
-  return `${product.row.platform}::${product.row.product}::${product.row.apy}`;
+  return productDedupeKey(product);
+}
+
+function assetTypesLabel(
+  product: HubProduct,
+  messages: ComparatorMessages
+): string {
+  const ids = product.comparatorIds ?? [product.comparatorId];
+  const unique = [...new Set(ids)];
+  if (unique.length <= 1) {
+    return assetTypeForId(messages, unique[0]!);
+  }
+  return unique.map((id) => assetTypeForId(messages, id)).join(" · ");
 }
 
 export function CompareHubContent({ payload }: CompareHubContentProps) {
@@ -291,7 +304,7 @@ export function CompareHubContent({ payload }: CompareHubContentProps) {
                 <HubDesktopRow
                   key={productRowKey(product)}
                   product={product}
-                  assetType={assetTypeForId(messages, product.comparatorId)}
+                  assetType={assetTypesLabel(product, messages)}
                   copy={copy}
                   riskLabels={riskLabels}
                 />
@@ -305,7 +318,7 @@ export function CompareHubContent({ payload }: CompareHubContentProps) {
             <HubMobileRow
               key={productRowKey(product)}
               product={product}
-              assetType={assetTypeForId(messages, product.comparatorId)}
+              assetType={assetTypesLabel(product, messages)}
               copy={copy}
               riskLabels={riskLabels}
             />

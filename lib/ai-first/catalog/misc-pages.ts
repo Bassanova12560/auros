@@ -5,7 +5,7 @@ export const partnersPage = enrichPage({
   path: "/partners",
   title: "Partenaires AUROS | Intégrations RWA",
   description:
-    "Devenez partenaire AUROS — plateformes tokenisation, counsel, custodians, tech RWA.",
+    "Programme partenaires AUROS — intégrations plateformes RWA, counsel, custodians et prestataires tech.",
   summary:
     "Programme partenaires AUROS pour acteurs RWA : plateformes d'émission, cabinets, custodians, intégrations tech. Contact via formulaire.",
   contentType: "guide",

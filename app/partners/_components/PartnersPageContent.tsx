@@ -3,11 +3,8 @@
 import Link from "next/link";
 
 import { useLocale } from "@/app/_components/i18n/LocaleProvider";
-import { AmbientShell } from "@/app/_components/ui/AmbientShell";
 import { BezelCard } from "@/app/_components/ui/BezelCard";
 import { PrimaryButton } from "@/app/_components/ui/PrimaryButton";
-import { Footer } from "@/app/_components/Footer";
-import { Nav } from "@/app/_components/Nav";
 import { getPartnersMessages } from "@/lib/partners-i18n";
 
 import { PartnerContactForm } from "./PartnerContactForm";
@@ -17,9 +14,7 @@ export function PartnersPageContent() {
   const m = getPartnersMessages(locale);
 
   return (
-    <AmbientShell>
-      <Nav />
-      <main className="page-main page-main--nav min-h-dvh pt-24 text-white">
+    <main className="page-main page-main--nav min-h-dvh text-white">
         <section className="border-b border-white/[0.06] px-4 py-16 md:px-6 md:py-28 lg:py-36">
           <div className="page-inner page-inner--6xl mx-auto">
             <p className="page-eyebrow">{m.eyebrow}</p>
@@ -132,7 +127,5 @@ export function PartnersPageContent() {
           </div>
         </section>
       </main>
-      <Footer />
-    </AmbientShell>
   );
 }

@@ -20,6 +20,8 @@ export type Messages = {
     green: string;
     compare: string;
     academy: string;
+    partners: string;
+    pricing: string;
   };
   hero: {
     eyebrow: string;

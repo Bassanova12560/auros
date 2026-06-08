@@ -24,6 +24,7 @@ type AcademyCoreMessages = {
     eyebrow: string;
     title: string;
     intro: string;
+    teaserHighlights: readonly string[];
     verifyTitle: string;
     verifyBody: string;
     startFree: string;
@@ -118,8 +119,15 @@ type AcademyCoreMessages = {
     checkout: (price: string) => string;
     redirecting: string;
   };
-  mailto: {
-    praticienSubject: string;
+  waitlist: {
+    emailLabel: string;
+    emailPlaceholder: string;
+    submit: string;
+    submitting: string;
+    success: string;
+    error: string;
+    rateLimit: string;
+    invalidEmail: string;
   };
   tierNames: {
     fundamentals: string;
@@ -146,6 +154,11 @@ const fr: AcademyCoreMessages = {
     title: "AUROS Academy",
     intro:
       "Commencez par la certification Fondamentaux (gratuite). Les parcours Praticien et équipe ne sont pas encore ouverts.",
+    teaserHighlights: [
+      "Quiz ~20 min · FR / EN / ES",
+      "Attestation vérifiable 90 jours",
+      "Diplôme PDF optionnel",
+    ],
     verifyTitle: "Vérifier une attestation",
     verifyBody:
       "Chaque certifié reçoit un lien unique /academy/verify/… — partageable sur LinkedIn, CV ou data room.",
@@ -314,8 +327,15 @@ const fr: AcademyCoreMessages = {
     checkout: (price) => `Commander — ${price}`,
     redirecting: "Redirection Stripe…",
   },
-  mailto: {
-    praticienSubject: "AUROS Academy Praticien",
+  waitlist: {
+    emailLabel: "Email",
+    emailPlaceholder: "vous@entreprise.com",
+    submit: "Me prévenir à l'ouverture",
+    submitting: "Envoi…",
+    success: "Merci — nous vous préviendrons à l'ouverture du parcours.",
+    error: "Envoi impossible — réessayez dans un instant.",
+    rateLimit: "Trop de tentatives — réessayez dans une heure.",
+    invalidEmail: "Indiquez une adresse email valide.",
   },
   tierNames: {
     fundamentals: "Certification Fondamentaux RWA",
@@ -345,6 +365,11 @@ const en: AcademyCoreMessages = {
     title: "AUROS Academy",
     intro:
       "Start with the free Fundamentals certification. Practitioner and team tracks are not open yet.",
+    teaserHighlights: [
+      "~20 min quiz · FR / EN / ES",
+      "Verifiable 90-day certificate",
+      "Optional PDF diploma",
+    ],
     verifyTitle: "Verify a certificate",
     verifyBody:
       "Each graduate receives a unique /academy/verify/… link — shareable on LinkedIn, CV, or data room.",
@@ -513,8 +538,15 @@ const en: AcademyCoreMessages = {
     checkout: (price) => `Order — ${price}`,
     redirecting: "Redirecting to Stripe…",
   },
-  mailto: {
-    praticienSubject: "AUROS Academy Practitioner",
+  waitlist: {
+    emailLabel: "Email",
+    emailPlaceholder: "you@company.com",
+    submit: "Notify me at launch",
+    submitting: "Sending…",
+    success: "Thanks — we'll notify you when the track opens.",
+    error: "Could not send — try again shortly.",
+    rateLimit: "Too many attempts — try again in one hour.",
+    invalidEmail: "Enter a valid email address.",
   },
   tierNames: {
     fundamentals: "RWA Fundamentals Certification",
@@ -544,6 +576,11 @@ const es: AcademyCoreMessages = {
     title: "AUROS Academy",
     intro:
       "Empiece por la certificación Fundamentos (gratuita). Los recorridos Practicante y equipo aún no están abiertos.",
+    teaserHighlights: [
+      "Quiz ~20 min · FR / EN / ES",
+      "Certificado verificable 90 días",
+      "Diploma PDF opcional",
+    ],
     verifyTitle: "Verificar un certificado",
     verifyBody:
       "Cada certificado recibe un enlace único /academy/verify/… — compartible en LinkedIn, CV o data room.",
@@ -712,8 +749,15 @@ const es: AcademyCoreMessages = {
     checkout: (price) => `Pedir — ${price}`,
     redirecting: "Redirigiendo a Stripe…",
   },
-  mailto: {
-    praticienSubject: "AUROS Academy Practicante",
+  waitlist: {
+    emailLabel: "Email",
+    emailPlaceholder: "tu@empresa.com",
+    submit: "Avísame al abrir",
+    submitting: "Enviando…",
+    success: "Gracias — te avisaremos cuando abra el recorrido.",
+    error: "No se pudo enviar — inténtalo de nuevo.",
+    rateLimit: "Demasiados intentos — vuelve en una hora.",
+    invalidEmail: "Indica un email válido.",
   },
   tierNames: {
     fundamentals: "Certificación Fundamentos RWA",

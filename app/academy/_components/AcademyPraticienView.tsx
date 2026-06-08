@@ -4,11 +4,16 @@ import Link from "next/link";
 
 import { BezelCard } from "@/app/_components/ui/BezelCard";
 import { useLocale } from "@/app/_components/i18n/LocaleProvider";
-import { AUROS_ORG } from "@/lib/ai-first/org";
 import { ACADEMY_ROUTE } from "@/lib/academy";
 import { getAcademyMessages } from "@/lib/academy/i18n";
 
-export function AcademyPraticienView() {
+import { AcademyWaitlistForm } from "./AcademyWaitlistForm";
+
+type AcademyPraticienViewProps = {
+  tallyUrl?: string | null;
+};
+
+export function AcademyPraticienView({ tallyUrl }: AcademyPraticienViewProps) {
   const { locale } = useLocale();
   const m = getAcademyMessages(locale);
 
@@ -22,14 +27,13 @@ export function AcademyPraticienView() {
             <li key={item}>· {item}</li>
           ))}
         </ul>
-        <p className="mt-8">
-          <a
-            href={`mailto:${AUROS_ORG.contactEmail}?subject=${encodeURIComponent(m.mailto.praticienSubject)}`}
-            className="text-sm text-white/60 hover:text-white/80"
-          >
-            {m.praticien.notify}
-          </a>
-        </p>
+        <div className="mt-8">
+          <AcademyWaitlistForm
+            track="praticien"
+            tallyUrl={tallyUrl}
+            ctaLabel={m.praticien.notify.replace(/\s*→\s*$/, "")}
+          />
+        </div>
         <Link
           href={ACADEMY_ROUTE}
           className="mt-8 inline-block text-sm text-white/50 hover:text-white"

@@ -6,6 +6,10 @@ import { ACADEMY_PRATICIEN_ROUTE } from "@/lib/academy";
 
 import { AcademyPraticienView } from "../_components/AcademyPraticienView";
 
+function academyTallyUrl(): string | null {
+  return process.env.TALLY_URL?.trim() || null;
+}
+
 export const metadata: Metadata = {
   title: "Certification Praticien RWA | AUROS Academy",
   description:
@@ -22,7 +26,7 @@ export default function AcademyPraticienPage() {
   return (
     <>
       <AiFirstPageJsonLd path={ACADEMY_PRATICIEN_ROUTE} />
-      <AcademyPraticienView />
+      <AcademyPraticienView tallyUrl={academyTallyUrl()} />
     </>
   );
 }

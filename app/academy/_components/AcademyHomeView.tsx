@@ -5,7 +5,6 @@ import Link from "next/link";
 import { BezelCard } from "@/app/_components/ui/BezelCard";
 import { PrimaryButton } from "@/app/_components/ui/PrimaryButton";
 import { useLocale } from "@/app/_components/i18n/LocaleProvider";
-import { AUROS_ORG } from "@/lib/ai-first/org";
 import {
   ACADEMY_ENTREPRISE_ROUTE,
   ACADEMY_FUNDAMENTALS_ROUTE,
@@ -14,13 +13,19 @@ import {
 } from "@/lib/academy";
 import { getAcademyMessages } from "@/lib/academy/i18n";
 
+import { AcademyWaitlistForm } from "./AcademyWaitlistForm";
+
 const TIER_META = [
   { id: "fundamentals" as const, path: ACADEMY_FUNDAMENTALS_ROUTE, status: "available" as const },
   { id: "praticien" as const, path: ACADEMY_PRATICIEN_ROUTE, status: "soon" as const },
   { id: "entreprise" as const, path: ACADEMY_ENTREPRISE_ROUTE, status: "partial" as const },
 ];
 
-export function AcademyHomeView() {
+type AcademyHomeViewProps = {
+  tallyUrl?: string | null;
+};
+
+export function AcademyHomeView({ tallyUrl }: AcademyHomeViewProps) {
   const { locale } = useLocale();
   const m = getAcademyMessages(locale);
 
@@ -34,6 +39,16 @@ export function AcademyHomeView() {
           {m.home.title}
         </h1>
         <p className="mt-5 text-lg leading-relaxed text-white/55">{m.home.intro}</p>
+        <ul className="mt-6 flex flex-wrap gap-2">
+          {m.home.teaserHighlights.map((item) => (
+            <li
+              key={item}
+              className="rounded-full border border-white/[0.08] bg-white/[0.02] px-3 py-1.5 font-mono text-[10px] uppercase tracking-wider text-white/45"
+            >
+              {item}
+            </li>
+          ))}
+        </ul>
         <div className="mt-10">
           <PrimaryButton href={ACADEMY_FUNDAMENTALS_ROUTE}>{m.home.startFree}</PrimaryButton>
         </div>
@@ -54,12 +69,12 @@ export function AcademyHomeView() {
               </p>
               <div className="mt-8">
                 {status === "soon" ? (
-                  <a
-                    href={`mailto:${AUROS_ORG.contactEmail}?subject=${encodeURIComponent(m.mailto.praticienSubject)}`}
-                    className="font-mono text-[11px] tracking-wide text-white/40 transition hover:text-white/70"
-                  >
-                    {tier.cta} →
-                  </a>
+                  <AcademyWaitlistForm
+                    track="praticien"
+                    tallyUrl={tallyUrl}
+                    compact
+                    ctaLabel={tier.cta}
+                  />
                 ) : (
                   <Link
                     href={path}

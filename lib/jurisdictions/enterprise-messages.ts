@@ -235,8 +235,8 @@ const FR: EnterpriseMessages = {
       {
         quote:
           "Shortlist tech RWA pertinente pour notre obligation tokenisée — intro directe au bon interlocuteur.",
-        name: "Marcus Chen",
-        role: "Head of Digital Assets · family office",
+        name: "Thomas Weber",
+        role: "Directeur structuration · fonds dette privée",
         metric: "2 prestataires shortlistés",
       },
     ],

@@ -12,12 +12,12 @@ export function DashboardDossierPreview({ locale = "fr" }: Props) {
 
   return (
     <aside
-      className="mx-auto w-full max-w-md text-left"
+      className="mx-auto w-full min-w-0 max-w-md text-left sm:max-w-md"
       aria-label={m.previewLabel}
       data-dashboard-teaser=""
     >
-      <div className="bezel-outer">
-        <div className="bezel-inner p-5 md:p-6">
+      <div className="bezel-outer min-w-0">
+        <div className="bezel-inner min-w-0 p-4 sm:p-5 md:p-6">
           <div className="flex items-center justify-between gap-3">
             <p className="font-mono text-[9px] uppercase tracking-[0.24em] text-white/45">
               {m.previewLabel}

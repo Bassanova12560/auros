@@ -89,7 +89,8 @@ export const dashboardPage = enrichPage({
   id: "dashboard",
   path: "/dashboard",
   title: "Mes dossiers | AUROS",
-  description: "Liste des dossiers RWA enregistrés — compte AUROS.",
+  description:
+    "Espace personnel AUROS — dossiers tokenisation RWA, scores d'admission et exports PDF depuis votre compte.",
   summary: "Espace utilisateur authentifié listant les dossiers tokenisation sauvegardés.",
   contentType: "app",
   language: "multi",

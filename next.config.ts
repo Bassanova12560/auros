@@ -2,6 +2,7 @@ import type { NextConfig } from "next";
 
 import { LEGACY_COMPARATOR_REDIRECTS } from "./lib/comparators/constants";
 import { GREEN_LEGACY_REDIRECTS } from "./lib/green/constants";
+import { AUROS_LEGACY_REDIRECTS } from "./lib/site/redirects";
 
 const securityHeaders = [
   { key: "X-DNS-Prefetch-Control", value: "on" },
@@ -39,6 +40,11 @@ const nextConfig: NextConfig = {
         permanent: true,
       })),
       ...GREEN_LEGACY_REDIRECTS.map(({ source, destination, permanent }) => ({
+        source,
+        destination,
+        permanent,
+      })),
+      ...AUROS_LEGACY_REDIRECTS.map(({ source, destination, permanent }) => ({
         source,
         destination,
         permanent,

@@ -22,7 +22,7 @@ export default function robots(): MetadataRoute.Robots {
       },
       ...aiBots.map((userAgent) => ({
         userAgent,
-        allow: ["/", "/llms.txt", "/llms-full.txt", "/humans.txt", "/about", "/academy", "/ai-first/", "/jurisdictions", "/green", "/faq", "/ressources", "/how-it-works", "/discover", "/trust"],
+        allow: ["/", "/llms.txt", "/llms-full.txt", "/humans.txt", "/about", "/academy", "/ai-first/", "/jurisdictions", "/pricing", "/green", "/faq", "/ressources", "/how-it-works", "/discover", "/trust"],
         disallow: ["/starter/", "/api/dev/"],
       })),
     ],

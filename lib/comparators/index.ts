@@ -89,7 +89,7 @@ export { getImmobilierRows } from "./immobilier";
 export { getBondRows } from "./bonds";
 export { getCommodityRows } from "./commodities";
 export { getPrivateCreditRows } from "./private-credit";
-export { getCompareHubPayload } from "./compare-hub";
+export { getCompareHubPayload, productDedupeKey, dedupeHubProducts } from "./compare-hub";
 export type { CompareHubPayload, HubProduct, TierHighlight } from "./compare-hub";
 
 export {

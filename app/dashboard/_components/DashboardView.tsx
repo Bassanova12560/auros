@@ -23,16 +23,18 @@ export function DashboardGuest({ preview }: { preview?: ReactNode }) {
     <AmbientShell>
       <Nav />
       <main className="page-main page-main--nav text-white">
-        <div className="page-inner page-inner--lg mx-auto px-4 pb-16 pt-6 md:px-6 md:pt-8">
-          <div className="flex flex-col gap-10 lg:flex-row lg:items-start lg:gap-12">
-            <div className="flex-1 text-center lg:text-left">
+        <div className="page-inner page-inner--lg mx-auto min-w-0 px-4 pb-16 pt-4 md:px-6 md:pt-8">
+          <div className="flex flex-col gap-8 sm:gap-10 lg:flex-row lg:items-start lg:gap-12">
+            <div className="min-w-0 flex-1 text-center lg:text-left">
               {preview ? (
-                <div className="mb-8 flex justify-center lg:justify-start">{preview}</div>
+                <div className="mb-6 flex justify-center sm:mb-8 lg:justify-start">
+                  {preview}
+                </div>
               ) : null}
               <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-white/45">
                 {m.eyebrow}
               </p>
-              <h1 className="mt-4 font-display text-3xl font-semibold md:text-4xl">
+              <h1 className="mt-4 font-display text-2xl font-semibold sm:text-3xl md:text-4xl">
                 {m.title}
               </h1>
               <p className="mx-auto mt-3 max-w-lg text-sm leading-relaxed text-muted lg:mx-0">
@@ -40,14 +42,14 @@ export function DashboardGuest({ preview }: { preview?: ReactNode }) {
               </p>
               <Link
                 href="/wizard"
-                className="mt-6 inline-flex min-h-[44px] items-center justify-center rounded-xl border border-white bg-white px-5 py-3 font-mono text-xs uppercase tracking-wider text-void transition hover:bg-white/90"
+                className="mt-6 inline-flex min-h-[44px] w-full max-w-xs items-center justify-center rounded-xl border border-white bg-white px-5 py-3 font-mono text-xs uppercase tracking-wider text-void transition hover:bg-white/90 sm:w-auto"
                 data-dashboard-teaser-cta=""
               >
                 {m.continueWizard}
               </Link>
             </div>
 
-            <div className="w-full max-w-sm shrink-0 rounded-2xl border border-white/[0.08] bg-white/[0.02] p-6 md:p-8 lg:mx-0 lg:ml-auto">
+            <div className="w-full min-w-0 max-w-sm shrink-0 rounded-2xl border border-white/[0.08] bg-white/[0.02] p-5 md:p-8 lg:mx-0 lg:ml-auto">
               <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/40">
                 {m.eyebrow}
               </p>

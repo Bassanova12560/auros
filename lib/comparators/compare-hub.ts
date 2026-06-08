@@ -12,6 +12,7 @@ import type { ComparatorProductRow } from "./types";
 export type HubProduct = {
   row: ComparatorProductRow;
   comparatorId: ComparatorId;
+  comparatorIds?: ComparatorId[];
   comparatorHref: string;
   riskTier: RiskTier;
   riskTiers?: RiskTier[];
@@ -52,27 +53,43 @@ function toHubProducts(
   }));
 }
 
-function productDedupeKey(product: HubProduct): string {
+export function productDedupeKey(product: HubProduct): string {
   const platform = product.row.platform.trim().toLowerCase();
   const name = product.row.product.trim().toLowerCase();
-  const apy = product.row.apy.toFixed(4);
-  return `${platform}::${name}::${apy}`;
+  return `${platform}::${name}`;
 }
 
-function dedupeHubProducts(products: HubProduct[]): HubProduct[] {
+function productHasTier(product: HubProduct, tier: RiskTier): boolean {
+  const tiers = product.riskTiers ?? [product.riskTier];
+  return tiers.includes(tier);
+}
+
+export function dedupeHubProducts(products: HubProduct[]): HubProduct[] {
   const map = new Map<string, HubProduct>();
   for (const product of products) {
     const key = productDedupeKey(product);
     const existing = map.get(key);
     if (!existing) {
-      map.set(key, { ...product, riskTiers: [product.riskTier] });
+      map.set(key, {
+        ...product,
+        riskTiers: [product.riskTier],
+        comparatorIds: [product.comparatorId],
+      });
       continue;
     }
-    const riskTiers = [...new Set([...(existing.riskTiers ?? [existing.riskTier]), product.riskTier])];
+    const riskTiers = [
+      ...new Set([...(existing.riskTiers ?? [existing.riskTier]), product.riskTier]),
+    ];
+    const comparatorIds = [
+      ...new Set([
+        ...(existing.comparatorIds ?? [existing.comparatorId]),
+        product.comparatorId,
+      ]),
+    ];
     if (product.row.apy > existing.row.apy) {
-      map.set(key, { ...product, riskTiers });
+      map.set(key, { ...product, riskTiers, comparatorIds });
     } else {
-      map.set(key, { ...existing, riskTiers });
+      map.set(key, { ...existing, riskTiers, comparatorIds });
     }
   }
   return [...map.values()];
@@ -80,7 +97,7 @@ function dedupeHubProducts(products: HubProduct[]): HubProduct[] {
 
 function buildTierHighlights(products: HubProduct[]): TierHighlight[] {
   return RISK_TIER_ORDER.map((tier) => {
-    const scoped = products.filter((p) => p.riskTier === tier);
+    const scoped = products.filter((p) => productHasTier(p, tier));
     const withYield = scoped.filter((p) => p.row.apy > 0);
     const best =
       withYield.length > 0

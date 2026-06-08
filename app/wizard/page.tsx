@@ -57,6 +57,7 @@ import {
   prevExpertStep,
   WIZARD_EXPERT_STEPS,
 } from "@/lib/wizard-expert-path";
+import { firstStepOfPhase } from "@/lib/wizard-phases";
 
 export default function WizardPage() {
   const [step, setStep] = useState(1);
@@ -579,6 +580,15 @@ export default function WizardPage() {
     if (step > 1) setStep(step - 1);
   }, [step, expertMode]);
 
+  const goToPhase = useCallback(
+    (phaseIndex: number) => {
+      if (expertMode) return;
+      setStep(firstStepOfPhase(phaseIndex));
+      setValidationHint(false);
+    },
+    [expertMode]
+  );
+
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Enter" && !(e.target instanceof HTMLTextAreaElement)) {
@@ -711,6 +721,7 @@ export default function WizardPage() {
       showNext={canGoNext}
       onBack={goBack}
       onNext={goNext}
+      onPhaseClick={goToPhase}
       onNextBlocked={() => setValidationHint(true)}
       showValidationHint={validationHint}
     >

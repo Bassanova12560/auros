@@ -16,6 +16,8 @@ export const es: Messages = {
     green: "Green",
     compare: "Compare",
     academy: "Academy",
+    partners: "Plataformas",
+    pricing: "Tarifas",
   },
   hero: {
     eyebrow: "Activos del mundo real",

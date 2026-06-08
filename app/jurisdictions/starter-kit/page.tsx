@@ -66,8 +66,8 @@ export default function StarterKitPage() {
                   {m.ctaGuide}
                 </PrimaryButton>
                 <a
-                  href={`${JURISDICTIONS_ROUTE}${JURISDICTIONS_ANCHORS.quote}`}
-                  className="inline-flex items-center rounded-full border border-white/15 px-6 py-3 text-sm text-white/70 transition hover:border-white/30 hover:text-white"
+                  href="/pricing"
+                  className="inline-flex min-h-[44px] items-center rounded-full border border-white/15 px-6 py-3 text-sm text-white/70 transition hover:border-white/30 hover:text-white"
                 >
                   {m.ctaPricing}
                 </a>
