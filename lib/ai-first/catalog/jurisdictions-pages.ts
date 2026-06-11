@@ -18,7 +18,7 @@ export const jurisdictionsPage = enrichPage({
   path: JURISDICTIONS_ROUTE,
   title: "Comparateur juridictions RWA | AUROS",
   description:
-    "Comparez 8 juridictions tokenisation RWA : frais, délais licence, fiscalité investisseur, KYC — DIFC, Luxembourg, Singapour, Suisse, France, Irlande, Bahreïn, Gibraltar.",
+    "Comparez les 8 juridictions RWA : Luxembourg, DIFC, Suisse, Liechtenstein, Singapour, BVI, Caïmans, France.",
   summary:
     "Outil B2B central AUROS pour arbitrer où structurer une émission RWA (phase 0). Compare 8 juridictions sur frais État vs conseil, délais licence, fiscalité investisseur et niveau KYC. Étude comparative gratuite ; memo juridiction Starter Kit 5 000 € si validation.",
   contentType: "tool",

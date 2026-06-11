@@ -426,7 +426,7 @@ export const fr: Messages = {
     howItWorks: "Comment ça marche",
     discover: "Découvrir",
     trust: "Confiance",
-    compareAll: "Compare all RWA yields",
+    compareAll: "Comparer tous les rendements RWA",
     jurisdictionComparator: "Comparateur juridictions",
     stablecoins: "Stablecoins RWA",
     realEstate: "Immobilier RWA",

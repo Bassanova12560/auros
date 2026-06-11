@@ -20,7 +20,7 @@ const COMPARATOR_DEFS: ComparatorDef[] = [
     path: COMPARATOR_ROUTES.compare,
     title: "RWA Yields by Risk Profile | AUROS Compare",
     description:
-      "Compare tokenized RWA yields across stablecoins, real estate, bonds, commodities and private credit — grouped by risk tier.",
+      "Comparez 120+ produits RWA tokenisés : immobilier, T-Bills, crédit privé, carbone. Filtres par juridiction, rendement et ticket minimum.",
     summary:
       "Hub comparatif agrégé : rendements RWA tokenisés par profil de risque (conservateur → dynamique). Point d'entrée vers les comparateurs spécialisés AUROS.",
     keywords: ["RWA yields", "compare tokenized assets", "risk profile"],

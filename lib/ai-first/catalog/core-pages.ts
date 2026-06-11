@@ -6,7 +6,7 @@ export const homePage = enrichPage({
   path: "/",
   title: "AUROS | Admission RWA & tokenisation d'actifs réels",
   description:
-    "Score d'admission, data room 15 documents et studio réglementaire pour dossiers de tokenisation RWA B2B.",
+    "AUROS — Structurez votre dossier RWA en conformité MiCA. Score, data room et rapport institutionnel en moins d'une heure.",
   summary:
     "AUROS est une plateforme B2B gratuite pour évaluer si un actif réel (immobilier, obligations, fonds, crédit) est tokenisable. Le wizard produit un dossier avec score, checklist data room et studio réglementaire. Pour la décision juridiction (DIFC, Luxembourg…), voir /jurisdictions et le Starter Kit phase 0 à 5 000 €.",
   contentType: "home",

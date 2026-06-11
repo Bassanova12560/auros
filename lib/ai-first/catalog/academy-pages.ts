@@ -19,7 +19,7 @@ export const academyHomePage = enrichPage({
   path: ACADEMY_ROUTE,
   title: "AUROS Academy | Certification RWA & formation tokenisation",
   description:
-    "Certification RWA AUROS Academy — parcours Fondamentaux gratuit disponible. Attestation 90 j, diplôme PDF optionnel 39 €. Praticien et parcours équipe prochainement.",
+    "AUROS Academy — Formez-vous à la conformité RWA : MiCA, KYC, structuration juridique.",
   summary:
     "AUROS Academy est le bras formation & certification RWA d'AUROS — indépendant des outils wizard/comparateur. Disponible : Certification Fondamentaux RWA gratuite (quiz anti-triche 8/10, 3 réponses guidées 12 mots min, attestation 90 j + micro-renouvellement, diplôme PDF optionnel 39 €). Certificat établissement 249 €. Registre public agrégé sur /academy/registry. Prochainement : parcours Praticien et certification équipe complète.",
   contentType: "academy",

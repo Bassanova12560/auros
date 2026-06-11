@@ -29,7 +29,7 @@ export const greenHomePage = enrichPage({
   path: GREEN_ROUTE,
   title: "Tokenisation verte & énergie locale | AUROS Green",
   description:
-    "Place de marché mondiale énergie verte, grille RTMS, registre public et wizard actif renouvelable. 25+ pays, statuts honnêtes (démo, pilote, registre). FR / EN / ES.",
+    "AUROS Green — Structurez vos actifs d'énergie renouvelable pour la tokenisation MiCA.",
   summary:
     "AUROS Green — hub tokenisation verte : marketplace mondiale (25+ pays), méthodologie RTMS, KPIs indicatifs, registre vérifiable, wizard actif renouvelable et candidature label.",
   contentType: "landing",

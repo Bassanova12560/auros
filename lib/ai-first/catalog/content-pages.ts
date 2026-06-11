@@ -139,7 +139,7 @@ export const trustPage = enrichPage({
   path: "/trust",
   title: "Confiance & conformité | AUROS",
   description:
-    "MiCA, RGPD, KYC/AML — cadre réglementaire transparent, processus en 3 étapes et retours anonymisés pour la préparation de dossiers RWA.",
+    "AUROS — Sécurité, conformité RGPD et vérification humaine pour vos dossiers RWA institutionnels.",
   summary:
     "Transparence réglementaire AUROS : MiCA, RGPD UE, KYC/AML, processus diagnostic → juridiction → revue humaine, analyses indicatives — counsel requis avant émission.",
   contentType: "guide",
