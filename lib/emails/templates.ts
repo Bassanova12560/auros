@@ -1339,3 +1339,43 @@ export function wizardProPaymentInternalEmail(
   );
   return { subject, html };
 }
+
+// --- Wizard resume reminder (48h) ---
+
+export type WizardResumeReminderEmailData = {
+  locale?: Locale;
+  resumeUrl: string;
+  tier?: string;
+};
+
+export function wizardResumeReminderEmail(data: WizardResumeReminderEmailData) {
+  const locale = data.locale ?? "fr";
+  const subject =
+    locale === "en"
+      ? "Your AUROS analysis is waiting"
+      : locale === "es"
+        ? "Su análisis AUROS le espera"
+        : "Votre analyse AUROS vous attend";
+
+  const body =
+    locale === "en"
+      ? "You unlocked the Pro wizard — pick up where you left off and complete your institutional dossier."
+      : locale === "es"
+        ? "Desbloqueó el wizard Pro — retome donde lo dejó y complete su dossier institucional."
+        : "Vous avez débloqué le wizard Pro — reprenez là où vous vous étiez arrêté et complétez votre dossier institutionnel.";
+
+  const ctaLabel =
+    locale === "en"
+      ? "Resume wizard"
+      : locale === "es"
+        ? "Reanudar wizard"
+        : "Reprendre le wizard";
+
+  const html = layout(
+    `<p style="margin:0 0 12px;font-size:18px;font-weight:600;">${escapeHtml(subject)}</p>
+    <p style="margin:0 0 8px;color:${BRAND_MUTED};">${body}</p>
+    ${data.tier ? `<p style="margin:0;color:${BRAND_MUTED};font-size:13px;">Pack: ${escapeHtml(data.tier)}</p>` : ""}
+    ${cta(data.resumeUrl, ctaLabel)}`
+  );
+  return { subject, html };
+}

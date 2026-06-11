@@ -1,7 +1,8 @@
 import { ALL_RWA_DOCUMENT_IDS } from "@/lib/rwa-document-phases";
 import type { Currency, WizardData } from "@/lib/wizard-types";
 
-export const STORAGE_KEY = "tokenization_wizard_state_v1";
+export const LEGACY_STORAGE_KEY_V1 = "tokenization_wizard_state_v1";
+export const STORAGE_KEY = "tokenization_wizard_state_v2";
 export const DOSSIER_STORAGE_KEY = "auros_dossier";
 export const TOTAL_STEPS = 15;
 

@@ -72,8 +72,10 @@ import {
   type GreenOfferInterestEmailData,
   wizardProPaymentUserEmail,
   wizardProPaymentInternalEmail,
+  wizardResumeReminderEmail,
   type WizardProPaymentEmailData,
   type WizardProPaymentInternalEmailData,
+  type WizardResumeReminderEmailData,
 } from "./templates";
 
 function getResend(): Resend | null {
@@ -277,6 +279,14 @@ export async function sendWizardProPaymentInternal(
     internalNotifyEmail() ?? "adrien@auros.app";
   const { subject, html } = wizardProPaymentInternalEmail(data);
   return sendSafe({ to: internal, subject, html });
+}
+
+export async function sendWizardResumeReminder(
+  to: string,
+  data: WizardResumeReminderEmailData
+): Promise<boolean> {
+  const { subject, html } = wizardResumeReminderEmail(data);
+  return sendSafe({ to, subject, html });
 }
 
 export async function sendStarterKitDelivery(

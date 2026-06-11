@@ -1,10 +1,15 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
-import { Suspense, useCallback, useMemo, useState } from "react";
+import { Suspense, useCallback, useEffect, useMemo, useState } from "react";
 
 import { useLocale } from "@/app/_components/i18n/LocaleProvider";
+import { track } from "@/lib/analytics";
 import { getWizardProTierMessages } from "@/lib/wizard-pro-i18n";
+import {
+  computeWizardChargeCents,
+  isUpgradeTier,
+} from "@/lib/stripe/wizard-checkout";
 import {
   isWizardTier,
   WIZARD_TIER_AMOUNTS,
@@ -14,12 +19,34 @@ import {
 
 const TIERS: WizardTier[] = ["starter", "pro", "institutional"];
 
+const PRO_UNLOCK_KEY = "auros_wizard_pro_session";
+
 function WizardProContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { locale } = useLocale();
   const m = getWizardProTierMessages(locale);
   const preselected = searchParams.get("tier");
+  const upgradeFromParam = searchParams.get("upgrade_from");
+  const sessionFromUrl = searchParams.get("session_id");
+  const [previousSessionId, setPreviousSessionId] = useState<string | null>(
+    sessionFromUrl
+  );
+  const upgradeFrom =
+    upgradeFromParam && isWizardTier(upgradeFromParam)
+      ? upgradeFromParam
+      : undefined;
+  useEffect(() => {
+    if (sessionFromUrl) {
+      setPreviousSessionId(sessionFromUrl);
+      return;
+    }
+    try {
+      setPreviousSessionId(sessionStorage.getItem(PRO_UNLOCK_KEY));
+    } catch {
+      setPreviousSessionId(null);
+    }
+  }, [sessionFromUrl]);
   const [selected, setSelected] = useState<WizardTier>(
     preselected && isWizardTier(preselected) ? preselected : "starter"
   );
@@ -27,6 +54,20 @@ function WizardProContent() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const cancelled = searchParams.get("cancelled") === "1";
+
+  const displayPrice = useCallback(
+    (tier: WizardTier) => {
+      const cents = computeWizardChargeCents(
+        tier,
+        upgradeFrom && isUpgradeTier(upgradeFrom, tier) ? upgradeFrom : undefined
+      );
+      const eur = cents / 100;
+      return locale === "en"
+        ? `€${eur.toLocaleString("en-GB")}`
+        : `${eur.toLocaleString("fr-FR")} €`;
+    },
+    [locale, upgradeFrom]
+  );
 
   const formatPrice = useCallback(
     (tier: WizardTier) => {
@@ -78,11 +119,25 @@ function WizardProContent() {
   const checkout = async () => {
     setLoading(true);
     setError(null);
+    const isUpgrade =
+      !!upgradeFrom &&
+      isUpgradeTier(upgradeFrom, selected) &&
+      !!previousSessionId;
+    track(isUpgrade ? "wizard_upgrade" : "wizard_pro_checkout", {
+      tier: selected,
+      upgradeFrom: upgradeFrom ?? "",
+    });
     try {
       const res = await fetch("/api/wizard/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ tier: selected, email, locale }),
+        body: JSON.stringify({
+          tier: selected,
+          email,
+          locale,
+          upgradeFrom: isUpgrade ? upgradeFrom : undefined,
+          previousSessionId: isUpgrade ? previousSessionId : undefined,
+        }),
       });
       const json = (await res.json()) as { url?: string; error?: string };
       if (!res.ok || !json.url) {
@@ -130,7 +185,9 @@ function WizardProContent() {
               }`}
             >
               <p className="font-mono text-[10px] uppercase tracking-wider text-white/45">
-                {formatPrice(tier)}
+                {upgradeFrom && isUpgradeTier(upgradeFrom, tier)
+                  ? displayPrice(tier)
+                  : formatPrice(tier)}
               </p>
               <p className="mt-2 text-sm font-medium text-white">{label}</p>
               <ul className="mt-3 space-y-1.5 text-xs text-white/50">
@@ -167,6 +224,16 @@ function WizardProContent() {
           </tbody>
         </table>
       </div>
+
+      {upgradeFrom && isUpgradeTier(upgradeFrom, selected) ? (
+        <p className="mt-4 max-w-md text-xs text-white/50">
+          {locale === "fr"
+            ? `Upgrade depuis ${upgradeFrom} — vous payez uniquement la différence (${displayPrice(selected)}).`
+            : locale === "es"
+              ? `Upgrade desde ${upgradeFrom} — paga solo la diferencia (${displayPrice(selected)}).`
+              : `Upgrade from ${upgradeFrom} — pay the difference only (${displayPrice(selected)}).`}
+        </p>
+      ) : null}
 
       <div className="mt-10 max-w-md">
         <label className="wizard-field-label" htmlFor="wizard-pro-email">

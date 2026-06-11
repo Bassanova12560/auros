@@ -58,6 +58,15 @@ export const RAPIDAPI_LISTING = {
       description: "Create free-tier API key (no auth required)",
       authRequired: false,
     },
+    {
+      name: "Monitor (Premium)",
+      method: "POST",
+      path: "/api/v1/monitor",
+      description:
+        "Create regulatory monitor — requires premium-tier API key (Bearer auros_pk_* with tier=premium). GET/DELETE /api/v1/monitor/:id for status and unsubscribe.",
+      authRequired: true,
+      premium: true,
+    },
   ],
   pricingTiers: [
     {
@@ -65,6 +74,14 @@ export const RAPIDAPI_LISTING = {
       monthlyQuota: 100,
       priceUsd: 0,
       description: "100 requests/month — score, products, jurisdictions, checklist",
+    },
+    {
+      name: "Premium Monitor",
+      monthlyQuota: 10_000,
+      priceUsd: 199,
+      description:
+        "POST/GET/DELETE /api/v1/monitor — regulatory change alerts (requires premium API key)",
+      available: true,
     },
     {
       name: "Pro",

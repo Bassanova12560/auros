@@ -23,6 +23,7 @@ import { ConciergeSection } from "./_components/ConciergeSection";
 import { DossierActions } from "./_components/DossierActions";
 import { DossierCollapsible } from "./_components/DossierCollapsible";
 import { DossierNextSteps } from "./_components/DossierNextSteps";
+import { DossierStarterKitCrossSell } from "./_components/DossierStarterKitCrossSell";
 import { DossierQualityScore } from "./_components/DossierQualityScore";
 import { DossierShareSection } from "./_components/DossierShareSection";
 import { AdmissionReadinessPanel } from "./_components/AdmissionReadinessPanel";
@@ -520,6 +521,8 @@ function DossierMain() {
             </div>
           )}
         </section>
+
+        <DossierStarterKitCrossSell paidTier={dossier.paidTier} />
 
         <DossierNextSteps
           isSignedIn={!!isSignedIn}

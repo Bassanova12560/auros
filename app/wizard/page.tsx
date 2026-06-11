@@ -67,10 +67,12 @@ import {
   type WizardMode,
 } from "@/lib/wizard-modes";
 import { getWizardUnlockBySessionAction } from "@/lib/actions/wizard-purchase";
+import { markWizardCompletedAction } from "@/lib/actions/wizard-complete";
 import {
   phaseIndexFromSlug,
   phaseSlugFromIndex,
 } from "@/lib/wizard-phase-url";
+import { migrateWizardStorageV1ToV2 } from "@/lib/wizard-storage-migrate";
 import type { MicaAnswers } from "@/lib/mica-checker/types";
 
 const PRO_UNLOCK_KEY = "auros_wizard_pro_session";
@@ -95,6 +97,7 @@ export default function WizardPage() {
   useEffect(() => {
     clearDemoContactStorage();
     try {
+      migrateWizardStorageV1ToV2();
       const params =
         typeof window !== "undefined"
           ? new URLSearchParams(window.location.search)

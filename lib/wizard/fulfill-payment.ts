@@ -47,6 +47,7 @@ export async function fulfillWizardPayment(session: {
       paid_at: new Date().toISOString(),
       wizard_unlocked: true,
       locale: meta.locale,
+      upgrade_from: meta.upgradeFrom ?? null,
     },
     { onConflict: "stripe_session_id" }
   );

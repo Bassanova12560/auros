@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import { EasePanel } from "@/app/_components/EasePanel";
 import { useLocale } from "@/app/_components/i18n/LocaleProvider";
@@ -39,6 +39,13 @@ export function ExploreSummary({ data }: Props) {
     data.goals[0]
       ? wizardOptionLabel(locale, "goals", data.goals[0])
       : "—";
+
+  const exploreTracked = useRef(false);
+  useEffect(() => {
+    if (exploreTracked.current) return;
+    exploreTracked.current = true;
+    track("wizard_explore_complete", { score: result?.score ?? 0 });
+  }, [result?.score]);
 
   const handlePdf = async () => {
     setPdfLoading(true);

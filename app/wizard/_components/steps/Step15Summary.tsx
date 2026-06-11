@@ -7,6 +7,7 @@ import { useCallback, useMemo, useState } from "react";
 import { EasePanel } from "@/app/_components/EasePanel";
 import { useLocale } from "@/app/_components/i18n/LocaleProvider";
 import { saveDossierAction } from "@/lib/actions/dossiers";
+import { markWizardCompletedAction } from "@/lib/actions/wizard-complete";
 import { track } from "@/lib/analytics";
 import { getEaseMessages } from "@/lib/ease-i18n";
 import { scorePresentation } from "@/lib/score-presentation";
@@ -251,8 +252,11 @@ export function Step15Summary({ data }: Props) {
     }
 
     track("wizard_completed", { score: dossier.score ?? 0 });
+    if (data.email) {
+      void markWizardCompletedAction(data.email);
+    }
     router.push("/dossier");
-  }, [buildDossier, data.assetType, isSignedIn, router, ws.s15]);
+  }, [buildDossier, data.assetType, data.email, isSignedIn, router, ws.s15]);
 
   const ctaLabel =
     genState === "saving"
