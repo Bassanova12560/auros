@@ -17,7 +17,7 @@ export const IMMOBILIER_PROJECTS: Record<string, RealEstateProjectMeta> = {
     logo: "/logos/realt.png",
   },
   lofty: {
-    name: "Lofty",
+    name: "Lofty.ai",
     link: "https://lofty.ai",
     category: "residential",
     logo: "/logos/lofty.png",
@@ -45,6 +45,21 @@ export const IMMOBILIER_PROJECTS: Record<string, RealEstateProjectMeta> = {
     link: "https://landshare.io",
     category: "land",
     logo: "/logos/landshare.png",
+  },
+  blocksquare: {
+    name: "Blocksquare",
+    link: "https://blocksquare.io",
+    category: "commercial",
+  },
+  stegx: {
+    name: "StegX",
+    link: "https://stegx.com",
+    category: "commercial",
+  },
+  tangible: {
+    name: "Tangible",
+    link: "https://www.tangible.store",
+    category: "residential",
   },
 };
 

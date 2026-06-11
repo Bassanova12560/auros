@@ -35,6 +35,31 @@ export const PRIVATE_CREDIT_PROJECTS: Record<string, PrivateCreditProjectMeta> =
     category: "alternative",
     logo: "/logos/nest.png",
   },
+  figure: {
+    name: "Figure",
+    link: "https://figure.com",
+    category: "prime",
+  },
+  credix: {
+    name: "Credix",
+    link: "https://credix.finance",
+    category: "emerging",
+  },
+  truefi: {
+    name: "TrueFi",
+    link: "https://truefi.io",
+    category: "prime",
+  },
+  "huma-finance": {
+    name: "Huma Finance",
+    link: "https://huma.finance",
+    category: "emerging",
+  },
+  clearpool: {
+    name: "Clearpool",
+    link: "https://clearpool.finance",
+    category: "prime",
+  },
 };
 
 export const DEFILLAMA_PRIVATE_CREDIT_SLUGS = Object.keys(

@@ -18,11 +18,24 @@
     "platform": "Backed Finance",
     "product": "bIB01",
     "apy": 4.2,
-    "tvlUsd": 0,
-    "chains": ["Ethereum"],
+    "tvlUsd": 45000000,
+    "chains": ["Ethereum", "Polygon"],
     "link": "https://backed.fi",
     "affiliate_link": "",
     "logo": "/logos/backed.png",
     "category": "treasury"
+  },
+  {
+    "id": "backed-bcspx",
+    "project": "backed-finance",
+    "platform": "Backed Finance",
+    "product": "bCSPX",
+    "apy": 0,
+    "tvlUsd": 28000000,
+    "chains": ["Ethereum"],
+    "link": "https://backed.fi/products/bCSPX",
+    "affiliate_link": "",
+    "logo": "/logos/backed.png",
+    "category": "mixed"
   }
 ]

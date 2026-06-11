@@ -17,6 +17,12 @@ export const BOND_PROJECTS: Record<string, BondProjectMeta> = {
     category: "sovereign",
     logo: "/logos/openeden.png",
   },
+  "openeden-hybond": {
+    name: "OpenEden × BNY",
+    link: "https://openeden.com",
+    category: "corporate",
+    logo: "/logos/openeden.png",
+  },
   "theo-network-thbill": {
     name: "Theo Network",
     link: "https://theo.xyz",
@@ -49,6 +55,88 @@ export const BOND_PROJECTS: Record<string, BondProjectMeta> = {
     category: "structured",
     logo: "/logos/centrifuge.png",
     symbols: ["JTRSY"],
+  },
+  "franklin-templeton": {
+    name: "Franklin Templeton",
+    link: "https://www.franklintempleton.com/products/benji",
+    category: "sovereign",
+  },
+  hashnote: {
+    name: "Hashnote",
+    link: "https://usyc.hashnote.com",
+    category: "sovereign",
+  },
+  wisdomtree: {
+    name: "WisdomTree",
+    link: "https://www.wisdomtree.com/investments/digital-assets",
+    category: "sovereign",
+  },
+  "matrixdock-sbtb": {
+    name: "Matrixdock",
+    link: "https://matrixdock.com",
+    category: "sovereign",
+    logo: "/logos/matrixdock.png",
+  },
+  "backed-finance": {
+    name: "Backed Finance",
+    link: "https://backed.fi",
+    category: "sovereign",
+    logo: "/logos/backed.png",
+  },
+  bitbond: {
+    name: "Bitbond",
+    link: "https://www.bitbond.com",
+    category: "corporate",
+  },
+  "swarm-markets": {
+    name: "Swarm Markets",
+    link: "https://swarm.com",
+    category: "structured",
+  },
+  "mt-pelerin": {
+    name: "Mt Pelerin",
+    link: "https://www.mtpelerin.com",
+    category: "structured",
+  },
+  "hamilton-lane": {
+    name: "Hamilton Lane",
+    link: "https://www.securitize.io",
+    category: "structured",
+  },
+  "apollo-securitize": {
+    name: "Apollo",
+    link: "https://www.securitize.io",
+    category: "structured",
+  },
+  "kkr-securitize": {
+    name: "KKR",
+    link: "https://www.securitize.io",
+    category: "structured",
+  },
+  "blackstone-securitize": {
+    name: "Blackstone",
+    link: "https://www.securitize.io",
+    category: "structured",
+  },
+  toucan: {
+    name: "Toucan Protocol",
+    link: "/green/compare?rwa=toucan",
+    category: "structured",
+  },
+  "klima-dao": {
+    name: "KlimaDAO",
+    link: "/green/compare?rwa=klim",
+    category: "structured",
+  },
+  "moss-earth": {
+    name: "Moss.Earth",
+    link: "/green/compare?rwa=moss",
+    category: "structured",
+  },
+  flowcarbon: {
+    name: "Flow Carbon",
+    link: "/green/compare?rwa=flowcarbon",
+    category: "structured",
   },
 };
 

@@ -19,7 +19,7 @@
     "product": "XAUT",
     "apy": 0,
     "tvlUsd": 650000000,
-    "chains": ["Ethereum"],
+    "chains": ["Ethereum", "Tron"],
     "link": "https://gold.tether.to",
     "affiliate_link": "",
     "logo": "/logos/tether.png",
@@ -36,6 +36,45 @@
     "link": "https://matrixdock.com",
     "affiliate_link": "",
     "logo": "/logos/matrixdock.png",
+    "category": "precious_metals"
+  },
+  {
+    "id": "ondo-global-markets",
+    "project": "ondo-global-markets",
+    "platform": "Ondo Finance",
+    "product": "Actions US tokenisées",
+    "apy": 0,
+    "tvlUsd": 250000000,
+    "chains": ["Ethereum", "Solana", "Polygon"],
+    "link": "https://ondo.finance/global-markets",
+    "affiliate_link": "",
+    "logo": "/logos/ondo.png",
+    "category": "precious_metals"
+  },
+  {
+    "id": "agrotoken-soja",
+    "project": "agrotoken",
+    "platform": "Agrotoken",
+    "product": "Soja / maïs / blé",
+    "apy": 0,
+    "tvlUsd": 18000000,
+    "chains": ["Polygon", "Ethereum"],
+    "link": "https://agrotoken.io",
+    "affiliate_link": "",
+    "logo": "",
+    "category": "agricultural"
+  },
+  {
+    "id": "cache-gold-cgt",
+    "project": "cache-gold",
+    "platform": "Cache Gold",
+    "product": "CGT",
+    "apy": 0,
+    "tvlUsd": 42000000,
+    "chains": ["Ethereum"],
+    "link": "https://cache.gold",
+    "affiliate_link": "",
+    "logo": "",
     "category": "precious_metals"
   }
 ]

@@ -57,6 +57,12 @@ export const STABLECOIN_PROJECTS: Record<string, StablecoinProjectMeta> = {
     category: "credit",
     logo: "/logos/goldfinch.png",
   },
+  "backed-finance": {
+    name: "Backed Finance",
+    link: "https://backed.fi",
+    category: "treasury",
+    logo: "/logos/backed.png",
+  },
 };
 
 export const DEFILLAMA_PROJECT_SLUGS = Object.keys(STABLECOIN_PROJECTS);

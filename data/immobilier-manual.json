@@ -15,7 +15,7 @@
   {
     "id": "lofty-portfolio",
     "project": "lofty",
-    "platform": "Lofty",
+    "platform": "Lofty.ai",
     "product": "Biens locatifs US",
     "apy": 8.2,
     "tvlUsd": 35000000,
@@ -55,7 +55,7 @@
     "id": "yieldbricks-eu",
     "project": "yieldbricks",
     "platform": "YieldBricks",
-    "product": "Actifs commerciaux EU",
+    "product": "Immo commercial EU (MiCA)",
     "apy": 8.5,
     "tvlUsd": 12000000,
     "chains": ["Polygon"],
@@ -68,7 +68,7 @@
     "id": "landshare-properties",
     "project": "landshare",
     "platform": "Landshare",
-    "product": "Foncier & résidences",
+    "product": "Foncier & résidences US",
     "apy": 10.0,
     "tvlUsd": 15000000,
     "chains": ["BNB Chain"],
@@ -76,5 +76,44 @@
     "affiliate_link": "",
     "logo": "/logos/landshare.png",
     "category": "land"
+  },
+  {
+    "id": "blocksquare-eu",
+    "project": "blocksquare",
+    "platform": "Blocksquare",
+    "product": "100+ biens EU",
+    "apy": 7.8,
+    "tvlUsd": 22000000,
+    "chains": ["Ethereum", "Polygon"],
+    "link": "https://blocksquare.io",
+    "affiliate_link": "",
+    "logo": "",
+    "category": "commercial"
+  },
+  {
+    "id": "stegx-hedera",
+    "project": "stegx",
+    "platform": "StegX",
+    "product": "Portefeuille EU + US",
+    "apy": 8.0,
+    "tvlUsd": 100000000,
+    "chains": ["Hedera"],
+    "link": "https://stegx.com",
+    "affiliate_link": "",
+    "logo": "",
+    "category": "commercial"
+  },
+  {
+    "id": "tangible-usdr",
+    "project": "tangible",
+    "platform": "Tangible",
+    "product": "USDR (stablecoin immo)",
+    "apy": 6.5,
+    "tvlUsd": 45000000,
+    "chains": ["Polygon", "Arbitrum"],
+    "link": "https://www.tangible.store",
+    "affiliate_link": "",
+    "logo": "",
+    "category": "residential"
   }
 ]
