@@ -65,6 +65,8 @@ type StoredDossier = {
   id?: string;
   status?: DossierStatus;
   greenRtms?: ReturnType<typeof computeGreenRtmsScore>;
+  wizardMode?: "explore" | "pro";
+  paidTier?: string;
 };
 
 type AiState = "idle" | "loading" | "done" | "error";
