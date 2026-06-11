@@ -1,9 +1,4 @@
-"use client";
-
-import { motion } from "framer-motion";
 import type { ReactNode } from "react";
-
-import { fadeUp } from "@/lib/motion";
 
 type BezelCardProps = {
   children: ReactNode;
@@ -18,25 +13,13 @@ export function BezelCard({
   innerClassName = "",
   animate = false,
 }: BezelCardProps) {
-  const shell = (
-    <div className={`bezel-outer ${className}`}>
-      <div className={`bezel-inner ${innerClassName}`}>{children}</div>
-    </div>
-  );
-
-  if (!animate) return shell;
+  const fadeCls = animate ? "green-hub-fade-in" : "";
 
   return (
-    <motion.div
-      className={className}
-      variants={fadeUp}
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true, margin: "-60px" }}
-    >
+    <div className={`${fadeCls} ${className}`.trim()}>
       <div className="bezel-outer h-full min-w-0">
         <div className={`bezel-inner ${innerClassName}`}>{children}</div>
       </div>
-    </motion.div>
+    </div>
   );
 }

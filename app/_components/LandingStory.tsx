@@ -1,9 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
-
 import { useTranslations } from "./i18n/LocaleProvider";
-import { fadeUp } from "@/lib/motion";
 
 type Act = 1 | 2 | 3;
 
@@ -22,13 +19,7 @@ export function LandingStory({ act }: { act: Act }) {
         act === 2 ? "border-y border-white/[0.06] bg-white/[0.015]" : ""
       }`}
     >
-      <motion.div
-        className="mx-auto max-w-3xl text-center"
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, margin: "-40px" }}
-        variants={fadeUp}
-      >
+      <div className="green-hub-fade-in mx-auto max-w-3xl text-center">
         <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-white/35">
           {String(act).padStart(2, "0")}
         </p>
@@ -38,7 +29,7 @@ export function LandingStory({ act }: { act: Act }) {
         <p className="mx-auto mt-4 max-w-xl text-base leading-relaxed text-muted">
           {content.body}
         </p>
-      </motion.div>
+      </div>
     </section>
   );
 }

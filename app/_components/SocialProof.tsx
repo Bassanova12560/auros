@@ -1,10 +1,7 @@
 "use client";
 
-import { motion } from "framer-motion";
-
 import { useTranslations } from "./i18n/LocaleProvider";
 import { SectionHeader } from "./ui/SectionHeader";
-import { fadeUp, staggerContainer } from "@/lib/motion";
 
 export function SocialProof() {
   const t = useTranslations();
@@ -48,36 +45,20 @@ export function SocialProof() {
           title={t.socialProof.title}
         />
 
-        <motion.div
-          className="mt-10 grid gap-6 border-b border-white/[0.06] pb-14 sm:grid-cols-2 lg:grid-cols-4"
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          variants={staggerContainer(0.06)}
-        >
+        <div className="green-hub-fade-in mt-10 grid gap-6 border-b border-white/[0.06] pb-14 sm:grid-cols-2 lg:grid-cols-4">
           {stats.map((s) => (
-            <motion.div key={s.label} variants={fadeUp} className="text-center">
+            <div key={s.label} className="text-center">
               <p className="font-display text-3xl font-semibold tabular-nums text-white">
                 {s.value}
               </p>
               <p className="mt-2 font-mono text-[10px] text-white/35">{s.label}</p>
-            </motion.div>
+            </div>
           ))}
-        </motion.div>
+        </div>
 
-        <motion.div
-          className="mt-14 grid gap-4 md:grid-cols-3"
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          variants={staggerContainer(0.08)}
-        >
+        <div className="green-hub-fade-in-delay mt-14 grid gap-4 md:grid-cols-3">
           {testimonials.map((item) => (
-            <motion.blockquote
-              key={item.name}
-              variants={fadeUp}
-              className="card-flat"
-            >
+            <blockquote key={item.name} className="card-flat">
               <p className="text-sm leading-relaxed text-white/80">
                 &ldquo;{item.quote}&rdquo;
               </p>
@@ -89,9 +70,9 @@ export function SocialProof() {
                   {item.role}
                 </span>
               </footer>
-            </motion.blockquote>
+            </blockquote>
           ))}
-        </motion.div>
+        </div>
       </div>
     </section>
   );

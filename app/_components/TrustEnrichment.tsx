@@ -1,9 +1,12 @@
+"use client";
+
 import { ContentFaqList } from "@/app/_components/ContentPageLayout";
-import { DEFAULT_LOCALE, getMessages } from "@/lib/i18n";
+
+import { useTranslations } from "./i18n/LocaleProvider";
 
 /** SSR-friendly trust enrichment — badges, infrastructure, native FAQ accordion. */
 export function TrustEnrichment() {
-  const te = getMessages(DEFAULT_LOCALE).trustPage;
+  const te = useTranslations().trustPage;
 
   return (
     <section className="border-t border-white/[0.06] px-6 py-16 md:py-20">

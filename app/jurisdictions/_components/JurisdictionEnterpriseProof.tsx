@@ -1,11 +1,8 @@
 "use client";
 
-import { motion } from "framer-motion";
-
 import { BezelCard } from "@/app/_components/ui/BezelCard";
 import { SectionHeader } from "@/app/_components/ui/SectionHeader";
 import { getEnterpriseMessages } from "@/lib/jurisdictions/enterprise-messages";
-import { fadeUp, staggerContainer } from "@/lib/motion";
 
 import { useJurisdictionPage } from "./useJurisdictionPage";
 
@@ -18,15 +15,9 @@ export function JurisdictionEnterpriseProof() {
     <section className="border-t border-white/[0.06] py-16 md:py-24">
       <SectionHeader eyebrow={p.eyebrow} title={p.title} align="left" />
 
-      <motion.div
-        className="mt-10 grid gap-4 md:grid-cols-3"
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, margin: "-60px" }}
-        variants={staggerContainer(0.08, 0.06)}
-      >
+      <div className="green-hub-fade-in mt-10 grid gap-4 md:grid-cols-3">
         {p.cases.map((item) => (
-          <motion.div key={item.name} variants={fadeUp}>
+          <div key={item.name}>
             <BezelCard innerClassName="flex h-full flex-col p-6 md:p-7" animate>
               <p className="flex-1 text-sm leading-relaxed text-white/65">
                 &ldquo;{item.quote}&rdquo;
@@ -39,9 +30,9 @@ export function JurisdictionEnterpriseProof() {
                 </p>
               </div>
             </BezelCard>
-          </motion.div>
+          </div>
         ))}
-      </motion.div>
+      </div>
     </section>
   );
 }

@@ -1,11 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { motion } from "framer-motion";
 
 import { useTranslations } from "./i18n/LocaleProvider";
 import { SectionHeader } from "./ui/SectionHeader";
-import { fadeUp, staggerContainer } from "@/lib/motion";
 
 function SkeletonBlock({ className }: { className?: string }) {
   return (
@@ -29,17 +27,10 @@ export function DossierDeliverables() {
           subtitle={d.subtitle}
         />
 
-        <motion.div
-          className="mt-12 grid gap-4 md:grid-cols-2"
-          variants={staggerContainer(0.06, 0.05)}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-60px" }}
-        >
+        <div className="green-hub-fade-in mt-12 grid gap-4 md:grid-cols-2">
           {d.blocks.map((block, i) => (
-            <motion.article
+            <article
               key={block.tag}
-              variants={fadeUp}
               className={`rounded-xl border border-white/[0.08] bg-white/[0.03] p-5 ${
                 i === 0 ? "md:col-span-2" : ""
               }`}
@@ -55,9 +46,7 @@ export function DossierDeliverables() {
                   </span>
                 ) : null}
               </div>
-              <h3 className="mt-3 text-sm font-medium text-white">
-                {block.title}
-              </h3>
+              <h3 className="mt-3 text-sm font-medium text-white">{block.title}</h3>
               <p className="mt-2 text-sm leading-relaxed text-white/50">
                 {block.description}
               </p>
@@ -71,9 +60,9 @@ export function DossierDeliverables() {
                   </div>
                 ) : null}
               </div>
-            </motion.article>
+            </article>
           ))}
-        </motion.div>
+        </div>
 
         <p className="mt-8 text-center text-sm leading-relaxed text-white/45">
           {d.disclaimer}

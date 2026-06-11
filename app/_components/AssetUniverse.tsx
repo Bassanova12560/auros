@@ -1,11 +1,8 @@
 "use client";
 
-import { motion } from "framer-motion";
-
 import { useTranslations } from "./i18n/LocaleProvider";
 import { BezelCard } from "./ui/BezelCard";
 import { SectionHeader } from "./ui/SectionHeader";
-import { fadeUp, staggerContainer } from "@/lib/motion";
 
 const SPANS = ["md:col-span-2", "", "", "md:col-span-2"] as const;
 const FEATURED = [true, false, false, false] as const;
@@ -24,19 +21,9 @@ export function AssetUniverse() {
           align="left"
         />
 
-        <motion.div
-          className="mt-14 grid gap-4 md:grid-cols-2"
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-80px" }}
-          variants={staggerContainer(0.08)}
-        >
+        <div className="green-hub-fade-in mt-14 grid gap-4 md:grid-cols-2">
           {au.cards.map((asset, i) => (
-            <motion.div
-              key={asset.title}
-              variants={fadeUp}
-              className={SPANS[i]}
-            >
+            <div key={asset.title} className={SPANS[i]}>
               {FEATURED[i] ? (
                 <BezelCard innerClassName="p-8">
                   <CardContent asset={asset} />
@@ -46,9 +33,9 @@ export function AssetUniverse() {
                   <CardContent asset={asset} />
                 </div>
               )}
-            </motion.div>
+            </div>
           ))}
-        </motion.div>
+        </div>
       </div>
     </section>
   );

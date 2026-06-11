@@ -217,7 +217,7 @@ const FR: ComparatorMessages = {
     viewComparator: "Voir le comparateur",
     viewPlatform: "Voir la plateforme",
     updated: (date) => `Mis à jour · ${date}`,
-    totalProducts: (n) => `${n} produits comparés`,
+    totalProducts: (n) => `${n} produit${n > 1 ? "s" : ""} unique${n > 1 ? "s" : ""}`,
     dossierBanner: {
       title: "Vous structurez un actif RWA ?",
       subtitle: "Préparez votre dossier d'admission en quelques minutes — score, data room, conformité.",
@@ -584,7 +584,7 @@ const EN: ComparatorMessages = {
     viewComparator: "View comparator",
     viewPlatform: "View platform",
     updated: (date) => `Updated · ${date}`,
-    totalProducts: (n) => `${n} products compared`,
+    totalProducts: (n) => `${n} unique product${n === 1 ? "" : "s"}`,
     dossierBanner: {
       title: "Structuring an RWA asset?",
       subtitle: "Prepare your admission dossier in minutes — score, data room, compliance.",
@@ -951,7 +951,7 @@ const ES: ComparatorMessages = {
     viewComparator: "Ver comparador",
     viewPlatform: "Ver plataforma",
     updated: (date) => `Actualizado · ${date}`,
-    totalProducts: (n) => `${n} productos comparados`,
+    totalProducts: (n) => `${n} producto${n === 1 ? "" : "s"} único${n === 1 ? "" : "s"}`,
     dossierBanner: {
       title: "¿Estructura un activo RWA?",
       subtitle: "Prepare su expediente de admisión en minutos — score, data room, cumplimiento.",

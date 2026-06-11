@@ -45,3 +45,18 @@ $idx = $html.IndexOf("Classes d")
 $idx2 = $html.IndexOf("AUROS Green")
 $afterStats = if ($idx2 -gt $idx -and $idx -gt 0) { "Y" } else { "N" }
 Write-Host "8 home Green cross-sell after stats: $afterStats"
+
+$html = Fetch "/trust"
+Write-Host "9 /trust howWeWork=$(Test-Html $html 'Comment nous travaillons') caseStudies=$(Test-Html $html 'Exemples de parcours')"
+
+$html = Fetch "/pricing"
+Write-Host "10 /pricing=$(Test-Html $html 'Starter')"
+
+$html = Fetch "/green/blog"
+Write-Host "11 /green/blog featured=$(Test-Html $html '. la une|Featured|Destacado')"
+
+$html = Fetch "/wizard"
+Write-Host "12 /wizard phase pills=$(Test-Html $html "L.actif.*Strat.gie|Strat.gie.*Conformit")"
+
+$html = Fetch "/compare"
+Write-Host "13 /compare unique products=$(Test-Html $html 'produits uniques|unique product')"

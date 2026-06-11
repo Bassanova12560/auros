@@ -480,6 +480,14 @@ export type GreenMessages = {
     wizardCta: string;
     backLink: string;
   };
+  blog: {
+    eyebrow: string;
+    title: string;
+    intro: string;
+    featuredLabel: string;
+    readArticle: string;
+    backLink: string;
+  };
   mailto: {
     greenExpertSubject: string;
   };
@@ -1370,6 +1378,15 @@ const FR: GreenMessages = {
     wizardCta: "Ouvrir le wizard — actif renouvelable",
     backLink: "← Retour AUROS Green",
   },
+  blog: {
+    eyebrow: "AUROS Green · Blog",
+    title: "Articles & guides",
+    intro:
+      "Contenus éducatifs sur RTMS, marketplace, label Verified et traçabilité énergétique — ton professionnel, statuts honnêtes.",
+    featuredLabel: "À la une",
+    readArticle: "Lire l'article →",
+    backLink: "← Retour hub Green",
+  },
   exam: {
     eyebrow: "Examen RTMS",
     title: "Quiz Praticien Green",
@@ -2259,6 +2276,15 @@ const EN: GreenMessages = {
     ],
     wizardCta: "Open wizard — renewable asset",
     backLink: "← Back to AUROS Green",
+  },
+  blog: {
+    eyebrow: "AUROS Green · Blog",
+    title: "Articles & guides",
+    intro:
+      "Educational content on RTMS, marketplace, Verified label and energy traceability — professional tone, honest statuses.",
+    featuredLabel: "Featured",
+    readArticle: "Read article →",
+    backLink: "← Back to Green hub",
   },
   exam: {
     eyebrow: "RTMS exam",
@@ -3156,6 +3182,15 @@ const ES: GreenMessages = {
     ],
     wizardCta: "Abrir wizard — activo renovable",
     backLink: "← Volver a AUROS Green",
+  },
+  blog: {
+    eyebrow: "AUROS Green · Blog",
+    title: "Artículos y guías",
+    intro:
+      "Contenido educativo sobre RTMS, marketplace, etiqueta Verified y trazabilidad energética — tono profesional, estados honestos.",
+    featuredLabel: "Destacado",
+    readArticle: "Leer artículo →",
+    backLink: "← Volver al hub Green",
   },
   exam: {
     eyebrow: "Examen RTMS",

@@ -57,7 +57,11 @@ import {
   prevExpertStep,
   WIZARD_EXPERT_STEPS,
 } from "@/lib/wizard-expert-path";
-import { firstStepOfPhase } from "@/lib/wizard-phases";
+import { firstStepOfPhase, wizardPhaseIndex } from "@/lib/wizard-phases";
+import {
+  phaseIndexFromSlug,
+  phaseSlugFromIndex,
+} from "@/lib/wizard-phase-url";
 
 export default function WizardPage() {
   const [step, setStep] = useState(1);
@@ -290,11 +294,30 @@ export default function WizardPage() {
       } catch {
         // ignore
       }
+
+      const phaseParam = params?.get("phase");
+      if (phaseParam && !demo && params?.get("expert") !== "1") {
+        const phaseIdx = phaseIndexFromSlug(phaseParam);
+        if (phaseIdx !== null) {
+          setStep(firstStepOfPhase(phaseIdx));
+        }
+      }
     } catch {
       // ignore malformed storage
     }
     setHydrated(true);
   }, []);
+
+  useEffect(() => {
+    if (!hydrated || expertMode || typeof window === "undefined") return;
+    const slug = phaseSlugFromIndex(wizardPhaseIndex(step));
+    if (!slug) return;
+    const url = new URL(window.location.href);
+    if (url.searchParams.get("phase") === slug) return;
+    url.searchParams.set("phase", slug);
+    const next = `${url.pathname}${url.search}${url.hash}`;
+    window.history.replaceState(null, "", next);
+  }, [hydrated, step, expertMode]);
 
   useEffect(() => {
     if (!hydrated) return;
