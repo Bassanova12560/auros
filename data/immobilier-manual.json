@@ -10,7 +10,8 @@
     "link": "https://realt.co",
     "affiliate_link": "",
     "logo": "/logos/realt.png",
-    "category": "residential"
+    "category": "residential",
+    "jurisdiction": "US"
   },
   {
     "id": "lofty-portfolio",
@@ -23,13 +24,15 @@
     "link": "https://lofty.ai",
     "affiliate_link": "",
     "logo": "/logos/lofty.png",
-    "category": "residential"
+    "category": "residential",
+    "jurisdiction": "US"
   },
   {
     "id": "estate-protocol-dubai",
     "project": "estate-protocol",
     "platform": "Estate Protocol",
     "product": "Immobilier Dubai",
+    "jurisdiction": "UAE",
     "apy": 8.0,
     "tvlUsd": 8000000,
     "chains": ["Arbitrum"],

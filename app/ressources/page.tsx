@@ -20,6 +20,7 @@ const SECTIONS = [
     links: [
       { href: "/how-it-works", label: "Comment ça marche", desc: "Trois étapes jusqu'au dossier RWA." },
       { href: "/estimate", label: "Score de préparation", desc: "Test indicatif en une phrase, sans compte." },
+      { href: "/tools", label: "Outils tokenisation RWA", desc: "4 outils gratuits — MiCA, rendement, juridiction et coût indicatif." },
       { href: "/wizard", label: "Wizard tokenisation", desc: "Parcours gratuit — score et data room." },
       { href: AUROS_FAQ_ROUTE, label: "FAQ AUROS", desc: "10 réponses sur wizard, juridictions, RGPD." },
     ],
@@ -27,6 +28,10 @@ const SECTIONS = [
   {
     title: "Approfondir",
     links: [
+      { href: "/blog", label: "Blog tokenisation RWA", desc: "Guides pilier — immobilier Europe, MiCA et parcours émetteur." },
+      { href: "/glossary", label: "Glossaire RWA", desc: "80+ définitions MiCA, standards, structures et ESG." },
+      { href: "/data/rwa-index", label: "AUROS RWA Index", desc: "Indice mensuel — rendements par classe, export CSV." },
+      { href: "/data/state-of-rwa-issuers", label: "State of RWA Issuers", desc: "Rapport trimestriel émetteurs — PDF avec email gate." },
       { href: "/discover", label: "Découvrir AUROS", desc: "Univers d'actifs et livrables dossier." },
       { href: "/trust", label: "Confiance & conformité", desc: "MiCA, RGPD, cadre réglementaire." },
       { href: "/jurisdictions", label: "Comparateur juridictions", desc: "8 juridictions — régulateur, fiscalité, délais." },

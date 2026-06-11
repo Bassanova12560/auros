@@ -62,6 +62,7 @@ function manualToRow(entry: ManualProductInput): CommodityRow {
     logo: entry.logo ?? "",
     live: false,
     category: (entry.category as CommodityRow["category"]) ?? "agricultural",
+    jurisdiction: entry.jurisdiction,
   };
 }
 

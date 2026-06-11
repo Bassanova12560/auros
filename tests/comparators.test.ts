@@ -8,8 +8,13 @@ import {
   buildCommoditiesPayload,
   buildPrivateCreditPayload,
   buildImmobilierPayload,
+  buildCompareHubShareUrl,
+  buildCompareShareUrl,
   computeComparatorSummary,
   dedupeHubProducts,
+  normalizeCompareProductIds,
+  parseCompareProductIdsParam,
+  toggleCompareProductId,
   filterRwaPools,
   formatTvl,
   getComparatorMessages,
@@ -388,17 +393,39 @@ describe("comparators/product-meta", () => {
   it("filters by minimum investment threshold", () => {
     assert.equal(
       matchesMinInvestmentFilter(
-        { minInvestmentUsd: 50, liquidityDays: 1, fees: "0%", accreditedOnly: false, highlight: null },
+        { minInvestmentUsd: 50, liquidityDays: 1, fees: "0%", accreditedOnly: false, highlight: null, jurisdiction: null },
         "under500"
       ),
       true
     );
     assert.equal(
       matchesMinInvestmentFilter(
-        { minInvestmentUsd: 25_000, liquidityDays: 90, fees: "1%", accreditedOnly: true, highlight: null },
+        { minInvestmentUsd: 25_000, liquidityDays: 90, fees: "1%", accreditedOnly: true, highlight: null, jurisdiction: null },
         "under500"
       ),
       false
+    );
+  });
+
+  it("resolves jurisdiction from product id metadata", () => {
+    assert.equal(
+      resolveProductMeta("immobilier", {
+        id: "estate-protocol-dubai",
+        project: "estate-protocol",
+        platform: "Estate Protocol",
+        product: "Immobilier Dubai",
+        apy: 8,
+        apyBase: null,
+        apyReward: null,
+        tvlUsd: 1_000_000,
+        chains: ["Arbitrum"],
+        link: "https://estateprotocol.io",
+        affiliate_link: "",
+        logo: "",
+        live: false,
+        category: "residential",
+      }).jurisdiction,
+      "UAE"
     );
   });
 
@@ -476,5 +503,54 @@ describe("comparators/registry", () => {
     assert.equal(isComparatorPath("/compare"), true);
     assert.equal(isComparatorPath("/stablecoins"), true);
     assert.equal(isComparatorPath("/wizard"), false);
+  });
+});
+
+describe("comparators/compare-selection", () => {
+  it("normalizes and caps product ids at 4", () => {
+    const ids = normalizeCompareProductIds([
+      "a",
+      "b",
+      "a",
+      "c",
+      "d",
+      "e",
+      "f",
+    ]);
+    assert.deepEqual(ids, ["a", "b", "c", "d"]);
+  });
+
+  it("parses compare URL param", () => {
+    assert.deepEqual(parseCompareProductIdsParam("a,b ,c"), ["a", "b", "c"]);
+    assert.deepEqual(parseCompareProductIdsParam(""), []);
+  });
+
+  it("toggles selection and blocks beyond max", () => {
+    let ids = ["a", "b", "c", "d"];
+    const full = toggleCompareProductId(ids, "e");
+    assert.equal(full.added, false);
+    assert.equal(full.reason, "full");
+
+    const removed = toggleCompareProductId(ids, "b");
+    assert.deepEqual(removed.ids, ["a", "c", "d"]);
+  });
+
+  it("builds shareable compare hub URL", () => {
+    const url = buildCompareHubShareUrl(["x", "y"], "https://auros.io");
+    assert.ok(url.startsWith("https://auros.io/compare?compare="));
+    assert.deepEqual(parseCompareProductIdsParam(new URL(url).searchParams.get("compare")), [
+      "x",
+      "y",
+    ]);
+  });
+
+  it("builds shareable compare URL for comparator pages", () => {
+    const url = buildCompareShareUrl("/stablecoins", ["a", "b"], "https://auros.io");
+    assert.ok(url.startsWith("https://auros.io/stablecoins?compare="));
+  });
+
+  it("exposes copy link i18n", () => {
+    assert.ok(getComparatorMessages("fr").compareHub.selection.copyLink.includes("lien"));
+    assert.ok(getComparatorMessages("en").compareHub.selection.linkCopied.includes("copied"));
   });
 });

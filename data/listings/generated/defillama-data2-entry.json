@@ -1,0 +1,29 @@
+{
+  "note": "AUROS has no on-chain TVL. Prefer support ticket before adapter PR. If team accepts Services listing without module, append object below to data2.ts.",
+  "entry": {
+    "name": "AUROS",
+    "address": null,
+    "symbol": "-",
+    "url": "https://getauros.com",
+    "description": "B2B RWA tokenization platform and open comparator aggregating 120+ tokenized products — bonds, stablecoins, real estate, private credit and commodities — with live APY/TVL from DeFiLlama plus curated issuer data.",
+    "chain": "Multi-Chain",
+    "logo": "auros.png",
+    "audits": "0",
+    "gecko_id": null,
+    "cmcId": null,
+    "category": "Services",
+    "chains": [
+      "Ethereum"
+    ],
+    "twitter": "",
+    "github": [],
+    "referralUrl": "https://getauros.com/compare"
+  },
+  "prChecklist": [
+    "Upload 512×512 logo to DefiLlama icons bucket (icons.llamao.fi) as auros.png",
+    "Open PR against DefiLlama/defillama-server defi/src/protocols/data2.ts",
+    "Enable Allow edits by maintainers",
+    "Explain in PR body: comparator/aggregator, no TVL — reference listing only",
+    "If rejected, use defillama.com/support ticket with DEFILLAMA_SUPPORT_TICKET body"
+  ]
+}

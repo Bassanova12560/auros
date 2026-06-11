@@ -1,0 +1,58 @@
+{
+  "generatedAt": "2026-06-11T19:18:41.690Z",
+  "api": {
+    "name": "AUROS Protocol",
+    "description": "The RWA Intelligence Layer — score MiCA readiness (0–100), browse 120+ tokenized RWA products, rank jurisdictions, and generate compliance checklists. Static rules, <200ms, no LLM. Indicative only.",
+    "category": "Finance",
+    "documentation": "https://getauros.com/developers/docs",
+    "termsOfUse": "https://getauros.com/trust",
+    "baseUrl": "https://getauros.com"
+  },
+  "endpoints": [
+    {
+      "name": "Score",
+      "method": "POST",
+      "path": "/api/v1/score",
+      "description": "MiCA intelligence score 0–100 with grade, breakdown, gaps, recommendations"
+    },
+    {
+      "name": "Products",
+      "method": "GET",
+      "path": "/api/v1/products",
+      "description": "Paginated RWA product catalog with APY, TVL, chains, jurisdiction filters"
+    },
+    {
+      "name": "Jurisdictions",
+      "method": "GET",
+      "path": "/api/v1/jurisdictions",
+      "description": "Regulatory jurisdiction ranking by asset type, investor profile, timeline, budget"
+    },
+    {
+      "name": "Checklist",
+      "method": "POST",
+      "path": "/api/v1/checklist",
+      "description": "20+ compliance checklist items per asset type and jurisdiction"
+    },
+    {
+      "name": "Create Key",
+      "method": "POST",
+      "path": "/api/v1/keys",
+      "description": "Create free-tier API key (no auth required)"
+    }
+  ],
+  "pricing": [
+    {
+      "name": "Free",
+      "monthlyQuota": 100,
+      "priceUsd": 0,
+      "description": "100 requests/month — score, products, jurisdictions, checklist"
+    }
+  ],
+  "authentication": {
+    "type": "bearer",
+    "header": "Authorization",
+    "format": "Bearer auros_pk_live_* or auros_pk_test_*",
+    "demoKey": "auros_pk_test_demo",
+    "keyCreationEndpoint": "https://getauros.com/api/v1/keys"
+  }
+}

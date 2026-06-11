@@ -30,6 +30,7 @@
     "project": "credix",
     "platform": "Credix",
     "product": "Crédit LatAm",
+    "jurisdiction": "Latin America",
     "apy": 12.0,
     "tvlUsd": 65000000,
     "chains": ["Solana"],

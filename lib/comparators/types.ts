@@ -13,6 +13,7 @@ export type ComparatorProductRow = {
   logo: string;
   live: boolean;
   category: string;
+  jurisdiction?: string;
 };
 
 export type StablecoinCategory = "treasury" | "credit" | "mixed";

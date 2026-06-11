@@ -20,6 +20,16 @@ import {
 } from "../lib/green/quiz-praticien";
 import { WIZARD_ASSET_OPTIONS } from "../app/wizard/_components/Step1Asset";
 
+const GREEN_HUB_SECONDARY_HREFS = [
+  "/green/comment-ca-marche",
+  "/green/faq",
+  "/green/blog",
+  "/green/standards",
+  "/green/compare",
+  "/green/label",
+  "/green/registry",
+] as const;
+
 describe("green/i18n", () => {
   for (const locale of ["fr", "en", "es"] as const) {
     it(`returns complete messages for ${locale}`, () => {
@@ -28,7 +38,11 @@ describe("green/i18n", () => {
       assert.ok(m.hub.manifesto.length > 40);
       assert.ok(m.hub.manifestoSign.includes("AUROS"));
       assert.equal(m.hub.actors.length, 4);
-      assert.equal(m.hub.secondary.links.length, 4);
+      assert.equal(m.hub.secondary.links.length, GREEN_HUB_SECONDARY_HREFS.length);
+      assert.deepEqual(
+        m.hub.secondary.links.map((link) => link.href),
+        [...GREEN_HUB_SECONDARY_HREFS]
+      );
       assert.ok(m.hub.metrics.title.length > 0);
       assert.ok(m.hub.metrics.noteDemo.length > 0);
       assert.ok(m.hub.registerCta.length > 0);

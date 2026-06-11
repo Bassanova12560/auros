@@ -9,7 +9,11 @@ import { PrimaryButton } from "@/app/_components/ui/PrimaryButton";
 import { PlatformLogo } from "./PlatformLogo";
 import { ProductMetaBadges } from "./ProductMetaBadges";
 import { ProductRowLink } from "./ProductRowLink";
+import { ComparePanel } from "./ComparePanel";
+import { CompareSelectCheckbox } from "./CompareSelectCheckbox";
+import { CompareSelectionBar } from "./CompareSelectionBar";
 import { RiskBadge } from "./RiskBadge";
+import { useCompareSelection } from "./useCompareSelection";
 import { useComparatorPage } from "./useComparatorPage";
 import {
   assetTypeForId,
@@ -77,6 +81,16 @@ export function CompareHubContent({ payload }: CompareHubContentProps) {
   const [minFilter, setMinFilter] = useState<MinInvestmentFilter>("all");
   const [sortColumn, setSortColumn] = useState<SortColumn>("apy");
   const [sortDirection, setSortDirection] = useState<SortDirection>("desc");
+  const {
+    selectedIds,
+    selectedProducts,
+    panelOpen,
+    setPanelOpen,
+    toggleSelect,
+    clearSelection,
+    isSelected,
+    maxReached,
+  } = useCompareSelection(payload.products);
 
   const formattedDate = formatComparatorDate(payload.fetchedAt, locale);
 
@@ -135,6 +149,14 @@ export function CompareHubContent({ payload }: CompareHubContentProps) {
           <p className="font-display text-base text-white">{copy.dossierBanner.title}</p>
           <p className="mt-1 max-w-xl text-sm text-white/55">
             {copy.dossierBanner.subtitle}
+          </p>
+          <p className="mt-3">
+            <Link
+              href="/tools/mica-checker"
+              className="font-mono text-[11px] text-white/40 underline-offset-2 hover:text-white/65 hover:underline"
+            >
+              Test MiCA indicatif →
+            </Link>
           </p>
         </div>
         <PrimaryButton
@@ -256,6 +278,9 @@ export function CompareHubContent({ payload }: CompareHubContentProps) {
           <table className="w-full min-w-[960px] border-collapse text-left">
             <thead>
               <tr className="border-b border-white/[0.08]">
+                <th className="w-10 pb-3 font-mono text-[10px] uppercase tracking-wider text-white/35">
+                  <span className="sr-only">{copy.selection.selectProduct}</span>
+                </th>
                 <th className="pb-3 font-mono text-[10px] uppercase tracking-wider text-white/35">
                   {copy.table.protocol}
                 </th>
@@ -292,6 +317,9 @@ export function CompareHubContent({ payload }: CompareHubContentProps) {
                   onSort={toggleSort}
                 />
                 <th className="pb-3 font-mono text-[10px] uppercase tracking-wider text-white/35">
+                  {copy.comparePanel.rows.jurisdiction}
+                </th>
+                <th className="pb-3 font-mono text-[10px] uppercase tracking-wider text-white/35">
                   {copy.table.risk}
                 </th>
                 <th className="pb-3 font-mono text-[10px] uppercase tracking-wider text-white/35">
@@ -307,6 +335,8 @@ export function CompareHubContent({ payload }: CompareHubContentProps) {
                   assetType={assetTypesLabel(product, messages)}
                   copy={copy}
                   riskLabels={riskLabels}
+                  selected={isSelected(product.row.id)}
+                  onToggleSelect={() => toggleSelect(product.row.id)}
                 />
               ))}
             </tbody>
@@ -321,6 +351,8 @@ export function CompareHubContent({ payload }: CompareHubContentProps) {
               assetType={assetTypesLabel(product, messages)}
               copy={copy}
               riskLabels={riskLabels}
+              selected={isSelected(product.row.id)}
+              onToggleSelect={() => toggleSelect(product.row.id)}
             />
           ))}
         </div>
@@ -329,6 +361,20 @@ export function CompareHubContent({ payload }: CompareHubContentProps) {
           <p className="py-12 text-center text-sm text-muted">{copy.noResults}</p>
         ) : null}
       </section>
+
+      <CompareSelectionBar
+        count={selectedIds.length}
+        canCompare={selectedIds.length >= 2}
+        maxReached={maxReached}
+        selectedIds={selectedIds}
+        onCompare={() => setPanelOpen(true)}
+        onClear={clearSelection}
+      />
+      <ComparePanel
+        open={panelOpen}
+        products={selectedProducts}
+        onClose={() => setPanelOpen(false)}
+      />
     </>
   );
 }
@@ -418,11 +464,15 @@ function HubDesktopRow({
   assetType,
   copy,
   riskLabels,
+  selected,
+  onToggleSelect,
 }: {
   product: HubProduct;
   assetType: string;
   copy: ComparatorMessages["compareHub"];
   riskLabels: ComparatorMessages["risk"];
+  selected: boolean;
+  onToggleSelect: () => void;
 }) {
   const profileBadge = multiProfileBadge(product, riskLabels);
 
@@ -437,9 +487,18 @@ function HubDesktopRow({
           openProductLink(product);
         }
       }}
-      className="cursor-pointer border-b border-white/[0.05] transition hover:bg-white/[0.04] focus-visible:bg-white/[0.04] focus-visible:outline-none"
+      className={`cursor-pointer border-b border-white/[0.05] transition hover:bg-white/[0.04] focus-visible:bg-white/[0.04] focus-visible:outline-none ${
+        selected ? "bg-white/[0.03]" : ""
+      }`}
       aria-label={`${product.row.platform} — ${copy.viewPlatform}`}
     >
+      <td className="py-4 pr-2">
+        <CompareSelectCheckbox
+          checked={selected}
+          label={copy.selection.selectProduct}
+          onToggle={onToggleSelect}
+        />
+      </td>
       <td className="py-4 pr-4">
         <div className="flex items-center gap-3">
           <PlatformLogo name={product.row.platform} logo={product.row.logo} />
@@ -474,6 +533,9 @@ function HubDesktopRow({
       <td className="py-4 pr-4 font-mono text-xs text-white/55">
         {product.meta.fees}
       </td>
+      <td className="py-4 pr-4 font-mono text-sm text-white/70">
+        {product.meta.jurisdiction ?? copy.comparePanel.notAvailable}
+      </td>
       <td className="py-4 pr-4">
         <RiskBadge
           comparatorId={product.comparatorId}
@@ -490,24 +552,33 @@ function HubMobileRow({
   assetType,
   copy,
   riskLabels,
+  selected,
+  onToggleSelect,
 }: {
   product: HubProduct;
   assetType: string;
   copy: ComparatorMessages["compareHub"];
   riskLabels: ComparatorMessages["risk"];
+  selected: boolean;
+  onToggleSelect: () => void;
 }) {
   const href = resolveComparatorProductLink(product.comparatorId, product.row);
   const profileBadge = multiProfileBadge(product, riskLabels);
 
   return (
-    <ProductRowLink
-      href={href}
-      row={product.row}
-      comparatorId={product.comparatorId}
-      ariaLabel={`${product.row.platform} — ${copy.viewPlatform}`}
-      className="overflow-hidden rounded-2xl border border-white/[0.08] bg-white/[0.02] transition active:bg-white/[0.04]"
+    <div
+      className={`overflow-hidden rounded-2xl border transition ${
+        selected
+          ? "border-white/15 bg-white/[0.04]"
+          : "border-white/[0.08] bg-white/[0.02]"
+      }`}
     >
-      <div className="flex items-start gap-3 p-4">
+      <div className="flex items-start gap-3 border-b border-white/[0.06] p-4">
+        <CompareSelectCheckbox
+          checked={selected}
+          label={copy.selection.selectProduct}
+          onToggle={onToggleSelect}
+        />
         <PlatformLogo
           name={product.row.platform}
           logo={product.row.logo}
@@ -545,20 +616,31 @@ function HubMobileRow({
         </div>
       </div>
 
-      <div className="grid grid-cols-3 gap-px border-t border-white/[0.06] bg-white/[0.06]">
-        <MetaCell label={copy.table.minInvestment}>
-          {formatMinInvestment(product.meta.minInvestmentUsd)}
-        </MetaCell>
-        <MetaCell label={copy.table.liquidity}>
-          {formatLiquidity(product.meta.liquidityDays, copy.liquidity)}
-        </MetaCell>
-        <MetaCell label={copy.table.fees}>{product.meta.fees}</MetaCell>
-      </div>
+      <ProductRowLink
+        href={href}
+        row={product.row}
+        comparatorId={product.comparatorId}
+        ariaLabel={`${product.row.platform} — ${copy.viewPlatform}`}
+        className="block transition active:bg-white/[0.04]"
+      >
+        <div className="grid grid-cols-2 gap-px border-t border-white/[0.06] bg-white/[0.06]">
+          <MetaCell label={copy.table.minInvestment}>
+            {formatMinInvestment(product.meta.minInvestmentUsd)}
+          </MetaCell>
+          <MetaCell label={copy.table.liquidity}>
+            {formatLiquidity(product.meta.liquidityDays, copy.liquidity)}
+          </MetaCell>
+          <MetaCell label={copy.table.fees}>{product.meta.fees}</MetaCell>
+          <MetaCell label={copy.comparePanel.rows.jurisdiction}>
+            {product.meta.jurisdiction ?? copy.comparePanel.notAvailable}
+          </MetaCell>
+        </div>
 
-      <p className="flex min-h-[44px] items-center justify-center border-t border-white/[0.06] font-mono text-xs text-white/50">
-        {copy.viewPlatform} →
-      </p>
-    </ProductRowLink>
+        <p className="flex min-h-[44px] items-center justify-center border-t border-white/[0.06] font-mono text-xs text-white/50">
+          {copy.viewPlatform} →
+        </p>
+      </ProductRowLink>
+    </div>
   );
 }
 

@@ -1,6 +1,8 @@
 import type { MetadataRoute } from "next";
 
 import { getIndexablePages } from "@/lib/ai-first";
+import { getAllGlossarySlugs, glossaryTermPath } from "@/lib/glossary";
+import { getAllBlogSlugs, blogArticlePath } from "@/lib/blog";
 import { getAllGreenBlogSlugs, greenBlogArticlePath } from "@/lib/green/blog/articles";
 import { SITE_URL } from "@/lib/comparators/site";
 import { listGreenMarketActorSitemapIds, listGreenMarketOfferSitemapIds } from "@/lib/green/market/green-market-db";
@@ -30,21 +32,38 @@ const PRIORITY: Record<string, number> = {
   "/bonds": 0.95,
   "/commodities": 0.95,
   "/private-credit": 0.95,
+  "/blog": 0.87,
+  "/blog/article": 0.85,
   "/green/blog": 0.86,
   "/green/faq": 0.85,
   "/green/comment-ca-marche": 0.84,
   "/faq": 0.82,
   "/ressources": 0.81,
+  "/glossary": 0.8,
+  "/glossary/term": 0.72,
   "/how-it-works": 0.8,
   "/discover": 0.78,
   "/trust": 0.78,
   "/estimate": 0.77,
+  "/developers": 0.8,
+  "/developers/dashboard": 0.72,
+  "/developers/docs": 0.78,
+  "/developers/docs/page": 0.74,
+  "/tools": 0.79,
+  "/tools/mica-checker": 0.78,
+  "/tools/yield-calculator": 0.78,
+  "/tools/jurisdiction-picker": 0.78,
+  "/tools/cost-estimator": 0.78,
+  "/data/rwa-index": 0.82,
+  "/data/state-of-rwa-issuers": 0.81,
   "/pricing": 0.76,
   "/partners": 0.6,
 };
 
 const FREQUENCY: Record<string, MetadataRoute.Sitemap[number]["changeFrequency"]> = {
   "/compare": "hourly",
+  "/data/rwa-index": "weekly",
+  "/data/state-of-rwa-issuers": "monthly",
   "/stablecoins": "hourly",
   "/real-estate": "hourly",
   "/bonds": "hourly",
@@ -96,12 +115,34 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     /* demo / build without DB */
   }
 
-  const blogEntries: MetadataRoute.Sitemap = getAllGreenBlogSlugs().map((slug) => ({
+  const greenBlogEntries: MetadataRoute.Sitemap = getAllGreenBlogSlugs().map((slug) => ({
     url: `${SITE_URL}${greenBlogArticlePath(slug)}`,
     lastModified: now,
     changeFrequency: "monthly" as const,
     priority: PRIORITY["/green/blog"] ?? 0.8,
   }));
 
-  return [...staticEntries, ...offerEntries, ...actorEntries, ...registryProjectEntries, ...blogEntries];
+  const blogEntries: MetadataRoute.Sitemap = getAllBlogSlugs().map((slug) => ({
+    url: `${SITE_URL}${blogArticlePath(slug)}`,
+    lastModified: now,
+    changeFrequency: "monthly" as const,
+    priority: PRIORITY["/blog/article"] ?? 0.85,
+  }));
+
+  const glossaryEntries: MetadataRoute.Sitemap = getAllGlossarySlugs().map((slug) => ({
+    url: `${SITE_URL}${glossaryTermPath(slug)}`,
+    lastModified: now,
+    changeFrequency: "monthly" as const,
+    priority: PRIORITY["/glossary/term"] ?? 0.72,
+  }));
+
+  return [
+    ...staticEntries,
+    ...offerEntries,
+    ...actorEntries,
+    ...registryProjectEntries,
+    ...greenBlogEntries,
+    ...blogEntries,
+    ...glossaryEntries,
+  ];
 }

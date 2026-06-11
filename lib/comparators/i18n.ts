@@ -118,6 +118,38 @@ export type ComparatorMessages = {
     noResults: string;
     metaDisclaimer: string;
     footerDisclaimer: string;
+    selection: {
+      barLabel: string;
+      count: (n: number) => string;
+      compare: string;
+      compareHint: string;
+      clear: string;
+      maxReached: string;
+      selectProduct: string;
+      copyLink: string;
+      linkCopied: string;
+    };
+    comparePanel: {
+      eyebrow: string;
+      title: string;
+      close: string;
+      yes: string;
+      no: string;
+      notAvailable: string;
+      viewFiche: string;
+      rows: {
+        criterion: string;
+        product: string;
+        apy: string;
+        minInvestment: string;
+        liquidity: string;
+        fees: string;
+        jurisdiction: string;
+        accredited: string;
+        chain: string;
+        fiche: string;
+      };
+    };
     ecosystem: {
       title: string;
       dossier: string;
@@ -254,6 +286,39 @@ const FR: ComparatorMessages = {
       "Minimum, liquidité et frais indicatifs — vérifiez les conditions exactes sur chaque plateforme avant d'investir.",
     footerDisclaimer:
       "Rendements indicatifs agrégés depuis les comparateurs AUROS. Pas un conseil en investissement — vérifiez chaque plateforme.",
+    selection: {
+      barLabel: "Sélection comparateur",
+      count: (n) =>
+        `${n} produit${n > 1 ? "s" : ""} sélectionné${n > 1 ? "s" : ""} · max. 4`,
+      compare: "Comparer",
+      compareHint: "Sélectionnez au moins 2 produits pour comparer.",
+      clear: "Effacer",
+      maxReached: "Maximum 4 produits — retirez-en un pour en ajouter.",
+      selectProduct: "Sélectionner pour comparer",
+      copyLink: "Copier le lien",
+      linkCopied: "Lien copié",
+    },
+    comparePanel: {
+      eyebrow: "Comparaison côte à côte",
+      title: "Comparer les produits",
+      close: "Fermer",
+      yes: "Oui",
+      no: "Non",
+      notAvailable: "—",
+      viewFiche: "Voir la fiche",
+      rows: {
+        criterion: "Critère",
+        product: "Produit",
+        apy: "APY",
+        minInvestment: "Minimum",
+        liquidity: "Liquidité",
+        fees: "Frais",
+        jurisdiction: "Juridiction",
+        accredited: "Accrédité",
+        chain: "Chaîne",
+        fiche: "Fiche AUROS",
+      },
+    },
     ecosystem: {
       title: "Écosystème AUROS",
       dossier: "Préparer un dossier",
@@ -621,6 +686,39 @@ const EN: ComparatorMessages = {
       "Minimum, liquidity and fees are indicative — check exact terms on each platform before investing.",
     footerDisclaimer:
       "Indicative yields aggregated from AUROS comparators. Not investment advice — check each platform.",
+    selection: {
+      barLabel: "Comparator selection",
+      count: (n) =>
+        `${n} product${n === 1 ? "" : "s"} selected · max. 4`,
+      compare: "Compare",
+      compareHint: "Select at least 2 products to compare.",
+      clear: "Clear",
+      maxReached: "Maximum 4 products — remove one to add another.",
+      selectProduct: "Select to compare",
+      copyLink: "Copy link",
+      linkCopied: "Link copied",
+    },
+    comparePanel: {
+      eyebrow: "Side-by-side comparison",
+      title: "Compare products",
+      close: "Close",
+      yes: "Yes",
+      no: "No",
+      notAvailable: "—",
+      viewFiche: "View sheet",
+      rows: {
+        criterion: "Criterion",
+        product: "Product",
+        apy: "APY",
+        minInvestment: "Minimum",
+        liquidity: "Liquidity",
+        fees: "Fees",
+        jurisdiction: "Jurisdiction",
+        accredited: "Accredited",
+        chain: "Chain",
+        fiche: "AUROS sheet",
+      },
+    },
     ecosystem: {
       title: "AUROS ecosystem",
       dossier: "Prepare a dossier",
@@ -988,6 +1086,39 @@ const ES: ComparatorMessages = {
       "Mínimo, liquidez y comisiones indicativos — verifique las condiciones exactas en cada plataforma antes de invertir.",
     footerDisclaimer:
       "Rendimientos indicativos agregados de los comparadores AUROS. No es asesoramiento financiero — verifique cada plataforma.",
+    selection: {
+      barLabel: "Selección comparador",
+      count: (n) =>
+        `${n} producto${n > 1 ? "s" : ""} seleccionado${n > 1 ? "s" : ""} · máx. 4`,
+      compare: "Comparar",
+      compareHint: "Seleccione al menos 2 productos para comparar.",
+      clear: "Borrar",
+      maxReached: "Máximo 4 productos — retire uno para añadir otro.",
+      selectProduct: "Seleccionar para comparar",
+      copyLink: "Copiar enlace",
+      linkCopied: "Enlace copiado",
+    },
+    comparePanel: {
+      eyebrow: "Comparación lado a lado",
+      title: "Comparar productos",
+      close: "Cerrar",
+      yes: "Sí",
+      no: "No",
+      notAvailable: "—",
+      viewFiche: "Ver ficha",
+      rows: {
+        criterion: "Criterio",
+        product: "Producto",
+        apy: "APY",
+        minInvestment: "Mínimo",
+        liquidity: "Liquidez",
+        fees: "Comisiones",
+        jurisdiction: "Jurisdicción",
+        accredited: "Acreditado",
+        chain: "Cadena",
+        fiche: "Ficha AUROS",
+      },
+    },
     ecosystem: {
       title: "Ecosistema AUROS",
       dossier: "Preparar expediente",

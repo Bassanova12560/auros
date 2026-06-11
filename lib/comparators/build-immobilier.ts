@@ -54,6 +54,7 @@ function manualToRow(entry: ManualProductInput): RealEstateRow {
     logo: entry.logo ?? "",
     live: false,
     category: (entry.category as RealEstateRow["category"]) ?? "residential",
+    jurisdiction: entry.jurisdiction,
   };
 }
 

@@ -1,0 +1,34 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "auros-protocol"
+version = "1.0.0"
+description = "Official Python SDK for the AUROS Protocol — RWA intelligence API"
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.10"
+keywords = ["auros", "rwa", "mica", "tokenization", "api"]
+authors = [{ name = "AUROS", email = "contact@getauros.com" }]
+dependencies = [
+  "httpx>=0.27",
+]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Typing :: Typed",
+]
+
+[project.urls]
+Homepage = "https://getauros.com/developers"
+Documentation = "https://getauros.com/developers/docs"
+Repository = "https://github.com/getauros/auros"
+
+[tool.hatch.build.targets.wheel]
+packages = ["auros"]

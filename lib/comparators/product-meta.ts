@@ -9,6 +9,7 @@ export type ProductMetaInput = {
   fees?: string;
   accreditedOnly?: boolean;
   highlight?: ProductHighlight | null;
+  jurisdiction?: string;
 };
 
 export type ResolvedProductMeta = {
@@ -17,6 +18,7 @@ export type ResolvedProductMeta = {
   fees: string;
   accreditedOnly: boolean;
   highlight: ProductHighlight | null;
+  jurisdiction: string | null;
 };
 
 /** Overrides par id produit (priorité max). */
@@ -26,17 +28,20 @@ const ID_META: Record<string, ProductMetaInput> = {
     liquidityDays: 14,
     fees: "2% + frais gas",
     highlight: "popular",
+    jurisdiction: "US",
   },
   "lofty-portfolio": {
     minInvestmentUsd: 50,
     liquidityDays: 7,
     fees: "1.5%",
     highlight: "popular",
+    jurisdiction: "US",
   },
   "estate-protocol-dubai": {
     minInvestmentUsd: 100,
     liquidityDays: 30,
     fees: "2%",
+    jurisdiction: "UAE",
   },
   "realtyx-luxury": {
     minInvestmentUsd: 100,
@@ -47,11 +52,13 @@ const ID_META: Record<string, ProductMetaInput> = {
     minInvestmentUsd: 500,
     liquidityDays: 30,
     fees: "1.5%",
+    jurisdiction: "EU",
   },
   "landshare-properties": {
     minInvestmentUsd: 50,
     liquidityDays: 14,
     fees: "2%",
+    jurisdiction: "US",
   },
   "mountain-usdm": {
     minInvestmentUsd: 1,
@@ -64,6 +71,7 @@ const ID_META: Record<string, ProductMetaInput> = {
     fees: "0.2%",
     accreditedOnly: true,
     highlight: "popular",
+    jurisdiction: "Switzerland",
   },
   "republic-note": {
     minInvestmentUsd: 500,
@@ -75,6 +83,7 @@ const ID_META: Record<string, ProductMetaInput> = {
     liquidityDays: 1,
     fees: "0.02% custody",
     highlight: "popular",
+    jurisdiction: "US",
   },
   "tether-xaut": {
     minInvestmentUsd: 1,
@@ -91,11 +100,13 @@ const ID_META: Record<string, ProductMetaInput> = {
     liquidityDays: 1,
     fees: "0.15%",
     highlight: "popular",
+    jurisdiction: "US",
   },
   "ondo-yield-assets::USDY": {
     minInvestmentUsd: 500,
     liquidityDays: 1,
     fees: "0.15%",
+    jurisdiction: "US",
   },
   "openeden-tbill::TBILL": {
     minInvestmentUsd: 1000,
@@ -112,11 +123,13 @@ const ID_META: Record<string, ProductMetaInput> = {
     liquidityDays: 1,
     fees: "0.15%",
     highlight: "popular",
+    jurisdiction: "US",
   },
   "superstate-uscc::USCC": {
     minInvestmentUsd: 1000,
     liquidityDays: 1,
     fees: "0.15%",
+    jurisdiction: "US",
   },
   "theo-network-thbill::THBILL": {
     minInvestmentUsd: 1000,
@@ -179,6 +192,7 @@ const ID_META: Record<string, ProductMetaInput> = {
     liquidityDays: 1,
     fees: "0.15%",
     highlight: "popular",
+    jurisdiction: "US",
   },
   "hashnote-usyc": {
     minInvestmentUsd: 100_000,
@@ -186,12 +200,14 @@ const ID_META: Record<string, ProductMetaInput> = {
     fees: "0.1%",
     accreditedOnly: true,
     highlight: "popular",
+    jurisdiction: "US",
   },
   "wisdomtree-wtgxx": {
     minInvestmentUsd: 1000,
     liquidityDays: 1,
     fees: "0.2%",
     accreditedOnly: true,
+    jurisdiction: "US",
   },
   "openeden-hybond": {
     minInvestmentUsd: 100_000,
@@ -204,24 +220,28 @@ const ID_META: Record<string, ProductMetaInput> = {
     liquidityDays: 1,
     fees: "0.3%",
     accreditedOnly: true,
+    jurisdiction: "Singapore",
   },
   "backed-bcspx": {
     minInvestmentUsd: 1000,
     liquidityDays: 3,
     fees: "0.2%",
     accreditedOnly: true,
+    jurisdiction: "Switzerland",
   },
   "bitbond-bafin": {
     minInvestmentUsd: 1000,
     liquidityDays: 7,
     fees: "0.5%",
     accreditedOnly: true,
+    jurisdiction: "Germany",
   },
   "swarm-bafin": {
     minInvestmentUsd: 100,
     liquidityDays: 3,
     fees: "0.3%",
     accreditedOnly: true,
+    jurisdiction: "Germany",
   },
   "mt-pelerin-equity": {
     minInvestmentUsd: 1000,
@@ -288,12 +308,14 @@ const ID_META: Record<string, ProductMetaInput> = {
     fees: "0.5–1%",
     accreditedOnly: true,
     highlight: "popular",
+    jurisdiction: "US",
   },
   "credix-latam": {
     minInvestmentUsd: 1000,
     liquidityDays: 60,
     fees: "1–2%",
     accreditedOnly: true,
+    jurisdiction: "Latin America",
   },
   "truefi-global": {
     minInvestmentUsd: 5000,
@@ -348,24 +370,28 @@ const ID_META: Record<string, ProductMetaInput> = {
     minInvestmentUsd: 100,
     liquidityDays: 30,
     fees: "1.5%",
+    jurisdiction: "EU",
   },
   "stegx-hedera": {
     minInvestmentUsd: 1000,
     liquidityDays: 30,
     fees: "1.5%",
     accreditedOnly: true,
+    jurisdiction: "EU · US",
   },
   "tangible-usdr": {
     minInvestmentUsd: 1,
     liquidityDays: 1,
     fees: "0.5%",
     highlight: "new",
+    jurisdiction: "US",
   },
   "ondo-global-markets": {
     minInvestmentUsd: 100,
     liquidityDays: 1,
     fees: "0.15%",
     accreditedOnly: true,
+    jurisdiction: "US",
   },
   "agrotoken-soja": {
     minInvestmentUsd: 500,
@@ -417,6 +443,7 @@ const PROJECT_META: Record<string, ProductMetaInput> = {
     liquidityDays: 3,
     fees: "0.2%",
     accreditedOnly: true,
+    jurisdiction: "Switzerland",
   },
   figure: {
     minInvestmentUsd: 10_000,
@@ -473,6 +500,7 @@ const PROJECT_META: Record<string, ProductMetaInput> = {
     minInvestmentUsd: 500,
     liquidityDays: 1,
     fees: "0.15%",
+    jurisdiction: "US",
   },
   "openeden-tbill": {
     minInvestmentUsd: 1000,
@@ -488,11 +516,13 @@ const PROJECT_META: Record<string, ProductMetaInput> = {
     minInvestmentUsd: 1000,
     liquidityDays: 1,
     fees: "0.15%",
+    jurisdiction: "US",
   },
   "superstate-uscc": {
     minInvestmentUsd: 1000,
     liquidityDays: 1,
     fees: "0.15%",
+    jurisdiction: "US",
   },
 };
 
@@ -573,6 +603,7 @@ function mergeMeta(...layers: ProductMetaInput[]): ResolvedProductMeta {
     fees: merged.fees ?? "—",
     accreditedOnly: merged.accreditedOnly ?? false,
     highlight: merged.highlight ?? null,
+    jurisdiction: merged.jurisdiction ?? null,
   };
 }
 
@@ -584,7 +615,8 @@ export function resolveProductMeta(
     COMPARATOR_DEFAULTS[comparatorId],
     COMPARATOR_CATEGORY_DEFAULTS[comparatorId][row.category] ?? {},
     PROJECT_META[row.project] ?? {},
-    ID_META[row.id] ?? {}
+    ID_META[row.id] ?? {},
+    row.jurisdiction ? { jurisdiction: row.jurisdiction } : {}
   );
 }
 

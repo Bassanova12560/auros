@@ -89,8 +89,32 @@ export { getImmobilierRows } from "./immobilier";
 export { getBondRows } from "./bonds";
 export { getCommodityRows } from "./commodities";
 export { getPrivateCreditRows } from "./private-credit";
-export { getCompareHubPayload, productDedupeKey, dedupeHubProducts } from "./compare-hub";
+export {
+  getCompareHubPayload,
+  productDedupeKey,
+  dedupeHubProducts,
+  rowsToHubProducts,
+  COMPARATOR_HREFS,
+} from "./compare-hub";
 export type { CompareHubPayload, HubProduct, TierHighlight } from "./compare-hub";
+
+export {
+  COMPARE_HUB_MAX,
+  COMPARE_HUB_URL_PARAM,
+  normalizeCompareProductIds,
+  parseCompareProductIdsParam,
+  encodeCompareProductIdsParam,
+  buildCompareHubShareUrl,
+  buildCompareShareUrl,
+  toggleCompareProductId,
+} from "./compare-selection";
+
+export {
+  highlightNumericRow,
+  parseFeesCompareValue,
+  compareCellHighlightClass,
+  type CompareCellHighlight,
+} from "./compare-highlights";
 
 export {
   resolveRiskTier,

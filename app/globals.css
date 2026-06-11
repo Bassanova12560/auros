@@ -400,6 +400,13 @@ select.jurisdiction-field option[value=""] {
   }
 }
 
+.compare-selection-bar {
+  @apply fixed bottom-0 left-0 right-0 z-40 border-t border-white/[0.08] bg-void/95 backdrop-blur-xl px-4 py-3;
+  padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
+  padding-left: max(1rem, env(safe-area-inset-left));
+  padding-right: max(1rem, env(safe-area-inset-right));
+}
+
 .mobile-sticky-bar {
   @apply fixed bottom-0 left-0 right-0 z-40 border-t border-white/[0.08] bg-void/95 backdrop-blur-xl px-4 py-3 md:hidden;
   padding-bottom: max(0.75rem, env(safe-area-inset-bottom));

@@ -16,6 +16,8 @@ import {
 import { miscPages } from "./misc-pages";
 import { buildSeoLandingPages } from "./seo-landing-pages";
 import { contentPages } from "./content-pages";
+import { glossaryPages } from "./glossary-pages";
+import { protocolDocsPages } from "./protocol-docs-pages";
 import { AUROS_ORG } from "../org";
 import { catalogVersion } from "../enrich";
 import type { AiFirstCatalog, AiFirstPage } from "../types";
@@ -36,6 +38,8 @@ export function getAllAiFirstPages(): AiFirstPage[] {
     ...academyPages,
     ...greenPages,
     ...contentPages,
+    ...glossaryPages,
+    ...protocolDocsPages,
     ...miscPages,
   ];
   return cachedPages;

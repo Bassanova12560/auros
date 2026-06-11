@@ -64,6 +64,7 @@ function manualToRow(entry: ManualProductInput): StablecoinRow {
     logo: entry.logo ?? "",
     live: false,
     category: (entry.category as StablecoinRow["category"]) ?? "mixed",
+    jurisdiction: entry.jurisdiction,
   };
 }
 

@@ -1,0 +1,280 @@
+type AssetType = "real_estate" | "private_fund" | "bonds" | "private_credit" | "commodities" | "stablecoins" | "other";
+type IssuerType = "company_spv" | "existing_fund" | "individual" | "unsure";
+type AssetClass = "financial_instrument" | "art_utility" | "e_money" | "unsure";
+type EuNexus = "issuer_eu" | "asset_eu" | "investors_eu" | "no_eu" | "unsure";
+type WhitepaperStatus = "ready" | "draft" | "none" | "unsure";
+type InvestorType = "professional" | "retail" | "mixed" | "unsure";
+type ScoreStatus = "ready" | "progress" | "early";
+type MicaClassification = "utility_token" | "asset_referenced_token" | "e_money_token" | "other_crypto_asset" | "financial_instrument" | "out_of_scope" | "uncertain";
+type ScoreRequest = {
+    description?: string;
+    asset_type?: AssetType;
+    issuer_type?: IssuerType;
+    asset_class?: AssetClass;
+    eu_nexus?: EuNexus;
+    whitepaper?: WhitepaperStatus;
+    investor_type?: InvestorType;
+    value_eur?: number;
+    jurisdiction?: string;
+    has_kyc?: boolean;
+    has_data_room?: boolean;
+    documents_count?: number;
+};
+type ScoreBreakdown = {
+    legal_structure: number;
+    kyc_aml: number;
+    mica_compliance: number;
+    data_room: number;
+    investor_protection: number;
+};
+type RecommendedJurisdiction = {
+    id: string;
+    score: number;
+    rationale: string;
+};
+type RecommendedPlatform = {
+    id: string;
+    name: string;
+    category: string;
+    apy: number;
+};
+type ProtocolMeta = {
+    version: "1.0";
+    computed_at: string;
+    request_id?: string;
+};
+type ScoreResponse = {
+    disclaimer: string;
+    score: number;
+    grade: string;
+    status: ScoreStatus;
+    breakdown: ScoreBreakdown;
+    mica_classification: MicaClassification;
+    critical_gaps: string[];
+    recommendations: string[];
+    recommended_jurisdictions: RecommendedJurisdiction[];
+    recommended_platforms: RecommendedPlatform[];
+    meta: ProtocolMeta & {
+        full_report_url: string;
+        parsed_keywords: string[];
+    };
+};
+type ProductCategory = "stablecoins" | "real_estate" | "bonds" | "commodities" | "private_credit" | "all";
+type ProductsQuery = {
+    category?: ProductCategory;
+    jurisdiction?: string;
+    chain?: string;
+    yield_min?: number;
+    yield_max?: number;
+    page?: number;
+    limit?: number;
+    sort?: "apy" | "tvl" | "name";
+};
+type ProductItem = {
+    id: string;
+    name: string;
+    platform: string;
+    category: string;
+    apy: number;
+    tvl_usd: number;
+    chains: string[];
+    jurisdiction: string | null;
+    affiliate_url: string;
+    min_investment_usd: number | null;
+    live: boolean;
+};
+type ProductsResponse = {
+    disclaimer: string;
+    products: ProductItem[];
+    pagination: {
+        page: number;
+        limit: number;
+        total: number;
+        total_pages: number;
+    };
+    fetched_at: string;
+};
+type JurisdictionsAssetType = "real_estate" | "bonds" | "private_credit" | "funds" | "all";
+type JurisdictionsQuery = {
+    asset_type?: JurisdictionsAssetType;
+    investor_type?: "professional" | "retail" | "mixed" | "all";
+    timeline_months?: number;
+    budget?: number;
+};
+type JurisdictionItem = {
+    id: string;
+    score: number;
+    rationale: string;
+    fee_min_eur: number;
+    fee_max_eur: number;
+    license_max_months: number;
+    asset_types: string[];
+    kyc_level: string;
+};
+type JurisdictionsResponse = {
+    disclaimer: string;
+    jurisdictions: JurisdictionItem[];
+    query: JurisdictionsQuery;
+};
+type ChecklistRequest = {
+    asset_type: "real_estate" | "private_fund" | "bonds" | "private_credit";
+    jurisdiction: string;
+    structure?: "spv" | "fund" | "trust" | "other";
+};
+type ChecklistItem = {
+    id: string;
+    category: string;
+    title: string;
+    regulatory_reference: string;
+    required: boolean;
+    estimated_time_days: number;
+    estimated_cost_eur: number;
+    dependencies: string[];
+    auros_tip: string;
+};
+type ChecklistResponse = {
+    disclaimer: string;
+    asset_type: string;
+    jurisdiction: string;
+    structure: string;
+    items: ChecklistItem[];
+    total_items: number;
+    estimated_total_days: number;
+    estimated_total_cost_eur: number;
+};
+type CreateKeyRequest = {
+    email: string;
+};
+type CreateKeyResponse = {
+    disclaimer: string;
+    ok: boolean;
+    api_key?: string;
+    tier?: "free";
+    monthly_limit?: number;
+    message?: string;
+};
+type ProtocolErrorBody = {
+    disclaimer: string;
+    error: {
+        code: string;
+        message: string;
+    };
+};
+type AurosProtocolOptions = {
+    apiKey: string;
+    baseUrl?: string;
+    fetch?: typeof fetch;
+};
+type AlertType = "score_change" | "regulation_update" | "new_requirement" | "deadline_approaching";
+type MonitorRequest = {
+    asset_type: AssetType;
+    jurisdiction: string;
+    structure?: "spv" | "fund" | "trust" | "other";
+    webhook_url?: string;
+    email?: string;
+    alert_on?: AlertType[];
+    baseline_score?: number;
+};
+type MonitorResponse = {
+    disclaimer: string;
+    id: string;
+    status: "active" | "paused";
+    asset_type: string;
+    jurisdiction: string;
+    structure: string;
+    alert_on: string[];
+    webhook_url: string | null;
+    email?: string | null;
+    baseline_score?: number | null;
+    created_at: string;
+    pricing?: Record<string, unknown>;
+};
+type DossierSection = "executive_summary" | "score_breakdown" | "mica_classification" | "checklist" | "jurisdictions" | "platforms" | "disclaimers";
+type DossierRequest = {
+    score_id?: string;
+    score?: ScoreRequest;
+    format?: "pdf" | "json" | "zip";
+    sections?: DossierSection[];
+    branding?: {
+        company_name?: string;
+        logo_url?: string;
+    };
+    locale?: "fr" | "en" | "es";
+};
+type DossierResponse = {
+    disclaimer: string;
+    dossier_id: string;
+    format: string;
+    download_url?: string;
+    expires_in_hours?: number;
+    filename?: string;
+    full_report_url?: string;
+    sections?: string[];
+    data?: Record<string, unknown>;
+};
+type WebhookRegisterRequest = {
+    url: string;
+    events?: AlertType[];
+};
+type WebhookItem = {
+    id: string;
+    url: string;
+    events: string[];
+    active: boolean;
+    created_at: string;
+};
+type WebhooksListResponse = {
+    disclaimer: string;
+    webhooks: WebhookItem[];
+    total: number;
+};
+type WebhookRegisterResponse = {
+    disclaimer: string;
+    id: string;
+    url: string;
+    events: string[];
+    active: boolean;
+    created_at: string;
+    signature_header: string;
+    signature_algorithm: string;
+};
+
+declare class AurosProtocol {
+    private readonly apiKey;
+    private readonly baseUrl;
+    private readonly fetchFn;
+    constructor(options: AurosProtocolOptions);
+    score(body: ScoreRequest): Promise<ScoreResponse>;
+    products(query?: ProductsQuery): Promise<ProductsResponse>;
+    jurisdictions(query?: JurisdictionsQuery): Promise<JurisdictionsResponse>;
+    checklist(body: ChecklistRequest): Promise<ChecklistResponse>;
+    monitor(body: MonitorRequest): Promise<MonitorResponse>;
+    getMonitor(id: string): Promise<MonitorResponse>;
+    deleteMonitor(id: string): Promise<{
+        ok: boolean;
+        id: string;
+        deleted: boolean;
+    }>;
+    dossier(body: DossierRequest): Promise<DossierResponse>;
+    registerWebhook(body: WebhookRegisterRequest): Promise<WebhookRegisterResponse>;
+    webhooks(): Promise<WebhooksListResponse>;
+    deleteWebhook(id: string): Promise<{
+        ok: boolean;
+        id: string;
+        deleted: boolean;
+    }>;
+    /** Create a free-tier API key (no auth required). */
+    createKey(body: CreateKeyRequest): Promise<CreateKeyResponse>;
+    private get;
+    private post;
+    private request;
+}
+
+declare class AurosProtocolError extends Error {
+    readonly code: string;
+    readonly status: number;
+    constructor(code: string, message: string, status: number);
+    static fromResponse(status: number, body: ProtocolErrorBody): AurosProtocolError;
+}
+
+export { type AlertType, type AssetClass, type AssetType, AurosProtocol, AurosProtocolError, type AurosProtocolOptions, type ChecklistItem, type ChecklistRequest, type ChecklistResponse, type CreateKeyRequest, type CreateKeyResponse, type DossierRequest, type DossierResponse, type DossierSection, type EuNexus, type InvestorType, type IssuerType, type JurisdictionItem, type JurisdictionsAssetType, type JurisdictionsQuery, type JurisdictionsResponse, type MicaClassification, type MonitorRequest, type MonitorResponse, type ProductCategory, type ProductItem, type ProductsQuery, type ProductsResponse, type ProtocolErrorBody, type ProtocolMeta, type RecommendedJurisdiction, type RecommendedPlatform, type ScoreBreakdown, type ScoreRequest, type ScoreResponse, type ScoreStatus, type WebhookItem, type WebhookRegisterRequest, type WebhookRegisterResponse, type WebhooksListResponse, type WhitepaperStatus };

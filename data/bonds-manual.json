@@ -108,6 +108,7 @@
     "project": "bitbond",
     "platform": "Bitbond",
     "product": "Obligations tokenisées",
+    "jurisdiction": "Germany",
     "apy": 5.2,
     "tvlUsd": 25000000,
     "chains": ["Ethereum", "Polygon"],

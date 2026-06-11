@@ -62,6 +62,7 @@ function manualToRow(entry: ManualProductInput): PrivateCreditRow {
     logo: entry.logo ?? "",
     live: false,
     category: (entry.category as PrivateCreditRow["category"]) ?? "prime",
+    jurisdiction: entry.jurisdiction,
   };
 }
 

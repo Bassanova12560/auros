@@ -1,0 +1,801 @@
+openapi: 3.1.0
+info:
+  title: AUROS Protocol
+  version: "1.0"
+  description: |
+    The RWA Intelligence Layer — indicative MiCA scoring, RWA catalog, jurisdiction ranking,
+    and compliance checklists. Not legal advice.
+
+    **Base URL (production):** `https://getauros.com`
+
+    **Authentication:** Bearer token (`auros_pk_live_*` or `auros_pk_test_*`). Demo key: `auros_pk_test_demo`.
+
+    **Free tier:** 100 requests/month per key. Key creation via `POST /api/v1/keys` (no auth).
+
+    **Response header:** `X-AUROS-Protocol-Version: 1.0` on every response.
+
+    **SDKs:** `@auros/protocol` (npm), `auros-protocol` (pip). Docs: `/developers/docs`.
+  contact:
+    name: AUROS
+    url: https://getauros.com/developers
+    email: contact@getauros.com
+  license:
+    name: Proprietary
+    url: https://getauros.com/trust
+servers:
+  - url: https://getauros.com
+    description: Production
+  - url: http://localhost:3000
+    description: Local development
+security:
+  - bearerAuth: []
+tags:
+  - name: Intelligence
+    description: MiCA scoring and compliance
+  - name: Catalog
+    description: RWA product data
+  - name: Keys
+    description: API key management
+  - name: Premium
+    description: Monitor, dossier, webhooks — requires live key or paid tier
+paths:
+  /api/v1/score:
+    post:
+      tags: [Intelligence]
+      summary: MiCA intelligence score
+      operationId: score
+      description: |
+        Compute an indicative MiCA readiness score (0–100) with grade, five-dimension breakdown,
+        classification, gaps, recommendations, and jurisdiction/platform suggestions.
+        Accepts free-text `description` and/or structured compliance fields.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ScoreRequest"
+            examples:
+              textOnly:
+                summary: Free-text description
+                value:
+                  description: "Retail warehouse Luxembourg €2.5M SPV professional investors whitepaper draft"
+              structured:
+                summary: Structured fields
+                value:
+                  asset_type: real_estate
+                  issuer_type: company_spv
+                  investor_type: professional
+                  whitepaper: draft
+                  jurisdiction: luxembourg
+                  value_eur: 2500000
+                  has_kyc: true
+                  has_data_room: false
+      responses:
+        "200":
+          description: Score result
+          headers:
+            X-AUROS-Protocol-Version:
+              schema:
+                type: string
+                example: "1.0"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ScoreResponse"
+              example:
+                disclaimer: "Indicative intelligence only — not legal, tax, or investment advice."
+                score: 72
+                grade: "B-"
+                status: progress
+                breakdown:
+                  legal_structure: 78
+                  kyc_aml: 65
+                  mica_compliance: 70
+                  data_room: 55
+                  investor_protection: 80
+                mica_classification: financial_instrument
+                critical_gaps:
+                  - "Complete whitepaper before retail distribution"
+                recommendations:
+                  - "Incorporate an EU SPV or regulated fund vehicle before retail distribution."
+                recommended_jurisdictions:
+                  - id: luxembourg
+                    score: 88
+                    rationale: "Strong fund/SPV framework for professional real estate RWA."
+                recommended_platforms:
+                  - id: maple
+                    name: Maple
+                    category: private_credit
+                    apy: 8.2
+                meta:
+                  version: "1.0"
+                  computed_at: "2026-06-11T10:00:00.000Z"
+                  full_report_url: "https://getauros.com/wizard"
+                  parsed_keywords: ["warehouse", "luxembourg", "spv"]
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "429":
+          $ref: "#/components/responses/RateLimit"
+  /api/v1/products:
+    get:
+      tags: [Catalog]
+      summary: RWA product catalog
+      operationId: products
+      description: Paginated catalog of 120+ tokenized RWA products with APY, TVL, chains, and jurisdiction.
+      parameters:
+        - name: category
+          in: query
+          schema:
+            type: string
+            enum: [stablecoins, real_estate, bonds, commodities, private_credit, all]
+            default: all
+        - name: jurisdiction
+          in: query
+          schema:
+            type: string
+            maxLength: 64
+        - name: chain
+          in: query
+          schema:
+            type: string
+            maxLength: 64
+        - name: yield_min
+          in: query
+          schema:
+            type: number
+            minimum: 0
+        - name: yield_max
+          in: query
+          schema:
+            type: number
+            minimum: 0
+        - name: page
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+        - name: sort
+          in: query
+          schema:
+            type: string
+            enum: [apy, tvl, name]
+            default: apy
+      responses:
+        "200":
+          description: Paginated products
+          headers:
+            X-AUROS-Protocol-Version:
+              schema:
+                type: string
+                example: "1.0"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProductsResponse"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "429":
+          $ref: "#/components/responses/RateLimit"
+  /api/v1/jurisdictions:
+    get:
+      tags: [Intelligence]
+      summary: Jurisdiction ranking
+      operationId: jurisdictions
+      description: Rank regulatory jurisdictions by asset type, investor profile, timeline, and budget.
+      parameters:
+        - name: asset_type
+          in: query
+          schema:
+            type: string
+            enum: [real_estate, bonds, private_credit, funds, all]
+            default: all
+        - name: investor_type
+          in: query
+          schema:
+            type: string
+            enum: [professional, retail, mixed, all]
+            default: all
+        - name: timeline_months
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 36
+        - name: budget
+          in: query
+          schema:
+            type: integer
+            minimum: 0
+      responses:
+        "200":
+          description: Ranked jurisdictions
+          headers:
+            X-AUROS-Protocol-Version:
+              schema:
+                type: string
+                example: "1.0"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JurisdictionsResponse"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "429":
+          $ref: "#/components/responses/RateLimit"
+  /api/v1/checklist:
+    post:
+      tags: [Intelligence]
+      summary: Compliance checklist
+      operationId: checklist
+      description: Generate 20+ compliance items for an asset type, jurisdiction, and legal structure.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ChecklistRequest"
+            example:
+              asset_type: real_estate
+              jurisdiction: luxembourg
+              structure: spv
+      responses:
+        "200":
+          description: Checklist items
+          headers:
+            X-AUROS-Protocol-Version:
+              schema:
+                type: string
+                example: "1.0"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ChecklistResponse"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "429":
+          $ref: "#/components/responses/RateLimit"
+  /api/v1/keys:
+    post:
+      tags: [Keys]
+      summary: Create API key
+      operationId: createKey
+      security: []
+      description: |
+        Request a free-tier API key (100 requests/month). No authentication required.
+        Rate-limited by IP (5 requests/hour). The raw key is returned once — store securely.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateKeyRequest"
+            example:
+              email: developer@company.com
+      responses:
+        "200":
+          description: Key created
+          headers:
+            X-AUROS-Protocol-Version:
+              schema:
+                type: string
+                example: "1.0"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreateKeyResponse"
+              example:
+                disclaimer: "Indicative intelligence only — not legal, tax, or investment advice."
+                ok: true
+                api_key: auros_pk_live_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+                tier: free
+                monthly_limit: 100
+                message: "Store this key securely — it will not be shown again."
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "429":
+          $ref: "#/components/responses/RateLimit"
+  /api/v1/monitor:
+    post:
+      tags: [Premium]
+      summary: Register asset monitor
+      operationId: monitor
+      description: |
+        Premium endpoint. Register an asset profile for regulatory monitoring.
+        Requires `auros_pk_live_*` or premium tier. Pricing: 49€/mo (5 assets), 199€/mo (25 assets).
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MonitorRequest"
+      responses:
+        "201":
+          description: Monitor created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MonitorResponse"
+        "403":
+          $ref: "#/components/responses/PremiumRequired"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+  /api/v1/monitor/{id}:
+    get:
+      tags: [Premium]
+      summary: Get monitor status
+      operationId: getMonitor
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: Monitor status
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MonitorResponse"
+        "403":
+          $ref: "#/components/responses/PremiumRequired"
+        "404":
+          description: Not found
+    delete:
+      tags: [Premium]
+      summary: Delete monitor
+      operationId: deleteMonitor
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: Deleted
+        "403":
+          $ref: "#/components/responses/PremiumRequired"
+        "404":
+          description: Not found
+  /api/v1/dossier:
+    post:
+      tags: [Premium]
+      summary: Generate institutional dossier
+      operationId: dossier
+      description: |
+        Premium endpoint. Generate PDF or JSON institutional MiCA readiness report.
+        PDF returns HMAC-signed download_url valid 24h.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DossierRequest"
+      responses:
+        "200":
+          description: Dossier generated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DossierResponse"
+        "403":
+          $ref: "#/components/responses/PremiumRequired"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+  /api/v1/webhooks:
+    post:
+      tags: [Premium]
+      summary: Register webhook
+      operationId: registerWebhook
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/WebhookRegisterRequest"
+      responses:
+        "201":
+          description: Webhook registered
+        "403":
+          $ref: "#/components/responses/PremiumRequired"
+    get:
+      tags: [Premium]
+      summary: List webhooks
+      operationId: listWebhooks
+      responses:
+        "200":
+          description: Webhook list
+        "403":
+          $ref: "#/components/responses/PremiumRequired"
+  /api/v1/webhooks/{id}:
+    delete:
+      tags: [Premium]
+      summary: Delete webhook
+      operationId: deleteWebhook
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: Deleted
+        "403":
+          $ref: "#/components/responses/PremiumRequired"
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: "API key: auros_pk_live_* or auros_pk_test_* (demo: auros_pk_test_demo)"
+  schemas:
+    ProtocolError:
+      type: object
+      required: [disclaimer, error]
+      properties:
+        disclaimer:
+          type: string
+        error:
+          type: object
+          required: [code, message]
+          properties:
+            code:
+              type: string
+              enum: [unauthorized, validation_error, invalid_json, rate_limit, quota_exceeded]
+            message:
+              type: string
+    ScoreRequest:
+      type: object
+      properties:
+        description:
+          type: string
+          minLength: 10
+          maxLength: 4000
+        asset_type:
+          type: string
+          enum: [real_estate, private_fund, bonds, private_credit, commodities, stablecoins, other]
+        issuer_type:
+          type: string
+          enum: [company_spv, existing_fund, individual, unsure]
+        asset_class:
+          type: string
+          enum: [financial_instrument, art_utility, e_money, unsure]
+        eu_nexus:
+          type: string
+          enum: [issuer_eu, asset_eu, investors_eu, no_eu, unsure]
+        whitepaper:
+          type: string
+          enum: [ready, draft, none, unsure]
+        investor_type:
+          type: string
+          enum: [professional, retail, mixed, unsure]
+        value_eur:
+          type: number
+          exclusiveMinimum: 0
+        jurisdiction:
+          type: string
+          maxLength: 64
+        has_kyc:
+          type: boolean
+        has_data_room:
+          type: boolean
+        documents_count:
+          type: integer
+          minimum: 0
+          maximum: 100
+    ScoreResponse:
+      type: object
+      required: [disclaimer, score, grade, status, breakdown, mica_classification, critical_gaps, recommendations, recommended_jurisdictions, recommended_platforms, meta]
+      properties:
+        disclaimer:
+          type: string
+        score:
+          type: number
+          minimum: 0
+          maximum: 100
+        grade:
+          type: string
+        status:
+          type: string
+          enum: [ready, progress, early]
+        breakdown:
+          type: object
+          properties:
+            legal_structure: { type: number }
+            kyc_aml: { type: number }
+            mica_compliance: { type: number }
+            data_room: { type: number }
+            investor_protection: { type: number }
+        mica_classification:
+          type: string
+          enum: [utility_token, asset_referenced_token, e_money_token, other_crypto_asset, financial_instrument, out_of_scope, uncertain]
+        critical_gaps:
+          type: array
+          items: { type: string }
+        recommendations:
+          type: array
+          items: { type: string }
+        recommended_jurisdictions:
+          type: array
+          items:
+            type: object
+            properties:
+              id: { type: string }
+              score: { type: number }
+              rationale: { type: string }
+        recommended_platforms:
+          type: array
+          items:
+            type: object
+            properties:
+              id: { type: string }
+              name: { type: string }
+              category: { type: string }
+              apy: { type: number }
+        meta:
+          type: object
+          properties:
+            version: { type: string, const: "1.0" }
+            computed_at: { type: string, format: date-time }
+            request_id: { type: string }
+            full_report_url: { type: string, format: uri }
+            parsed_keywords:
+              type: array
+              items: { type: string }
+    ProductsResponse:
+      type: object
+      required: [disclaimer, products, pagination, fetched_at]
+      properties:
+        disclaimer:
+          type: string
+        products:
+          type: array
+          items:
+            $ref: "#/components/schemas/ProductItem"
+        pagination:
+          type: object
+          properties:
+            page: { type: integer }
+            limit: { type: integer }
+            total: { type: integer }
+            total_pages: { type: integer }
+        fetched_at:
+          type: string
+          format: date-time
+    ProductItem:
+      type: object
+      properties:
+        id: { type: string }
+        name: { type: string }
+        platform: { type: string }
+        category: { type: string }
+        apy: { type: number }
+        tvl_usd: { type: number }
+        chains:
+          type: array
+          items: { type: string }
+        jurisdiction: { type: string, nullable: true }
+        affiliate_url: { type: string }
+        min_investment_usd: { type: number, nullable: true }
+        live: { type: boolean }
+    JurisdictionsResponse:
+      type: object
+      required: [disclaimer, jurisdictions, query]
+      properties:
+        disclaimer:
+          type: string
+        jurisdictions:
+          type: array
+          items:
+            $ref: "#/components/schemas/JurisdictionItem"
+        query:
+          type: object
+    JurisdictionItem:
+      type: object
+      properties:
+        id: { type: string }
+        score: { type: number }
+        rationale: { type: string }
+        fee_min_eur: { type: number }
+        fee_max_eur: { type: number }
+        license_max_months: { type: number }
+        asset_types:
+          type: array
+          items: { type: string }
+        kyc_level: { type: string }
+    ChecklistRequest:
+      type: object
+      required: [asset_type, jurisdiction]
+      properties:
+        asset_type:
+          type: string
+          enum: [real_estate, private_fund, bonds, private_credit]
+        jurisdiction:
+          type: string
+          minLength: 2
+          maxLength: 64
+        structure:
+          type: string
+          enum: [spv, fund, trust, other]
+          default: spv
+    ChecklistResponse:
+      type: object
+      required: [disclaimer, asset_type, jurisdiction, structure, items, total_items, estimated_total_days, estimated_total_cost_eur]
+      properties:
+        disclaimer: { type: string }
+        asset_type: { type: string }
+        jurisdiction: { type: string }
+        structure: { type: string }
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/ChecklistItem"
+        total_items: { type: integer }
+        estimated_total_days: { type: integer }
+        estimated_total_cost_eur: { type: number }
+    ChecklistItem:
+      type: object
+      properties:
+        id: { type: string }
+        category: { type: string }
+        title: { type: string }
+        regulatory_reference: { type: string }
+        required: { type: boolean }
+        estimated_time_days: { type: integer }
+        estimated_cost_eur: { type: number }
+        dependencies:
+          type: array
+          items: { type: string }
+        auros_tip: { type: string }
+    CreateKeyRequest:
+      type: object
+      required: [email]
+      properties:
+        email:
+          type: string
+          format: email
+          maxLength: 254
+    CreateKeyResponse:
+      type: object
+      required: [disclaimer, ok]
+      properties:
+        disclaimer: { type: string }
+        ok: { type: boolean }
+        api_key: { type: string }
+        tier:
+          type: string
+          enum: [free]
+        monthly_limit: { type: integer }
+        message: { type: string }
+    MonitorRequest:
+      type: object
+      required: [asset_type, jurisdiction]
+      properties:
+        asset_type:
+          type: string
+          enum: [real_estate, private_fund, bonds, private_credit, commodities, stablecoins, other]
+        jurisdiction: { type: string }
+        structure:
+          type: string
+          enum: [spv, fund, trust, other]
+          default: spv
+        webhook_url: { type: string, format: uri }
+        email: { type: string, format: email }
+        alert_on:
+          type: array
+          items:
+            type: string
+            enum: [score_change, regulation_update, new_requirement, deadline_approaching]
+        baseline_score: { type: integer, minimum: 0, maximum: 100 }
+    MonitorResponse:
+      type: object
+      properties:
+        disclaimer: { type: string }
+        id: { type: string }
+        status: { type: string, enum: [active, paused] }
+        asset_type: { type: string }
+        jurisdiction: { type: string }
+        structure: { type: string }
+        alert_on:
+          type: array
+          items: { type: string }
+        webhook_url: { type: string, nullable: true }
+        created_at: { type: string, format: date-time }
+        pricing: { type: object }
+    DossierRequest:
+      type: object
+      properties:
+        score_id: { type: string }
+        score:
+          $ref: "#/components/schemas/ScoreRequest"
+        format:
+          type: string
+          enum: [pdf, json, zip]
+          default: pdf
+        sections:
+          type: array
+          items: { type: string }
+        branding:
+          type: object
+          properties:
+            company_name: { type: string }
+            logo_url: { type: string, format: uri }
+        locale:
+          type: string
+          enum: [fr, en, es]
+    DossierResponse:
+      type: object
+      properties:
+        disclaimer: { type: string }
+        dossier_id: { type: string }
+        format: { type: string }
+        download_url: { type: string, format: uri }
+        expires_in_hours: { type: integer }
+        full_report_url: { type: string, format: uri }
+    WebhookRegisterRequest:
+      type: object
+      required: [url]
+      properties:
+        url: { type: string, format: uri }
+        events:
+          type: array
+          items:
+            type: string
+            enum: [score_change, regulation_update, new_requirement, deadline_approaching]
+  responses:
+    Unauthorized:
+      description: Missing or invalid API key
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ProtocolError"
+          example:
+            disclaimer: "Indicative intelligence only — not legal, tax, or investment advice."
+            error:
+              code: unauthorized
+              message: "Invalid API key"
+    ValidationError:
+      description: Invalid request parameters or body
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ProtocolError"
+    RateLimit:
+      description: Rate limit or monthly quota exceeded
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ProtocolError"
+          example:
+            disclaimer: "Indicative intelligence only — not legal, tax, or investment advice."
+            error:
+              code: quota_exceeded
+              message: "Monthly quota exceeded (100 requests/month on free tier)"
+    PremiumRequired:
+      description: Premium tier required (live key or paid plan)
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ProtocolError"
+          example:
+            disclaimer: "Indicative intelligence only — not legal, tax, or investment advice."
+            error:
+              code: premium_required
+              message: "Endpoint réservé au tier premium. Utilisez une clé auros_pk_live_*."

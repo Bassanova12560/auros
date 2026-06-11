@@ -270,7 +270,11 @@ export type Messages = {
     academy: string;
     green: string;
     faq: string;
+    glossary: string;
+    tools: string;
     resources: string;
+    rwaIndex: string;
+    quarterlyReport: string;
     about: string;
     pricing: string;
   };

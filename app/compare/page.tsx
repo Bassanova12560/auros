@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 
 import { CompareHubContent } from "@/app/comparators/_components/CompareHubContent";
 import { DossierCtaStrip } from "@/app/comparators/_components/DossierCtaStrip";
@@ -27,7 +28,9 @@ export default async function CompareHubPage() {
     <>
       <main className="page-main page-main--sticky">
         <div className="page-inner page-inner--5xl mx-auto">
-          <CompareHubContent payload={payload} />
+          <Suspense fallback={null}>
+            <CompareHubContent payload={payload} />
+          </Suspense>
         </div>
       </main>
       <DossierCtaStrip />

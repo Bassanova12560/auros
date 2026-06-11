@@ -32,13 +32,26 @@ export type CompareHubPayload = {
   totalProducts: number;
 };
 
-const COMPARATOR_HREFS: Record<ComparatorId, string> = {
+export const COMPARATOR_HREFS: Record<ComparatorId, string> = {
   stablecoins: COMPARATOR_ROUTES.stablecoins,
   immobilier: COMPARATOR_ROUTES.realEstate,
   obligations: COMPARATOR_ROUTES.bonds,
   "matieres-premieres": COMPARATOR_ROUTES.commodities,
   "private-credit": COMPARATOR_ROUTES.privateCredit,
 };
+
+export function rowsToHubProducts(
+  rows: ComparatorProductRow[],
+  comparatorId: ComparatorId
+): HubProduct[] {
+  return rows.map((row) => ({
+    row,
+    comparatorId,
+    comparatorHref: COMPARATOR_HREFS[comparatorId],
+    riskTier: resolveRiskTier(comparatorId, row.category),
+    meta: resolveProductMeta(comparatorId, row),
+  }));
+}
 
 function toHubProducts(
   rows: ComparatorProductRow[],

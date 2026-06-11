@@ -60,6 +60,7 @@ function manualToRow(entry: ManualProductInput): BondRow {
     logo: entry.logo ?? "",
     live: false,
     category: (entry.category as BondRow["category"]) ?? "sovereign",
+    jurisdiction: entry.jurisdiction,
   };
 }
 

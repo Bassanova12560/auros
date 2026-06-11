@@ -10,6 +10,7 @@ export type ManualProductInput = {
   affiliate_link?: string;
   logo?: string;
   category?: string;
+  jurisdiction?: string;
 };
 
 /** @deprecated use ManualProductInput */
@@ -31,7 +32,8 @@ function isManualProduct(value: unknown): value is ManualProductInput {
     Array.isArray(value.chains) &&
     value.chains.every((c) => typeof c === "string") &&
     typeof value.link === "string" &&
-    (value.category === undefined || typeof value.category === "string")
+    (value.category === undefined || typeof value.category === "string") &&
+    (value.jurisdiction === undefined || typeof value.jurisdiction === "string")
   );
 }
 

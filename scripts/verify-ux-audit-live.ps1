@@ -60,3 +60,8 @@ Write-Host "12 /wizard phase pills=$(Test-Html $html "L.actif.*Strat.gie|Strat.g
 
 $html = Fetch "/compare"
 Write-Host "13 /compare unique products=$(Test-Html $html 'produits uniques|unique product')"
+
+Write-Host auros-app-cutover-check
+nslookup -type=A auros.app 8.8.8.8
+nslookup -type=CNAME www.auros.app 8.8.8.8
+curl.exe -sI https://auros.app | findstr /i Server

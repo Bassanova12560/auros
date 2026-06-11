@@ -1,18 +1,24 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { Suspense, useMemo, useState } from "react";
 
+import { ComparePanel } from "./ComparePanel";
+import { CompareSelectCheckbox } from "./CompareSelectCheckbox";
+import { CompareSelectionBar } from "./CompareSelectionBar";
 import { PlatformLogo } from "./PlatformLogo";
 import { ProductMetaBadges } from "./ProductMetaBadges";
 import { ProductRowLink } from "./ProductRowLink";
 import { RiskBadge } from "./RiskBadge";
+import { useCompareSelection } from "./useCompareSelection";
 import { useComparatorPage } from "./useComparatorPage";
 import {
+  COMPARATOR_HREFS,
   formatLiquidity,
   formatMinInvestment,
   formatTvl,
   matchesMinInvestmentFilter,
   resolveProductMeta,
+  rowsToHubProducts,
 } from "@/lib/comparators";
 import type { ComparatorPageCopy } from "@/lib/comparators/i18n";
 import type { ComparatorId } from "@/lib/comparators/registry";
@@ -41,7 +47,15 @@ type ComparatorProductsTableProps = {
 
 const MOBILE_SORT_FIELDS: SortField[] = ["apy", "tvlUsd", "platform"];
 
-export function ComparatorProductsTable({
+export function ComparatorProductsTable(props: ComparatorProductsTableProps) {
+  return (
+    <Suspense fallback={null}>
+      <ComparatorProductsTableInner {...props} />
+    </Suspense>
+  );
+}
+
+function ComparatorProductsTableInner({
   rows,
   category,
   onCategoryChange,
@@ -53,6 +67,20 @@ export function ComparatorProductsTable({
   const { messages } = useComparatorPage();
   const hub = messages.compareHub;
   const t = copy;
+  const hubProducts = useMemo(
+    () => rowsToHubProducts(rows, comparatorId),
+    [rows, comparatorId]
+  );
+  const {
+    selectedIds,
+    selectedProducts,
+    panelOpen,
+    setPanelOpen,
+    toggleSelect,
+    clearSelection,
+    isSelected,
+    maxReached,
+  } = useCompareSelection(hubProducts);
   const [query, setQuery] = useState("");
   const [minFilter, setMinFilter] = useState<MinInvestmentFilter>("all");
   const [sortMode, setSortMode] = useState<SortMode>("apy");
@@ -142,6 +170,7 @@ export function ComparatorProductsTable({
     category !== "all" && activeFilterLabel ? ` · ${activeFilterLabel}` : "";
 
   return (
+    <>
     <div>
       <div className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] md:mx-0 md:flex-wrap md:overflow-visible md:px-0 [&::-webkit-scrollbar]:hidden">
         {categoryFilters.map((opt) => (
@@ -253,6 +282,9 @@ export function ComparatorProductsTable({
         <table className="w-full min-w-[960px] text-left text-sm">
           <thead>
             <tr className="border-b border-white/[0.08]">
+              <th className="w-10 pb-3 font-mono text-[10px] uppercase tracking-wider text-white/35">
+                <span className="sr-only">{hub.selection.selectProduct}</span>
+              </th>
               <SortTh
                 label={t.table.protocol}
                 field="platform"
@@ -287,6 +319,9 @@ export function ComparatorProductsTable({
               <th className="pb-3 font-mono text-[10px] uppercase tracking-wider text-white/35">
                 {hub.table.fees}
               </th>
+              <th className="pb-3 font-mono text-[10px] uppercase tracking-wider text-white/35">
+                {hub.comparePanel.rows.jurisdiction}
+              </th>
               <SortTh
                 label={t.table.tvl}
                 field="tvlUsd"
@@ -311,6 +346,8 @@ export function ComparatorProductsTable({
                 hub={hub}
                 comparatorId={comparatorId}
                 resolveLink={resolveLink}
+                selected={isSelected(row.id)}
+                onToggleSelect={() => toggleSelect(row.id)}
               />
             ))}
           </tbody>
@@ -327,6 +364,8 @@ export function ComparatorProductsTable({
             hub={hub}
             comparatorId={comparatorId}
             resolveLink={resolveLink}
+            selected={isSelected(row.id)}
+            onToggleSelect={() => toggleSelect(row.id)}
           />
         ))}
       </div>
@@ -337,6 +376,21 @@ export function ComparatorProductsTable({
         </p>
       ) : null}
     </div>
+    <CompareSelectionBar
+      count={selectedIds.length}
+      canCompare={selectedIds.length >= 2}
+      maxReached={maxReached}
+      selectedIds={selectedIds}
+      sharePath={COMPARATOR_HREFS[comparatorId]}
+      onCompare={() => setPanelOpen(true)}
+      onClear={clearSelection}
+    />
+    <ComparePanel
+      open={panelOpen}
+      products={selectedProducts}
+      onClose={() => setPanelOpen(false)}
+    />
+    </>
   );
 }
 
@@ -452,6 +506,8 @@ function DesktopRow({
   hub,
   comparatorId,
   resolveLink,
+  selected,
+  onToggleSelect,
 }: {
   row: ComparatorProductRow;
   isTop: boolean;
@@ -459,6 +515,8 @@ function DesktopRow({
   hub: HubCopy;
   comparatorId: ComparatorId;
   resolveLink: (row: ComparatorProductRow) => string;
+  selected: boolean;
+  onToggleSelect: () => void;
 }) {
   const href = resolveLink(row);
   const meta = resolveProductMeta(comparatorId, row);
@@ -488,10 +546,17 @@ function DesktopRow({
         }
       }}
       className={`group cursor-pointer border-b border-white/[0.05] transition focus-visible:bg-white/[0.04] focus-visible:outline-none ${
-        isTop ? "bg-white/[0.04]" : "hover:bg-white/[0.04]"
+        selected ? "bg-white/[0.03]" : isTop ? "bg-white/[0.04]" : "hover:bg-white/[0.04]"
       }`}
       aria-label={labels.viewPlatformAria(row.platform)}
     >
+      <td className="py-4 pr-2">
+        <CompareSelectCheckbox
+          checked={selected}
+          label={hub.selection.selectProduct}
+          onToggle={onToggleSelect}
+        />
+      </td>
       <td className="py-4 pr-4">
         <div className="flex items-center gap-3">
           <PlatformLogo name={row.platform} logo={row.logo} />
@@ -526,6 +591,9 @@ function DesktopRow({
         {formatLiquidity(meta.liquidityDays, hub.liquidity)}
       </td>
       <td className="py-4 pr-4 font-mono text-xs text-white/55">{meta.fees}</td>
+      <td className="py-4 pr-4 font-mono text-sm text-white/70">
+        {meta.jurisdiction ?? hub.comparePanel.notAvailable}
+      </td>
       <td className="py-4 pr-4 text-right tabular-nums text-muted">
         {row.tvlUsd > 0 ? formatTvl(row.tvlUsd) : "—"}
       </td>
@@ -541,6 +609,8 @@ function MobileRow({
   hub,
   comparatorId,
   resolveLink,
+  selected,
+  onToggleSelect,
 }: {
   row: ComparatorProductRow;
   isTop: boolean;
@@ -548,6 +618,8 @@ function MobileRow({
   hub: HubCopy;
   comparatorId: ComparatorId;
   resolveLink: (row: ComparatorProductRow) => string;
+  selected: boolean;
+  onToggleSelect: () => void;
 }) {
   const href = resolveLink(row);
   const meta = resolveProductMeta(comparatorId, row);
@@ -557,18 +629,21 @@ function MobileRow({
       : row.chains.join(", ");
 
   return (
-    <ProductRowLink
-      href={href}
-      row={row}
-      comparatorId={comparatorId}
-      ariaLabel={labels.viewPlatformAria(row.platform)}
-      className={`overflow-hidden rounded-2xl border transition active:bg-white/[0.04] ${
-        isTop
+    <div
+      className={`overflow-hidden rounded-2xl border transition ${
+        selected
           ? "border-white/15 bg-white/[0.04]"
-          : "border-white/[0.08] bg-white/[0.02]"
+          : isTop
+            ? "border-white/15 bg-white/[0.04]"
+            : "border-white/[0.08] bg-white/[0.02]"
       }`}
     >
-      <div className="flex items-start gap-3 p-4">
+      <div className="flex items-start gap-3 border-b border-white/[0.06] p-4">
+        <CompareSelectCheckbox
+          checked={selected}
+          label={hub.selection.selectProduct}
+          onToggle={onToggleSelect}
+        />
         <PlatformLogo name={row.platform} logo={row.logo} size={40} />
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-2">
@@ -597,30 +672,41 @@ function MobileRow({
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-px border-t border-white/[0.06] bg-white/[0.06]">
-        <MetaCell label={hub.table.minInvestment}>
-          {formatMinInvestment(meta.minInvestmentUsd)}
-        </MetaCell>
-        <MetaCell label={hub.table.liquidity}>
-          {formatLiquidity(meta.liquidityDays, hub.liquidity)}
-        </MetaCell>
-        <MetaCell label={hub.table.fees}>{meta.fees}</MetaCell>
-        <MetaCell label={labels.chain}>{chainLabel}</MetaCell>
-      </div>
+      <ProductRowLink
+        href={href}
+        row={row}
+        comparatorId={comparatorId}
+        ariaLabel={labels.viewPlatformAria(row.platform)}
+        className="block transition active:bg-white/[0.04]"
+      >
+        <div className="grid grid-cols-2 gap-px border-t border-white/[0.06] bg-white/[0.06]">
+          <MetaCell label={hub.table.minInvestment}>
+            {formatMinInvestment(meta.minInvestmentUsd)}
+          </MetaCell>
+          <MetaCell label={hub.table.liquidity}>
+            {formatLiquidity(meta.liquidityDays, hub.liquidity)}
+          </MetaCell>
+          <MetaCell label={hub.table.fees}>{meta.fees}</MetaCell>
+          <MetaCell label={hub.comparePanel.rows.jurisdiction}>
+            {meta.jurisdiction ?? hub.comparePanel.notAvailable}
+          </MetaCell>
+          <MetaCell label={labels.chain}>{chainLabel}</MetaCell>
+        </div>
 
-      <p className="flex min-h-[48px] items-center justify-center gap-2 border-t border-white/[0.06] bg-white/[0.02] px-4 py-3.5 font-mono text-xs text-white/70">
-        {labels.viewPlatform}
-        <svg width="12" height="12" viewBox="0 0 14 14" fill="none" aria-hidden>
-          <path
-            d="M3 11L11 3M11 3H5M11 3V9"
-            stroke="currentColor"
-            strokeWidth="1.25"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
-      </p>
-    </ProductRowLink>
+        <p className="flex min-h-[48px] items-center justify-center gap-2 border-t border-white/[0.06] bg-white/[0.02] px-4 py-3.5 font-mono text-xs text-white/70">
+          {labels.viewPlatform}
+          <svg width="12" height="12" viewBox="0 0 14 14" fill="none" aria-hidden>
+            <path
+              d="M3 11L11 3M11 3H5M11 3V9"
+              stroke="currentColor"
+              strokeWidth="1.25"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        </p>
+      </ProductRowLink>
+    </div>
   );
 }
 
