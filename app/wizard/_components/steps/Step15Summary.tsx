@@ -229,7 +229,7 @@ export function Step15Summary({ data }: Props) {
       const saveResult = await saveDossierAction({
         assetType: data.assetType || null,
         data: dossier.data as Record<string, unknown>,
-        score: dossier.score,
+        score: dossier.score ?? 0,
       });
       if (!saveResult.ok) {
         setGenState("error");
