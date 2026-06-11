@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 import {
@@ -38,6 +39,7 @@ import { Step7Timeline } from "./_components/steps/Step7Timeline";
 import { Step8Platform } from "./_components/steps/Step8Platform";
 import { Step9Contact } from "./_components/steps/Step9Contact";
 import { Step15Summary } from "./_components/steps/Step15Summary";
+import { StepMicaQuestion } from "./_components/steps/StepMicaQuestion";
 import {
   Step10LegalStructure,
   Step11Revenue,
@@ -45,31 +47,43 @@ import {
   Step13InvestorProfile,
   Step14Additional,
 } from "./_components/WizardStepsExtended";
+import { ExploreSummary } from "./_components/ExploreSummary";
 import { WizardPathChoice } from "./_components/WizardPathChoice";
 import { WizardShell } from "./_components/WizardShell";
 import { StarterPhaseBanner } from "./_components/StarterPhaseBanner";
 import {
-  applyExpertDefaults,
-  expertStepCount,
-  expertStepIndex,
-  isExpertStep,
-  nextExpertStep,
-  prevExpertStep,
-  WIZARD_EXPERT_STEPS,
-} from "@/lib/wizard-expert-path";
-import { firstStepOfPhase, wizardPhaseIndex } from "@/lib/wizard-phases";
+  firstStepOfPhaseForMode,
+  isMicaStep,
+  isStepInMode,
+  MICA_STEP_TO_QUESTION,
+  nextStepForMode,
+  parseWizardMode,
+  modeFromLegacyExpert,
+  phaseIndexForStep,
+  prevStepForMode,
+  stepCountForMode,
+  stepIndexInMode,
+  type WizardMode,
+} from "@/lib/wizard-modes";
+import { getWizardUnlockBySessionAction } from "@/lib/actions/wizard-purchase";
 import {
   phaseIndexFromSlug,
   phaseSlugFromIndex,
 } from "@/lib/wizard-phase-url";
+import type { MicaAnswers } from "@/lib/mica-checker/types";
+
+const PRO_UNLOCK_KEY = "auros_wizard_pro_session";
 
 export default function WizardPage() {
+  const router = useRouter();
   const [step, setStep] = useState(1);
   const [data, setData] = useState<WizardData>(initialWizardData);
   const [hydrated, setHydrated] = useState(false);
   const [savedAt, setSavedAt] = useState<number | null>(null);
-  const [expertMode, setExpertMode] = useState(false);
+  const [wizardMode, setWizardMode] = useState<WizardMode>("explore");
   const [pathChosen, setPathChosen] = useState(false);
+  const [proUnlocked, setProUnlocked] = useState(false);
+  const [proAccessChecked, setProAccessChecked] = useState(false);
   const [step9Hints, setStep9Hints] = useState(false);
   const [validationHint, setValidationHint] = useState(false);
   const [starterPhase, setStarterPhase] = useState<{
@@ -86,6 +100,8 @@ export default function WizardPage() {
           : null;
       const demo = params?.get("demo") === "1";
       const expertUrl = params?.get("expert") === "1";
+      const modeParam = parseWizardMode(params?.get("mode"));
+      const sessionId = params?.get("session_id");
       const assetRenewable = params?.get("asset") === "renewable";
       if (demo) {
         const sim = getSimulationWizardData();
@@ -101,39 +117,57 @@ export default function WizardPage() {
 
       const raw = localStorage.getItem(STORAGE_KEY);
       let restored: Partial<WizardData> | null = null;
+      let resolvedMode: WizardMode =
+        modeParam ?? (expertUrl ? "explore" : "explore");
       if (raw) {
         const parsed = JSON.parse(raw) as {
           step?: number;
           data?: Partial<WizardData>;
           expertMode?: boolean;
+          wizardMode?: WizardMode;
           pathChosen?: boolean;
         };
         if (parsed.data) restored = parsed.data;
-        if (parsed.expertMode) {
-          setExpertMode(true);
+        const storedMode =
+          parsed.wizardMode ??
+          (parsed.expertMode ? modeFromLegacyExpert(true) : null);
+        if (storedMode) {
+          setWizardMode(storedMode);
           setPathChosen(true);
-        } else if (expertUrl) {
-          setExpertMode(true);
+        } else if (expertUrl || modeParam === "explore") {
+          setWizardMode("explore");
+          setPathChosen(true);
+        } else if (modeParam === "pro") {
+          setWizardMode("pro");
           setPathChosen(true);
         }
         if (parsed.pathChosen) setPathChosen(true);
+        resolvedMode =
+          storedMode ??
+          (expertUrl || modeParam === "explore"
+            ? "explore"
+            : modeParam === "pro"
+              ? "pro"
+              : "explore");
         if (
           typeof parsed.step === "number" &&
           parsed.step >= 1 &&
           parsed.step <= TOTAL_STEPS
         ) {
           const s = parsed.step;
-          if (parsed.expertMode || expertUrl) {
-            if (isExpertStep(s)) setStep(s);
-            else setStep(1);
-          } else {
-            setStep(s);
-          }
-        } else if (expertUrl) {
+          if (isStepInMode(resolvedMode, s)) setStep(s);
+          else setStep(1);
+        } else if (expertUrl || modeParam) {
           setStep(1);
         }
-      } else if (expertUrl) {
-        setExpertMode(true);
+      } else if (expertUrl || modeParam === "explore") {
+        resolvedMode = "explore";
+        setWizardMode("explore");
+        setPathChosen(true);
+        setStep(1);
+      } else if (modeParam === "pro") {
+        resolvedMode = "pro";
+        setWizardMode("pro");
         setPathChosen(true);
         setStep(1);
       }
@@ -243,6 +277,11 @@ export default function WizardPage() {
       }
       const prefill = loadWizardPrefill();
       if (prefill) {
+        if (prefill.mode) {
+          setWizardMode(prefill.mode);
+          setPathChosen(true);
+          resolvedMode = prefill.mode;
+        }
         setData((prev) => ({
           ...prev,
           assetType: prefill.assetType || prev.assetType,
@@ -250,7 +289,15 @@ export default function WizardPage() {
           currency: prefill.currency || prev.currency,
           country: prefill.country || prev.country,
           city: prefill.city || prev.city,
+          description: prefill.description || prev.description,
+          valueBucket: prefill.valueBucket ?? prev.valueBucket,
+          mica: prefill.mica
+            ? { ...(prev.mica ?? {}), ...prefill.mica }
+            : prev.mica,
         }));
+        if (prefill.fromTool) {
+          track("wizard_prefill_applied", { fromTool: prefill.fromTool });
+        }
         clearWizardPrefill();
       }
       try {
@@ -296,11 +343,32 @@ export default function WizardPage() {
       }
 
       const phaseParam = params?.get("phase");
-      if (phaseParam && !demo && params?.get("expert") !== "1") {
+      if (phaseParam && !demo) {
         const phaseIdx = phaseIndexFromSlug(phaseParam);
         if (phaseIdx !== null) {
-          setStep(firstStepOfPhase(phaseIdx));
+          setStep(firstStepOfPhaseForMode(resolvedMode, phaseIdx));
         }
+      }
+
+      if (sessionId) {
+        sessionStorage.setItem(PRO_UNLOCK_KEY, sessionId);
+      }
+      const unlockSession =
+        sessionId ?? sessionStorage.getItem(PRO_UNLOCK_KEY) ?? undefined;
+      if (unlockSession) {
+        void getWizardUnlockBySessionAction(unlockSession).then((r) => {
+          if (r.ok && r.unlocked) {
+            setProUnlocked(true);
+            try {
+              sessionStorage.setItem("auros_wizard_paid_tier", r.tier);
+            } catch {
+              // ignore
+            }
+          }
+          setProAccessChecked(true);
+        });
+      } else {
+        setProAccessChecked(true);
       }
     } catch {
       // ignore malformed storage
@@ -309,15 +377,15 @@ export default function WizardPage() {
   }, []);
 
   useEffect(() => {
-    if (!hydrated || expertMode || typeof window === "undefined") return;
-    const slug = phaseSlugFromIndex(wizardPhaseIndex(step));
+    if (!hydrated || typeof window === "undefined") return;
+    const slug = phaseSlugFromIndex(phaseIndexForStep(wizardMode, step));
     if (!slug) return;
     const url = new URL(window.location.href);
     if (url.searchParams.get("phase") === slug) return;
     url.searchParams.set("phase", slug);
     const next = `${url.pathname}${url.search}${url.hash}`;
     window.history.replaceState(null, "", next);
-  }, [hydrated, step, expertMode]);
+  }, [hydrated, step, wizardMode]);
 
   useEffect(() => {
     if (!hydrated) return;
@@ -327,7 +395,7 @@ export default function WizardPage() {
         JSON.stringify({
           step,
           data,
-          expertMode,
+          wizardMode,
           pathChosen,
           ts: Date.now(),
         })
@@ -336,17 +404,27 @@ export default function WizardPage() {
     } catch {
       // storage may be full / disabled
     }
-  }, [data, step, hydrated, expertMode, pathChosen]);
+  }, [data, step, hydrated, wizardMode, pathChosen]);
 
   useEffect(() => {
-    if (!hydrated || !expertMode) return;
-    if (!isExpertStep(step)) {
-      const fallback =
-        [...WIZARD_EXPERT_STEPS].find((s) => s >= step) ??
-        WIZARD_EXPERT_STEPS[0];
+    if (!hydrated) return;
+    if (!isStepInMode(wizardMode, step)) {
+      const steps = wizardMode === "explore"
+        ? [1, 2, 3, 6, 9, 15]
+        : [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 16, 17, 18, 19, 20, 15];
+      const fallback = steps.find((s) => s >= step) ?? steps[0];
       setStep(fallback);
     }
-  }, [hydrated, expertMode, step]);
+  }, [hydrated, wizardMode, step]);
+
+  useEffect(() => {
+    if (!hydrated || !proAccessChecked || wizardMode !== "pro" || proUnlocked) {
+      return;
+    }
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("demo") === "1") return;
+    router.replace("/wizard/pro");
+  }, [hydrated, proAccessChecked, wizardMode, proUnlocked, router]);
 
   useEffect(() => {
     if (!hydrated) return;
@@ -475,6 +553,17 @@ export default function WizardPage() {
     []
   );
 
+  const updateMica = useCallback((patch: Partial<MicaAnswers>) => {
+    setData((prev) => ({
+      ...prev,
+      mica: { ...(prev.mica ?? {}), ...patch },
+    }));
+  }, []);
+
+  const setSingleGoal = useCallback((value: string) => {
+    setData((prev) => ({ ...prev, goals: [value] }));
+  }, []);
+
   const toggleLegalStatus = useCallback((value: string) => {
     setData((prev) => {
       const current = prev.legalStatus;
@@ -505,6 +594,10 @@ export default function WizardPage() {
   }, []);
 
   const isStepValid = useMemo(() => {
+    if (isMicaStep(step)) {
+      const q = MICA_STEP_TO_QUESTION[step];
+      return !!data.mica?.[q];
+    }
     switch (step) {
       case 1:
         return data.assetType.trim().length > 0;
@@ -513,6 +606,9 @@ export default function WizardPage() {
         return trimmed.length > 0 && trimmed.split(/\s+/).length >= STEP2_MIN_WORDS;
       }
       case 3:
+        if (wizardMode === "explore") {
+          return !!data.valueBucket;
+        }
         return (
           data.estimatedValue >= VALUE_MIN &&
           data.estimatedValue <= VALUE_MAX
@@ -522,12 +618,20 @@ export default function WizardPage() {
       case 5:
         return data.documents.length > 0;
       case 6:
-        return data.goals.length > 0;
+        return wizardMode === "explore"
+          ? data.goals.length === 1
+          : data.goals.length > 0;
       case 7:
         return data.timeline.length > 0;
       case 8:
         return data.platform.length > 0;
       case 9:
+        if (wizardMode === "explore") {
+          return (
+            EMAIL_REGEX.test((data.email ?? "").trim()) &&
+            data.marketingConsent === true
+          );
+        }
         return (
           (data.firstName?.trim().length ?? 0) > 0 &&
           EMAIL_REGEX.test((data.email ?? "").trim()) &&
@@ -552,7 +656,7 @@ export default function WizardPage() {
       default:
         return false;
     }
-  }, [step, data]);
+  }, [step, data, wizardMode]);
 
   const goNext = useCallback(() => {
     if (!isStepValid) {
@@ -573,51 +677,36 @@ export default function WizardPage() {
         consent: true,
       });
     }
-    if (expertMode) {
-      const next = nextExpertStep(step);
-      if (next === 15) {
-        setData((d) => applyExpertDefaults(d));
-      }
-      if (next) setStep(next);
-      return;
-    }
-    if (step < TOTAL_STEPS) {
-      setStep(step + 1);
-      setValidationHint(false);
-    }
+    const next = nextStepForMode(wizardMode, step);
+    if (next) setStep(next);
   }, [
     step,
     isStepValid,
     data.email,
     data.assetType,
     data.marketingConsent,
-    expertMode,
+    wizardMode,
   ]);
 
   const goBack = useCallback(() => {
-    if (expertMode) {
-      const prev = prevExpertStep(step);
-      if (prev) setStep(prev);
-      return;
-    }
-    if (step > 1) setStep(step - 1);
-  }, [step, expertMode]);
+    const prev = prevStepForMode(wizardMode, step);
+    if (prev) setStep(prev);
+  }, [step, wizardMode]);
 
   const goToPhase = useCallback(
     (phaseIndex: number) => {
-      if (expertMode) return;
-      setStep(firstStepOfPhase(phaseIndex));
+      if (wizardMode !== "pro") return;
+      setStep(firstStepOfPhaseForMode("pro", phaseIndex));
       setValidationHint(false);
     },
-    [expertMode]
+    [wizardMode]
   );
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Enter" && !(e.target instanceof HTMLTextAreaElement)) {
-        const canAdvance = expertMode
-          ? nextExpertStep(step) !== null && isStepValid
-          : step < TOTAL_STEPS && isStepValid;
+        const canAdvance =
+          nextStepForMode(wizardMode, step) !== null && isStepValid;
         if (canAdvance) {
           e.preventDefault();
           goNext();
@@ -626,11 +715,10 @@ export default function WizardPage() {
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [goNext, isStepValid, step, expertMode]);
+  }, [goNext, isStepValid, step, wizardMode]);
 
-  const progressPct = expertMode
-    ? (expertStepIndex(step) / expertStepCount()) * 100
-    : (step / TOTAL_STEPS) * 100;
+  const progressPct =
+    (stepIndexInMode(wizardMode, step) / stepCountForMode(wizardMode)) * 100;
 
   const showPathChoice = step === 1 && hydrated && !pathChosen;
 
@@ -651,7 +739,13 @@ export default function WizardPage() {
           />
         );
       case 3:
-        return <Step3Value data={data} update={update} />;
+        return (
+          <Step3Value
+            data={data}
+            update={update}
+            exploreMode={wizardMode === "explore"}
+          />
+        );
       case 4:
         return <Step4Location data={data} update={update} />;
       case 5:
@@ -661,6 +755,8 @@ export default function WizardPage() {
           <Step6Objectives
             data={data}
             toggle={(v) => toggleInArray("goals", v)}
+            singleSelect={wizardMode === "explore"}
+            onSingleSelect={setSingleGoal}
           />
         );
       case 7:
@@ -713,30 +809,43 @@ export default function WizardPage() {
           />
         );
       case 15:
-        return <Step15Summary data={data} />;
+        return wizardMode === "explore" ? (
+          <ExploreSummary data={data} />
+        ) : (
+          <Step15Summary data={data} />
+        );
+      case 16:
+      case 17:
+      case 18:
+      case 19:
+      case 20:
+        return (
+          <StepMicaQuestion step={step} data={data} updateMica={updateMica} />
+        );
       default:
         return null;
     }
   }, [
     step,
     data,
+    wizardMode,
     update,
+    updateMica,
+    setSingleGoal,
     toggleDocument,
     toggleInArray,
     toggleLegalStatus,
   ]);
 
-  const canGoBack = expertMode ? prevExpertStep(step) !== null : step > 1;
-  const canGoNext = expertMode
-    ? nextExpertStep(step) !== null
-    : step < TOTAL_STEPS;
+  const canGoBack = prevStepForMode(wizardMode, step) !== null;
+  const canGoNext = nextStepForMode(wizardMode, step) !== null;
 
   return (
     <WizardShell
       step={step}
-      totalSteps={TOTAL_STEPS}
+      totalSteps={stepCountForMode(wizardMode)}
       progressPct={progressPct}
-      expertMode={expertMode}
+      wizardMode={wizardMode}
       savedAt={savedAt}
       hydrated={hydrated}
       isStepValid={isStepValid}
@@ -757,13 +866,17 @@ export default function WizardPage() {
       <div className="relative min-h-[min(52vh,480px)]">
         {showPathChoice ? (
           <WizardPathChoice
-            onExpress={() => {
-              setExpertMode(true);
+            onExplore={() => {
+              setWizardMode("explore");
               setPathChosen(true);
+              setStep(1);
+              const url = new URL(window.location.href);
+              url.searchParams.set("mode", "explore");
+              url.searchParams.delete("expert");
+              window.history.replaceState(null, "", url.toString());
             }}
-            onStandard={() => {
-              setExpertMode(false);
-              setPathChosen(true);
+            onPro={() => {
+              router.push("/wizard/pro");
             }}
           />
         ) : null}

@@ -16,14 +16,19 @@ import {
   stepPositionInPhase,
   wizardPhaseIndex,
 } from "@/lib/wizard-journey-i18n";
-import { getWizardExpertMessages } from "@/lib/wizard-expert-i18n";
-import { expertMinutesLeft, expertStepCount, expertStepIndex } from "@/lib/wizard-expert-path";
+import { getWizardModesMessages } from "@/lib/wizard-modes-i18n";
+import {
+  phaseIndexForStep,
+  stepCountForMode,
+  stepIndexInMode,
+  type WizardMode,
+} from "@/lib/wizard-modes";
 
 type Props = {
   step: number;
   totalSteps: number;
   progressPct: number;
-  expertMode?: boolean;
+  wizardMode?: WizardMode;
   savedAt: number | null;
   hydrated: boolean;
   isStepValid: boolean;
@@ -54,28 +59,31 @@ export function WizardShell({
   showValidationHint = false,
   children,
   navExtra,
-  expertMode = false,
+  wizardMode = "pro",
 }: Props) {
   const { locale } = useLocale();
   const shell = getWizardShellMessages(locale);
   const journey = getJourneyMessages(locale);
-  const expert = getWizardExpertMessages(locale);
+  const modes = getWizardModesMessages(locale);
+  const isExplore = wizardMode === "explore";
   const phase = wizardPhaseForStep(step);
-  const phaseIdx = wizardPhaseIndex(step);
+  const phaseIdx = phaseIndexForStep(wizardMode, step);
   const inPhase = stepPositionInPhase(step);
-  const minsLeft = expertMode ? expertMinutesLeft(step) : estimatedMinutesLeft(step);
-  const phaseIntro = expertMode ? null : phaseIntroForStep(step, locale);
-  const expertIdx = expertStepIndex(step);
-  const expertTotal = expertStepCount();
+  const minsLeft = isExplore
+    ? Math.max(1, Math.ceil((stepCountForMode("explore") - stepIndexInMode("explore", step) + 1) * 0.6))
+    : estimatedMinutesLeft(step);
+  const phaseIntro = isExplore ? null : phaseIntroForStep(step, locale);
+  const modeIdx = stepIndexInMode(wizardMode, step);
+  const modeTotal = stepCountForMode(wizardMode);
 
   return (
     <main className="page-main page-main--nav mx-auto flex min-h-dvh max-w-3xl flex-col md:px-6 md:py-12">
       <div className="mb-3 flex flex-wrap items-center justify-between gap-2 font-mono text-[10px] uppercase tracking-[0.2em] text-white/40">
         <span>{shell.title}</span>
         <span className="tabular-nums tracking-[0.12em] text-white/55">
-          {expertMode ? (
+          {isExplore ? (
             <>
-              {expert.expressLabel} · {expert.stepOf(expertIdx, expertTotal)} ·{" "}
+              {modes.exploreLabel} · {modes.stepOf(modeIdx, modeTotal)} ·{" "}
               {journey.minutesLeft(minsLeft)}
             </>
           ) : (
@@ -87,8 +95,7 @@ export function WizardShell({
         </span>
       </div>
 
-      {!expertMode ? (
-        <>
+      <>
           <div
             className="mb-4 flex gap-1"
             role="progressbar"
@@ -176,12 +183,11 @@ export function WizardShell({
             />
           </div>
         </>
-      ) : null}
 
-      {expertMode || phase ? (
+      {phase ? (
         <div className="mb-6 space-y-2">
-          {expertMode ? (
-            <p className="text-sm leading-relaxed text-white/55">{expert.expressNote}</p>
+          {isExplore ? (
+            <p className="text-sm leading-relaxed text-white/55">{modes.exploreNote}</p>
           ) : (
             <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-white/45">
               {shell.phaseOf} {phaseIdx + 1}/{WIZARD_PHASES.length} ·{" "}
@@ -193,7 +199,7 @@ export function WizardShell({
             <p className="text-sm leading-relaxed text-white/55">{phaseIntro}</p>
           ) : null}
           <p className="font-mono text-[10px] text-white/30">
-            {expertMode ? expert.shellExpress : journey.shellNote}
+            {isExplore ? modes.shellExplore : modes.shellPro}
           </p>
         </div>
       ) : null}

@@ -5,7 +5,7 @@ import { AmbientShell } from "../_components/ui/AmbientShell";
 export const metadata: Metadata = {
   title: "Créer mon dossier RWA | AUROS",
   description:
-    "Wizard gratuit — décrivez votre actif en 15 étapes, obtenez un score d'admission et un dossier institutionnel complet.",
+    "Explore gratuit en 5 questions ou wizard Pro institutionnel — score d'admission et dossier complet.",
   robots: { index: false, follow: false },
   openGraph: {
     title: "Créer mon dossier RWA | AUROS",

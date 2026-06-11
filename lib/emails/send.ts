@@ -70,6 +70,10 @@ import {
   type GreenLabelIncompleteReminderEmailData,
   type GreenMarketAlertEmailData,
   type GreenOfferInterestEmailData,
+  wizardProPaymentUserEmail,
+  wizardProPaymentInternalEmail,
+  type WizardProPaymentEmailData,
+  type WizardProPaymentInternalEmailData,
 } from "./templates";
 
 function getResend(): Resend | null {
@@ -255,6 +259,23 @@ export async function sendJurisdictionPaymentInternal(
   const internal = internalNotifyEmail();
   if (!internal) return false;
   const { subject, html } = jurisdictionPaymentInternalEmail(data);
+  return sendSafe({ to: internal, subject, html });
+}
+
+export async function sendWizardProPaymentConfirmation(
+  to: string,
+  data: WizardProPaymentEmailData
+): Promise<boolean> {
+  const { subject, html } = wizardProPaymentUserEmail(data);
+  return sendSafe({ to, subject, html });
+}
+
+export async function sendWizardProPaymentInternal(
+  data: WizardProPaymentInternalEmailData
+): Promise<boolean> {
+  const internal =
+    internalNotifyEmail() ?? "adrien@auros.app";
+  const { subject, html } = wizardProPaymentInternalEmail(data);
   return sendSafe({ to: internal, subject, html });
 }
 

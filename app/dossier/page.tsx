@@ -241,10 +241,25 @@ function DossierMain() {
       setAiState("loading");
       setAiError(null);
       try {
+        const dataBlob = current.data as Record<string, unknown> | undefined;
+        const wizardMode =
+          current.wizardMode ??
+          (typeof dataBlob?.wizardMode === "string"
+            ? dataBlob.wizardMode
+            : undefined);
+        const paidTier =
+          current.paidTier ??
+          (typeof dataBlob?.paidTier === "string" ? dataBlob.paidTier : undefined);
+
         const res = await fetch("/api/generate", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ data: current.data, locale }),
+          body: JSON.stringify({
+            data: current.data,
+            locale,
+            wizardMode,
+            paidTier,
+          }),
         });
         const json = (await res.json()) as Record<string, unknown>;
         if (res.status === 429) {

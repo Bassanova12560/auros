@@ -9,7 +9,9 @@ import { useLocale } from "@/app/_components/i18n/LocaleProvider";
 import { saveDossierAction } from "@/lib/actions/dossiers";
 import { track } from "@/lib/analytics";
 import { getEaseMessages } from "@/lib/ease-i18n";
-import { computeEaseSummary } from "@/lib/readiness-ease";
+import { scorePresentation } from "@/lib/score-presentation";
+import { tierFromScore } from "@/lib/score";
+import { computeUnifiedWizardScore } from "@/lib/wizard-scoring-unified";
 import {
   DOC_NONE,
   DOSSIER_STORAGE_KEY,
@@ -19,7 +21,6 @@ import {
 import { formatCurrencyDisplay } from "@/lib/wizard-format";
 import { getWizardStepsMessages } from "@/lib/wizard-steps-i18n";
 import { wizardOptionLabel } from "@/lib/wizard-options-i18n";
-import { computeWizardScore } from "@/lib/wizard-scoring";
 import type { WizardData } from "@/lib/wizard-types";
 import {
   computeGreenRtmsScore,
@@ -29,6 +30,7 @@ import {
 import { WizardSummaryRow } from "../WizardPrimitives";
 import { WizardStepHeader } from "../WizardStepHeader";
 import { GreenRtmsPanel } from "../GreenRtmsPanel";
+import { ProScoreBreakdown } from "../ProScoreBreakdown";
 
 type GenerateState = "idle" | "saving" | "error";
 
@@ -46,18 +48,29 @@ export function Step15Summary({ data }: Props) {
   const [genError, setGenError] = useState<string | null>(null);
   const [detailsOpen, setDetailsOpen] = useState(false);
 
-  const result = useMemo(
-    () => computeWizardScore(data, locale),
+  const unified = useMemo(
+    () => computeUnifiedWizardScore("pro", data, locale),
     [data, locale]
   );
+  const result = useMemo(() => {
+    if (unified.mode !== "pro") return null;
+    const score = unified.protocol.score;
+    const tierInfo = tierFromScore(score);
+    const presentation = scorePresentation(score, locale);
+    return {
+      score,
+      tier: tierInfo.tier,
+      label: presentation.tierLabel,
+      color: tierInfo.color,
+      admissionPercent: unified.ease.admissionPercent,
+      admissionLabel: unified.ease.subline,
+    };
+  }, [unified, locale]);
   const rtms = useMemo(
     () => (isGreenWizardAsset(data.assetType) ? computeGreenRtmsScore(data) : null),
     [data]
   );
-  const ease = useMemo(
-    () => computeEaseSummary(data, locale, result.score),
-    [data, locale, result.score]
-  );
+  const ease = unified.ease;
 
   const truncatedDescription = data.description
     ? data.description.length > 100
@@ -181,12 +194,21 @@ export function Step15Summary({ data }: Props) {
       // best-effort merge
     }
 
+    let paidTier: string | undefined;
+    try {
+      paidTier = sessionStorage.getItem("auros_wizard_paid_tier") ?? undefined;
+    } catch {
+      // ignore
+    }
+
     return {
       generatedAt: new Date().toISOString(),
-      score: result.score,
-      tier: result.tier,
-      tierLabel: result.label,
-      data: merged,
+      score: result?.score,
+      tier: result?.tier,
+      tierLabel: result?.label,
+      wizardMode: "pro" as const,
+      paidTier,
+      data: { ...merged, wizardMode: "pro", paidTier },
       ...(rtms ? { greenRtms: rtms } : {}),
     };
   }, [data, result, rtms]);
@@ -254,6 +276,8 @@ export function Step15Summary({ data }: Props) {
         <EasePanel summary={ease} locale={locale} />
       </div>
 
+      <ProScoreBreakdown data={data} />
+
       {rtms ? <GreenRtmsPanel rtms={rtms} /> : null}
 
       <div className="my-8 flex flex-col items-center">
@@ -261,16 +285,16 @@ export function Step15Summary({ data }: Props) {
           {ws.s15.admissionHint ?? "Admission"}
         </p>
         <p className="wizard-score-display mt-2" aria-live="polite">
-          {result.score}
+          {result?.score ?? "—"}
         </p>
         <p
           className="mt-2 font-mono text-[11px] uppercase tracking-[0.18em]"
-          style={{ color: result.color }}
+          style={{ color: result?.color }}
         >
-          {result.label}
+          {result?.label}
         </p>
         <p className="mt-1 font-mono text-[10px] tabular-nums text-white/45">
-          {result.admissionPercent}% · {result.admissionLabel}
+          {result?.admissionPercent}% · {result?.admissionLabel}
         </p>
       </div>
 

@@ -34,7 +34,10 @@ import {
 } from "@/lib/tokenization-readiness";
 import { calculateScoreFromText } from "@/lib/score";
 import { saveLeadAction } from "@/lib/actions/leads";
-import { saveWizardPrefill } from "@/lib/wizard-prefill";
+import {
+  prefillFromEstimate,
+  saveWizardPrefill,
+} from "@/lib/wizard-prefill";
 import { getWizardStepsMessages } from "@/lib/wizard-steps-i18n";
 
 /** Interactive score form — static shell lives in app/estimate/page.tsx for SSR. */
@@ -160,13 +163,12 @@ export function ScoreWidgetForm() {
 
   const goFullDossier = useCallback(() => {
     if (!evaluatedText.trim()) return;
-    saveWizardPrefill({
-      assetType: "",
-      estimatedValue: 250_000,
-      currency: "EUR",
-      country: "",
-      quickScore: score ?? undefined,
-    });
+    saveWizardPrefill(
+      prefillFromEstimate({
+        description: evaluatedText.trim(),
+        quickScore: score ?? undefined,
+      })
+    );
     track("score_widget_to_wizard", { score: score ?? 0 });
     router.push("/wizard");
   }, [evaluatedText, score, router]);

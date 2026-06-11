@@ -1268,3 +1268,74 @@ export function greenOfferInterestActorEmail(data: GreenOfferInterestEmailData) 
   );
   return { subject: copy.subject, html };
 }
+
+// --- Wizard Pro payment ---
+
+export type WizardProPaymentEmailData = {
+  firstName: string;
+  tier: string;
+  locale?: Locale;
+  wizardUrl: string;
+};
+
+export function wizardProPaymentUserEmail(data: WizardProPaymentEmailData) {
+  const locale = data.locale ?? "fr";
+  const subject =
+    locale === "en"
+      ? "Payment confirmed — AUROS Pro wizard"
+      : locale === "es"
+        ? "Pago confirmado — Wizard Pro AUROS"
+        : "Paiement confirmé — Wizard Pro AUROS";
+
+  const body =
+    locale === "en"
+      ? "Thank you. Your institutional wizard is unlocked — complete the 19-step dossier and receive your full analysis."
+      : locale === "es"
+        ? "Gracias. Su wizard institucional está desbloqueado — complete el dossier en 19 pasos y reciba su análisis completo."
+        : "Merci. Votre wizard institutionnel est débloqué — complétez le dossier en 19 étapes et recevez votre analyse complète.";
+
+  const ctaLabel =
+    locale === "en"
+      ? "Open Pro wizard"
+      : locale === "es"
+        ? "Abrir wizard Pro"
+        : "Ouvrir le wizard Pro";
+
+  const html = layout(
+    `<p style="margin:0 0 12px;font-size:18px;font-weight:600;">${escapeHtml(data.firstName)},</p>
+    <p style="margin:0 0 8px;color:${BRAND_MUTED};">${body}</p>
+    <p style="margin:0;color:${BRAND_MUTED};font-size:13px;">Pack: ${escapeHtml(data.tier)}</p>
+    ${cta(data.wizardUrl, ctaLabel)}`
+  );
+  return { subject, html };
+}
+
+export type WizardProPaymentInternalEmailData = {
+  firstName: string;
+  email: string;
+  tier: string;
+  sessionId: string;
+  amountCents?: number;
+  wizardUrl: string;
+};
+
+export function wizardProPaymentInternalEmail(
+  data: WizardProPaymentInternalEmailData
+) {
+  const amount =
+    data.amountCents != null
+      ? `€${(data.amountCents / 100).toLocaleString("fr-FR")}`
+      : "—";
+  const subject = `[AUROS] 💰 Wizard Pro · ${data.email}`;
+  const html = layout(
+    `<h1 style="margin:0 0 16px;font-size:20px;">Wizard Pro payment</h1>
+    <p><strong>Name:</strong> ${escapeHtml(data.firstName)}</p>
+    <p><strong>Email:</strong> ${escapeHtml(data.email)}</p>
+    <p><strong>Pack:</strong> ${escapeHtml(data.tier)}</p>
+    <p><strong>Amount:</strong> ${escapeHtml(amount)}</p>
+    <p><strong>Session:</strong> ${escapeHtml(data.sessionId)}</p>
+    <p><strong>Wizard:</strong> <a href="${escapeHtml(data.wizardUrl)}" style="color:${BRAND_TEXT};">${escapeHtml(data.wizardUrl)}</a></p>`,
+    "AUROS internal — wizard Pro unlocked"
+  );
+  return { subject, html };
+}

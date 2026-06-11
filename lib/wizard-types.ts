@@ -3,7 +3,9 @@
  * preview, and PDF generator.
  */
 
+import type { MicaAnswers } from "@/lib/mica-checker/types";
 import { normalizeDocumentIds } from "@/lib/rwa-document-phases";
+import type { ValueBucketId } from "@/lib/wizard-modes";
 
 export type Currency = "EUR" | "USD" | "GBP" | "CHF";
 
@@ -28,6 +30,10 @@ export type WizardData = {
   legalStatus: string[];
   investorProfile: string;
   additionalNotes: string;
+  /** Explore mode — valeur par fourchette. */
+  valueBucket?: ValueBucketId;
+  /** Pro mode — réponses MiCA (étapes 16–20). */
+  mica?: Partial<MicaAnswers>;
 };
 
 export type DossierContent = {
@@ -112,5 +118,16 @@ export function normalizeWizardData(
       typeof raw.investorProfile === "string" ? raw.investorProfile : "",
     additionalNotes:
       typeof raw.additionalNotes === "string" ? raw.additionalNotes : "",
+    valueBucket:
+      raw.valueBucket === "under_100k" ||
+      raw.valueBucket === "100k_500k" ||
+      raw.valueBucket === "500k_2m" ||
+      raw.valueBucket === "over_2m"
+        ? raw.valueBucket
+        : undefined,
+    mica:
+      raw.mica && typeof raw.mica === "object"
+        ? (raw.mica as Partial<MicaAnswers>)
+        : undefined,
   };
 }

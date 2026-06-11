@@ -8,6 +8,10 @@ import { StaticSectionHeader } from "@/app/_components/StaticSectionHeader";
 import { PrimaryButton } from "@/app/_components/ui/PrimaryButton";
 import { useLocale } from "@/app/_components/i18n/LocaleProvider";
 import { track } from "@/lib/analytics";
+import {
+  prefillFromCostEstimator,
+  saveWizardPrefill,
+} from "@/lib/wizard-prefill";
 import { COST_ESTIMATOR_FAQ } from "@/lib/cost-estimator/faq";
 import {
   COST_ASSET_ORDER,
@@ -212,14 +216,21 @@ export function CostEstimatorView() {
 
             <div className="mt-8 flex flex-col items-stretch gap-3 sm:flex-row sm:flex-wrap sm:items-center">
               <PrimaryButton
-                href="/wizard"
-                onClick={() =>
+                href="/wizard?mode=explore"
+                onClick={() => {
+                  saveWizardPrefill(
+                    prefillFromCostEstimator({
+                      assetType,
+                      dealSize,
+                      jurisdictionId: estimate.jurisdictionId,
+                    })
+                  );
                   track("cost_estimator_cta", {
                     target: "wizard",
                     assetType,
                     jurisdiction: estimate.jurisdictionId,
-                  })
-                }
+                  });
+                }}
               >
                 {copy.wizardCta}
               </PrimaryButton>

@@ -9,6 +9,10 @@ import { StaticSectionHeader } from "@/app/_components/StaticSectionHeader";
 import { PrimaryButton } from "@/app/_components/ui/PrimaryButton";
 import { useLocale } from "@/app/_components/i18n/LocaleProvider";
 import { track } from "@/lib/analytics";
+import {
+  prefillFromMicaChecker,
+  saveWizardPrefill,
+} from "@/lib/wizard-prefill";
 import { MICA_CHECKER_FAQ } from "@/lib/mica-checker/faq";
 import { getMicaCheckerCopy } from "@/lib/mica-checker/i18n";
 import { computeMicaReadiness } from "@/lib/mica-checker/scoring";
@@ -206,10 +210,16 @@ export function MicaCheckerView() {
 
             <div className="mt-10 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
               <PrimaryButton
-                href="/wizard?phase=conformite"
-                onClick={() =>
-                  track("mica_checker_cta", { target: "wizard", score: result.score })
-                }
+                href="/wizard?mode=pro&phase=conformite"
+                onClick={() => {
+                  saveWizardPrefill(
+                    prefillFromMicaChecker({
+                      answers,
+                      score: result.score,
+                    })
+                  );
+                  track("mica_checker_cta", { target: "wizard", score: result.score });
+                }}
               >
                 {copy.wizardCta}
               </PrimaryButton>

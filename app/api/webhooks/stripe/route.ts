@@ -5,6 +5,8 @@ import { fulfillJurisdictionPayment, fulfillWalkInPayment, parseCheckoutMetadata
 import { fulfillAcademyDiplomaPayment } from "@/lib/academy/fulfill-diploma-payment";
 import { parseAcademyDiplomaMetadata } from "@/lib/academy/diploma-checkout";
 import { getStripe, stripeWebhookSecret } from "@/lib/stripe/jurisdiction-checkout";
+import { parseWizardCheckoutMetadata } from "@/lib/stripe/wizard-checkout";
+import { fulfillWizardPayment } from "@/lib/wizard/fulfill-payment";
 
 export const runtime = "nodejs";
 
@@ -34,9 +36,15 @@ export async function POST(request: Request) {
   if (event.type === "checkout.session.completed") {
     const session = event.data.object as Stripe.Checkout.Session;
 
-    const academyMeta = parseAcademyDiplomaMetadata(
-      (session.metadata ?? {}) as Record<string, string>
-    );
+    const sessionMeta = (session.metadata ?? {}) as Record<string, string>;
+
+    const wizardMeta = parseWizardCheckoutMetadata(sessionMeta);
+    if (wizardMeta) {
+      await fulfillWizardPayment(session);
+      return NextResponse.json({ received: true });
+    }
+
+    const academyMeta = parseAcademyDiplomaMetadata(sessionMeta);
     if (academyMeta) {
       await fulfillAcademyDiplomaPayment(session);
       return NextResponse.json({ received: true });

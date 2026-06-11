@@ -9,6 +9,11 @@ import {
   VALUE_STEP,
   VALUE_DEFAULT,
 } from "@/lib/wizard-constants";
+import {
+  bucketMidpoint,
+  VALUE_BUCKETS,
+  type ValueBucketId,
+} from "@/lib/wizard-modes";
 import { formatCurrencyDisplay, formatWithSpaces } from "@/lib/wizard-format";
 import { useLocale } from "@/app/_components/i18n/LocaleProvider";
 import { getWizardStepsMessages } from "@/lib/wizard-steps-i18n";
@@ -18,9 +23,10 @@ import { WizardStepHeader } from "../WizardStepHeader";
 type Props = {
   data: WizardData;
   update: <K extends keyof WizardData>(k: K, v: WizardData[K]) => void;
+  exploreMode?: boolean;
 };
 
-export function Step3Value({ data, update }: Props) {
+export function Step3Value({ data, update, exploreMode = false }: Props) {
   const { locale } = useLocale();
   const ws = getWizardStepsMessages(locale);
   const clamp = (n: number) => Math.min(Math.max(n, VALUE_MIN), VALUE_MAX);
@@ -46,6 +52,48 @@ export function Step3Value({ data, update }: Props) {
   const onNumberBlur = () => {
     if (data.estimatedValue < VALUE_MIN) update("estimatedValue", VALUE_MIN);
   };
+
+  const selectBucket = (id: ValueBucketId) => {
+    update("valueBucket", id);
+    update("estimatedValue", bucketMidpoint(id));
+  };
+
+  if (exploreMode) {
+    return (
+      <div>
+        <WizardStepHeader
+          step={3}
+          tag={ws.s3.tag}
+          title={ws.s3.title}
+          subtitle={
+            locale === "fr"
+              ? "Fourchette indicative — vous affinerez dans le parcours Pro."
+              : "Indicative range — refine in the Pro path."
+          }
+        />
+        <div className="mt-8 grid gap-2 sm:grid-cols-2">
+          {VALUE_BUCKETS.map((b) => {
+            const active = data.valueBucket === b.id;
+            const label = locale === "fr" ? b.labelFr : b.labelEn;
+            return (
+              <button
+                key={b.id}
+                type="button"
+                onClick={() => selectBucket(b.id)}
+                className={
+                  active
+                    ? "wizard-asset-chip wizard-asset-chip-active"
+                    : "wizard-asset-chip"
+                }
+              >
+                {label}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div>

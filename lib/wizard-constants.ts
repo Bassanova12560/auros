@@ -126,4 +126,6 @@ export const initialWizardData: WizardData = {
   legalStatus: [],
   investorProfile: "",
   additionalNotes: "",
+  valueBucket: undefined,
+  mica: undefined,
 };

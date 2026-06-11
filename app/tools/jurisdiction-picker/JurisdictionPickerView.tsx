@@ -8,6 +8,10 @@ import { StaticSectionHeader } from "@/app/_components/StaticSectionHeader";
 import { PrimaryButton } from "@/app/_components/ui/PrimaryButton";
 import { useLocale } from "@/app/_components/i18n/LocaleProvider";
 import { track } from "@/lib/analytics";
+import {
+  prefillFromJurisdictionPicker,
+  saveWizardPrefill,
+} from "@/lib/wizard-prefill";
 import { JURISDICTION_PICKER_FAQ } from "@/lib/jurisdiction-picker/faq";
 import {
   ASSET_FILTER_ORDER,
@@ -188,10 +192,18 @@ export function JurisdictionPickerView() {
                 {copy.jurisdictionsCta}
               </PrimaryButton>
               <Link
-                href="/wizard"
-                onClick={() =>
-                  track("jurisdiction_picker_cta", { target: "wizard" })
-                }
+                href="/wizard?mode=pro"
+                onClick={() => {
+                  const top = result.recommendations[0]?.id ?? "luxembourg";
+                  saveWizardPrefill(
+                    prefillFromJurisdictionPicker({
+                      asset,
+                      priorities,
+                      topJurisdictionId: top,
+                    })
+                  );
+                  track("jurisdiction_picker_cta", { target: "wizard" });
+                }}
                 className="text-center font-mono text-xs text-white/50 underline-offset-2 hover:text-white/75 hover:underline"
               >
                 {copy.wizardCta}

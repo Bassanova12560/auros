@@ -13,6 +13,7 @@ import { siteOrigin } from "@/lib/emails/constants";
 import { sendWizardComplete } from "@/lib/emails/send";
 import { checkRateLimit, getRequestIp } from "@/lib/rate-limit";
 import { tierFromScore } from "@/lib/score";
+import { isWizardTier } from "@/lib/wizard-modes";
 import { computeWizardScore } from "@/lib/wizard-scoring";
 import { normalizeWizardData } from "@/lib/wizard-types";
 
@@ -34,6 +35,26 @@ export async function POST(req: Request) {
         : body;
     const wizardData = normalizeWizardData(raw);
 
+    const wizardMode =
+      typeof body.wizardMode === "string"
+        ? body.wizardMode
+        : typeof raw.wizardMode === "string"
+          ? raw.wizardMode
+          : undefined;
+    const paidTier =
+      typeof body.paidTier === "string"
+        ? body.paidTier
+        : typeof raw.paidTier === "string"
+          ? raw.paidTier
+          : undefined;
+
+    const isLegacyDossier = wizardMode === undefined && paidTier === undefined;
+    const templateOnly =
+      !isLegacyDossier &&
+      (wizardMode === "explore" ||
+        !paidTier ||
+        !isWizardTier(paidTier));
+
     if (!wizardData.assetType?.trim()) {
       return Response.json(
         { ok: false, error: "assetType is required" },
@@ -45,12 +66,13 @@ export async function POST(req: Request) {
     const locale: Locale =
       typeof rawLocale === "string" && isLocale(rawLocale) ? rawLocale : "fr";
 
-    if (isSimulationMode()) {
+    if (isSimulationMode() || templateOnly) {
       const sections = generateTemplateDossier(wizardData, locale);
       return Response.json({
         ok: true,
-        provider: "simulation",
+        provider: isSimulationMode() ? "simulation" : "template",
         cached: false,
+        templateOnly: templateOnly && !isSimulationMode(),
         generatedAt: new Date().toISOString(),
         ...sections,
       });

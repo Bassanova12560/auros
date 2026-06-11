@@ -80,6 +80,10 @@ export type StoredDossier = {
   aiMeta?: { provider: string; generatedAt: string };
   id?: string;
   locale?: Locale;
+  /** Optional diagonal watermark (e.g. explore preview). */
+  watermark?: string;
+  wizardMode?: "explore" | "pro";
+  paidTier?: string;
 };
 
 const DOC_ROWS = ALL_RWA_DOCUMENT_IDS.map((id) => RWA_DOCUMENT_LABELS[id]);
@@ -241,6 +245,15 @@ const styles = StyleSheet.create({
   body: { fontSize: 8, lineHeight: 1.55, color: "#222222" },
   scoreBig: { fontSize: 48, fontWeight: 700, lineHeight: 1 },
   tier: { fontSize: 7, letterSpacing: 1.5, marginTop: 4, color: "#555555" },
+  watermark: {
+    position: "absolute",
+    top: "42%",
+    left: "8%",
+    fontSize: 28,
+    color: "#eeeeee",
+    transform: "rotate(-35deg)",
+    letterSpacing: 4,
+  },
   barTrack: {
     height: 4,
     backgroundColor: "#eeeeee",
@@ -301,7 +314,13 @@ function AurosLogo({ size = 16 }: { size?: number }) {
   );
 }
 
-function PageHeader({ s }: { s: PdfStrings }) {
+function PageHeader({
+  s,
+  tierBadge,
+}: {
+  s: PdfStrings;
+  tierBadge?: string;
+}) {
   return (
     <>
       <View style={styles.headerRow}>
@@ -309,11 +328,22 @@ function PageHeader({ s }: { s: PdfStrings }) {
           <AurosLogo />
           <Text style={styles.brandText}>AUROS</Text>
         </View>
-        <Text style={styles.reportTitle}>{s.reportTitle}</Text>
+        <Text style={styles.reportTitle}>
+          {tierBadge ? `${tierBadge} · ${s.reportTitle}` : s.reportTitle}
+        </Text>
       </View>
       <View style={styles.redRule} />
     </>
   );
+}
+
+function pdfTierBadge(dossier: StoredDossier): string | undefined {
+  if (dossier.watermark) return undefined;
+  const tier = dossier.paidTier;
+  if (tier === "starter") return "PRO STARTER";
+  if (tier === "pro") return "PRO";
+  if (tier === "institutional") return "PRO INSTITUTIONAL";
+  return undefined;
 }
 
 function ReportFooter({ date, s }: { date: string; s: PdfStrings }) {
@@ -352,7 +382,12 @@ function PageOne({
 
   return (
     <Page size="A4" style={styles.page}>
-      <PageHeader s={s} />
+      {dossier.watermark ? (
+        <Text style={styles.watermark} fixed>
+          {dossier.watermark}
+        </Text>
+      ) : null}
+      <PageHeader s={s} tierBadge={pdfTierBadge(dossier)} />
       <View style={styles.twoCol}>
         <View style={styles.colLeft}>
           <Text style={styles.sectionLabel}>{s.sections.asset}</Text>
@@ -468,7 +503,7 @@ function PageTwo({
 
   return (
     <Page size="A4" style={styles.page}>
-      <PageHeader s={s} />
+      <PageHeader s={s} tierBadge={pdfTierBadge(dossier)} />
 
       <View style={styles.block}>
         <Text style={styles.sectionLabel}>{s.sections.ai}</Text>
