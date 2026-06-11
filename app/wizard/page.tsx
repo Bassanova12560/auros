@@ -16,6 +16,7 @@ import {
   initialWizardData,
 } from "@/lib/wizard-constants";
 import { saveLeadAction } from "@/lib/actions/leads";
+import { track } from "@/lib/analytics";
 import {
   clearWizardPrefill,
   loadWizardPrefill,
