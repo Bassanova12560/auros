@@ -33,7 +33,22 @@ export type { CompareRequest, CompareProduct, CompareResponse } from "./schemas/
 export { rankProtocolJurisdictions } from "./jurisdictions/rank";
 export { generateChecklist } from "./checklist/generate";
 export { parseDescription } from "./nlp/parse-description";
-export { scoreRequestSchema } from "./schemas/score";
+export { scoreRequestSchema, scoreResponseSchema } from "./schemas/score";
+export type { ScoreRequest, ScoreResponse } from "./schemas/score";
+export {
+  scoreHistoryResponseSchema,
+  scoreHistoryEntrySchema,
+} from "./schemas/score-history";
+export type { ScoreHistoryEntry, ScoreHistoryResponse } from "./schemas/score-history";
+export {
+  newScoreId,
+  isValidScoreSessionId,
+  scoreSessionOwnedByKey,
+  resolveScoreSessionId,
+  recordScoreHistory,
+  listScoreHistory,
+} from "./scoring/history";
+export type { ScoreHistoryRecord, ScoreHistoryPayload } from "./scoring/history";
 export { productsQuerySchema } from "./schemas/products";
 export { jurisdictionsQuerySchema } from "./schemas/jurisdictions";
 export { checklistRequestSchema } from "./schemas/checklist";

@@ -35,6 +35,11 @@ var AurosProtocol = class {
   async score(body) {
     return this.post("/api/v1/score", body);
   }
+  async scoreHistory(id) {
+    return this.get(
+      `/api/v1/score/${encodeURIComponent(id)}/history`
+    );
+  }
   async products(query = {}) {
     const params = new URLSearchParams();
     for (const [key, value] of Object.entries(query)) {

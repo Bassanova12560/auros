@@ -24,6 +24,9 @@ export type MicaClassification =
   | "uncertain";
 
 export type ScoreRequest = {
+  score_id?: string;
+  monitor_id?: string;
+  record_history?: boolean;
   description?: string;
   asset_type?: AssetType;
   issuer_type?: IssuerType;
@@ -65,8 +68,30 @@ export type ProtocolMeta = {
   request_id?: string;
 };
 
+export type ScoreHistoryEntry = {
+  id: number;
+  score: number;
+  grade: string;
+  status: ScoreStatus;
+  breakdown: ScoreBreakdown;
+  mica_classification: MicaClassification;
+  request?: Record<string, unknown>;
+  created_at: string;
+};
+
+export type ScoreHistoryResponse = {
+  disclaimer: string;
+  score_id: string;
+  kind: "session" | "monitor";
+  total: number;
+  entries: ScoreHistoryEntry[];
+  meta: ProtocolMeta;
+};
+
 export type ScoreResponse = {
   disclaimer: string;
+  score_id?: string;
+  history_url?: string;
   score: number;
   grade: string;
   status: ScoreStatus;

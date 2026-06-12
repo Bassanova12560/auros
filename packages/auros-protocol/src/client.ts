@@ -16,6 +16,7 @@ import type {
   ProductsQuery,
   ProductsResponse,
   ProtocolErrorBody,
+  ScoreHistoryResponse,
   ScoreRequest,
   ScoreResponse,
   WebhookRegisterRequest,
@@ -44,6 +45,12 @@ export class AurosProtocol {
 
   async score(body: ScoreRequest): Promise<ScoreResponse> {
     return this.post<ScoreResponse>("/api/v1/score", body);
+  }
+
+  async scoreHistory(id: string): Promise<ScoreHistoryResponse> {
+    return this.get<ScoreHistoryResponse>(
+      `/api/v1/score/${encodeURIComponent(id)}/history`
+    );
   }
 
   async products(query: ProductsQuery = {}): Promise<ProductsResponse> {

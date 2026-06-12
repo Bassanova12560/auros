@@ -52,6 +52,43 @@ describe("@adrien1212balitrand/auros-protocol SDK", () => {
     assert.equal(result.grade, "B-");
   });
 
+  it("scoreHistory() fetches session history", async () => {
+    const client = new AurosProtocol({
+      apiKey: "auros_pk_test_demo",
+      fetch: mockFetch((url) => {
+        assert.ok(url.includes("/api/v1/score/scr_abc123/history"));
+        return Response.json({
+          disclaimer: "test",
+          score_id: "scr_abc123",
+          kind: "session",
+          total: 1,
+          entries: [
+            {
+              id: 1,
+              score: 72,
+              grade: "B-",
+              status: "progress",
+              breakdown: {
+                legal_structure: 70,
+                kyc_aml: 70,
+                mica_compliance: 70,
+                data_room: 70,
+                investor_protection: 70,
+              },
+              mica_classification: "financial_instrument",
+              created_at: "2026-06-12T10:00:00.000Z",
+            },
+          ],
+          meta: { version: "1.0", computed_at: "2026-06-12T10:00:00.000Z" },
+        });
+      }),
+    });
+
+    const history = await client.scoreHistory("scr_abc123");
+    assert.equal(history.total, 1);
+    assert.equal(history.entries[0]?.score, 72);
+  });
+
   it("products() builds query string", async () => {
     const client = new AurosProtocol({
       apiKey: "auros_pk_test_demo",

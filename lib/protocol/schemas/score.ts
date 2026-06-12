@@ -38,8 +38,18 @@ const euNexusSchema = z.enum([
 const whitepaperSchema = z.enum(["ready", "draft", "none", "unsure"]);
 const investorTypeSchema = z.enum(["professional", "retail", "mixed", "unsure"]);
 
+const scoreIdSchema = z
+  .string()
+  .regex(/^scr_[a-f0-9]{24}$/, "Invalid score_id format (expected scr_…)");
+const monitorIdSchema = z
+  .string()
+  .regex(/^mon_[a-f0-9]{24}$/, "Invalid monitor_id format (expected mon_…)");
+
 export const scoreRequestSchema = z
   .object({
+    score_id: scoreIdSchema.optional(),
+    monitor_id: monitorIdSchema.optional(),
+    record_history: z.boolean().optional(),
     description: z.string().min(10).max(4000).optional(),
     asset_type: assetTypeSchema.optional(),
     issuer_type: issuerTypeSchema.optional(),
@@ -63,6 +73,8 @@ export const scoreRequestSchema = z
 
 export const scoreResponseSchema = z.object({
   disclaimer: z.string(),
+  score_id: z.string().optional(),
+  history_url: z.string().url().optional(),
   score: z.number().min(0).max(100),
   grade: z.string(),
   status: z.enum(["ready", "progress", "early"]),

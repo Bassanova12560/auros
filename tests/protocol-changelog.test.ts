@@ -11,7 +11,7 @@ import {
 describe("protocol/changelog", () => {
   it("lists released entries newest first", () => {
     const released = getReleasedChangelogEntries();
-    assert.equal(released[0]?.id, "rate-limit-headers");
+    assert.equal(released[0]?.id, "python-sdk-pypi");
     assert.ok(released.length >= 5);
     assert.ok(released.every((e) => e.status === "released"));
   });

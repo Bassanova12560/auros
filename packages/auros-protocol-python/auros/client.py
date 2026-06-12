@@ -47,6 +47,9 @@ class AurosProtocol:
     def score(self, **body: Any) -> dict[str, Any]:
         return self._post("/api/v1/score", body)
 
+    def score_history(self, score_id: str) -> dict[str, Any]:
+        return self._request("GET", f"/api/v1/score/{score_id}/history")
+
     def products(self, **query: Any) -> dict[str, Any]:
         return self._get("/api/v1/products", query)
 
@@ -55,6 +58,12 @@ class AurosProtocol:
 
     def checklist(self, **body: Any) -> dict[str, Any]:
         return self._post("/api/v1/checklist", body)
+
+    def compare(self, **body: Any) -> dict[str, Any]:
+        return self._post("/api/v1/compare", body)
+
+    def status(self) -> dict[str, Any]:
+        return self._request("GET", "/api/v1/status", auth=False)
 
     def monitor(self, **body: Any) -> dict[str, Any]:
         return self._post("/api/v1/monitor", body)

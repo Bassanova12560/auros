@@ -25,6 +25,25 @@ export type ProtocolChangelogEntry = {
 /** Single source for `/developers/changelog` and GET `/api/v1/changelog`. Newest first. */
 export const PROTOCOL_CHANGELOG: ProtocolChangelogEntry[] = [
   {
+    id: "python-sdk-pypi",
+    date: "2026-06-12",
+    title: "Python SDK on PyPI",
+    summary:
+      "Package `auros-protocol` v1.0.0 publié sur PyPI — client httpx typé pour score, products, jurisdictions, checklist, compare et status.",
+    details: [
+      "Installation : pip install auros-protocol.",
+      "Méthodes miroir du SDK TypeScript pour les endpoints publics v1.",
+      "Clé démo auros_pk_test_demo documentée dans le README PyPI.",
+    ],
+    links: [
+      { href: "https://pypi.org/project/auros-protocol/", label: "PyPI auros-protocol" },
+      { href: "/developers", label: "Portail développeurs" },
+    ],
+    tags: ["sdk", "python"],
+    status: "released",
+    roadmapItem: 6,
+  },
+  {
     id: "rate-limit-headers",
     date: "2026-06-12",
     title: "Rate limit response headers",
