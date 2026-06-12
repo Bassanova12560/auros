@@ -44,6 +44,7 @@ export const PROTOCOL_DOC_PAGES: ProtocolDocPage[] = [
         links: [
           { href: "/developers", label: "Page développeurs" },
           { href: "/auros-openapi.yaml", label: "OpenAPI spec" },
+          { href: "/auros-postman.json", label: "Postman collection" },
         ],
       },
       {

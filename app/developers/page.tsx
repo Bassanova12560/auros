@@ -247,7 +247,15 @@ console.log(result.score, result.grade);`}
                 href="/auros-openapi.yaml"
                 className="text-sm text-white/70 hover:text-white"
               >
-                OpenAPI 3.1 spec (8 endpoints) →
+                OpenAPI 3.1 spec →
+              </Link>
+            </li>
+            <li>
+              <Link
+                href="/auros-postman.json"
+                className="text-sm text-white/70 hover:text-white"
+              >
+                Postman collection v2.1 (tous les endpoints v1) →
               </Link>
             </li>
             <li>

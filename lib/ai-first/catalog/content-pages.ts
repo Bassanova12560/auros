@@ -325,6 +325,8 @@ export const developersPage = enrichPage({
     { key: "Version", value: "1.0" },
     { key: "Tier gratuit", value: "100 requêtes/mois" },
     { key: "Playground", value: "/developers#playground" },
+    { key: "Postman", value: "/auros-postman.json" },
+    { key: "OpenAPI", value: "/auros-openapi.yaml" },
   ],
   relatedPaths: [
     "/developers/docs",

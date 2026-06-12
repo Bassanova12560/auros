@@ -65,6 +65,11 @@ export default function ProtocolDocsIndexPage() {
               </Link>
             </li>
             <li>
+              <Link href="/auros-postman.json" className="hover:text-white">
+                Postman collection v2.1 →
+              </Link>
+            </li>
+            <li>
               <Link href="/developers#playground" className="hover:text-white">
                 Playground interactif →
               </Link>

@@ -18,6 +18,8 @@ info:
     **Response headers (every response):** `X-AUROS-Protocol-Version: 1.0`, `X-AUROS-Logo: https://getauros.com/auros-logo.svg`, `X-Response-Time` (request duration in ms).
 
     **SDKs:** `@adrien1212balitrand/auros-protocol` (npm), `auros-protocol` (pip). Docs: `/developers/docs`.
+
+    **Postman:** Import `/auros-postman.json` (collection v2.1 — all v1 endpoints, demo key pre-filled).
   contact:
     name: AUROS
     url: https://getauros.com/developers
@@ -26,7 +28,7 @@ info:
     name: Proprietary
     url: https://getauros.com/trust
 externalDocs:
-  description: Developer hub & playground
+  description: Developer hub, playground & Postman collection (/auros-postman.json)
   url: https://getauros.com/developers
 servers:
   - url: https://getauros.com

@@ -1,0 +1,436 @@
+{
+  "info": {
+    "_postman_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+    "name": "AUROS Protocol v1",
+    "description": "The RWA Intelligence Layer — MiCA scoring, RWA catalog, jurisdiction ranking, compliance checklists, and premium monitor/dossier/webhooks.\n\n**Base URL:** `{{baseUrl}}`\n**Auth:** Bearer `{{apiKey}}` (demo: `auros_pk_test_demo`)\n**Free tier:** 100 requests/month\n\nImport via URL: `https://getauros.com/auros-postman.json`\nDocs: https://getauros.com/developers",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{apiKey}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "https://getauros.com"
+    },
+    {
+      "key": "apiKey",
+      "value": "auros_pk_test_demo"
+    },
+    {
+      "key": "monitorId",
+      "value": ""
+    },
+    {
+      "key": "webhookId",
+      "value": ""
+    },
+    {
+      "key": "dossierToken",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "Status",
+      "item": [
+        {
+          "name": "GET /api/v1/status",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/status",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "status"]
+            },
+            "description": "Public health check — probes scoring engine, product catalog, jurisdiction ranking, and key storage. No authentication required."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Intelligence",
+      "item": [
+        {
+          "name": "POST /api/v1/score (free-text)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"description\": \"Entrepôt retail Luxembourg €2.5M SPV investisseurs professionnels whitepaper brouillon\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/score",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "score"]
+            },
+            "description": "Compute an indicative MiCA readiness score (0–100) from free-text description."
+          },
+          "response": []
+        },
+        {
+          "name": "POST /api/v1/score (structured)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"asset_type\": \"real_estate\",\n  \"issuer_type\": \"company_spv\",\n  \"investor_type\": \"professional\",\n  \"whitepaper\": \"draft\",\n  \"jurisdiction\": \"luxembourg\",\n  \"value_eur\": 2500000,\n  \"has_kyc\": true,\n  \"has_data_room\": false\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/score",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "score"]
+            },
+            "description": "Compute MiCA score from structured compliance fields."
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/v1/jurisdictions",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/jurisdictions?asset_type=real_estate&investor_type=professional&timeline_months=6",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "jurisdictions"],
+              "query": [
+                {
+                  "key": "asset_type",
+                  "value": "real_estate",
+                  "description": "real_estate | bonds | private_credit | funds | all"
+                },
+                {
+                  "key": "investor_type",
+                  "value": "professional",
+                  "description": "professional | retail | mixed | all"
+                },
+                {
+                  "key": "timeline_months",
+                  "value": "6",
+                  "description": "1–36"
+                },
+                {
+                  "key": "budget",
+                  "value": "",
+                  "description": "Budget in EUR",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Rank regulatory jurisdictions by asset type, investor profile, timeline, and budget."
+          },
+          "response": []
+        },
+        {
+          "name": "POST /api/v1/checklist",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"asset_type\": \"real_estate\",\n  \"jurisdiction\": \"luxembourg\",\n  \"structure\": \"spv\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/checklist",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "checklist"]
+            },
+            "description": "Generate 20+ compliance items for an asset type, jurisdiction, and legal structure."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Catalog",
+      "item": [
+        {
+          "name": "GET /api/v1/products",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/products?category=bonds&yield_min=4&limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "products"],
+              "query": [
+                {
+                  "key": "category",
+                  "value": "bonds",
+                  "description": "stablecoins | real_estate | bonds | commodities | private_credit | all"
+                },
+                {
+                  "key": "jurisdiction",
+                  "value": "",
+                  "disabled": true
+                },
+                {
+                  "key": "chain",
+                  "value": "",
+                  "disabled": true
+                },
+                {
+                  "key": "yield_min",
+                  "value": "4"
+                },
+                {
+                  "key": "yield_max",
+                  "value": "",
+                  "disabled": true
+                },
+                {
+                  "key": "page",
+                  "value": "1",
+                  "disabled": true
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                },
+                {
+                  "key": "sort",
+                  "value": "apy",
+                  "description": "apy | tvl | name",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Paginated catalog of 120+ tokenized RWA products with APY, TVL, chains, and jurisdiction."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Keys",
+      "item": [
+        {
+          "name": "POST /api/v1/keys",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"developpeur@entreprise.com\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/keys",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "keys"]
+            },
+            "description": "Request a free-tier API key (100 requests/month). No authentication required. The raw key is returned once — store securely."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Premium",
+      "description": "Requires `auros_pk_live_*` or premium tier. Demo key returns HTTP 403 premium_required.",
+      "item": [
+        {
+          "name": "Monitor",
+          "item": [
+            {
+              "name": "POST /api/v1/monitor",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"asset_type\": \"real_estate\",\n  \"jurisdiction\": \"luxembourg\",\n  \"structure\": \"spv\",\n  \"webhook_url\": \"https://your.app/hooks/auros\",\n  \"alert_on\": [\"score_change\", \"regulation_update\", \"deadline_approaching\"]\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/monitor",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "v1", "monitor"]
+                },
+                "description": "Register an asset profile for regulatory monitoring. Save `id` from response to `monitorId` variable."
+              },
+              "response": []
+            },
+            {
+              "name": "GET /api/v1/monitor/:id",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/monitor/{{monitorId}}",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "v1", "monitor", "{{monitorId}}"]
+                },
+                "description": "Get monitor status, last check, and last alert."
+              },
+              "response": []
+            },
+            {
+              "name": "DELETE /api/v1/monitor/:id",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/monitor/{{monitorId}}",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "v1", "monitor", "{{monitorId}}"]
+                },
+                "description": "Delete (unregister) a monitor."
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Dossier",
+          "item": [
+            {
+              "name": "POST /api/v1/dossier",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"score\": {\n    \"description\": \"Entrepôt retail Luxembourg €2.5M SPV professionnels\",\n    \"asset_type\": \"real_estate\"\n  },\n  \"format\": \"pdf\",\n  \"sections\": [\"executive_summary\", \"score_breakdown\", \"checklist\", \"disclaimers\"],\n  \"branding\": { \"company_name\": \"Ma Société\" }\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/dossier",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "v1", "dossier"]
+                },
+                "description": "Generate institutional MiCA readiness report. PDF response includes `download_url` — extract token to `dossierToken`."
+              },
+              "response": []
+            },
+            {
+              "name": "GET /api/v1/dossier/pdf",
+              "request": {
+                "auth": {
+                  "type": "noauth"
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/dossier/pdf?token={{dossierToken}}",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "v1", "dossier", "pdf"],
+                  "query": [
+                    {
+                      "key": "token",
+                      "value": "{{dossierToken}}",
+                      "description": "HMAC-signed token from POST /api/v1/dossier download_url (valid 24h)"
+                    }
+                  ]
+                },
+                "description": "Download dossier PDF using HMAC-signed token from POST /api/v1/dossier response. No Bearer auth — token query param only."
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Webhooks",
+          "item": [
+            {
+              "name": "POST /api/v1/webhooks",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"url\": \"https://your.app/hooks/auros\",\n  \"events\": [\"regulation_update\", \"new_requirement\"]\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/webhooks",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "v1", "webhooks"]
+                },
+                "description": "Register a webhook endpoint for HMAC-signed alerts. Save `id` to `webhookId` variable."
+              },
+              "response": []
+            },
+            {
+              "name": "GET /api/v1/webhooks",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/webhooks",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "v1", "webhooks"]
+                },
+                "description": "List registered webhooks for the current API key."
+              },
+              "response": []
+            },
+            {
+              "name": "DELETE /api/v1/webhooks/:id",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/webhooks/{{webhookId}}",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "v1", "webhooks", "{{webhookId}}"]
+                },
+                "description": "Delete a registered webhook."
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

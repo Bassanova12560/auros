@@ -34,6 +34,7 @@ export const protocolDocsIndexPage = enrichPage({
     { key: "Endpoints", value: "5 (score, products, jurisdictions, checklist, keys)" },
     { key: "SDK", value: "@adrien1212balitrand/auros-protocol · auros-protocol (Python)" },
     { key: "OpenAPI", value: "/auros-openapi.yaml" },
+    { key: "Postman", value: "/auros-postman.json" },
   ],
   relatedPaths: ["/developers", "/tools/mica-checker", "/compare"],
 });
