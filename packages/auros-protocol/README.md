@@ -47,6 +47,7 @@ console.log(api_key); // store securely — shown once
 | Method | Endpoint | Auth |
 |--------|----------|------|
 | `score(body)` | `POST /api/v1/score` | Bearer |
+| `scoreBatch(body)` | `POST /api/v1/score/batch` | Bearer |
 | `products(query?)` | `GET /api/v1/products` | Bearer |
 | `jurisdictions(query?)` | `GET /api/v1/jurisdictions` | Bearer |
 | `checklist(body)` | `POST /api/v1/checklist` | Bearer |

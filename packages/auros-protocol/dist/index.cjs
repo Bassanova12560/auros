@@ -62,6 +62,9 @@ var AurosProtocol = class {
   async score(body) {
     return this.post("/api/v1/score", body);
   }
+  async scoreBatch(body) {
+    return this.post("/api/v1/score/batch", body);
+  }
   async scoreHistory(id) {
     return this.get(
       `/api/v1/score/${encodeURIComponent(id)}/history`

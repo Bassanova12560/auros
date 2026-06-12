@@ -82,6 +82,31 @@ type ScoreResponse = {
         parsed_keywords: string[];
     };
 };
+type ScoreBatchRequest = {
+    items: ScoreRequest[];
+    record_history?: boolean;
+};
+type ScoreBatchSuccessItem = ScoreResponse & {
+    index: number;
+    ok: true;
+};
+type ScoreBatchErrorItem = {
+    index: number;
+    ok: false;
+    error: {
+        code: string;
+        message: string;
+    };
+};
+type ScoreBatchResultItem = ScoreBatchSuccessItem | ScoreBatchErrorItem;
+type ScoreBatchResponse = {
+    disclaimer: string;
+    total: number;
+    succeeded: number;
+    failed: number;
+    items: ScoreBatchResultItem[];
+    meta: ProtocolMeta;
+};
 type ProductCategory = "stablecoins" | "real_estate" | "bonds" | "commodities" | "private_credit" | "all";
 type ProductsQuery = {
     category?: ProductCategory;
@@ -311,6 +336,7 @@ declare class AurosProtocol {
     private readonly fetchFn;
     constructor(options: AurosProtocolOptions);
     score(body: ScoreRequest): Promise<ScoreResponse>;
+    scoreBatch(body: ScoreBatchRequest): Promise<ScoreBatchResponse>;
     scoreHistory(id: string): Promise<ScoreHistoryResponse>;
     products(query?: ProductsQuery): Promise<ProductsResponse>;
     compare(body: CompareRequest): Promise<CompareResponse>;
@@ -345,4 +371,4 @@ declare class AurosProtocolError extends Error {
     static fromResponse(status: number, body: ProtocolErrorBody): AurosProtocolError;
 }
 
-export { type AlertType, type AssetClass, type AssetType, AurosProtocol, AurosProtocolError, type AurosProtocolOptions, type ChecklistItem, type ChecklistRequest, type ChecklistResponse, type CompareCellHighlight, type CompareProduct, type CompareRequest, type CompareResponse, type CreateKeyRequest, type CreateKeyResponse, type DossierRequest, type DossierResponse, type DossierSection, type EuNexus, type InvestorType, type IssuerType, type JurisdictionItem, type JurisdictionsAssetType, type JurisdictionsQuery, type JurisdictionsResponse, type MicaClassification, type MonitorRequest, type MonitorResponse, type ProductCategory, type ProductItem, type ProductsQuery, type ProductsResponse, type ProtocolErrorBody, type ProtocolMeta, type RecommendedJurisdiction, type RecommendedPlatform, type RiskTier, type ScoreBreakdown, type ScoreHistoryEntry, type ScoreHistoryResponse, type ScoreRequest, type ScoreResponse, type ScoreStatus, type WebhookItem, type WebhookRegisterRequest, type WebhookRegisterResponse, type WebhooksListResponse, type WhitepaperStatus };
+export { type AlertType, type AssetClass, type AssetType, AurosProtocol, AurosProtocolError, type AurosProtocolOptions, type ChecklistItem, type ChecklistRequest, type ChecklistResponse, type CompareCellHighlight, type CompareProduct, type CompareRequest, type CompareResponse, type CreateKeyRequest, type CreateKeyResponse, type DossierRequest, type DossierResponse, type DossierSection, type EuNexus, type InvestorType, type IssuerType, type JurisdictionItem, type JurisdictionsAssetType, type JurisdictionsQuery, type JurisdictionsResponse, type MicaClassification, type MonitorRequest, type MonitorResponse, type ProductCategory, type ProductItem, type ProductsQuery, type ProductsResponse, type ProtocolErrorBody, type ProtocolMeta, type RecommendedJurisdiction, type RecommendedPlatform, type RiskTier, type ScoreBatchErrorItem, type ScoreBatchRequest, type ScoreBatchResponse, type ScoreBatchResultItem, type ScoreBatchSuccessItem, type ScoreBreakdown, type ScoreHistoryEntry, type ScoreHistoryResponse, type ScoreRequest, type ScoreResponse, type ScoreStatus, type WebhookItem, type WebhookRegisterRequest, type WebhookRegisterResponse, type WebhooksListResponse, type WhitepaperStatus };

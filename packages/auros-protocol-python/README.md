@@ -33,6 +33,7 @@ print(result["score"], result["grade"], result["mica_classification"])
 | Method | Endpoint | Auth |
 |--------|----------|------|
 | `score(**fields)` | `POST /api/v1/score` | Bearer |
+| `score_batch(**body)` | `POST /api/v1/score/batch` | Bearer |
 | `products(**query)` | `GET /api/v1/products` | Bearer |
 | `jurisdictions(**query)` | `GET /api/v1/jurisdictions` | Bearer |
 | `checklist(**body)` | `POST /api/v1/checklist` | Bearer |

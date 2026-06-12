@@ -11,8 +11,8 @@ import {
 describe("protocol/changelog", () => {
   it("lists released entries newest first", () => {
     const released = getReleasedChangelogEntries();
-    assert.equal(released[0]?.id, "python-sdk-pypi");
-    assert.ok(released.length >= 5);
+    assert.equal(released[0]?.id, "batch-score-endpoint");
+    assert.ok(released.length >= 6);
     assert.ok(released.every((e) => e.status === "released"));
   });
 

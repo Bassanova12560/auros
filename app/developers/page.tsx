@@ -26,6 +26,14 @@ const CURL_EXAMPLES = [
   -d '{"description":"Entrepôt retail Luxembourg €2.5M SPV investisseurs professionnels"}'`,
   },
   {
+    method: "POST",
+    path: "/api/v1/score/batch",
+    curl: `curl -X POST ${BASE}/api/v1/score/batch \\
+  -H "Authorization: Bearer ${DEMO_API_KEY}" \\
+  -H "Content-Type: application/json" \\
+  -d '{"items":[{"description":"Entrepôt retail Luxembourg SPV investisseurs professionnels"},{"asset_type":"bonds","issuer_type":"company_spv"}]}'`,
+  },
+  {
     method: "GET",
     path: "/api/v1/score/{id}/history",
     curl: `curl "${BASE}/api/v1/score/scr_VOTRE_SESSION_ID/history" \\
@@ -91,6 +99,11 @@ const ENDPOINTS = [
     method: "POST",
     path: "/api/v1/score",
     desc: "Score MiCA 0–100, grade A+–F, breakdown 5 dimensions — retourne score_id + historique.",
+  },
+  {
+    method: "POST",
+    path: "/api/v1/score/batch",
+    desc: "Score batch jusqu'à 20 actifs — succès partiel, 1 unité quota par appel.",
   },
   {
     method: "GET",

@@ -36,6 +36,27 @@ export { parseDescription } from "./nlp/parse-description";
 export { scoreRequestSchema, scoreResponseSchema } from "./schemas/score";
 export type { ScoreRequest, ScoreResponse } from "./schemas/score";
 export {
+  scoreBatchRequestSchema,
+  scoreBatchResponseSchema,
+  scoreBatchResultItemSchema,
+  SCORE_BATCH_MIN_ITEMS,
+  SCORE_BATCH_MAX_ITEMS,
+} from "./schemas/score-batch";
+export type {
+  ScoreBatchRequest,
+  ScoreBatchResponse,
+  ScoreBatchResultItem,
+} from "./schemas/score-batch";
+export {
+  processScoreItem,
+  validateScoreRequest,
+} from "./scoring/process-score-item";
+export type {
+  ProcessScoreContext,
+  ProcessedScoreResult,
+  ProcessScoreOutcome,
+} from "./scoring/process-score-item";
+export {
   scoreHistoryResponseSchema,
   scoreHistoryEntrySchema,
 } from "./schemas/score-history";

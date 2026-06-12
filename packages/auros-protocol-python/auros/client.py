@@ -47,6 +47,9 @@ class AurosProtocol:
     def score(self, **body: Any) -> dict[str, Any]:
         return self._post("/api/v1/score", body)
 
+    def score_batch(self, **body: Any) -> dict[str, Any]:
+        return self._post("/api/v1/score/batch", body)
+
     def score_history(self, score_id: str) -> dict[str, Any]:
         return self._request("GET", f"/api/v1/score/{score_id}/history")
 

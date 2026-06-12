@@ -114,6 +114,29 @@
           "response": []
         },
         {
+          "name": "POST /api/v1/score/batch",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"record_history\": true,\n  \"items\": [\n    {\n      \"description\": \"Retail warehouse Luxembourg €2.5M SPV professional investors\"\n    },\n    {\n      \"asset_type\": \"bonds\",\n      \"issuer_type\": \"company_spv\",\n      \"whitepaper\": \"draft\",\n      \"has_kyc\": true\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/score/batch",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "score", "batch"]
+            },
+            "description": "Score up to 20 assets in one call. Partial success per item. Counts as 1 quota unit (not N items). Each successful item includes score_id."
+          },
+          "response": []
+        },
+        {
           "name": "GET /api/v1/score/{id}/history",
           "request": {
             "method": "GET",

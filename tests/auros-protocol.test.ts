@@ -47,9 +47,41 @@ describe("@adrien1212balitrand/auros-protocol SDK", () => {
       }),
     });
 
-    const result = await client.score({ description: "Test asset description here" });
+    const result = await client.score({ description: "Valid description here" });
     assert.equal(result.score, 72);
     assert.equal(result.grade, "B-");
+  });
+
+  it("scoreBatch() posts items array", async () => {
+    const client = new AurosProtocol({
+      apiKey: "auros_pk_test_demo",
+      fetch: mockFetch((url, init) => {
+        assert.ok(url.endsWith("/api/v1/score/batch"));
+        assert.equal(init?.method, "POST");
+        const body = JSON.parse(init?.body as string);
+        assert.equal(body.items.length, 2);
+        return Response.json({
+          disclaimer: "test",
+          total: 2,
+          succeeded: 2,
+          failed: 0,
+          items: [
+            { index: 0, ok: true, score_id: "scr_abc123", score: 70, grade: "B" },
+            { index: 1, ok: true, score_id: "scr_def456", score: 65, grade: "C+" },
+          ],
+          meta: { version: "1.0", computed_at: "2026-06-12T00:00:00.000Z" },
+        });
+      }),
+    });
+
+    const result = await client.scoreBatch({
+      items: [
+        { description: "Luxembourg warehouse SPV professional" },
+        { asset_type: "bonds", issuer_type: "company_spv" },
+      ],
+    });
+    assert.equal(result.total, 2);
+    assert.equal(result.succeeded, 2);
   });
 
   it("scoreHistory() fetches session history", async () => {

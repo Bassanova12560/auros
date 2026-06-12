@@ -90,6 +90,7 @@ console.log(result.score, result.grade);`,
         heading: "Quota & rate limiting",
         paragraphs: [
           "Tier gratuit : 100 requêtes/mois par clé. Dépassement → HTTP 429 `quota_exceeded`.",
+          "POST /api/v1/score/batch compte comme **1 requête** quota (max 20 scores par batch).",
           "Burst IP : 30 req/min. Création de clé : 5 req/heure par IP.",
           "Chaque réponse authentifiée inclut les headers Stripe-style : `X-RateLimit-Limit`, `X-RateLimit-Remaining`, `X-RateLimit-Reset` (timestamp Unix — reset quota mensuel au 1er du mois UTC).",
           "Chaque réponse authentifiée inclut les headers Stripe-style : `X-RateLimit-Limit`, `X-RateLimit-Remaining`, `X-RateLimit-Reset` (timestamp Unix — reset quota mensuel au 1er du mois UTC).",
@@ -122,7 +123,7 @@ console.log(result.score, result.grade);`,
     description: "Score MiCA indicatif 0–100 avec grade, breakdown 5 dimensions, gaps et recommandations.",
     category: "endpoints",
     categoryLabel: "Endpoints",
-    relatedSlugs: ["endpoint-score-history", "guide-score-real-estate", "endpoint-checklist"],
+    relatedSlugs: ["endpoint-score", "guide-score-real-estate", "endpoint-checklist"],
     sections: [
       {
         heading: "Requête",
@@ -167,6 +168,91 @@ console.log(result.score, result.grade);`,
   -H "Content-Type: application/json" \\
   -d '{"description":"Entrepôt retail Luxembourg €2.5M SPV professionnels"}'`,
         language: "bash",
+        paragraphs: [],
+      },
+    ],
+  },
+  {
+    slug: "endpoint-score-batch",
+    title: "POST /api/v1/score/batch",
+    description:
+      "Score jusqu'à 20 actifs en un appel — succès partiel par item, 1 unité de quota par batch.",
+    category: "endpoints",
+    categoryLabel: "Endpoints",
+    relatedSlugs: ["endpoint-score", "endpoint-score-history", "authentication"],
+    sections: [
+      {
+        heading: "Requête",
+        paragraphs: [
+          "Tableau `items` (1–20) : chaque élément accepte le même schéma que POST /score.",
+          "Option batch `record_history` s'applique à tous les items sauf override par item.",
+          "**Quota :** 1 batch = **1 requête** mensuelle (pas N items) — avantage institutionnel vs appels unitaires.",
+        ],
+        code: `{
+  "record_history": true,
+  "items": [
+    { "description": "Entrepôt retail Luxembourg €2.5M SPV professionnels" },
+    {
+      "asset_type": "bonds",
+      "issuer_type": "company_spv",
+      "whitepaper": "draft",
+      "has_kyc": true
+    }
+  ]
+}`,
+        language: "json",
+      },
+      {
+        heading: "Succès partiel",
+        paragraphs: [
+          "HTTP 200 même si certains items échouent la validation.",
+          "Items valides : résultat score complet + `score_id` + `history_url`.",
+          "Items invalides : `{ \"index\": N, \"ok\": false, \"error\": { \"code\", \"message\" } }`.",
+        ],
+        code: `{
+  "total": 2,
+  "succeeded": 1,
+  "failed": 1,
+  "items": [
+    {
+      "index": 0,
+      "ok": true,
+      "score_id": "scr_a1b2c3d4e5f6789012345678",
+      "history_url": "${BASE}/api/v1/score/scr_a1b2c3d4e5f6789012345678/history",
+      "score": 72,
+      "grade": "B-"
+    },
+    {
+      "index": 1,
+      "ok": false,
+      "error": {
+        "code": "validation_error",
+        "message": "Provide description or structured asset/compliance fields"
+      }
+    }
+  ]
+}`,
+        language: "json",
+      },
+      {
+        heading: "cURL",
+        code: `curl -X POST ${BASE}/api/v1/score/batch \\
+  -H "Authorization: Bearer ${DEMO_API_KEY}" \\
+  -H "Content-Type: application/json" \\
+  -d '{"items":[{"description":"Entrepôt Luxembourg SPV professionnels"},{"asset_type":"bonds","issuer_type":"company_spv"}]}'`,
+        language: "bash",
+        paragraphs: [],
+      },
+      {
+        heading: "SDK",
+        code: `const batch = await client.scoreBatch({
+  items: [
+    { description: "Entrepôt Luxembourg SPV professionnels" },
+    { asset_type: "bonds", issuer_type: "company_spv" },
+  ],
+});
+console.log(batch.succeeded, batch.items[0]?.score_id);`,
+        language: "typescript",
         paragraphs: [],
       },
     ],

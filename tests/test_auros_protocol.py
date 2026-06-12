@@ -33,6 +33,29 @@ class AurosProtocolClientTest(unittest.TestCase):
         self.assertEqual(call.kwargs["headers"]["Authorization"], "Bearer auros_pk_test_demo")
 
     @patch("auros.client.httpx.Client")
+    def test_score_batch_posts_items(self, client_cls: MagicMock) -> None:
+        http = MagicMock()
+        client_cls.return_value = http
+        http.request.return_value = MagicMock(
+            is_success=True,
+            status_code=200,
+            json=lambda: {"total": 2, "succeeded": 2, "failed": 0, "items": []},
+        )
+
+        client = AurosProtocol(api_key="auros_pk_test_demo")
+        result = client.score_batch(
+            items=[
+                {"description": "Luxembourg SPV professional investors"},
+                {"asset_type": "bonds", "issuer_type": "company_spv"},
+            ]
+        )
+
+        self.assertEqual(result["total"], 2)
+        call = http.request.call_args
+        self.assertIn("/api/v1/score/batch", call.args[1])
+        self.assertEqual(len(call.kwargs["json"]["items"]), 2)
+
+    @patch("auros.client.httpx.Client")
     def test_status_skips_auth(self, client_cls: MagicMock) -> None:
         http = MagicMock()
         client_cls.return_value = http

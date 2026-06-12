@@ -19,6 +19,8 @@ import type {
   ScoreHistoryResponse,
   ScoreRequest,
   ScoreResponse,
+  ScoreBatchRequest,
+  ScoreBatchResponse,
   WebhookRegisterRequest,
   WebhookRegisterResponse,
   WebhooksListResponse,
@@ -45,6 +47,10 @@ export class AurosProtocol {
 
   async score(body: ScoreRequest): Promise<ScoreResponse> {
     return this.post<ScoreResponse>("/api/v1/score", body);
+  }
+
+  async scoreBatch(body: ScoreBatchRequest): Promise<ScoreBatchResponse> {
+    return this.post<ScoreBatchResponse>("/api/v1/score/batch", body);
   }
 
   async scoreHistory(id: string): Promise<ScoreHistoryResponse> {

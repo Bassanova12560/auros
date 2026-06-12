@@ -25,6 +25,26 @@ export type ProtocolChangelogEntry = {
 /** Single source for `/developers/changelog` and GET `/api/v1/changelog`. Newest first. */
 export const PROTOCOL_CHANGELOG: ProtocolChangelogEntry[] = [
   {
+    id: "batch-score-endpoint",
+    date: "2026-06-12",
+    title: "POST /api/v1/score/batch",
+    summary:
+      "Score jusqu'à 20 actifs en un appel — succès partiel par item, quota 1 unité par batch (pas par item).",
+    details: [
+      "Corps : `{ \"items\": [ { description | champs structurés }, … ], \"record_history\"?: boolean }`.",
+      "Chaque item retourne `score_id` + résultat complet ou `{ ok: false, error }` sans faire échouer le batch.",
+      "SDK TypeScript/Python : `client.scoreBatch()` / `score_batch()`.",
+      "Compte comme 1 requête quota mensuel (100/mois free tier) — documenté OpenAPI et docs auth.",
+    ],
+    links: [
+      { href: "/developers/docs/endpoint-score-batch", label: "Documentation endpoint" },
+      { href: "/auros-openapi.yaml", label: "OpenAPI spec" },
+    ],
+    tags: ["endpoint", "sdk", "institutional"],
+    status: "released",
+    roadmapItem: 8,
+  },
+  {
     id: "python-sdk-pypi",
     date: "2026-06-12",
     title: "Python SDK on PyPI",

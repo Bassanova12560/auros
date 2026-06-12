@@ -107,6 +107,33 @@ export type ScoreResponse = {
   };
 };
 
+export type ScoreBatchRequest = {
+  items: ScoreRequest[];
+  record_history?: boolean;
+};
+
+export type ScoreBatchSuccessItem = ScoreResponse & {
+  index: number;
+  ok: true;
+};
+
+export type ScoreBatchErrorItem = {
+  index: number;
+  ok: false;
+  error: { code: string; message: string };
+};
+
+export type ScoreBatchResultItem = ScoreBatchSuccessItem | ScoreBatchErrorItem;
+
+export type ScoreBatchResponse = {
+  disclaimer: string;
+  total: number;
+  succeeded: number;
+  failed: number;
+  items: ScoreBatchResultItem[];
+  meta: ProtocolMeta;
+};
+
 export type ProductCategory =
   | "stablecoins"
   | "real_estate"
