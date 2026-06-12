@@ -9,6 +9,7 @@ import {
   PROTOCOL_DOCS_ROUTE,
   protocolDocPath,
 } from "@/lib/protocol/docs";
+import { DeveloperBrandMark } from "@/app/developers/_components/DeveloperBrandMark";
 import { metadataFromPath } from "@/lib/seo/metadata";
 
 type PageProps = { params: Promise<{ slug: string }> };
@@ -36,6 +37,7 @@ export default async function ProtocolDocPage({ params }: PageProps) {
 
   return (
     <FocusPageShell path={path} width="3xl">
+      <DeveloperBrandMark />
       <ContentPageLayout
         eyebrow={`Documentation · ${doc.categoryLabel}`}
         title={doc.title}

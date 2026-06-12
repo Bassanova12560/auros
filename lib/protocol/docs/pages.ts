@@ -72,7 +72,7 @@ console.log(result.score, result.grade);`,
       {
         heading: "Header Authorization",
         paragraphs: [
-          "Tous les endpoints protégés exigent `Authorization: Bearer <api_key>`. Le header `X-AUROS-Protocol-Version: 1.0` est renvoyé dans chaque réponse.",
+          "Tous les endpoints protégés exigent `Authorization: Bearer <api_key>`. Chaque réponse inclut `X-AUROS-Protocol-Version: 1.0` et `X-AUROS-Logo: https://getauros.com/auros-logo.svg`.",
         ],
         code: `Authorization: Bearer auros_pk_live_xxxxxxxx`,
         language: "bash",

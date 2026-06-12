@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { ContentPageLayout } from "@/app/_components/ContentPageLayout";
+import { DeveloperBrandMark } from "@/app/developers/_components/DeveloperBrandMark";
 import { FocusPageShell } from "@/app/_components/FocusPageShell";
 import { metadataFromPath } from "@/lib/seo/metadata";
 import { FREE_TIER_MONTHLY_LIMIT } from "@/lib/protocol/constants";
@@ -53,6 +54,7 @@ export default async function DevelopersDashboardPage({
 
   return (
     <FocusPageShell path={DEVELOPERS_DASHBOARD_ROUTE} width="2xl">
+      <DeveloperBrandMark />
       <ContentPageLayout
         eyebrow="AUROS Protocol"
         title="Usage dashboard"

@@ -1,6 +1,16 @@
 import { NextResponse } from "next/server";
 
-import { PROTOCOL_DISCLAIMER, PROTOCOL_VERSION } from "./constants";
+import { AUROS_LOGO_URL, PROTOCOL_DISCLAIMER, PROTOCOL_VERSION } from "./constants";
+
+export function getProtocolResponseHeaders(
+  extra?: Record<string, string>
+): Record<string, string> {
+  return {
+    "X-AUROS-Protocol-Version": PROTOCOL_VERSION,
+    "X-AUROS-Logo": AUROS_LOGO_URL,
+    ...extra,
+  };
+}
 
 export function protocolJson<T extends Record<string, unknown>>(
   body: T,
@@ -10,10 +20,7 @@ export function protocolJson<T extends Record<string, unknown>>(
     { disclaimer: PROTOCOL_DISCLAIMER, ...body },
     {
       status: init?.status ?? 200,
-      headers: {
-        "X-AUROS-Protocol-Version": PROTOCOL_VERSION,
-        ...init?.headers,
-      },
+      headers: getProtocolResponseHeaders(init?.headers),
     }
   );
 }

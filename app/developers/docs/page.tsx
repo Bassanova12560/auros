@@ -7,6 +7,7 @@ import {
   PROTOCOL_DOCS_ROUTE,
   protocolDocPath,
 } from "@/lib/protocol/docs";
+import { DeveloperBrandMark } from "@/app/developers/_components/DeveloperBrandMark";
 import { metadataFromPath } from "@/lib/seo/metadata";
 
 export const metadata = metadataFromPath(PROTOCOL_DOCS_ROUTE);
@@ -20,6 +21,7 @@ const CATEGORIES = [
 export default function ProtocolDocsIndexPage() {
   return (
     <FocusPageShell path={PROTOCOL_DOCS_ROUTE} width="3xl">
+      <DeveloperBrandMark />
       <ContentPageLayout
         eyebrow="AUROS Protocol · Documentation"
         title="Documentation API"

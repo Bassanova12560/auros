@@ -1,5 +1,11 @@
 # @adrien1212balitrand/auros-protocol
 
+<p align="center">
+  <a href="https://getauros.com/developers">
+    <img src="https://getauros.com/auros-logo.svg" alt="AUROS" width="120" />
+  </a>
+</p>
+
 Official TypeScript/JavaScript SDK for the [AUROS Protocol](https://getauros.com/developers) — the RWA intelligence layer.
 
 Score MiCA readiness, browse 120+ tokenized products, rank jurisdictions, and generate compliance checklists — all via REST with typed responses.

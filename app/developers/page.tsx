@@ -6,6 +6,7 @@ import { metadataFromPath } from "@/lib/seo/metadata";
 import { DEMO_API_KEY } from "@/lib/protocol/constants";
 import { PROTOCOL_DOCS_ROUTE } from "@/lib/protocol/docs";
 
+import { DeveloperBrandMark } from "./_components/DeveloperBrandMark";
 import { DeveloperPlayground } from "./_components/DeveloperPlayground";
 
 export const DEVELOPERS_ROUTE = "/developers";
@@ -101,6 +102,7 @@ const ENDPOINTS = [
 export default function DevelopersPage() {
   return (
     <FocusPageShell path={DEVELOPERS_ROUTE} width="3xl">
+      <DeveloperBrandMark />
       <ContentPageLayout
         eyebrow="AUROS Protocol · v1.0"
         title="AUROS Protocol — The RWA Intelligence Layer"
@@ -205,8 +207,9 @@ console.log(result.score, result.grade);`}
             ))}
           </div>
           <p className="mt-3 text-xs font-light text-white/40">
-            Clé démo : <code>{DEMO_API_KEY}</code> · Header réponse :{" "}
-            <code>X-AUROS-Protocol-Version: 1.0</code>
+            Clé démo : <code>{DEMO_API_KEY}</code> · Headers réponse :{" "}
+            <code>X-AUROS-Protocol-Version: 1.0</code>,{" "}
+            <code>X-AUROS-Logo: {BASE}/auros-logo.svg</code>
           </p>
         </section>
 
