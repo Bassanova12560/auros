@@ -6,7 +6,7 @@ info:
     The RWA Intelligence Layer — indicative MiCA scoring, RWA catalog, jurisdiction ranking,
     and compliance checklists. Not legal advice.
 
-    **Base URL (production):** `https://getauros.com`
+    **Base URLs (production):** `https://getauros.com` or `https://api.getauros.com` (API subdomain)
 
     **Authentication:** Bearer token (`auros_pk_live_*` or `auros_pk_test_*`). Demo key: `auros_pk_test_demo`.
 
@@ -14,7 +14,7 @@ info:
 
     **Response header:** `X-AUROS-Protocol-Version: 1.0` on every response.
 
-    **SDKs:** `@auros/protocol` (npm), `auros-protocol` (pip). Docs: `/developers/docs`.
+    **SDKs:** `@adrien1212balitrand/auros-protocol` (npm), `auros-protocol` (pip). Docs: `/developers/docs`.
   contact:
     name: AUROS
     url: https://getauros.com/developers
@@ -24,7 +24,9 @@ info:
     url: https://getauros.com/trust
 servers:
   - url: https://getauros.com
-    description: Production
+    description: Production (main domain)
+  - url: https://api.getauros.com
+    description: Production (API subdomain — same endpoints under /api/v1/*)
   - url: http://localhost:3000
     description: Local development
 security:

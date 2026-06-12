@@ -152,6 +152,16 @@ export function ExploreSummary({ data }: Props) {
           : "Get my full analysis → €490"}
       </Link>
       <p className="mt-4 text-center text-xs leading-relaxed text-white/45">
+        {locale === "fr" ? "Blocage juridiction ? " : "Jurisdiction blocked? "}
+        <Link
+          href="/jurisdictions/starter-kit"
+          onClick={() => track("wizard_explore_starter_kit_crosssell")}
+          className="text-white/55 underline decoration-white/20 hover:text-white/80"
+        >
+          {locale === "fr" ? "Starter Kit memo →" : "Starter Kit memo →"}
+        </Link>
+      </p>
+      <p className="mt-2 text-center text-xs leading-relaxed text-white/45">
         {easeM.generateNote}
       </p>
     </div>

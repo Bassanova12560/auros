@@ -99,7 +99,7 @@ export const RAPIDAPI_LISTING = {
     },
   ],
   sdks: [
-    { language: "TypeScript", package: "@auros/protocol", install: "npm install @auros/protocol" },
+    { language: "TypeScript", package: "@adrien1212balitrand/auros-protocol", install: "npm install @adrien1212balitrand/auros-protocol" },
     { language: "Python", package: "auros-protocol", install: "pip install auros-protocol" },
   ],
   tags: ["RWA", "MiCA", "tokenization", "compliance", "real-world-assets", "fintech", "regulatory"],

@@ -1,5 +1,5 @@
 {
-  "name": "@auros/protocol",
+  "name": "@adrien1212balitrand/auros-protocol",
   "version": "1.0.0",
   "description": "Official TypeScript SDK for the AUROS Protocol — RWA intelligence API",
   "license": "MIT",

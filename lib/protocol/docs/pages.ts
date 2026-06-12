@@ -39,7 +39,7 @@ export const PROTOCOL_DOC_PAGES: ProtocolDocPage[] = [
         paragraphs: [
           "Préférez le SDK TypeScript ou Python pour des types stricts et une gestion d'erreurs unifiée.",
         ],
-        code: `npm install @auros/protocol`,
+        code: `npm install @adrien1212balitrand/auros-protocol`,
         language: "bash",
         links: [
           { href: "/developers", label: "Page développeurs" },
@@ -49,7 +49,7 @@ export const PROTOCOL_DOC_PAGES: ProtocolDocPage[] = [
       {
         heading: "TypeScript",
         paragraphs: ["Exemple minimal avec la clé démo :"],
-        code: `import { AurosProtocol } from "@auros/protocol";
+        code: `import { AurosProtocol } from "@adrien1212balitrand/auros-protocol";
 
 const client = new AurosProtocol({ apiKey: "${DEMO_API_KEY}" });
 const result = await client.score({
@@ -90,6 +90,14 @@ console.log(result.score, result.grade);`,
         paragraphs: [
           "Tier gratuit : 100 requêtes/mois par clé. Dépassement → HTTP 429 `quota_exceeded`.",
           "Burst IP : 30 req/min. Création de clé : 5 req/heure par IP.",
+        ],
+      },
+      {
+        heading: "Sous-domaine api.getauros.com",
+        paragraphs: [
+          "Les endpoints sont disponibles sur `https://getauros.com/api/v1/*` et sur `https://api.getauros.com/v1/*` (même backend).",
+          "Configuration Vercel : ajoutez `api.getauros.com` dans Settings → Domains, puis un enregistrement DNS CNAME `api` pointant vers `cname.vercel-dns.com` (valeur affichée par Vercel).",
+          "La racine `api.getauros.com/` redirige vers `/developers`. Le SDK utilise `https://getauros.com` par défaut — passez `baseUrl: \"https://api.getauros.com\"` si vous préférez le sous-domaine dédié.",
         ],
       },
       {
@@ -446,7 +454,7 @@ const avgScore = scores.reduce((s, r) => s + r.score, 0) / scores.length;`,
       },
       {
         heading: "Backend Next.js (route handler)",
-        code: `import { AurosProtocol } from "@auros/protocol";
+        code: `import { AurosProtocol } from "@adrien1212balitrand/auros-protocol";
 
 const auros = new AurosProtocol({ apiKey: process.env.AUROS_API_KEY! });
 

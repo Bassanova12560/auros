@@ -32,7 +32,7 @@ export const protocolDocsIndexPage = enrichPage({
   audience: ["développeurs", "fintech", "intégrateurs"],
   facts: [
     { key: "Endpoints", value: "5 (score, products, jurisdictions, checklist, keys)" },
-    { key: "SDK", value: "@auros/protocol · auros-protocol (Python)" },
+    { key: "SDK", value: "@adrien1212balitrand/auros-protocol · auros-protocol (Python)" },
     { key: "OpenAPI", value: "/auros-openapi.yaml" },
   ],
   relatedPaths: ["/developers", "/tools/mica-checker", "/compare"],

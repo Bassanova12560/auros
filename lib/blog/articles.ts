@@ -427,6 +427,392 @@ export const BLOG_ARTICLES: BlogArticle[] = [
       },
     ],
   },
+  {
+    slug: "mica-guide-emetteurs-rwa",
+    title: "MiCA pour émetteurs RWA : guide pratique 2026",
+    description:
+      "Guide MiCA pour émetteurs RWA en Europe : périmètre crypto-actif vs titre financier, whitepaper, CASP, périodes transitoires et checklist documentaire. Contenu éducatif — counsel requis.",
+    excerpt:
+      "Comment lire MiCA quand vous tokenisez un actif réel en 2026 : double qualification, whitepaper, CASP, passeport partiel et pièges fréquents — sans promesse réglementaire ni conseil juridique.",
+    publishedAt: "2026-06-12",
+    modifiedAt: "2026-06-12",
+    readingTimeMinutes: 16,
+    keywords: [
+      "MiCA RWA",
+      "MiCA émetteur",
+      "whitepaper MiCA",
+      "CASP tokenisation",
+      "crypto-actif Europe",
+      "régulation tokenisation",
+      "MiCA security token",
+      "passeport MiCA",
+    ],
+    cta: { href: "/tools/mica-checker", label: "Tester mon exposition MiCA" },
+    ctaBlocks: [
+      {
+        afterSection: 1,
+        title: "Définitions et outils",
+        links: [
+          { href: "/glossary/mica", label: "Glossaire MiCA" },
+          { href: "/glossary/whitepaper-mica", label: "Whitepaper MiCA" },
+          { href: "/glossary/casp", label: "Prestataire CASP" },
+        ],
+      },
+      {
+        afterSection: 3,
+        title: "Structuration et juridictions",
+        links: [
+          { href: "/wizard", label: "Wizard dossier actif" },
+          { href: "/tools/jurisdiction-picker", label: "Sélecteur juridiction" },
+          { href: "/jurisdictions", label: "Comparateur 8 hubs" },
+        ],
+      },
+      {
+        afterSection: 5,
+        title: "Marché et conformité continue",
+        links: [
+          { href: "/compare", label: "Hub comparateur RWA" },
+          { href: "/trust", label: "Confiance & conformité" },
+          { href: "/developers", label: "API AUROS Protocol" },
+        ],
+      },
+    ],
+    sections: [
+      {
+        heading: "MiCA en une phrase — et pourquoi les RWA sont un cas limite",
+        paragraphs: [
+          "Le règlement MiCA (Markets in Crypto-Assets, UE 2023/1114) harmonise l'émission et le service sur certains crypto-actifs dans l'Union européenne : whitepaper, gouvernance émetteur, agrément des prestataires (CASP). Pour un émetteur RWA — immobilier, crédit privé, obligations adossées à des actifs réels — MiCA n'est qu'une couche : le droit des valeurs mobilières national peut primer dès que le jeton représente des droits économiques assimilables à des titres.",
+          "Le cas limite typique : un token ERC-3643 distribuant des loyers nets à des investisseurs professionnels. Est-ce un crypto-actif « autre » sous MiCA ? Un security token soumis à prospectus ou exemption ? Les deux ? La réponse dépend du contenu économique du jeton, pas du label marketing « RWA » ou « utility ».",
+          "Les émetteurs sérieux traitent MiCA comme un filtre obligatoire — pas comme une case à cocher finale. Un whitepaper MiCA mal aligné avec le pacte d'associés ou le prospectus financier crée plus de risque qu'aucun whitepaper : incohérence documentaire = signal rouge pour régulateur et investisseurs.",
+          "Ce guide est éducatif et indicatif. Il ne constitue pas un avis juridique. Avant toute émission, un counsel spécialisé MiCA et droit financier local est indispensable.",
+        ],
+        links: [
+          { href: "/blog/real-estate-tokenization-europe", label: "Tokenisation immo Europe" },
+          { href: "/how-it-works", label: "Comment fonctionne AUROS" },
+        ],
+      },
+      {
+        heading: "Arbre de qualification : crypto-actif, titre financier, les deux",
+        paragraphs: [
+          "Étape 1 — Exclure les catégories MiCA sans ambiguïté : les jetons qui sont déjà des instruments financiers au sens de MiFID II (actions, obligations classiques tokenisées sans couche crypto spécifique) relèvent du droit des marchés financiers, pas du livre crypto-actifs MiCA. Étape 2 — Identifier les e-money tokens et ART (asset-referenced tokens) : rares en RWA pur mais à exclure explicitement dans la note counsel.",
+          "Étape 3 — Crypto-actif « autre » (other crypto-asset) : jetons sans droits sur l'émetteur type equity, sans référence à un panier d'actifs. Beaucoup de RWA tentent cette qualification — le régulateur regarde les flux économiques réels. Étape 4 — Requalification security : si dividendes, plus-value ou gouvernance économique dominent, le prospectus ou placement privé entre en jeu.",
+          "La double qualification n'est pas une erreur de structuration si elle est assumée et documentée : whitepaper MiCA + note d'information ou prospectus coordonnés, CASP pour custody/exchange si applicable, exemptions de placement privé tracées pays par pays.",
+          "Le test MiCA AUROS (/tools/mica-checker) oriente les lacunes documentaires avant mobilisation du counsel. Il ne certifie pas la conformité — il priorise la préparation.",
+        ],
+        links: [
+          { href: "/tools/mica-checker", label: "Test MiCA indicatif" },
+          { href: "/glossary/security-token", label: "Security token" },
+          { href: "/glossary/emt-e-money-token", label: "E-money token" },
+        ],
+      },
+      {
+        heading: "Whitepaper MiCA : contenu, responsabilité et coordination",
+        paragraphs: [
+          "Le whitepaper MiCA pour un crypto-actif « autre » doit décrire : l'émetteur, le projet, les risques (y compris technologiques et réglementaires), les droits attachés au jeton, la technologie blockchain, et les informations sur l'offre. La responsabilité de l'émetteur est engagée — les allégations doivent être vérifiables et cohérentes avec les contrats off-chain.",
+          "Pour un RWA, les sections critiques sont la description de l'actif sous-jacent (titre foncier, créances, garanties), la chaîne de détention SPV/fonds, le mécanisme de distribution des flux, les restrictions de transfert et le traitement des défauts (vacance, défaut emprunteur). Omettre la vacance locative sur un immeuble tokenisé est une faille classique.",
+          "Coordination counsel : le whitepaper MiCA ne doit pas contredire le pacte d'associés, le prospectus ou la note d'information. Un glossaire interne alignant les termes « token », « part », « droit économique » évite les écarts entre équipes juridique et technique.",
+          "Les émetteurs institutionnels archivent version datée, hash du document on-chain si pertinent, et journal des modifications — pratique attendue en due diligence investisseur même si MiCA n'exige pas formellement un registre blockchain du whitepaper.",
+        ],
+        links: [
+          { href: "/glossary/whitepaper-mica", label: "Définition whitepaper MiCA" },
+          { href: "/glossary/spv", label: "Définition SPV" },
+          { href: "/wizard", label: "Wizard data room" },
+        ],
+      },
+      {
+        heading: "CASP : quand l'agrément entre en jeu",
+        paragraphs: [
+          "Un CASP (Crypto-Asset Service Provider) agréé MiCA peut custody, exchange, transfer, conseil — selon l'annexe du règlement. Un émetteur RWA pur qui ne détient pas les fonds des investisseurs et ne tient pas de plateforme de négociation peut ne pas être CASP — mais dès qu'il custody des clés investisseurs ou opère un marché secondaire, le périmètre change.",
+          "Les modèles fréquents : émetteur non-CASP + custody institutionnelle chez un CASP tiers ; plateforme de distribution partenaire CASP ; smart contract avec restrictions ERC-3643 gérées par un agent de transfert. Chaque maillon doit être identifié dans le dossier régulateur.",
+          "Le passeport MiCA permet à un CASP agréé dans un État membre de notifier ses services dans d'autres États — utile pour une distribution transfrontalière de services crypto, distincte du passeport prospectus pour titres financiers.",
+          "Anticiper le CASP en phase exploratoire évite de reconcevoir l'architecture après audit smart contract. Le sélecteur juridiction AUROS pondère la maturité CASP par hub — indicatif seulement.",
+        ],
+        links: [
+          { href: "/glossary/casp", label: "Glossaire CASP" },
+          { href: "/glossary/passporting-europeen", label: "Passeport européen" },
+          { href: "/jurisdictions/luxembourg-real-estate", label: "Luxembourg RWA" },
+        ],
+      },
+      {
+        heading: "Périodes transitoires et calendrier 2026",
+        paragraphs: [
+          "MiCA s'applique par vagues : stablecoins (ART/EMT) en premier, crypto-actifs autres et CASP selon calendrier publié par la Commission et les NCAs nationales. Les acteurs historiques PSAN (France) ou équivalents bénéficient de périodes transitoires — pas un blanc-seing permanent sur des modèles non conformes.",
+          "Les nouveaux émetteurs RWA en 2026 doivent structurer dès le départ comme si MiCA et droit financier s'appliquaient pleinement : data room complète, whitepaper, qualification jeton, KYC/AML. Attendre la fin d'une transition est un pari réglementaire, pas une stratégie.",
+          "Calendrier indicatif émetteur : mois 1–2 cadrage et qualification counsel ; mois 2–4 documentation (whitepaper, contrats, audits) ; mois 4–8 implémentation technique et dialogue régulateur si CASP ; mois 6–12 commercialisation encadrée. Le wizard AUROS compresse la phase exploratoire, pas le dialogue CSSF/AMF.",
+          "Surveillez les Q&A ESMA et communications nationales — la doctrine évolue sur les RWA hybrides. Abonnez-vous aux mises à jour de votre counsel, pas aux résumés Twitter.",
+        ],
+        links: [
+          { href: "/tools/cost-estimator", label: "Estimateur de coût" },
+          { href: "/blog/tokenisation-rwa-luxembourg", label: "Guide Luxembourg" },
+          { href: "/estimate", label: "Score de préparation" },
+        ],
+      },
+      {
+        heading: "Checklist documentaire émetteur (15 pièces indicatives)",
+        paragraphs: [
+          "AUROS recommande une data room minimale avant tout dialogue institutionnel : (1) description actif et due diligence titre, (2) structure juridique et organigramme SPV/fonds, (3) qualification jeton et note counsel, (4) whitepaper MiCA ou équivalent, (5) prospectus/exemption si security, (6) pacte d'associés / statuts, (7) politique AML/KYC, (8) audit smart contract, (9) architecture custody, (10) registre actionnaires off-chain, (11) description restrictions transfert on-chain, (12) waterfall de distribution, (13) scénarios de stress (vacance, défaut), (14) assurances et garanties, (15) plan de communication investisseurs.",
+          "Le wizard gratuit priorise 3 pièces urgentes visibles — les 12 autres restent accessibles sans submerger l'écran. Un dossier incomplet en exploration est normal ; un dossier incomplet à la commercialisation ne l'est pas.",
+          "L'API AUROS Protocol (/developers) permet d'intégrer score MiCA indicatif et checklist dans vos outils internes — quota gratuit 100 req/mois, SDK npm `@adrien1212balitrand/auros-protocol`.",
+          "La revue humaine AUROS sur soumission dossier ne remplace pas le counsel — elle accélère la priorisation avant facturation conseil externe.",
+        ],
+        links: [
+          { href: "/developers", label: "Portail développeurs" },
+          { href: "/developers/docs/quickstart", label: "Quickstart API" },
+          { href: "/trust", label: "Confiance AUROS" },
+        ],
+      },
+      {
+        heading: "Erreurs fréquentes et comment les éviter",
+        paragraphs: [
+          "Erreur 1 — Appeler « utility token » un jeton avec droits de cash-flow : requalification et sanctions. Erreur 2 — Whitepaper générique copié-collé sans actif sous-jacent décrit. Erreur 3 — Oublier le pays de résidence de chaque investisseur cible (reverse solicitation mal documentée). Erreur 4 — Smart contract non aligné avec pacte (transfert libre alors que préemption contractuelle). Erreur 5 — Sous-estimer les coûts récurrents CASP/custody/reporting.",
+          "Erreur 6 — Promettre une liquidité secondaire « crypto » sans marché réel ni market maker. Erreur 7 — Ignorer MiCA parce que « on est en placement privé » — le placement privé est une exemption procédurale, pas une exemption substantielle sur AML et qualification.",
+          "Les outils Pilier 1 AUROS (test MiCA, estimateur, sélecteur juridiction) existent pour réduire ces angles morts en phase amont — pas pour signer à votre place.",
+          "En cas de doute, arrêtez la commercialisation, pas la documentation. Un retard de marché coûte moins qu'une offre non conforme.",
+        ],
+        links: [
+          { href: "/tools/mica-checker", label: "Test MiCA" },
+          { href: "/compare", label: "Comparateur marché RWA" },
+          { href: "/wizard/pro", label: "Wizard Pro" },
+        ],
+      },
+    ],
+    faq: [
+      {
+        question: "MiCA s'applique-t-il à tous les jetons RWA ?",
+        answer:
+          "Non automatiquement. Selon qualification, un RWA peut relever de MiCA, du droit des valeurs mobilières, des deux, ou d'exemptions spécifiques. Analyse counsel obligatoire.",
+      },
+      {
+        question: "Faut-il un whitepaper MiCA pour un placement privé ?",
+        answer:
+          "Potentiellement oui si le jeton est un crypto-actif « autre » sous MiCA — le placement privé n'exempte pas toujours des obligations d'information MiCA. Coordination avec exemption prospectus si security token.",
+      },
+      {
+        question: "Un émetteur immobilier est-il forcément CASP ?",
+        answer:
+          "Non si émission pure sans custody ni plateforme de négociation. Dès custody client ou exchange, agrément ou partenariat CASP requis.",
+      },
+      {
+        question: "Quelle différence entre passeport MiCA et passeport prospectus ?",
+        answer:
+          "MiCA passeport concerne crypto-actifs et services CASP. Prospectus concerne titres financiers. Un RWA hybride peut nécessiter les deux analyses.",
+      },
+      {
+        question: "Le test MiCA AUROS suffit-il avant émission ?",
+        answer:
+          "Non — outil indicatif de préparation. Seul un avis juridique qualifié valide le périmètre réglementaire.",
+      },
+      {
+        question: "Les PSAN français sont-ils automatiquement conformes MiCA ?",
+        answer:
+          "Non — périodes transitoires limitées. Vérifiez le calendrier AMF et le mapping vers statut CASP.",
+      },
+      {
+        question: "Comment intégrer le scoring MiCA dans notre stack ?",
+        answer:
+          "API AUROS Protocol POST /api/v1/score ou SDK npm. 100 req/mois gratuites. Docs sur /developers.",
+      },
+      {
+        question: "Où trouver des exemples de RWA conformes en Europe ?",
+        answer:
+          "Le comparateur /compare agrège des produits publics avec statut déclaré — croisez toujours avec documents officiels d'émission.",
+      },
+    ],
+  },
+  {
+    slug: "marche-rwa-europe-2026",
+    title: "Marché RWA en Europe 2026 : panorama et tendances",
+    description:
+      "Panorama du marché RWA européen en 2026 : segments (obligations, immobilier, crédit privé, stablecoins), TVL indicatif, régulation MiCA, acteurs et feuille de route émetteur. Données éducatives.",
+    excerpt:
+      "Où en est le marché des real world assets en Europe en 2026 ? Segments, régulation, liquidité, acteurs institutionnels et feuille de route émetteur — données indicatives, pas conseil d'investissement.",
+    publishedAt: "2026-06-12",
+    modifiedAt: "2026-06-12",
+    readingTimeMinutes: 15,
+    keywords: [
+      "marché RWA Europe",
+      "real world assets Europe 2026",
+      "tokenisation Europe",
+      "RWA TVL",
+      "obligations tokenisées",
+      "stablecoins treasury",
+      "crédit privé tokenisé",
+      "tendances RWA",
+    ],
+    cta: { href: "/compare", label: "Explorer le comparateur RWA" },
+    ctaBlocks: [
+      {
+        afterSection: 1,
+        title: "Segments et données live",
+        links: [
+          { href: "/bonds", label: "Obligations tokenisées" },
+          { href: "/real-estate", label: "Immobilier RWA" },
+          { href: "/data/rwa-index", label: "Indice RWA AUROS" },
+        ],
+      },
+      {
+        afterSection: 3,
+        title: "Régulation et structuration",
+        links: [
+          { href: "/blog/mica-guide-emetteurs-rwa", label: "Guide MiCA émetteurs" },
+          { href: "/tools/mica-checker", label: "Test MiCA" },
+          { href: "/jurisdictions", label: "8 juridictions comparées" },
+        ],
+      },
+      {
+        afterSection: 5,
+        title: "Passer à l'action",
+        links: [
+          { href: "/wizard", label: "Wizard émetteur" },
+          { href: "/tools/yield-calculator", label: "Calculateur rendement" },
+          { href: "/discover", label: "Découvrir les actifs RWA" },
+        ],
+      },
+    ],
+    sections: [
+      {
+        heading: "Pourquoi parler de « marché RWA » en Europe en 2026 ?",
+        paragraphs: [
+          "Les real world assets (RWA) désignent des droits économiques on-chain adossés à des actifs off-chain : dette souveraine et corporate tokenisée, créances privées, immobilier, matières premières, parts de fonds. En 2026, l'Europe n'est plus en phase purement expérimentale : des émetteurs institutionnels, banques et fintechs publient des produits avec TVL mesurable, documentation MiCA ou prospectus, et pipelines multi-actifs.",
+          "Le moteur n'est pas la spéculation retail : ce sont les taux, la recherche de rendement treasury régulé, la tokenisation de parts de fonds existants et la pression réglementaire (MiCA, DORA, AML renforcé) qui poussent à des structures auditables. Le comparateur AUROS (/compare) agrège 120+ produits dédupliqués avec APY/TVL live via DeFiLlama et catalogue manuel.",
+          "Ce panorama est éducatif. Les chiffres TVL/APY évoluent hourly — vérifiez les sources primaires. Aucune recommandation d'investissement.",
+          "Trois lecteurs cibles : l'émetteur qui se positionne, l'investisseur professionnel qui cartographie l'offre, et l'intégrateur fintech qui branche l'API AUROS Protocol pour enrichir ses dashboards.",
+        ],
+        links: [
+          { href: "/compare", label: "Hub comparateur" },
+          { href: "/data/state-of-rwa-issuers", label: "État des émetteurs" },
+          { href: "/how-it-works", label: "Comment fonctionne AUROS" },
+        ],
+      },
+      {
+        heading: "Segments dominants : obligations, stablecoins treasury, crédit, immobilier",
+        paragraphs: [
+          "Obligations et bons du Trésor tokenisés : segment le plus liquide en TVL agrégée — produits adossés à dette souveraine US/EU ou corporate investment grade. Attrait treasury des entreprises et DAOs cherchant rendement on-chain avec émetteurs connus. Voir /bonds pour le comparateur dédié.",
+          "Stablecoins et cash equivalents régulés : segment en croissance post-MiCA pour les EMT — moins « RWA exotique » mais socle de liquidité pour les marchés tokenisés. Le hub /compare les classe avec les produits yield-bearing.",
+          "Crédit privé tokenisé : fonds et plateformes digitalisant des créances SME, trade finance, dette structurée. Tickets institutionnels, due diligence crédit classique. Segment /private-credit sur AUROS.",
+          "Immobilier tokenisé : plus visible médiatiquement, TVL plus fragmentée — immeubles uniques, résidences gérées, logistique. Liquidité secondaire inégale. Le guide immobilier Europe (/blog/real-estate-tokenization-europe) détaille les structures.",
+          "Matières premières (or, agricole) : niche mais utile pour diversification ; souvent des wrappers régulés plutôt que spot on-chain pur.",
+        ],
+        links: [
+          { href: "/bonds", label: "Comparateur obligations" },
+          { href: "/private-credit", label: "Crédit privé" },
+          { href: "/commodities", label: "Matières premières" },
+        ],
+      },
+      {
+        heading: "Cartographie géographique : hubs et passeports",
+        paragraphs: [
+          "Luxembourg, France, Allemagne, Irlande et Pays-Bas concentrent l'essentiel des véhicules régulés UE — CSSF, AMF, BaFin, CBI. Les émetteurs choisissent selon investisseurs cibles, fiscalité et profondeur prestataires (dépositaire, AIFM, CASP).",
+          "Hors UE mais présents dans les comparatifs : DIFC (Dubaï), Singapour, Suisse — souvent pour actifs export ou investisseurs non-UE. Le passeport MiCA ne couvre pas ces hubs ; les montages transfrontaliers exigent analyse pays par pays.",
+          "Le comparateur juridictions AUROS couvre huit hubs avec paramètres indicatifs délai/coût/friendliness RWA. Le Starter Kit (5 000 € HT) livre un memo personnalisé si l'arbitrage bloque.",
+          "Tendance 2026 : émetteurs multi-juridictionnels avec documentation harmonisée UE + annexes locales — pas un seul PDF unique pour tous les pays.",
+        ],
+        links: [
+          { href: "/jurisdictions", label: "Comparateur juridictions" },
+          { href: "/blog/tokenisation-rwa-luxembourg", label: "Hub Luxembourg" },
+          { href: "/tools/jurisdiction-picker", label: "Sélecteur juridiction" },
+        ],
+      },
+      {
+        heading: "Régulation : MiCA, DORA et attentes investisseurs",
+        paragraphs: [
+          "MiCA structure l'émission crypto et les CASP — voir notre guide émetteurs (/blog/mica-guide-emetteurs-rwa). DORA renforce la résilience numérique des entités financières — pertinent si vous dépendez de custody tiers ou cloud critique.",
+          "Les investisseurs institutionnels demandent : audit smart contract, identité on-chain (ERC-3643 ou équivalent), registre off-chain aligné, reporting périodique et politique de conflits d'intérêts. La transparence TVL/APY sans hypothèses cachées devient un standard de crédibilité.",
+          "Les promesses de rendement fixes sans réserve de risque sont un signal d'alerte régulateur — le marché mature affiche des fourchettes, stress scenarios et historique de défaut si applicable.",
+          "AUROS positionne tout contenu comme indicatif — le hub compare des données publiques, le wizard aide à structurer, l'API score oriente la préparation MiCA.",
+        ],
+        links: [
+          { href: "/blog/mica-guide-emetteurs-rwa", label: "Guide MiCA" },
+          { href: "/glossary/mica", label: "Glossaire MiCA" },
+          { href: "/trust", label: "Confiance AUROS" },
+        ],
+      },
+      {
+        heading: "Liquidité, rendement et ce que les chiffres ne disent pas",
+        paragraphs: [
+          "TVL agrégée masque la concentration : quelques protocoles dominent les courbes. APY élevé peut refléter prime de risque crédit, durée lock-up ou incentives temporaires — lisez toujours la documentation d'émission.",
+          "Liquidité secondaire : marchés permissionnés existent (ATS, plateformes émetteurs) mais volumes faibles vs crypto spot. Lock-up et whitelist ERC-3643 protègent le pool mais limitent la sortie rapide.",
+          "Le calculateur rendement AUROS (/tools/yield-calculator) simule des scénarios indicatifs. L'indice RWA (/data/rwa-index) suit des métriques agrégées éducatives — pas un benchmark investissable.",
+          "Pour les émetteurs : positionnez-vous honnêtement vs obligations tokenisées et fonds traditionnels sur transparence et délai de mise en marché, pas sur une liquidité miracle.",
+        ],
+        links: [
+          { href: "/tools/yield-calculator", label: "Calculateur rendement" },
+          { href: "/data/rwa-index", label: "Indice RWA" },
+          { href: "/real-estate", label: "Immobilier tokenisé" },
+        ],
+      },
+      {
+        heading: "Acteurs et écosystème : qui fait quoi",
+        paragraphs: [
+          "Émetteurs : banques, néobanques, fonds alternatifs, promoteurs immobiliers institutionnels. Plateformes : agrégateurs yield, marketplaces permissionnées. Infrastructure : custody, tokenisation (ERC-3643), oracles, KYC on-chain.",
+          "AUROS se positionne comme couche intelligence et admission : comparateur ouvert, wizard émetteur, API Protocol pour scoring et checklist — pas custody, pas placement, pas conseil investissement.",
+          "Les données DeFiLlama alimentent le hub compare hourly ; le catalogue manuel AUROS couvre les produits pas encore indexés. Objectif : vue unifiée éducative pour l'écosystème européen.",
+          "Intégrateurs : SDK `@adrien1212balitrand/auros-protocol`, OpenAPI `/auros-openapi.yaml`, catalogue machine-readable `/ai-first/index.json`.",
+        ],
+        links: [
+          { href: "/developers", label: "Portail développeurs" },
+          { href: "/ai-first/index.json", label: "Catalogue AI-first" },
+          { href: "/compare", label: "Comparateur live" },
+        ],
+      },
+      {
+        heading: "Feuille de route émetteur 2026 en quatre moments",
+        paragraphs: [
+          "Moment 1 — Cartographier le marché : segment cible, benchmarks rendement/liquidité via /compare, identification investisseurs type. Moment 2 — Qualifier régulation : MiCA, prospectus, CASP — test MiCA et counsel.",
+          "Moment 3 — Structurer : juridiction, SPV/fonds, tech stack, data room 15 pièces. Wizard AUROS en ~15 minutes pour une première passe. Moment 4 — Industrialiser : audits, distribution, reporting récurrent.",
+          "Les émetteurs qui réussissent en 2026 partagent un trait : documentation avant marketing. Les retards viennent plus souvent de pièces manquantes que de technologie blockchain.",
+          "Prochaine étape concrète : lancer le wizard (/wizard) ou explorer le hub (/compare) selon votre profil émetteur vs analyste marché.",
+        ],
+        links: [
+          { href: "/wizard", label: "Wizard émetteur" },
+          { href: "/estimate", label: "Score préparation" },
+          { href: "/jurisdictions/starter-kit", label: "Starter Kit juridiction" },
+        ],
+      },
+    ],
+    faq: [
+      {
+        question: "Quelle taille de marché RWA en Europe en 2026 ?",
+        answer:
+          "Les estimations varient selon périmètre (on-chain seul vs AUM off-chain tokenisé). Le comparateur AUROS suit 120+ produits publics avec TVL live — consultez /compare et /data/rwa-index pour des ordres de grandeur indicatifs.",
+      },
+      {
+        question: "Quel segment RWA est le plus liquide ?",
+        answer:
+          "Indicativement obligations/treasury tokenisées et stablecoins yield-bearing régulés. Immobilier plus fragmenté. Vérifiez volumes secondaires réels par produit.",
+      },
+      {
+        question: "L'Europe est-elle en retard vs États-Unis sur les RWA ?",
+        answer:
+          "L'UE privilégie cadres régulés (MiCA, prospectus) — délais plus longs mais crédibilité institutionnelle. Arbitrage selon investisseurs cibles, pas un classement absolu.",
+      },
+      {
+        question: "Comment suivre l'évolution du marché ?",
+        answer:
+          "Hub /compare (hourly), indice /data/rwa-index, blog AUROS et API products pour intégrateurs.",
+      },
+      {
+        question: "AUROS recommande-t-il des produits RWA ?",
+        answer:
+          "Non — comparateur éducatif et outils émetteur. Pas de conseil investissement.",
+      },
+      {
+        question: "Quels prérequis pour émettre un RWA en UE ?",
+        answer:
+          "Qualification jeton, structure juridique, documentation MiCA/prospectus, KYC/AML, audits — voir wizard et guide MiCA émetteurs.",
+      },
+      {
+        question: "Le rendement affiché sur /compare est-il garanti ?",
+        answer:
+          "Non — APY indicatifs sources DeFiLlama et émetteurs, peuvent varier. Lisez les documents officiels.",
+      },
+      {
+        question: "Comment citer les données AUROS ?",
+        answer:
+          "Source getauros.com/compare avec date de consultation. API disponible sous quota gratuit pour usage structuré.",
+      },
+    ],
+  },
 ];
 
 export function getAllBlogSlugs(): string[] {

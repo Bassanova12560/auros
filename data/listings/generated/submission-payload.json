@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-11T20:32:39.289Z",
+  "generatedAt": "2026-06-12T12:11:03.341Z",
   "project": {
     "slug": "auros",
     "name": "AUROS",
@@ -1265,8 +1265,8 @@
       "sdks": [
         {
           "language": "TypeScript",
-          "package": "@auros/protocol",
-          "install": "npm install @auros/protocol"
+          "package": "@adrien1212balitrand/auros-protocol",
+          "install": "npm install @adrien1212balitrand/auros-protocol"
         },
         {
           "language": "Python",

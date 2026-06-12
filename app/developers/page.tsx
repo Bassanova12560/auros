@@ -115,7 +115,7 @@ export default function DevelopersPage() {
             <div>
               <p className="font-mono text-[10px] text-emerald-400/80">npm</p>
               <pre className="mt-2 overflow-x-auto rounded-lg bg-black/40 p-3 font-mono text-[11px] text-white/65">
-                npm install @auros/protocol
+                npm install @adrien1212balitrand/auros-protocol
               </pre>
             </div>
             <div>
@@ -126,7 +126,7 @@ export default function DevelopersPage() {
             </div>
           </div>
           <pre className="mt-4 overflow-x-auto rounded-lg bg-black/40 p-4 font-mono text-[11px] leading-relaxed text-white/65">
-            {`import { AurosProtocol } from "@auros/protocol";
+            {`import { AurosProtocol } from "@adrien1212balitrand/auros-protocol";
 
 const client = new AurosProtocol({ apiKey: "${DEMO_API_KEY}" });
 const result = await client.score({

@@ -10,7 +10,7 @@ function mockFetch(handler: (url: string, init?: RequestInit) => Response | Prom
   }) as typeof fetch;
 }
 
-describe("@auros/protocol SDK", () => {
+describe("@adrien1212balitrand/auros-protocol SDK", () => {
   it("score() sends auth header and parses response", async () => {
     const client = new AurosProtocol({
       apiKey: "auros_pk_test_demo",

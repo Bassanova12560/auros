@@ -1,4 +1,4 @@
-# @auros/protocol
+# @adrien1212balitrand/auros-protocol
 
 Official TypeScript/JavaScript SDK for the [AUROS Protocol](https://getauros.com/developers) — the RWA intelligence layer.
 
@@ -7,13 +7,13 @@ Score MiCA readiness, browse 120+ tokenized products, rank jurisdictions, and ge
 ## Install
 
 ```bash
-npm install @auros/protocol
+npm install @adrien1212balitrand/auros-protocol
 ```
 
 ## Quickstart (< 5 min)
 
 ```ts
-import { AurosProtocol } from "@auros/protocol";
+import { AurosProtocol } from "@adrien1212balitrand/auros-protocol";
 
 const client = new AurosProtocol({
   apiKey: "auros_pk_test_demo", // demo key — 100 req/mo on free tier
@@ -115,7 +115,7 @@ const client = new AurosProtocol({
 ## Errors
 
 ```ts
-import { AurosProtocolError } from "@auros/protocol";
+import { AurosProtocolError } from "@adrien1212balitrand/auros-protocol";
 
 try {
   await client.score({ description: "short" });

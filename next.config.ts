@@ -32,8 +32,25 @@ const nextConfig: NextConfig = {
       },
     ];
   },
+  async rewrites() {
+    return {
+      beforeFiles: [
+        {
+          source: "/:path*",
+          has: [{ type: "host", value: "api.getauros.com" }],
+          destination: "/api/:path*",
+        },
+      ],
+    };
+  },
   async redirects() {
     return [
+      {
+        source: "/",
+        has: [{ type: "host", value: "api.getauros.com" }],
+        destination: "https://getauros.com/developers",
+        permanent: false,
+      },
       ...LEGACY_COMPARATOR_REDIRECTS.map(({ source, destination }) => ({
         source,
         destination,
