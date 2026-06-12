@@ -3,10 +3,11 @@ import {
   jurisdictionsQuerySchema,
   protocolError,
   protocolJson,
+  protocolRoute,
   rankProtocolJurisdictions,
 } from "@/lib/protocol";
 
-export async function GET(req: Request) {
+export const GET = protocolRoute(async (req: Request) => {
   const auth = await authenticateProtocolRequest(req);
   if (!auth.ok) return auth.response;
 
@@ -23,4 +24,4 @@ export async function GET(req: Request) {
 
   const jurisdictions = rankProtocolJurisdictions(parsed.data);
   return protocolJson({ jurisdictions, query: parsed.data });
-}
+});

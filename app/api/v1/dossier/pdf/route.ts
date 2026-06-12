@@ -7,8 +7,9 @@ import {
 import { getDossierPayload } from "@/lib/protocol/dossier/generate";
 import { generateProtocolDossierPdf } from "@/lib/protocol/dossier/report-pdf";
 import { getProtocolResponseHeaders } from "@/lib/protocol/response";
+import { protocolRoute } from "@/lib/protocol/timing";
 
-export async function GET(req: Request) {
+export const GET = protocolRoute(async (req: Request) => {
   const url = new URL(req.url);
   const token = url.searchParams.get("token")?.trim();
   const headers = getProtocolResponseHeaders();
@@ -42,4 +43,4 @@ export async function GET(req: Request) {
       "Cache-Control": "private, no-store",
     }),
   });
-}
+});

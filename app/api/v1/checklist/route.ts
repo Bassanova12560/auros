@@ -4,9 +4,10 @@ import {
   generateChecklist,
   protocolError,
   protocolJson,
+  protocolRoute,
 } from "@/lib/protocol";
 
-export async function POST(req: Request) {
+export const POST = protocolRoute(async (req: Request) => {
   const auth = await authenticateProtocolRequest(req);
   if (!auth.ok) return auth.response;
 
@@ -28,4 +29,4 @@ export async function POST(req: Request) {
 
   const checklist = generateChecklist(parsed.data);
   return protocolJson(checklist);
-}
+});

@@ -4,9 +4,10 @@ import {
   createKeyRequestSchema,
   protocolError,
   protocolJson,
+  protocolRoute,
 } from "@/lib/protocol";
 
-export async function POST(req: Request) {
+export const POST = protocolRoute(async (req: Request) => {
   const ip = getRequestIp(req);
   const { allowed } = checkRateLimit(`protocol-keys:${ip}`, 5, 3_600_000);
   if (!allowed) {
@@ -39,4 +40,4 @@ export async function POST(req: Request) {
     message:
       "Store this key securely — it will not be shown again. Free tier: 100 requests/month.",
   });
-}
+});

@@ -209,7 +209,8 @@ console.log(result.score, result.grade);`}
           <p className="mt-3 text-xs font-light text-white/40">
             Clé démo : <code>{DEMO_API_KEY}</code> · Headers réponse :{" "}
             <code>X-AUROS-Protocol-Version: 1.0</code>,{" "}
-            <code>X-AUROS-Logo: {BASE}/auros-logo.svg</code>
+            <code>X-AUROS-Logo: {BASE}/auros-logo.svg</code>,{" "}
+            <code>X-Response-Time</code>
           </p>
         </section>
 
@@ -234,6 +235,11 @@ console.log(result.score, result.grade);`}
                 className="text-sm text-white/70 hover:text-white"
               >
                 Documentation API (quickstart, auth, guides) →
+              </Link>
+            </li>
+            <li>
+              <Link href="/status" className="text-sm text-white/70 hover:text-white">
+                Statut API & uptime →
               </Link>
             </li>
             <li>

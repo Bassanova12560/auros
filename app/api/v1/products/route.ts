@@ -4,9 +4,10 @@ import {
   productsQuerySchema,
   protocolError,
   protocolJson,
+  protocolRoute,
 } from "@/lib/protocol";
 
-export async function GET(req: Request) {
+export const GET = protocolRoute(async (req: Request) => {
   const auth = await authenticateProtocolRequest(req);
   if (!auth.ok) return auth.response;
 
@@ -23,4 +24,4 @@ export async function GET(req: Request) {
 
   const result = await listProtocolProducts(parsed.data);
   return protocolJson(result);
-}
+});

@@ -3,13 +3,14 @@ import {
   checkPremiumAccess,
   protocolError,
   protocolJson,
+  protocolRoute,
   webhookRegisterSchema,
 } from "@/lib/protocol";
 import { findKeyRecord } from "@/lib/protocol/auth/keys";
 import { registerWebhook, listWebhooksForKey } from "@/lib/protocol/webhooks/store";
 import { logProtocolUsage } from "@/lib/protocol/usage/log";
 
-export async function POST(req: Request) {
+export const POST = protocolRoute(async (req: Request) => {
   const auth = await authenticateProtocolRequest(req);
   if (!auth.ok) return auth.response;
 
@@ -59,9 +60,9 @@ export async function POST(req: Request) {
     },
     { status: 201 }
   );
-}
+});
 
-export async function GET(req: Request) {
+export const GET = protocolRoute(async (req: Request) => {
   const auth = await authenticateProtocolRequest(req);
   if (!auth.ok) return auth.response;
 
@@ -86,4 +87,4 @@ export async function GET(req: Request) {
       })),
     total: webhooks.filter((w) => w.active).length,
   });
-}
+});

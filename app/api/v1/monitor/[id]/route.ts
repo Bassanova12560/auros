@@ -6,13 +6,14 @@ import {
   premiumPricingMeta,
   protocolError,
   protocolJson,
+  protocolRoute,
 } from "@/lib/protocol";
 import { findKeyRecord } from "@/lib/protocol/auth/keys";
 import { logProtocolUsage } from "@/lib/protocol/usage/log";
 
 type RouteContext = { params: Promise<{ id: string }> };
 
-export async function GET(req: Request, context: RouteContext) {
+export const GET = protocolRoute(async (req: Request, context: RouteContext) => {
   const auth = await authenticateProtocolRequest(req);
   if (!auth.ok) return auth.response;
 
@@ -45,9 +46,9 @@ export async function GET(req: Request, context: RouteContext) {
     last_alert_at: monitor.last_alert_at,
     ...premiumPricingMeta(),
   });
-}
+});
 
-export async function DELETE(req: Request, context: RouteContext) {
+export const DELETE = protocolRoute(async (req: Request, context: RouteContext) => {
   const auth = await authenticateProtocolRequest(req);
   if (!auth.ok) return auth.response;
 
@@ -65,4 +66,4 @@ export async function DELETE(req: Request, context: RouteContext) {
   await logProtocolUsage(auth.ctx.keyHash, `/api/v1/monitor/${id}`, "DELETE", 200);
 
   return protocolJson({ ok: true, id, deleted: true });
-}
+});

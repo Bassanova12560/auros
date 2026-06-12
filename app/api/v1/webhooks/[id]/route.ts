@@ -3,6 +3,7 @@ import {
   checkPremiumAccess,
   protocolError,
   protocolJson,
+  protocolRoute,
 } from "@/lib/protocol";
 import { findKeyRecord } from "@/lib/protocol/auth/keys";
 import { deleteWebhook } from "@/lib/protocol/webhooks/store";
@@ -10,7 +11,7 @@ import { logProtocolUsage } from "@/lib/protocol/usage/log";
 
 type RouteContext = { params: Promise<{ id: string }> };
 
-export async function DELETE(req: Request, context: RouteContext) {
+export const DELETE = protocolRoute(async (req: Request, context: RouteContext) => {
   const auth = await authenticateProtocolRequest(req);
   if (!auth.ok) return auth.response;
 
@@ -28,4 +29,4 @@ export async function DELETE(req: Request, context: RouteContext) {
   await logProtocolUsage(auth.ctx.keyHash, `/api/v1/webhooks/${id}`, "DELETE", 200);
 
   return protocolJson({ ok: true, id, deleted: true });
-}
+});

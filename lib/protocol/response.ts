@@ -3,11 +3,13 @@ import { NextResponse } from "next/server";
 import { AUROS_LOGO_URL, PROTOCOL_DISCLAIMER, PROTOCOL_VERSION } from "./constants";
 
 export function getProtocolResponseHeaders(
-  extra?: Record<string, string>
+  extra?: Record<string, string>,
+  responseTime?: string
 ): Record<string, string> {
   return {
     "X-AUROS-Protocol-Version": PROTOCOL_VERSION,
     "X-AUROS-Logo": AUROS_LOGO_URL,
+    ...(responseTime ? { "X-Response-Time": responseTime } : {}),
     ...extra,
   };
 }

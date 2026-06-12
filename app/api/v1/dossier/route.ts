@@ -5,6 +5,7 @@ import {
   dossierRequestSchema,
   protocolError,
   protocolJson,
+  protocolRoute,
   premiumPricingMeta,
 } from "@/lib/protocol";
 import { findKeyRecord } from "@/lib/protocol/auth/keys";
@@ -18,7 +19,7 @@ import {
 } from "@/lib/protocol/dossier/generate";
 import { logProtocolUsage } from "@/lib/protocol/usage/log";
 
-export async function POST(req: Request) {
+export const POST = protocolRoute(async (req: Request) => {
   const auth = await authenticateProtocolRequest(req);
   if (!auth.ok) return auth.response;
 
@@ -78,4 +79,4 @@ export async function POST(req: Request) {
     sections: payload.sections,
     ...premiumPricingMeta(),
   });
-}
+});

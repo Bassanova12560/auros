@@ -7,6 +7,7 @@ import {
   premiumPricingMeta,
   protocolError,
   protocolJson,
+  protocolRoute,
 } from "@/lib/protocol";
 import { findKeyRecord } from "@/lib/protocol/auth/keys";
 import { logProtocolUsage } from "@/lib/protocol/usage/log";
@@ -14,7 +15,7 @@ import { KEY_PREFIX_LIVE } from "@/lib/protocol/constants";
 
 const MONITOR_ASSET_LIMIT_LIVE = 25;
 
-export async function POST(req: Request) {
+export const POST = protocolRoute(async (req: Request) => {
   const auth = await authenticateProtocolRequest(req);
   if (!auth.ok) return auth.response;
 
@@ -69,4 +70,4 @@ export async function POST(req: Request) {
     },
     { status: 201 }
   );
-}
+});

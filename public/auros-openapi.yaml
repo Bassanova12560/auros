@@ -15,7 +15,7 @@ info:
 
     **Free tier:** 100 requests/month per key. Key creation via `POST /api/v1/keys` (no auth).
 
-    **Response headers (every response):** `X-AUROS-Protocol-Version: 1.0`, `X-AUROS-Logo: https://getauros.com/auros-logo.svg`.
+    **Response headers (every response):** `X-AUROS-Protocol-Version: 1.0`, `X-AUROS-Logo: https://getauros.com/auros-logo.svg`, `X-Response-Time` (request duration in ms).
 
     **SDKs:** `@adrien1212balitrand/auros-protocol` (npm), `auros-protocol` (pip). Docs: `/developers/docs`.
   contact:
@@ -46,7 +46,72 @@ tags:
     description: API key management
   - name: Premium
     description: Monitor, dossier, webhooks — requires live key or paid tier
+  - name: Status
+    description: Public health checks — no auth
 paths:
+  /api/v1/status:
+    get:
+      tags: [Status]
+      summary: API health status
+      operationId: status
+      security: []
+      description: |
+        Public health check — probes scoring engine, product catalog, jurisdiction ranking,
+        and key storage. No authentication required.
+      responses:
+        "200":
+          description: System status
+          headers:
+            X-AUROS-Protocol-Version:
+              schema:
+                type: string
+                example: "1.0"
+            X-AUROS-Logo:
+              schema:
+                type: string
+                format: uri
+            X-Response-Time:
+              schema:
+                type: string
+                example: "12ms"
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [status, services, version, timestamp]
+                properties:
+                  status:
+                    type: string
+                    enum: [operational, degraded, down]
+                  services:
+                    type: object
+                    additionalProperties:
+                      type: object
+                      properties:
+                        status:
+                          type: string
+                        latency_ms:
+                          type: integer
+                        message:
+                          type: string
+                  version:
+                    type: string
+                  app_version:
+                    type: string
+                  timestamp:
+                    type: string
+                    format: date-time
+                  deploy:
+                    type: object
+                    properties:
+                      environment:
+                        type: string
+                      commit:
+                        type: string
+                        nullable: true
+                      ref:
+                        type: string
+                        nullable: true
   /api/v1/score:
     post:
       tags: [Intelligence]

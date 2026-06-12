@@ -5,11 +5,12 @@ import {
   parseDescription,
   protocolError,
   protocolJson,
+  protocolRoute,
   scoreRequestSchema,
 } from "@/lib/protocol";
 import { topPlatformsForAsset } from "@/lib/protocol/products/adapter";
 
-export async function POST(req: Request) {
+export const POST = protocolRoute(async (req: Request) => {
   const auth = await authenticateProtocolRequest(req);
   if (!auth.ok) return auth.response;
 
@@ -39,4 +40,4 @@ export async function POST(req: Request) {
   const enriched = await attachRecommendedPlatforms(result, platforms);
 
   return protocolJson(enriched);
-}
+});

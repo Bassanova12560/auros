@@ -332,7 +332,30 @@ export const developersPage = enrichPage({
     "/compare",
     "/wizard",
     AUROS_RESOURCES_ROUTE,
+    "/status",
   ],
+});
+
+export const statusPage = enrichPage({
+  id: "status",
+  path: "/status",
+  title: "AUROS API Status | System health",
+  description:
+    "Public status page for AUROS Protocol API — uptime checks for scoring, catalog, jurisdictions, and key storage.",
+  summary:
+    "Page statut AUROS — santé API Protocol, version, commit déployé, endpoint JSON /api/v1/status.",
+  contentType: "guide",
+  language: "multi",
+  indexable: true,
+  lastUpdated: "2026-06-12",
+  keywords: ["AUROS status", "API uptime", "system health"],
+  intents: ["Is AUROS API up", "AUROS API status page"],
+  audience: ["développeurs", "intégrateurs"],
+  facts: [
+    { key: "JSON endpoint", value: "/api/v1/status" },
+    { key: "Refresh", value: "60 seconds" },
+  ],
+  relatedPaths: ["/developers", "/developers/docs"],
 });
 
 export const toolsHubPage = enrichPage({
@@ -889,6 +912,7 @@ export const contentPages: AiFirstPage[] = [
   trustPage,
   estimatePage,
   developersPage,
+  statusPage,
   toolsHubPage,
   micaCheckerPage,
   yieldCalculatorPage,

@@ -7,6 +7,9 @@ export {
   KEY_PREFIX_TEST,
 } from "./constants";
 export { protocolJson, protocolError, getProtocolResponseHeaders } from "./response";
+export { protocolRoute, withResponseTime, responseTimeMs } from "./timing";
+export { getProtocolStatus } from "./status";
+export type { ProtocolStatusPayload, ServiceCheck, ServiceHealth } from "./status";
 export { authenticateProtocolRequest } from "./auth/middleware";
 export {
   createApiKey,
