@@ -30,13 +30,15 @@ print(result["score"], result["grade"], result["mica_classification"])
 
 ## Methods
 
-| Method | Endpoint |
-|--------|----------|
-| `score(**fields)` | `POST /api/v1/score` |
-| `products(**query)` | `GET /api/v1/products` |
-| `jurisdictions(**query)` | `GET /api/v1/jurisdictions` |
-| `checklist(**body)` | `POST /api/v1/checklist` |
-| `create_key(email)` | `POST /api/v1/keys` |
+| Method | Endpoint | Auth |
+|--------|----------|------|
+| `score(**fields)` | `POST /api/v1/score` | Bearer |
+| `products(**query)` | `GET /api/v1/products` | Bearer |
+| `jurisdictions(**query)` | `GET /api/v1/jurisdictions` | Bearer |
+| `checklist(**body)` | `POST /api/v1/checklist` | Bearer |
+| `compare(**body)` | `POST /api/v1/compare` | Bearer |
+| `status()` | `GET /api/v1/status` | None |
+| `create_key(email)` | `POST /api/v1/keys` | None |
 
 ## Examples
 
@@ -58,6 +60,13 @@ items = client.checklist(
     structure="spv",
 )
 
+# Compare RWA products
+comparison = client.compare(category="bonds", yield_min=4, limit=3)
+
+# API health (no auth)
+health = client.status()
+print(health["status"], health["version"])
+
 # Free API key
 key_resp = client.create_key("you@company.com")
 print(key_resp["api_key"])
@@ -73,3 +82,14 @@ with AurosProtocol(api_key="auros_pk_test_demo") as client:
 ## Disclaimer
 
 Indicative intelligence only — not legal, tax, or investment advice.
+
+## Publish (maintainers)
+
+```bash
+cd packages/auros-protocol-python
+python -m pip install --upgrade build twine
+python -m build
+python -m twine upload dist/*
+```
+
+Set `TWINE_USERNAME=__token__` and `TWINE_PASSWORD=pypi-<your-api-token>` before upload.

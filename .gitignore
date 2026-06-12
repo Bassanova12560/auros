@@ -26,6 +26,9 @@ node_modules/
 # misc
 .DS_Store
 *.pem
+__pycache__/
+*.py[cod]
+packages/auros-protocol-python/dist/
 
 # debug
 npm-debug.log*
