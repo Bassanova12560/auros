@@ -56,3 +56,15 @@ export {
   verifyDossierDownloadToken,
 } from "./dossier/download-token";
 export { logProtocolUsage, getUsageStats, findKeyHashByEmail } from "./usage/log";
+export {
+  PROTOCOL_CHANGELOG,
+  PROTOCOL_CHANGELOG_ROUTE,
+  getProtocolChangelogPayload,
+  getReleasedChangelogEntries,
+  getUpcomingChangelogEntries,
+} from "./changelog";
+export type {
+  ProtocolChangelogEntry,
+  ProtocolChangelogPayload,
+  ChangelogEntryStatus,
+} from "./changelog";

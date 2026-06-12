@@ -60,6 +60,11 @@ export default function ProtocolDocsIndexPage() {
           </h2>
           <ul className="mt-4 space-y-2 text-sm text-white/60">
             <li>
+              <Link href="/developers/changelog" className="hover:text-white">
+                Changelog API →
+              </Link>
+            </li>
+            <li>
               <Link href="/auros-openapi.yaml" className="hover:text-white">
                 OpenAPI 3.1 spec →
               </Link>

@@ -4,6 +4,7 @@ import { ContentPageLayout } from "@/app/_components/ContentPageLayout";
 import { FocusPageShell } from "@/app/_components/FocusPageShell";
 import { metadataFromPath } from "@/lib/seo/metadata";
 import { DEMO_API_KEY } from "@/lib/protocol/constants";
+import { PROTOCOL_CHANGELOG_ROUTE } from "@/lib/protocol/changelog";
 import { PROTOCOL_DOCS_ROUTE } from "@/lib/protocol/docs";
 
 import { DeveloperBrandMark } from "./_components/DeveloperBrandMark";
@@ -248,6 +249,14 @@ console.log(result.score, result.grade);`}
                 className="text-sm text-white/70 hover:text-white"
               >
                 Documentation API (quickstart, auth, guides) →
+              </Link>
+            </li>
+            <li>
+              <Link
+                href={PROTOCOL_CHANGELOG_ROUTE}
+                className="text-sm text-white/70 hover:text-white"
+              >
+                Changelog API (releases & roadmap) →
               </Link>
             </li>
             <li>

@@ -330,6 +330,7 @@ export const developersPage = enrichPage({
   ],
   relatedPaths: [
     "/developers/docs",
+    "/developers/changelog",
     "/tools/mica-checker",
     "/compare",
     "/wizard",

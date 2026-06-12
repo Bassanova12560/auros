@@ -1,5 +1,6 @@
 import { enrichPage } from "../enrich";
 import type { AiFirstPage } from "../types";
+import { PROTOCOL_CHANGELOG_ROUTE } from "@/lib/protocol/changelog";
 import {
   PROTOCOL_DOC_PAGES,
   PROTOCOL_DOCS_ROUTE,
@@ -36,7 +37,40 @@ export const protocolDocsIndexPage = enrichPage({
     { key: "OpenAPI", value: "/auros-openapi.yaml" },
     { key: "Postman", value: "/auros-postman.json" },
   ],
-  relatedPaths: ["/developers", "/tools/mica-checker", "/compare"],
+  relatedPaths: ["/developers", PROTOCOL_CHANGELOG_ROUTE, "/tools/mica-checker", "/compare"],
+});
+
+export const protocolChangelogPage = enrichPage({
+  id: "developers-changelog",
+  path: PROTOCOL_CHANGELOG_ROUTE,
+  title: "AUROS Protocol API Changelog | Releases v1",
+  description:
+    "Changelog public AUROS Protocol v1 — status page, Postman, compare endpoint, headers branding ; feed JSON /api/v1/changelog.",
+  summary:
+    "Historique releases API AUROS Protocol — roadmap items 1–4 publiés, item 5 rate limit headers à venir.",
+  contentType: "guide",
+  language: "multi",
+  indexable: true,
+  lastUpdated: "2026-06-12",
+  keywords: [
+    "AUROS Protocol changelog",
+    "API releases",
+    "RWA API updates",
+  ],
+  intents: [
+    "Quelles nouveautés AUROS Protocol API",
+    "Changelog endpoint compare",
+  ],
+  audience: ["développeurs", "fintech", "intégrateurs"],
+  facts: [
+    { key: "JSON feed", value: "/api/v1/changelog" },
+    { key: "Dernière release", value: "POST /api/v1/compare" },
+  ],
+  breadcrumbs: [
+    { name: "Développeurs", path: "/developers" },
+    { name: "Changelog", path: PROTOCOL_CHANGELOG_ROUTE },
+  ],
+  relatedPaths: ["/developers", PROTOCOL_DOCS_ROUTE, "/status", "/api/v1/changelog"],
 });
 
 export function buildProtocolDocCatalogPages(): AiFirstPage[] {
@@ -70,5 +104,6 @@ export function buildProtocolDocCatalogPages(): AiFirstPage[] {
 
 export const protocolDocsPages: AiFirstPage[] = [
   protocolDocsIndexPage,
+  protocolChangelogPage,
   ...buildProtocolDocCatalogPages(),
 ];
