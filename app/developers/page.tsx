@@ -27,6 +27,12 @@ const CURL_EXAMPLES = [
   },
   {
     method: "GET",
+    path: "/api/v1/score/{id}/history",
+    curl: `curl "${BASE}/api/v1/score/scr_VOTRE_SESSION_ID/history" \\
+  -H "Authorization: Bearer ${DEMO_API_KEY}"`,
+  },
+  {
+    method: "GET",
     path: "/api/v1/products",
     curl: `curl "${BASE}/api/v1/products?category=bonds&yield_min=4&limit=10" \\
   -H "Authorization: Bearer ${DEMO_API_KEY}"`,
@@ -84,7 +90,12 @@ const ENDPOINTS = [
   {
     method: "POST",
     path: "/api/v1/score",
-    desc: "Score MiCA 0–100, grade A+–F, breakdown 5 dimensions.",
+    desc: "Score MiCA 0–100, grade A+–F, breakdown 5 dimensions — retourne score_id + historique.",
+  },
+  {
+    method: "GET",
+    path: "/api/v1/score/{id}/history",
+    desc: "Historique des scores pour une session scr_… ou monitor mon_…",
   },
   {
     method: "GET",
@@ -224,7 +235,13 @@ console.log(result.score, result.grade);`}
             Clé démo : <code>{DEMO_API_KEY}</code> · Headers réponse :{" "}
             <code>X-AUROS-Protocol-Version: 1.0</code>,{" "}
             <code>X-AUROS-Logo: {BASE}/auros-logo.svg</code>,{" "}
-            <code>X-Response-Time</code>
+            <code>X-Response-Time</code>,{" "}
+            <code>X-RateLimit-Limit</code>,{" "}
+            <code>X-RateLimit-Remaining</code>,{" "}
+            <code>X-RateLimit-Reset</code>,{" "}
+            <code>X-RateLimit-Limit</code>,{" "}
+            <code>X-RateLimit-Remaining</code>,{" "}
+            <code>X-RateLimit-Reset</code>
           </p>
         </section>
 
@@ -258,6 +275,16 @@ console.log(result.score, result.grade);`}
               >
                 Changelog API (releases & roadmap) →
               </Link>
+            </li>
+            <li>
+              <a
+                href="https://pypi.org/project/auros-protocol/"
+                className="text-sm text-white/70 hover:text-white"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Python SDK on PyPI (auros-protocol) →
+              </a>
             </li>
             <li>
               <Link href="/status" className="text-sm text-white/70 hover:text-white">

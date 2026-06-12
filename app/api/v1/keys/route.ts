@@ -6,11 +6,20 @@ import {
   protocolJson,
   protocolRoute,
 } from "@/lib/protocol";
+import { setRateLimitContext } from "@/lib/protocol/rate-limit-context";
+
+const KEYS_IP_LIMIT = 5;
+const KEYS_IP_WINDOW_MS = 3_600_000;
 
 export const POST = protocolRoute(async (req: Request) => {
   const ip = getRequestIp(req);
-  const { allowed } = checkRateLimit(`protocol-keys:${ip}`, 5, 3_600_000);
-  if (!allowed) {
+  const rate = checkRateLimit(`protocol-keys:${ip}`, KEYS_IP_LIMIT, KEYS_IP_WINDOW_MS);
+  setRateLimitContext({
+    limit: KEYS_IP_LIMIT,
+    remaining: rate.remaining,
+    reset: rate.reset,
+  });
+  if (!rate.allowed) {
     return protocolError("rate_limit", "Too many key requests from this IP", 429);
   }
 

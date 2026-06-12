@@ -2,7 +2,7 @@
   "info": {
     "_postman_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
     "name": "AUROS Protocol v1",
-    "description": "The RWA Intelligence Layer — MiCA scoring, RWA catalog, jurisdiction ranking, compliance checklists, and premium monitor/dossier/webhooks.\n\n**Base URL:** `{{baseUrl}}`\n**Auth:** Bearer `{{apiKey}}` (demo: `auros_pk_test_demo`)\n**Free tier:** 100 requests/month\n\nImport via URL: `https://getauros.com/auros-postman.json`\nDocs: https://getauros.com/developers",
+    "description": "The RWA Intelligence Layer — MiCA scoring, RWA catalog, jurisdiction ranking, compliance checklists, and premium monitor/dossier/webhooks.\n\n**Base URL:** `{{baseUrl}}`\n**Auth:** Bearer `{{apiKey}}` (demo: `auros_pk_test_demo`)\n**Free tier:** 100 requests/month\n\n**Rate limit headers:** `X-RateLimit-Limit`, `X-RateLimit-Remaining`, `X-RateLimit-Reset` (Unix) on authenticated responses.\n\nImport via URL: `https://getauros.com/auros-postman.json`\nDocs: https://getauros.com/developers",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "auth": {
@@ -23,6 +23,10 @@
     {
       "key": "apiKey",
       "value": "auros_pk_test_demo"
+    },
+    {
+      "key": "scoreId",
+      "value": ""
     },
     {
       "key": "monitorId",
@@ -106,6 +110,20 @@
               "path": ["api", "v1", "score"]
             },
             "description": "Compute MiCA score from structured compliance fields."
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/v1/score/{id}/history",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/score/{{scoreId}}/history",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "score", "{{scoreId}}", "history"]
+            },
+            "description": "Historical score snapshots for a session (`scr_…` from POST /score) or premium monitor (`mon_…`). Set `scoreId` collection variable after scoring."
           },
           "response": []
         },

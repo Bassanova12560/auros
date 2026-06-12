@@ -91,6 +91,8 @@ console.log(result.score, result.grade);`,
         paragraphs: [
           "Tier gratuit : 100 requêtes/mois par clé. Dépassement → HTTP 429 `quota_exceeded`.",
           "Burst IP : 30 req/min. Création de clé : 5 req/heure par IP.",
+          "Chaque réponse authentifiée inclut les headers Stripe-style : `X-RateLimit-Limit`, `X-RateLimit-Remaining`, `X-RateLimit-Reset` (timestamp Unix — reset quota mensuel au 1er du mois UTC).",
+          "Chaque réponse authentifiée inclut les headers Stripe-style : `X-RateLimit-Limit`, `X-RateLimit-Remaining`, `X-RateLimit-Reset` (timestamp Unix — reset quota mensuel au 1er du mois UTC).",
         ],
       },
       {
@@ -120,7 +122,7 @@ console.log(result.score, result.grade);`,
     description: "Score MiCA indicatif 0–100 avec grade, breakdown 5 dimensions, gaps et recommandations.",
     category: "endpoints",
     categoryLabel: "Endpoints",
-    relatedSlugs: ["guide-score-real-estate", "endpoint-checklist"],
+    relatedSlugs: ["endpoint-score-history", "guide-score-real-estate", "endpoint-checklist"],
     sections: [
       {
         heading: "Requête",
@@ -138,6 +140,8 @@ console.log(result.score, result.grade);`,
         heading: "Réponse (extrait)",
         paragraphs: ["Chaque réponse inclut `disclaimer` et `meta.full_report_url` vers le wizard AUROS."],
         code: `{
+  "score_id": "scr_a1b2c3d4e5f6789012345678",
+  "history_url": "${BASE}/api/v1/score/scr_a1b2c3d4e5f6789012345678/history",
   "score": 72,
   "grade": "B-",
   "status": "progress",
@@ -163,6 +167,63 @@ console.log(result.score, result.grade);`,
   -H "Content-Type: application/json" \\
   -d '{"description":"Entrepôt retail Luxembourg €2.5M SPV professionnels"}'`,
         language: "bash",
+        paragraphs: [],
+      },
+    ],
+  },
+  {
+    slug: "endpoint-score-history",
+    title: "GET /api/v1/score/{id}/history",
+    description:
+      "Historique chronologique des scores pour une session (`scr_…`) ou un monitor premium (`mon_…`).",
+    category: "endpoints",
+    categoryLabel: "Endpoints",
+    relatedSlugs: ["endpoint-score", "endpoint-monitor"],
+    sections: [
+      {
+        heading: "Persistance automatique",
+        paragraphs: [
+          "Chaque POST /api/v1/score avec une clé authentifiée (hors clé démo) enregistre un snapshot dans `protocol_score_history`.",
+          "La réponse score inclut `score_id` et `history_url`. Repassez `score_id` pour accumuler l'historique d'un même dossier.",
+          "Désactiver : `\"record_history\": false` dans le corps POST /score.",
+        ],
+      },
+      {
+        heading: "Réponse",
+        code: `{
+  "score_id": "scr_a1b2c3d4e5f6789012345678",
+  "kind": "session",
+  "total": 2,
+  "entries": [
+    {
+      "id": 1,
+      "score": 68,
+      "grade": "C+",
+      "status": "progress",
+      "breakdown": { "legal_structure": 70, "kyc_aml": 60, "mica_compliance": 65, "data_room": 50, "investor_protection": 75 },
+      "mica_classification": "financial_instrument",
+      "created_at": "2026-06-12T10:00:00.000Z"
+    }
+  ],
+  "meta": { "version": "1.0", "computed_at": "2026-06-12T11:00:00.000Z" }
+}`,
+        language: "json",
+        paragraphs: [],
+      },
+      {
+        heading: "cURL",
+        code: `curl "${BASE}/api/v1/score/scr_VOTRE_SESSION_ID/history" \\
+  -H "Authorization: Bearer ${DEMO_API_KEY}"`,
+        language: "bash",
+        paragraphs: [
+          "Remplacez `scr_VOTRE_SESSION_ID` par le `score_id` retourné par POST /score. Pour un monitor premium, utilisez l'id `mon_…`.",
+        ],
+      },
+      {
+        heading: "SDK",
+        code: `const result = await client.score({ description: "..." });
+const history = await client.scoreHistory(result.score_id!);`,
+        language: "typescript",
         paragraphs: [],
       },
     ],

@@ -47,7 +47,7 @@ export const protocolChangelogPage = enrichPage({
   description:
     "Changelog public AUROS Protocol v1 — status page, Postman, compare endpoint, headers branding ; feed JSON /api/v1/changelog.",
   summary:
-    "Historique releases API AUROS Protocol — roadmap items 1–4 publiés, item 5 rate limit headers à venir.",
+    "Historique releases API AUROS Protocol — status page, Postman, compare, Python SDK PyPI et rate limit headers à venir.",
   contentType: "guide",
   language: "multi",
   indexable: true,
@@ -64,7 +64,7 @@ export const protocolChangelogPage = enrichPage({
   audience: ["développeurs", "fintech", "intégrateurs"],
   facts: [
     { key: "JSON feed", value: "/api/v1/changelog" },
-    { key: "Dernière release", value: "POST /api/v1/compare" },
+    { key: "Dernière release", value: "GET /api/v1/score/{id}/history" },
   ],
   breadcrumbs: [
     { name: "Développeurs", path: "/developers" },

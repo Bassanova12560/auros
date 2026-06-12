@@ -11,16 +11,14 @@ import {
 describe("protocol/changelog", () => {
   it("lists released entries newest first", () => {
     const released = getReleasedChangelogEntries();
-    assert.ok(released.length >= 4);
-    assert.equal(released[0]?.id, "compare-endpoint");
+    assert.equal(released[0]?.id, "rate-limit-headers");
+    assert.ok(released.length >= 5);
     assert.ok(released.every((e) => e.status === "released"));
   });
 
-  it("includes upcoming rate limit headers", () => {
+  it("has no upcoming entries", () => {
     const upcoming = getUpcomingChangelogEntries();
-    assert.equal(upcoming.length, 1);
-    assert.equal(upcoming[0]?.id, "rate-limit-headers");
-    assert.equal(upcoming[0]?.roadmapItem, 5);
+    assert.equal(upcoming.length, 0);
   });
 
   it("builds JSON payload for /api/v1/changelog", () => {

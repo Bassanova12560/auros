@@ -7,24 +7,27 @@ export function checkRateLimit(
   identifier: string,
   limit: number = 10,
   windowMs: number = 3_600_000
-): { allowed: boolean; remaining: number } {
+): { allowed: boolean; remaining: number; reset: number } {
   const now = Date.now();
   const record = requests.get(identifier);
 
   if (!record || now > record.resetAt) {
+    const resetAt = now + windowMs;
     requests.set(identifier, {
       count: 1,
-      resetAt: now + windowMs,
+      resetAt,
     });
-    return { allowed: true, remaining: limit - 1 };
+    return { allowed: true, remaining: limit - 1, reset: Math.ceil(resetAt / 1000) };
   }
 
+  const reset = Math.ceil(record.resetAt / 1000);
+
   if (record.count >= limit) {
-    return { allowed: false, remaining: 0 };
+    return { allowed: false, remaining: 0, reset };
   }
 
   record.count++;
-  return { allowed: true, remaining: limit - record.count };
+  return { allowed: true, remaining: limit - record.count, reset };
 }
 
 /** Client IP from Next.js server actions / RSC (falls back to `unknown`). */

@@ -1,7 +1,18 @@
 import { checkRateLimit as checkMemoryRateLimit } from "@/lib/rate-limit";
 
 import { FREE_TIER_MONTHLY_LIMIT } from "../constants";
+import { monthQuotaResetUnix } from "../rate-limit-context";
 import { getKeyUsage, incrementKeyUsage } from "./keys";
+
+const IP_BURST_LIMIT = 30;
+const IP_BURST_WINDOW_MS = 60_000;
+
+export type ProtocolRateLimitResult = {
+  allowed: boolean;
+  remaining: number;
+  limit: number;
+  reset: number;
+};
 
 const MONTH_MS = 30 * 24 * 3_600_000;
 
@@ -36,8 +47,9 @@ function monthBucket(): string {
 export async function checkProtocolRateLimit(
   keyId: string,
   isDemo: boolean
-): Promise<{ allowed: boolean; remaining: number; limit: number }> {
+): Promise<ProtocolRateLimitResult> {
   const limit = isDemo ? 50 : FREE_TIER_MONTHLY_LIMIT;
+  const reset = monthQuotaResetUnix();
   const bucket = monthBucket();
   const redisKey = `auros:protocol:${keyId}:${bucket}`;
 
@@ -51,19 +63,24 @@ export async function checkProtocolRateLimit(
       allowed: count <= limit,
       remaining: Math.max(0, limit - count),
       limit,
+      reset,
     };
   }
 
   const usage = await getKeyUsage(keyId);
   const next = usage + 1;
   if (next > limit) {
-    return { allowed: false, remaining: 0, limit };
+    return { allowed: false, remaining: 0, limit, reset };
   }
   await incrementKeyUsage(keyId);
-  return { allowed: true, remaining: limit - next, limit };
+  return { allowed: true, remaining: limit - next, limit, reset };
 }
 
-export function checkIpBurstLimit(ip: string): { allowed: boolean } {
-  const { allowed } = checkMemoryRateLimit(`protocol-ip:${ip}`, 30, 60_000);
-  return { allowed };
+export function checkIpBurstLimit(ip: string): ProtocolRateLimitResult {
+  const { allowed, remaining, reset } = checkMemoryRateLimit(
+    `protocol-ip:${ip}`,
+    IP_BURST_LIMIT,
+    IP_BURST_WINDOW_MS
+  );
+  return { allowed, remaining, limit: IP_BURST_LIMIT, reset };
 }

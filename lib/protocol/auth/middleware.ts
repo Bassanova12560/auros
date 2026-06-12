@@ -1,6 +1,7 @@
 import { checkIpBurstLimit, checkProtocolRateLimit } from "./rate-limit";
 import { validateApiKey } from "./keys";
 import { protocolError } from "../response";
+import { setRateLimitContext } from "../rate-limit-context";
 
 export type AuthContext = {
   keyHash: string;
@@ -8,12 +9,25 @@ export type AuthContext = {
   email?: string;
 };
 
+function applyRateLimitHeaders(rate: {
+  limit: number;
+  remaining: number;
+  reset: number;
+}): void {
+  setRateLimitContext({
+    limit: rate.limit,
+    remaining: rate.remaining,
+    reset: rate.reset,
+  });
+}
+
 export async function authenticateProtocolRequest(
   req: Request
 ): Promise<{ ok: true; ctx: AuthContext } | { ok: false; response: ReturnType<typeof protocolError> }> {
   const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
   const burst = checkIpBurstLimit(ip);
   if (!burst.allowed) {
+    applyRateLimitHeaders(burst);
     return {
       ok: false,
       response: protocolError("rate_limit", "Too many requests. Slow down.", 429),
@@ -42,6 +56,7 @@ export async function authenticateProtocolRequest(
   }
 
   const rate = await checkProtocolRateLimit(validation.keyHash, validation.isDemo);
+  applyRateLimitHeaders(rate);
   if (!rate.allowed) {
     return {
       ok: false,

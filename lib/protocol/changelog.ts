@@ -25,6 +25,22 @@ export type ProtocolChangelogEntry = {
 /** Single source for `/developers/changelog` and GET `/api/v1/changelog`. Newest first. */
 export const PROTOCOL_CHANGELOG: ProtocolChangelogEntry[] = [
   {
+    id: "rate-limit-headers",
+    date: "2026-06-12",
+    title: "Rate limit response headers",
+    summary:
+      "Headers X-RateLimit-Limit, X-RateLimit-Remaining et X-RateLimit-Reset sur toutes les réponses /api/v1/* authentifiées et routes limitées par IP.",
+    details: [
+      "Visibilité quota mensuel par clé (100 req/mois free, 50 demo) sans parser le corps 429.",
+      "Burst IP (30/min) et création de clé (5/h/IP) exposent les mêmes headers avec fenêtre glissante.",
+      "X-RateLimit-Reset : timestamp Unix — début du mois UTC suivant pour le quota clé.",
+    ],
+    links: [{ href: "/developers/docs/authentication", label: "Docs authentification" }],
+    tags: ["headers", "rate-limit"],
+    status: "released",
+    roadmapItem: 5,
+  },
+  {
     id: "compare-endpoint",
     date: "2026-06-12",
     title: "POST /api/v1/compare",
@@ -94,20 +110,6 @@ export const PROTOCOL_CHANGELOG: ProtocolChangelogEntry[] = [
     tags: ["branding", "headers"],
     status: "released",
     roadmapItem: 4,
-  },
-  {
-    id: "rate-limit-headers",
-    date: "2026-06-12",
-    title: "Rate limit response headers (à venir)",
-    summary:
-      "Headers X-RateLimit-Remaining, X-RateLimit-Limit et X-RateLimit-Reset sur toutes les routes /api/v1/*.",
-    details: [
-      "Visibilité quota mensuel par clé et burst IP sans parser le corps 429.",
-      "Cohérent avec le tier gratuit 100 req/mois et limites keys/monitor.",
-    ],
-    tags: ["headers", "rate-limit"],
-    status: "upcoming",
-    roadmapItem: 5,
   },
 ];
 

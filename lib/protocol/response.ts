@@ -1,15 +1,21 @@
 import { NextResponse } from "next/server";
 
 import { AUROS_LOGO_URL, PROTOCOL_DISCLAIMER, PROTOCOL_VERSION } from "./constants";
+import {
+  formatRateLimitHeaders,
+  getRateLimitContext,
+} from "./rate-limit-context";
 
 export function getProtocolResponseHeaders(
   extra?: Record<string, string>,
   responseTime?: string
 ): Record<string, string> {
+  const rateLimit = getRateLimitContext();
   return {
     "X-AUROS-Protocol-Version": PROTOCOL_VERSION,
     "X-AUROS-Logo": AUROS_LOGO_URL,
     ...(responseTime ? { "X-Response-Time": responseTime } : {}),
+    ...(rateLimit ? formatRateLimitHeaders(rateLimit) : {}),
     ...extra,
   };
 }

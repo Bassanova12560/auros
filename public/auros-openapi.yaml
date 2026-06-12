@@ -15,7 +15,7 @@ info:
 
     **Free tier:** 100 requests/month per key. Key creation via `POST /api/v1/keys` (no auth).
 
-    **Response headers (every response):** `X-AUROS-Protocol-Version: 1.0`, `X-AUROS-Logo: https://getauros.com/auros-logo.svg`, `X-Response-Time` (request duration in ms).
+    **Response headers (every response):** `X-AUROS-Protocol-Version: 1.0`, `X-AUROS-Logo: https://getauros.com/auros-logo.svg`, `X-Response-Time` (request duration in ms). Authenticated routes and IP-limited endpoints also return `X-RateLimit-Limit`, `X-RateLimit-Remaining`, `X-RateLimit-Reset` (Unix timestamp — monthly key quota resets on the 1st UTC).
 
     **SDKs:** `@adrien1212balitrand/auros-protocol` (npm), `auros-protocol` (pip). Docs: `/developers/docs`.
 
@@ -196,6 +196,77 @@ paths:
           $ref: "#/components/responses/ValidationError"
         "401":
           $ref: "#/components/responses/Unauthorized"
+        "429":
+          $ref: "#/components/responses/RateLimit"
+  /api/v1/score/{id}/history:
+    get:
+      tags: [Intelligence]
+      summary: Score history for a session or monitor
+      operationId: scoreHistory
+      description: |
+        Return chronological score snapshots for a `scr_*` session (from POST /api/v1/score)
+        or a premium `mon_*` monitor. Requires Bearer auth; scoped to the API key that created the session.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: "^(scr|mon)_[a-f0-9]{24}$"
+          description: Score session id (`scr_…`) or monitor id (`mon_…`)
+      responses:
+        "200":
+          description: Score history entries
+          headers:
+            X-AUROS-Protocol-Version:
+              schema:
+                type: string
+                example: "1.0"
+            X-AUROS-Logo:
+              schema:
+                type: string
+                format: uri
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ScoreHistoryResponse"
+              example:
+                disclaimer: "Indicative intelligence only — not legal, tax, or investment advice."
+                score_id: scr_a1b2c3d4e5f6789012345678
+                kind: session
+                total: 2
+                entries:
+                  - id: 1
+                    score: 68
+                    grade: C+
+                    status: progress
+                    breakdown:
+                      legal_structure: 70
+                      kyc_aml: 60
+                      mica_compliance: 65
+                      data_room: 50
+                      investor_protection: 75
+                    mica_classification: financial_instrument
+                    created_at: "2026-06-12T10:00:00.000Z"
+                  - id: 2
+                    score: 72
+                    grade: B-
+                    status: progress
+                    breakdown:
+                      legal_structure: 78
+                      kyc_aml: 65
+                      mica_compliance: 70
+                      data_room: 55
+                      investor_protection: 80
+                    mica_classification: financial_instrument
+                    created_at: "2026-06-12T11:00:00.000Z"
+                meta:
+                  version: "1.0"
+                  computed_at: "2026-06-12T11:05:00.000Z"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
         "429":
           $ref: "#/components/responses/RateLimit"
   /api/v1/products:
@@ -661,12 +732,31 @@ components:
           type: integer
           minimum: 0
           maximum: 100
+        score_id:
+          type: string
+          pattern: "^scr_[a-f0-9]{24}$"
+          description: Continue an existing score session (returned by a prior POST /score)
+        monitor_id:
+          type: string
+          pattern: "^mon_[a-f0-9]{24}$"
+          description: Link this score to a premium monitor (`mon_…`)
+        record_history:
+          type: boolean
+          default: true
+          description: Persist snapshot for authenticated keys (demo key skips storage)
     ScoreResponse:
       type: object
       required: [disclaimer, score, grade, status, breakdown, mica_classification, critical_gaps, recommendations, recommended_jurisdictions, recommended_platforms, meta]
       properties:
         disclaimer:
           type: string
+        score_id:
+          type: string
+          description: Session id for history lookups (`scr_…`)
+        history_url:
+          type: string
+          format: uri
+          description: GET URL for this session's score history
         score:
           type: number
           minimum: 0
@@ -720,6 +810,53 @@ components:
             parsed_keywords:
               type: array
               items: { type: string }
+    ScoreHistoryResponse:
+      type: object
+      required: [disclaimer, score_id, kind, total, entries, meta]
+      properties:
+        disclaimer: { type: string }
+        score_id: { type: string }
+        kind:
+          type: string
+          enum: [session, monitor]
+        total: { type: integer, minimum: 0 }
+        entries:
+          type: array
+          items:
+            $ref: "#/components/schemas/ScoreHistoryEntry"
+        meta:
+          type: object
+          required: [version, computed_at]
+          properties:
+            version: { type: string, const: "1.0" }
+            computed_at: { type: string, format: date-time }
+    ScoreHistoryEntry:
+      type: object
+      required: [id, score, grade, status, breakdown, mica_classification, created_at]
+      properties:
+        id: { type: integer }
+        score: { type: number, minimum: 0, maximum: 100 }
+        grade: { type: string }
+        status:
+          type: string
+          enum: [ready, progress, early]
+        breakdown:
+          type: object
+          properties:
+            legal_structure: { type: number }
+            kyc_aml: { type: number }
+            mica_compliance: { type: number }
+            data_room: { type: number }
+            investor_protection: { type: number }
+        mica_classification:
+          type: string
+          enum: [utility_token, asset_referenced_token, e_money_token, other_crypto_asset, financial_instrument, out_of_scope, uncertain]
+        request:
+          type: object
+          additionalProperties: true
+        created_at:
+          type: string
+          format: date-time
     ProductsResponse:
       type: object
       required: [disclaimer, products, pagination, fetched_at]
@@ -1074,6 +1211,20 @@ components:
             $ref: "#/components/schemas/ProtocolError"
     RateLimit:
       description: Rate limit or monthly quota exceeded
+      headers:
+        X-RateLimit-Limit:
+          schema:
+            type: integer
+            example: 100
+        X-RateLimit-Remaining:
+          schema:
+            type: integer
+            example: 0
+        X-RateLimit-Reset:
+          schema:
+            type: integer
+            description: Unix timestamp when the limit window resets
+            example: 1751328000
       content:
         application/json:
           schema:
