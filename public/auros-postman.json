@@ -232,7 +232,56 @@
       ]
     },
     {
-      "name": "Keys",
+      "name": "Compare",
+      "item": [
+        {
+          "name": "POST /api/v1/compare (by product IDs)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"product_ids\": [\"maple-usdc\", \"realt-portfolio\", \"backed-bib01\"]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/compare",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "compare"]
+            },
+            "description": "Compare 2–4 products side-by-side by explicit IDs — mirrors the /compare hub panel."
+          },
+          "response": []
+        },
+        {
+          "name": "POST /api/v1/compare (by filter)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"category\": \"bonds\",\n  \"yield_min\": 4,\n  \"risk_tier\": \"core\",\n  \"limit\": 3\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/compare",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "compare"]
+            },
+            "description": "Select top matching products by category, yield, risk tier, and jurisdiction (2–4 results, sorted by APY)."
+          },
+          "response": []
+        }
+      ]
+    },
       "item": [
         {
           "name": "POST /api/v1/keys",

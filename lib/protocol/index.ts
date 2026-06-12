@@ -20,7 +20,16 @@ export {
 } from "./auth/keys";
 export { checkPremiumAccess, premiumPricingMeta, PREMIUM_PRICING } from "./auth/premium";
 export { computeProtocolScore, attachRecommendedPlatforms } from "./scoring/compute-score";
-export { listProtocolProducts, topPlatformsForAsset } from "./products/adapter";
+export { listProtocolProducts, topPlatformsForAsset, hubToProductItem } from "./products/adapter";
+export { buildProtocolCompare } from "./compare/build";
+export type { CompareBuildResult, CompareBuildPayload } from "./compare/build";
+export {
+  compareRequestSchema,
+  compareResponseSchema,
+  COMPARE_MIN_PRODUCTS,
+  COMPARE_MAX_PRODUCTS,
+} from "./schemas/compare";
+export type { CompareRequest, CompareProduct, CompareResponse } from "./schemas/compare";
 export { rankProtocolJurisdictions } from "./jurisdictions/rank";
 export { generateChecklist } from "./checklist/generate";
 export { parseDescription } from "./nlp/parse-description";

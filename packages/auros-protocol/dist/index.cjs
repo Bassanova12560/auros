@@ -72,6 +72,9 @@ var AurosProtocol = class {
     const qs = params.toString();
     return this.get(`/api/v1/products${qs ? `?${qs}` : ""}`);
   }
+  async compare(body) {
+    return this.post("/api/v1/compare", body);
+  }
   async jurisdictions(query = {}) {
     const params = new URLSearchParams();
     for (const [key, value] of Object.entries(query)) {

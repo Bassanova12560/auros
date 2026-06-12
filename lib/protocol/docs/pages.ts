@@ -211,6 +211,84 @@ console.log(result.score, result.grade);`,
     ],
   },
   {
+    slug: "endpoint-compare",
+    title: "POST /api/v1/compare",
+    description:
+      "Comparaison side-by-side de 2–4 produits RWA — par IDs explicites ou filtres (category, yield, risk tier, jurisdiction).",
+    category: "endpoints",
+    categoryLabel: "Endpoints",
+    relatedSlugs: ["endpoint-products", "guide-compliance-dashboard"],
+    sections: [
+      {
+        heading: "Modes de requête",
+        paragraphs: [
+          "**Par IDs** — `product_ids` (2–4 IDs du catalogue, ordre conservé).",
+          "**Par filtres** — omettez `product_ids` et passez `category`, `yield_min`, `risk_tier`, `jurisdiction`, `limit` (2–4, défaut 4). Les produits sont triés par APY décroissant.",
+        ],
+      },
+      {
+        heading: "cURL (par IDs)",
+        code: `curl -X POST ${BASE}/api/v1/compare \\
+  -H "Authorization: Bearer ${DEMO_API_KEY}" \\
+  -H "Content-Type: application/json" \\
+  -d '{"product_ids":["maple-usdc","realt-portfolio","backed-bib01"]}'`,
+        language: "bash",
+        paragraphs: [],
+      },
+      {
+        heading: "cURL (par filtres)",
+        code: `curl -X POST ${BASE}/api/v1/compare \\
+  -H "Authorization: Bearer ${DEMO_API_KEY}" \\
+  -H "Content-Type: application/json" \\
+  -d '{"category":"bonds","yield_min":4,"risk_tier":"core","limit":3}'`,
+        language: "bash",
+        paragraphs: [],
+      },
+      {
+        heading: "Réponse (extrait)",
+        code: `{
+  "mode": "product_ids",
+  "products": [{
+    "id": "maple-usdc",
+    "name": "Maple USDC Pool",
+    "platform": "Maple",
+    "category": "private_credit",
+    "asset_class": "private_credit",
+    "sub_category": "prime",
+    "risk_tier": "core",
+    "apy": 8.2,
+    "tvl_usd": 45000000,
+    "jurisdiction": "Cayman Islands",
+    "liquidity_days": 7,
+    "fees": "1%",
+    "accredited_only": false,
+    "live": true
+  }],
+  "comparison": {
+    "product_count": 3,
+    "share_url": "${BASE}/compare?compare=maple-usdc,realt-portfolio,backed-bib01",
+    "highlights": { "apy": ["best", null, "worst"], "tvl_usd": [null, null, null] }
+  },
+  "fetched_at": "2026-06-11T10:00:00.000Z",
+  "meta": { "version": "1.0", "computed_at": "..." }
+}`,
+        language: "json",
+        paragraphs: [
+          "Les champs `comparison.highlights` reprennent la logique du panneau /compare (`best` / `worst` par métrique).",
+        ],
+        links: [{ href: "/compare", label: "Comparateur RWA AUROS" }],
+      },
+      {
+        heading: "SDK",
+        code: `const result = await client.compare({
+  product_ids: ["maple-usdc", "realt-portfolio"],
+});`,
+        language: "typescript",
+        paragraphs: [],
+      },
+    ],
+  },
+  {
     slug: "endpoint-jurisdictions",
     title: "GET /api/v1/jurisdictions",
     description: "Classement réglementaire des juridictions selon actif, profil investisseur, délai et budget.",
@@ -402,7 +480,7 @@ console.log(result.score, result.grade);`,
       "Construire un dashboard compliance avec score, checklist et catalogue RWA — agrégation multi-actifs.",
     category: "guides",
     categoryLabel: "Guides",
-    relatedSlugs: ["endpoint-products", "endpoint-checklist", "endpoint-score"],
+    relatedSlugs: ["endpoint-products", "endpoint-compare", "endpoint-checklist", "endpoint-score"],
     sections: [
       {
         heading: "Architecture",

@@ -273,6 +273,67 @@ paths:
           $ref: "#/components/responses/Unauthorized"
         "429":
           $ref: "#/components/responses/RateLimit"
+  /api/v1/compare:
+    post:
+      tags: [Catalog]
+      summary: Side-by-side RWA product comparison
+      operationId: compare
+      description: |
+        Compare 2–4 tokenized RWA products side-by-side — mirrors the `/compare` hub.
+        Pass explicit `product_ids` or filter criteria (`category`, `yield_min`, `risk_tier`, `jurisdiction`, `limit`).
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CompareRequest"
+            examples:
+              byIds:
+                summary: Compare by product IDs
+                value:
+                  product_ids: ["maple-usdc", "realt-portfolio", "backed-bib01"]
+              byFilter:
+                summary: Compare top matches by filter
+                value:
+                  category: bonds
+                  yield_min: 4
+                  risk_tier: core
+                  limit: 3
+      responses:
+        "200":
+          description: Structured comparison payload
+          headers:
+            X-AUROS-Protocol-Version:
+              schema:
+                type: string
+                example: "1.0"
+            X-AUROS-Logo:
+              schema:
+                type: string
+                format: uri
+                example: https://getauros.com/auros-logo.svg
+            X-Response-Time:
+              schema:
+                type: string
+                example: "42ms"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CompareResponse"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          description: Unknown product ID in product_ids mode
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProtocolError"
+        "429":
+          $ref: "#/components/responses/RateLimit"
   /api/v1/jurisdictions:
     get:
       tags: [Intelligence]
@@ -695,6 +756,140 @@ components:
         affiliate_url: { type: string }
         min_investment_usd: { type: number, nullable: true }
         live: { type: boolean }
+    CompareRequest:
+      type: object
+      description: |
+        Either pass `product_ids` (2–4 IDs) for an explicit comparison, or omit IDs and use filter fields
+        to select the top matches (sorted by APY).
+      properties:
+        product_ids:
+          type: array
+          minItems: 2
+          maxItems: 4
+          items:
+            type: string
+            minLength: 1
+        category:
+          type: string
+          enum: [stablecoins, real_estate, bonds, commodities, private_credit, all]
+          default: all
+        yield_min:
+          type: number
+          minimum: 0
+        risk_tier:
+          type: string
+          enum: [conservative, core, advanced]
+        jurisdiction:
+          type: string
+          maxLength: 64
+        limit:
+          type: integer
+          minimum: 2
+          maximum: 4
+          default: 4
+          description: Max products to return in filter mode
+    CompareProduct:
+      allOf:
+        - $ref: "#/components/schemas/ProductItem"
+        - type: object
+          properties:
+            asset_class:
+              type: string
+              description: API category (stablecoins, real_estate, bonds, etc.)
+            sub_category:
+              type: string
+              description: Comparator sub-category (treasury, sovereign, prime, etc.)
+            risk_tier:
+              type: string
+              enum: [conservative, core, advanced]
+            liquidity_days:
+              type: integer
+            fees:
+              type: string
+            accredited_only:
+              type: boolean
+    CompareResponse:
+      type: object
+      required: [disclaimer, mode, products, comparison, fetched_at, meta]
+      properties:
+        disclaimer:
+          type: string
+        mode:
+          type: string
+          enum: [product_ids, filter]
+        products:
+          type: array
+          minItems: 2
+          maxItems: 4
+          items:
+            $ref: "#/components/schemas/CompareProduct"
+        comparison:
+          type: object
+          required: [product_count, share_url, highlights]
+          properties:
+            product_count:
+              type: integer
+            share_url:
+              type: string
+              format: uri
+            product_ids:
+              type: array
+              items:
+                type: string
+            filters:
+              type: object
+              properties:
+                category:
+                  type: string
+                yield_min:
+                  type: number
+                risk_tier:
+                  type: string
+                jurisdiction:
+                  type: string
+                limit:
+                  type: integer
+            highlights:
+              type: object
+              properties:
+                apy:
+                  type: array
+                  items:
+                    type: string
+                    nullable: true
+                    enum: [best, worst, null]
+                tvl_usd:
+                  type: array
+                  items:
+                    type: string
+                    nullable: true
+                    enum: [best, worst, null]
+                min_investment_usd:
+                  type: array
+                  items:
+                    type: string
+                    nullable: true
+                    enum: [best, worst, null]
+                liquidity_days:
+                  type: array
+                  items:
+                    type: string
+                    nullable: true
+                    enum: [best, worst, null]
+        fetched_at:
+          type: string
+          format: date-time
+        meta:
+          type: object
+          properties:
+            version:
+              type: string
+              const: "1.0"
+            computed_at:
+              type: string
+              format: date-time
+            request_id:
+              type: string
     JurisdictionsResponse:
       type: object
       required: [disclaimer, jurisdictions, query]

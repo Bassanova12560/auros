@@ -31,6 +31,14 @@ const CURL_EXAMPLES = [
   -H "Authorization: Bearer ${DEMO_API_KEY}"`,
   },
   {
+    method: "POST",
+    path: "/api/v1/compare",
+    curl: `curl -X POST ${BASE}/api/v1/compare \\
+  -H "Authorization: Bearer ${DEMO_API_KEY}" \\
+  -H "Content-Type: application/json" \\
+  -d '{"product_ids":["maple-usdc","realt-portfolio","backed-bib01"]}'`,
+  },
+  {
     method: "GET",
     path: "/api/v1/jurisdictions",
     curl: `curl "${BASE}/api/v1/jurisdictions?asset_type=real_estate&investor_type=professional" \\
@@ -83,6 +91,11 @@ const ENDPOINTS = [
     desc: "Catalogue RWA — filtres category, chain, yield, jurisdiction.",
   },
   {
+    method: "POST",
+    path: "/api/v1/compare",
+    desc: "Comparaison 2–4 produits RWA — IDs explicites ou filtres (comme /compare).",
+  },
+  {
     method: "GET",
     path: "/api/v1/jurisdictions",
     desc: "Classement réglementaire selon actif, budget et délai.",
@@ -106,7 +119,7 @@ export default function DevelopersPage() {
       <ContentPageLayout
         eyebrow="AUROS Protocol · v1.0"
         title="AUROS Protocol — The RWA Intelligence Layer"
-        intro="API publique pour scorer la maturité MiCA, explorer le catalogue RWA et comparer les juridictions — règles statiques, réponse < 200 ms, sans LLM. Indicatif uniquement ; validez avec un conseil avant toute émission."
+        intro="API publique pour scorer la maturité MiCA, explorer le catalogue RWA, comparer des produits side-by-side et classer les juridictions — règles statiques, réponse < 200 ms, sans LLM. Indicatif uniquement ; validez avec un conseil avant toute émission."
         cta={{ href: "#playground", label: "Tester dans le playground" }}
       >
         <section className="card-flat px-5 py-5">

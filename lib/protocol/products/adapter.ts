@@ -20,7 +20,7 @@ const COMPARATOR_TO_API_CATEGORY: Record<ComparatorId, string> = {
   "private-credit": "private_credit",
 };
 
-function hubToProductItem(product: HubProduct): ProductItem {
+export function hubToProductItem(product: HubProduct): ProductItem {
   const affiliate =
     product.row.affiliate_link?.trim() ||
     product.row.link?.trim() ||

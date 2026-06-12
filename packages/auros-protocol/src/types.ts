@@ -127,6 +127,54 @@ export type ProductsResponse = {
   fetched_at: string;
 };
 
+export type CompareCellHighlight = "best" | "worst" | null;
+
+export type RiskTier = "conservative" | "core" | "advanced";
+
+export type CompareRequest = {
+  product_ids?: string[];
+  category?: ProductCategory;
+  yield_min?: number;
+  risk_tier?: RiskTier;
+  jurisdiction?: string;
+  limit?: number;
+};
+
+export type CompareProduct = ProductItem & {
+  asset_class: string;
+  sub_category: string;
+  risk_tier: RiskTier;
+  liquidity_days: number;
+  fees: string;
+  accredited_only: boolean;
+};
+
+export type CompareResponse = {
+  disclaimer: string;
+  mode: "product_ids" | "filter";
+  products: CompareProduct[];
+  comparison: {
+    product_count: number;
+    share_url: string;
+    product_ids?: string[];
+    filters?: {
+      category: ProductCategory;
+      yield_min?: number;
+      risk_tier?: RiskTier;
+      jurisdiction?: string;
+      limit: number;
+    };
+    highlights: {
+      apy: CompareCellHighlight[];
+      tvl_usd: CompareCellHighlight[];
+      min_investment_usd: CompareCellHighlight[];
+      liquidity_days: CompareCellHighlight[];
+    };
+  };
+  fetched_at: string;
+  meta: ProtocolMeta;
+};
+
 export type JurisdictionsAssetType =
   | "real_estate"
   | "bonds"

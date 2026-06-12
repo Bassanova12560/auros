@@ -3,6 +3,8 @@ import type {
   AurosProtocolOptions,
   ChecklistRequest,
   ChecklistResponse,
+  CompareRequest,
+  CompareResponse,
   CreateKeyRequest,
   CreateKeyResponse,
   DossierRequest,
@@ -53,6 +55,10 @@ export class AurosProtocol {
     }
     const qs = params.toString();
     return this.get<ProductsResponse>(`/api/v1/products${qs ? `?${qs}` : ""}`);
+  }
+
+  async compare(body: CompareRequest): Promise<CompareResponse> {
+    return this.post<CompareResponse>("/api/v1/compare", body);
   }
 
   async jurisdictions(query: JurisdictionsQuery = {}): Promise<JurisdictionsResponse> {
