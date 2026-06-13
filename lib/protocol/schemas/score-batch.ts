@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 import { protocolMetaSchema } from "./common";
-import { scoreRequestSchema, scoreResponseSchema } from "./score";
+import { scoreResponseSchema } from "./score";
 
 /** Minimum items per batch request. */
 export const SCORE_BATCH_MIN_ITEMS = 1;
@@ -9,9 +9,10 @@ export const SCORE_BATCH_MIN_ITEMS = 1;
 /** Maximum items per batch request (institutional portfolios). */
 export const SCORE_BATCH_MAX_ITEMS = 20;
 
+/** Items are validated individually in the route for partial success. */
 export const scoreBatchRequestSchema = z.object({
   items: z
-    .array(scoreRequestSchema)
+    .array(z.unknown())
     .min(SCORE_BATCH_MIN_ITEMS, `At least ${SCORE_BATCH_MIN_ITEMS} item required`)
     .max(
       SCORE_BATCH_MAX_ITEMS,

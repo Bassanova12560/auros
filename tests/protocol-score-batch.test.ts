@@ -26,6 +26,16 @@ describe("protocol/schemas/score-batch", () => {
     assert.equal(parsed.data?.items.length, 2);
   });
 
+  it("accepts batches with invalid items (validated per item in route)", () => {
+    const parsed = scoreBatchRequestSchema.safeParse({
+      items: [
+        { description: "Luxembourg warehouse SPV professional investors" },
+        { description: "bad" },
+      ],
+    });
+    assert.equal(parsed.success, true);
+  });
+
   it("rejects empty and oversized batches", () => {
     assert.equal(scoreBatchRequestSchema.safeParse({ items: [] }).success, false);
     const tooMany = Array.from({ length: SCORE_BATCH_MAX_ITEMS + 1 }, () => ({
