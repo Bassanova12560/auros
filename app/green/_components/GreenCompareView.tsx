@@ -76,7 +76,10 @@ import { getGreenMarketMessages } from "@/lib/green/market-i18n";
 
 
 
-import { formatGreenTaxonomyScoreDisplay } from "@/lib/green/compare-taxonomy";
+import {
+  formatGreenTaxonomyScoreDisplay,
+  sortGreenCompareRowsByTaxonomy,
+} from "@/lib/green/compare-taxonomy";
 
 import {
 
@@ -206,11 +209,11 @@ export function GreenCompareView({
   });
 
   const visibleRows = useMemo(
-
-    () => GREEN_COMPARE_ROWS.filter((row) => selectedRwaIds.includes(row.id)),
-
+    () =>
+      sortGreenCompareRowsByTaxonomy(
+        GREEN_COMPARE_ROWS.filter((row) => selectedRwaIds.includes(row.id))
+      ),
     [selectedRwaIds]
-
   );
 
   const [pdfState, setPdfState] = useState<PdfState>("idle");

@@ -153,6 +153,21 @@ describe("green/compare-taxonomy-score", () => {
     assert.ok(compareGreenTaxonomyScore(rows[2], rows[0]) > 0);
   });
 
+  it("sorts all compare rows by descending taxonomy score", () => {
+    const sorted = sortGreenCompareRowsByTaxonomy(GREEN_COMPARE_ROWS);
+    const scores = sorted.map((row) => row.green_taxonomy_score);
+    for (let i = 1; i < scores.length; i++) {
+      const prev = scores[i - 1];
+      const curr = scores[i];
+      if (prev == null || curr == null) {
+        assert.equal(prev == null && curr == null, true);
+      } else {
+        assert.ok(prev >= curr);
+      }
+    }
+    assert.equal(sorted[0]?.id, "sunexchange");
+  });
+
   it("maps taxonomy scores consistently in CSV and PDF exports", () => {
     const labels = getGreenMessages("fr").compare;
     const sample = GREEN_COMPARE_ROWS.slice(0, 3);
