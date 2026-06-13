@@ -6,6 +6,7 @@ import { useLocale } from "@/app/_components/i18n/LocaleProvider";
 import {
   AUROS_WIZARD_ROUTE,
   GREEN_ABOUT_ROUTE,
+  GREEN_CSRD_CHECK_ROUTE,
   GREEN_MARKET_ROUTE,
   GREEN_REGISTER_ROUTE,
   getGreenMessages,
@@ -134,10 +135,21 @@ export function GreenHubView({ marketSnapshot, impact, registrySnapshot }: Props
             {m.hub.aboutCta} →
           </Link>
           <Link
-            href={`${AUROS_WIZARD_ROUTE}?asset=renewable`}
+            href={`${AUROS_WIZARD_ROUTE}?type=green&asset=renewable`}
             className="font-mono text-[11px] tracking-wide text-white/30 transition-colors duration-300 hover:text-white/55 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
           >
             {m.hub.wizardCta} →
+          </Link>
+          <Link
+            href={GREEN_CSRD_CHECK_ROUTE}
+            className="font-mono text-[11px] tracking-wide text-white/30 transition-colors duration-300 hover:text-white/55 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+          >
+            {locale === "fr"
+              ? "Test CSRD gratuit"
+              : locale === "es"
+                ? "Test CSRD gratuito"
+                : "Free CSRD check"}{" "}
+            →
           </Link>
         </p>
 

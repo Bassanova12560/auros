@@ -11,6 +11,7 @@ export const WIZARD_PREFILL_KEY = "auros_wizard_prefill_v1";
 
 export type WizardPrefillFromTool =
   | "mica-checker"
+  | "csrd-checker"
   | "estimate"
   | "cost-estimator"
   | "jurisdiction-picker";
@@ -96,6 +97,17 @@ export function prefillFromJurisdictionPicker(input: {
     jurisdictionPriorities: input.priorities,
     mode: "pro",
     fromTool: "jurisdiction-picker",
+  };
+}
+
+export function prefillFromCsrdChecker(): WizardPrefill {
+  return {
+    assetType: GREEN_WIZARD_ASSET_TYPE,
+    estimatedValue: 1_000_000,
+    currency: "EUR",
+    country: "",
+    mode: "pro",
+    fromTool: "csrd-checker",
   };
 }
 

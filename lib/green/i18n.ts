@@ -795,6 +795,11 @@ const FR: GreenMessages = {
           href: "/green/standards",
         },
         {
+          title: "CSRD Checker",
+          description: "Estimez votre scope CSRD et votre préparation en ~2 min.",
+          href: "/green/csrd-check",
+        },
+        {
           title: "Comparateur",
           description: "Projets tokenisés sourcés, statuts honnêtes, liens vérifiés.",
           href: "/green/compare",
@@ -1694,6 +1699,11 @@ const EN: GreenMessages = {
           title: "RTMS standards",
           description: "Real, transparent, measurable, sound — the reference grid.",
           href: "/green/standards",
+        },
+        {
+          title: "CSRD Checker",
+          description: "Estimate your CSRD scope and readiness in ~2 min.",
+          href: "/green/csrd-check",
         },
         {
           title: "Comparator",
@@ -2597,6 +2607,11 @@ const ES: GreenMessages = {
           title: "Estándares RTMS",
           description: "Real, transparente, medible, sano — la cuadrícula de referencia.",
           href: "/green/standards",
+        },
+        {
+          title: "CSRD Checker",
+          description: "Estime su ámbito CSRD y preparación en ~2 min.",
+          href: "/green/csrd-check",
         },
         {
           title: "Comparador",

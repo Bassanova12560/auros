@@ -5,6 +5,7 @@ import {
   GREEN_CERTIFICATION_ROUTE,
   GREEN_CHARGERS_ROUTE,
   GREEN_COMPARE_ROUTE,
+  GREEN_CSRD_CHECK_ROUTE,
   GREEN_CONSUMERS_ROUTE,
   GREEN_DISCLAIMER,
   GREEN_GUIDE_ROUTE,
@@ -449,6 +450,32 @@ export const greenRegisterPage = enrichPage({
   relatedPaths: [GREEN_MARKET_ROUTE, GREEN_ROUTE, GREEN_LABEL_ROUTE],
 });
 
+export const greenCsrdCheckPage = enrichPage({
+  id: "green-csrd-check",
+  path: GREEN_CSRD_CHECK_ROUTE,
+  title: "CSRD Checker — scope et préparation | AUROS Green",
+  description:
+    "Six questions pour estimer votre scope CSRD et score de préparation — gratuit, indicatif, ~2 min.",
+  summary:
+    "CSRD Checker AUROS Green : estimation du scope Corporate Sustainability Reporting Directive, score de préparation et CTA wizard actifs verts.",
+  contentType: "landing",
+  language: "multi",
+  indexable: true,
+  lastUpdated: "2026-06-01",
+  keywords: ["CSRD checker", "scope CSRD", "ESRS préparation", "EU Taxonomy entreprise"],
+  intents: [
+    "Savoir si mon entreprise est en scope CSRD",
+    "Préparer mon rapport de durabilité ESRS",
+    "Lier CSRD et actifs verts tokenisés",
+  ],
+  audience: ["CFO", "responsables ESG", "PME cotées", "family office"],
+  facts: [
+    { key: "Durée", value: "~2 minutes — 6 questions" },
+    { key: "Suite", value: "/wizard?type=green&asset=renewable — Green Score EU Taxonomy" },
+  ],
+  relatedPaths: [GREEN_ROUTE, GREEN_STANDARDS_ROUTE, "/wizard"],
+});
+
 export const greenRtmsAssistantPage = enrichPage({
   id: "green-rtms-assistant",
   path: GREEN_RTMS_ASSISTANT_ROUTE,
@@ -552,6 +579,7 @@ export const greenPages: AiFirstPage[] = [
   greenConsumersPage,
   greenStandardsPage,
   greenComparePage,
+  greenCsrdCheckPage,
   greenRtmsAssistantPage,
   greenLabelPage,
   greenCertificationPage,

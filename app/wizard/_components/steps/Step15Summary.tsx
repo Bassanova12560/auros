@@ -27,10 +27,15 @@ import {
   computeGreenRtmsScore,
   isGreenWizardAsset,
 } from "@/lib/green/rtms-scoring";
+import {
+  computeGreenComplianceScore,
+  isGreenWizardContext,
+} from "@/lib/green/scoring/green-compliance";
 
 import { WizardSummaryRow } from "../WizardPrimitives";
 import { WizardStepHeader } from "../WizardStepHeader";
 import { GreenRtmsPanel } from "../GreenRtmsPanel";
+import { GreenCompliancePanel } from "../GreenCompliancePanel";
 import { ProScoreBreakdown } from "../ProScoreBreakdown";
 
 type GenerateState = "idle" | "saving" | "error";
@@ -69,6 +74,10 @@ export function Step15Summary({ data }: Props) {
   }, [unified, locale]);
   const rtms = useMemo(
     () => (isGreenWizardAsset(data.assetType) ? computeGreenRtmsScore(data) : null),
+    [data]
+  );
+  const greenCompliance = useMemo(
+    () => (isGreenWizardContext(data) ? computeGreenComplianceScore(data) : null),
     [data]
   );
   const ease = unified.ease;
@@ -211,8 +220,9 @@ export function Step15Summary({ data }: Props) {
       paidTier,
       data: { ...merged, wizardMode: "pro", paidTier },
       ...(rtms ? { greenRtms: rtms } : {}),
+      ...(greenCompliance ? { greenCompliance } : {}),
     };
-  }, [data, result, rtms]);
+  }, [data, result, rtms, greenCompliance]);
 
   const handleGenerate = useCallback(async () => {
     setGenState("saving");
@@ -283,6 +293,7 @@ export function Step15Summary({ data }: Props) {
       <ProScoreBreakdown data={data} />
 
       {rtms ? <GreenRtmsPanel rtms={rtms} /> : null}
+      {greenCompliance ? <GreenCompliancePanel compliance={greenCompliance} /> : null}
 
       <div className="my-8 flex flex-col items-center">
         <p className="font-mono text-[10px] uppercase tracking-wider text-white/40">

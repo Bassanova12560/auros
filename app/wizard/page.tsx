@@ -106,7 +106,9 @@ export default function WizardPage() {
       const expertUrl = params?.get("expert") === "1";
       const modeParam = parseWizardMode(params?.get("mode"));
       const sessionId = params?.get("session_id");
-      const assetRenewable = params?.get("asset") === "renewable";
+      const assetRenewable =
+        params?.get("asset") === "renewable" || params?.get("type") === "green";
+      const typeGreen = params?.get("type") === "green";
       if (demo) {
         const sim = getSimulationWizardData();
         localStorage.setItem(
@@ -170,6 +172,11 @@ export default function WizardPage() {
         setPathChosen(true);
         setStep(1);
       } else if (modeParam === "pro") {
+        resolvedMode = "pro";
+        setWizardMode("pro");
+        setPathChosen(true);
+        setStep(1);
+      } else if (typeGreen) {
         resolvedMode = "pro";
         setWizardMode("pro");
         setPathChosen(true);
@@ -303,6 +310,11 @@ export default function WizardPage() {
           track("wizard_prefill_applied", { fromTool: prefill.fromTool });
         }
         clearWizardPrefill();
+      }
+      if (typeGreen) {
+        setWizardMode("pro");
+        setPathChosen(true);
+        resolvedMode = "pro";
       }
       try {
         const starterRaw = sessionStorage.getItem("auros_wizard_starter_seed");

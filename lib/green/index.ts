@@ -1,6 +1,7 @@
 export {
   GREEN_ROUTE,
   GREEN_ABOUT_ROUTE,
+  GREEN_CSRD_CHECK_ROUTE,
   GREEN_MARKET_ROUTE,
   GREEN_MARKET_OFFER_ROUTE,
   GREEN_MARKET_ACTOR_ROUTE,
@@ -139,6 +140,18 @@ export {
   type GreenRtmsScore,
   type GreenRtmsTier,
 } from "./rtms-scoring";
+export {
+  computeGreenComplianceScore,
+  detectGreenAssetClass,
+  isGreenWizardContext,
+  type GreenComplianceScore,
+  type GreenAssetClass,
+  type SfdrArticle,
+  type EuGbsEligibility,
+} from "./scoring/green-compliance";
+export { computeCsrdScope } from "./csrd-check/scoring";
+export type { CsrdAnswers, CsrdResult, CsrdQuestionId } from "./csrd-check/types";
+export { CSRD_CHECKER_FAQ } from "./csrd-check/faq";
 export { generateGreenDossierPDF, suggestedGreenFilename } from "./green-pdf";
 export {
   startGreenPraticienExam,
