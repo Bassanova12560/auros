@@ -21,6 +21,7 @@
     "prod:check": "npx tsx scripts/prod-preflight.ts",
     "verify:integrations": "npx tsx scripts/verify-integrations.ts",
     "db:bootstrap:jurisdiction": "npx tsx scripts/run-jurisdiction-bootstrap.ts",
+    "db:bootstrap:protocol-webhooks": "npx tsx scripts/run-protocol-webhook-deliveries-bootstrap.ts",
     "db:bootstrap:academy-reminders": "npx tsx scripts/run-academy-reminders-bootstrap.ts",
     "db:bootstrap:academy-sessions": "npx tsx scripts/run-academy-sessions-bootstrap.ts",
     "db:bootstrap:academy-diploma": "npx tsx scripts/run-academy-diploma-bootstrap.ts",

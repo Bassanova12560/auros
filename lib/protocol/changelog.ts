@@ -25,6 +25,27 @@ export type ProtocolChangelogEntry = {
 /** Single source for `/developers/changelog` and GET `/api/v1/changelog`. Newest first. */
 export const PROTOCOL_CHANGELOG: ProtocolChangelogEntry[] = [
   {
+    id: "webhook-replay-dlq",
+    date: "2026-06-13",
+    title: "Webhook replay, dead letter queue & delivery logs",
+    summary:
+      "Journal des livraisons webhook, retry exponentiel (5 tentatives), dead letter et endpoints replay — visible sur le dashboard développeurs.",
+    details: [
+      "Table protocol_webhook_deliveries — statuts pending, delivered, failed, dead_letter.",
+      "GET /api/v1/webhooks/:id/deliveries — liste paginée des tentatives.",
+      "POST /api/v1/webhooks/:id/replay et POST /api/v1/webhooks/deliveries/:delivery_id/replay — relance manuelle (premium).",
+      "Cron /api/cron/protocol-monitor étendu — retry automatique avec backoff 1m → 4h.",
+      "Section Webhook deliveries sur /developers/dashboard (tier premium).",
+    ],
+    links: [
+      { href: "/developers/docs/endpoint-webhooks", label: "Documentation webhooks" },
+      { href: "/auros-openapi.yaml", label: "OpenAPI spec" },
+    ],
+    tags: ["endpoint", "webhooks", "observability"],
+    status: "released",
+    roadmapItem: 9,
+  },
+  {
     id: "regulatory-feed-endpoint",
     date: "2026-06-13",
     title: "GET /api/v1/regulatory/feed",

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 
 import { checkRegulatoryUpdates } from "@/lib/protocol/monitor/check-regulatory-updates";
+import { retryPendingDeliveries } from "@/lib/protocol/webhooks/deliveries";
 
 /** Cron endpoint — protect with CRON_SECRET header. Wire in vercel.json or Trigger.dev. */
 export async function GET(req: Request) {
@@ -19,6 +20,13 @@ export async function GET(req: Request) {
     );
   }
 
-  const result = await checkRegulatoryUpdates();
-  return NextResponse.json({ ok: true, ...result });
+  const [monitorResult, retryResult] = await Promise.all([
+    checkRegulatoryUpdates(),
+    retryPendingDeliveries(),
+  ]);
+  return NextResponse.json({
+    ok: true,
+    ...monitorResult,
+    webhook_retries: retryResult,
+  });
 }

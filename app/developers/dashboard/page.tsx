@@ -7,6 +7,10 @@ import { metadataFromPath } from "@/lib/seo/metadata";
 import { FREE_TIER_MONTHLY_LIMIT } from "@/lib/protocol/constants";
 import { getUsageStats, findKeyHashByEmail } from "@/lib/protocol/usage/log";
 import { validateApiKey, findKeyRecord } from "@/lib/protocol/auth/keys";
+import {
+  deliveryToPublic,
+  listRecentDeliveriesForKey,
+} from "@/lib/protocol/webhooks/deliveries";
 
 export const DEVELOPERS_DASHBOARD_ROUTE = "/developers/dashboard";
 
@@ -51,6 +55,11 @@ export default async function DevelopersDashboardPage({
     keyHash && !error
       ? await getUsageStats(keyHash)
       : { requests_this_month: 0, total_logged: 0, by_endpoint: {} };
+
+  const deliveries =
+    keyHash && !error && tier !== "free"
+      ? await listRecentDeliveriesForKey(keyHash, 15)
+      : [];
 
   return (
     <FocusPageShell path={DEVELOPERS_DASHBOARD_ROUTE} width="2xl">
@@ -104,6 +113,49 @@ export default async function DevelopersDashboardPage({
             </div>
           )}
         </section>
+
+        {deliveries.length > 0 && (
+          <section className="card-flat mt-6 px-5 py-5">
+            <h2 className="font-mono text-[11px] text-white/45">Webhook deliveries</h2>
+            <p className="mt-2 text-xs text-white/40">
+              Dernières tentatives — replay via POST /api/v1/webhooks/deliveries/:id/replay
+            </p>
+            <ul className="mt-4 space-y-3">
+              {deliveries.map((d) => {
+                const pub = deliveryToPublic(d);
+                return (
+                  <li
+                    key={pub.id}
+                    className="rounded-lg border border-white/8 px-3 py-3 text-sm text-white/60"
+                  >
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                      <span className="font-mono text-[10px] text-emerald-400/80">
+                        {pub.event}
+                      </span>
+                      <span
+                        className={
+                          pub.status === "delivered"
+                            ? "text-emerald-400/90"
+                            : pub.status === "dead_letter"
+                              ? "text-red-400/90"
+                              : "text-amber-400/90"
+                        }
+                      >
+                        {pub.status}
+                      </span>
+                    </div>
+                    <p className="mt-1 truncate font-mono text-[10px] text-white/35">
+                      {pub.id} · {pub.attempts} attempt{pub.attempts !== 1 ? "s" : ""}
+                    </p>
+                    {pub.last_error && (
+                      <p className="mt-1 text-xs text-red-400/70">{pub.last_error}</p>
+                    )}
+                  </li>
+                );
+              })}
+            </ul>
+          </section>
+        )}
 
         <p className="mt-6 text-xs text-white/35">
           Key hash (truncated):{" "}

@@ -53,7 +53,7 @@ export type WebhookEventPayload = {
 export async function dispatchWebhook(
   url: string,
   payload: WebhookEventPayload
-): Promise<{ ok: boolean; status?: number }> {
+): Promise<{ ok: boolean; status?: number; error?: string }> {
   const body = JSON.stringify(payload);
   const signature = webhookSignatureHeader(body);
   try {
@@ -68,8 +68,10 @@ export async function dispatchWebhook(
       body,
       signal: AbortSignal.timeout(15_000),
     });
-    return { ok: res.ok, status: res.status };
-  } catch {
-    return { ok: false };
+    if (res.ok) return { ok: true, status: res.status };
+    return { ok: false, status: res.status, error: `HTTP ${res.status}` };
+  } catch (err) {
+    const message = err instanceof Error ? err.message : "Network error";
+    return { ok: false, error: message };
   }
 }

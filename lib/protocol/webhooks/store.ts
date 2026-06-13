@@ -102,6 +102,28 @@ function persistFile(): void {
   saveFileStore(data);
 }
 
+export async function getWebhook(
+  id: string,
+  keyHash: string
+): Promise<WebhookRecord | null> {
+  if (isSupabaseConfigured()) {
+    try {
+      const supabase = await supabaseClient();
+      const { data } = await supabase
+        .from("protocol_webhooks")
+        .select("*")
+        .eq("id", id)
+        .eq("key_hash", keyHash)
+        .maybeSingle();
+      if (data) return data as WebhookRecord;
+    } catch {
+      // fall through
+    }
+  }
+  const list = memoryStore.get(keyHash) ?? [];
+  return list.find((w) => w.id === id) ?? null;
+}
+
 export async function listWebhooksForKey(keyHash: string): Promise<WebhookRecord[]> {
   if (isSupabaseConfigured()) {
     try {
