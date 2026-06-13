@@ -244,6 +244,7 @@ export type GreenMessages = {
       token: string;
       yield: string;
       impact: string;
+      taxonomy: string;
       label: string;
       source: string;
       reviewed: string;
@@ -1065,6 +1066,7 @@ const FR: GreenMessages = {
       token: "Token / instrument",
       yield: "Rendement (indicatif)",
       impact: "Impact (indicatif)",
+      taxonomy: "Taxonomy (indicatif)",
       label: "Statut label",
       source: "Source",
       reviewed: "Revu le",
@@ -1971,6 +1973,7 @@ const EN: GreenMessages = {
       token: "Token / instrument",
       yield: "Yield (indicative)",
       impact: "Impact (indicative)",
+      taxonomy: "Taxonomy (indicative)",
       label: "Label status",
       source: "Source",
       reviewed: "Reviewed",
@@ -2879,6 +2882,7 @@ const ES: GreenMessages = {
       token: "Token / instrumento",
       yield: "Rendimiento (indicativo)",
       impact: "Impacto (indicativo)",
+      taxonomy: "Taxonomy (indicativo)",
       label: "Estado etiqueta",
       source: "Fuente",
       reviewed: "Revisado",

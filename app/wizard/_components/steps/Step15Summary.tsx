@@ -293,7 +293,9 @@ export function Step15Summary({ data }: Props) {
       <ProScoreBreakdown data={data} />
 
       {rtms ? <GreenRtmsPanel rtms={rtms} /> : null}
-      {greenCompliance ? <GreenCompliancePanel compliance={greenCompliance} /> : null}
+      {greenCompliance ? (
+        <GreenCompliancePanel compliance={greenCompliance} email={data.email} />
+      ) : null}
 
       <div className="my-8 flex flex-col items-center">
         <p className="font-mono text-[10px] uppercase tracking-wider text-white/40">

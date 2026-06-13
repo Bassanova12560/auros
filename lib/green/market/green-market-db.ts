@@ -93,7 +93,7 @@ function countActorCountries(actors: ReadonlyArray<GreenMarketActor>): number {
   return new Set(actors.map((a) => a.country.trim()).filter(Boolean)).size;
 }
 
-/** Live snapshot: hide demo only when referenced pilots span enough countries. */
+/** Live snapshot: hide demo listings once enough referenced/verified actors exist in DB. */
 export function resolveLiveMarketActors(
   dbActors: GreenMarketActor[],
   dbOffers: GreenMarketOffer[]
@@ -102,19 +102,15 @@ export function resolveLiveMarketActors(
     (a) => a.listingTier === "referenced" || a.listingTier === "verified"
   ).length;
 
+  const hideDemo = referencedCount >= GREEN_MIN_REFERENCED_TO_HIDE_DEMO;
+
   const nonDemoActors = dbActors.filter((a) => a.listingTier !== "demo");
-  const referencedCountryCount = countActorCountries(nonDemoActors);
-
-  const hideDemo =
-    referencedCount >= GREEN_MIN_REFERENCED_TO_HIDE_DEMO &&
-    referencedCountryCount >= 5;
-
   let actors = hideDemo ? nonDemoActors : dbActors;
   let offers = hideDemo
     ? dbOffers.filter((o) => o.listingTier !== "demo")
     : dbOffers;
 
-  if (countActorCountries(actors) < 10) {
+  if (!hideDemo && countActorCountries(actors) < 10) {
     const ids = new Set(actors.map((a) => a.id));
     for (const demo of GREEN_MARKET_ACTORS) {
       if (!ids.has(demo.id)) {

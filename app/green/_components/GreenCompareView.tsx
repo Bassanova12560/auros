@@ -1006,6 +1006,8 @@ export function GreenCompareView({
 
                 <th className="py-4 pr-4">{c.table.impact}</th>
 
+                <th className="py-4 pr-4">{c.table.taxonomy}</th>
+
                 <th className="py-4 pr-4">{c.table.label}</th>
 
                 <th className="px-6 py-4">{c.table.source}</th>
@@ -1020,7 +1022,7 @@ export function GreenCompareView({
 
                 <tr>
 
-                  <td colSpan={8} className="px-6 py-8 text-neutral-500">
+                  <td colSpan={9} className="px-6 py-8 text-neutral-500">
 
                     {c.emptyNote}
 
@@ -1067,6 +1069,10 @@ export function GreenCompareView({
                     <td className="py-4 pr-4 text-xs text-neutral-500">{row.yieldNote}</td>
 
                     <td className="py-4 pr-4 text-xs text-neutral-500">{row.impactNote}</td>
+
+                    <td className="py-4 pr-4 font-mono text-xs tabular-nums text-emerald-500/80">
+                      {row.green_taxonomy_score != null ? `${row.green_taxonomy_score}` : "—"}
+                    </td>
 
                     <td className="py-4 pr-4">
 

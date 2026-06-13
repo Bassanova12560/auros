@@ -14,6 +14,8 @@ import type { CsrdAnswers, CsrdQuestionId } from "@/lib/green/csrd-check/types";
 import { GREEN_CSRD_CHECK_ROUTE } from "@/lib/green/constants";
 import { prefillFromCsrdChecker, saveWizardPrefill } from "@/lib/wizard-prefill";
 
+import { GreenImpactReportCta } from "@/app/green/_components/GreenImpactReportCta";
+
 const EMPTY: CsrdAnswers = {
   employees250: null,
   revenue40m: null,
@@ -167,6 +169,9 @@ export function CsrdCheckView() {
               <button type="button" onClick={restart} className="text-sm text-white/45">
                 Recommencer
               </button>
+            </div>
+            <div className="mt-8">
+              <GreenImpactReportCta csrdResult={result} />
             </div>
           </div>
         </div>

@@ -154,6 +154,17 @@ export type { CsrdAnswers, CsrdResult, CsrdQuestionId } from "./csrd-check/types
 export { CSRD_CHECKER_FAQ } from "./csrd-check/faq";
 export { generateGreenDossierPDF, suggestedGreenFilename } from "./green-pdf";
 export {
+  generateGreenImpactReportPDF,
+  suggestedGreenImpactReportFilename,
+} from "./impact-report-pdf";
+export type { GreenImpactReportInput } from "./impact-report-pdf";
+export {
+  GREEN_IMPACT_REPORT_AMOUNTS,
+  greenImpactReportProduct,
+  isGreenImpactReportTier,
+} from "./impact-report-pricing";
+export type { GreenImpactReportTier } from "./impact-report-pricing";
+export {
   startGreenPraticienExam,
   submitGreenPraticienExam,
 } from "./praticien-exam";

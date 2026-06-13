@@ -4,8 +4,11 @@ import Link from "next/link";
 
 import type { GreenComplianceScore } from "@/lib/green/scoring/green-compliance";
 
+import { GreenImpactReportCta } from "@/app/green/_components/GreenImpactReportCta";
+
 type Props = {
   compliance: GreenComplianceScore;
+  email?: string;
 };
 
 const SFDR_LABELS: Record<GreenComplianceScore["sfdr_classification"], string> = {
@@ -29,7 +32,7 @@ const CLASS_LABELS: Record<GreenComplianceScore["asset_class"], string> = {
   other_green: "Actif vert",
 };
 
-export function GreenCompliancePanel({ compliance }: Props) {
+export function GreenCompliancePanel({ compliance, email }: Props) {
   return (
     <div className="mt-6 rounded-2xl border border-teal-500/35 bg-teal-500/[0.04] p-6">
       <div className="flex flex-wrap items-end justify-between gap-4">
@@ -80,6 +83,8 @@ export function GreenCompliancePanel({ compliance }: Props) {
       >
         Tester votre scope CSRD →
       </Link>
+
+      <GreenImpactReportCta email={email} compact />
     </div>
   );
 }

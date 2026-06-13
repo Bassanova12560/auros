@@ -317,18 +317,26 @@ describe("green/market-routes", () => {
     assert.ok(snap.offers.length >= 5);
   });
 
-  it("keeps demo actors when live DB referenced pilots lack country diversity", () => {
+  it("keeps demo actors when fewer than 5 referenced pilots in live DB", () => {
+    const franceReferenced = GREEN_MARKET_ACTORS.filter((a) => a.country === "France")
+      .slice(0, 4)
+      .map((a) => ({ ...a, listingTier: "referenced" as const }));
+    const { actors } = resolveLiveMarketActors(franceReferenced, []);
+    assert.ok(actors.some((a) => a.listingTier === "demo"));
+  });
+
+  it("hides demo actors when live DB has at least 5 referenced pilots", () => {
     const franceReferenced = GREEN_MARKET_ACTORS.filter((a) => a.country === "France")
       .slice(0, 6)
       .map((a) => ({ ...a, listingTier: "referenced" as const }));
     const { actors } = resolveLiveMarketActors(franceReferenced, []);
-    assert.ok(actors.some((a) => a.listingTier === "demo"));
-    assert.ok(countActorCountries(actors) >= 10);
+    assert.ok(!actors.some((a) => a.listingTier === "demo"));
+    assert.equal(actors.length, 6);
   });
 
-  it("merges worldwide demo fallback when filtered live actors are too local", () => {
+  it("merges worldwide demo fallback only when demo tier is still visible", () => {
     const franceOnly = GREEN_MARKET_ACTORS.filter((a) => a.country === "France")
-      .slice(0, 8)
+      .slice(0, 4)
       .map((a) => ({ ...a, listingTier: "referenced" as const }));
     const { actors } = resolveLiveMarketActors(franceOnly, []);
     assert.ok(countActorCountries(actors) >= 10);

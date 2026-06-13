@@ -77,9 +77,10 @@ const styles = StyleSheet.create({
   colType: { width: "10%" },
   colToken: { width: "14%" },
   colYield: { width: "16%" },
-  colImpact: { width: "16%" },
-  colLabel: { width: "12%" },
-  colSource: { width: "14%" },
+  colImpact: { width: "14%" },
+  colTaxonomy: { width: "10%" },
+  colLabel: { width: "10%" },
+  colSource: { width: "12%" },
   colMarketActor: { width: "22%" },
   colMarketEnergy: { width: "10%" },
   colMarketSide: { width: "8%" },
@@ -153,6 +154,7 @@ export type GreenComparePdfRow = {
   token: string;
   yieldNote: string;
   impactNote: string;
+  taxonomyScore: string;
   label: string;
   source: string;
   reviewed: string;
@@ -169,6 +171,8 @@ export function greenCompareRowsToPdfRows(
     token: row.token,
     yieldNote: row.yieldNote,
     impactNote: row.impactNote,
+    taxonomyScore:
+      row.green_taxonomy_score != null ? `${row.green_taxonomy_score}/100` : "—",
     label: labels.labelStatus[row.labelStatus],
     source: `${row.sourceLabel} (${row.lastReviewed})`,
     reviewed: row.lastReviewed,
@@ -211,6 +215,7 @@ function CompareDocument({
           <Text style={[styles.th, styles.colToken]}>{labels.table.token}</Text>
           <Text style={[styles.th, styles.colYield]}>{labels.table.yield}</Text>
           <Text style={[styles.th, styles.colImpact]}>{labels.table.impact}</Text>
+          <Text style={[styles.th, styles.colTaxonomy]}>{labels.table.taxonomy}</Text>
           <Text style={[styles.th, styles.colLabel]}>{labels.table.label}</Text>
           <Text style={[styles.th, styles.colSource]}>{labels.table.source}</Text>
         </View>
@@ -231,6 +236,9 @@ function CompareDocument({
             </View>
             <View style={styles.colImpact}>
               <Text style={styles.td}>{row.impactNote}</Text>
+            </View>
+            <View style={styles.colTaxonomy}>
+              <Text style={styles.td}>{row.taxonomyScore}</Text>
             </View>
             <View style={styles.colLabel}>
               <Text style={styles.td}>{row.label}</Text>
