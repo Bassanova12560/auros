@@ -165,7 +165,7 @@ export default function DevelopersPage() {
       <ContentPageLayout
         eyebrow="AUROS Protocol · v1.0"
         title="AUROS Protocol — The RWA Intelligence Layer"
-        intro="API publique pour scorer la maturité MiCA, explorer le catalogue RWA, comparer des produits side-by-side et classer les juridictions — règles statiques, réponse < 200 ms, sans LLM. Indicatif uniquement ; validez avec un conseil avant toute émission."
+        intro="API publique pour scorer la maturité MiCA, explorer le catalogue RWA, comparer des produits side-by-side et classer les juridictions — règles statiques, réponse < 200 ms, sans LLM. Disponible sur getauros.com/api/v1/* et api.getauros.com/v1/*. Indicatif uniquement ; validez avec un conseil avant toute émission."
         cta={{ href: "#playground", label: "Tester dans le playground" }}
       >
         <section className="card-flat px-5 py-5">
@@ -363,6 +363,16 @@ console.log(result.score, result.grade);`}
             <li>
               <Link href="/compare" className="text-sm text-white/70 hover:text-white">
                 Comparateur RWA (120+ produits) →
+              </Link>
+            </li>
+            <li>
+              <Link href="/green/csrd-check" className="text-sm text-white/70 hover:text-white">
+                CSRD Checker — scope & préparation ESG →
+              </Link>
+            </li>
+            <li>
+              <Link href="/green/impact-report" className="text-sm text-white/70 hover:text-white">
+                Rapport d&apos;impact Green (PDF EU Taxonomy) →
               </Link>
             </li>
           </ul>

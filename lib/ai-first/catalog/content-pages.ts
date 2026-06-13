@@ -303,15 +303,16 @@ export const developersPage = enrichPage({
   path: "/developers",
   title: "AUROS Protocol API | The RWA Intelligence Layer",
   description:
-    "API publique AUROS Protocol v1 : score MiCA, catalogue RWA, juridictions et checklist — clé gratuite, 100 req/mois, playground intégré.",
+    "API publique AUROS Protocol v1 sur getauros.com et api.getauros.com — score MiCA, catalogue RWA, compare, juridictions et checklist. Clé gratuite 100 req/mois, playground intégré.",
   summary:
-    "Page développeurs AUROS Protocol — quickstart curl, endpoints /api/v1/score, products, jurisdictions, checklist ; signup email → clé API.",
+    "Hub développeurs AUROS Protocol — quickstart curl, endpoints /api/v1/score, products, compare, jurisdictions, checklist ; base URL api.getauros.com/v1 ou getauros.com/api/v1.",
   contentType: "guide",
   language: "multi",
   indexable: true,
-  lastUpdated: "2026-06-11",
+  lastUpdated: "2026-06-13",
   keywords: [
     "AUROS Protocol API",
+    "api.getauros.com",
     "RWA intelligence API",
     "MiCA scoring API",
     "tokenisation API",
@@ -319,10 +320,13 @@ export const developersPage = enrichPage({
   intents: [
     "Comment intégrer le score MiCA AUROS",
     "API catalogue RWA tokenisés",
+    "Base URL api.getauros.com",
   ],
   audience: ["développeurs", "fintech", "émetteurs", "intégrateurs"],
   facts: [
     { key: "Version", value: "1.0" },
+    { key: "Base URL", value: "https://api.getauros.com/v1/* (alias getauros.com/api/v1/*)" },
+    { key: "Hub", value: "api.getauros.com/ → /developers" },
     { key: "Tier gratuit", value: "100 requêtes/mois" },
     { key: "Playground", value: "/developers#playground" },
     { key: "Postman", value: "/auros-postman.json" },
@@ -331,6 +335,8 @@ export const developersPage = enrichPage({
   relatedPaths: [
     "/developers/docs",
     "/developers/changelog",
+    "/green/csrd-check",
+    "/green/impact-report",
     "/tools/mica-checker",
     "/compare",
     "/wizard",

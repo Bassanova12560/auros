@@ -89,8 +89,11 @@ export const greenHomePage = enrichPage({
     GREEN_MARKET_ROUTE,
     GREEN_STANDARDS_ROUTE,
     GREEN_COMPARE_ROUTE,
+    GREEN_CSRD_CHECK_ROUTE,
+    GREEN_IMPACT_REPORT_ROUTE,
     GREEN_LABEL_ROUTE,
     "/compare",
+    "/developers",
     "/academy",
     "/wizard",
   ],
@@ -235,9 +238,9 @@ export const greenCertificationPage = enrichPage({
 export const greenRegistryPage = enrichPage({
   id: "green-registry",
   path: GREEN_REGISTRY_ROUTE,
-  title: "Registre AUROS Green",
+  title: "Registre public projets AUROS Green Verified",
   description:
-    "Registre public projets et experts labellisés AUROS Green.",
+    "Registre public des projets et experts labellisés AUROS Green — statuts Verified RTMS et cas pilotes éducatifs, vérifiables en ligne.",
   summary:
     "Registre AUROS Green Phase 1 : structure prête, listes vides jusqu'aux premières validations label.",
   contentType: "landing",
@@ -474,8 +477,26 @@ export const greenCsrdCheckPage = enrichPage({
   facts: [
     { key: "Durée", value: "~2 minutes — 6 questions" },
     { key: "Suite", value: "/wizard?type=green&asset=renewable — Green Score EU Taxonomy" },
+    { key: "Impact Report", value: `${GREEN_IMPACT_REPORT_ROUTE} — PDF EU Taxonomy + RTMS` },
   ],
-  relatedPaths: [GREEN_ROUTE, GREEN_STANDARDS_ROUTE, GREEN_IMPACT_REPORT_ROUTE, "/wizard"],
+  faq: [
+    {
+      question: "Qu'est-ce que la CSRD ?",
+      answer:
+        "La Corporate Sustainability Reporting Directive (CSRD) impose à de nombreuses entreprises de l'UE de publier un rapport de durabilité audité selon les standards ESRS.",
+    },
+    {
+      question: "Ce checker remplace-t-il un conseil juridique ?",
+      answer:
+        "Non. Il estime si votre entreprise est probablement en scope CSRD et votre niveau de préparation — validez avec un auditeur ou conseil ESG.",
+    },
+    {
+      question: "Que faire après le test CSRD ?",
+      answer:
+        "Utilisez le wizard AUROS Green pour scorer l'alignement EU Taxonomy de vos actifs verts, puis commandez un Impact Report PDF sur /green/impact-report.",
+    },
+  ],
+  relatedPaths: [GREEN_ROUTE, GREEN_STANDARDS_ROUTE, GREEN_IMPACT_REPORT_ROUTE, "/wizard", "/developers"],
 });
 
 export const greenImpactReportPage = enrichPage({
@@ -505,8 +526,26 @@ export const greenImpactReportPage = enrichPage({
   facts: [
     { key: "Formats", value: "Standard 49 € · Institutionnel 199 €" },
     { key: "Livraison", value: "Téléchargement PDF immédiat après paiement" },
+    { key: "Entrée", value: `${GREEN_CSRD_CHECK_ROUTE} ou wizard Green` },
   ],
-  relatedPaths: [GREEN_CSRD_CHECK_ROUTE, GREEN_ROUTE, "/wizard?type=green"],
+  faq: [
+    {
+      question: "Que contient le rapport d'impact Green ?",
+      answer:
+        "Une synthèse PDF EU Taxonomy + RTMS depuis votre dossier wizard ou CSRD Checker — indicatif, prêt à partager en interne avec votre conseil ESG.",
+    },
+    {
+      question: "Quelle différence entre Standard et Institutionnel ?",
+      answer:
+        "Standard 49 € : synthèse concise pour équipes opérationnelles. Institutionnel 199 € : format étendu pour comités ESG et documentation externe.",
+    },
+    {
+      question: "Le rapport remplace-t-il un audit CSRD ?",
+      answer:
+        "Non. Document indicatif — validez avec votre auditeur ou conseil ESG avant toute publication réglementaire CSRD/ESRS.",
+    },
+  ],
+  relatedPaths: [GREEN_CSRD_CHECK_ROUTE, GREEN_ROUTE, "/wizard?type=green", "/developers"],
 });
 
 export const greenImpactReportReadyPage = enrichPage({
@@ -552,8 +591,9 @@ export const greenRtmsAssistantPage = enrichPage({
 export const greenProducersPage = enrichPage({
   id: "green-producers",
   path: GREEN_PRODUCERS_ROUTE,
-  title: "Producteurs | AUROS Green",
-  description: "Liste producteurs solaire, éolien, hydro — place de marché mondiale AUROS Green.",
+  title: "Producteurs solaire & éolien | AUROS Green Marketplace",
+  description:
+    "Annuaire producteurs solaire, éolien et hydro sur la carte mondiale AUROS Green — filtres pays, capacité et statut label RTMS.",
   summary: "Producteurs énergie renouvelable référencés sur la carte mondiale AUROS Green.",
   contentType: "landing",
   language: "multi",
@@ -569,8 +609,9 @@ export const greenProducersPage = enrichPage({
 export const greenStorersPage = enrichPage({
   id: "green-storers",
   path: GREEN_STORERS_ROUTE,
-  title: "Stockeurs | AUROS Green",
-  description: "Batteries et stockage — AUROS Green marketplace.",
+  title: "Stockeurs BESS & batteries | AUROS Green Marketplace",
+  description:
+    "Acteurs stockage batterie (BESS) référencés sur la marketplace AUROS Green — capacité, localisation et annonces achat/vente.",
   summary: "Acteurs stockage BESS sur AUROS Green.",
   contentType: "landing",
   language: "multi",
@@ -586,8 +627,9 @@ export const greenStorersPage = enrichPage({
 export const greenChargersPage = enrichPage({
   id: "green-chargers",
   path: GREEN_CHARGERS_ROUTE,
-  title: "Rechargeurs | AUROS Green",
-  description: "Bornes VE — AUROS Green marketplace.",
+  title: "Bornes recharge VE | AUROS Green Marketplace",
+  description:
+    "Infrastructure recharge véhicule électrique sur la carte AUROS Green — flottes, collectivités et sites tertiaires.",
   summary: "Infrastructure recharge véhicule électrique.",
   contentType: "landing",
   language: "multi",
@@ -603,8 +645,9 @@ export const greenChargersPage = enrichPage({
 export const greenConsumersPage = enrichPage({
   id: "green-consumers",
   path: GREEN_CONSUMERS_ROUTE,
-  title: "Consommateurs | AUROS Green",
-  description: "Acheteurs et sites consommateurs — AUROS Green marketplace.",
+  title: "Consommateurs énergie locale | AUROS Green Marketplace",
+  description:
+    "Sites industriels et tertiaires acheteurs d'énergie renouvelable — demande locale sur la marketplace AUROS Green.",
   summary: "Demande énergie locale industrielle et tertiaire.",
   contentType: "landing",
   language: "multi",

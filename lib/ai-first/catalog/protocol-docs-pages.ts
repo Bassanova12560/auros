@@ -37,7 +37,7 @@ export const protocolDocsIndexPage = enrichPage({
     { key: "OpenAPI", value: "/auros-openapi.yaml" },
     { key: "Postman", value: "/auros-postman.json" },
   ],
-  relatedPaths: ["/developers", PROTOCOL_CHANGELOG_ROUTE, "/tools/mica-checker", "/compare"],
+  relatedPaths: ["/developers", PROTOCOL_CHANGELOG_ROUTE, "/tools/mica-checker", "/compare", "/green/csrd-check"],
 });
 
 export const protocolChangelogPage = enrichPage({

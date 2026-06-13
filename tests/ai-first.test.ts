@@ -49,6 +49,10 @@ describe("ai-first/catalog", () => {
     assert.match(txt, /ai-first\/index.json/);
     assert.match(txt, /ai-first\/rag/);
     assert.match(txt, /Primary products/);
+    assert.match(txt, /AUROS Green/);
+    assert.match(txt, /AUROS Protocol API/);
+    assert.match(txt, /\/green\/csrd-check/);
+    assert.match(txt, /api\.getauros\.com/);
   });
 
   it("indexable pages cover sitemap entries", () => {

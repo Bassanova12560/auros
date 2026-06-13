@@ -35,7 +35,10 @@ export const GREEN_ESG_TERMS: GlossaryTerm[] = [
     extended:
       "La taxonomie définit critères techniques par secteur (énergie, bâtiment, transport…). Un projet RWA vert peut invoquer l'alignement taxonomique pour certains investisseurs. L'éligibilité requiert analyse substantielle — pas un label marketing automatique.",
     relatedTerms: ["sfdr", "green-bond", "finance-durable"],
-    internalLinks: [{ href: "/green/standards", label: "Standards Green" }],
+    internalLinks: [
+      { href: "/green/standards", label: "Standards Green" },
+      { href: "/green/impact-report", label: "Rapport d'impact EU Taxonomy" },
+    ],
   },
   {
     slug: "green-bond",
@@ -136,7 +139,10 @@ export const GREEN_ESG_TERMS: GlossaryTerm[] = [
     extended:
       "Le CSRD impose informations ESG auditées selon standards ESRS. Les contreparties RWA de grands groupes devront fournir données alignées. Anticiper collecte et qualité des données facilite distribution institutionnelle.",
     relatedTerms: ["double-materialite", "sfdr", "esg"],
-    internalLinks: [{ href: "/trust", label: "Reporting & confiance" }],
+    internalLinks: [
+      { href: "/green/csrd-check", label: "CSRD Checker AUROS Green" },
+      { href: "/trust", label: "Reporting & confiance" },
+    ],
   },
   {
     slug: "tcfd",

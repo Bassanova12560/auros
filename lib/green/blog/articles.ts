@@ -208,6 +208,7 @@ export const GREEN_BLOG_ARTICLES: GreenBlogArticle[] = [
         heading: "Après obtention du label",
         paragraphs: [
           "Fiche registre public, badge marketplace si acteur référencé, lien verify partageable. Renouvellement et mise à jour documentaire prévus en roadmap — date de certification visible sur la fiche projet.",
+          "Pour les entreprises en scope CSRD, complétez le CSRD Checker (/green/csrd-check) puis commandez un Impact Report PDF (/green/impact-report) EU Taxonomy + RTMS depuis votre dossier.",
           "Experts Praticien Green (/green/praticien) peuvent accompagner la préparation dossier — examen RTMS beta disponible.",
         ],
       },
