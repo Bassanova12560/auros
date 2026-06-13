@@ -1,4 +1,5 @@
 import type { GreenCompareRow } from "./compare-data";
+import { formatGreenTaxonomyScoreDisplay } from "./compare-taxonomy";
 import type { GreenMessages } from "./i18n";
 import type { GreenMarketOfferDetail } from "./market/offer-detail";
 import { formatGreenMarketOfferTitle } from "./market/offer-detail";
@@ -43,7 +44,7 @@ export function greenCompareRowsToCsv(
       row.token,
       row.yieldNote,
       row.impactNote,
-      row.green_taxonomy_score != null ? String(row.green_taxonomy_score) : "—",
+      formatGreenTaxonomyScoreDisplay(row.green_taxonomy_score),
       labels.labelStatus[row.labelStatus],
       row.sourceLabel,
       row.lastReviewed,

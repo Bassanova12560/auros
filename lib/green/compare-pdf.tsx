@@ -14,6 +14,7 @@ import {
 } from "@react-pdf/renderer";
 
 import type { GreenCompareRow } from "./compare-data";
+import { formatGreenTaxonomyScorePdf } from "./compare-taxonomy";
 import type { GreenMessages } from "./i18n";
 import type { GreenMarketOfferDetail } from "./market/offer-detail";
 import { formatGreenMarketOfferTitle } from "./market/offer-detail";
@@ -171,8 +172,7 @@ export function greenCompareRowsToPdfRows(
     token: row.token,
     yieldNote: row.yieldNote,
     impactNote: row.impactNote,
-    taxonomyScore:
-      row.green_taxonomy_score != null ? `${row.green_taxonomy_score}/100` : "—",
+    taxonomyScore: formatGreenTaxonomyScorePdf(row.green_taxonomy_score),
     label: labels.labelStatus[row.labelStatus],
     source: `${row.sourceLabel} (${row.lastReviewed})`,
     reviewed: row.lastReviewed,
