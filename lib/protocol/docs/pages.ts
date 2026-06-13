@@ -886,6 +886,27 @@ export async function POST(req: Request) {
         ],
       },
       {
+        heading: "Journal des livraisons",
+        paragraphs: [
+          "Chaque tentative est enregistrée — statuts : pending, delivered, failed, dead_letter (après 5 échecs).",
+          "GET /api/v1/webhooks/:id/deliveries?limit=20&offset=0&status=dead_letter — log paginé.",
+          "Retry automatique via cron /api/cron/protocol-monitor — backoff 1m, 5m, 15m, 1h, 4h.",
+          "Dashboard premium : /developers/dashboard?key=… — 15 dernières livraisons.",
+        ],
+      },
+      {
+        heading: "Replay",
+        paragraphs: [],
+        code: `# Relancer une delivery
+curl -X POST ${BASE}/api/v1/webhooks/deliveries/whd_abc123/replay \\
+  -H "Authorization: Bearer auros_pk_live_xxx"
+
+# Relancer toutes les dead_letter d'un webhook
+curl -X POST ${BASE}/api/v1/webhooks/wh_abc123/replay \\
+  -H "Authorization: Bearer auros_pk_live_xxx"`,
+        language: "bash",
+      },
+      {
         heading: "Payload exemple",
         paragraphs: [],
         code: `{
