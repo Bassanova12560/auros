@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-12T12:11:03.341Z",
+  "generatedAt": "2026-06-12T14:11:12.486Z",
   "project": {
     "slug": "auros",
     "name": "AUROS",
@@ -70,6 +70,13 @@
       "supportOthers": "https://support.coingecko.com/hc/en-us/requests/new",
       "requestFormsDirectory": "https://support.coingecko.com/hc/en-us/articles/23960919544345-Support-Directory-CoinGecko-Request-Forms",
       "listingTerms": "https://www.coingecko.com/en/listing_terms"
+    },
+    "rwaXyz": {
+      "partnersPortal": "https://partners.rwa.xyz/",
+      "partnersLogin": "https://partners.rwa.xyz/login",
+      "onboardingDocs": "https://docs.rwa.xyz/onboarding/platforms",
+      "directory": "https://app.rwa.xyz/directory",
+      "contactEmail": "team@rwa.xyz"
     }
   },
   "catalog": {
@@ -1133,6 +1140,65 @@
     "partnerPortalUrl": "https://partner.coingecko.com/request-form/new",
     "supportFallbackUrl": "https://support.coingecko.com/hc/en-us/requests/new"
   },
+  "rwaXyz": {
+    "strategy": "Partners portal (partners.rwa.xyz) — Protocol listing for B2B platform; company email required. Email team@rwa.xyz if @getauros.com not ready.",
+    "urls": {
+      "partnersPortal": "https://partners.rwa.xyz/",
+      "partnersLogin": "https://partners.rwa.xyz/login",
+      "onboardingDocs": "https://docs.rwa.xyz/onboarding/platforms",
+      "directory": "https://app.rwa.xyz/directory",
+      "contactEmail": "team@rwa.xyz"
+    },
+    "formFields": {
+      "listingType": "Protocol",
+      "directoryCategory": "Infrastructure & Service Providers",
+      "companyName": "AUROS",
+      "displayName": "AUROS",
+      "website": "https://getauros.com",
+      "compareHubUrl": "https://getauros.com/compare",
+      "developersUrl": "https://getauros.com/developers",
+      "apiDocsUrl": "https://getauros.com/developers/docs",
+      "openapiUrl": "https://getauros.com/auros-openapi.yaml",
+      "aiCatalogUrl": "https://getauros.com/ai-first/index.json",
+      "logoUrl": "https://getauros.com/auros-logo.svg",
+      "contactName": "Adrien Balitrand",
+      "contactEmail": "adrien@getauros.com",
+      "contactEmailFallback": "adrien.balitrand@gmail.com",
+      "headquarters": "France / EU",
+      "foundedYear": "2024",
+      "languages": [
+        "en",
+        "fr",
+        "es"
+      ],
+      "networksReferenced": "Multi-chain (aggregates Ethereum, Polygon, Arbitrum, Base, and others via indexed RWA protocols)",
+      "assetClassesCovered": [
+        "Stablecoins & cash equivalents",
+        "U.S. & non-U.S. government debt / tokenized bonds",
+        "Private credit",
+        "Real estate",
+        "Commodities"
+      ],
+      "shortDescription": "B2B RWA tokenization platform and open comparator aggregating 120+ tokenized products — bonds, stablecoins, real estate, private credit and commodities — with live APY/TVL from DeFiLlama plus curated issuer data.",
+      "longDescription": "AUROS helps issuers structure real-world asset tokenization with a jurisdiction-first workflow (8 hubs compared) and a free asset admission wizard. The /compare hub is an independent RWA yield comparator covering stablecoins & treasury, tokenized bonds, real estate, private credit and commodities — aggregating DeFiLlama yields hourly and manual catalog entries for products not yet indexed. Educational content only; not investment advice. Public API at https://getauros.com/developers: MiCA readiness scoring (0–100), jurisdiction ranking across 8 regulatory hubs, compliance checklists, and a paginated RWA product catalog. AUROS does not custody funds, issue tokens, or report on-chain TVL — we are an independent comparator and B2B issuer onboarding platform.",
+      "differentiators": [
+        "Open RWA yield comparator at /compare — 120+ products, hourly DeFiLlama APY/TVL + curated catalog",
+        "MiCA intelligence API — static rules, <200ms, no LLM (indicative only)",
+        "Jurisdiction-first tokenization wizard for issuers (8 hubs compared)",
+        "Machine-readable catalog for AI/agents: /ai-first/index.json"
+      ],
+      "dataSources": [
+        "DeFiLlama Yields API",
+        "AUROS manual catalog JSON"
+      ],
+      "submissionNotes": "AUROS is not an asset issuer. We request a Directory listing as a Protocol/platform (B2B tokenization + analytics) or Infrastructure & Service Provider. No smart contracts or TVL to index — please link our compare hub and developer API. Happy to provide domain verification."
+    },
+    "emailOutreach": {
+      "to": "team@rwa.xyz",
+      "subject": "Directory listing request — AUROS (RWA comparator & B2B tokenization platform)",
+      "body": "Hello RWA.xyz team,\n\nWe would like AUROS listed in the RWA.xyz Directory as a tokenization platform / infrastructure provider (not an asset issuer).\n\nAbout AUROS\n- Website: https://getauros.com\n- RWA yield comparator: https://getauros.com/compare (120+ tokenized products — bonds, stablecoins, real estate, private credit, commodities)\n- Developer API: https://getauros.com/developers — MiCA readiness scoring, jurisdiction ranking, compliance checklists, product catalog\n- Logo: https://getauros.com/auros-logo.svg\n\nAUROS helps issuers structure RWA tokenization with a jurisdiction-first workflow (8 hubs compared) and operates an independent open comparator aggregating DeFiLlama yields hourly plus a curated catalog. We do not custody user funds, issue tokens, or have on-chain TVL.\n\nSuggested listing type: Protocol (platform) or Infrastructure & Service Provider.\n\nContact: Adrien Balitrand — please reply to this thread; our Partners portal login requires a company email (@getauros.com) which we are finalizing.\n\nThank you,\nAdrien Balitrand\nAUROS — https://getauros.com"
+    }
+  },
   "manualChecklist": [
     {
       "step": 1,
@@ -1167,6 +1233,18 @@
       "action": "CoinGecko fallback ticket",
       "url": "https://support.coingecko.com/hc/en-us/requests/new",
       "detail": "If partner form lacks comparator category, use support ticket with same copy."
+    },
+    {
+      "step": 7,
+      "action": "RWA.xyz Partners portal",
+      "url": "https://partners.rwa.xyz/login",
+      "detail": "Sign in with @getauros.com (personal domains blocked). Add New Company → Listing Type: Protocol. Paste rwaXyz.formFields from submission-payload.json."
+    },
+    {
+      "step": 8,
+      "action": "RWA.xyz email fallback",
+      "url": "mailto:team@rwa.xyz",
+      "detail": "If no company email yet, send rwaXyz.emailOutreach (subject + body) to team@rwa.xyz from getauros.com address."
     }
   ],
   "rapidapi": {

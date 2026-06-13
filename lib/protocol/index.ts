@@ -21,6 +21,10 @@ export {
 export { checkPremiumAccess, premiumPricingMeta, PREMIUM_PRICING } from "./auth/premium";
 export { computeProtocolScore, attachRecommendedPlatforms } from "./scoring/compute-score";
 export { listProtocolProducts, topPlatformsForAsset, hubToProductItem } from "./products/adapter";
+export { buildProtocolBenchmarks } from "./benchmarks/compute";
+export type { BenchmarkBuildResult } from "./benchmarks/compute";
+export { computeBenchmarkMetrics, percentile } from "./benchmarks/percentiles";
+export { resolveStaticBenchmark, STATIC_BENCHMARKS, MIN_LIVE_YIELD_PRODUCTS } from "./benchmarks/static";
 export { buildProtocolCompare } from "./compare/build";
 export type { CompareBuildResult, CompareBuildPayload } from "./compare/build";
 export {
@@ -71,6 +75,12 @@ export {
 } from "./scoring/history";
 export type { ScoreHistoryRecord, ScoreHistoryPayload } from "./scoring/history";
 export { productsQuerySchema } from "./schemas/products";
+export {
+  benchmarksQuerySchema,
+  benchmarksResponseSchema,
+  BENCHMARK_CATEGORIES,
+} from "./schemas/benchmarks";
+export type { BenchmarksQuery, BenchmarksResponse, BenchmarkCategory } from "./schemas/benchmarks";
 export { jurisdictionsQuerySchema } from "./schemas/jurisdictions";
 export { checklistRequestSchema } from "./schemas/checklist";
 export { createKeyRequestSchema } from "./schemas/keys";

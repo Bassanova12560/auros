@@ -277,6 +277,32 @@
             "description": "Paginated catalog of 120+ tokenized RWA products with APY, TVL, chains, and jurisdiction."
           },
           "response": []
+        },
+        {
+          "name": "GET /api/v1/benchmarks",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/benchmarks?category=bonds&jurisdiction=EU",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "benchmarks"],
+              "query": [
+                {
+                  "key": "category",
+                  "value": "bonds",
+                  "description": "bonds | stablecoins | real_estate | private_credit | commodities (required)"
+                },
+                {
+                  "key": "jurisdiction",
+                  "value": "EU",
+                  "description": "Optional partial jurisdiction filter (EU, US, CH, …)"
+                }
+              ]
+            },
+            "description": "Sector benchmarks — median APY, P25/P75 quartiles, product count from /compare hub (static fallback if sparse)."
+          },
+          "response": []
         }
       ]
     },

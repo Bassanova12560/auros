@@ -14,6 +14,8 @@ import {
   DEFILLAMA_PR_FORM,
   LISTING_SUBMISSION_URLS,
   MANUAL_SUBMISSION_CHECKLIST,
+  RWA_XYZ_EMAIL_OUTREACH,
+  RWA_XYZ_FORM_FIELDS,
 } from "../../data/listings/auros-listing";
 import {
   RAPIDAPI_LISTING,
@@ -77,6 +79,13 @@ async function main() {
       partnerPortalUrl: LISTING_SUBMISSION_URLS.coingecko.newRequest,
       supportFallbackUrl: LISTING_SUBMISSION_URLS.coingecko.supportOthers,
     },
+    rwaXyz: {
+      strategy:
+        "Partners portal (partners.rwa.xyz) — Protocol listing for B2B platform; company email required. Email team@rwa.xyz if @getauros.com not ready.",
+      urls: LISTING_SUBMISSION_URLS.rwaXyz,
+      formFields: RWA_XYZ_FORM_FIELDS,
+      emailOutreach: RWA_XYZ_EMAIL_OUTREACH,
+    },
     manualChecklist: MANUAL_SUBMISSION_CHECKLIST,
     rapidapi: {
       listing: RAPIDAPI_LISTING,
@@ -98,10 +107,27 @@ async function main() {
     "utf8"
   );
 
+  const rwaXyzPath = join(OUT_DIR, "rwa-xyz-submission.json");
+  writeFileSync(
+    rwaXyzPath,
+    `${JSON.stringify(
+      {
+        generatedAt: new Date().toISOString(),
+        urls: LISTING_SUBMISSION_URLS.rwaXyz,
+        formFields: RWA_XYZ_FORM_FIELDS,
+        emailOutreach: RWA_XYZ_EMAIL_OUTREACH,
+      },
+      null,
+      2
+    )}\n`,
+    "utf8"
+  );
+
   console.log("AUROS listing submission package generated\n");
   console.log("Output:", outPath);
   console.log("DeFiLlama draft:", data2Path);
   console.log("RapidAPI:", rapidapiPath);
+  console.log("RWA.xyz:", rwaXyzPath);
   console.log("");
   console.log("Catalog (static):", summary.totalProducts, "products,", summary.uniquePlatforms, "platforms");
   if (liveHubCount != null) {

@@ -431,6 +431,66 @@ paths:
           $ref: "#/components/responses/Unauthorized"
         "429":
           $ref: "#/components/responses/RateLimit"
+  /api/v1/benchmarks:
+    get:
+      tags: [Catalog]
+      summary: Sector RWA benchmarks
+      operationId: benchmarks
+      description: |
+        Sector benchmarks (median APY, P25/P75 quartiles, product count) computed from the `/compare` hub.
+        Optional `jurisdiction` filter. Falls back to curated static benchmarks when live yield data is sparse (< 3 products).
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: category
+          in: query
+          required: true
+          schema:
+            type: string
+            enum: [bonds, stablecoins, real_estate, private_credit, commodities]
+        - name: jurisdiction
+          in: query
+          schema:
+            type: string
+            maxLength: 64
+          description: Partial match on product jurisdiction (e.g. EU, US, CH, Luxembourg)
+      responses:
+        "200":
+          description: Sector benchmark metrics
+          headers:
+            X-AUROS-Protocol-Version:
+              schema:
+                type: string
+                example: "1.0"
+            X-AUROS-Logo:
+              schema:
+                type: string
+                format: uri
+                example: https://getauros.com/auros-logo.svg
+            X-Response-Time:
+              schema:
+                type: string
+                example: "18ms"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BenchmarksResponse"
+              example:
+                category: bonds
+                jurisdiction: EU
+                metrics:
+                  median_apy: 4.45
+                  p25_apy: 4.2
+                  p75_apy: 4.7
+                  product_count: 9
+                as_of: "2026-06-30"
+                disclaimer: Indicative intelligence only — not legal, tax, or investment advice.
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "429":
+          $ref: "#/components/responses/RateLimit"
   /api/v1/compare:
     post:
       tags: [Catalog]
@@ -1221,6 +1281,29 @@ components:
         affiliate_url: { type: string }
         min_investment_usd: { type: number, nullable: true }
         live: { type: boolean }
+    BenchmarksResponse:
+      type: object
+      required: [disclaimer, category, metrics, as_of]
+      properties:
+        disclaimer:
+          type: string
+        category:
+          type: string
+          enum: [bonds, stablecoins, real_estate, private_credit, commodities]
+        jurisdiction:
+          type: string
+          description: Present when filtered by jurisdiction query param
+        metrics:
+          type: object
+          required: [median_apy, p25_apy, p75_apy, product_count]
+          properties:
+            median_apy: { type: number, description: Median APY (%), live hub or static fallback }
+            p25_apy: { type: number, description: 25th percentile APY (%) }
+            p75_apy: { type: number, description: 75th percentile APY (%) }
+            product_count: { type: integer, minimum: 0 }
+        as_of:
+          type: string
+          description: ISO timestamp (live hub) or edition date (static fallback)
     CompareRequest:
       type: object
       description: |

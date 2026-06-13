@@ -28,6 +28,13 @@ export const LISTING_SUBMISSION_URLS = {
       "https://support.coingecko.com/hc/en-us/articles/23960919544345-Support-Directory-CoinGecko-Request-Forms",
     listingTerms: "https://www.coingecko.com/en/listing_terms",
   },
+  rwaXyz: {
+    partnersPortal: "https://partners.rwa.xyz/",
+    partnersLogin: "https://partners.rwa.xyz/login",
+    onboardingDocs: "https://docs.rwa.xyz/onboarding/platforms",
+    directory: "https://app.rwa.xyz/directory",
+    contactEmail: "team@rwa.xyz",
+  },
 } as const;
 
 export const AUROS_LISTING = {
@@ -120,6 +127,72 @@ export const COINGECKO_FORM_FIELDS = {
   additionalInfo: `AUROS is not a tradable token. We request a project/platform reference listing or ecosystem tag pointing to our RWA comparator (${listingUrl(COMPARATOR_ROUTES.compare)}) and B2B tokenization tools. We aggregate public yield data including CoinGecko-listed RWA protocols. Machine-readable catalog: ${listingUrl("/ai-first/index.json")}.`,
 } as const;
 
+/** RWA.xyz Partners portal — Protocol (platform) listing; no on-chain assets issued by AUROS. */
+export const RWA_XYZ_FORM_FIELDS = {
+  listingType: "Protocol",
+  /** Directory V2 category closest to AUROS (analytics + issuer tooling, not custody). */
+  directoryCategory: "Infrastructure & Service Providers",
+  companyName: "AUROS",
+  displayName: "AUROS",
+  website: LISTING_SITE_URL,
+  compareHubUrl: listingUrl(COMPARATOR_ROUTES.compare),
+  developersUrl: listingUrl("/developers"),
+  apiDocsUrl: listingUrl("/developers/docs"),
+  openapiUrl: listingUrl("/auros-openapi.yaml"),
+  aiCatalogUrl: listingUrl("/ai-first/index.json"),
+  logoUrl: listingUrl("/auros-logo.svg"),
+  contactName: "Adrien Balitrand",
+  /** Partners portal rejects personal domains — use @getauros.com for login. */
+  contactEmail: "adrien@getauros.com",
+  contactEmailFallback: AUROS_LISTING.contactEmail,
+  headquarters: "France / EU",
+  foundedYear: "2024",
+  languages: ["en", "fr", "es"],
+  networksReferenced: "Multi-chain (aggregates Ethereum, Polygon, Arbitrum, Base, and others via indexed RWA protocols)",
+  assetClassesCovered: [
+    "Stablecoins & cash equivalents",
+    "U.S. & non-U.S. government debt / tokenized bonds",
+    "Private credit",
+    "Real estate",
+    "Commodities",
+  ],
+  shortDescription: AUROS_SHORT_EN,
+  longDescription: `${AUROS_DESCRIPTIONS.longEn} Public API at ${listingUrl("/developers")}: MiCA readiness scoring (0–100), jurisdiction ranking across 8 regulatory hubs, compliance checklists, and a paginated RWA product catalog. AUROS does not custody funds, issue tokens, or report on-chain TVL — we are an independent comparator and B2B issuer onboarding platform.`,
+  differentiators: [
+    "Open RWA yield comparator at /compare — 120+ products, hourly DeFiLlama APY/TVL + curated catalog",
+    "MiCA intelligence API — static rules, <200ms, no LLM (indicative only)",
+    "Jurisdiction-first tokenization wizard for issuers (8 hubs compared)",
+    "Machine-readable catalog for AI/agents: /ai-first/index.json",
+  ],
+  dataSources: AUROS_LISTING.dataSources,
+  submissionNotes:
+    "AUROS is not an asset issuer. We request a Directory listing as a Protocol/platform (B2B tokenization + analytics) or Infrastructure & Service Provider. No smart contracts or TVL to index — please link our compare hub and developer API. Happy to provide domain verification.",
+} as const;
+
+export const RWA_XYZ_EMAIL_OUTREACH = {
+  to: LISTING_SUBMISSION_URLS.rwaXyz.contactEmail,
+  subject: "Directory listing request — AUROS (RWA comparator & B2B tokenization platform)",
+  body: `Hello RWA.xyz team,
+
+We would like AUROS listed in the RWA.xyz Directory as a tokenization platform / infrastructure provider (not an asset issuer).
+
+About AUROS
+- Website: ${LISTING_SITE_URL}
+- RWA yield comparator: ${listingUrl(COMPARATOR_ROUTES.compare)} (120+ tokenized products — bonds, stablecoins, real estate, private credit, commodities)
+- Developer API: ${listingUrl("/developers")} — MiCA readiness scoring, jurisdiction ranking, compliance checklists, product catalog
+- Logo: ${listingUrl("/auros-logo.svg")}
+
+AUROS helps issuers structure RWA tokenization with a jurisdiction-first workflow (8 hubs compared) and operates an independent open comparator aggregating DeFiLlama yields hourly plus a curated catalog. We do not custody user funds, issue tokens, or have on-chain TVL.
+
+Suggested listing type: Protocol (platform) or Infrastructure & Service Provider.
+
+Contact: Adrien Balitrand — please reply to this thread; our Partners portal login requires a company email (@getauros.com) which we are finalizing.
+
+Thank you,
+Adrien Balitrand
+AUROS — ${LISTING_SITE_URL}`,
+} as const;
+
 /** Draft entry for defillama-server data2.ts — metadata-only; requires DeFiLlama team approval (no TVL adapter). */
 export const DEFILLAMA_DATA2_DRAFT = {
   note: "AUROS has no on-chain TVL. Prefer support ticket before adapter PR. If team accepts Services listing without module, append object below to data2.ts.",
@@ -208,5 +281,19 @@ export const MANUAL_SUBMISSION_CHECKLIST = [
     action: "CoinGecko fallback ticket",
     url: LISTING_SUBMISSION_URLS.coingecko.supportOthers,
     detail: "If partner form lacks comparator category, use support ticket with same copy.",
+  },
+  {
+    step: 7,
+    action: "RWA.xyz Partners portal",
+    url: LISTING_SUBMISSION_URLS.rwaXyz.partnersLogin,
+    detail:
+      "Sign in with @getauros.com (personal domains blocked). Add New Company → Listing Type: Protocol. Paste rwaXyz.formFields from submission-payload.json.",
+  },
+  {
+    step: 8,
+    action: "RWA.xyz email fallback",
+    url: `mailto:${LISTING_SUBMISSION_URLS.rwaXyz.contactEmail}`,
+    detail:
+      "If no company email yet, send rwaXyz.emailOutreach (subject + body) to team@rwa.xyz from getauros.com address.",
   },
 ] as const;

@@ -46,6 +46,12 @@ const CURL_EXAMPLES = [
   -H "Authorization: Bearer ${DEMO_API_KEY}"`,
   },
   {
+    method: "GET",
+    path: "/api/v1/benchmarks",
+    curl: `curl "${BASE}/api/v1/benchmarks?category=bonds" \\
+  -H "Authorization: Bearer ${DEMO_API_KEY}"`,
+  },
+  {
     method: "POST",
     path: "/api/v1/compare",
     curl: `curl -X POST ${BASE}/api/v1/compare \\
@@ -124,6 +130,11 @@ const ENDPOINTS = [
     method: "GET",
     path: "/api/v1/products",
     desc: "Catalogue RWA — filtres category, chain, yield, jurisdiction.",
+  },
+  {
+    method: "GET",
+    path: "/api/v1/benchmarks",
+    desc: "Benchmarks sectoriels — médiane APY, quartiles P25/P75, product count.",
   },
   {
     method: "POST",

@@ -25,6 +25,26 @@ export type ProtocolChangelogEntry = {
 /** Single source for `/developers/changelog` and GET `/api/v1/changelog`. Newest first. */
 export const PROTOCOL_CHANGELOG: ProtocolChangelogEntry[] = [
   {
+    id: "benchmarks-endpoint",
+    date: "2026-06-13",
+    title: "GET /api/v1/benchmarks",
+    summary:
+      "Benchmarks sectoriels RWA — médiane APY, quartiles P25/P75 et nombre de produits par catégorie, avec repli statique curaté si le hub live est sparse.",
+    details: [
+      "GET /api/v1/benchmarks — auth Bearer, paramètre requis `category` (bonds|stablecoins|real_estate|private_credit|commodities).",
+      "Filtre optionnel `jurisdiction` (match partiel, ex. EU, US, Luxembourg).",
+      "Métriques calculées depuis le hub `/compare` ; fallback statique si < 3 produits avec rendement positif.",
+      "Réponse : median_apy, p25_apy, p75_apy, product_count, as_of + disclaimer standard.",
+    ],
+    links: [
+      { href: "/developers/docs/endpoint-benchmarks", label: "Documentation benchmarks" },
+      { href: "/auros-openapi.yaml", label: "OpenAPI spec" },
+    ],
+    tags: ["endpoint", "catalog", "market-data"],
+    status: "released",
+    roadmapItem: 12,
+  },
+  {
     id: "mcp-server",
     date: "2026-06-13",
     title: "MCP server for AUROS Protocol",

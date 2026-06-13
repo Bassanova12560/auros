@@ -320,7 +320,7 @@ const history = await client.scoreHistory(result.score_id!);`,
     description: "Catalogue paginé de 120+ produits RWA tokenisés — APY, TVL, chains, juridiction.",
     category: "endpoints",
     categoryLabel: "Endpoints",
-    relatedSlugs: ["guide-compliance-dashboard"],
+    relatedSlugs: ["endpoint-benchmarks", "guide-compliance-dashboard"],
     sections: [
       {
         heading: "Paramètres query",
@@ -351,6 +351,49 @@ const history = await client.scoreHistory(result.score_id!);`,
   }],
   "pagination": { "page": 1, "limit": 10, "total": 48, "total_pages": 5 },
   "fetched_at": "2026-06-11T10:00:00.000Z"
+}`,
+        language: "json",
+        paragraphs: [],
+      },
+    ],
+  },
+  {
+    slug: "endpoint-benchmarks",
+    title: "GET /api/v1/benchmarks",
+    description:
+      "Benchmarks sectoriels RWA — médiane APY, quartiles P25/P75 et nombre de produits par catégorie (hub live ou repli statique).",
+    category: "endpoints",
+    categoryLabel: "Endpoints",
+    relatedSlugs: ["endpoint-products", "endpoint-compare", "guide-compliance-dashboard"],
+    sections: [
+      {
+        heading: "Paramètres query",
+        paragraphs: [
+          "`category` (requis) — bonds, stablecoins, real_estate, private_credit ou commodities.",
+          "`jurisdiction` (optionnel) — filtre partiel sur la juridiction des produits (ex. EU, US, CH, Luxembourg).",
+          "Les métriques sont calculées depuis le hub `/compare`. Si moins de 3 produits avec rendement positif dans la tranche, un benchmark statique curaté est renvoyé.",
+        ],
+      },
+      {
+        heading: "cURL",
+        code: `curl "${BASE}/api/v1/benchmarks?category=bonds&jurisdiction=EU" \\
+  -H "Authorization: Bearer ${DEMO_API_KEY}"`,
+        language: "bash",
+        paragraphs: [],
+      },
+      {
+        heading: "Réponse (extrait)",
+        code: `{
+  "disclaimer": "Indicative intelligence only — not legal, tax, or investment advice.",
+  "category": "bonds",
+  "jurisdiction": "EU",
+  "metrics": {
+    "median_apy": 4.45,
+    "p25_apy": 4.2,
+    "p75_apy": 4.7,
+    "product_count": 9
+  },
+  "as_of": "2026-06-30"
 }`,
         language: "json",
         paragraphs: [],
@@ -627,7 +670,7 @@ const history = await client.scoreHistory(result.score_id!);`,
       "Construire un dashboard compliance avec score, checklist et catalogue RWA — agrégation multi-actifs.",
     category: "guides",
     categoryLabel: "Guides",
-    relatedSlugs: ["endpoint-products", "endpoint-compare", "endpoint-checklist", "endpoint-score"],
+    relatedSlugs: ["endpoint-benchmarks", "endpoint-products", "endpoint-compare", "endpoint-checklist", "endpoint-score"],
     sections: [
       {
         heading: "Architecture",

@@ -11,6 +11,7 @@ import {
 describe("protocol/changelog", () => {
   it("lists released entries newest first", () => {
     const released = getReleasedChangelogEntries();
+    assert.ok(released.some((e) => e.id === "benchmarks-endpoint"));
     assert.ok(released.some((e) => e.id === "mcp-server"));
     assert.ok(released.some((e) => e.id === "webhook-replay-dlq"));
     assert.ok(released.some((e) => e.id === "regulatory-feed-endpoint"));
