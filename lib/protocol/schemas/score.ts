@@ -38,6 +38,21 @@ const euNexusSchema = z.enum([
 const whitepaperSchema = z.enum(["ready", "draft", "none", "unsure"]);
 const investorTypeSchema = z.enum(["professional", "retail", "mixed", "unsure"]);
 
+const scoreWeightProfileSchema = z.enum(["default", "real_estate_fund", "credit_fund"]);
+
+const dimensionWeightsSchema = z
+  .object({
+    legal_structure: z.number().min(0).max(100),
+    kyc_aml: z.number().min(0).max(100),
+    mica_compliance: z.number().min(0).max(100),
+    data_room: z.number().min(0).max(100),
+    investor_protection: z.number().min(0).max(100),
+  })
+  .partial()
+  .refine((w) => Object.values(w).some((v) => v !== undefined), {
+    message: "weights must include at least one dimension",
+  });
+
 const scoreIdSchema = z
   .string()
   .regex(/^scr_[a-f0-9]{24}$/, "Invalid score_id format (expected scr_…)");
@@ -62,6 +77,8 @@ export const scoreRequestSchema = z
     has_kyc: z.boolean().optional(),
     has_data_room: z.boolean().optional(),
     documents_count: z.number().int().min(0).max(100).optional(),
+    profile: scoreWeightProfileSchema.optional(),
+    weights: dimensionWeightsSchema.optional(),
   })
   .refine(
     (data) =>
@@ -106,6 +123,18 @@ export const scoreResponseSchema = z.object({
   meta: protocolMetaSchema.extend({
     full_report_url: z.string().url(),
     parsed_keywords: z.array(z.string()),
+    weights_applied: z
+      .object({
+        legal_structure: z.number(),
+        kyc_aml: z.number(),
+        mica_compliance: z.number(),
+        data_room: z.number(),
+        investor_protection: z.number(),
+      })
+      .optional(),
+    weights_source: z.enum(["default", "profile", "custom"]).optional(),
+    weights_profile: scoreWeightProfileSchema.optional(),
+    weights_normalized: z.boolean().optional(),
   }),
 });
 

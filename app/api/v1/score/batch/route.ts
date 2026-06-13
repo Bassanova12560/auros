@@ -5,6 +5,8 @@ import {
   protocolRoute,
   scoreBatchRequestSchema,
 } from "@/lib/protocol";
+import { findKeyRecord } from "@/lib/protocol/auth/keys";
+import { assertCustomScoringAllowed } from "@/lib/protocol/scoring/assert-custom-scoring";
 import {
   processScoreItem,
   validateScoreRequest,
@@ -32,6 +34,8 @@ export const POST = protocolRoute(async (req: Request) => {
   }
 
   const { items, record_history: recordHistoryDefault } = parsed.data;
+  const rawKey = req.headers.get("authorization")?.slice(7).trim() ?? "";
+  const record = await findKeyRecord(auth.ctx.keyHash);
   const ctx = {
     keyHash: auth.ctx.keyHash,
     isDemo: auth.ctx.isDemo,
@@ -46,6 +50,21 @@ export const POST = protocolRoute(async (req: Request) => {
           index,
           ok: false as const,
           error: { code: "validation_error", message: validated.message },
+        };
+      }
+
+      const weightGate = assertCustomScoringAllowed(rawKey, record, auth.ctx.isDemo, {
+        profile: validated.data.profile,
+        weights: validated.data.weights,
+      });
+      if (!weightGate.ok) {
+        return {
+          index,
+          ok: false as const,
+          error: {
+            code: "premium_required",
+            message: "Custom scoring weights require a premium key.",
+          },
         };
       }
 

@@ -5,6 +5,8 @@ import {
   protocolRoute,
   scoreRequestSchema,
 } from "@/lib/protocol";
+import { findKeyRecord } from "@/lib/protocol/auth/keys";
+import { assertCustomScoringAllowed } from "@/lib/protocol/scoring/assert-custom-scoring";
 import { processScoreItem } from "@/lib/protocol/scoring/process-score-item";
 import { logProtocolUsage } from "@/lib/protocol/usage/log";
 
@@ -27,6 +29,14 @@ export const POST = protocolRoute(async (req: Request) => {
       400
     );
   }
+
+  const rawKey = req.headers.get("authorization")?.slice(7).trim() ?? "";
+  const record = await findKeyRecord(auth.ctx.keyHash);
+  const weightGate = assertCustomScoringAllowed(rawKey, record, auth.ctx.isDemo, {
+    profile: parsed.data.profile,
+    weights: parsed.data.weights,
+  });
+  if (!weightGate.ok) return weightGate.response;
 
   const outcome = await processScoreItem(parsed.data, {
     keyHash: auth.ctx.keyHash,

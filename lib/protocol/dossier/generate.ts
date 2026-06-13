@@ -17,7 +17,12 @@ export type DossierPayload = {
   score: ProtocolScoreResult;
   checklist: ReturnType<typeof generateChecklist> | null;
   sections: string[];
-  branding?: { company_name?: string; logo_url?: string };
+  branding?: {
+    company_name?: string;
+    logo_url?: string;
+    primary_color?: string;
+    hide_auros_branding?: boolean;
+  };
   locale: "fr" | "en" | "es";
   created_at: string;
   full_report_url: string;

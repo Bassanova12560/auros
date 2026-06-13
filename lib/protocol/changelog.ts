@@ -25,6 +25,37 @@ export type ProtocolChangelogEntry = {
 /** Single source for `/developers/changelog` and GET `/api/v1/changelog`. Newest first. */
 export const PROTOCOL_CHANGELOG: ProtocolChangelogEntry[] = [
   {
+    id: "custom-scoring-weights",
+    date: "2026-06-13",
+    title: "Custom scoring weights & profiles",
+    summary:
+      "Pondérations personnalisables sur POST /api/v1/score et /score/batch — profils real_estate_fund et credit_fund (premium).",
+    details: [
+      "Champs optionnels `profile` et `weights` (5 dimensions, somme 100 %).",
+      "Réponse inclut meta.weights_applied, weights_source, weights_normalized.",
+      "Clé demo / free : poids par défaut uniquement — custom → 403 premium_required.",
+    ],
+    links: [{ href: "/developers/docs/endpoint-score", label: "Documentation score" }],
+    tags: ["endpoint", "premium", "scoring"],
+    status: "released",
+    roadmapItem: 14,
+  },
+  {
+    id: "dossier-white-label",
+    date: "2026-06-13",
+    title: "White-label PDF dossier",
+    summary:
+      "Branding client sur les dossiers premium — logo HTTPS, couleur primaire, masquage AUROS.",
+    details: [
+      "POST /api/v1/dossier — branding.company_name, logo_url, primary_color, hide_auros_branding.",
+      "PDF généré avec en-tête client et footer « Powered by AUROS » optionnel.",
+    ],
+    links: [{ href: "/developers/docs/endpoint-dossier", label: "Documentation dossier" }],
+    tags: ["premium", "pdf", "branding"],
+    status: "released",
+    roadmapItem: 13,
+  },
+  {
     id: "benchmarks-endpoint",
     date: "2026-06-13",
     title: "GET /api/v1/benchmarks",

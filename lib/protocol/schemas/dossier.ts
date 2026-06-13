@@ -21,7 +21,16 @@ export const dossierRequestSchema = z
     branding: z
       .object({
         company_name: z.string().max(120).optional(),
-        logo_url: z.string().url().optional(),
+        logo_url: z
+          .string()
+          .url()
+          .refine((u) => u.startsWith("https://"), "logo_url must be HTTPS")
+          .optional(),
+        primary_color: z
+          .string()
+          .regex(/^#[0-9A-Fa-f]{6}$/, "primary_color must be hex (#RRGGBB)")
+          .optional(),
+        hide_auros_branding: z.boolean().optional(),
       })
       .optional(),
     locale: z.enum(["fr", "en", "es"]).default("fr"),

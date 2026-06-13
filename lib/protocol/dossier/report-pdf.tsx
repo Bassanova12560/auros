@@ -5,6 +5,7 @@
 import {
   Document,
   Font,
+  Image,
   Page,
   StyleSheet,
   Text,
@@ -30,8 +31,22 @@ Font.register({
 });
 Font.registerHyphenationCallback((word) => [word]);
 
-const BRAND = "#9F2F2D";
+const DEFAULT_BRAND = "#9F2F2D";
 const MUTED = "#737373";
+
+function brandColor(payload: DossierPayload): string {
+  return payload.branding?.primary_color ?? DEFAULT_BRAND;
+}
+
+function showAuros(payload: DossierPayload): boolean {
+  return !payload.branding?.hide_auros_branding;
+}
+
+function footerText(payload: DossierPayload, pageNote: string): string {
+  const parts = [pageNote];
+  if (showAuros(payload)) parts.unshift("AUROS Protocol v1.0");
+  return parts.filter(Boolean).join(" · ");
+}
 
 const styles = StyleSheet.create({
   page: {
@@ -43,19 +58,18 @@ const styles = StyleSheet.create({
   },
   coverTitle: { fontSize: 20, fontWeight: 700, marginTop: 80 },
   coverSub: { fontSize: 10, color: MUTED, marginTop: 12 },
-  brand: { fontSize: 7, letterSpacing: 2, color: BRAND },
+  brand: { fontSize: 7, letterSpacing: 2 },
   sectionTitle: {
     fontSize: 11,
     fontWeight: 700,
     marginTop: 16,
     marginBottom: 8,
-    color: BRAND,
   },
   row: { flexDirection: "row", marginBottom: 4 },
   label: { width: "40%", color: MUTED },
   value: { width: "60%" },
   bullet: { marginBottom: 3, lineHeight: 1.4 },
-  scoreBig: { fontSize: 36, fontWeight: 700, color: BRAND },
+  scoreBig: { fontSize: 36, fontWeight: 700 },
   footer: {
     position: "absolute",
     bottom: 30,
@@ -72,27 +86,36 @@ const styles = StyleSheet.create({
 
 function CoverPage({ payload }: { payload: DossierPayload }) {
   const company = payload.branding?.company_name ?? "AUROS Protocol";
+  const color = brandColor(payload);
   return (
     <Page size="A4" style={styles.page}>
-      <Text style={styles.brand}>AUROS · PROTOCOL DOSSIER</Text>
-      <Text style={styles.coverTitle}>Institutional MiCA Readiness Report</Text>
+      {payload.branding?.logo_url ? (
+        <Image src={payload.branding.logo_url} style={{ width: 120, height: 40, objectFit: "contain" }} />
+      ) : showAuros(payload) ? (
+        <Text style={[styles.brand, { color }]}>AUROS · PROTOCOL DOSSIER</Text>
+      ) : null}
+      <Text style={[styles.coverTitle, { color }]}>Institutional MiCA Readiness Report</Text>
       <Text style={styles.coverSub}>
         {company} · Generated {new Date(payload.created_at).toLocaleDateString("fr-FR")}
       </Text>
       <Text style={styles.coverSub}>Reference: {payload.id}</Text>
       <View style={{ marginTop: 40 }}>
-        <Text style={styles.scoreBig}>{payload.score.score}</Text>
+        <Text style={[styles.scoreBig, { color }]}>{payload.score.score}</Text>
         <Text>Grade {payload.score.grade} · Status {payload.score.status}</Text>
       </View>
-      <Text style={styles.footer}>{PROTOCOL_DISCLAIMER}</Text>
+      <Text style={styles.footer}>
+        {PROTOCOL_DISCLAIMER}
+        {showAuros(payload) ? "" : `\nPrepared for ${company}.`}
+      </Text>
     </Page>
   );
 }
 
 function ExecutiveSummary({ payload }: { payload: DossierPayload }) {
+  const color = brandColor(payload);
   return (
     <Page size="A4" style={styles.page}>
-      <Text style={styles.sectionTitle}>Executive Summary</Text>
+      <Text style={[styles.sectionTitle, { color }]}>Executive Summary</Text>
       <Text style={styles.note}>
         Indicative MiCA readiness assessment based on structured inputs and AUROS static
         scoring rules. Not legal advice — validate with qualified counsel before issuance.
@@ -123,18 +146,17 @@ function ExecutiveSummary({ payload }: { payload: DossierPayload }) {
           • {gap}
         </Text>
       ))}
-      <Text style={styles.footer}>
-        AUROS Protocol v1.0 · Page 2 · {PROTOCOL_DISCLAIMER}
-      </Text>
+      <Text style={styles.footer}>{footerText(payload, PROTOCOL_DISCLAIMER)}</Text>
     </Page>
   );
 }
 
 function ScoreBreakdown({ payload }: { payload: DossierPayload }) {
+  const color = brandColor(payload);
   const dims = Object.entries(payload.score.breakdown);
   return (
     <Page size="A4" style={styles.page}>
-      <Text style={styles.sectionTitle}>Score Breakdown — 5 Dimensions</Text>
+      <Text style={[styles.sectionTitle, { color }]}>Score Breakdown — 5 Dimensions</Text>
       {dims.map(([dim, val]) => (
         <View key={dim} style={styles.row}>
           <Text style={styles.label}>{dim.replace(/_/g, " ")}</Text>
@@ -153,25 +175,26 @@ function ScoreBreakdown({ payload }: { payload: DossierPayload }) {
           • {j.id} ({j.score}) — {j.rationale}
         </Text>
       ))}
-      <Text style={styles.footer}>AUROS Protocol v1.0 · Page 3</Text>
+      <Text style={styles.footer}>{footerText(payload, "Page 3")}</Text>
     </Page>
   );
 }
 
 function ChecklistSection({ payload }: { payload: DossierPayload }) {
+  const color = brandColor(payload);
   if (!payload.checklist) {
     return (
       <Page size="A4" style={styles.page}>
-        <Text style={styles.sectionTitle}>Compliance Checklist</Text>
+        <Text style={[styles.sectionTitle, { color }]}>Compliance Checklist</Text>
         <Text style={styles.note}>No checklist generated for this asset type.</Text>
-        <Text style={styles.footer}>AUROS Protocol v1.0</Text>
+        <Text style={styles.footer}>{footerText(payload, "")}</Text>
       </Page>
     );
   }
   const items = payload.checklist.items.slice(0, 15);
   return (
     <Page size="A4" style={styles.page}>
-      <Text style={styles.sectionTitle}>
+      <Text style={[styles.sectionTitle, { color }]}>
         Compliance Checklist — {payload.checklist.jurisdiction}
       </Text>
       <Text style={styles.note}>
@@ -187,15 +210,16 @@ function ChecklistSection({ payload }: { payload: DossierPayload }) {
           </Text>
         </View>
       ))}
-      <Text style={styles.footer}>AUROS Protocol v1.0 · Checklist excerpt</Text>
+      <Text style={styles.footer}>{footerText(payload, "Checklist excerpt")}</Text>
     </Page>
   );
 }
 
-function DisclaimersPage() {
+function DisclaimersPage({ payload }: { payload: DossierPayload }) {
+  const color = brandColor(payload);
   return (
     <Page size="A4" style={styles.page}>
-      <Text style={styles.sectionTitle}>Legal Disclaimers</Text>
+      <Text style={[styles.sectionTitle, { color }]}>Legal Disclaimers</Text>
       <Text style={styles.note}>{PROTOCOL_DISCLAIMER}</Text>
       <Text style={[styles.note, { marginTop: 12 }]}>
         This report is generated automatically from AUROS Protocol static rules. It does not
@@ -203,9 +227,11 @@ function DisclaimersPage() {
         evolve — monitor regulatory updates via AUROS Protocol Monitor (premium).
       </Text>
       <Text style={[styles.note, { marginTop: 12 }]}>
-        © AUROS · getauros.com · contact@getauros.com
+        {showAuros(payload)
+          ? "© AUROS · getauros.com · contact@getauros.com"
+          : `Prepared for ${payload.branding?.company_name ?? "client"}.`}
       </Text>
-      <Text style={styles.footer}>End of report</Text>
+      <Text style={styles.footer}>{footerText(payload, "End of report")}</Text>
     </Page>
   );
 }
@@ -220,7 +246,7 @@ function DossierDocument({ payload }: { payload: DossierPayload }) {
       {(sections.includes("checklist") || sections.includes("mica_classification")) && (
         <ChecklistSection payload={payload} />
       )}
-      {sections.includes("disclaimers") && <DisclaimersPage />}
+      {sections.includes("disclaimers") && <DisclaimersPage payload={payload} />}
     </Document>
   );
 }

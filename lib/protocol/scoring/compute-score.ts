@@ -13,6 +13,7 @@ import {
   type ScoreDimension,
 } from "./rules";
 import { gradeFromScore, statusFromScore } from "./grades";
+import { resolveScoreWeights, type ScoreWeightProfileId } from "./weight-profiles";
 
 export type StructuredScoreInput = {
   description?: string;
@@ -27,6 +28,8 @@ export type StructuredScoreInput = {
   has_kyc?: boolean;
   has_data_room?: boolean;
   documents_count?: number;
+  profile?: ScoreWeightProfileId;
+  weights?: Partial<Record<ScoreDimension, number>>;
 };
 
 export type ScoreBreakdown = Record<ScoreDimension, number>;
@@ -46,6 +49,10 @@ export type ProtocolScoreResult = {
     computed_at: string;
     full_report_url: string;
     parsed_keywords: string[];
+    weights_applied?: Record<ScoreDimension, number>;
+    weights_source?: "default" | "profile" | "custom";
+    weights_profile?: ScoreWeightProfileId;
+    weights_normalized?: boolean;
   };
 };
 
@@ -175,9 +182,14 @@ export function computeProtocolScore(input: StructuredScoreInput): ProtocolScore
     investor_protection: scoreInvestorProtection(input, parsed),
   };
 
+  const resolvedWeights = resolveScoreWeights({
+    profile: input.profile,
+    weights: input.weights,
+  });
+
   let score = 0;
   for (const dim of Object.keys(SCORE_DIMENSION_WEIGHTS) as ScoreDimension[]) {
-    score += breakdown[dim] * SCORE_DIMENSION_WEIGHTS[dim];
+    score += breakdown[dim] * resolvedWeights.fractions[dim];
   }
   score = Math.round(Math.min(100, Math.max(0, score)));
 
@@ -210,6 +222,10 @@ export function computeProtocolScore(input: StructuredScoreInput): ProtocolScore
       computed_at: new Date().toISOString(),
       full_report_url: buildWizardUrl(input, parsed),
       parsed_keywords: parsed.keywords,
+      weights_applied: resolvedWeights.applied,
+      weights_source: resolvedWeights.source,
+      weights_profile: resolvedWeights.profile,
+      weights_normalized: resolvedWeights.normalized || undefined,
     },
   };
 }
