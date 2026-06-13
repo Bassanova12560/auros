@@ -15,6 +15,7 @@ const NAV_LINKS = [
   { href: "/wizard", key: "tokenize" as const },
   { href: "/dashboard", key: "dossiers" as const },
   { href: "/jurisdictions?from=nav", key: "jurisdictions" as const },
+  { href: "/green", key: "green" as const },
   { href: "/partners", key: "partners" as const },
 ] as const;
 

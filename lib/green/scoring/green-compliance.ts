@@ -15,18 +15,21 @@ export type SfdrArticle = "article_6" | "article_8" | "article_9";
 
 export type EuGbsEligibility = "eligible" | "conditional" | "not_eligible";
 
+export type GreenCompliancePriorityKey =
+  | "document_taxonomy"
+  | "sfdr_communication"
+  | "gbs_allocation"
+  | "carbon_standard"
+  | "renewable_production";
+
 export type GreenComplianceScore = {
   asset_class: GreenAssetClass;
   eu_taxonomy_alignment: number;
   sfdr_classification: SfdrArticle;
   eu_gbs_eligible: EuGbsEligibility;
   /** Max 3 improvement priorities (UX psychology). */
-  priorities: string[];
-  disclaimer: string;
+  priority_keys: GreenCompliancePriorityKey[];
 };
-
-const DISCLAIMER =
-  "Score d'alignement indicatif — pas une certification EU Taxonomy, SFDR ou EU GBS officielle. Validez avec un conseil ESG qualifié.";
 
 function textBlob(data: WizardData): string {
   return [
@@ -150,22 +153,22 @@ function buildPriorities(
   sfdr: SfdrArticle,
   gbs: EuGbsEligibility,
   assetClass: GreenAssetClass
-): string[] {
-  const out: string[] = [];
+): GreenCompliancePriorityKey[] {
+  const out: GreenCompliancePriorityKey[] = [];
   if (taxonomy < 60) {
-    out.push("Documenter l'alignement EU Taxonomy (objectifs climat + DNSH + safeguards).");
+    out.push("document_taxonomy");
   }
   if (sfdr === "article_6") {
-    out.push("Structurer la communication ESG pour viser SFDR Article 8 ou 9.");
+    out.push("sfdr_communication");
   }
   if (gbs === "conditional") {
-    out.push("Compléter le rapport d'allocation EU Green Bond Standard (≥ 85 % Taxonomy).");
+    out.push("gbs_allocation");
   }
   if (assetClass === "carbon" && taxonomy < 70) {
-    out.push("Préciser le standard carbone (Verra VCS, Gold Standard) et l'additionnalité.");
+    out.push("carbon_standard");
   }
   if (assetClass === "renewable" && taxonomy < 65) {
-    out.push("Ajouter les preuves de production (MWh) et la traçabilité REC/PPA.");
+    out.push("renewable_production");
   }
   return out.slice(0, 3);
 }
@@ -175,7 +178,7 @@ export function computeGreenComplianceScore(data: WizardData): GreenComplianceSc
   const eu_taxonomy_alignment = taxonomyForClass(data, asset_class);
   const sfdr_classification = sfdrFromInputs(eu_taxonomy_alignment, data, asset_class);
   const eu_gbs_eligible = gbsFromInputs(eu_taxonomy_alignment, asset_class, data);
-  const priorities = buildPriorities(
+  const priority_keys = buildPriorities(
     eu_taxonomy_alignment,
     sfdr_classification,
     eu_gbs_eligible,
@@ -187,8 +190,7 @@ export function computeGreenComplianceScore(data: WizardData): GreenComplianceSc
     eu_taxonomy_alignment,
     sfdr_classification,
     eu_gbs_eligible,
-    priorities,
-    disclaimer: DISCLAIMER,
+    priority_keys,
   };
 }
 

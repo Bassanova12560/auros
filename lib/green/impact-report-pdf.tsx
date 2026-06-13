@@ -14,6 +14,8 @@ import {
 } from "@react-pdf/renderer";
 
 import { DEFAULT_LOCALE, isLocale, type Locale } from "@/lib/i18n";
+import { getGreenComplianceCopy } from "@/lib/green/compliance-i18n";
+import { getCsrdCheckerCopy } from "@/lib/green/csrd-check/i18n";
 import { getGreenMessages } from "@/lib/green/i18n";
 import { GREEN_RTMS_PILLARS, GREEN_WIZARD_ASSET_TYPE } from "@/lib/green/constants";
 import type { GreenRtmsScore } from "@/lib/green/rtms-scoring";
@@ -121,21 +123,12 @@ function resolveLocale(input: GreenImpactReportInput): Locale {
   return l && isLocale(l) ? l : DEFAULT_LOCALE;
 }
 
-const SFDR_LABELS: Record<GreenComplianceScore["sfdr_classification"], string> = {
-  article_6: "SFDR Art. 6",
-  article_8: "SFDR Art. 8",
-  article_9: "SFDR Art. 9",
-};
-
-const GBS_LABELS: Record<GreenComplianceScore["eu_gbs_eligible"], string> = {
-  eligible: "EU GBS eligible",
-  conditional: "EU GBS — conditional",
-  not_eligible: "Outside EU GBS",
-};
 
 function ImpactReportDocument({ input }: { input: GreenImpactReportInput }) {
   const locale = resolveLocale(input);
   const m = getGreenMessages(locale);
+  const complianceCopy = getGreenComplianceCopy(locale);
+  const csrdCopy = getCsrdCheckerCopy(locale);
   const data = input.data ?? ({} as WizardData);
   const rtms = input.greenRtms;
   const compliance = input.greenCompliance;
@@ -177,7 +170,7 @@ function ImpactReportDocument({ input }: { input: GreenImpactReportInput }) {
             <View style={{ maxWidth: 300 }}>
               <Text style={styles.sectionLabel}>{taxonomyLabel}</Text>
               <Text style={{ color: MUTED, lineHeight: 1.4 }}>
-                {compliance.disclaimer.slice(0, 120)}…
+                {complianceCopy.disclaimer.slice(0, 120)}…
               </Text>
             </View>
             <Text style={styles.scoreBig}>{compliance.eu_taxonomy_alignment}</Text>
@@ -188,23 +181,23 @@ function ImpactReportDocument({ input }: { input: GreenImpactReportInput }) {
           <View style={styles.grid}>
             <View style={styles.gridCell}>
               <Text style={styles.sectionLabel}>SFDR</Text>
-              <Text>{SFDR_LABELS[compliance.sfdr_classification]}</Text>
+              <Text>{complianceCopy.sfdrLabels[compliance.sfdr_classification]}</Text>
             </View>
             <View style={styles.gridCell}>
               <Text style={styles.sectionLabel}>EU GBS</Text>
-              <Text>{GBS_LABELS[compliance.eu_gbs_eligible]}</Text>
+              <Text>{complianceCopy.gbsLabels[compliance.eu_gbs_eligible]}</Text>
             </View>
           </View>
         ) : null}
 
-        {compliance && compliance.priorities.length > 0 ? (
+        {compliance && compliance.priority_keys.length > 0 ? (
           <View style={styles.section}>
             <Text style={styles.sectionLabel}>
               {locale === "fr" ? "Priorités (max 3)" : locale === "es" ? "Prioridades (máx. 3)" : "Priorities (max 3)"}
             </Text>
-            {compliance.priorities.map((p) => (
-              <Text key={p} style={styles.bullet}>
-                · {p}
+            {compliance.priority_keys.map((key) => (
+              <Text key={key} style={styles.bullet}>
+                · {complianceCopy.priorities[key]}
               </Text>
             ))}
           </View>
@@ -234,15 +227,15 @@ function ImpactReportDocument({ input }: { input: GreenImpactReportInput }) {
         {csrd ? (
           <View style={styles.section}>
             <Text style={styles.sectionLabel}>CSRD</Text>
-            <Text style={{ fontWeight: 700 }}>{csrd.scope_label}</Text>
+            <Text style={{ fontWeight: 700 }}>{csrdCopy.scopeLabels[csrd.scope_key]}</Text>
             {csrd.scope_from_year ? (
               <Text style={{ color: MUTED, marginTop: 4 }}>
-                Scope from {csrd.scope_from_year} · prep. {csrd.preparation_score}/100
+                {csrdCopy.scopeFromYear(csrd.scope_from_year)} · {csrd.preparation_score}/100
               </Text>
             ) : null}
-            {csrd.priorities.map((p) => (
-              <Text key={p} style={styles.bullet}>
-                · {p}
+            {csrd.priority_keys.map((key) => (
+              <Text key={key} style={styles.bullet}>
+                · {csrdCopy.priorities[key]}
               </Text>
             ))}
           </View>

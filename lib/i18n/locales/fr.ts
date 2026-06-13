@@ -6,6 +6,7 @@ export const fr: Messages = {
     tokenize: "Tokeniser",
     dossiers: "Dossiers",
     jurisdictions: "Juridictions",
+    green: "Green",
     partners: "Plateformes",
     login: "Connexion",
     start: "Démarrer",

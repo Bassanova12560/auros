@@ -31,6 +31,7 @@ import { TokenizationStudio } from "./_components/TokenizationStudio";
 import { DataRoomChecklist } from "./_components/DataRoomChecklist";
 import { ExportLegalPackButton } from "./_components/ExportLegalPackButton";
 import { GreenDossierExtras } from "./_components/GreenDossierExtras";
+import { GreenCompliancePanel } from "@/app/wizard/_components/GreenCompliancePanel";
 import { normalizeDossierStatus, type DossierStatus } from "@/lib/dossier-status";
 import { track } from "@/lib/analytics";
 import {
@@ -46,6 +47,11 @@ import {
   suggestedGreenFilename,
 } from "@/lib/green/green-pdf";
 import { computeGreenRtmsScore, isGreenWizardAsset } from "@/lib/green/rtms-scoring";
+import {
+  computeGreenComplianceScore,
+  isGreenWizardContext,
+  type GreenComplianceScore,
+} from "@/lib/green/scoring/green-compliance";
 import { mergeDossierDataBlob } from "@/lib/dossier-data";
 import { getComplianceStatus } from "@/lib/compliance-status";
 import { tierFromScore } from "@/lib/score";
@@ -66,6 +72,7 @@ type StoredDossier = {
   id?: string;
   status?: DossierStatus;
   greenRtms?: ReturnType<typeof computeGreenRtmsScore>;
+  greenCompliance?: GreenComplianceScore;
   wizardMode?: "explore" | "pro";
   paidTier?: string;
 };
@@ -381,8 +388,13 @@ function DossierMain() {
       const greenRtms =
         dossier.greenRtms ??
         (isGreen && dossier.data ? computeGreenRtmsScore(dossier.data) : undefined);
+      const greenCompliance =
+        dossier.greenCompliance ??
+        (dossier.data && isGreenWizardContext(dossier.data)
+          ? computeGreenComplianceScore(dossier.data)
+          : undefined);
       const blob = isGreen
-        ? await generateGreenDossierPDF({ ...dossier, locale, greenRtms })
+        ? await generateGreenDossierPDF({ ...dossier, locale, greenRtms, greenCompliance })
         : await generateDossierPDF({ ...dossier, locale });
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
@@ -395,7 +407,10 @@ function DossierMain() {
       a.remove();
       setTimeout(() => URL.revokeObjectURL(url), 0);
       setPdfState("idle");
-      track("dossier_pdf_downloaded");
+      track("dossier_pdf_downloaded", {
+        locale,
+        green: isGreen,
+      });
     } catch (err) {
       console.error("PDF failed", err);
       setPdfState("error");
@@ -428,6 +443,14 @@ function DossierMain() {
       computeGreenRtmsScore(data as WizardData)
     );
   }, [data, dossier?.greenRtms]);
+
+  const greenCompliance = useMemo(() => {
+    if (!data) return null;
+    return (
+      dossier?.greenCompliance ??
+      (isGreenWizardContext(data) ? computeGreenComplianceScore(data) : null)
+    );
+  }, [data, dossier?.greenCompliance]);
 
   const complianceLabel = (id: string, ok: boolean) => {
     if (id === "mica") return ok ? dm.compliance.aligned : dm.compliance.reviewRequired;
@@ -534,6 +557,9 @@ function DossierMain() {
         <AdmissionReadinessPanel data={data} />
 
         {greenRtms ? <GreenDossierExtras rtms={greenRtms} /> : null}
+        {greenCompliance ? (
+          <GreenCompliancePanel compliance={greenCompliance} email={data.email} />
+        ) : null}
 
         <DossierActions
           pdfLabel={dm.pdf.download}
@@ -555,7 +581,8 @@ function DossierMain() {
           submitError={submitError}
           pdfNote={dm.pdfNote}
           onDownloadPdf={() => {
-            if (!isSignedIn) {
+            const isGreen = isGreenWizardAsset(data.assetType);
+            if (!isSignedIn && !isGreen) {
               setShowAuthModal(true);
               return;
             }

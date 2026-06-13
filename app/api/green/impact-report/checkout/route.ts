@@ -1,3 +1,4 @@
+/** Requires STRIPE_SECRET_KEY (see lib/stripe/green-impact-checkout). */
 import { NextResponse } from "next/server";
 
 import type { Locale } from "@/lib/i18n";

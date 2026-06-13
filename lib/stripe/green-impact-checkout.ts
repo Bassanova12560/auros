@@ -1,3 +1,11 @@
+/**
+ * Green Impact Report Stripe checkout + paid-session retrieval.
+ *
+ * Env:
+ * - STRIPE_SECRET_KEY — create/retrieve Checkout sessions (shared getStripe).
+ * - STRIPE_WEBHOOK_SECRET — POST /api/webhooks/stripe verifies checkout.session.completed.
+ * - NEXT_PUBLIC_SUPABASE_URL + SUPABASE_SECRET_KEY — entitlement rows (fulfill-impact-payment).
+ */
 import Stripe from "stripe";
 
 import { siteOrigin } from "@/lib/emails/constants";

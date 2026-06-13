@@ -14,12 +14,14 @@ import {
 } from "@react-pdf/renderer";
 
 import { DEFAULT_LOCALE, isLocale, type Locale } from "@/lib/i18n";
+import { getGreenComplianceCopy } from "@/lib/green/compliance-i18n";
 import { getGreenMessages } from "@/lib/green/i18n";
 import {
   GREEN_RTMS_PILLARS,
   GREEN_WIZARD_ASSET_TYPE,
 } from "@/lib/green/constants";
 import type { GreenRtmsScore } from "@/lib/green/rtms-scoring";
+import type { GreenComplianceScore } from "@/lib/green/scoring/green-compliance";
 import type { StoredDossier } from "@/lib/pdf";
 
 Font.register({
@@ -84,6 +86,14 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     marginBottom: 4,
   },
+  grid: { flexDirection: "row", gap: 12 },
+  gridCell: {
+    flex: 1,
+    borderWidth: 1,
+    borderColor: "#d4d4d4",
+    borderRadius: 4,
+    padding: 10,
+  },
   bullet: { color: MUTED, marginBottom: 2, paddingLeft: 8 },
   footer: {
     position: "absolute",
@@ -100,8 +110,10 @@ const styles = StyleSheet.create({
 
 export type GreenDossierPdfInput = StoredDossier & {
   greenRtms?: GreenRtmsScore;
+  greenCompliance?: GreenComplianceScore;
   locale?: Locale;
 };
+
 
 function resolveLocale(dossier: GreenDossierPdfInput): Locale {
   const l = dossier.locale;
@@ -111,11 +123,27 @@ function resolveLocale(dossier: GreenDossierPdfInput): Locale {
 function GreenDocument({ dossier }: { dossier: GreenDossierPdfInput }) {
   const locale = resolveLocale(dossier);
   const m = getGreenMessages(locale);
+  const complianceCopy = getGreenComplianceCopy(locale);
   const data = dossier.data ?? {};
   const rtms = dossier.greenRtms;
+  const compliance = dossier.greenCompliance;
   const date = (dossier.generatedAt ? new Date(dossier.generatedAt) : new Date())
     .toISOString()
     .slice(0, 10);
+
+  const taxonomyLabel = complianceCopy.panelEyebrow;
+  const prioritiesLabel =
+    locale === "fr"
+      ? "Priorités (max 3)"
+      : locale === "es"
+        ? "Prioridades (máx. 3)"
+        : "Priorities (max 3)";
+  const footerNote =
+    locale === "fr"
+      ? "AUROS Green · grille RTMS indicative — pas un avis juridique"
+      : locale === "es"
+        ? "AUROS Green · cuadrícula RTMS indicativa — no es asesoramiento jurídico"
+        : "AUROS Green · indicative RTMS grid — not legal advice";
 
   const docProps: DocumentProps = {
     title: `AUROS Green RTMS — ${data.assetType ?? GREEN_WIZARD_ASSET_TYPE}`,
@@ -136,6 +164,51 @@ function GreenDocument({ dossier }: { dossier: GreenDossierPdfInput }) {
             {[data.city, data.country].filter(Boolean).join(", ") || "—"} · {date}
           </Text>
         </View>
+
+        {compliance ? (
+          <View style={styles.scoreRow}>
+            <View style={{ maxWidth: 300 }}>
+              <Text style={styles.sectionLabel}>{taxonomyLabel}</Text>
+              <Text style={{ color: MUTED, lineHeight: 1.4 }}>
+                {complianceCopy.assetClassLabels[compliance.asset_class]}{" "}
+                {complianceCopy.alignmentSuffix}
+              </Text>
+            </View>
+            <Text style={styles.scoreBig}>{compliance.eu_taxonomy_alignment}</Text>
+          </View>
+        ) : null}
+
+        {compliance ? (
+          <View style={styles.grid}>
+            <View style={styles.gridCell}>
+              <Text style={styles.sectionLabel}>{complianceCopy.sfdrLabel}</Text>
+              <Text>{complianceCopy.sfdrLabels[compliance.sfdr_classification]}</Text>
+            </View>
+            <View style={styles.gridCell}>
+              <Text style={styles.sectionLabel}>{complianceCopy.gbsLabel}</Text>
+              <Text>{complianceCopy.gbsLabels[compliance.eu_gbs_eligible]}</Text>
+            </View>
+          </View>
+        ) : null}
+
+        {compliance && compliance.priority_keys.length > 0 ? (
+          <View style={styles.section}>
+            <Text style={styles.sectionLabel}>{prioritiesLabel}</Text>
+            {compliance.priority_keys.slice(0, 3).map((key) => (
+              <Text key={key} style={styles.bullet}>
+                · {complianceCopy.priorities[key]}
+              </Text>
+            ))}
+          </View>
+        ) : null}
+
+        {compliance ? (
+          <View style={styles.section}>
+            <Text style={{ color: MUTED, lineHeight: 1.4, fontSize: 8 }}>
+              {complianceCopy.disclaimer}
+            </Text>
+          </View>
+        ) : null}
 
         {rtms ? (
           <View style={styles.scoreRow}>
@@ -179,9 +252,7 @@ function GreenDocument({ dossier }: { dossier: GreenDossierPdfInput }) {
           </Text>
         </View>
 
-        <Text style={styles.footer}>
-          AUROS Green · indicative RTMS grid — not legal advice · auros-delta.vercel.app/green
-        </Text>
+        <Text style={styles.footer}>{footerNote} · getauros.com/green</Text>
       </Page>
     </Document>
   );

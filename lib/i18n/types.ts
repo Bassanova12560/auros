@@ -10,6 +10,7 @@ export type Messages = {
     tokenize: string;
     dossiers: string;
     jurisdictions: string;
+    green: string;
     partners: string;
     login: string;
     start: string;

@@ -84,6 +84,10 @@ export type StoredDossier = {
   watermark?: string;
   wizardMode?: "explore" | "pro";
   paidTier?: string;
+  /** Green wizard RTMS score (persisted from Step15Summary). */
+  greenRtms?: import("@/lib/green/rtms-scoring").GreenRtmsScore;
+  /** Green wizard EU Taxonomy compliance (persisted from Step15Summary). */
+  greenCompliance?: import("@/lib/green/scoring/green-compliance").GreenComplianceScore;
 };
 
 const DOC_ROWS = ALL_RWA_DOCUMENT_IDS.map((id) => RWA_DOCUMENT_LABELS[id]);

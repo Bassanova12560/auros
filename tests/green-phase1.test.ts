@@ -25,6 +25,7 @@ const GREEN_HUB_SECONDARY_HREFS = [
   "/green/faq",
   "/green/blog",
   "/green/standards",
+  "/green/csrd-check",
   "/green/compare",
   "/green/label",
   "/green/registry",

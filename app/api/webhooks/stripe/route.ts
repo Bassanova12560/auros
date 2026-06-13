@@ -1,10 +1,13 @@
+/** Requires STRIPE_SECRET_KEY + STRIPE_WEBHOOK_SECRET (lib/stripe/jurisdiction-checkout). */
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
 
 import { fulfillJurisdictionPayment, fulfillWalkInPayment, parseCheckoutMetadata } from "@/lib/jurisdictions/fulfill-payment";
 import { fulfillAcademyDiplomaPayment } from "@/lib/academy/fulfill-diploma-payment";
 import { parseAcademyDiplomaMetadata } from "@/lib/academy/diploma-checkout";
+import { fulfillGreenImpactPaymentFromStripe } from "@/lib/green/fulfill-impact-payment";
 import { getStripe, stripeWebhookSecret } from "@/lib/stripe/jurisdiction-checkout";
+import { parseGreenImpactCheckoutMetadata } from "@/lib/stripe/green-impact-checkout";
 import { parseWizardCheckoutMetadata } from "@/lib/stripe/wizard-checkout";
 import { fulfillWizardPayment } from "@/lib/wizard/fulfill-payment";
 
@@ -47,6 +50,12 @@ export async function POST(request: Request) {
     const academyMeta = parseAcademyDiplomaMetadata(sessionMeta);
     if (academyMeta) {
       await fulfillAcademyDiplomaPayment(session);
+      return NextResponse.json({ received: true });
+    }
+
+    const greenImpactMeta = parseGreenImpactCheckoutMetadata(sessionMeta);
+    if (greenImpactMeta) {
+      await fulfillGreenImpactPaymentFromStripe(session);
       return NextResponse.json({ received: true });
     }
 

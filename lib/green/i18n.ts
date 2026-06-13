@@ -12,6 +12,9 @@ export type GreenMessages = {
       standards: string;
       registry: string;
       label: string;
+      compare: string;
+      csrdCheck: string;
+      impactReport: string;
       tokenize: string;
     };
   };
@@ -527,6 +530,9 @@ const FR: GreenMessages = {
       standards: "Standards",
       registry: "Registre",
       label: "Label",
+      compare: "Comparer",
+      csrdCheck: "CSRD",
+      impactReport: "Impact Report",
       tokenize: "Tokeniser",
     },
   },
@@ -1434,6 +1440,9 @@ const EN: GreenMessages = {
       standards: "Standards",
       registry: "Registry",
       label: "Label",
+      compare: "Compare",
+      csrdCheck: "CSRD",
+      impactReport: "Impact Report",
       tokenize: "Tokenize",
     },
   },
@@ -2339,6 +2348,9 @@ const ES: GreenMessages = {
       standards: "Estándares",
       registry: "Registro",
       label: "Etiqueta",
+      compare: "Comparar",
+      csrdCheck: "CSRD",
+      impactReport: "Impact Report",
       tokenize: "Tokenizar",
     },
   },

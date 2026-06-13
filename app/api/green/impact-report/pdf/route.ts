@@ -8,14 +8,23 @@ import {
 } from "@/lib/green/impact-report-pdf";
 import type { GreenImpactReportInput } from "@/lib/green/impact-report-pdf";
 import type { CsrdResult } from "@/lib/green/csrd-check/types";
-import { isGreenImpactReportTier } from "@/lib/green/impact-report-pricing";
-import { retrievePaidGreenImpactSession } from "@/lib/stripe/green-impact-checkout";
+import { verifyGreenImpactReportEntitlement } from "@/lib/green/fulfill-impact-payment";
+import { checkRateLimit, getRequestIp } from "@/lib/rate-limit";
 import { normalizeWizardData } from "@/lib/wizard-types";
-import type { Locale } from "@/lib/i18n";
 
 export const runtime = "nodejs";
 
+const PDF_IP_LIMIT = 8;
+const PDF_IP_WINDOW_MS = 3_600_000;
+const PDF_SESSION_LIMIT = 5;
+
 export async function POST(request: Request) {
+  const ip = getRequestIp(request);
+  const ipRate = checkRateLimit(`green-impact-pdf:${ip}`, PDF_IP_LIMIT, PDF_IP_WINDOW_MS);
+  if (!ipRate.allowed) {
+    return NextResponse.json({ error: "rate_limit" }, { status: 429 });
+  }
+
   let body: unknown;
   try {
     body = await request.json();
@@ -33,17 +42,22 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "missing_session" }, { status: 400 });
   }
 
-  const session = await retrievePaidGreenImpactSession(sessionId);
-  if (!session) {
+  const sessionRate = checkRateLimit(
+    `green-impact-pdf:session:${sessionId}`,
+    PDF_SESSION_LIMIT,
+    PDF_IP_WINDOW_MS
+  );
+  if (!sessionRate.allowed) {
+    return NextResponse.json({ error: "rate_limit" }, { status: 429 });
+  }
+
+  const purchase = await verifyGreenImpactReportEntitlement(sessionId);
+  if (!purchase) {
     return NextResponse.json({ error: "payment_required" }, { status: 402 });
   }
 
-  const meta = session.metadata ?? {};
-  const tierRaw = meta.tier?.trim() ?? "standard";
-  const tier = isGreenImpactReportTier(tierRaw) ? tierRaw : "standard";
-  const localeRaw = meta.locale?.trim();
-  const locale: Locale =
-    localeRaw === "en" || localeRaw === "es" || localeRaw === "fr" ? localeRaw : "fr";
+  const tier = purchase.tier;
+  const locale = purchase.locale;
 
   const data = normalizeWizardData(
     (o.data && typeof o.data === "object" ? o.data : {}) as Record<string, unknown>

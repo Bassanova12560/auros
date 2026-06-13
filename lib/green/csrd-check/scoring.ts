@@ -1,7 +1,4 @@
-import type { CsrdAnswers, CsrdResult } from "./types";
-
-const DISCLAIMER =
-  "Estimation indicative du scope CSRD — pas un avis juridique. Vérifiez avec votre auditeur ou conseil ESG.";
+import type { CsrdAnswers, CsrdPriorityKey, CsrdResult, CsrdScopeKey } from "./types";
 
 function isLargeUndertaking(answers: CsrdAnswers): boolean {
   return (
@@ -16,15 +13,15 @@ export function computeCsrdScope(answers: CsrdAnswers): CsrdResult {
   const in_scope = large || listed;
 
   let scope_from_year: number | null = null;
-  let scope_label = "Hors scope CSRD (estimation)";
+  let scope_key: CsrdScopeKey = "out_of_scope";
 
   if (in_scope) {
     if (listed && !large) {
       scope_from_year = 2027;
-      scope_label = "Scope CSRD probable — PME cotée (reporting dès exercice 2027)";
+      scope_key = "listed_sme";
     } else {
       scope_from_year = 2026;
-      scope_label = "Scope CSRD probable — grande entreprise (reporting dès exercice 2026)";
+      scope_key = "large_undertaking";
     }
   }
 
@@ -38,24 +35,23 @@ export function computeCsrdScope(answers: CsrdAnswers): CsrdResult {
   const preparation_tier: CsrdResult["preparation_tier"] =
     preparation_score >= 70 ? "ready" : preparation_score >= 45 ? "progress" : "early";
 
-  const priorities: string[] = [];
+  const priority_keys: CsrdPriorityKey[] = [];
   if (in_scope && answers.hasSustainabilityReport !== true) {
-    priorities.push("Lancer un rapport de durabilité CSRD (double matérialité).");
+    priority_keys.push("sustainability_report");
   }
   if (answers.greenAssets === true && preparation_score < 60) {
-    priorities.push("Cartographier le Green Asset Ratio et l'alignement EU Taxonomy.");
+    priority_keys.push("green_asset_ratio");
   }
   if (in_scope && answers.hasSustainabilityReport === false) {
-    priorities.push("Identifier les datapoints ESRS prioritaires pour votre secteur.");
+    priority_keys.push("esrs_datapoints");
   }
 
   return {
     in_scope,
     scope_from_year,
-    scope_label,
+    scope_key,
     preparation_score,
     preparation_tier,
-    priorities: priorities.slice(0, 3),
-    disclaimer: DISCLAIMER,
+    priority_keys: priority_keys.slice(0, 3),
   };
 }
