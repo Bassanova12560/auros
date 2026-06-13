@@ -7,10 +7,11 @@
  */
 
 import { PROTOCOL_DISCLAIMER } from "../constants";
-import { listActiveMonitors, markMonitorChecked } from "./store";
-import { updatesForMonitor } from "./esma-feed";
+import { dispatchRegulatoryFeedUpdates } from "../regulatory/dispatch-updates";
+import { filterFeedForMonitor } from "../regulatory/feed";
 import { dispatchWebhook, type WebhookEventPayload } from "../webhooks/sign";
 import { listWebhooksForKey } from "../webhooks/store";
+import { listActiveMonitors, markMonitorChecked } from "./store";
 
 const CHECK_INTERVAL_MS = 24 * 60 * 60 * 1000;
 
@@ -18,6 +19,8 @@ export type RegulatoryCheckResult = {
   monitors_checked: number;
   alerts_sent: number;
   errors: number;
+  regulatory_subscriptions_checked: number;
+  regulatory_webhooks_fired: number;
 };
 
 export async function checkRegulatoryUpdates(): Promise<RegulatoryCheckResult> {
@@ -32,7 +35,7 @@ export async function checkRegulatoryUpdates(): Promise<RegulatoryCheckResult> {
       : 0;
     if (now - lastChecked < CHECK_INTERVAL_MS) continue;
 
-    const updates = updatesForMonitor(monitor);
+    const updates = filterFeedForMonitor(monitor);
     const recentUpdate = updates[0];
     let alertSent = false;
 
@@ -48,7 +51,7 @@ export async function checkRegulatoryUpdates(): Promise<RegulatoryCheckResult> {
         summary: recentUpdate.summary,
         details: {
           title: recentUpdate.title,
-          source_url: recentUpdate.source_url,
+          source_url: recentUpdate.url,
           published_at: recentUpdate.published_at,
           deadline: recentUpdate.deadline,
           update_id: recentUpdate.id,
@@ -81,9 +84,13 @@ export async function checkRegulatoryUpdates(): Promise<RegulatoryCheckResult> {
     await markMonitorChecked(monitor.id, alertSent);
   }
 
+  const feedDispatch = await dispatchRegulatoryFeedUpdates();
+
   return {
     monitors_checked: monitors.length,
     alerts_sent: alertsSent,
-    errors,
+    errors: errors + feedDispatch.errors,
+    regulatory_subscriptions_checked: feedDispatch.subscriptions_checked,
+    regulatory_webhooks_fired: feedDispatch.webhooks_fired,
   };
 }

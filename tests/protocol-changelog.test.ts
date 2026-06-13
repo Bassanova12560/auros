@@ -11,9 +11,12 @@ import {
 describe("protocol/changelog", () => {
   it("lists released entries newest first", () => {
     const released = getReleasedChangelogEntries();
-    assert.equal(released[0]?.id, "batch-score-endpoint");
-    assert.ok(released.length >= 6);
+    assert.ok(released.some((e) => e.id === "regulatory-feed-endpoint"));
+    assert.ok(released.length >= 7);
     assert.ok(released.every((e) => e.status === "released"));
+    for (let i = 1; i < released.length; i++) {
+      assert.ok(released[i - 1]!.date >= released[i]!.date);
+    }
   });
 
   it("has no upcoming entries", () => {

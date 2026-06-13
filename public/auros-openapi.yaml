@@ -758,6 +758,179 @@ paths:
           description: Deleted
         "403":
           $ref: "#/components/responses/PremiumRequired"
+  /api/v1/webhooks/{id}/deliveries:
+    get:
+      tags: [Premium]
+      summary: List webhook delivery log
+      operationId: listWebhookDeliveries
+      description: |
+        Paginated delivery log for a registered webhook — pending, delivered, failed, dead_letter.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+        - name: limit
+          in: query
+          schema: { type: integer, minimum: 1, maximum: 100, default: 20 }
+        - name: offset
+          in: query
+          schema: { type: integer, minimum: 0, default: 0 }
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [pending, delivered, failed, dead_letter]
+      responses:
+        "200":
+          description: Delivery log page
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WebhookDeliveriesResponse"
+        "404":
+          description: Webhook not found
+        "403":
+          $ref: "#/components/responses/PremiumRequired"
+  /api/v1/webhooks/{id}/replay:
+    post:
+      tags: [Premium]
+      summary: Replay webhook deliveries
+      operationId: replayWebhookDeliveries
+      description: |
+        Replay dead-letter deliveries for a webhook. Optional body `{ "delivery_id": "whd_..." }`
+        replays a single delivery instead of all dead_letter rows.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/WebhookReplayRequest"
+      responses:
+        "200":
+          description: Replay result
+        "404":
+          description: Webhook or delivery not found
+        "403":
+          $ref: "#/components/responses/PremiumRequired"
+  /api/v1/webhooks/deliveries/{delivery_id}/replay:
+    post:
+      tags: [Premium]
+      summary: Replay a single delivery
+      operationId: replayWebhookDelivery
+      parameters:
+        - name: delivery_id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: Delivery replayed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WebhookReplayResponse"
+        "404":
+          description: Delivery not found
+        "403":
+          $ref: "#/components/responses/PremiumRequired"
+  /api/v1/regulatory/feed:
+    get:
+      tags: [Premium]
+      summary: Curated regulatory intelligence feed
+      operationId: regulatoryFeed
+      description: |
+        Premium endpoint. Returns curated ESMA/AMF/BaFin MiCA references (v1 static seed).
+        v2 will add live polling. Filter by jurisdiction, tag, since date.
+      parameters:
+        - name: jurisdiction
+          in: query
+          schema: { type: string, example: france }
+        - name: tag
+          in: query
+          schema:
+            type: string
+            enum: [mica, esma, amf, bafin]
+        - name: since
+          in: query
+          schema: { type: string, format: date, example: "2025-01-01" }
+        - name: limit
+          in: query
+          schema: { type: integer, minimum: 1, maximum: 100, default: 50 }
+      responses:
+        "200":
+          description: Regulatory feed items
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RegulatoryFeedResponse"
+        "403":
+          $ref: "#/components/responses/PremiumRequired"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+  /api/v1/regulatory/subscribe:
+    post:
+      tags: [Premium]
+      summary: Subscribe to regulatory feed alerts
+      operationId: regulatorySubscribe
+      description: |
+        Premium endpoint. Subscribe to `regulatory.update` webhook events filtered by
+        jurisdiction and optional tags. Complements POST /api/v1/webhooks.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegulatorySubscribeRequest"
+      responses:
+        "201":
+          description: Subscription created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RegulatorySubscribeResponse"
+        "403":
+          $ref: "#/components/responses/PremiumRequired"
+        "429":
+          $ref: "#/components/responses/RateLimit"
+  /api/v1/regulatory/subscribe/{id}:
+    get:
+      tags: [Premium]
+      summary: Get regulatory subscription
+      operationId: getRegulatorySubscription
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: Subscription status
+        "404":
+          description: Not found
+        "403":
+          $ref: "#/components/responses/PremiumRequired"
+    delete:
+      tags: [Premium]
+      summary: Delete regulatory subscription
+      operationId: deleteRegulatorySubscription
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: Deleted
+        "404":
+          description: Not found
+        "403":
+          $ref: "#/components/responses/PremiumRequired"
 components:
   securitySchemes:
     bearerAuth:
@@ -1345,7 +1518,123 @@ components:
           type: array
           items:
             type: string
-            enum: [score_change, regulation_update, new_requirement, deadline_approaching]
+            enum:
+              - score_change
+              - regulation_update
+              - new_requirement
+              - deadline_approaching
+              - regulatory.update
+    WebhookDelivery:
+      type: object
+      properties:
+        id: { type: string }
+        webhook_id: { type: string, nullable: true }
+        event: { type: string }
+        status:
+          type: string
+          enum: [pending, delivered, failed, dead_letter]
+        attempts: { type: integer }
+        last_error: { type: string, nullable: true }
+        created_at: { type: string, format: date-time }
+        next_retry_at: { type: string, format: date-time, nullable: true }
+        delivered_at: { type: string, format: date-time, nullable: true }
+        url: { type: string, format: uri }
+    WebhookDeliveriesResponse:
+      type: object
+      properties:
+        webhook_id: { type: string }
+        deliveries:
+          type: array
+          items:
+            $ref: "#/components/schemas/WebhookDelivery"
+        total: { type: integer }
+        limit: { type: integer }
+        offset: { type: integer }
+    WebhookReplayRequest:
+      type: object
+      properties:
+        delivery_id: { type: string }
+    WebhookReplayResponse:
+      type: object
+      properties:
+        delivery:
+          $ref: "#/components/schemas/WebhookDelivery"
+        ok: { type: boolean }
+    RegulatoryFeedItem:
+      type: object
+      required: [id, title, source, jurisdiction, published_at, url, summary, tags]
+      properties:
+        id: { type: string }
+        title: { type: string }
+        source:
+          type: string
+          enum: [ESMA, AMF, BaFin, EC, EBA]
+        jurisdiction: { type: string }
+        published_at: { type: string, format: date }
+        url: { type: string, format: uri }
+        summary: { type: string }
+        tags:
+          type: array
+          items:
+            type: string
+            enum: [mica, esma, amf, bafin]
+        severity:
+          type: string
+          enum: [low, medium, high]
+        event_type:
+          type: string
+          enum: [regulation_update, new_requirement, deadline_approaching]
+        deadline: { type: string, nullable: true }
+    RegulatoryFeedResponse:
+      type: object
+      properties:
+        disclaimer: { type: string }
+        last_updated: { type: string, format: date }
+        total: { type: integer }
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/RegulatoryFeedItem"
+        meta:
+          type: object
+          properties:
+            version: { type: string }
+            source: { type: string, example: curated }
+            note: { type: string }
+    RegulatorySubscribeRequest:
+      type: object
+      properties:
+        jurisdictions:
+          type: array
+          items: { type: string }
+          minItems: 1
+          default: [eu]
+        tags:
+          type: array
+          items:
+            type: string
+            enum: [mica, esma, amf, bafin]
+        webhook_url: { type: string, format: uri }
+        email: { type: string, format: email }
+    RegulatorySubscribeResponse:
+      type: object
+      properties:
+        disclaimer: { type: string }
+        id: { type: string }
+        jurisdictions:
+          type: array
+          items: { type: string }
+        tags:
+          type: array
+          items: { type: string }
+        webhook_url: { type: string, nullable: true }
+        events:
+          type: array
+          items:
+            type: string
+            enum: [regulatory.update]
+        status: { type: string, enum: [active] }
+        created_at: { type: string, format: date-time }
   responses:
     Unauthorized:
       description: Missing or invalid API key

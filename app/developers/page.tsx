@@ -78,6 +78,16 @@ const CURL_EXAMPLES = [
 
 const PREMIUM_ENDPOINTS = [
   {
+    method: "GET",
+    path: "/api/v1/regulatory/feed",
+    desc: "Feed réglementaire ESMA/AMF/BaFin curaté — filtres jurisdiction/tag (premium).",
+  },
+  {
+    method: "POST",
+    path: "/api/v1/regulatory/subscribe",
+    desc: "Abonnement alertes feed réglementaire par juridiction (premium).",
+  },
+  {
     method: "POST",
     path: "/api/v1/monitor",
     desc: "Surveiller un actif — alertes MiCA, webhooks ESMA (premium).",

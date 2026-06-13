@@ -2,9 +2,17 @@ import { z } from "zod";
 
 import { ALERT_TYPES } from "./monitor";
 
+export const WEBHOOK_EVENT_TYPES = [
+  ...ALERT_TYPES,
+  "regulatory.update",
+] as const;
+
 export const webhookRegisterSchema = z.object({
   url: z.string().url(),
-  events: z.array(z.enum(ALERT_TYPES)).min(1).default([...ALERT_TYPES]),
+  events: z
+    .array(z.enum(WEBHOOK_EVENT_TYPES))
+    .min(1)
+    .default([...WEBHOOK_EVENT_TYPES]),
 });
 
 export const webhookItemSchema = z.object({

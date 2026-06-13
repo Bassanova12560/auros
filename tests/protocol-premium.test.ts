@@ -70,7 +70,7 @@ describe("protocol/monitor", () => {
       alert_on: ["regulation_update", "deadline_approaching"],
     });
     assert.ok(updates.length >= 1);
-    assert.ok(updates.every((u) => u.source_url.includes("esma.europa.eu")));
+    assert.ok(updates.every((u) => u.url.includes("esma.europa.eu") || u.url.includes("amf-france.org") || u.url.includes("bafin.de")));
   });
 });
 
@@ -120,5 +120,63 @@ describe("protocol/webhooks", () => {
     assert.ok(wh.id.startsWith("wh_"));
     const deleted = await deleteWebhook(wh.id, keyHash);
     assert.equal(deleted, true);
+  });
+
+  it("logs failed deliveries and moves to dead_letter after max attempts", async () => {
+    const { webhookRetryDelayMs, WEBHOOK_MAX_DELIVERY_ATTEMPTS } = await import(
+      "../lib/protocol/webhooks/constants"
+    );
+    const {
+      enqueueWebhookDelivery,
+      attemptDelivery,
+      getDelivery,
+      listDeliveriesForWebhook,
+      replayDelivery,
+    } = await import("../lib/protocol/webhooks/deliveries");
+
+    assert.equal(webhookRetryDelayMs(1), 60_000);
+    assert.equal(WEBHOOK_MAX_DELIVERY_ATTEMPTS, 5);
+
+    const keyHash = `whd-${Date.now()}`;
+    const webhookId = `wh_test_${Date.now()}`;
+    const payload = {
+      event: "regulation_update",
+      severity: "low" as const,
+      impact_on_score: 0,
+      summary: "test delivery",
+      timestamp: new Date().toISOString(),
+      disclaimer: "test",
+    };
+
+    const first = await enqueueWebhookDelivery({
+      url: "http://127.0.0.1:1/unreachable",
+      payload,
+      key_hash: keyHash,
+      webhook_id: webhookId,
+    });
+    assert.equal(first.ok, false);
+    assert.equal(first.delivery.status, "failed");
+    assert.equal(first.delivery.attempts, 1);
+    assert.ok(first.delivery.next_retry_at);
+
+    let record = first.delivery;
+    while (record.attempts < WEBHOOK_MAX_DELIVERY_ATTEMPTS) {
+      const next = await attemptDelivery(record);
+      record = next.delivery;
+    }
+    assert.equal(record.status, "dead_letter");
+    assert.equal(record.attempts, WEBHOOK_MAX_DELIVERY_ATTEMPTS);
+
+    const fetched = await getDelivery(record.id, keyHash);
+    assert.ok(fetched);
+    assert.equal(fetched?.status, "dead_letter");
+
+    const { total } = await listDeliveriesForWebhook(webhookId, keyHash);
+    assert.ok(total >= 1);
+
+    const replay = await replayDelivery(record.id, keyHash);
+    assert.ok(replay);
+    assert.equal(replay?.delivery.attempts, 1);
+    assert.notEqual(replay?.delivery.status, "dead_letter");
   });
 });

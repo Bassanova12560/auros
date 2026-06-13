@@ -75,11 +75,55 @@ export { jurisdictionsQuerySchema } from "./schemas/jurisdictions";
 export { checklistRequestSchema } from "./schemas/checklist";
 export { createKeyRequestSchema } from "./schemas/keys";
 export { monitorRequestSchema, ALERT_TYPES } from "./schemas/monitor";
-export { dossierRequestSchema, DOSSIER_SECTIONS } from "./schemas/dossier";
-export { webhookRegisterSchema } from "./schemas/webhooks";
+export {
+  regulatoryFeedQuerySchema,
+  regulatorySubscribeSchema,
+} from "./schemas/regulatory";
+export { WEBHOOK_EVENT_TYPES, webhookRegisterSchema } from "./schemas/webhooks";
 export { createMonitor, getMonitor, deleteMonitor, countActiveMonitors } from "./monitor/store";
 export { checkRegulatoryUpdates } from "./monitor/check-regulatory-updates";
-export { registerWebhook, listWebhooksForKey, deleteWebhook } from "./webhooks/store";
+export {
+  REGULATORY_FEED,
+  REGULATORY_FEED_LAST_UPDATED,
+  REGULATORY_TAGS,
+  queryRegulatoryFeed,
+  filterFeedForMonitor,
+  filterFeedForSubscription,
+  toPublicFeedItem,
+} from "./regulatory/feed";
+export type { RegulatoryFeedItem, RegulatoryTag } from "./regulatory/feed";
+export {
+  createRegulatorySubscription,
+  getRegulatorySubscription,
+  deleteRegulatorySubscription,
+  countActiveRegulatorySubscriptions,
+  listActiveRegulatorySubscriptions,
+} from "./regulatory/subscribe-store";
+export { dispatchRegulatoryFeedUpdates } from "./regulatory/dispatch-updates";
+export { dossierRequestSchema, DOSSIER_SECTIONS } from "./schemas/dossier";
+export { registerWebhook, listWebhooksForKey, deleteWebhook, getWebhook } from "./webhooks/store";
+export {
+  WEBHOOK_MAX_DELIVERY_ATTEMPTS,
+  WEBHOOK_RETRY_BACKOFF_MS,
+  webhookRetryDelayMs,
+} from "./webhooks/constants";
+export {
+  enqueueWebhookDelivery,
+  attemptDelivery,
+  getDelivery,
+  listDeliveriesForWebhook,
+  listRecentDeliveriesForKey,
+  replayDelivery,
+  replayDeadLetterForWebhook,
+  retryPendingDeliveries,
+  deliveryToPublic,
+} from "./webhooks/deliveries";
+export type {
+  WebhookDeliveryRecord,
+  WebhookDeliveryStatus,
+  DeliveryAttemptResult,
+  RetryPendingResult,
+} from "./webhooks/deliveries";
 export {
   signWebhookPayload,
   webhookSignatureHeader,

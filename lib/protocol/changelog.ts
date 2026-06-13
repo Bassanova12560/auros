@@ -25,6 +25,26 @@ export type ProtocolChangelogEntry = {
 /** Single source for `/developers/changelog` and GET `/api/v1/changelog`. Newest first. */
 export const PROTOCOL_CHANGELOG: ProtocolChangelogEntry[] = [
   {
+    id: "regulatory-feed-endpoint",
+    date: "2026-06-13",
+    title: "GET /api/v1/regulatory/feed",
+    summary:
+      "Feed réglementaire curaté ESMA/AMF/BaFin — 18 références MiCA, webhook `regulatory.update`, abonnements par juridiction.",
+    details: [
+      "GET /api/v1/regulatory/feed — premium, filtres jurisdiction/tag/since/limit.",
+      "POST /api/v1/regulatory/subscribe — alertes feed par juridiction + tags mica/esma/amf/bafin.",
+      "Webhook `regulatory.update` — cron /api/cron/protocol-monitor ou trigger manuel.",
+      "v1 = feed statique curaté ; v2 = polling live ESMA/AMF/BaFin.",
+    ],
+    links: [
+      { href: "/developers/docs/regulatory-feed", label: "Documentation feed réglementaire" },
+      { href: "/auros-openapi.yaml", label: "OpenAPI spec" },
+    ],
+    tags: ["endpoint", "premium", "regulatory"],
+    status: "released",
+    roadmapItem: 10,
+  },
+  {
     id: "batch-score-endpoint",
     date: "2026-06-12",
     title: "POST /api/v1/score/batch",

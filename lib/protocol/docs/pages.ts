@@ -712,6 +712,76 @@ export async function POST(req: Request) {
     ],
   },
   {
+    slug: "regulatory-feed",
+    title: "Feed réglementaire ESMA/AMF/BaFin (Premium)",
+    description:
+      "Feed curaté MiCA — GET /api/v1/regulatory/feed, abonnements par juridiction, webhook regulatory.update.",
+    category: "endpoints",
+    categoryLabel: "Endpoints",
+    relatedSlugs: ["endpoint-monitor", "endpoint-webhooks", "guide-monitor-mica"],
+    sections: [
+      {
+        heading: "Premium requis",
+        paragraphs: [
+          "Clé `auros_pk_live_*` ou tier premium/monitor/enterprise.",
+          "v1 = feed statique curaté (18 références ESMA, AMF, BaFin, EC). v2 ajoutera le polling live.",
+        ],
+      },
+      {
+        heading: "Consulter le feed",
+        paragraphs: [
+          "Filtres optionnels : `jurisdiction`, `tag` (mica|esma|amf|bafin), `since` (ISO date), `limit` (max 100).",
+        ],
+        code: `curl "${BASE}/api/v1/regulatory/feed?jurisdiction=france&tag=amf&limit=10" \\
+  -H "Authorization: Bearer auros_pk_live_xxx"`,
+        language: "bash",
+      },
+      {
+        heading: "S'abonner aux alertes",
+        paragraphs: [
+          "POST /api/v1/regulatory/subscribe — filtre par juridictions et tags.",
+          "GET/DELETE /api/v1/regulatory/subscribe/:id — statut et désinscription.",
+          "Enregistrez aussi POST /api/v1/webhooks avec l'événement `regulatory.update` pour un endpoint global.",
+        ],
+        code: `curl -X POST ${BASE}/api/v1/regulatory/subscribe \\
+  -H "Authorization: Bearer auros_pk_live_xxx" \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "jurisdictions": ["france", "eu"],
+    "tags": ["amf", "mica"],
+    "webhook_url": "https://your.app/hooks/auros-regulatory"
+  }'`,
+        language: "bash",
+      },
+      {
+        heading: "Webhook regulatory.update",
+        paragraphs: [
+          "Déclenché par le cron daily `/api/cron/protocol-monitor` (Authorization: Bearer $CRON_SECRET).",
+          "Payload signé HMAC — même format que les autres webhooks Protocol.",
+        ],
+        code: `{
+  "event": "regulatory.update",
+  "severity": "high",
+  "impact_on_score": -7,
+  "summary": "AMF — transition PSAN vers agrément MiCA CASP",
+  "details": {
+    "feed_item": {
+      "id": "amf-2025-psan-transition",
+      "title": "...",
+      "source": "AMF",
+      "url": "https://www.amf-france.org/...",
+      "tags": ["amf", "mica"]
+    },
+    "subscription_id": "regsub_abc123"
+  },
+  "timestamp": "2026-06-13T06:00:00.000Z",
+  "disclaimer": "Indicative intelligence only..."
+}`,
+        language: "json",
+      },
+    ],
+  },
+  {
     slug: "endpoint-monitor",
     title: "POST /api/v1/monitor (Premium)",
     description:
@@ -803,7 +873,7 @@ export async function POST(req: Request) {
   -H "Content-Type: application/json" \\
   -d '{
     "url": "https://your.app/hooks/auros",
-    "events": ["regulation_update", "new_requirement"]
+    "events": ["regulation_update", "new_requirement", "regulatory.update"]
   }'`,
         language: "bash",
       },
@@ -812,6 +882,7 @@ export async function POST(req: Request) {
         paragraphs: [
           "Chaque payload POST inclut `X-AUROS-Signature: sha256=<hmac>` signé avec `WEBHOOK_SECRET` (côté AUROS).",
           "GET /api/v1/webhooks — liste. DELETE /api/v1/webhooks/:id — suppression.",
+          "Événement `regulatory.update` — voir /developers/docs/regulatory-feed.",
         ],
       },
       {
@@ -839,7 +910,7 @@ export async function POST(req: Request) {
       "Automatiser la veille réglementaire ESMA/MiCA via monitors et webhooks AUROS Protocol.",
     category: "guides",
     categoryLabel: "Guides",
-    relatedSlugs: ["endpoint-monitor", "endpoint-webhooks"],
+    relatedSlugs: ["endpoint-monitor", "endpoint-webhooks", "regulatory-feed"],
     sections: [
       {
         heading: "Architecture",
