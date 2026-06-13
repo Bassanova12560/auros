@@ -76,7 +76,7 @@ import { getGreenMarketMessages } from "@/lib/green/market-i18n";
 
 
 
-import { GreenCompareOffersSection } from "./market/GreenCompareOffersSection";
+import { formatGreenTaxonomyScoreDisplay } from "@/lib/green/compare-taxonomy";
 
 import {
 
@@ -94,10 +94,9 @@ import {
 
 } from "./green-ui";
 
-
+import { GreenCompareOffersSection } from "./market/GreenCompareOffersSection";
 
 type Props = {
-
   registryProjects: GreenRegistryProjectRow[];
 
   initialOfferIds?: string[];
@@ -1071,7 +1070,7 @@ export function GreenCompareView({
                     <td className="py-4 pr-4 text-xs text-neutral-500">{row.impactNote}</td>
 
                     <td className="py-4 pr-4 font-mono text-xs tabular-nums text-emerald-500/80">
-                      {row.green_taxonomy_score != null ? `${row.green_taxonomy_score}` : "—"}
+                      {formatGreenTaxonomyScoreDisplay(row.green_taxonomy_score)}
                     </td>
 
                     <td className="py-4 pr-4">

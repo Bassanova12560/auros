@@ -2,6 +2,8 @@ export {
   GREEN_ROUTE,
   GREEN_ABOUT_ROUTE,
   GREEN_CSRD_CHECK_ROUTE,
+  GREEN_IMPACT_REPORT_ROUTE,
+  GREEN_IMPACT_REPORT_READY_ROUTE,
   GREEN_MARKET_ROUTE,
   GREEN_MARKET_OFFER_ROUTE,
   GREEN_MARKET_ACTOR_ROUTE,
@@ -101,6 +103,12 @@ export {
 } from "./compare-data";
 export type { GreenCompareRow, GreenRegistryProject } from "./compare-data";
 export {
+  compareGreenTaxonomyScore,
+  formatGreenTaxonomyScoreDisplay,
+  formatGreenTaxonomyScorePdf,
+  sortGreenCompareRowsByTaxonomy,
+} from "./compare-taxonomy";
+export {
   getGreenRegistrySnapshot,
   getGreenRegistryProjectByToken,
   getGreenRegistryProjectById,
@@ -146,11 +154,18 @@ export {
   isGreenWizardContext,
   type GreenComplianceScore,
   type GreenAssetClass,
+  type GreenCompliancePriorityKey,
   type SfdrArticle,
   type EuGbsEligibility,
 } from "./scoring/green-compliance";
+export { getCsrdCheckerCopy } from "./csrd-check/i18n";
+export type { CsrdCheckerCopy } from "./csrd-check/i18n";
+export { getGreenComplianceCopy } from "./compliance-i18n";
+export type { GreenComplianceCopy } from "./compliance-i18n";
+export { getGreenImpactReportCopy } from "./impact-report-i18n";
+export type { GreenImpactReportCopy } from "./impact-report-i18n";
 export { computeCsrdScope } from "./csrd-check/scoring";
-export type { CsrdAnswers, CsrdResult, CsrdQuestionId } from "./csrd-check/types";
+export type { CsrdAnswers, CsrdResult, CsrdQuestionId, CsrdScopeKey, CsrdPriorityKey } from "./csrd-check/types";
 export { CSRD_CHECKER_FAQ } from "./csrd-check/faq";
 export { generateGreenDossierPDF, suggestedGreenFilename } from "./green-pdf";
 export {

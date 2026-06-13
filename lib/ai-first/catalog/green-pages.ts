@@ -6,6 +6,8 @@ import {
   GREEN_CHARGERS_ROUTE,
   GREEN_COMPARE_ROUTE,
   GREEN_CSRD_CHECK_ROUTE,
+  GREEN_IMPACT_REPORT_ROUTE,
+  GREEN_IMPACT_REPORT_READY_ROUTE,
   GREEN_CONSUMERS_ROUTE,
   GREEN_DISCLAIMER,
   GREEN_GUIDE_ROUTE,
@@ -473,7 +475,56 @@ export const greenCsrdCheckPage = enrichPage({
     { key: "Durée", value: "~2 minutes — 6 questions" },
     { key: "Suite", value: "/wizard?type=green&asset=renewable — Green Score EU Taxonomy" },
   ],
-  relatedPaths: [GREEN_ROUTE, GREEN_STANDARDS_ROUTE, "/wizard"],
+  relatedPaths: [GREEN_ROUTE, GREEN_STANDARDS_ROUTE, GREEN_IMPACT_REPORT_ROUTE, "/wizard"],
+});
+
+export const greenImpactReportPage = enrichPage({
+  id: "green-impact-report",
+  path: GREEN_IMPACT_REPORT_ROUTE,
+  title: "Rapport d'impact Green — PDF EU Taxonomy + RTMS | AUROS Green",
+  description:
+    "Commandez un rapport PDF institutionnel EU Taxonomy + RTMS depuis votre dossier Green — indicatif, prêt à partager.",
+  summary:
+    "Rapport d'impact AUROS Green : synthèse PDF EU Taxonomy et RTMS depuis wizard ou CSRD Checker — téléchargement immédiat après paiement Stripe.",
+  contentType: "landing",
+  language: "multi",
+  indexable: true,
+  lastUpdated: "2026-06-13",
+  keywords: [
+    "rapport impact green",
+    "EU Taxonomy PDF",
+    "RTMS report",
+    "green impact report",
+  ],
+  intents: [
+    "Commander un rapport d'impact EU Taxonomy",
+    "Obtenir un PDF RTMS pour mon dossier vert",
+    "Partager un rapport ESG interne",
+  ],
+  audience: ["CFO", "responsables ESG", "family office", "promoteurs"],
+  facts: [
+    { key: "Formats", value: "Standard 49 € · Institutionnel 199 €" },
+    { key: "Livraison", value: "Téléchargement PDF immédiat après paiement" },
+  ],
+  relatedPaths: [GREEN_CSRD_CHECK_ROUTE, GREEN_ROUTE, "/wizard?type=green"],
+});
+
+export const greenImpactReportReadyPage = enrichPage({
+  id: "green-impact-report-ready",
+  path: GREEN_IMPACT_REPORT_READY_ROUTE,
+  title: "Télécharger votre rapport d'impact | AUROS Green",
+  description: "Page post-paiement — téléchargement du rapport d'impact Green PDF.",
+  summary:
+    "Confirmation paiement rapport d'impact AUROS Green — génération et téléchargement PDF EU Taxonomy + RTMS.",
+  contentType: "landing",
+  language: "multi",
+  indexable: false,
+  lastUpdated: "2026-06-13",
+  keywords: ["télécharger rapport impact green"],
+  intents: ["Télécharger mon rapport d'impact après paiement"],
+  audience: ["acheteurs rapport impact"],
+  facts: [{ key: "Accès", value: "Session Stripe confirmée requise" }],
+  relatedPaths: [GREEN_IMPACT_REPORT_ROUTE, GREEN_CSRD_CHECK_ROUTE],
 });
 
 export const greenRtmsAssistantPage = enrichPage({
@@ -580,6 +631,8 @@ export const greenPages: AiFirstPage[] = [
   greenStandardsPage,
   greenComparePage,
   greenCsrdCheckPage,
+  greenImpactReportPage,
+  greenImpactReportReadyPage,
   greenRtmsAssistantPage,
   greenLabelPage,
   greenCertificationPage,

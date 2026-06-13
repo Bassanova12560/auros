@@ -4,16 +4,17 @@ import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 
 import { PrimaryButton } from "@/app/_components/ui/PrimaryButton";
+import { useLocale } from "@/app/_components/i18n/LocaleProvider";
 import { DOSSIER_STORAGE_KEY } from "@/lib/wizard-constants";
 import type { GreenComplianceScore } from "@/lib/green/scoring/green-compliance";
 import type { GreenImpactReportTier } from "@/lib/green/impact-report-pricing";
+import { getGreenImpactReportCopy } from "@/lib/green/impact-report-i18n";
 import type { CsrdResult } from "@/lib/green/csrd-check/types";
 import { track } from "@/lib/analytics";
 
 type Props = {
   email?: string;
   firstName?: string;
-  locale?: string;
   csrdResult?: CsrdResult;
   /** Compact layout for wizard summary panel */
   compact?: boolean;
@@ -24,10 +25,11 @@ type CheckoutState = "idle" | "loading" | "error";
 export function GreenImpactReportCta({
   email = "",
   firstName,
-  locale = "fr",
   csrdResult,
   compact = false,
 }: Props) {
+  const { locale } = useLocale();
+  const copy = getGreenImpactReportCopy(locale).cta;
   const [checkoutState, setCheckoutState] = useState<CheckoutState>("idle");
   const [error, setError] = useState<string | null>(null);
 
@@ -61,11 +63,11 @@ export function GreenImpactReportCta({
 
       if (!contactEmail.includes("@")) {
         setCheckoutState("error");
-        setError("Indiquez votre e-mail dans le wizard pour commander le rapport.");
+        setError(copy.errors.emailRequired);
         return;
       }
 
-      track("green_impact_report_checkout", { tier });
+      track("impact_report_checkout_start", { tier, locale });
 
       try {
         const res = await fetch("/api/green/impact-report/checkout", {
@@ -77,19 +79,21 @@ export function GreenImpactReportCta({
         if (!res.ok || !json.url) {
           setCheckoutState("error");
           setError(
-            json.error === "stripe_unconfigured"
-              ? "Paiement temporairement indisponible — réessayez plus tard."
-              : "Impossible de lancer le paiement."
+            json.error === "missing_email"
+              ? copy.errors.emailRequired
+              : json.error === "stripe_unconfigured"
+                ? copy.errors.stripeUnavailable
+                : copy.errors.checkoutFailed
           );
           return;
         }
         window.location.href = json.url;
       } catch {
         setCheckoutState("error");
-        setError("Erreur réseau — réessayez.");
+        setError(copy.errors.network);
       }
     },
-    [email, firstName, locale]
+    [copy.errors, email, firstName, locale]
   );
 
   const loading = checkoutState === "loading";
@@ -97,9 +101,7 @@ export function GreenImpactReportCta({
   if (compact) {
     return (
       <div className="mt-4 border-t border-teal-500/20 pt-4">
-        <p className="text-xs text-neutral-400">
-          Rapport PDF institutionnel — EU Taxonomy + RTMS, prêt à partager.
-        </p>
+        <p className="text-xs text-neutral-400">{copy.compactDescription}</p>
         <div className="mt-3 flex flex-wrap gap-2">
           <button
             type="button"
@@ -107,7 +109,7 @@ export function GreenImpactReportCta({
             onClick={() => startCheckout("standard")}
             className="rounded-full border border-teal-500/40 px-4 py-2 text-xs uppercase tracking-wider text-teal-400 transition hover:border-teal-400 disabled:opacity-50"
           >
-            {loading ? "Redirection…" : "PDF · 49 €"}
+            {loading ? copy.redirecting : copy.pdfStandard}
           </button>
           <button
             type="button"
@@ -115,12 +117,20 @@ export function GreenImpactReportCta({
             onClick={() => startCheckout("institutional")}
             className="text-xs text-neutral-500 hover:text-teal-400/80 disabled:opacity-50"
           >
-            Version institutionnelle · 199 €
+            {copy.institutional}
           </button>
         </div>
         {error ? (
           <p className="mt-2 text-xs text-amber-400/90" role="alert">
             {error}
+          </p>
+        ) : null}
+        {!email.includes("@") ? (
+          <p className="mt-2 text-xs text-neutral-500">
+            <Link href="/wizard?type=green" className="text-teal-400/80 hover:text-teal-300">
+              {copy.wizardLink}
+            </Link>{" "}
+            {copy.wizardHint}
           </p>
         ) : null}
       </div>
@@ -130,14 +140,12 @@ export function GreenImpactReportCta({
   return (
     <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6">
       <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-emerald-500/70">
-        Rapport d&apos;impact Green
+        {copy.eyebrow}
       </p>
-      <p className="mt-2 text-sm text-white/65">
-        Synthèse PDF EU Taxonomy + RTMS depuis votre dossier — indicatif, prêt à partager en interne.
-      </p>
+      <p className="mt-2 text-sm text-white/65">{copy.description}</p>
       <div className="mt-5 flex flex-wrap gap-3">
         <PrimaryButton disabled={loading} onClick={() => startCheckout("standard")}>
-          {loading ? "Redirection…" : "Commander · 49 €"}
+          {loading ? copy.redirecting : copy.orderStandard}
         </PrimaryButton>
         <button
           type="button"
@@ -145,12 +153,10 @@ export function GreenImpactReportCta({
           onClick={() => startCheckout("institutional")}
           className="text-sm text-white/45 hover:text-white/70 disabled:opacity-50"
         >
-          Institutionnel · 199 €
+          {copy.orderInstitutional}
         </button>
       </div>
-      <p className="mt-3 text-[11px] text-white/35">
-        Paiement sécurisé Stripe · téléchargement immédiat après validation.
-      </p>
+      <p className="mt-3 text-[11px] text-white/35">{copy.paymentNote}</p>
       {error ? (
         <p className="mt-2 text-xs text-amber-400/90" role="alert">
           {error}
@@ -159,9 +165,9 @@ export function GreenImpactReportCta({
       {!email.includes("@") ? (
         <p className="mt-2 text-xs text-white/40">
           <Link href="/wizard?type=green" className="text-emerald-500/70 hover:text-emerald-400">
-            Complétez le wizard Green
+            {copy.wizardLink}
           </Link>{" "}
-          pour enrichir le rapport.
+          {copy.wizardHint}
         </p>
       ) : null}
     </div>

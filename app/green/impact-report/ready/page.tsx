@@ -5,21 +5,26 @@ import { useSearchParams } from "next/navigation";
 import { Suspense, useCallback, useEffect, useState } from "react";
 
 import { PrimaryButton } from "@/app/_components/ui/PrimaryButton";
+import { useLocale } from "@/app/_components/i18n/LocaleProvider";
 import { DOSSIER_STORAGE_KEY } from "@/lib/wizard-constants";
 import type { CsrdResult } from "@/lib/green/csrd-check/types";
 import { GREEN_ROUTE } from "@/lib/green/constants";
+import { getGreenImpactReportCopy } from "@/lib/green/impact-report-i18n";
+import { track } from "@/lib/analytics";
 
 type PdfState = "idle" | "generating" | "error" | "done";
 
 function ReadyInner() {
+  const { locale } = useLocale();
+  const copy = getGreenImpactReportCopy(locale).ready;
   const searchParams = useSearchParams();
   const sessionId = searchParams.get("session_id")?.trim() ?? "";
   const [pdfState, setPdfState] = useState<PdfState>("idle");
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!sessionId) setError("Session de paiement introuvable.");
-  }, [sessionId]);
+    if (!sessionId) setError(copy.errors.sessionMissing);
+  }, [copy.errors.sessionMissing, sessionId]);
 
   const downloadPdf = useCallback(async () => {
     if (!sessionId) return;
@@ -48,14 +53,14 @@ function ReadyInner() {
       const res = await fetch("/api/green/impact-report/pdf", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ sessionId, data, csrdResult }),
+        body: JSON.stringify({ sessionId, data, csrdResult, locale }),
       });
       if (!res.ok) {
         setPdfState("error");
         setError(
           res.status === 402
-            ? "Paiement non confirmé — contactez support@getauros.com."
-            : "Génération du PDF impossible."
+            ? copy.errors.paymentUnconfirmed
+            : copy.errors.generationFailed
         );
         return;
       }
@@ -69,38 +74,39 @@ function ReadyInner() {
       anchor.click();
       URL.revokeObjectURL(url);
       setPdfState("done");
+      track("impact_report_download", { locale });
     } catch {
       setPdfState("error");
-      setError("Erreur réseau — réessayez.");
+      setError(copy.errors.network);
     }
-  }, [sessionId]);
+  }, [copy.errors, locale, sessionId]);
+
+  const downloadLabel =
+    pdfState === "generating"
+      ? copy.generating
+      : pdfState === "done"
+        ? copy.redownload
+        : copy.download;
 
   return (
     <div className="page-inner mx-auto max-w-lg px-4 py-16 md:py-24">
       <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-emerald-500/70">
-        AUROS Green · Impact Report
+        {copy.eyebrow}
       </p>
-      <h1 className="mt-4 text-2xl font-light text-white">Paiement confirmé</h1>
-      <p className="mt-3 text-sm leading-relaxed text-white/60">
-        Votre rapport d&apos;impact est prêt. Téléchargez le PDF EU Taxonomy + RTMS — indicatif,
-        à valider avec votre conseil ESG.
-      </p>
+      <h1 className="mt-4 text-2xl font-light text-white">{copy.title}</h1>
+      <p className="mt-3 text-sm leading-relaxed text-white/60">{copy.description}</p>
       <div className="mt-8 flex flex-wrap gap-3">
         <PrimaryButton
           disabled={!sessionId || pdfState === "generating"}
           onClick={downloadPdf}
         >
-          {pdfState === "generating"
-            ? "Génération…"
-            : pdfState === "done"
-              ? "Retélécharger le PDF"
-              : "Télécharger le PDF"}
+          {downloadLabel}
         </PrimaryButton>
         <Link
           href={GREEN_ROUTE}
           className="inline-flex min-h-[44px] items-center text-sm text-white/45 hover:text-white/70"
         >
-          Retour AUROS Green
+          {copy.backLink}
         </Link>
       </div>
       {error ? (
@@ -112,9 +118,15 @@ function ReadyInner() {
   );
 }
 
+function ReadyLoading() {
+  const { locale } = useLocale();
+  const copy = getGreenImpactReportCopy(locale).ready;
+  return <div className="page-inner px-4 py-16 text-white/50">{copy.loading}</div>;
+}
+
 export default function GreenImpactReportReadyPage() {
   return (
-    <Suspense fallback={<div className="page-inner px-4 py-16 text-white/50">Chargement…</div>}>
+    <Suspense fallback={<ReadyLoading />}>
       <ReadyInner />
     </Suspense>
   );
