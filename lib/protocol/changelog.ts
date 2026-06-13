@@ -25,6 +25,26 @@ export type ProtocolChangelogEntry = {
 /** Single source for `/developers/changelog` and GET `/api/v1/changelog`. Newest first. */
 export const PROTOCOL_CHANGELOG: ProtocolChangelogEntry[] = [
   {
+    id: "mcp-server",
+    date: "2026-06-13",
+    title: "MCP server for AUROS Protocol",
+    summary:
+      "Package @adrien1212balitrand/auros-mcp — 8 outils MCP (score, products, compare, …) pour Cursor et Claude Desktop.",
+    details: [
+      "Tools : score, score_batch, products, jurisdictions, checklist, compare, regulatory_feed, status.",
+      "Auth via env AUROS_API_KEY (clé démo auros_pk_test_demo par défaut).",
+      "Thin wrapper sur https://getauros.com/api/v1/* — aucune route HTTP nouvelle.",
+      "Config Cursor/Claude Desktop documentée — npx @adrien1212balitrand/auros-mcp.",
+    ],
+    links: [
+      { href: "/developers/docs/mcp-server", label: "Documentation MCP server" },
+      { href: "/developers", label: "Portail développeurs" },
+    ],
+    tags: ["mcp", "tooling", "sdk"],
+    status: "released",
+    roadmapItem: 11,
+  },
+  {
     id: "webhook-replay-dlq",
     date: "2026-06-13",
     title: "Webhook replay, dead letter queue & delivery logs",

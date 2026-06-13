@@ -712,6 +712,95 @@ export async function POST(req: Request) {
     ],
   },
   {
+    slug: "mcp-server",
+    title: "MCP server (Cursor & Claude Desktop)",
+    description:
+      "Exposez AUROS Protocol comme serveur MCP — 8 outils pour agents IA : score MiCA, catalogue RWA, juridictions, compare.",
+    category: "getting-started",
+    categoryLabel: "Démarrage",
+    relatedSlugs: ["quickstart", "authentication", "endpoint-score"],
+    sections: [
+      {
+        heading: "Installation",
+        paragraphs: [
+          "Le package npm `@adrien1212balitrand/auros-mcp` encapsule l'API REST en outils MCP compatibles Cursor et Claude Desktop.",
+          "Authentification via variable d'environnement `AUROS_API_KEY` — clé démo publique par défaut.",
+        ],
+        code: `npm install -g @adrien1212balitrand/auros-mcp`,
+        language: "bash",
+      },
+      {
+        heading: "Configuration Cursor",
+        paragraphs: [
+          "Ajoutez à `.cursor/mcp.json` (projet) ou aux paramètres MCP globaux, puis redémarrez Cursor.",
+        ],
+        code: `{
+  "mcpServers": {
+    "auros-protocol": {
+      "command": "npx",
+      "args": ["-y", "@adrien1212balitrand/auros-mcp"],
+      "env": {
+        "AUROS_API_KEY": "${DEMO_API_KEY}"
+      }
+    }
+  }
+}`,
+        language: "json",
+      },
+      {
+        heading: "Configuration Claude Desktop",
+        paragraphs: [
+          "Éditez `claude_desktop_config.json` (Windows : %APPDATA%\\Claude\\, macOS : ~/Library/Application Support/Claude/).",
+        ],
+        code: `{
+  "mcpServers": {
+    "auros-protocol": {
+      "command": "npx",
+      "args": ["-y", "@adrien1212balitrand/auros-mcp"],
+      "env": {
+        "AUROS_API_KEY": "${DEMO_API_KEY}"
+      }
+    }
+  }
+}`,
+        language: "json",
+      },
+      {
+        heading: "Outils disponibles",
+        paragraphs: [
+          "• `score` — POST /api/v1/score (description libre ou champs structurés)",
+          "• `score_batch` — POST /api/v1/score/batch (max 20 items, 1 unité quota)",
+          "• `products` — GET /api/v1/products (catalogue 120+ produits RWA)",
+          "• `jurisdictions` — GET /api/v1/jurisdictions (classement réglementaire)",
+          "• `checklist` — POST /api/v1/checklist (20+ items compliance)",
+          "• `compare` — POST /api/v1/compare (2–4 produits side-by-side)",
+          "• `regulatory_feed` — GET /api/v1/regulatory/feed (premium, feed ESMA/AMF/BaFin)",
+          "• `status` — GET /api/v1/status (santé API, sans auth)",
+        ],
+      },
+      {
+        heading: "Variables d'environnement",
+        paragraphs: [
+          `• \`AUROS_API_KEY\` — Bearer token (défaut : \`${DEMO_API_KEY}\`)`,
+          "• `AUROS_BASE_URL` — base URL API (défaut : https://getauros.com)",
+          "Obtenez une clé gratuite (100 req/mois) via POST /api/v1/keys ou le playground /developers.",
+        ],
+        links: [
+          { href: "/developers#playground", label: "Playground développeurs" },
+          { href: "/status", label: "Statut API" },
+        ],
+      },
+      {
+        heading: "Exemples de prompts agent",
+        paragraphs: [
+          "« Score ce SPV immobilier Luxembourg €2.5M, investisseurs professionnels, whitepaper brouillon. »",
+          "« Compare maple-usdc, realt-portfolio et backed-bib01. »",
+          "« Quelles juridictions pour des obligations tokenisées avec un délai de 6 mois ? »",
+        ],
+      },
+    ],
+  },
+  {
     slug: "regulatory-feed",
     title: "Feed réglementaire ESMA/AMF/BaFin (Premium)",
     description:

@@ -161,7 +161,7 @@ export default function DevelopersPage() {
           <h2 className="font-mono text-[11px] tracking-wide text-white/45">
             SDK — installation
           </h2>
-          <div className="mt-4 grid gap-4 sm:grid-cols-2">
+          <div className="mt-4 grid gap-4 sm:grid-cols-3">
             <div>
               <p className="font-mono text-[10px] text-emerald-400/80">npm</p>
               <pre className="mt-2 overflow-x-auto rounded-lg bg-black/40 p-3 font-mono text-[11px] text-white/65">
@@ -172,6 +172,12 @@ export default function DevelopersPage() {
               <p className="font-mono text-[10px] text-emerald-400/80">pip</p>
               <pre className="mt-2 overflow-x-auto rounded-lg bg-black/40 p-3 font-mono text-[11px] text-white/65">
                 pip install auros-protocol
+              </pre>
+            </div>
+            <div>
+              <p className="font-mono text-[10px] text-emerald-400/80">MCP</p>
+              <pre className="mt-2 overflow-x-auto rounded-lg bg-black/40 p-3 font-mono text-[11px] text-white/65">
+                npx @adrien1212balitrand/auros-mcp
               </pre>
             </div>
           </div>
@@ -308,6 +314,14 @@ console.log(result.score, result.grade);`}
               >
                 Python SDK on PyPI (auros-protocol) →
               </a>
+            </li>
+            <li>
+              <Link
+                href="/developers/docs/mcp-server"
+                className="text-sm text-white/70 hover:text-white"
+              >
+                MCP server (Cursor & Claude Desktop) →
+              </Link>
             </li>
             <li>
               <Link href="/status" className="text-sm text-white/70 hover:text-white">

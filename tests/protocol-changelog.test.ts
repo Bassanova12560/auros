@@ -11,9 +11,10 @@ import {
 describe("protocol/changelog", () => {
   it("lists released entries newest first", () => {
     const released = getReleasedChangelogEntries();
+    assert.ok(released.some((e) => e.id === "mcp-server"));
     assert.ok(released.some((e) => e.id === "webhook-replay-dlq"));
     assert.ok(released.some((e) => e.id === "regulatory-feed-endpoint"));
-    assert.ok(released.length >= 8);
+    assert.ok(released.length >= 9);
     assert.ok(released.every((e) => e.status === "released"));
     for (let i = 1; i < released.length; i++) {
       assert.ok(released[i - 1]!.date >= released[i]!.date);
