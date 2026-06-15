@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-12T14:11:12.494Z",
+  "generatedAt": "2026-06-15T10:34:04.660Z",
   "urls": {
     "partnersPortal": "https://partners.rwa.xyz/",
     "partnersLogin": "https://partners.rwa.xyz/login",
@@ -38,10 +38,11 @@
       "Commodities"
     ],
     "shortDescription": "B2B RWA tokenization platform and open comparator aggregating 120+ tokenized products — bonds, stablecoins, real estate, private credit and commodities — with live APY/TVL from DeFiLlama plus curated issuer data.",
-    "longDescription": "AUROS helps issuers structure real-world asset tokenization with a jurisdiction-first workflow (8 hubs compared) and a free asset admission wizard. The /compare hub is an independent RWA yield comparator covering stablecoins & treasury, tokenized bonds, real estate, private credit and commodities — aggregating DeFiLlama yields hourly and manual catalog entries for products not yet indexed. Educational content only; not investment advice. Public API at https://getauros.com/developers: MiCA readiness scoring (0–100), jurisdiction ranking across 8 regulatory hubs, compliance checklists, and a paginated RWA product catalog. AUROS does not custody funds, issue tokens, or report on-chain TVL — we are an independent comparator and B2B issuer onboarding platform.",
+    "longDescription": "AUROS helps issuers structure real-world asset tokenization with a jurisdiction-first workflow (8 hubs compared) and a free asset admission wizard. The /compare hub is an independent RWA yield comparator covering stablecoins & treasury, tokenized bonds, real estate, private credit and commodities — aggregating DeFiLlama yields hourly and manual catalog entries for products not yet indexed. Educational content only; not investment advice. Public API at https://getauros.com/developers: MiCA readiness scoring (0–100), jurisdiction ranking across 8 regulatory hubs, compliance checklists, and a paginated RWA product catalog. Python SDK on PyPI (auros-protocol). AUROS does not custody funds, issue tokens, or report on-chain TVL — we are an independent comparator and B2B issuer onboarding platform.",
     "differentiators": [
       "Open RWA yield comparator at /compare — 120+ products, hourly DeFiLlama APY/TVL + curated catalog",
       "MiCA intelligence API — static rules, <200ms, no LLM (indicative only)",
+      "Python SDK on PyPI: https://pypi.org/project/auros-protocol/",
       "Jurisdiction-first tokenization wizard for issuers (8 hubs compared)",
       "Machine-readable catalog for AI/agents: /ai-first/index.json"
     ],

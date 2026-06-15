@@ -157,10 +157,11 @@ export const RWA_XYZ_FORM_FIELDS = {
     "Commodities",
   ],
   shortDescription: AUROS_SHORT_EN,
-  longDescription: `${AUROS_DESCRIPTIONS.longEn} Public API at ${listingUrl("/developers")}: MiCA readiness scoring (0–100), jurisdiction ranking across 8 regulatory hubs, compliance checklists, and a paginated RWA product catalog. AUROS does not custody funds, issue tokens, or report on-chain TVL — we are an independent comparator and B2B issuer onboarding platform.`,
+  longDescription: `${AUROS_DESCRIPTIONS.longEn} Public API at ${listingUrl("/developers")}: MiCA readiness scoring (0–100), jurisdiction ranking across 8 regulatory hubs, compliance checklists, and a paginated RWA product catalog. Python SDK on PyPI (auros-protocol). AUROS does not custody funds, issue tokens, or report on-chain TVL — we are an independent comparator and B2B issuer onboarding platform.`,
   differentiators: [
     "Open RWA yield comparator at /compare — 120+ products, hourly DeFiLlama APY/TVL + curated catalog",
     "MiCA intelligence API — static rules, <200ms, no LLM (indicative only)",
+    "Python SDK on PyPI: https://pypi.org/project/auros-protocol/",
     "Jurisdiction-first tokenization wizard for issuers (8 hubs compared)",
     "Machine-readable catalog for AI/agents: /ai-first/index.json",
   ],
