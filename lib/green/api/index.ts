@@ -19,6 +19,7 @@ export { greenApiJson, greenApiError, greenApiOptions } from "./response";
 export {
   lookupGreenScoreById,
   lookupGreenScoresByIds,
+  lookupNatureScoreById,
   listGreenScoreCatalogIds,
   type GreenScoreLookup,
 } from "./score-lookup";

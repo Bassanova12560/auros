@@ -63,6 +63,12 @@ export function buildGreenApiOpenApiSpec() {
       },
       "/api/green/index": { get: { summary: "Green RWA Index JSON feed" } },
       "/api/green/changelog": { get: { summary: "Monthly index movers" } },
+      "/api/green/nature-score/{id}": {
+        get: {
+          summary: "Nature Score (TNFD LEAP-inspired) for nature-based assets",
+          parameters: [{ name: "id", in: "path", required: true, schema: { type: "string" } }],
+        },
+      },
       "/api/v1/green/carbon-quality/batch": {
         post: {
           summary: `Batch CQS (API key required, max ${GREEN_FREE_BATCH_MAX_ITEMS} free)`,

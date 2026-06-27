@@ -8,8 +8,11 @@ type ScorePayload = {
     id: string;
     name: string;
     composite_score: number;
+    benchmark?: { percentile: number; label: string };
     carbon_quality: { score: number; tier: string } | null;
     watt: { rating: number; lifetime_gwh: number | null } | null;
+    nature_score?: { score: number; tier: string } | null;
+    icvcm_readiness?: { status: string; headline: string } | null;
   };
   error?: { message: string };
 };
@@ -81,7 +84,16 @@ export default function EmbedGreenScorePage({
             <p className="font-mono text-2xl text-emerald-400">{s.watt.rating}</p>
           </div>
         ) : null}
+        {s.nature_score ? (
+          <div>
+            <p className="text-[10px] uppercase text-white/40">Nature</p>
+            <p className="font-mono text-2xl text-emerald-400">{s.nature_score.score}</p>
+          </div>
+        ) : null}
       </div>
+      {s.benchmark ? (
+        <p className="mt-2 text-[10px] text-white/45">{s.benchmark.label}</p>
+      ) : null}
       <a
         href={`https://getauros.com/green/api?utm_source=embed&id=${s.id}`}
         target="_blank"

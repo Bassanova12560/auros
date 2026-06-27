@@ -38,6 +38,12 @@ const ENDPOINTS = [
   },
   {
     method: "GET",
+    path: "/api/green/nature-score/{id}",
+    desc: "Nature Score TNFD — actifs nature-based (Moss, Regen…)",
+    free: true,
+  },
+  {
+    method: "GET",
     path: "/api/green/changelog",
     desc: "Mouvements mensuels Green Index",
     free: true,
