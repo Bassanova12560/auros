@@ -258,6 +258,53 @@ console.log(batch.succeeded, batch.items[0]?.score_id);`,
     ],
   },
   {
+    slug: "endpoint-green-carbon-quality",
+    title: "Carbon Quality Score (CQS) — Green API",
+    description:
+      "Score indicatif 0–100 par crédit carbone — lecture publique gratuite par id, batch jusqu'à 50 items avec clé API.",
+    category: "endpoints",
+    categoryLabel: "Endpoints",
+    relatedSlugs: ["endpoint-score-batch", "authentication", "endpoint-compare"],
+    sections: [
+      {
+        heading: "GET public (gratuit)",
+        paragraphs: [
+          "Une référence comparateur Green (`toucan`, `moss`, `klim`…) — pas d'authentification.",
+          "Usage presse, due diligence rapide, intégration widget.",
+        ],
+        code: `curl ${BASE}/api/green/carbon-quality/toucan`,
+        language: "bash",
+      },
+      {
+        heading: "POST batch (clé API)",
+        paragraphs: [
+          "Jusqu'à **50 crédits** par appel — portfolio corporate ou pipeline M&A.",
+          "`id` = référence comparateur AUROS, ou `text` = description libre (min 10 caractères).",
+          "Compte au quota mensuel Protocol — licence volume : /partners.",
+        ],
+        code: `curl -X POST ${BASE}/api/v1/green/carbon-quality/batch \\
+  -H "Authorization: Bearer ${DEMO_API_KEY}" \\
+  -H "Content-Type: application/json" \\
+  -d '{"items":[{"id":"toucan"},{"text":"Gold Standard forestry credits retired 2024 Verra"}]}'`,
+        language: "bash",
+      },
+      {
+        heading: "Réponse batch (extrait)",
+        code: `{
+  "total": 2,
+  "succeeded": 2,
+  "items": [
+    { "index": 0, "ok": true, "id": "toucan", "carbon_quality": { "score": 62, "tier": "acceptable" } }
+  ]
+}`,
+        language: "json",
+        paragraphs: [
+          "Le CQS est un signal AUROS — pas une certification ICVCM/Verra. Voir aussi /data/green-index.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "endpoint-score-history",
     title: "GET /api/v1/score/{id}/history",
     description:
