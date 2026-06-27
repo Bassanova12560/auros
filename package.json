@@ -11,7 +11,7 @@
     "simulate:http": "npx tsx scripts/simulate-all.ts --http",
     "simulate:prod": "npx tsx scripts/simulate-all.ts --http --prod",
     "test": "node --import tsx --test tests/**/*.test.ts",
-    "test:green": "node --import tsx --test tests/green-market.test.ts tests/green-health.test.ts tests/green-compliance-csrd.test.ts tests/green-impact-report.test.ts tests/green-sprint2.test.ts tests/green-sprint7.test.ts tests/green-sprint8.test.ts tests/green-sprint9.test.ts tests/green-sprint10.test.ts tests/green-sprint11.test.ts tests/green-sprint12.test.ts tests/green-sprint13.test.ts tests/green-sprint14.test.ts tests/green-sprint15.test.ts tests/green-sprint16.test.ts tests/green-sprint17.test.ts tests/green-sprint18.test.ts",
+    "test:green": "node --import tsx --test tests/green-market.test.ts tests/green-health.test.ts tests/green-compliance-csrd.test.ts tests/green-impact-report.test.ts tests/green-scoring-index.test.ts tests/green-sprint2.test.ts tests/green-sprint7.test.ts tests/green-sprint8.test.ts tests/green-sprint9.test.ts tests/green-sprint10.test.ts tests/green-sprint11.test.ts tests/green-sprint12.test.ts tests/green-sprint13.test.ts tests/green-sprint14.test.ts tests/green-sprint15.test.ts tests/green-sprint16.test.ts tests/green-sprint17.test.ts tests/green-sprint18.test.ts",
     "test:purchase": "npx tsx scripts/test-starter-purchase.ts",
     "test:purchase:live": "npx tsx scripts/test-starter-purchase.ts --db --http --prod",
     "test:stripe-purchase": "npx tsx scripts/test-stripe-purchase.ts",

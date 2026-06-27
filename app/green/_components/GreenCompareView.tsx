@@ -76,10 +76,14 @@ import { getGreenMarketMessages } from "@/lib/green/market-i18n";
 
 
 
+import { enrichGreenCompareRows } from "@/lib/green/compare-enriched";
 import {
   formatGreenTaxonomyScoreDisplay,
-  sortGreenCompareRowsByTaxonomy,
 } from "@/lib/green/compare-taxonomy";
+import {
+  formatCarbonQualityDisplay,
+} from "@/lib/green/scoring/carbon-quality";
+import { formatWattScoreDisplay } from "@/lib/green/scoring/watt-score";
 
 import {
 
@@ -210,9 +214,9 @@ export function GreenCompareView({
 
   const visibleRows = useMemo(
     () =>
-      sortGreenCompareRowsByTaxonomy(
+      enrichGreenCompareRows(
         GREEN_COMPARE_ROWS.filter((row) => selectedRwaIds.includes(row.id))
-      ),
+      ).sort((a, b) => b.composite_score - a.composite_score),
     [selectedRwaIds]
   );
 
@@ -1010,6 +1014,10 @@ export function GreenCompareView({
 
                 <th className="py-4 pr-4">{c.table.taxonomy}</th>
 
+                <th className="py-4 pr-4">{c.table.carbonQuality}</th>
+
+                <th className="py-4 pr-4">{c.table.wattScore}</th>
+
                 <th className="py-4 pr-4">{c.table.label}</th>
 
                 <th className="px-6 py-4">{c.table.source}</th>
@@ -1024,7 +1032,7 @@ export function GreenCompareView({
 
                 <tr>
 
-                  <td colSpan={9} className="px-6 py-8 text-neutral-500">
+                  <td colSpan={11} className="px-6 py-8 text-neutral-500">
 
                     {c.emptyNote}
 
@@ -1074,6 +1082,14 @@ export function GreenCompareView({
 
                     <td className="py-4 pr-4 font-mono text-xs tabular-nums text-emerald-500/80">
                       {formatGreenTaxonomyScoreDisplay(row.green_taxonomy_score)}
+                    </td>
+
+                    <td className="py-4 pr-4 font-mono text-xs tabular-nums text-emerald-500/80">
+                      {formatCarbonQualityDisplay(row.carbon_quality_score)}
+                    </td>
+
+                    <td className="py-4 pr-4 font-mono text-xs tabular-nums text-emerald-500/80">
+                      {formatWattScoreDisplay(row.watt_score)}
                     </td>
 
                     <td className="py-4 pr-4">

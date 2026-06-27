@@ -31,6 +31,7 @@ const SECTIONS = [
       { href: "/blog", label: "Blog tokenisation RWA", desc: "Guides pilier — immobilier Europe, MiCA et parcours émetteur." },
       { href: "/glossary", label: "Glossaire RWA", desc: "80+ définitions MiCA, standards, structures et ESG." },
       { href: "/data/rwa-index", label: "AUROS RWA Index", desc: "Indice mensuel — rendements par classe, export CSV." },
+      { href: "/data/green-index", label: "AUROS Green RWA Index", desc: "Top actifs climatiques — CQS, Watt Score, export CSV." },
       { href: "/data/state-of-rwa-issuers", label: "State of RWA Issuers", desc: "Rapport trimestriel émetteurs — PDF avec email gate." },
       { href: "/discover", label: "Découvrir AUROS", desc: "Univers d'actifs et livrables dossier." },
       { href: "/trust", label: "Confiance & conformité", desc: "MiCA, RGPD, cadre réglementaire." },
@@ -45,6 +46,8 @@ const SECTIONS = [
       { href: GREEN_FAQ_ROUTE, label: "FAQ Green", desc: "14 Q&R RTMS, label, marketplace." },
       { href: "/green/comment-ca-marche", label: "Comment ça marche Green", desc: "Parcours en 4 étapes." },
       { href: GREEN_BLOG_ROUTE, label: "Blog Green", desc: "Articles RTMS, PPA, producteurs vs stockeurs." },
+      { href: "/data/green-index", label: "AUROS Green Index", desc: "Indice mensuel CQS + Watt — top 20 actifs EU." },
+      { href: "/green/compare", label: "Comparateur Green", desc: "Références marché avec CQS et Watt Score." },
     ],
   },
   {

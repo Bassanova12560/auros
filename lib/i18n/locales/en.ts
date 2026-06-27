@@ -439,6 +439,7 @@ export const en: Messages = {
     tools: "Tools",
     resources: "Resources",
     rwaIndex: "AUROS RWA Index",
+    greenIndex: "AUROS Green Index",
     quarterlyReport: "State of RWA Issuers",
     about: "About",
     pricing: "Pricing",

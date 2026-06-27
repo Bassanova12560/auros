@@ -248,6 +248,8 @@ export type GreenMessages = {
       yield: string;
       impact: string;
       taxonomy: string;
+      carbonQuality: string;
+      wattScore: string;
       label: string;
       source: string;
       reviewed: string;
@@ -1073,6 +1075,8 @@ const FR: GreenMessages = {
       yield: "Rendement (indicatif)",
       impact: "Impact (indicatif)",
       taxonomy: "Taxonomy (indicatif)",
+      carbonQuality: "CQS (indicatif)",
+      wattScore: "Watt Score",
       label: "Statut label",
       source: "Source",
       reviewed: "Revu le",
@@ -1983,6 +1987,8 @@ const EN: GreenMessages = {
       yield: "Yield (indicative)",
       impact: "Impact (indicative)",
       taxonomy: "Taxonomy (indicative)",
+      carbonQuality: "CQS (indicative)",
+      wattScore: "Watt Score",
       label: "Label status",
       source: "Source",
       reviewed: "Reviewed",
@@ -2895,6 +2901,8 @@ const ES: GreenMessages = {
       yield: "Rendimiento (indicativo)",
       impact: "Impacto (indicativo)",
       taxonomy: "Taxonomy (indicativo)",
+      carbonQuality: "CQS (indicativo)",
+      wattScore: "Watt Score",
       label: "Estado etiqueta",
       source: "Fuente",
       reviewed: "Revisado",

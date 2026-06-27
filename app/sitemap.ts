@@ -58,6 +58,7 @@ const PRIORITY: Record<string, number> = {
   "/tools/jurisdiction-picker": 0.78,
   "/tools/cost-estimator": 0.78,
   "/data/rwa-index": 0.82,
+  "/data/green-index": 0.84,
   "/data/state-of-rwa-issuers": 0.81,
   "/pricing": 0.76,
   "/partners": 0.6,
@@ -66,6 +67,7 @@ const PRIORITY: Record<string, number> = {
 const FREQUENCY: Record<string, MetadataRoute.Sitemap[number]["changeFrequency"]> = {
   "/compare": "hourly",
   "/data/rwa-index": "weekly",
+  "/data/green-index": "weekly",
   "/data/state-of-rwa-issuers": "monthly",
   "/stablecoins": "hourly",
   "/real-estate": "hourly",

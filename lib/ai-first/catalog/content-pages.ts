@@ -82,6 +82,7 @@ export const resourcesPage = enrichPage({
     { key: "Outils Pilier 1", value: "/tools — MiCA · Rendement · Juridiction · Coût" },
     { key: "Comparateur", value: "/compare — 120+ produits RWA" },
     { key: "RWA Index", value: "/data/rwa-index — indice mensuel rendements" },
+    { key: "Green Index", value: "/data/green-index — top actifs climatiques CQS + Watt" },
     { key: "Rapport trimestriel", value: "/data/state-of-rwa-issuers — State of RWA Issuers PDF" },
     { key: "Machine-readable", value: "/llms.txt · /ai-first/index.json" },
   ],
@@ -91,6 +92,7 @@ export const resourcesPage = enrichPage({
     BLOG_ROUTE,
     "/tools",
     "/data/rwa-index",
+    "/data/green-index",
     "/data/state-of-rwa-issuers",
     "/how-it-works",
     "/discover",
@@ -232,11 +234,65 @@ export const rwaIndexPage = enrichPage({
   relatedPaths: [
     "/compare",
     "/data/state-of-rwa-issuers",
+    "/data/green-index",
     "/tools",
     "/tools/yield-calculator",
     "/blog",
     "/glossary",
     "/jurisdictions",
+    AUROS_RESOURCES_ROUTE,
+    "/wizard",
+  ],
+});
+
+export const greenIndexPage = enrichPage({
+  id: "green-index",
+  path: "/data/green-index",
+  title: "AUROS Green RWA Index — Top actifs climatiques tokenisés EU",
+  description:
+    "Indice mensuel AUROS : top 20 actifs Green RWA en Europe — Taxonomy EU, Carbon Quality Score (CQS) et Watt Score. Export CSV gratuit, méthodologie transparente.",
+  summary:
+    "Pilier SEO Green — AUROS Green RWA Index mensuel : classement composite CQS + Taxonomy + Watt, segments par type, export CSV, FAQ et Dataset JSON-LD.",
+  contentType: "guide",
+  language: "multi",
+  indexable: true,
+  lastUpdated: "2026-06-27",
+  keywords: [
+    "AUROS Green Index",
+    "Green RWA Index Europe",
+    "Carbon Quality Score",
+    "Watt Score",
+    "tokenized climate assets index",
+    "indice actifs climatiques tokenisés",
+  ],
+  intents: [
+    "Quels sont les meilleurs actifs Green RWA en Europe",
+    "Indice mensuel tokenisation climat",
+    "Carbon Quality Score crédits carbone",
+  ],
+  audience: ["journalistes", "analystes", "family office", "émetteurs", "LLM crawlers"],
+  facts: [
+    { key: "Fréquence", value: "Mensuel — édition du mois en cours" },
+    { key: "Sources", value: "Comparateur Green AUROS + profils CQS/Watt indicatifs" },
+    { key: "Export", value: "CSV gratuit depuis la page · API /api/green/index" },
+    { key: "CQS API", value: "GET /api/green/carbon-quality/[id] — lecture gratuite" },
+    { key: "Schema", value: "Dataset + FAQPage JSON-LD" },
+  ],
+  faq: [
+    {
+      question: "Qu'est-ce que l'AUROS Green RWA Index ?",
+      answer:
+        "Classement mensuel indicatif des actifs climatiques tokenisés en Europe, basé sur Taxonomy EU, Carbon Quality Score et Watt Score — pas un conseil en investissement.",
+    },
+    {
+      question: "Comment télécharger les données ?",
+      answer: "Export CSV gratuit sur /data/green-index ou feed JSON sur /api/green/index.",
+    },
+  ],
+  relatedPaths: [
+    GREEN_ROUTE,
+    "/green/compare",
+    "/data/rwa-index",
     AUROS_RESOURCES_ROUTE,
     "/wizard",
   ],
@@ -915,6 +971,7 @@ export const contentPages: AiFirstPage[] = [
   mainFaqPage,
   resourcesPage,
   rwaIndexPage,
+  greenIndexPage,
   stateOfRwaIssuersPage,
   howItWorksPage,
   discoverPage,
