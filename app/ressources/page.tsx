@@ -32,6 +32,7 @@ const SECTIONS = [
       { href: "/glossary", label: "Glossaire RWA", desc: "80+ définitions MiCA, standards, structures et ESG." },
       { href: "/data/rwa-index", label: "AUROS RWA Index", desc: "Indice mensuel — rendements par classe, export CSV." },
       { href: "/data/green-index", label: "AUROS Green RWA Index", desc: "Top actifs climatiques — CQS, Watt Score, export CSV." },
+      { href: "/data/uhi-index", label: "AUROS UHI Index", desc: "Actifs productifs tokenisés — énergie, trésorerie, crédit." },
       { href: "/data/state-of-rwa-issuers", label: "State of RWA Issuers", desc: "Rapport trimestriel émetteurs — PDF avec email gate." },
       { href: "/discover", label: "Découvrir AUROS", desc: "Univers d'actifs et livrables dossier." },
       { href: "/trust", label: "Confiance & conformité", desc: "MiCA, RGPD, cadre réglementaire." },

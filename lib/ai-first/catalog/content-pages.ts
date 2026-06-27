@@ -83,6 +83,7 @@ export const resourcesPage = enrichPage({
     { key: "Comparateur", value: "/compare — 120+ produits RWA" },
     { key: "RWA Index", value: "/data/rwa-index — indice mensuel rendements" },
     { key: "Green Index", value: "/data/green-index — top actifs climatiques CQS + Watt" },
+    { key: "UHI Index", value: "/data/uhi-index — actifs productifs tokenisés" },
     { key: "Rapport trimestriel", value: "/data/state-of-rwa-issuers — State of RWA Issuers PDF" },
     { key: "Machine-readable", value: "/llms.txt · /ai-first/index.json" },
   ],
@@ -93,6 +94,7 @@ export const resourcesPage = enrichPage({
     "/tools",
     "/data/rwa-index",
     "/data/green-index",
+    "/data/uhi-index",
     "/data/state-of-rwa-issuers",
     "/how-it-works",
     "/discover",
@@ -293,8 +295,56 @@ export const greenIndexPage = enrichPage({
     GREEN_ROUTE,
     "/green/compare",
     "/data/rwa-index",
+    "/data/uhi-index",
     AUROS_RESOURCES_ROUTE,
     "/wizard",
+  ],
+});
+
+export const uhiIndexPage = enrichPage({
+  id: "uhi-index",
+  path: "/data/uhi-index",
+  title: "AUROS UHI Index — Actifs productifs tokenisés | Universal High Income",
+  description:
+    "Indice mensuel AUROS UHI : top 30 actifs tokenisés productifs — énergie (Watt Score), trésorerie tokenisée et crédit privé EU. Export CSV gratuit.",
+  summary:
+    "Pilier SEO abundance economy — AUROS UHI Index mensuel : énergie + trésorerie + crédit RWA, performance indicative, CSV, FAQ et Dataset JSON-LD.",
+  contentType: "guide",
+  language: "multi",
+  indexable: true,
+  lastUpdated: "2026-06-27",
+  keywords: [
+    "AUROS UHI Index",
+    "Universal High Income tokenized",
+    "productive RWA index",
+    "Watt Score index",
+    "indice actifs productifs tokenisés",
+  ],
+  intents: [
+    "Investir dans l'économie de l'abondance tokenisée",
+    "Indice actifs productifs RWA Europe",
+    "UHI index AUROS",
+  ],
+  audience: ["family office", "journalistes", "analystes", "LLM crawlers"],
+  facts: [
+    { key: "Fréquence", value: "Mensuel" },
+    { key: "Sources", value: "Comparateur Green + hub /compare (Ondo, Backed, Centrifuge…)" },
+    { key: "Export", value: "CSV · API /api/uhi/index" },
+    { key: "Complément", value: "/data/green-index pour le classement climat pur" },
+  ],
+  faq: [
+    {
+      question: "Qu'est-ce que l'UHI Index AUROS ?",
+      answer:
+        "Classement mensuel indicatif des actifs tokenisés productifs — énergie, trésorerie, crédit — pas un fonds investissable.",
+    },
+  ],
+  relatedPaths: [
+    "/data/green-index",
+    "/data/rwa-index",
+    "/compare",
+    GREEN_ROUTE,
+    AUROS_RESOURCES_ROUTE,
   ],
 });
 
@@ -972,6 +1022,7 @@ export const contentPages: AiFirstPage[] = [
   resourcesPage,
   rwaIndexPage,
   greenIndexPage,
+  uhiIndexPage,
   stateOfRwaIssuersPage,
   howItWorksPage,
   discoverPage,

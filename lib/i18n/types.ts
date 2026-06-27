@@ -276,6 +276,7 @@ export type Messages = {
     resources: string;
     rwaIndex: string;
     greenIndex: string;
+    uhiIndex: string;
     quarterlyReport: string;
     about: string;
     pricing: string;

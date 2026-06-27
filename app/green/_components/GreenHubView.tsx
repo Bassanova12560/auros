@@ -141,6 +141,12 @@ export function GreenHubView({ marketSnapshot, impact, registrySnapshot }: Props
             {m.hub.wizardCta} →
           </Link>
             <Link
+              href="/data/uhi-index"
+              className="font-mono text-[11px] tracking-wide text-violet-400/80 transition-colors duration-300 hover:text-violet-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+            >
+              AUROS UHI Index →
+            </Link>
+            <Link
               href="/data/green-index"
               className="font-mono text-[11px] tracking-wide text-emerald-400/80 transition-colors duration-300 hover:text-emerald-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
             >

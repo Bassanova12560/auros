@@ -346,6 +346,153 @@ export const GREEN_BLOG_ARTICLES: GreenBlogArticle[] = [
       },
     ],
   },
+  {
+    slug: "credits-carbone-icvcm-2027",
+    title: "Pourquoi 90 % des crédits carbone tokenisés ne passeront pas le test ICVCM 2027",
+    description:
+      "La purge ICVCM/CCP va segmenter le marché carbone entre premium vérifié et junk credits — et le Carbon Quality Score AUROS devient le filtre obligatoire avant achat.",
+    excerpt:
+      "Dès 2027, les acheteurs corporate exigeront une preuve CCP avant tout achat. AUROS CQS score chaque crédit en self-service — gratuit en API.",
+    publishedAt: "2026-06-20",
+    modifiedAt: "2026-06-27",
+    readingTimeMinutes: 12,
+    keywords: [
+      "ICVCM 2027",
+      "Carbon Quality Score",
+      "crédits carbone tokenisés",
+      "CCP Core Carbon Principles",
+      "AUROS CQS",
+    ],
+    cta: { href: "/green/compare", label: "Scanner un crédit carbone (CQS)" },
+    sections: [
+      {
+        heading: "La purge qualité est déjà en cours",
+        paragraphs: [
+          "Le Integrity Council for the Voluntary Carbon Market (ICVCM) évalue les programmes carbone selon les Core Carbon Principles (CCP). Les crédits alignés capteront une prime durable ; les autres risquent l'exclusion des portefeuilles corporate d'ici 2027–2028.",
+          "Aujourd'hui, cette vérification est manuelle, lente, confiée à des consultants. Les tokens carbone on-chain (Toucan, Moss, Flowcarbon…) ajoutent une couche de liquidité — pas une garantie de qualité registre.",
+        ],
+      },
+      {
+        heading: "Ce que mesure le Carbon Quality Score AUROS",
+        paragraphs: [
+          "AUROS publie un Carbon Quality Score (CQS) 0–100 par référence marché : alignement CCP, registre (Verra, Gold Standard, Puro…), additionnalité, permanence, risque de reversement, vintage.",
+          "API publique gratuite : GET /api/green/carbon-quality/{id}. Chaque ligne du comparateur Green (/green/compare) affiche son CQS. Quand un acheteur dit « on n'achète que CQS > 70 », AUROS devient le filtre du marché.",
+        ],
+      },
+      {
+        heading: "Pourquoi la tokenisation aggrave le risque réputationnel",
+        paragraphs: [
+          "Wrapper on-chain sans traçabilité de retrait registre = risque de double comptage et de greenwashing. Le CQS AUROS pénalise les profils « on-chain only » sans registre Gold Standard ou Verra clair.",
+          "Consultez l'AUROS Green RWA Index (/data/green-index) : les crédits sous seuil CQS peuvent sortir du top 20 lors des révisions mensuelles — signal public avant que le problème ne devienne mainstream.",
+        ],
+      },
+      {
+        heading: "Actions concrètes pour acheteurs et vendeurs",
+        paragraphs: [
+          "Acheteurs : exiger CQS > 70 dans votre policy carbone interne, croiser avec retrait registre Verra/GS avant offset corporate.",
+          "Vendeurs / émetteurs : documenter méthodologie, millésime, registre et statut CCP dans votre dossier AUROS Green avant label Verified (/green/label).",
+        ],
+      },
+    ],
+  },
+  {
+    slug: "dpp-marche-rwa-plus-grand",
+    title: "Le Digital Product Passport va créer le plus grand marché RWA jamais vu — et personne n'est prêt",
+    description:
+      "DPP obligatoire dès 2027 (textiles, batteries EV > 2 kWh…) : chaque actif physique aura une identité numérique structurée — la source idéale pour tokeniser en EU.",
+    excerpt:
+      "2027 = point de non-retour DPP. AUROS prépare le DPP Bridge : vos données passeport deviennent l'input direct du dossier MiCA / wizard Green.",
+    publishedAt: "2026-06-22",
+    modifiedAt: "2026-06-27",
+    readingTimeMinutes: 11,
+    keywords: [
+      "Digital Product Passport",
+      "DPP tokenisation",
+      "batteries EV DPP 2027",
+      "RWA industrie",
+      "AUROS DPP Bridge",
+    ],
+    cta: { href: "/wizard?type=green", label: "Préparer mon dossier actif physique" },
+    sections: [
+      {
+        heading: "2027 : le DPP devient obligatoire",
+        paragraphs: [
+          "Le règlement ESPR impose le Digital Product Passport sur une première vague de produits : textiles, meubles, pneus, détergents — et dès février 2027, un passeport batterie unique pour tous les véhicules électriques et batteries industrielles > 2 kWh.",
+          "Pas de DPP = pas d'entrée sur le marché EU. D'ici 2030, la majorité des produits physiques vendus en Europe devront être couverts.",
+        ],
+      },
+      {
+        heading: "Pourquoi le DPP est la structure idéale du RWA",
+        paragraphs: [
+          "Un actif RWA tokenisé crédible a besoin de : identité, traçabilité, durabilité, cycle de vie — exactement ce que le DPP encode. Personne ne connecte aujourd'hui le registre DPP EU à la tokenisation MiCA.",
+          "AUROS positionne le DPP Bridge (roadmap) : vos données DPP alimentent directement le score MiCA, EU Taxonomy et Watt Score — « Votre DPP est prêt ? Tokenisez en 1 clic ».",
+        ],
+      },
+      {
+        heading: "Batteries et flottes EV : le marché colossal",
+        paragraphs: [
+          "Megapacks, flottes véhicules électriques, infrastructure de recharge : des milliers d'actifs physiques vont chercher un financement structuré. Le Watt Score AUROS quantifie la valeur énergétique sur la durée de vie — indépendamment du prix de marché financier.",
+          "En attendant le DPP Bridge complet, le wizard actif renouvelable (/wizard?type=green) et le comparateur Green structurent déjà les dossiers solaire, stockage et PPA.",
+        ],
+      },
+      {
+        heading: "Se préparer maintenant",
+        paragraphs: [
+          "Engagez vos fournisseurs sur les données durabilité, surveillez le calendrier ESPR par catégorie produit, et centralisez les preuves dans un dossier AUROS avant que la conformité ne devienne urgente.",
+          "Articles connexes : RTMS (/green/blog/quest-ce-que-rtms), AUROS Green Index (/data/green-index), UHI Index (/data/uhi-index).",
+        ],
+      },
+    ],
+  },
+  {
+    slug: "auros-green-index-premier-numero",
+    title: "AUROS Green Index #1 — les meilleurs actifs climatiques tokenisés d'Europe ce mois-ci",
+    description:
+      "Premier numéro de l'indice mensuel AUROS Green RWA : top 20 classés par Taxonomy EU, Carbon Quality Score et Watt Score. Export CSV gratuit.",
+    excerpt:
+      "L'AUROS Green RWA Index sort son édition mensuelle — référence presse et due diligence pour family offices. Données sur /data/green-index.",
+    publishedAt: "2026-06-27",
+    modifiedAt: "2026-06-27",
+    readingTimeMinutes: 8,
+    keywords: [
+      "AUROS Green Index",
+      "Green RWA Index Europe",
+      "indice actifs climatiques",
+      "Carbon Quality Score",
+      "Watt Score",
+    ],
+    cta: { href: "/data/green-index", label: "Consulter l'indice complet" },
+    sections: [
+      {
+        heading: "Un standard de qualité pour le Green RWA EU",
+        paragraphs: [
+          "AUROS lance l'édition mensuelle du Green RWA Index — le premier classement public combinant Taxonomy EU (35 %), Carbon Quality Score pour le carbone (35 %) et Watt Score énergie (30 %).",
+          "Objectif : donner à la presse financière, aux analystes et aux family offices une référence citée — « l'indice AUROS Green a progressé de X % ce mois » — sans prétendre être un produit investissable.",
+        ],
+      },
+      {
+        heading: "Comment lire le classement",
+        paragraphs: [
+          "Chaque ligne = une référence marché documentée au comparateur Green (/green/compare), avec statut label honnête (reference, in_review, certified). Le CQS est consultable via API pour chaque crédit carbone.",
+          "Le Watt Score traduit la valeur énergétique indicative (GWh sur durée de vie) pour solaire, REC, PPA — ancrage physique, pas marketing.",
+        ],
+      },
+      {
+        heading: "Export et API",
+        paragraphs: [
+          "CSV gratuit depuis /data/green-index. Feed JSON : /api/green/index. Citation recommandée : « AUROS Green RWA Index, édition [mois], getauros.com/data/green-index ».",
+          "Complément abundance economy : AUROS UHI Index (/data/uhi-index) élargit aux trésorerie et crédit RWA productifs.",
+        ],
+      },
+      {
+        heading: "Prochaines éditions",
+        paragraphs: [
+          "Publication mensuelle automatique. Les entrées/sorties reflètent les révisions CQS (ICVCM), les mises à jour Taxonomy et les nouvelles références AUROS Green.",
+          "Licence institutionnelle et réplication d'indice : /partners.",
+        ],
+      },
+    ],
+  },
 ];
 
 export function getGreenBlogArticle(slug: string): GreenBlogArticle | undefined {
