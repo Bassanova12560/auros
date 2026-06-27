@@ -76,7 +76,7 @@ export function DeveloperPlayground() {
           Obtenir une clé API
         </h3>
         <p className="mt-2 text-sm font-light text-white/45">
-          E-mail professionnel → clé instantanée. Tier gratuit : 100 requêtes/mois.
+          E-mail professionnel → clé instantanée. Tier gratuit : 1000 requêtes/mois.
           Clé démo playground : <code className="text-white/60">{DEMO_API_KEY}</code>
         </p>
         <div className="mt-4 flex flex-col gap-3 sm:flex-row">

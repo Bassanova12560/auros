@@ -277,7 +277,8 @@ export const greenIndexPage = enrichPage({
     { key: "Fréquence", value: "Mensuel — édition du mois en cours" },
     { key: "Sources", value: "Comparateur Green AUROS + profils CQS/Watt indicatifs" },
     { key: "Export", value: "CSV gratuit depuis la page · API /api/green/index" },
-    { key: "CQS API", value: "GET /api/green/carbon-quality/[id] — lecture gratuite" },
+    { key: "Score API", value: "GET /api/green/score/[id] — CQS + Watt + composite" },
+    { key: "Hub API", value: "/green/api — OpenAPI, embed, quotas" },
     { key: "Schema", value: "Dataset + FAQPage JSON-LD" },
   ],
   faq: [
@@ -294,10 +295,65 @@ export const greenIndexPage = enrichPage({
   relatedPaths: [
     GREEN_ROUTE,
     "/green/compare",
+    "/green/api",
     "/data/rwa-index",
     "/data/uhi-index",
     AUROS_RESOURCES_ROUTE,
     "/wizard",
+  ],
+});
+
+export const greenApiPage = enrichPage({
+  id: "green-api",
+  path: "/green/api",
+  title: "AUROS Green API — CQS, Watt Score & Green Index (gratuit)",
+  description:
+    "API publique AUROS Green : score unifié CQS + Watt, bulk, analyse texte, Green Index et changelog. 100 req/jour sans clé, 1000/mois avec clé API free.",
+  summary:
+    "Hub développeurs Green — endpoints REST gratuits, OpenAPI, embed iframe, batch CQS payant avec clé Protocol.",
+  contentType: "guide",
+  language: "multi",
+  indexable: true,
+  lastUpdated: "2026-06-27",
+  keywords: [
+    "AUROS Green API",
+    "Carbon Quality Score API",
+    "Watt Score API",
+    "Green RWA API",
+    "tokenized carbon credits API",
+  ],
+  intents: [
+    "API gratuite score carbone tokenisé",
+    "Intégrer CQS dans une app",
+    "Embed score Green RWA",
+  ],
+  audience: ["développeurs", "analystes", "presse", "partenaires"],
+  facts: [
+    { key: "Score unifié", value: "GET /api/green/score/{id}" },
+    { key: "Anonyme", value: "100 req/jour/IP" },
+    { key: "Clé free", value: "POST /api/v1/keys — 1000 req/mois" },
+    { key: "Batch CQS", value: "POST /api/v1/green/carbon-quality/batch" },
+    { key: "OpenAPI", value: "/api/green/openapi" },
+    { key: "Embed", value: "/embed/green-score?id=toucan" },
+  ],
+  faq: [
+    {
+      question: "L'API Green est-elle vraiment gratuite ?",
+      answer:
+        "Oui pour la lecture : score, bulk limité, analyse texte et index. Le batch portfolio nécessite une clé API (1000 req/mois gratuites).",
+    },
+    {
+      question: "Quelle est la différence avec l'API Protocol ?",
+      answer:
+        "Green API = scores climat (CQS, Watt, index). Protocol API = score MiCA admission RWA. Même clé free couvre les deux quotas.",
+    },
+  ],
+  relatedPaths: [
+    GREEN_ROUTE,
+    "/data/green-index",
+    "/developers",
+    "/developers/docs/endpoint-green-carbon-quality",
+    "/partners",
   ],
 });
 
@@ -409,7 +465,7 @@ export const developersPage = enrichPage({
   path: "/developers",
   title: "AUROS Protocol API | The RWA Intelligence Layer",
   description:
-    "API publique AUROS Protocol v1 sur getauros.com et api.getauros.com — score MiCA, catalogue RWA, compare, juridictions et checklist. Clé gratuite 100 req/mois, playground intégré.",
+    "API publique AUROS Protocol v1 sur getauros.com et api.getauros.com — score MiCA, catalogue RWA, compare, juridictions et checklist. Clé gratuite 1000 req/mois, playground intégré.",
   summary:
     "Hub développeurs AUROS Protocol — quickstart curl, endpoints /api/v1/score, products, compare, jurisdictions, checklist ; base URL api.getauros.com/v1 ou getauros.com/api/v1.",
   contentType: "guide",
@@ -433,7 +489,8 @@ export const developersPage = enrichPage({
     { key: "Version", value: "1.0" },
     { key: "Base URL", value: "https://api.getauros.com/v1/* (alias getauros.com/api/v1/*)" },
     { key: "Hub", value: "api.getauros.com/ → /developers" },
-    { key: "Tier gratuit", value: "100 requêtes/mois" },
+    { key: "Tier gratuit", value: "1000 requêtes/mois (Green + Protocol)" },
+    { key: "Green API", value: "/green/api — CQS, Watt, index gratuit" },
     { key: "Playground", value: "/developers#playground" },
     { key: "Postman", value: "/auros-postman.json" },
     { key: "OpenAPI", value: "/auros-openapi.yaml" },
@@ -1022,6 +1079,7 @@ export const contentPages: AiFirstPage[] = [
   resourcesPage,
   rwaIndexPage,
   greenIndexPage,
+  greenApiPage,
   uhiIndexPage,
   stateOfRwaIssuersPage,
   howItWorksPage,

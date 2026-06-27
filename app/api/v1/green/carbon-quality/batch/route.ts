@@ -1,12 +1,22 @@
 import {
   authenticateProtocolRequest,
+  findKeyRecord,
   protocolError,
   protocolJson,
   protocolRoute,
 } from "@/lib/protocol";
 import { logProtocolUsage } from "@/lib/protocol/usage/log";
+import { batchMaxItemsForTier, type GreenApiTier } from "@/lib/green/api/auth";
 import { carbonQualityBatchRequestSchema } from "@/lib/green/schemas/carbon-quality-batch";
 import { resolveCarbonQualityBatchItem } from "@/lib/green/scoring/carbon-quality-batch";
+
+async function tierForKey(keyHash: string, isDemo: boolean): Promise<GreenApiTier> {
+  if (isDemo) return "demo";
+  const record = await findKeyRecord(keyHash);
+  if (record?.tier === "premium" || record?.tier === "monitor") return "premium";
+  if (record?.tier === "enterprise") return "enterprise";
+  return "free";
+}
 
 export const POST = protocolRoute(async (req: Request) => {
   const auth = await authenticateProtocolRequest(req);
@@ -24,6 +34,16 @@ export const POST = protocolRoute(async (req: Request) => {
     return protocolError(
       "validation_error",
       parsed.error.issues.map((i) => i.message).join("; "),
+      400
+    );
+  }
+
+  const tier = await tierForKey(auth.ctx.keyHash, auth.ctx.isDemo);
+  const maxItems = batchMaxItemsForTier(tier);
+  if (parsed.data.items.length > maxItems) {
+    return protocolError(
+      "batch_limit",
+      `Max ${maxItems} items per batch on tier ${tier}. Premium: /partners`,
       400
     );
   }
@@ -55,8 +75,8 @@ export const POST = protocolRoute(async (req: Request) => {
   );
 
   return protocolJson({
-    disclaimer:
-      "Indicative AUROS Carbon Quality Score — not Verra/ICVCM certification. Batch endpoint requires API key.",
+    tier,
+    batch_limit: maxItems,
     total: results.length,
     succeeded,
     failed: results.length - succeeded,

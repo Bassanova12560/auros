@@ -47,6 +47,6 @@ export const POST = protocolRoute(async (req: Request) => {
     tier,
     monthly_limit: monthlyLimit,
     message:
-      "Store this key securely — it will not be shown again. Free tier: 100 requests/month.",
+      "Store this key securely — it will not be shown again. Free tier: 1000 Green + Protocol requests/month.",
   });
 });

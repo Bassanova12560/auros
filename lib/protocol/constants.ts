@@ -8,7 +8,7 @@ export const PROTOCOL_DISCLAIMER =
 
 export const DEMO_API_KEY = "auros_pk_test_demo";
 
-export const FREE_TIER_MONTHLY_LIMIT = 100;
+export const FREE_TIER_MONTHLY_LIMIT = 1000;
 
 export const KEY_PREFIX_LIVE = "auros_pk_live_";
 export const KEY_PREFIX_TEST = "auros_pk_test_";

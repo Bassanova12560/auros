@@ -154,7 +154,7 @@ const ENDPOINTS = [
   {
     method: "POST",
     path: "/api/v1/keys",
-    desc: "Créer une clé gratuite (100 req/mois) — sans auth.",
+    desc: "Créer une clé gratuite (1000 req/mois) — sans auth.",
   },
 ] as const;
 

@@ -1,0 +1,136 @@
+import { checkRateLimit, getRequestIp } from "@/lib/rate-limit";
+import { checkIpBurstLimit, checkProtocolRateLimit } from "@/lib/protocol/auth/rate-limit";
+import { findKeyRecord, validateApiKey } from "@/lib/protocol/auth/keys";
+
+import {
+  GREEN_ANON_DAILY_LIMIT,
+  GREEN_ANON_BULK_MAX_IDS,
+  GREEN_FREE_BATCH_MAX_ITEMS,
+  GREEN_FREE_BULK_MAX_IDS,
+  GREEN_PREMIUM_BATCH_MAX_ITEMS,
+} from "./constants";
+import { greenApiError } from "./response";
+
+const ANON_WINDOW_MS = 24 * 60 * 60 * 1000;
+
+export type GreenApiTier = "anonymous" | "free" | "premium" | "enterprise" | "demo";
+
+export type GreenApiAuth = {
+  tier: GreenApiTier;
+  keyHash: string | null;
+  rateLimit: {
+    allowed: boolean;
+    remaining: number;
+    limit: number;
+    reset: number;
+  };
+};
+
+export async function authenticateGreenPublicRequest(
+  req: Request
+): Promise<
+  { ok: true; auth: GreenApiAuth } | { ok: false; response: ReturnType<typeof greenApiError> }
+> {
+  const authHeader = req.headers.get("authorization")?.trim();
+  if (authHeader?.startsWith("Bearer ")) {
+    const raw = authHeader.slice(7).trim();
+    const validation = await validateApiKey(raw);
+    if (!validation.valid || !validation.keyHash) {
+      return {
+        ok: false,
+        response: greenApiError("unauthorized", "Invalid API key — create one at POST /api/v1/keys", 401),
+      };
+    }
+
+    const rate = await checkProtocolRateLimit(validation.keyHash, validation.isDemo);
+    if (!rate.allowed) {
+      return {
+        ok: false,
+        response: greenApiError(
+          "quota_exceeded",
+          `Monthly API quota exceeded (${rate.limit} requests). Upgrade at /partners.`,
+          429,
+          {
+            tier: validation.isDemo ? "demo" : "free",
+            keyHash: validation.keyHash,
+            rateLimit: rate,
+          }
+        ),
+      };
+    }
+
+    let tier: GreenApiTier = validation.isDemo ? "demo" : "free";
+    if (!validation.isDemo) {
+      const record = await findKeyRecord(validation.keyHash);
+      if (record?.tier === "premium" || record?.tier === "monitor") tier = "premium";
+      if (record?.tier === "enterprise") tier = "enterprise";
+    }
+
+    return {
+      ok: true,
+      auth: { tier, keyHash: validation.keyHash, rateLimit: rate },
+    };
+  }
+
+  const ip = getRequestIp(req);
+  const burst = checkIpBurstLimit(ip);
+  if (!burst.allowed) {
+    return {
+      ok: false,
+      response: greenApiError("rate_limit", "Too many requests — slow down or use an API key.", 429),
+    };
+  }
+
+  const daily = checkRateLimit(`green-api:${ip}`, GREEN_ANON_DAILY_LIMIT, ANON_WINDOW_MS);
+  if (!daily.allowed) {
+    return {
+      ok: false,
+      response: greenApiError(
+        "quota_exceeded",
+        `Daily anonymous limit (${GREEN_ANON_DAILY_LIMIT}/day). Get a free API key: POST /api/v1/keys`,
+        429,
+        {
+          tier: "anonymous",
+          keyHash: null,
+          rateLimit: { ...daily, limit: GREEN_ANON_DAILY_LIMIT },
+        }
+      ),
+    };
+  }
+
+  return {
+    ok: true,
+    auth: {
+      tier: "anonymous",
+      keyHash: null,
+      rateLimit: { ...daily, limit: GREEN_ANON_DAILY_LIMIT },
+    },
+  };
+}
+
+/** Batch and bulk endpoints require an API key. */
+export async function requireGreenApiKey(req: Request) {
+  const authHeader = req.headers.get("authorization")?.trim();
+  if (!authHeader?.startsWith("Bearer ")) {
+    return {
+      ok: false as const,
+      response: greenApiError(
+        "api_key_required",
+        "This endpoint requires Authorization: Bearer <api_key>. Free keys: POST /api/v1/keys (1000 req/month).",
+        401
+      ),
+    };
+  }
+  return authenticateGreenPublicRequest(req);
+}
+
+export function batchMaxItemsForTier(tier: GreenApiTier): number {
+  if (tier === "premium" || tier === "enterprise") return GREEN_PREMIUM_BATCH_MAX_ITEMS;
+  return GREEN_FREE_BATCH_MAX_ITEMS;
+}
+
+export function bulkMaxIdsForTier(tier: GreenApiTier): number {
+  if (tier === "anonymous") return GREEN_ANON_BULK_MAX_IDS;
+  if (tier === "demo") return 10;
+  return GREEN_FREE_BULK_MAX_IDS;
+}

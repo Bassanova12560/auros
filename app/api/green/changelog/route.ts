@@ -1,9 +1,9 @@
 import {
   authenticateGreenPublicRequest,
+  buildGreenIndexChangelog,
   greenApiJson,
   greenApiOptions,
 } from "@/lib/green/api";
-import { getGreenIndexPayload } from "@/lib/green-index";
 
 export const revalidate = 3600;
 
@@ -11,20 +11,16 @@ export function OPTIONS() {
   return greenApiOptions();
 }
 
-/** Public JSON feed for Green Index (press, API consumers). */
+/** Monthly Green Index movers — press & integrators. */
 export async function GET(req: Request) {
   const authResult = await authenticateGreenPublicRequest(req);
   if (!authResult.ok) return authResult.response;
 
-  const payload = await getGreenIndexPayload();
   return greenApiJson(
     {
       ok: true,
-      payload,
+      changelog: buildGreenIndexChangelog(),
       tier: authResult.auth.tier,
-      unified_score: "/api/green/score/{id}",
-      docs: "/green/api",
-      disclaimer: "Indicative — not investment advice.",
     },
     { auth: authResult.auth }
   );

@@ -16,7 +16,7 @@ export const PROTOCOL_DOC_PAGES: ProtocolDocPage[] = [
       {
         heading: "1. Obtenir une clé API",
         paragraphs: [
-          "Le tier gratuit offre 100 requêtes/mois. Créez une clé via le playground ou l'endpoint keys — aucune carte requise.",
+          "Le tier gratuit offre 1000 requêtes/mois. Créez une clé via le playground ou l'endpoint keys — aucune carte requise.",
         ],
         code: `curl -X POST ${BASE}/api/v1/keys \\
   -H "Content-Type: application/json" \\
@@ -65,7 +65,7 @@ console.log(result.score, result.grade);`,
     slug: "authentication",
     title: "Authentification",
     description:
-      "Clés API Bearer, formats auros_pk_live/test, quota gratuit 100 req/mois, variables d'environnement Vercel.",
+      "Clés API Bearer, formats auros_pk_live/test, quota gratuit 1000 req/mois, variables d'environnement Vercel.",
     category: "getting-started",
     categoryLabel: "Démarrage",
     relatedSlugs: ["quickstart", "endpoint-keys"],
@@ -89,7 +89,7 @@ console.log(result.score, result.grade);`,
       {
         heading: "Quota & rate limiting",
         paragraphs: [
-          "Tier gratuit : 100 requêtes/mois par clé. Dépassement → HTTP 429 `quota_exceeded`.",
+          "Tier gratuit : 1000 requêtes/mois par clé. Dépassement → HTTP 429 `quota_exceeded`.",
           "POST /api/v1/score/batch compte comme **1 requête** quota (max 20 scores par batch).",
           "Burst IP : 30 req/min. Création de clé : 5 req/heure par IP.",
           "Chaque réponse authentifiée inclut les headers Stripe-style : `X-RateLimit-Limit`, `X-RateLimit-Remaining`, `X-RateLimit-Reset` (timestamp Unix — reset quota mensuel au 1er du mois UTC).",
@@ -259,18 +259,39 @@ console.log(batch.succeeded, batch.items[0]?.score_id);`,
   },
   {
     slug: "endpoint-green-carbon-quality",
-    title: "Carbon Quality Score (CQS) — Green API",
+    title: "AUROS Green API — CQS, Watt & Index",
     description:
-      "Score indicatif 0–100 par crédit carbone — lecture publique gratuite par id, batch jusqu'à 50 items avec clé API.",
+      "API publique Green : score unifié, bulk, analyse texte, index et batch CQS. 100 req/jour anon, 1000/mois avec clé free.",
     category: "endpoints",
     categoryLabel: "Endpoints",
     relatedSlugs: ["endpoint-score-batch", "authentication", "endpoint-compare"],
     sections: [
       {
-        heading: "GET public (gratuit)",
+        heading: "GET score unifié (recommandé)",
         paragraphs: [
-          "Une référence comparateur Green (`toucan`, `moss`, `klim`…) — pas d'authentification.",
-          "Usage presse, due diligence rapide, intégration widget.",
+          "Endpoint principal — CQS + Watt + composite + rang Green Index.",
+          "100 req/jour sans clé · 1000/mois avec clé free (`POST /api/v1/keys`).",
+          "Hub complet : /green/api · OpenAPI : /api/green/openapi",
+        ],
+        code: `curl ${BASE}/api/green/score/toucan`,
+        language: "bash",
+      },
+      {
+        heading: "GET bulk & POST analyze",
+        paragraphs: [
+          "Bulk : `GET /api/green/scores?ids=toucan,moss` (max 5 anon, 20 avec clé).",
+          "Due diligence texte : `POST /api/green/score/analyze` body `{ \"text\": \"Gold Standard forestry…\" }`.",
+        ],
+        code: `curl "${BASE}/api/green/scores?ids=toucan,moss"
+curl -X POST ${BASE}/api/green/score/analyze \\
+  -H "Content-Type: application/json" \\
+  -d '{"text":"Verra REDD+ credits retired 2024 on-chain"}'`,
+        language: "bash",
+      },
+      {
+        heading: "GET CQS seul (legacy)",
+        paragraphs: [
+          "Une référence comparateur Green (`toucan`, `moss`, `klim`…) — préférez `/api/green/score/{id}`.",
         ],
         code: `curl ${BASE}/api/green/carbon-quality/toucan`,
         language: "bash",
@@ -278,9 +299,8 @@ console.log(batch.succeeded, batch.items[0]?.score_id);`,
       {
         heading: "POST batch (clé API)",
         paragraphs: [
-          "Jusqu'à **50 crédits** par appel — portfolio corporate ou pipeline M&A.",
+          "Jusqu'à **10 crédits** (free) ou **50** (premium) par appel.",
           "`id` = référence comparateur AUROS, ou `text` = description libre (min 10 caractères).",
-          "Compte au quota mensuel Protocol — licence volume : /partners.",
         ],
         code: `curl -X POST ${BASE}/api/v1/green/carbon-quality/batch \\
   -H "Authorization: Bearer ${DEMO_API_KEY}" \\
@@ -289,18 +309,12 @@ console.log(batch.succeeded, batch.items[0]?.score_id);`,
         language: "bash",
       },
       {
-        heading: "Réponse batch (extrait)",
-        code: `{
-  "total": 2,
-  "succeeded": 2,
-  "items": [
-    { "index": 0, "ok": true, "id": "toucan", "carbon_quality": { "score": 62, "tier": "acceptable" } }
-  ]
-}`,
-        language: "json",
+        heading: "Embed presse / partenaires",
         paragraphs: [
-          "Le CQS est un signal AUROS — pas une certification ICVCM/Verra. Voir aussi /data/green-index.",
+          "Widget iframe sans authentification — lien « Powered by AUROS » inclus.",
         ],
+        code: `<iframe src="${BASE}/embed/green-score?id=toucan" width="320" height="160"></iframe>`,
+        language: "bash",
       },
     ],
   },
@@ -617,7 +631,7 @@ const history = await client.scoreHistory(result.score_id!);`,
   {
     slug: "endpoint-keys",
     title: "POST /api/v1/keys",
-    description: "Création de clé API gratuite — 100 req/mois, sans authentification, rate-limit IP.",
+    description: "Création de clé API gratuite — 1000 req/mois, sans authentification, rate-limit IP.",
     category: "endpoints",
     categoryLabel: "Endpoints",
     relatedSlugs: ["authentication", "quickstart"],
@@ -873,7 +887,7 @@ export async function POST(req: Request) {
         paragraphs: [
           `• \`AUROS_API_KEY\` — Bearer token (défaut : \`${DEMO_API_KEY}\`)`,
           "• `AUROS_BASE_URL` — base URL API (défaut : https://getauros.com)",
-          "Obtenez une clé gratuite (100 req/mois) via POST /api/v1/keys ou le playground /developers.",
+          "Obtenez une clé gratuite (1000 req/mois) via POST /api/v1/keys ou le playground /developers.",
         ],
         links: [
           { href: "/developers#playground", label: "Playground développeurs" },

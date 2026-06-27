@@ -19,6 +19,7 @@ const PRIORITY: Record<string, number> = {
   "/green/market/actor": 0.88,
   "/green/register": 0.87,
   "/green/compare": 0.88,
+  "/green/api": 0.87,
   "/green/registry/project": 0.84,
   "/green/rtms-assistant": 0.84,
   "/green/csrd-check": 0.89,
