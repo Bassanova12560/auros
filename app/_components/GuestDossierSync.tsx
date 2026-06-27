@@ -4,6 +4,7 @@ import { useAuth } from "@clerk/nextjs";
 import { useEffect, useRef } from "react";
 
 import { syncGuestDossierAction } from "@/lib/actions/dossiers";
+import { getPartnerCode } from "@/lib/partner-attribution";
 import type { DossierContent } from "@/lib/wizard-types";
 
 type StoredDossier = {
@@ -41,6 +42,7 @@ export function GuestDossierSync({
         score,
         aiContent: dossier.aiContent,
         aiMeta: dossier.aiMeta,
+        referredBy: getPartnerCode(),
       });
 
       if (result.ok) {

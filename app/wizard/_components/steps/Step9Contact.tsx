@@ -5,6 +5,7 @@ import { useRef, useState } from "react";
 import { MarketingConsentCheckbox } from "@/app/_components/MarketingConsentCheckbox";
 import { useLocale } from "@/app/_components/i18n/LocaleProvider";
 import { saveLeadAction } from "@/lib/actions/leads";
+import { getPartnerCode } from "@/lib/partner-attribution";
 import { EMAIL_REGEX } from "@/lib/wizard-constants";
 import { getWizardStepsMessages } from "@/lib/wizard-steps-i18n";
 import type { WizardData } from "@/lib/wizard-types";
@@ -47,6 +48,7 @@ export function Step9Contact({
       source: "wizard_step_9",
       assetType: data.assetType || null,
       consent: true,
+      referredBy: getPartnerCode(),
     });
   };
 

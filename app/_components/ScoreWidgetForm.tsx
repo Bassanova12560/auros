@@ -34,6 +34,7 @@ import {
 } from "@/lib/tokenization-readiness";
 import { calculateScoreFromText } from "@/lib/score";
 import { saveLeadAction } from "@/lib/actions/leads";
+import { getPartnerCode } from "@/lib/partner-attribution";
 import {
   prefillFromEstimate,
   saveWizardPrefill,
@@ -135,6 +136,7 @@ export function ScoreWidgetForm() {
       score: score ?? undefined,
       consent: true,
       locale,
+      referredBy: getPartnerCode(),
     });
     if (result.ok) {
       setEmailSaved(true);

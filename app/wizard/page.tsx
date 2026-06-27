@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
@@ -28,7 +29,11 @@ import {
 import { getSimulationWizardData } from "@/lib/simulation/sample-wizard";
 import type { Currency, WizardData } from "@/lib/wizard-types";
 import { isLocale, type Locale } from "@/lib/i18n";
-import { GREEN_WIZARD_ASSET_TYPE } from "@/lib/green/constants";
+import { GREEN_WIZARD_ASSET_TYPE, GREEN_IMPACT_REPORT_ROUTE } from "@/lib/green/constants";
+import { getGreenImpactReportCopy } from "@/lib/green/impact-report-i18n";
+import { capturePartnerFromSearchParams, getPartnerCode } from "@/lib/partner-attribution";
+
+import { useLocale } from "@/app/_components/i18n/LocaleProvider";
 
 import { Step1Asset } from "./_components/Step1Asset";
 import { Step2Description } from "./_components/steps/Step2Description";
@@ -79,6 +84,8 @@ const PRO_UNLOCK_KEY = "auros_wizard_pro_session";
 
 export default function WizardPage() {
   const router = useRouter();
+  const { locale } = useLocale();
+  const impactReportCopy = getGreenImpactReportCopy(locale);
   const [step, setStep] = useState(1);
   const [data, setData] = useState<WizardData>(initialWizardData);
   const [hydrated, setHydrated] = useState(false);
@@ -93,6 +100,8 @@ export default function WizardPage() {
     country: string;
     locale: Locale;
   } | null>(null);
+  const [impactReportCheckoutCancelled, setImpactReportCheckoutCancelled] =
+    useState(false);
 
   useEffect(() => {
     clearDemoContactStorage();
@@ -109,6 +118,16 @@ export default function WizardPage() {
       const assetRenewable =
         params?.get("asset") === "renewable" || params?.get("type") === "green";
       const typeGreen = params?.get("type") === "green";
+      if (params?.get("cancelled") === "impact_report") {
+        setImpactReportCheckoutCancelled(true);
+        track("impact_report_checkout_cancelled", { locale });
+        const url = new URL(window.location.href);
+        url.searchParams.delete("cancelled");
+        window.history.replaceState(null, "", url.toString());
+      }
+      if (params) {
+        capturePartnerFromSearchParams(params);
+      }
       if (demo) {
         const sim = getSimulationWizardData();
         localStorage.setItem(
@@ -691,6 +710,7 @@ export default function WizardPage() {
         source: "wizard_step_9",
         assetType: data.assetType || null,
         consent: true,
+        referredBy: getPartnerCode(),
       });
     }
     const next = nextStepForMode(wizardMode, step);
@@ -878,6 +898,22 @@ export default function WizardPage() {
           locale={starterPhase.locale}
           jurisdictionCountry={starterPhase.country}
         />
+      ) : null}
+      {impactReportCheckoutCancelled ? (
+        <div
+          className="mb-6 rounded-xl border border-teal-500/30 bg-teal-500/[0.06] px-4 py-3"
+          role="status"
+        >
+          <p className="text-sm leading-relaxed text-white/70">
+            {impactReportCopy.checkoutCancelled.message}
+          </p>
+          <Link
+            href={GREEN_IMPACT_REPORT_ROUTE}
+            className="mt-2 inline-flex text-xs uppercase tracking-wider text-teal-400/90 hover:text-teal-300"
+          >
+            {impactReportCopy.checkoutCancelled.retryLink}
+          </Link>
+        </div>
       ) : null}
       <div className="relative min-h-[min(52vh,480px)]">
         {showPathChoice ? (

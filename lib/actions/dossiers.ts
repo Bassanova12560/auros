@@ -17,6 +17,7 @@ import {
   type WizardData,
 } from "@/lib/wizard-types";
 import { isLocale, type Locale } from "@/lib/i18n";
+import { normalizePartnerCode } from "@/lib/partner-attribution";
 import { tierFromScore } from "@/lib/score";
 
 export type SaveDossierInput = {
@@ -25,6 +26,8 @@ export type SaveDossierInput = {
   score: number;
   aiContent?: DossierContent;
   aiMeta?: { provider: string; generatedAt: string };
+  /** Partner apporteur code from ?partner=CODE */
+  referredBy?: string | null;
 };
 
 export type SaveDossierResult =
@@ -106,6 +109,8 @@ export async function saveDossierAction(
     ? mergeDossierDataBlob(input.data, input.aiContent, input.aiMeta!)
     : input.data;
 
+  const referredBy = normalizePartnerCode(input.referredBy ?? null);
+
   const supabase = getSupabaseServerClient();
   const { data, error } = await supabase
     .from("dossiers")
@@ -115,6 +120,7 @@ export async function saveDossierAction(
       data: payload,
       score: clampScore(input.score),
       status: input.aiContent ? "generated" : "draft",
+      referred_by: referredBy,
     })
     .select("id")
     .single();

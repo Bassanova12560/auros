@@ -33,6 +33,7 @@ import { ExportLegalPackButton } from "./_components/ExportLegalPackButton";
 import { GreenDossierExtras } from "./_components/GreenDossierExtras";
 import { GreenCompliancePanel } from "@/app/wizard/_components/GreenCompliancePanel";
 import { normalizeDossierStatus, type DossierStatus } from "@/lib/dossier-status";
+import { getPartnerCode } from "@/lib/partner-attribution";
 import { track } from "@/lib/analytics";
 import {
   getDossierByIdAction,
@@ -352,6 +353,7 @@ function DossierMain() {
         assetType: dossier.data.assetType ?? null,
         data: payload,
         score: dossier.score ?? 0,
+        referredBy: getPartnerCode(),
       });
       if (!sync.ok) {
         setSubmitState("error");

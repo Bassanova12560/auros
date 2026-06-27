@@ -115,6 +115,8 @@ describe("green/i18n-csrd-impact", () => {
       const copy = getGreenImpactReportCopy(locale);
       assert.ok(copy.cta.orderStandard.includes("49"));
       assert.ok(copy.ready.download.length > 0);
+      assert.ok(copy.checkoutCancelled.message.length > 0);
+      assert.ok(copy.checkoutCancelled.retryLink.length > 0);
     });
   }
 });

@@ -36,6 +36,10 @@ export type GreenImpactReportCopy = {
       network: string;
     };
   };
+  checkoutCancelled: {
+    message: string;
+    retryLink: string;
+  };
 };
 
 const FR: GreenImpactReportCopy = {
@@ -76,6 +80,11 @@ const FR: GreenImpactReportCopy = {
       generationFailed: "Génération du PDF impossible.",
       network: "Erreur réseau — réessayez.",
     },
+  },
+  checkoutCancelled: {
+    message:
+      "Paiement du rapport d'impact annulé — votre dossier wizard est intact. Vous pouvez réessayer quand vous voulez.",
+    retryLink: "Reprendre le rapport d'impact →",
   },
 };
 
@@ -118,6 +127,11 @@ const EN: GreenImpactReportCopy = {
       network: "Network error — try again.",
     },
   },
+  checkoutCancelled: {
+    message:
+      "Impact report payment cancelled — your wizard dossier is unchanged. You can try again anytime.",
+    retryLink: "Back to Impact Report →",
+  },
 };
 
 const ES: GreenImpactReportCopy = {
@@ -158,6 +172,11 @@ const ES: GreenImpactReportCopy = {
       generationFailed: "No se pudo generar el PDF.",
       network: "Error de red — reintente.",
     },
+  },
+  checkoutCancelled: {
+    message:
+      "Pago del informe de impacto cancelado — su dossier wizard no ha cambiado. Puede reintentar cuando quiera.",
+    retryLink: "Volver al informe de impacto →",
   },
 };
 

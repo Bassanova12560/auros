@@ -7,6 +7,7 @@ import { useCallback, useMemo, useState } from "react";
 import { EasePanel } from "@/app/_components/EasePanel";
 import { useLocale } from "@/app/_components/i18n/LocaleProvider";
 import { saveDossierAction } from "@/lib/actions/dossiers";
+import { getPartnerCode } from "@/lib/partner-attribution";
 import { markWizardCompletedAction } from "@/lib/actions/wizard-complete";
 import { track } from "@/lib/analytics";
 import { getEaseMessages } from "@/lib/ease-i18n";
@@ -241,6 +242,7 @@ export function Step15Summary({ data }: Props) {
         assetType: data.assetType || null,
         data: dossier.data as Record<string, unknown>,
         score: dossier.score ?? 0,
+        referredBy: getPartnerCode(),
       });
       if (!saveResult.ok) {
         setGenState("error");

@@ -2,8 +2,9 @@
 
 import { isValidCaptureEmail } from "@/lib/email-capture";
 import { sendLeadScore } from "@/lib/emails/send";
-import { tierFromScore } from "@/lib/score";
 import { isLocale, type Locale } from "@/lib/i18n";
+import { normalizePartnerCode } from "@/lib/partner-attribution";
+import { tierFromScore } from "@/lib/score";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 
 export type LeadSource = "score_widget" | "wizard_step_9";
@@ -15,6 +16,8 @@ export type SaveLeadInput = {
   score?: number | null;
   consent: boolean;
   locale?: Locale;
+  /** Partner apporteur code from ?partner=CODE */
+  referredBy?: string | null;
 };
 
 export type SaveLeadResult =
@@ -34,6 +37,8 @@ export async function saveLeadAction(
     return { ok: false, error: "consent_required" };
   }
 
+  const referredBy = normalizePartnerCode(input.referredBy ?? null);
+
   const supabase = getSupabaseServerClient();
   const { data, error } = await supabase
     .from("leads")
@@ -46,6 +51,7 @@ export async function saveLeadAction(
           ? Math.round(input.score)
           : null,
       consent: true,
+      referred_by: referredBy,
     })
     .select("id")
     .single();

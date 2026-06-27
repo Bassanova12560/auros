@@ -9,6 +9,8 @@
 import { readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
+import { GREEN_HEALTH_PATHS } from "@/lib/green/green-health";
+
 type Check = {
   id: string;
   level: "ok" | "warn" | "fail";
@@ -138,26 +140,41 @@ function runEnvChecks(): Check[] {
 
 async function runHttpChecks(base: string): Promise<Check[]> {
   const checks: Check[] = [];
-  const paths: { path: string; expect: number }[] = [
+  const isProdHost =
+    !base.includes("localhost") && !base.includes("127.0.0.1");
+
+  const paths: { path: string; expect: number | number[] }[] = [
     { path: "/", expect: 200 },
     { path: "/wizard", expect: 200 },
     { path: "/wizard?expert=1", expect: 200 },
     { path: "/privacy", expect: 200 },
-    { path: "/api/simulate", expect: 200 },
+    { path: "/green", expect: 200 },
+    { path: "/green/market", expect: 200 },
+    { path: "/green/impact-report", expect: 200 },
+    {
+      path: "/api/simulate",
+      expect: isProdHost ? [200, 403] : 200,
+    },
   ];
 
+  for (const greenPath of GREEN_HEALTH_PATHS) {
+    if (paths.some((p) => p.path === greenPath)) continue;
+    paths.push({ path: greenPath, expect: 200 });
+  }
+
   for (const { path, expect } of paths) {
+    const expected = Array.isArray(expect) ? expect : [expect];
     const url = `${base.replace(/\/$/, "")}${path}`;
     try {
       const res = await fetch(url, { redirect: "follow" });
-      if (res.status === expect) {
+      if (expected.includes(res.status)) {
         push(checks, `http${path}`, "ok", `GET ${path} → ${res.status}`);
       } else {
         push(
           checks,
           `http${path}`,
           "warn",
-          `GET ${path} → ${res.status} (expected ${expect})`
+          `GET ${path} → ${res.status} (expected ${expected.join(" or ")})`
         );
       }
     } catch (err) {
