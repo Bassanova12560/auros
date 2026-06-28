@@ -180,6 +180,38 @@ export const AUROS_MCP_TOOLS = [
     schema: {},
     handler: (client: AurosApiClient) => client.status(),
   },
+  {
+    name: "green_score",
+    description:
+      "AUROS Green unified score (CQS + Watt + Nature + benchmark) for a catalog id (e.g. toucan, moss). Free public read.",
+    schema: {
+      id: z.string().describe("Green compare catalog id"),
+    },
+    handler: (client: AurosApiClient, args: Record<string, unknown>) =>
+      client.greenScore(String(args.id)),
+  },
+  {
+    name: "green_registry",
+    description:
+      "Registry Connect — Verra/Gold Standard/Puro serial to CQS + Nature Score. Free public read.",
+    schema: {
+      serial: z.string().describe("Registry serial e.g. VCS-674"),
+    },
+    handler: (client: AurosApiClient, args: Record<string, unknown>) =>
+      client.greenRegistry(String(args.serial)),
+  },
+  {
+    name: "green_nature_index",
+    description: "AUROS Nature Score Index ranking — biodiversity & nature-based assets.",
+    schema: {},
+    handler: (client: AurosApiClient) => client.greenNatureIndex(),
+  },
+  {
+    name: "green_api_status",
+    description: "AUROS Green API health probes (score, registry, nature-index, openapi).",
+    schema: {},
+    handler: (client: AurosApiClient) => client.greenApiStatus(),
+  },
 ] as const;
 
 export function registerAurosTools(

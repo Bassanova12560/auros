@@ -244,6 +244,12 @@ ${BASE}/api/green/changelog/rss`}
             Green Index →
           </Link>
           <Link
+            href="/green/press"
+            className="inline-flex items-center rounded-full border border-white/15 px-5 py-2.5 text-sm text-white/80"
+          >
+            Kit presse →
+          </Link>
+          <Link
             href="/green/blog/green-api-standard-ouvert-2026"
             className="inline-flex items-center rounded-full border border-white/15 px-5 py-2.5 text-sm text-white/80"
           >

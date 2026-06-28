@@ -8,6 +8,7 @@ import {
   GREEN_MARKET_ROUTE,
   GREEN_REGISTER_ROUTE,
   GREEN_ROUTE,
+  GREEN_PRESS_ROUTE,
   GREEN_RTMS_ASSISTANT_ROUTE,
   GREEN_STANDARDS_ROUTE,
   AUROS_FAQ_ROUTE,
@@ -356,6 +357,28 @@ export const greenApiPage = enrichPage({
     "/developers/docs/endpoint-green-carbon-quality",
     "/partners",
   ],
+});
+
+export const greenPressPage = enrichPage({
+  id: "green-press-kit",
+  path: GREEN_PRESS_ROUTE,
+  title: "Kit presse AUROS Green — citations, RSS et embeds",
+  description:
+    "Ressources presse et analystes : citation AUROS Green API, feeds RSS, indices CSV, widget embed et contact media.",
+  summary: "Kit média Green — citations, changelog RSS, Green Index et widget pour journalistes.",
+  contentType: "guide",
+  language: "multi",
+  indexable: true,
+  lastUpdated: "2026-06-28",
+  keywords: ["AUROS Green press", "Green API media kit", "carbon quality press"],
+  intents: ["Citer AUROS Green Index", "Embed widget presse", "RSS movers Green"],
+  audience: ["journalistes", "analystes", "family office"],
+  facts: [
+    { key: "RSS", value: "/api/green/changelog/rss" },
+    { key: "Statut", value: "GET /api/green/status" },
+    { key: "Communiqué", value: "/green/blog/green-api-standard-ouvert-2026" },
+  ],
+  relatedPaths: [GREEN_ROUTE, "/green/api", "/data/green-index", "/green/blog"],
 });
 
 export const greenRegistryConnectPage = enrichPage({
@@ -1136,6 +1159,7 @@ export const contentPages: AiFirstPage[] = [
   rwaIndexPage,
   greenIndexPage,
   greenApiPage,
+  greenPressPage,
   greenRegistryConnectPage,
   natureScoreIndexPage,
   uhiIndexPage,

@@ -5,11 +5,12 @@ import { isCronAuthorized } from "@/lib/cron-auth";
 import { GREEN_HEALTH_PATHS } from "@/lib/green/green-health";
 
 describe("green/health-paths", () => {
-  it("lists key public Green routes", () => {
+  it("lists key public Green routes including API and press", () => {
     assert.ok(GREEN_HEALTH_PATHS.includes("/green/market"));
-    assert.ok(GREEN_HEALTH_PATHS.includes("/green/rtms-assistant"));
-    assert.equal(GREEN_HEALTH_PATHS.length, 6);
-    assert.ok(GREEN_HEALTH_PATHS.includes("/green"));
+    assert.ok(GREEN_HEALTH_PATHS.includes("/green/api"));
+    assert.ok(GREEN_HEALTH_PATHS.includes("/green/press"));
+    assert.ok(GREEN_HEALTH_PATHS.includes("/data/nature-score"));
+    assert.ok(GREEN_HEALTH_PATHS.length >= 10);
   });
 });
 

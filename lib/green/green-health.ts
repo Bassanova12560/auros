@@ -6,6 +6,11 @@ export const GREEN_HEALTH_PATHS = [
   "/green/label",
   "/green/compare",
   "/green/rtms-assistant",
+  "/green/api",
+  "/green/press",
+  "/green/registry-connect",
+  "/data/green-index",
+  "/data/nature-score",
 ] as const;
 
 export type GreenHealthCheck = {

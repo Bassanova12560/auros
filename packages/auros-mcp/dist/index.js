@@ -44,6 +44,24 @@ var AurosApiClient = class {
   async status() {
     return this.request("GET", "/api/v1/status", void 0, void 0, false);
   }
+  async greenScore(id) {
+    return this.request("GET", `/api/green/score/${encodeURIComponent(id)}`, void 0, void 0, false);
+  }
+  async greenRegistry(serial) {
+    return this.request(
+      "GET",
+      "/api/green/registry",
+      void 0,
+      { serial },
+      false
+    );
+  }
+  async greenNatureIndex() {
+    return this.request("GET", "/api/green/nature-index", void 0, void 0, false);
+  }
+  async greenApiStatus() {
+    return this.request("GET", "/api/green/status", void 0, void 0, false);
+  }
   async request(method, path, body, query, auth = true) {
     const params = new URLSearchParams();
     if (query) {
@@ -223,6 +241,34 @@ var AUROS_MCP_TOOLS = [
     description: "AUROS Protocol API health \u2014 service probes, version, deployed commit. No auth required.",
     schema: {},
     handler: (client2) => client2.status()
+  },
+  {
+    name: "green_score",
+    description: "AUROS Green unified score (CQS + Watt + Nature + benchmark) for a catalog id (e.g. toucan, moss). Free public read.",
+    schema: {
+      id: z.string().describe("Green compare catalog id")
+    },
+    handler: (client2, args) => client2.greenScore(String(args.id))
+  },
+  {
+    name: "green_registry",
+    description: "Registry Connect \u2014 Verra/Gold Standard/Puro serial to CQS + Nature Score. Free public read.",
+    schema: {
+      serial: z.string().describe("Registry serial e.g. VCS-674")
+    },
+    handler: (client2, args) => client2.greenRegistry(String(args.serial))
+  },
+  {
+    name: "green_nature_index",
+    description: "AUROS Nature Score Index ranking \u2014 biodiversity & nature-based assets.",
+    schema: {},
+    handler: (client2) => client2.greenNatureIndex()
+  },
+  {
+    name: "green_api_status",
+    description: "AUROS Green API health probes (score, registry, nature-index, openapi).",
+    schema: {},
+    handler: (client2) => client2.greenApiStatus()
   }
 ];
 function registerAurosTools(server2, client2) {

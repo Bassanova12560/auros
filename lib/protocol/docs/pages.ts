@@ -925,6 +925,10 @@ export async function POST(req: Request) {
           "• `compare` — POST /api/v1/compare (2–4 produits side-by-side)",
           "• `regulatory_feed` — GET /api/v1/regulatory/feed (premium, feed ESMA/AMF/BaFin)",
           "• `status` — GET /api/v1/status (santé API, sans auth)",
+          "• `green_score` — GET /api/green/score/{id} (CQS + Watt + Nature, gratuit)",
+          "• `green_registry` — GET /api/green/registry?serial=… (Verra/GS/Puro)",
+          "• `green_nature_index` — GET /api/green/nature-index",
+          "• `green_api_status` — GET /api/green/status",
         ],
       },
       {

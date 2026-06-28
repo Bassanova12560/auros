@@ -53,6 +53,28 @@ export class AurosApiClient {
     return this.request("GET", "/api/v1/status", undefined, undefined, false);
   }
 
+  async greenScore(id: string): Promise<unknown> {
+    return this.request("GET", `/api/green/score/${encodeURIComponent(id)}`, undefined, undefined, false);
+  }
+
+  async greenRegistry(serial: string): Promise<unknown> {
+    return this.request(
+      "GET",
+      "/api/green/registry",
+      undefined,
+      { serial },
+      false
+    );
+  }
+
+  async greenNatureIndex(): Promise<unknown> {
+    return this.request("GET", "/api/green/nature-index", undefined, undefined, false);
+  }
+
+  async greenApiStatus(): Promise<unknown> {
+    return this.request("GET", "/api/green/status", undefined, undefined, false);
+  }
+
   private async request(
     method: string,
     path: string,

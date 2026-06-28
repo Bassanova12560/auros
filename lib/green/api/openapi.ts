@@ -105,6 +105,7 @@ export function buildGreenApiOpenApiSpec() {
       "/api/v1/keys": {
         post: { summary: "Create free API key (1000 req/month)" },
       },
+      "/api/green/status": { get: { summary: "Green API health probes (public)" } },
     },
     components: {
       securitySchemes: {

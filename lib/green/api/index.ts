@@ -26,3 +26,4 @@ export {
 } from "./score-lookup";
 export { buildGreenApiOpenApiSpec } from "./openapi";
 export { buildGreenIndexChangelog } from "./changelog";
+export { buildGreenApiStatus, GREEN_API_STATUS_PATHS } from "./status";
