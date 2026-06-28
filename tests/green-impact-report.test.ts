@@ -113,6 +113,8 @@ describe("green/i18n-csrd-impact", () => {
 
     it(`provides impact report copy for ${locale}`, () => {
       const copy = getGreenImpactReportCopy(locale);
+      assert.ok(copy.page.title.length > 0);
+      assert.ok(copy.page.subtitle.length > 0);
       assert.ok(copy.cta.orderStandard.includes("49"));
       assert.ok(copy.ready.download.length > 0);
       assert.ok(copy.checkoutCancelled.message.length > 0);

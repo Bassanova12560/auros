@@ -414,6 +414,38 @@ export const greenRegistryConnectPage = enrichPage({
   relatedPaths: [GREEN_ROUTE, "/green/api", "/data/green-index", "/green/compare"],
 });
 
+export const greenDppPage = enrichPage({
+  id: "green-dpp-bridge",
+  path: "/green/dpp",
+  title: "DPP Bridge v0 | EU Digital Product Passport JSON-LD | AUROS Green",
+  description:
+    "Passeport produit numérique EU — export JSON-LD CQS, Watt, Nature Score et EU Taxonomy depuis le catalogue Green Index. API gratuite.",
+  summary:
+    "DPP Bridge v0 — JSON-LD sustainability passport from AUROS Green scores for tokenized climate assets.",
+  contentType: "guide",
+  language: "multi",
+  indexable: true,
+  lastUpdated: "2026-06-28",
+  keywords: [
+    "Digital Product Passport",
+    "EU DPP",
+    "JSON-LD sustainability",
+    "green product passport API",
+  ],
+  intents: [
+    "Générer un passeport produit EU pour actif tokenisé",
+    "Exporter JSON-LD CQS et EU Taxonomy",
+    "Intégrer DPP dans ERP ou marketplace",
+  ],
+  audience: ["compliance", "product managers", "développeurs", "family office"],
+  facts: [
+    { key: "Endpoint", value: "GET /api/green/dpp/{id}?format=jsonld" },
+    { key: "Catalogue", value: "Ids Green Index (moss, toucan, klim…)" },
+    { key: "Tier", value: "Lecture gratuite — clé API optionnelle" },
+  ],
+  relatedPaths: [GREEN_ROUTE, "/green/api", "/data/green-index", "/green/csrd-check"],
+});
+
 export const natureScoreIndexPage = enrichPage({
   id: "nature-score-index",
   path: "/data/nature-score",
@@ -1161,6 +1193,7 @@ export const contentPages: AiFirstPage[] = [
   greenApiPage,
   greenPressPage,
   greenRegistryConnectPage,
+  greenDppPage,
   natureScoreIndexPage,
   uhiIndexPage,
   stateOfRwaIssuersPage,

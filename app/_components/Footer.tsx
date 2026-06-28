@@ -38,6 +38,7 @@ export function Footer() {
     { href: "/data/rwa-index", label: f.rwaIndex },
     { href: "/data/green-index", label: f.greenIndex },
     { href: "/green/api", label: f.greenApi },
+    { href: "/green/dpp", label: f.greenDpp },
     { href: "/data/uhi-index", label: f.uhiIndex },
     { href: "/data/state-of-rwa-issuers", label: f.quarterlyReport },
     { href: "/ressources", label: f.resources },

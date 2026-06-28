@@ -442,6 +442,7 @@ export const es: Messages = {
     rwaIndex: "AUROS RWA Index",
     greenIndex: "AUROS Green Index",
     greenApi: "Green API",
+    greenDpp: "DPP Bridge",
     uhiIndex: "AUROS UHI Index",
     quarterlyReport: "State of RWA Issuers",
     about: "Acerca de",

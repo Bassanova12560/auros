@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 
 import { FocusPageShell } from "@/app/_components/FocusPageShell";
 import { getAiFirstPageByPath } from "@/lib/ai-first";
@@ -7,7 +8,7 @@ import { GREEN_IMPACT_REPORT_ROUTE } from "@/lib/green/constants";
 import { metadataFromPath } from "@/lib/seo/metadata";
 import { withOgImage } from "@/lib/seo/og";
 
-import { GreenImpactReportCta } from "@/app/green/_components/GreenImpactReportCta";
+import { GreenImpactReportView } from "./_components/GreenImpactReportView";
 
 export const metadata: Metadata = withOgImage(
   metadataFromPath(GREEN_IMPACT_REPORT_ROUTE),
@@ -29,21 +30,9 @@ export default function GreenImpactReportPage() {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(block) }}
         />
       ))}
-      <div className="space-y-8 py-8 md:py-12">
-        <div>
-          <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-emerald-500/70">
-            AUROS Green
-          </p>
-          <h1 className="mt-4 text-2xl font-light text-white md:text-3xl">
-            Rapport d&apos;impact Green
-          </h1>
-          <p className="mt-3 max-w-xl text-sm leading-relaxed text-white/60">
-            Synthèse PDF EU Taxonomy + RTMS depuis votre dossier — indicatif, prêt à partager en
-            interne avec votre conseil ESG.
-          </p>
-        </div>
-        <GreenImpactReportCta />
-      </div>
+      <Suspense fallback={null}>
+        <GreenImpactReportView />
+      </Suspense>
     </FocusPageShell>
   );
 }

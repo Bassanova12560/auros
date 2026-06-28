@@ -26,6 +26,7 @@ export const GREEN_HOW_IT_WORKS_ROUTE = "/green/comment-ca-marche";
 export const GREEN_BLOG_ROUTE = "/green/blog";
 export const GREEN_PRESS_ROUTE = "/green/press";
 export const GREEN_REGISTRY_CONNECT_ROUTE = "/green/registry-connect";
+export const GREEN_DPP_ROUTE = "/green/dpp";
 export const GREEN_VERIFY_ROUTE = "/green/verify";
 export const GREEN_MY_ROUTE = "/green/my";
 

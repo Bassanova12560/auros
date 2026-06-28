@@ -1,6 +1,10 @@
 import type { Locale } from "@/lib/i18n";
 
 export type GreenImpactReportCopy = {
+  page: {
+    title: string;
+    subtitle: string;
+  };
   cta: {
     eyebrow: string;
     description: string;
@@ -43,6 +47,11 @@ export type GreenImpactReportCopy = {
 };
 
 const FR: GreenImpactReportCopy = {
+  page: {
+    title: "Rapport d'impact Green",
+    subtitle:
+      "Synthèse PDF EU Taxonomy + RTMS depuis votre dossier — indicatif, prêt à partager en interne avec votre conseil ESG.",
+  },
   cta: {
     eyebrow: "Rapport d'impact Green",
     description:
@@ -89,6 +98,11 @@ const FR: GreenImpactReportCopy = {
 };
 
 const EN: GreenImpactReportCopy = {
+  page: {
+    title: "Green Impact Report",
+    subtitle:
+      "EU Taxonomy + RTMS PDF summary from your dossier — indicative, ready to share internally with your ESG counsel.",
+  },
   cta: {
     eyebrow: "Green Impact Report",
     description:
@@ -135,6 +149,11 @@ const EN: GreenImpactReportCopy = {
 };
 
 const ES: GreenImpactReportCopy = {
+  page: {
+    title: "Informe de impacto Green",
+    subtitle:
+      "Resumen PDF EU Taxonomy + RTMS desde su dossier — indicativo, listo para compartir internamente con su counsel ESG.",
+  },
   cta: {
     eyebrow: "Informe de impacto Green",
     description:

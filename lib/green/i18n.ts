@@ -19,6 +19,7 @@ export type GreenMessages = {
       api: string;
       registryConnect: string;
       press: string;
+      dpp: string;
     };
   };
   disclaimer: string;
@@ -542,6 +543,7 @@ const FR: GreenMessages = {
       api: "API",
       registryConnect: "Registry Connect",
       press: "Presse",
+      dpp: "DPP",
     },
   },
   disclaimer:
@@ -803,6 +805,11 @@ const FR: GreenMessages = {
           title: "Kit presse",
           description: "Widget embed, faits clés, changelog RSS pour journalistes.",
           href: "/green/press",
+        },
+        {
+          title: "DPP Bridge",
+          description: "Passeport produit EU JSON-LD — CQS, Watt, Nature depuis le catalogue Green.",
+          href: "/green/dpp",
         },
         {
           title: "Comment ça marche",
@@ -1472,6 +1479,7 @@ const EN: GreenMessages = {
       api: "API",
       registryConnect: "Registry Connect",
       press: "Press",
+      dpp: "DPP",
     },
   },
   disclaimer:
@@ -1733,6 +1741,11 @@ const EN: GreenMessages = {
           title: "Press kit",
           description: "Embed widget, key facts, changelog RSS for journalists.",
           href: "/green/press",
+        },
+        {
+          title: "DPP Bridge",
+          description: "EU product passport JSON-LD — CQS, Watt, Nature from Green catalog.",
+          href: "/green/dpp",
         },
         {
           title: "How it works",
@@ -2400,6 +2413,7 @@ const ES: GreenMessages = {
       api: "API",
       registryConnect: "Registry Connect",
       press: "Prensa",
+      dpp: "DPP",
     },
   },
   disclaimer:
@@ -2665,6 +2679,11 @@ const ES: GreenMessages = {
           title: "Kit de prensa",
           description: "Widget embed, datos clave, changelog RSS para periodistas.",
           href: "/green/press",
+        },
+        {
+          title: "DPP Bridge",
+          description: "Pasaporte digital UE JSON-LD — CQS, Watt, Nature desde catálogo Green.",
+          href: "/green/dpp",
         },
         {
           title: "Cómo funciona",
