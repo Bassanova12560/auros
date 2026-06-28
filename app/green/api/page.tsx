@@ -44,6 +44,12 @@ const ENDPOINTS = [
   },
   {
     method: "GET",
+    path: "/api/green/registry?serial=…",
+    desc: "Registry Connect — Verra/GS serial → CQS + Nature",
+    free: true,
+  },
+  {
+    method: "GET",
     path: "/api/green/changelog",
     desc: "Mouvements mensuels Green Index",
     free: true,
@@ -156,6 +162,12 @@ curl -X POST ${BASE}/api/v1/green/carbon-quality/batch \\
             className="inline-flex items-center rounded-full border border-white/15 px-5 py-2.5 text-sm text-white/80"
           >
             Docs développeurs →
+          </Link>
+          <Link
+            href="/green/registry-connect"
+            className="inline-flex items-center rounded-full border border-white/15 px-5 py-2.5 text-sm text-white/80"
+          >
+            Registry Connect →
           </Link>
           <Link
             href="/partners"

@@ -61,6 +61,7 @@ export const POST = protocolRoute(async (req: Request) => {
       index,
       ok: true as const,
       id: item.id ?? null,
+      serial: item.serial ?? outcome.registry_serial ?? null,
       carbon_quality: outcome.result,
     };
   });

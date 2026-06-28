@@ -7,10 +7,20 @@ export const carbonQualityBatchItemSchema = z
   .object({
     id: z.string().min(1).optional(),
     text: z.string().min(10).optional(),
+    registry: z.string().min(2).optional(),
+    serial: z.string().min(2).optional(),
   })
-  .refine((item) => item.id != null || item.text != null, {
-    message: "Each item needs id (compare reference) or text (free-form description)",
-  });
+  .refine(
+    (item) =>
+      item.id != null ||
+      item.text != null ||
+      (item.registry != null && item.serial != null) ||
+      item.serial != null,
+    {
+      message:
+        "Each item needs id, text, serial (e.g. VCS-674), or registry+serial",
+    }
+  );
 
 export const carbonQualityBatchRequestSchema = z.object({
   items: z

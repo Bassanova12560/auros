@@ -351,10 +351,44 @@ export const greenApiPage = enrichPage({
   relatedPaths: [
     GREEN_ROUTE,
     "/data/green-index",
+    "/green/registry-connect",
     "/developers",
     "/developers/docs/endpoint-green-carbon-quality",
     "/partners",
   ],
+});
+
+export const greenRegistryConnectPage = enrichPage({
+  id: "green-registry-connect",
+  path: "/green/registry-connect",
+  title: "Registry Connect | Verra & Gold Standard → CQS AUROS",
+  description:
+    "Serial Verra VCS ou Gold Standard → Carbon Quality Score AUROS en une requête. API gratuite, batch portfolio, liens registre officiels.",
+  summary:
+    "Registry Connect v0 — lookup serial carbone, CQS + Nature Score indicatif, catalog pilote et batch API.",
+  contentType: "guide",
+  language: "multi",
+  indexable: true,
+  lastUpdated: "2026-06-27",
+  keywords: [
+    "Registry Connect",
+    "Verra VCS API",
+    "Gold Standard carbon API",
+    "carbon credit serial lookup",
+    "CQS API",
+  ],
+  intents: [
+    "Scorer un crédit carbone par numéro Verra",
+    "Due diligence serial Gold Standard",
+    "API registre carbone tokenisé",
+  ],
+  audience: ["analystes", "traders carbone", "family office", "développeurs"],
+  facts: [
+    { key: "Endpoint", value: "GET /api/green/registry?serial=VCS-674" },
+    { key: "Batch", value: "POST /api/v1/green/carbon-quality/batch avec serial" },
+    { key: "Registres", value: "Verra, Gold Standard, Puro (pilote)" },
+  ],
+  relatedPaths: [GREEN_ROUTE, "/green/api", "/data/green-index", "/green/compare"],
 });
 
 export const uhiIndexPage = enrichPage({
@@ -1080,6 +1114,7 @@ export const contentPages: AiFirstPage[] = [
   rwaIndexPage,
   greenIndexPage,
   greenApiPage,
+  greenRegistryConnectPage,
   uhiIndexPage,
   stateOfRwaIssuersPage,
   howItWorksPage,

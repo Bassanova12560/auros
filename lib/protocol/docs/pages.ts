@@ -297,6 +297,16 @@ curl -X POST ${BASE}/api/green/score/analyze \\
         language: "bash",
       },
       {
+        heading: "GET Registry Connect (serial → CQS)",
+        paragraphs: [
+          "Entrez un serial **Verra VCS**, **Gold Standard** ou **Puro** — CQS + Nature Score + liens registre.",
+          "Gratuit : `GET /api/green/registry?serial=VCS-674` · Hub : /green/registry-connect",
+        ],
+        code: `curl "${BASE}/api/green/registry?serial=VCS-674"
+curl "${BASE}/api/green/registry?registry=gold_standard&serial=5678"`,
+        language: "bash",
+      },
+      {
         heading: "POST batch (clé API)",
         paragraphs: [
           "Jusqu'à **10 crédits** (free) ou **50** (premium) par appel.",

@@ -1,4 +1,5 @@
 import { GREEN_COMPARE_ROWS } from "@/lib/green/compare-data";
+import { lookupRegistryConnect } from "@/lib/green/registry-connect";
 
 import {
   computeCarbonQualityForCompareRow,
@@ -10,11 +11,37 @@ import {
 export type CarbonQualityBatchInput = {
   id?: string;
   text?: string;
+  registry?: string;
+  serial?: string;
 };
 
 export function resolveCarbonQualityBatchItem(
   item: CarbonQualityBatchInput
-): { ok: true; result: CarbonQualityScore } | { ok: false; code: string; message: string } {
+): { ok: true; result: CarbonQualityScore; registry_serial?: string } | { ok: false; code: string; message: string } {
+  if (item.registry && item.serial) {
+    const outcome = lookupRegistryConnect({ registry: item.registry, serial: item.serial });
+    if (!outcome.ok) {
+      return { ok: false, code: outcome.code, message: outcome.message };
+    }
+    return {
+      ok: true,
+      result: outcome.data.scores.carbon_quality,
+      registry_serial: outcome.data.serial,
+    };
+  }
+
+  if (item.serial && !item.id && !item.text) {
+    const outcome = lookupRegistryConnect({ serial: item.serial });
+    if (!outcome.ok) {
+      return { ok: false, code: outcome.code, message: outcome.message };
+    }
+    return {
+      ok: true,
+      result: outcome.data.scores.carbon_quality,
+      registry_serial: outcome.data.serial,
+    };
+  }
+
   if (item.id) {
     const row = GREEN_COMPARE_ROWS.find((r) => r.id === item.id);
     if (!row) {

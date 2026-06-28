@@ -69,6 +69,16 @@ export function buildGreenApiOpenApiSpec() {
           parameters: [{ name: "id", in: "path", required: true, schema: { type: "string" } }],
         },
       },
+      "/api/green/registry": {
+        get: {
+          summary: "Registry Connect — Verra/Gold Standard serial to CQS",
+          parameters: [
+            { name: "serial", in: "query", schema: { type: "string" }, example: "VCS-674" },
+            { name: "registry", in: "query", schema: { type: "string" } },
+            { name: "q", in: "query", schema: { type: "string" } },
+          ],
+        },
+      },
       "/api/v1/green/carbon-quality/batch": {
         post: {
           summary: `Batch CQS (API key required, max ${GREEN_FREE_BATCH_MAX_ITEMS} free)`,
