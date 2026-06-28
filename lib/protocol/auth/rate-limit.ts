@@ -75,6 +75,10 @@ export async function checkProtocolRateLimit(
     if (count === 1) {
       await upstashCommand(["PEXPIRE", redisKey, MONTH_MS]);
     }
+    // Mirror usage to DB so quota nurture emails stay accurate in production.
+    if (!isDemo && keyId !== "demo") {
+      void incrementKeyUsage(keyId);
+    }
     return {
       allowed: count <= limit,
       remaining: Math.max(0, limit - count),

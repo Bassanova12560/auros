@@ -81,12 +81,26 @@ const ENDPOINTS = [
   },
 ];
 
-export default function GreenApiPage() {
+export default async function GreenApiPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ cancelled?: string }>;
+}) {
+  const { cancelled } = await searchParams;
   const catalog = listGreenScoreCatalogIds();
+  const showCancelled = cancelled === "premium";
 
   return (
     <FocusPageShell path={GREEN_API_DOCS_ROUTE} width="3xl">
       <div className="space-y-12">
+        {showCancelled ? (
+          <div
+            role="status"
+            className="rounded-xl border border-amber-500/30 bg-amber-500/[0.08] px-4 py-3 text-center text-sm text-amber-200/90"
+          >
+            Paiement annulé — votre clé free reste active. Réessayez Premium quand vous voulez.
+          </div>
+        ) : null}
         <header className="space-y-4 text-center">
           <p className="font-mono text-[11px] uppercase tracking-[0.25em] text-emerald-400/80">
             AUROS Green API

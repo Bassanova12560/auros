@@ -24,8 +24,12 @@ export async function fulfillGreenApiPremiumSubscription(
     meta.email || session.customer_details?.email?.trim().toLowerCase() || "";
   if (!email) return false;
 
-  let apiKey: string | null = null;
   const existing = await findKeyByEmail(email);
+  if (existing?.tier === "premium" || existing?.tier === "monitor") {
+    return true;
+  }
+
+  let apiKey: string | null = null;
   if (!existing) {
     const created = await createApiKey(email);
     apiKey = created.apiKey;

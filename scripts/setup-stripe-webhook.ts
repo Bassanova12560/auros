@@ -50,8 +50,12 @@ async function main() {
 
   const ep = await stripe.webhookEndpoints.create({
     url,
-    enabled_events: ["checkout.session.completed"],
-    description: "AUROS jurisdictions checkout",
+    enabled_events: [
+      "checkout.session.completed",
+      "customer.subscription.deleted",
+      "invoice.payment_failed",
+    ],
+    description: "AUROS checkout + Green API Premium lifecycle",
   });
 
   console.log("WEBHOOK_ID=" + ep.id);

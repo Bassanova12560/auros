@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 
 import { FocusPageShell } from "@/app/_components/FocusPageShell";
@@ -9,7 +10,10 @@ import { metadataFromPath } from "@/lib/seo/metadata";
 
 export const GREEN_API_SUCCESS_ROUTE = "/green/api/success";
 
-export const metadata = metadataFromPath(GREEN_API_SUCCESS_ROUTE);
+export const metadata: Metadata = {
+  ...metadataFromPath(GREEN_API_SUCCESS_ROUTE),
+  robots: { index: false, follow: false },
+};
 
 type PageProps = { searchParams: Promise<{ session_id?: string }> };
 

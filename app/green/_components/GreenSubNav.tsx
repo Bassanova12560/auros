@@ -3,6 +3,7 @@
 import Link from "next/link";
 
 import { useLocale } from "@/app/_components/i18n/LocaleProvider";
+import { GREEN_API_DOCS_ROUTE } from "@/lib/green/api/constants";
 import {
   AUROS_WIZARD_ROUTE,
   GREEN_COMPARE_ROUTE,
@@ -10,6 +11,8 @@ import {
   GREEN_IMPACT_REPORT_ROUTE,
   GREEN_LABEL_ROUTE,
   GREEN_MARKET_ROUTE,
+  GREEN_PRESS_ROUTE,
+  GREEN_REGISTRY_CONNECT_ROUTE,
   GREEN_REGISTRY_ROUTE,
   GREEN_STANDARDS_ROUTE,
   getGreenMessages,
@@ -19,10 +22,13 @@ const NAV_ROUTES = [
   { href: GREEN_MARKET_ROUTE, key: "market" as const },
   { href: GREEN_STANDARDS_ROUTE, key: "standards" as const },
   { href: GREEN_REGISTRY_ROUTE, key: "registry" as const },
+  { href: GREEN_API_DOCS_ROUTE, key: "api" as const },
+  { href: GREEN_REGISTRY_CONNECT_ROUTE, key: "registryConnect" as const },
   { href: GREEN_LABEL_ROUTE, key: "label" as const },
   { href: GREEN_COMPARE_ROUTE, key: "compare" as const },
   { href: GREEN_CSRD_CHECK_ROUTE, key: "csrdCheck" as const },
   { href: GREEN_IMPACT_REPORT_ROUTE, key: "impactReport" as const },
+  { href: GREEN_PRESS_ROUTE, key: "press" as const },
   { href: `${AUROS_WIZARD_ROUTE}?asset=renewable`, key: "tokenize" as const },
 ] as const;
 

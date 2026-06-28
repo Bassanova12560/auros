@@ -22,6 +22,10 @@ Thin wrapper over `https://getauros.com/api/v1/*` — no local scoring logic.
 | `compare` | `POST /api/v1/compare` | Bearer |
 | `regulatory_feed` | `GET /api/v1/regulatory/feed` | Bearer (premium) |
 | `status` | `GET /api/v1/status` | None |
+| `green_score` | `GET /api/green/score/{id}` | Optional Bearer |
+| `green_registry` | `GET /api/green/registry?serial=…` | Optional Bearer |
+| `green_nature_index` | `GET /api/green/nature-index` | Optional Bearer |
+| `green_api_status` | `GET /api/green/status` | None |
 
 ## Install
 
@@ -40,7 +44,7 @@ node dist/index.js
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `AUROS_API_KEY` | `auros_pk_test_demo` | Bearer API key ([free tier](https://getauros.com/developers) — 100 req/mo) |
+| `AUROS_API_KEY` | `auros_pk_test_demo` | Bearer API key ([free tier](https://getauros.com/developers) — 1000 req/mo) |
 | `AUROS_BASE_URL` | `https://getauros.com` | API base URL |
 
 Get your own key:

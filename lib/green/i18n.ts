@@ -16,6 +16,9 @@ export type GreenMessages = {
       csrdCheck: string;
       impactReport: string;
       tokenize: string;
+      api: string;
+      registryConnect: string;
+      press: string;
     };
   };
   disclaimer: string;
@@ -536,6 +539,9 @@ const FR: GreenMessages = {
       csrdCheck: "CSRD",
       impactReport: "Impact Report",
       tokenize: "Tokeniser",
+      api: "API",
+      registryConnect: "Registry Connect",
+      press: "Presse",
     },
   },
   disclaimer:
@@ -783,6 +789,21 @@ const FR: GreenMessages = {
     secondary: {
       title: "Standard & conformité",
       links: [
+        {
+          title: "Green API (gratuit)",
+          description: "CQS, Watt, Nature Index — clé API 1000 req/mois, embed & SDK.",
+          href: "/green/api",
+        },
+        {
+          title: "Registry Connect",
+          description: "Serial Verra/GS/Puro → CQS + Nature Score en un appel.",
+          href: "/green/registry-connect",
+        },
+        {
+          title: "Kit presse",
+          description: "Widget embed, faits clés, changelog RSS pour journalistes.",
+          href: "/green/press",
+        },
         {
           title: "Comment ça marche",
           description: "Parcours RTMS, marketplace, label et registre en 4 étapes.",
@@ -1448,6 +1469,9 @@ const EN: GreenMessages = {
       csrdCheck: "CSRD",
       impactReport: "Impact Report",
       tokenize: "Tokenize",
+      api: "API",
+      registryConnect: "Registry Connect",
+      press: "Press",
     },
   },
   disclaimer:
@@ -1695,6 +1719,21 @@ const EN: GreenMessages = {
     secondary: {
       title: "Standard & compliance",
       links: [
+        {
+          title: "Green API (free)",
+          description: "CQS, Watt, Nature Index — 1000 req/mo API key, embed & SDK.",
+          href: "/green/api",
+        },
+        {
+          title: "Registry Connect",
+          description: "Verra/GS/Puro serial → CQS + Nature Score in one call.",
+          href: "/green/registry-connect",
+        },
+        {
+          title: "Press kit",
+          description: "Embed widget, key facts, changelog RSS for journalists.",
+          href: "/green/press",
+        },
         {
           title: "How it works",
           description: "RTMS, marketplace, label and registry in 4 steps.",
@@ -2358,6 +2397,9 @@ const ES: GreenMessages = {
       csrdCheck: "CSRD",
       impactReport: "Impact Report",
       tokenize: "Tokenizar",
+      api: "API",
+      registryConnect: "Registry Connect",
+      press: "Prensa",
     },
   },
   disclaimer:
@@ -2609,6 +2651,21 @@ const ES: GreenMessages = {
     secondary: {
       title: "Estándar y conformidad",
       links: [
+        {
+          title: "Green API (gratis)",
+          description: "CQS, Watt, Nature Index — clave API 1000 req/mes, embed y SDK.",
+          href: "/green/api",
+        },
+        {
+          title: "Registry Connect",
+          description: "Serial Verra/GS/Puro → CQS + Nature Score en una llamada.",
+          href: "/green/registry-connect",
+        },
+        {
+          title: "Kit de prensa",
+          description: "Widget embed, datos clave, changelog RSS para periodistas.",
+          href: "/green/press",
+        },
         {
           title: "Cómo funciona",
           description: "RTMS, marketplace, etiqueta y registro en 4 pasos.",

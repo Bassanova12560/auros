@@ -43,7 +43,7 @@ export const POST = protocolRoute(async (req: Request) => {
   if (parsed.data.items.length > maxItems) {
     return protocolError(
       "batch_limit",
-      `Max ${maxItems} items per batch on tier ${tier}. Premium: /partners`,
+      `Max ${maxItems} items per batch on tier ${tier}. Premium (batch 50): /green/api`,
       400
     );
   }

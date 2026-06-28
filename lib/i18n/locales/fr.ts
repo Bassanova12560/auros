@@ -442,6 +442,7 @@ export const fr: Messages = {
     resources: "Ressources",
     rwaIndex: "AUROS RWA Index",
     greenIndex: "AUROS Green Index",
+    greenApi: "Green API",
     uhiIndex: "AUROS UHI Index",
     quarterlyReport: "State of RWA Issuers",
     about: "À propos",

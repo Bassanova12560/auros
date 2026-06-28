@@ -71,4 +71,24 @@ describe("green/api-nurture/fulfill", () => {
     const record = await findKeyByEmail(email);
     assert.equal(record?.tier, "premium");
   });
+
+  it("skips duplicate fulfillment when already premium", async () => {
+    const email = `premium-dup-${Date.now()}@example.com`;
+    await createApiKey(email);
+    const session = {
+      metadata: {
+        product: GREEN_API_PREMIUM_PRODUCT,
+        email,
+        locale: "fr",
+      },
+      customer_details: { email },
+    } as Parameters<typeof fulfillGreenApiPremiumSubscription>[0];
+
+    const first = await fulfillGreenApiPremiumSubscription(session);
+    const second = await fulfillGreenApiPremiumSubscription(session);
+    assert.equal(first, true);
+    assert.equal(second, true);
+    const record = await findKeyByEmail(email);
+    assert.equal(record?.tier, "premium");
+  });
 });

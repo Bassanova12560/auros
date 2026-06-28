@@ -22,20 +22,20 @@ export function GreenApiPremiumCheckout({ defaultEmail = "" }: Props) {
           title: "Green API Premium",
           hint: "Same email as your free API key (POST /api/v1/keys).",
           cta: `Subscribe — ${GREEN_API_PREMIUM_MONTHLY_EUR} €/mo`,
-          perks: "25k req/mo · batch 50 · history · DPP · Registry Connect · SLA",
+          perks: "25k req/mo · batch 50 · history · changelog webhooks · SLA",
         }
       : locale === "es"
         ? {
             title: "Green API Premium",
             hint: "Mismo email que su clave API free.",
             cta: `Suscribirse — ${GREEN_API_PREMIUM_MONTHLY_EUR} €/mes`,
-            perks: "25k req/mes · batch 50 · historial · DPP · Registry Connect · SLA",
+            perks: "25k req/mes · batch 50 · historial · webhooks changelog · SLA",
           }
         : {
             title: "Green API Premium",
             hint: "Même e-mail que votre clé API free (POST /api/v1/keys).",
             cta: `S'abonner — ${GREEN_API_PREMIUM_MONTHLY_EUR} €/mois`,
-            perks: "25k req/mois · batch 50 · historique · DPP · Registry Connect · SLA",
+            perks: "25k req/mois · batch 50 · historique · webhooks changelog · SLA",
           };
 
   async function handleCheckout() {

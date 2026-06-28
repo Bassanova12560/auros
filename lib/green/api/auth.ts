@@ -43,27 +43,27 @@ export async function authenticateGreenPublicRequest(
     }
 
     const rate = await checkProtocolRateLimit(validation.keyHash, validation.isDemo);
-    if (!rate.allowed) {
-      return {
-        ok: false,
-        response: greenApiError(
-          "quota_exceeded",
-          `Monthly API quota exceeded (${rate.limit} requests). Upgrade Green API Premium at /green/api — 25k req/mois.`,
-          429,
-          {
-            tier: validation.isDemo ? "demo" : "free",
-            keyHash: validation.keyHash,
-            rateLimit: rate,
-          }
-        ),
-      };
-    }
 
     let tier: GreenApiTier = validation.isDemo ? "demo" : "free";
     if (!validation.isDemo) {
       const record = await findKeyRecord(validation.keyHash);
       if (record?.tier === "premium" || record?.tier === "monitor") tier = "premium";
       if (record?.tier === "enterprise") tier = "enterprise";
+    }
+
+    if (!rate.allowed) {
+      const quotaMsg =
+        tier === "premium" || tier === "enterprise"
+          ? `Monthly API quota exceeded (${rate.limit} requests). Contact hello@getauros.com for Enterprise.`
+          : `Monthly API quota exceeded (${rate.limit} requests). Upgrade Green API Premium at /green/api — 25k req/mois.`;
+      return {
+        ok: false,
+        response: greenApiError("quota_exceeded", quotaMsg, 429, {
+          tier,
+          keyHash: validation.keyHash,
+          rateLimit: rate,
+        }),
+      };
     }
 
     return {

@@ -81,6 +81,23 @@ export class AurosGreen {
     return body as GreenDppResponse | Record<string, unknown>;
   }
 
+  async batchCarbonQuality(
+    items: Array<{ id?: string; text?: string; serial?: string; registry?: string }>
+  ): Promise<{
+    ok: true;
+    tier: string;
+    batch_limit: number;
+    total: number;
+    succeeded: number;
+    failed: number;
+    items: unknown[];
+  }> {
+    if (!this.apiKey) {
+      throw new Error("batchCarbonQuality requires an API key");
+    }
+    return this.post("/api/v1/green/carbon-quality/batch", { items });
+  }
+
   private headers(): HeadersInit {
     const h: Record<string, string> = { Accept: "application/json" };
     if (this.apiKey) h.Authorization = `Bearer ${this.apiKey}`;
