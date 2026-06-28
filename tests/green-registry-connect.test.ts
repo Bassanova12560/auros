@@ -60,6 +60,20 @@ describe("green/registry-connect/lookup", () => {
   });
 });
 
+describe("green/registry-connect/page", () => {
+  it("includes interactive lookup component", async () => {
+    const { readFileSync } = await import("node:fs");
+    const src = readFileSync("app/green/registry-connect/page.tsx", "utf8");
+    assert.ok(src.includes("RegistryConnectLookup"));
+    const ui = readFileSync(
+      "app/green/registry-connect/_components/RegistryConnectLookup.tsx",
+      "utf8"
+    );
+    assert.ok(ui.includes("/api/green/registry"));
+    assert.ok(ui.includes("GreenApiPremiumCheckout"));
+  });
+});
+
 describe("green/registry-connect/batch", () => {
   it("resolves batch item by serial", async () => {
     const outcome = await resolveCarbonQualityBatchItem({ serial: "VCS-674" });

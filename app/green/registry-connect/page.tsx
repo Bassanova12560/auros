@@ -3,11 +3,14 @@ import Link from "next/link";
 import { FocusPageShell } from "@/app/_components/FocusPageShell";
 import { PrimaryButton } from "@/app/_components/ui/PrimaryButton";
 import { absoluteUrl } from "@/lib/comparators/site";
-import { GREEN_API_DOCS_ROUTE } from "@/lib/green/api";
+import { GREEN_API_DOCS_ROUTE } from "@/lib/green/api/constants";
+import { GREEN_REGISTRY_CONNECT_ROUTE } from "@/lib/green/constants";
 import { listRegistryConnectSerials } from "@/lib/green/registry-connect";
 import { metadataFromPath } from "@/lib/seo/metadata";
 
-export const REGISTRY_CONNECT_ROUTE = "/green/registry-connect";
+import { RegistryConnectLookup } from "./_components/RegistryConnectLookup";
+
+export const REGISTRY_CONNECT_ROUTE = GREEN_REGISTRY_CONNECT_ROUTE;
 
 export const metadata = metadataFromPath(REGISTRY_CONNECT_ROUTE);
 
@@ -38,6 +41,8 @@ export default function RegistryConnectPage() {
           </p>
         </header>
 
+        <RegistryConnectLookup demoSerials={DEMO_SERIALS} />
+
         <section className="grid gap-3 sm:grid-cols-3">
           {MATCH_TYPES.map((m) => (
             <div key={m.kind} className="card-flat px-4 py-3 text-center">
@@ -49,35 +54,25 @@ export default function RegistryConnectPage() {
           ))}
         </section>
 
-        <section className="rounded-2xl border border-emerald-500/20 bg-emerald-500/[0.04] p-6">
-          <h2 className="text-sm font-medium text-white">Essayer maintenant</h2>
+        <details className="rounded-2xl border border-white/[0.06] bg-white/[0.02] p-5">
+          <summary className="cursor-pointer text-sm font-medium text-white/70">
+            Exemples curl & batch API
+          </summary>
           <pre className="mt-4 overflow-x-auto rounded-xl bg-black/60 p-4 font-mono text-xs text-emerald-100/90">
-{`# Verra VCS (live ou catalog)
-curl "${BASE}/api/green/registry?serial=VCS-674"
+{`curl "${BASE}/api/green/registry?serial=VCS-674"
 
-# Gold Standard
-curl "${BASE}/api/green/registry?registry=gold_standard&serial=5678"
-
-# Puro CORC
-curl "${BASE}/api/green/registry?registry=puro&serial=PURO-1001"
-
-# Batch portfolio (clé API)
 curl -X POST ${BASE}/api/v1/green/carbon-quality/batch \\
   -H "Authorization: Bearer YOUR_KEY" \\
   -H "Content-Type: application/json" \\
   -d '{"items":[{"serial":"VCS-674"},{"serial":"GS-5678"}]}'`}
           </pre>
-        </section>
+        </details>
 
         <section>
           <h2 className="font-mono text-[11px] uppercase tracking-wide text-white/45">
             Catalog pilote ({DEMO_SERIALS.length} serials)
           </h2>
           <p className="mt-2 font-mono text-xs text-white/50">{DEMO_SERIALS.join(" · ")}</p>
-          <p className="mt-2 text-xs text-white/40">
-            Hors catalog : ingestion live Verra/GS/Puro quand disponible, sinon inférence indicative.
-            Vérifiez toujours le retrait sur le registre officiel avant achat.
-          </p>
         </section>
 
         <div className="flex flex-wrap justify-center gap-3">
