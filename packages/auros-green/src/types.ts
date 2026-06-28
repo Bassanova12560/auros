@@ -38,3 +38,38 @@ export type GreenChangelogResponse = {
   ok: true;
   changelog: Record<string, unknown>;
 };
+
+export type GreenNatureIndexResponse = {
+  ok: true;
+  payload: {
+    editionIso: string;
+    referenceCount: number;
+    entries: Array<{
+      id: string;
+      name: string;
+      rank: number;
+      nature_score: number;
+      cqs: number | null;
+    }>;
+  };
+};
+
+export type GreenNatureScoreResponse = {
+  ok: true;
+  nature_score: { score: number; tier: string; ecosystem: string };
+};
+
+export type GreenScoreHistoryResponse = {
+  ok: true;
+  history: {
+    id: string;
+    name: string;
+    entries: Array<{ edition: string; composite_score: number }>;
+    trend: { composite_delta: number; months: number } | null;
+  };
+};
+
+export type GreenDppResponse = {
+  ok: true;
+  dpp: Record<string, unknown>;
+};

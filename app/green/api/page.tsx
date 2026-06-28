@@ -168,7 +168,8 @@ curl -X POST ${BASE}/api/v1/green/carbon-quality/batch \\
           </h2>
           <pre className="mt-3 overflow-x-auto rounded-xl bg-black/40 p-4 font-mono text-xs text-white/70">
 {`<script src="${BASE}/green-score.js" defer></script>
-<div data-auros-green-score data-id="toucan"></div>`}
+<div data-auros-green-score data-id="toucan" data-theme="dark"></div>
+<!-- data-theme="light" for light backgrounds -->`}
           </pre>
         </section>
 

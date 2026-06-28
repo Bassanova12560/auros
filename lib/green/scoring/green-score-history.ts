@@ -54,11 +54,23 @@ export function buildGreenScoreHistory(id: string, months = 12): GreenScoreHisto
 export function buildGreenScoreHistoryPayload(id: string) {
   const current = lookupGreenScoreById(id);
   if (!current) return null;
+  const entries = buildGreenScoreHistory(id);
+  const first = entries[0];
+  const last = entries[entries.length - 1];
+  const trend =
+    first && last
+      ? {
+          composite_delta: last.composite_score - first.composite_score,
+          cqs_delta: last.cqs != null && first.cqs != null ? last.cqs - first.cqs : null,
+          months: entries.length,
+        }
+      : null;
   return {
     id: current.id,
     name: current.name,
     edition_current: getEditionIso(),
-    entries: buildGreenScoreHistory(id),
+    entries,
+    trend,
     disclaimer:
       "Indicative AUROS Green score history — not investment advice. Premium tier.",
   };

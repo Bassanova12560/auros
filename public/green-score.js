@@ -1,8 +1,7 @@
 /**
  * AUROS Green Score embed widget — load via:
  * <script src="https://getauros.com/green-score.js" defer></script>
- * <div id="auros-green-score" data-id="toucan"></div>
- * <script>AurosGreenScore.mount("#auros-green-score");</script>
+ * <div data-auros-green-score data-id="toucan" data-theme="dark"></div>
  */
 (function (window, document) {
   "use strict";
@@ -17,7 +16,31 @@
       .replace(/"/g, "&quot;");
   }
 
-  function render(el, data, base) {
+  function themeStyles(theme) {
+    if (theme === "light") {
+      return {
+        card: "border:1px solid rgba(16,185,129,.35);border-radius:12px;padding:16px;background:#f8faf9;color:#0f172a;box-shadow:0 4px 24px rgba(0,0,0,.08)",
+        label: "margin:0;font-size:10px;text-transform:uppercase;color:rgba(15,23,42,.45)",
+        value: "margin:4px 0 0;font-family:ui-monospace,monospace;font-size:24px;color:#059669",
+        title: "margin:8px 0 0;font-size:14px;font-weight:500;color:#0f172a",
+        bench: "margin:8px 0 0;font-size:10px;color:rgba(15,23,42,.5)",
+        link: "display:inline-block;margin-top:12px;font-size:10px;color:#059669;text-decoration:none",
+        eyebrow: "margin:0;font-family:ui-monospace,monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#059669",
+      };
+    }
+    return {
+      card: "border:1px solid rgba(16,185,129,.3);border-radius:12px;padding:16px;background:#0a0f0d;color:#fff;box-shadow:0 4px 24px rgba(0,0,0,.4)",
+      label: "margin:0;font-size:10px;text-transform:uppercase;color:rgba(255,255,255,.4)",
+      value: "margin:4px 0 0;font-family:ui-monospace,monospace;font-size:24px;color:#34d399",
+      title: "margin:8px 0 0;font-size:14px;font-weight:500;color:rgba(255,255,255,.9)",
+      bench: "margin:8px 0 0;font-size:10px;color:rgba(255,255,255,.45)",
+      link: "display:inline-block;margin-top:12px;font-size:10px;color:rgba(52,211,153,.7);text-decoration:none",
+      eyebrow: "margin:0;font-family:ui-monospace,monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:rgba(52,211,153,.8)",
+    };
+  }
+
+  function render(el, data, base, theme) {
+    var t = themeStyles(theme);
     if (!data || !data.ok || !data.score) {
       el.innerHTML =
         '<div style="font-family:system-ui,sans-serif;font-size:12px;color:#f87171;padding:12px;border:1px solid rgba(248,113,113,.3);border-radius:12px;background:#0a0f0d">' +
@@ -28,38 +51,38 @@
     var s = data.score;
     var metrics = "";
     metrics +=
-      '<div><p style="margin:0;font-size:10px;text-transform:uppercase;color:rgba(255,255,255,.4)">Composite</p><p style="margin:4px 0 0;font-family:ui-monospace,monospace;font-size:24px;color:#34d399">' +
+      '<div><p style="' + t.label + '">Composite</p><p style="' + t.value + '">' +
       s.composite_score +
       "</p></div>";
     if (s.carbon_quality) {
       metrics +=
-        '<div><p style="margin:0;font-size:10px;text-transform:uppercase;color:rgba(255,255,255,.4)">CQS</p><p style="margin:4px 0 0;font-family:ui-monospace,monospace;font-size:24px;color:#34d399">' +
+        '<div><p style="' + t.label + '">CQS</p><p style="' + t.value + '">' +
         s.carbon_quality.score +
         "</p></div>";
     }
     if (s.watt) {
       metrics +=
-        '<div><p style="margin:0;font-size:10px;text-transform:uppercase;color:rgba(255,255,255,.4)">Watt</p><p style="margin:4px 0 0;font-family:ui-monospace,monospace;font-size:24px;color:#34d399">' +
+        '<div><p style="' + t.label + '">Watt</p><p style="' + t.value + '">' +
         s.watt.rating +
         "</p></div>";
     }
     if (s.nature_score) {
       metrics +=
-        '<div><p style="margin:0;font-size:10px;text-transform:uppercase;color:rgba(255,255,255,.4)">Nature</p><p style="margin:4px 0 0;font-family:ui-monospace,monospace;font-size:24px;color:#34d399">' +
+        '<div><p style="' + t.label + '">Nature</p><p style="' + t.value + '">' +
         s.nature_score.score +
         "</p></div>";
     }
     var bench = s.benchmark
-      ? '<p style="margin:8px 0 0;font-size:10px;color:rgba(255,255,255,.45)">' +
-        escapeHtml(s.benchmark.label) +
-        "</p>"
+      ? '<p style="' + t.bench + '">' + escapeHtml(s.benchmark.label) + "</p>"
       : "";
+    var compareUrl =
+      base + "/green/compare?rwa=" + encodeURIComponent(s.id) + "&utm_source=widget";
     el.innerHTML =
-      '<div style="font-family:system-ui,sans-serif;border:1px solid rgba(16,185,129,.3);border-radius:12px;padding:16px;background:#0a0f0d;color:#fff;box-shadow:0 4px 24px rgba(0,0,0,.4)">' +
-      '<p style="margin:0;font-family:ui-monospace,monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:rgba(52,211,153,.8)">AUROS Green Score</p>' +
-      '<p style="margin:8px 0 0;font-size:14px;font-weight:500;color:rgba(255,255,255,.9)">' +
+      '<div style="font-family:system-ui,sans-serif;' + t.card + '">' +
+      '<p style="' + t.eyebrow + '">AUROS Green Score</p>' +
+      '<a href="' + compareUrl + '" target="_blank" rel="noopener" style="' + t.title + ';text-decoration:none;display:block">' +
       escapeHtml(s.name) +
-      "</p>" +
+      " →</a>" +
       '<div style="margin-top:12px;display:flex;flex-wrap:wrap;gap:16px">' +
       metrics +
       "</div>" +
@@ -68,7 +91,7 @@
       base +
       "/green/api?utm_source=widget&id=" +
       encodeURIComponent(s.id) +
-      '" target="_blank" rel="noopener" style="display:inline-block;margin-top:12px;font-size:10px;color:rgba(52,211,153,.7);text-decoration:none">Powered by AUROS →</a>' +
+      '" target="_blank" rel="noopener" style="' + t.link + '">Powered by AUROS →</a>' +
       "</div>";
   }
 
@@ -80,6 +103,7 @@
         : elOrSelector;
     if (!el) return;
     var id = opts.id || el.getAttribute("data-id") || "toucan";
+    var theme = opts.theme || el.getAttribute("data-theme") || "dark";
     var base = (opts.baseUrl || el.getAttribute("data-base") || DEFAULT_BASE).replace(
       /\/$/,
       ""
@@ -91,7 +115,7 @@
         return r.json();
       })
       .then(function (data) {
-        render(el, data, base);
+        render(el, data, base, theme);
       })
       .catch(function () {
         el.innerHTML =
@@ -102,7 +126,10 @@
   function autoMount() {
     var nodes = document.querySelectorAll("[data-auros-green-score]");
     for (var i = 0; i < nodes.length; i++) {
-      mount(nodes[i], { id: nodes[i].getAttribute("data-id") || undefined });
+      mount(nodes[i], {
+        id: nodes[i].getAttribute("data-id") || undefined,
+        theme: nodes[i].getAttribute("data-theme") || undefined,
+      });
     }
   }
 

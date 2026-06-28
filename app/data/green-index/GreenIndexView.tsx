@@ -152,6 +152,12 @@ export function GreenIndexView({ payload }: Props) {
             {copy.downloadCsv}
           </PrimaryButton>
           <Link
+            href="/data/nature-score"
+            className="inline-flex items-center rounded-full border border-white/15 px-5 py-2.5 text-sm text-white/80 hover:border-white/30"
+          >
+            Nature Score Index →
+          </Link>
+          <Link
             href="/data/uhi-index"
             className="inline-flex items-center rounded-full border border-white/15 px-5 py-2.5 text-sm text-white/80 hover:border-white/30"
           >

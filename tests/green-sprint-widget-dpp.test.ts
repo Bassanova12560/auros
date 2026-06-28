@@ -12,10 +12,22 @@ describe("green/score-history", () => {
     assert.ok(history[0]!.composite_score >= 0);
   });
 
-  it("payload includes current edition", () => {
+  it("payload includes current edition and trend", () => {
     const payload = buildGreenScoreHistoryPayload("moss");
     assert.ok(payload);
     assert.equal(payload!.id, "moss");
+    assert.ok(payload!.trend);
+    assert.equal(payload!.trend!.months, 12);
+  });
+});
+
+describe("green/nature-index/csv", () => {
+  it("exports CSV rows", async () => {
+    const { natureIndexToCsv } = await import("@/lib/green/nature-index");
+    const payload = buildNatureIndexPayload();
+    const csv = natureIndexToCsv(payload);
+    assert.ok(csv.includes("rank,name"));
+    assert.ok(csv.includes("moss") || csv.includes("Moss"));
   });
 });
 
@@ -46,5 +58,6 @@ describe("green/widget", () => {
     assert.equal(existsSync(p), true);
     const src = readFileSync(p, "utf8");
     assert.ok(src.includes("AurosGreenScore"));
+    assert.ok(src.includes("data-theme"));
   });
 });

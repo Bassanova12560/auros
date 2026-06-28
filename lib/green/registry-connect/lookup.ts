@@ -14,6 +14,7 @@ import { lookupGreenScoreById } from "@/lib/green/api/score-lookup";
 import { findRegistryCatalogEntry } from "./catalog";
 import { fetchVerraProjectLive, providerSupportsLiveFetch } from "./fetch-verra";
 import { fetchGoldStandardProjectLive, providerSupportsGoldStandardLive } from "./fetch-gold-standard";
+import { fetchPuroProjectLive, providerSupportsPuroLive } from "./fetch-puro";
 import { parseRegistryConnectInput, type ParsedRegistryQuery } from "./parse-query";
 import type {
   RegistryConnectLookupInput,
@@ -196,6 +197,33 @@ async function resolveContext(parsed: ParsedRegistryQuery): Promise<{
     }
   }
 
+  if (providerSupportsPuroLive(parsed.provider)) {
+    const live = await fetchPuroProjectLive(parsed.serial);
+    if (live) {
+      const projectType = mapProjectType(live.project_type);
+      const profile = profileFromProviderAndContext(
+        parsed.provider,
+        live.description,
+        projectType
+      );
+      return {
+        match: "live",
+        result: {
+          match: "live",
+          provider: parsed.provider,
+          serial: parsed.serial,
+          project_name: live.project_name,
+          country: live.country,
+          vintage_year: null,
+          compare_id: null,
+          registry_urls: urls,
+        },
+        profile,
+        natureText: live.description,
+      };
+    }
+  }
+
   const description = `${parsed.provider} ${parsed.serial} carbon credit project`;
   const profile = profileFromProviderAndContext(parsed.provider, description, "other");
 
@@ -254,8 +282,10 @@ export async function lookupRegistryConnect(
       },
       methodology_note:
         match === "live"
-          ? "Registry Connect v1 — live Verra registry data + AUROS CQS. Verify retirement before procurement."
-          : "Registry Connect — indicative AUROS mapping. Verify retirement on official registry before procurement.",
+          ? `Registry Connect v1 — live ${result.provider} registry data + AUROS CQS. Verify retirement before procurement.`
+          : match === "catalog"
+            ? "Registry Connect — AUROS pilot catalog mapping. Verify retirement on official registry before procurement."
+            : "Registry Connect — indicative AUROS inference from serial format. Verify retirement on official registry before procurement.",
     },
   };
 }

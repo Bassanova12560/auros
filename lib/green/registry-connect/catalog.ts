@@ -40,6 +40,17 @@ export const REGISTRY_CONNECT_CATALOG: RegistryConnectEntry[] = [
     registry_project_url: "https://registry.verra.org/app/projectDetail/VCS/934",
   },
   {
+    serial: "VCS-2195",
+    provider: "verra",
+    project_name: "Katingan Peatland Restoration — Indonesia",
+    project_type: "forestry",
+    country: "Indonesia",
+    vintage_year: 2023,
+    description:
+      "Verra VCS peatland restoration Indonesia — high biodiversity nature-based carbon with community livelihoods",
+    registry_project_url: "https://registry.verra.org/app/projectDetail/VCS/2195",
+  },
+  {
     serial: "GS-1234",
     provider: "gold_standard",
     project_name: "Efficient Cookstoves — Rwanda (demo mapping)",

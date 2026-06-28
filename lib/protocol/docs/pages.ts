@@ -300,10 +300,12 @@ curl -X POST ${BASE}/api/green/score/analyze \\
         heading: "GET Registry Connect (serial → CQS)",
         paragraphs: [
           "Entrez un serial **Verra VCS**, **Gold Standard** ou **Puro** — CQS + Nature Score + liens registre.",
+          "v1 : ingestion live Verra/GS/Puro quand disponible · catalog pilote sinon inférence.",
           "Gratuit : `GET /api/green/registry?serial=VCS-674` · Hub : /green/registry-connect",
         ],
         code: `curl "${BASE}/api/green/registry?serial=VCS-674"
-curl "${BASE}/api/green/registry?registry=gold_standard&serial=5678"`,
+curl "${BASE}/api/green/registry?registry=gold_standard&serial=5678"
+curl "${BASE}/api/green/registry?registry=puro&serial=PURO-1001"`,
         language: "bash",
       },
       {

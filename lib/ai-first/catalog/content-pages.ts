@@ -361,15 +361,15 @@ export const greenApiPage = enrichPage({
 export const greenRegistryConnectPage = enrichPage({
   id: "green-registry-connect",
   path: "/green/registry-connect",
-  title: "Registry Connect | Verra & Gold Standard → CQS AUROS",
+  title: "Registry Connect v1 | Verra, Gold Standard & Puro → CQS AUROS",
   description:
-    "Serial Verra VCS ou Gold Standard → Carbon Quality Score AUROS en une requête. API gratuite, batch portfolio, liens registre officiels.",
+    "Serial Verra VCS, Gold Standard ou Puro → Carbon Quality Score AUROS en une requête. Ingestion live + catalog pilote, API gratuite et batch portfolio.",
   summary:
-    "Registry Connect v0 — lookup serial carbone, CQS + Nature Score indicatif, catalog pilote et batch API.",
+    "Registry Connect v1 — lookup serial carbone live Verra/GS/Puro, CQS + Nature Score indicatif, catalog pilote et batch API.",
   contentType: "guide",
   language: "multi",
   indexable: true,
-  lastUpdated: "2026-06-27",
+  lastUpdated: "2026-06-28",
   keywords: [
     "Registry Connect",
     "Verra VCS API",

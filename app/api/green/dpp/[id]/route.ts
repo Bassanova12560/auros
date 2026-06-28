@@ -1,3 +1,4 @@
+import { absoluteUrl } from "@/lib/comparators/site";
 import {
   authenticateGreenPublicRequest,
   greenApiError,
@@ -25,11 +26,17 @@ export async function GET(
     return greenApiError("not_found", `Unknown catalog id: ${id}`, 404, authResult.auth);
   }
 
+  const base = absoluteUrl("");
   const url = new URL(req.url);
-  if (url.searchParams.get("format") === "jsonld") {
+  const wantsJsonLd =
+    url.searchParams.get("format") === "jsonld" ||
+    req.headers.get("accept")?.includes("application/ld+json");
+
+  if (wantsJsonLd) {
     return new Response(JSON.stringify(doc, null, 2), {
       headers: {
         "Content-Type": "application/ld+json; charset=utf-8",
+        Link: `<${base}/api/green/dpp/${id}?format=jsonld>; rel="alternate"; type="application/ld+json"`,
         "X-AUROS-Tier": authResult.auth.tier,
       },
     });

@@ -3,7 +3,11 @@ import type {
   AurosGreenOptions,
   GreenApiErrorBody,
   GreenChangelogResponse,
+  GreenDppResponse,
+  GreenNatureIndexResponse,
+  GreenNatureScoreResponse,
   GreenRegistryResponse,
+  GreenScoreHistoryResponse,
   GreenScoreResponse,
 } from "./types";
 
@@ -45,12 +49,36 @@ export class AurosGreen {
     return this.get<GreenChangelogResponse>("/api/green/changelog");
   }
 
-  async getScoreHistory(id: string): Promise<{ ok: true; history: Record<string, unknown> }> {
-    return this.get(`/api/green/score/${encodeURIComponent(id)}/history`);
+  async getNatureIndex(): Promise<GreenNatureIndexResponse> {
+    return this.get<GreenNatureIndexResponse>("/api/green/nature-index");
   }
 
-  async getDpp(id: string): Promise<{ ok: true; dpp: Record<string, unknown> }> {
-    return this.get(`/api/green/dpp/${encodeURIComponent(id)}`);
+  async getNatureScore(id: string): Promise<GreenNatureScoreResponse> {
+    return this.get<GreenNatureScoreResponse>(
+      `/api/green/nature-score/${encodeURIComponent(id)}`
+    );
+  }
+
+  async getScoreHistory(id: string): Promise<GreenScoreHistoryResponse> {
+    return this.get<GreenScoreHistoryResponse>(
+      `/api/green/score/${encodeURIComponent(id)}/history`
+    );
+  }
+
+  async getDpp(id: string, format?: "json" | "jsonld"): Promise<GreenDppResponse | Record<string, unknown>> {
+    const qs = format === "jsonld" ? "?format=jsonld" : "";
+    const path = `/api/green/dpp/${encodeURIComponent(id)}${qs}`;
+    const res = await this.fetchFn(`${this.baseUrl}${path}`, {
+      headers:
+        format === "jsonld"
+          ? { ...this.headers(), Accept: "application/ld+json" }
+          : this.headers(),
+    });
+    const body = (await res.json()) as GreenDppResponse & GreenApiErrorBody;
+    if (!res.ok) {
+      throw AurosGreenError.fromResponse(res.status, body as GreenApiErrorBody);
+    }
+    return body as GreenDppResponse | Record<string, unknown>;
   }
 
   private headers(): HeadersInit {

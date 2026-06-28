@@ -6,3 +6,4 @@ export {
   type NatureIndexEntry,
   type NatureIndexPayload,
 } from "./compute";
+export { downloadNatureIndexCsv, natureIndexToCsv } from "./csv";

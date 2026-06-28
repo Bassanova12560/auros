@@ -54,8 +54,9 @@ describe("green/registry-connect/lookup", () => {
     assert.equal(outcome.ok, false);
   });
 
-  it("lists pilot serials", () => {
-    assert.ok(listRegistryConnectSerials().length >= 4);
+  it("lists pilot serials including VCS-2195", () => {
+    assert.ok(listRegistryConnectSerials().length >= 5);
+    assert.ok(listRegistryConnectSerials().includes("VCS-2195"));
   });
 });
 

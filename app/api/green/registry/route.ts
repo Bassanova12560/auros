@@ -12,7 +12,7 @@ export function OPTIONS() {
   return greenApiOptions();
 }
 
-/** Registry Connect v0 — Verra / Gold Standard serial → CQS + Nature Score. */
+/** Registry Connect v1 — Verra / Gold Standard / Puro serial → CQS + Nature Score. */
 export async function GET(req: Request) {
   const authResult = await authenticateGreenPublicRequest(req);
   if (!authResult.ok) return authResult.response;

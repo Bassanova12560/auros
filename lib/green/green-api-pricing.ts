@@ -18,10 +18,10 @@ export function greenApiPremiumLabel(locale: "fr" | "en" | "es" = "fr"): string 
 
 export function greenApiPremiumDescription(locale: "fr" | "en" | "es" = "fr"): string {
   if (locale === "en") {
-    return "25,000 req/month · batch 50 CQS · Registry Connect priority · SLA email";
+    return "25,000 req/month · batch 50 CQS · score history · DPP Bridge · Registry Connect priority · SLA email";
   }
   if (locale === "es") {
     return "25 000 req/mes · batch 50 CQS · Registry Connect · SLA email";
   }
-  return "25 000 req/mois · batch 50 CQS · Registry Connect prioritaire · SLA email";
+    return "25 000 req/mois · batch 50 CQS · historique scores · DPP Bridge · Registry Connect prioritaire · SLA email";
 }
