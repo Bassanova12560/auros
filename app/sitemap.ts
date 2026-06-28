@@ -61,6 +61,7 @@ const PRIORITY: Record<string, number> = {
   "/tools/cost-estimator": 0.78,
   "/data/rwa-index": 0.82,
   "/data/green-index": 0.84,
+  "/data/nature-score": 0.83,
   "/data/uhi-index": 0.83,
   "/data/state-of-rwa-issuers": 0.81,
   "/pricing": 0.76,

@@ -10,6 +10,7 @@ export {
 export {
   authenticateGreenPublicRequest,
   requireGreenApiKey,
+  requireGreenPremiumApiKey,
   batchMaxItemsForTier,
   bulkMaxIdsForTier,
   type GreenApiAuth,

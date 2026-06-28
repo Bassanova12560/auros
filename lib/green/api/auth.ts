@@ -124,6 +124,26 @@ export async function requireGreenApiKey(req: Request) {
   return authenticateGreenPublicRequest(req);
 }
 
+/** Premium+ endpoints (history, DPP export batch). */
+export async function requireGreenPremiumApiKey(req: Request) {
+  const authResult = await requireGreenApiKey(req);
+  if (!authResult.ok) return authResult;
+
+  const tier = authResult.auth.tier;
+  if (tier !== "premium" && tier !== "enterprise") {
+    return {
+      ok: false as const,
+      response: greenApiError(
+        "premium_required",
+        "Green API Premium required — subscribe at /green/api or /partners.",
+        402,
+        authResult.auth
+      ),
+    };
+  }
+  return authResult;
+}
+
 export function batchMaxItemsForTier(tier: GreenApiTier): number {
   if (tier === "premium" || tier === "enterprise") return GREEN_PREMIUM_BATCH_MAX_ITEMS;
   return GREEN_FREE_BATCH_MAX_ITEMS;

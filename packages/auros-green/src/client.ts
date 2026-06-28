@@ -45,6 +45,14 @@ export class AurosGreen {
     return this.get<GreenChangelogResponse>("/api/green/changelog");
   }
 
+  async getScoreHistory(id: string): Promise<{ ok: true; history: Record<string, unknown> }> {
+    return this.get(`/api/green/score/${encodeURIComponent(id)}/history`);
+  }
+
+  async getDpp(id: string): Promise<{ ok: true; dpp: Record<string, unknown> }> {
+    return this.get(`/api/green/dpp/${encodeURIComponent(id)}`);
+  }
+
   private headers(): HeadersInit {
     const h: Record<string, string> = { Accept: "application/json" };
     if (this.apiKey) h.Authorization = `Bearer ${this.apiKey}`;

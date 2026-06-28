@@ -391,6 +391,28 @@ export const greenRegistryConnectPage = enrichPage({
   relatedPaths: [GREEN_ROUTE, "/green/api", "/data/green-index", "/green/compare"],
 });
 
+export const natureScoreIndexPage = enrichPage({
+  id: "nature-score-index",
+  path: "/data/nature-score",
+  title: "AUROS Nature Score Index — Biodiversité & actifs nature-based",
+  description:
+    "Classement indicatif TNFD LEAP-inspired des actifs nature et biodiversité tokenisés — complément CQS et Green Index.",
+  summary: "Nature Score Index mensuel — top références nature-based avec CQS et écosystème.",
+  contentType: "guide",
+  language: "multi",
+  indexable: true,
+  lastUpdated: "2026-06-28",
+  keywords: ["Nature Score", "TNFD", "biodiversity tokenized assets", "AUROS nature index"],
+  intents: ["Classement actifs biodiversité tokenisés", "TNFD nature score API"],
+  audience: ["analystes", "family office", "journalistes"],
+  facts: [
+    { key: "API", value: "GET /api/green/nature-index" },
+    { key: "Score", value: "GET /api/green/nature-score/{id}" },
+    { key: "Page", value: "/data/nature-score" },
+  ],
+  relatedPaths: [GREEN_ROUTE, "/data/green-index", "/green/api", "/green/compare"],
+});
+
 export const uhiIndexPage = enrichPage({
   id: "uhi-index",
   path: "/data/uhi-index",
@@ -1115,6 +1137,7 @@ export const contentPages: AiFirstPage[] = [
   greenIndexPage,
   greenApiPage,
   greenRegistryConnectPage,
+  natureScoreIndexPage,
   uhiIndexPage,
   stateOfRwaIssuersPage,
   howItWorksPage,

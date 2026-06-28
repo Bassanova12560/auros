@@ -51,6 +51,24 @@ const ENDPOINTS = [
   },
   {
     method: "GET",
+    path: "/api/green/dpp/{id}",
+    desc: "DPP Bridge v0 — JSON-LD passeport produit EU",
+    free: true,
+  },
+  {
+    method: "GET",
+    path: "/api/green/score/{id}/history",
+    desc: "Historique mensuel (Premium)",
+    free: false,
+  },
+  {
+    method: "GET",
+    path: "/api/green/nature-index",
+    desc: "Nature Score Index — classement biodiversité",
+    free: true,
+  },
+  {
+    method: "GET",
     path: "/api/green/changelog",
     desc: "Mouvements mensuels Green Index",
     free: true,
@@ -146,6 +164,16 @@ curl -X POST ${BASE}/api/v1/green/carbon-quality/batch \\
 
         <section>
           <h2 className="font-mono text-[11px] uppercase tracking-wide text-white/45">
+            Widget JS (1 ligne)
+          </h2>
+          <pre className="mt-3 overflow-x-auto rounded-xl bg-black/40 p-4 font-mono text-xs text-white/70">
+{`<script src="${BASE}/green-score.js" defer></script>
+<div data-auros-green-score data-id="toucan"></div>`}
+          </pre>
+        </section>
+
+        <section>
+          <h2 className="font-mono text-[11px] uppercase tracking-wide text-white/45">
             Embed (iframe)
           </h2>
           <pre className="mt-3 overflow-x-auto rounded-xl bg-black/40 p-4 font-mono text-xs text-white/70">
@@ -201,6 +229,18 @@ ${BASE}/api/green/changelog/rss`}
             className="inline-flex items-center rounded-full border border-white/15 px-5 py-2.5 text-sm text-white/80"
           >
             Registry Connect →
+          </Link>
+          <Link
+            href="/data/nature-score"
+            className="inline-flex items-center rounded-full border border-white/15 px-5 py-2.5 text-sm text-white/80"
+          >
+            Nature Score Index →
+          </Link>
+          <Link
+            href="/data/green-index"
+            className="inline-flex items-center rounded-full border border-white/15 px-5 py-2.5 text-sm text-white/80"
+          >
+            Green Index →
           </Link>
           <Link
             href="/partners"

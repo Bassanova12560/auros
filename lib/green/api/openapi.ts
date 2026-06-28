@@ -63,6 +63,23 @@ export function buildGreenApiOpenApiSpec() {
       },
       "/api/green/index": { get: { summary: "Green RWA Index JSON feed" } },
       "/api/green/changelog": { get: { summary: "Monthly index movers" } },
+      "/api/green/nature-index": { get: { summary: "Nature Score Index ranking (biodiversity)" } },
+      "/api/green/dpp/{id}": {
+        get: {
+          summary: "DPP Bridge v0 — EU Digital Product Passport JSON-LD",
+          parameters: [
+            { name: "id", in: "path", required: true, schema: { type: "string" } },
+            { name: "format", in: "query", schema: { type: "string", enum: ["jsonld"] } },
+          ],
+        },
+      },
+      "/api/green/score/{id}/history": {
+        get: {
+          summary: "Monthly score history (Premium API key)",
+          security: [{ bearerAuth: [] }],
+          parameters: [{ name: "id", in: "path", required: true, schema: { type: "string" } }],
+        },
+      },
       "/api/green/nature-score/{id}": {
         get: {
           summary: "Nature Score (TNFD LEAP-inspired) for nature-based assets",

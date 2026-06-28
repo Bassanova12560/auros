@@ -322,8 +322,41 @@ curl "${BASE}/api/green/registry?registry=gold_standard&serial=5678"`,
         heading: "Embed presse / partenaires",
         paragraphs: [
           "Widget iframe sans authentification — lien « Powered by AUROS » inclus.",
+          "Widget JS 1-ligne : `<script src=\"…/green-score.js\" defer></script>` + `data-auros-green-score data-id=\"toucan\"`.",
         ],
-        code: `<iframe src="${BASE}/embed/green-score?id=toucan" width="320" height="160"></iframe>`,
+        code: `<iframe src="${BASE}/embed/green-score?id=toucan" width="320" height="160"></iframe>
+
+<script src="${BASE}/green-score.js" defer></script>
+<div data-auros-green-score data-id="toucan"></div>`,
+        language: "bash",
+      },
+      {
+        heading: "GET Nature Index & Nature Score",
+        paragraphs: [
+          "Classement biodiversité : `GET /api/green/nature-index` · page `/data/nature-score`.",
+          "Score unitaire TNFD : `GET /api/green/nature-score/{id}` (moss, regen-network…).",
+        ],
+        code: `curl ${BASE}/api/green/nature-index
+curl ${BASE}/api/green/nature-score/moss`,
+        language: "bash",
+      },
+      {
+        heading: "GET DPP Bridge (JSON-LD)",
+        paragraphs: [
+          "Passeport produit EU v0 — `GET /api/green/dpp/{id}` ou `?format=jsonld` pour LD+JSON.",
+        ],
+        code: `curl ${BASE}/api/green/dpp/toucan
+curl "${BASE}/api/green/dpp/toucan?format=jsonld"`,
+        language: "bash",
+      },
+      {
+        heading: "GET historique score (Premium)",
+        paragraphs: [
+          "12 mois indicatifs CQS/Watt/composite — clé tier premium ou enterprise.",
+          "HTTP 402 `premium_required` si clé free.",
+        ],
+        code: `curl ${BASE}/api/green/score/toucan/history \\
+  -H "Authorization: Bearer auros_pk_live_xxx"`,
         language: "bash",
       },
     ],
