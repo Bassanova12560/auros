@@ -493,6 +493,57 @@ export const GREEN_BLOG_ARTICLES: GreenBlogArticle[] = [
       },
     ],
   },
+  {
+    slug: "green-api-standard-ouvert-2026",
+    title:
+      "AUROS lance le standard Green API ouvert — CQS, Registry Connect et DPP en lecture gratuite",
+    description:
+      "Communiqué : API publique Green RWA (Carbon Quality Score, Watt, Nature Score, Registry Connect Verra/GS/Puro) — 100 req/jour sans clé, SDK npm, widget embed et Premium 299 €/mo.",
+    excerpt:
+      "Vérifiez gratuitement. Industrialisez avec la clé API. AUROS publie le référentiel ouvert pour scorer le Green RWA européen — presse et développeurs invités à citer getauros.com/green/api.",
+    publishedAt: "2026-06-28",
+    modifiedAt: "2026-06-28",
+    readingTimeMinutes: 10,
+    keywords: [
+      "Green API",
+      "Carbon Quality Score API",
+      "Registry Connect",
+      "DPP Bridge",
+      "tokenized climate assets",
+      "AUROS Green",
+    ],
+    cta: { href: "/green/api", label: "Hub API Green — essai gratuit" },
+    sections: [
+      {
+        heading: "Un standard ouvert pour le Green RWA",
+        paragraphs: [
+          "AUROS publie aujourd'hui l'API Green — le premier référentiel public combinant Carbon Quality Score (CQS), Watt Score, Nature Score TNFD-inspired et Green Index pour les actifs climatiques tokenisés en Europe.",
+          "Positionnement : « Vérifiez gratuitement. Industrialisez avec la clé API. » Lecture anonyme (100 req/jour/IP), clé free (1 000 req/mois), Premium self-serve (299 €/mois).",
+        ],
+      },
+      {
+        heading: "Registry Connect v1 — serial registre → score",
+        paragraphs: [
+          "Entrez un serial Verra VCS, Gold Standard ou Puro : l'API retourne CQS, Nature Score indicatif, liens registre officiels et mode de résolution (catalog, live, inferred).",
+          "Endpoint : GET /api/green/registry?serial=VCS-674 · Hub : /green/registry-connect · Batch portfolio via POST /api/v1/green/carbon-quality/batch.",
+        ],
+      },
+      {
+        heading: "Widget, SDK npm et DPP Bridge",
+        paragraphs: [
+          "Widget JS une ligne (green-score.js) pour presse et partenaires. SDK TypeScript @adrien1212balitrand/auros-green sur npm. DPP Bridge v0 exporte un JSON-LD passeport produit EU depuis les scores AUROS.",
+          "Indices publics : Green Index (/data/green-index), Nature Score Index (/data/nature-score), UHI Index (/data/uhi-index). OpenAPI : /api/green/openapi.",
+        ],
+      },
+      {
+        heading: "Citation presse & licence",
+        paragraphs: [
+          "Citation recommandée : « AUROS Green API, getauros.com/green/api — édition [mois] ». RSS movers mensuels : /api/green/changelog/rss.",
+          "Licence institutionnelle, réplication d'indice et SLA entreprise : contact@getauros.com · /partners.",
+        ],
+      },
+    ],
+  },
 ];
 
 export function getGreenBlogArticle(slug: string): GreenBlogArticle | undefined {

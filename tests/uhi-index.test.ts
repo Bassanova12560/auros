@@ -47,12 +47,13 @@ describe("uhi-index/compute", () => {
 });
 
 describe("green/strategy-blog-articles", () => {
-  it("registers three new strategy articles", () => {
+  it("registers strategy and press articles", () => {
     const slugs = getAllGreenBlogSlugs();
     for (const slug of [
       "credits-carbone-icvcm-2027",
       "dpp-marche-rwa-plus-grand",
       "auros-green-index-premier-numero",
+      "green-api-standard-ouvert-2026",
     ]) {
       assert.ok(slugs.includes(slug), slug);
       const article = getGreenBlogArticle(slug);
