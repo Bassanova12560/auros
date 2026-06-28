@@ -340,4 +340,53 @@ export async function createApiKey(email: string): Promise<{
   return { apiKey, tier: "free", monthlyLimit: FREE_TIER_MONTHLY_LIMIT };
 }
 
+/** Free-tier keys at or above usage ratio (for quota nurture emails). */
+export async function listFreeTierKeysNearQuota(
+  minUsageRatio = 0.8
+): Promise<Array<{ email: string; key_hash: string; usage: number; limit: number }>> {
+  const limit = FREE_TIER_MONTHLY_LIMIT;
+  const minUsage = Math.floor(limit * minUsageRatio);
+  const monthKey = currentMonthKey();
+  const seen = new Set<string>();
+  const out: Array<{ email: string; key_hash: string; usage: number; limit: number }> = [];
+
+  function push(record: ApiKeyRecord) {
+    if (record.tier !== "free") return;
+    if (record.month_key !== monthKey) return;
+    if (record.requests_this_month < minUsage) return;
+    if (seen.has(record.key_hash)) return;
+    seen.add(record.key_hash);
+    out.push({
+      email: record.email,
+      key_hash: record.key_hash,
+      usage: record.requests_this_month,
+      limit,
+    });
+  }
+
+  if (isSupabaseConfigured()) {
+    try {
+      const { getSupabaseServerClient } = await import("@/lib/supabase/server");
+      const supabase = getSupabaseServerClient();
+      const { data } = await supabase
+        .from("api_keys")
+        .select("*")
+        .eq("tier", "free")
+        .eq("month_key", monthKey)
+        .gte("requests_this_month", minUsage)
+        .limit(100);
+      if (data) {
+        for (const row of data as ApiKeyRecord[]) push(row);
+      }
+    } catch {
+      // fall through to local store
+    }
+  }
+
+  for (const record of memoryStore.values()) push(record);
+  for (const record of loadFileStore()) push(record);
+
+  return out;
+}
+
 export { hashKey, FREE_TIER_MONTHLY_LIMIT };

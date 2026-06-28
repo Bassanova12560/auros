@@ -70,6 +70,12 @@ import {
   type GreenLabelIncompleteReminderEmailData,
   type GreenMarketAlertEmailData,
   type GreenOfferInterestEmailData,
+  greenApiKeyWelcomeEmail,
+  greenApiPremiumActivatedEmail,
+  greenApiQuotaNurtureEmail,
+  type GreenApiKeyWelcomeEmailData,
+  type GreenApiPremiumActivatedEmailData,
+  type GreenApiQuotaNurtureEmailData,
   wizardProPaymentUserEmail,
   wizardProPaymentInternalEmail,
   wizardResumeReminderEmail,
@@ -436,4 +442,46 @@ export async function sendGreenOfferInterestActor(
 ): Promise<boolean> {
   const { subject, html } = greenOfferInterestActorEmail(data);
   return sendSafe({ to, subject, html });
+}
+
+export async function sendGreenApiKeyWelcome(
+  to: string,
+  data: GreenApiKeyWelcomeEmailData
+): Promise<boolean> {
+  const { subject, html } = greenApiKeyWelcomeEmail(data);
+  return sendSafe({ to, subject, html });
+}
+
+export async function sendGreenApiPremiumActivated(
+  to: string,
+  data: GreenApiPremiumActivatedEmailData
+): Promise<boolean> {
+  const { subject, html } = greenApiPremiumActivatedEmail(data);
+  return sendSafe({ to, subject, html });
+}
+
+export async function sendGreenApiQuotaNurture(
+  to: string,
+  data: GreenApiQuotaNurtureEmailData
+): Promise<boolean> {
+  const { subject, html } = greenApiQuotaNurtureEmail(data);
+  return sendSafe({ to, subject, html });
+}
+
+export async function sendGreenApiPremiumInternal(email: string): Promise<boolean> {
+  const internal = internalNotifyEmail();
+  if (!internal) return false;
+  return sendSafe({
+    to: internal,
+    subject: `Green API Premium — ${email}`,
+    html: `<p>Nouvel abonnement Green API Premium : ${escapeHtml(email)}</p>`,
+  });
+}
+
+function escapeHtml(text: string): string {
+  return text
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
 }

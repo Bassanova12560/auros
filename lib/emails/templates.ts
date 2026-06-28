@@ -1269,6 +1269,67 @@ export function greenOfferInterestActorEmail(data: GreenOfferInterestEmailData) 
   return { subject: copy.subject, html };
 }
 
+// --- Green API monetization ---
+
+export type GreenApiKeyWelcomeEmailData = {
+  monthlyLimit: number;
+};
+
+export function greenApiKeyWelcomeEmail(data: GreenApiKeyWelcomeEmailData) {
+  const origin = siteOrigin();
+  const premiumUrl = `${origin}/green/api`;
+  const html = layout(
+    `<p style="margin:0 0 16px;">Votre clé API AUROS Green est active — <strong>${data.monthlyLimit} requêtes/mois</strong> (CQS, Watt, Registry Connect, Nature Score).</p>` +
+      `<p style="margin:0 0 16px;color:${BRAND_MUTED};">Conservez la clé affichée une seule fois. Industrialisez avec Premium : 25&nbsp;000 req/mois, batch 50, historique et DPP Bridge.</p>` +
+      cta(premiumUrl, "Passer en Premium — 299 €/mois")
+  );
+  return {
+    subject: "Votre clé AUROS Green API est prête",
+    html,
+  };
+}
+
+export type GreenApiPremiumActivatedEmailData = {
+  apiKey?: string | null;
+  monthlyLimit: number;
+};
+
+export function greenApiPremiumActivatedEmail(data: GreenApiPremiumActivatedEmailData) {
+  const origin = siteOrigin();
+  const keyBlock = data.apiKey
+    ? `<p style="margin:16px 0;padding:12px;background:#111;border-radius:8px;font-family:ui-monospace,monospace;font-size:12px;word-break:break-all;">${escapeHtml(data.apiKey)}</p>`
+    : "";
+  const html = layout(
+    `<p style="margin:0 0 16px;"><strong>Green API Premium activé.</strong> Votre clé est passée en tier premium — <strong>${data.monthlyLimit.toLocaleString("fr-FR")} req/mois</strong>, batch 50, historique scores, webhooks changelog.</p>` +
+      keyBlock +
+      `<p style="margin:0 0 16px;color:${BRAND_MUTED};">Hub : documentation OpenAPI, Registry Connect v1 et statut API.</p>` +
+      cta(`${origin}/green/api`, "Ouvrir le hub API")
+  );
+  return {
+    subject: "AUROS Green API Premium — activé",
+    html,
+  };
+}
+
+export type GreenApiQuotaNurtureEmailData = {
+  usage: number;
+  limit: number;
+};
+
+export function greenApiQuotaNurtureEmail(data: GreenApiQuotaNurtureEmailData) {
+  const origin = siteOrigin();
+  const pct = Math.round((data.usage / data.limit) * 100);
+  const html = layout(
+    `<p style="margin:0 0 16px;">Vous avez utilisé <strong>${pct}%</strong> de votre quota Green API ce mois-ci (${data.usage}/${data.limit} req).</p>` +
+      `<p style="margin:0 0 16px;color:${BRAND_MUTED};">Passez en Premium pour 25&nbsp;000 req/mois, batch portfolio 50 crédits, historique et SLA email — sans interruption de production.</p>` +
+      cta(`${origin}/green/api`, "Upgrader — 299 €/mois")
+  );
+  return {
+    subject: `Quota Green API à ${pct}% — passer en Premium`,
+    html,
+  };
+}
+
 // --- Wizard Pro payment ---
 
 export type WizardProPaymentEmailData = {

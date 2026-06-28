@@ -33,6 +33,10 @@
       "schedule": "0 8 1 * *"
     },
     {
+      "path": "/api/cron/green-api-quota-nurture",
+      "schedule": "0 12 * * *"
+    },
+    {
       "path": "/api/cron/wizard-reminders",
       "schedule": "0 11 * * *"
     }

@@ -1,8 +1,11 @@
 import { NextResponse } from "next/server";
 
+import { siteOrigin } from "@/lib/emails/constants";
+import { greenApiUpsellPayload } from "@/lib/green/green-api-nurture";
+
 import type { GreenApiAuth } from "./auth";
 
-const GREEN_API_VERSION = "1.0";
+const GREEN_API_VERSION = "1.1";
 
 export function greenApiHeaders(
   auth?: GreenApiAuth,
@@ -20,6 +23,12 @@ export function greenApiHeaders(
     headers["X-RateLimit-Limit"] = String(auth.rateLimit.limit);
     headers["X-RateLimit-Remaining"] = String(auth.rateLimit.remaining);
     headers["X-RateLimit-Reset"] = String(auth.rateLimit.reset);
+    const upsell = greenApiUpsellPayload(auth);
+    if (upsell) {
+      const url = `${siteOrigin()}${upsell.upgrade_url as string}`;
+      headers["X-AUROS-Upsell"] = url;
+      headers["Link"] = `<${url}>; rel="payment"; title="Green API Premium"`;
+    }
   }
   return headers;
 }
@@ -28,11 +37,13 @@ export function greenApiJson<T extends Record<string, unknown>>(
   body: T,
   init?: { status?: number; auth?: GreenApiAuth; headers?: Record<string, string> }
 ): NextResponse {
+  const upsell = init?.auth ? greenApiUpsellPayload(init.auth) : null;
   return NextResponse.json(
     {
       disclaimer:
         "Indicative AUROS Green signals — not Verra/ICVCM certification or investment advice.",
       ...body,
+      ...(upsell ? { upsell } : {}),
     },
     {
       status: init?.status ?? 200,

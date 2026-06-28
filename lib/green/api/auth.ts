@@ -48,7 +48,7 @@ export async function authenticateGreenPublicRequest(
         ok: false,
         response: greenApiError(
           "quota_exceeded",
-          `Monthly API quota exceeded (${rate.limit} requests). Upgrade at /partners.`,
+          `Monthly API quota exceeded (${rate.limit} requests). Upgrade Green API Premium at /green/api — 25k req/mois.`,
           429,
           {
             tier: validation.isDemo ? "demo" : "free",

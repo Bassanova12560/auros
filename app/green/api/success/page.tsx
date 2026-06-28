@@ -35,8 +35,8 @@ export default async function GreenApiSuccessPage({ searchParams }: PageProps) {
         </h1>
         <p className="text-sm text-white/55">
           {activated
-            ? "Votre clé API existante est passée en tier premium (25 000 req/mois, batch 50)."
-            : "Si votre clé n'est pas encore premium, réessayez dans quelques minutes ou contactez support@getauros.com."}
+            ? "Votre clé API est en tier premium (25 000 req/mois, batch 50). Un email de confirmation vient d'être envoyé."
+            : "Si votre clé n'est pas encore premium, réessayez dans quelques minutes ou créez une clé free (POST /api/v1/keys) avec le même email avant de payer."}
         </p>
         <PrimaryButton href={GREEN_API_DOCS_ROUTE}>Retour au hub API</PrimaryButton>
         <Link href="/developers/dashboard" className="block text-xs text-emerald-500/70 hover:text-emerald-400">
