@@ -5,7 +5,7 @@ export type RegistryConnectProvider =
   | "puro"
   | "other";
 
-export type RegistryConnectMatchKind = "catalog" | "inferred" | "partial";
+export type RegistryConnectMatchKind = "catalog" | "live" | "inferred" | "partial";
 
 export type RegistryConnectEntry = {
   /** Normalized serial, e.g. VCS-674 */

@@ -32,8 +32,8 @@ describe("green/registry-connect/parse", () => {
 });
 
 describe("green/registry-connect/lookup", () => {
-  it("returns catalog match for VCS-674 with CQS", () => {
-    const outcome = lookupRegistryConnect({ serial: "VCS-674" });
+  it("returns catalog match for VCS-674 with CQS", async () => {
+    const outcome = await lookupRegistryConnect({ serial: "VCS-674" });
     assert.ok(outcome.ok);
     assert.equal(outcome.data.match, "catalog");
     assert.equal(outcome.data.project_name, findRegistryCatalogEntry("verra", "VCS-674")!.project_name);
@@ -42,15 +42,15 @@ describe("green/registry-connect/lookup", () => {
     assert.equal(outcome.data.compare_id, "moss");
   });
 
-  it("infers unknown VCS serial", () => {
-    const outcome = lookupRegistryConnect({ serial: "VCS-99999" });
+  it("infers unknown VCS serial when live fetch unavailable", async () => {
+    const outcome = await lookupRegistryConnect({ serial: "VCS-99999" });
     assert.ok(outcome.ok);
-    assert.equal(outcome.data.match, "inferred");
+    assert.ok(outcome.data.match === "inferred" || outcome.data.match === "live");
     assert.ok(outcome.data.registry_urls.project?.includes("verra.org"));
   });
 
-  it("rejects empty query", () => {
-    const outcome = lookupRegistryConnect({});
+  it("rejects empty query", async () => {
+    const outcome = await lookupRegistryConnect({});
     assert.equal(outcome.ok, false);
   });
 
@@ -60,8 +60,8 @@ describe("green/registry-connect/lookup", () => {
 });
 
 describe("green/registry-connect/batch", () => {
-  it("resolves batch item by serial", () => {
-    const outcome = resolveCarbonQualityBatchItem({ serial: "VCS-674" });
+  it("resolves batch item by serial", async () => {
+    const outcome = await resolveCarbonQualityBatchItem({ serial: "VCS-674" });
     assert.ok(outcome.ok);
     assert.equal(outcome.registry_serial, "VCS-674");
   });

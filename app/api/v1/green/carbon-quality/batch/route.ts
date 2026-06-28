@@ -48,23 +48,25 @@ export const POST = protocolRoute(async (req: Request) => {
     );
   }
 
-  const results = parsed.data.items.map((item, index) => {
-    const outcome = resolveCarbonQualityBatchItem(item);
-    if (!outcome.ok) {
+  const results = await Promise.all(
+    parsed.data.items.map(async (item, index) => {
+      const outcome = await resolveCarbonQualityBatchItem(item);
+      if (!outcome.ok) {
+        return {
+          index,
+          ok: false as const,
+          error: { code: outcome.code, message: outcome.message },
+        };
+      }
       return {
         index,
-        ok: false as const,
-        error: { code: outcome.code, message: outcome.message },
+        ok: true as const,
+        id: item.id ?? null,
+        serial: item.serial ?? outcome.registry_serial ?? null,
+        carbon_quality: outcome.result,
       };
-    }
-    return {
-      index,
-      ok: true as const,
-      id: item.id ?? null,
-      serial: item.serial ?? outcome.registry_serial ?? null,
-      carbon_quality: outcome.result,
-    };
-  });
+    })
+  );
 
   const succeeded = results.filter((r) => r.ok).length;
 

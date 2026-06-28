@@ -12,6 +12,7 @@ import {
 import { lookupGreenScoreById } from "@/lib/green/api/score-lookup";
 
 import { findRegistryCatalogEntry } from "./catalog";
+import { fetchVerraProjectLive, providerSupportsLiveFetch } from "./fetch-verra";
 import { parseRegistryConnectInput, type ParsedRegistryQuery } from "./parse-query";
 import type {
   RegistryConnectLookupInput,
@@ -93,15 +94,28 @@ function profileFromProviderAndContext(
   };
 }
 
-function inferFromParsed(parsed: ParsedRegistryQuery): {
+function mapProjectType(raw: string | null): string {
+  if (!raw) return "other";
+  const t = raw.toLowerCase();
+  if (/forest|redd|afolu/.test(t)) return "forestry";
+  if (/renewable|solar|wind/.test(t)) return "renewable";
+  if (/cookstove|energy/.test(t)) return "cookstove";
+  if (/soil|agric/.test(t)) return "soil";
+  return "other";
+}
+
+async function resolveContext(parsed: ParsedRegistryQuery): Promise<{
   match: RegistryConnectMatchKind;
   result: RegistryConnectLookupResult;
   profile: CarbonQualityProfile;
   natureText: string;
-} {
+}> {
   const catalog = findRegistryCatalogEntry(parsed.provider, parsed.serial);
   const urls = catalog?.registry_project_url
-    ? { project: catalog.registry_project_url, retirements: registryUrls(parsed.provider, parsed.serial).retirements }
+    ? {
+        project: catalog.registry_project_url,
+        retirements: registryUrls(parsed.provider, parsed.serial).retirements,
+      }
     : registryUrls(parsed.provider, parsed.serial);
 
   if (catalog) {
@@ -127,6 +141,33 @@ function inferFromParsed(parsed: ParsedRegistryQuery): {
     };
   }
 
+  if (providerSupportsLiveFetch(parsed.provider)) {
+    const live = await fetchVerraProjectLive(parsed.serial);
+    if (live) {
+      const projectType = mapProjectType(live.project_type);
+      const profile = profileFromProviderAndContext(
+        parsed.provider,
+        live.description,
+        projectType
+      );
+      return {
+        match: "live",
+        result: {
+          match: "live",
+          provider: parsed.provider,
+          serial: parsed.serial,
+          project_name: live.project_name,
+          country: live.country,
+          vintage_year: null,
+          compare_id: null,
+          registry_urls: urls,
+        },
+        profile,
+        natureText: live.description,
+      };
+    }
+  }
+
   const description = `${parsed.provider} ${parsed.serial} carbon credit project`;
   const profile = profileFromProviderAndContext(parsed.provider, description, "other");
 
@@ -147,9 +188,11 @@ function inferFromParsed(parsed: ParsedRegistryQuery): {
   };
 }
 
-export function lookupRegistryConnect(
+export async function lookupRegistryConnect(
   input: RegistryConnectLookupInput
-): { ok: true; data: RegistryConnectResponse } | { ok: false; code: string; message: string } {
+): Promise<
+  { ok: true; data: RegistryConnectResponse } | { ok: false; code: string; message: string }
+> {
   const parsed = parseRegistryConnectInput(input);
   if (!parsed) {
     return {
@@ -160,14 +203,13 @@ export function lookupRegistryConnect(
     };
   }
 
-  const { match, result, profile, natureText } = inferFromParsed(parsed);
+  const { match, result, profile, natureText } = await resolveContext(parsed);
   const carbon_quality = computeCarbonQualityFromProfile(profile);
 
   const natureProfile = inferNatureProfileFromText(natureText);
-  const nature_score =
-    /redd|forest|nature|biodivers|soil|rock weathering/i.test(natureText)
-      ? computeNatureScoreFromProfile(natureProfile)
-      : null;
+  const nature_score = /redd|forest|nature|biodivers|soil|rock weathering/i.test(natureText)
+    ? computeNatureScoreFromProfile(natureProfile)
+    : null;
 
   const unified_compare = result.compare_id ? lookupGreenScoreById(result.compare_id) : null;
 
@@ -183,15 +225,19 @@ export function lookupRegistryConnect(
         unified_compare,
       },
       methodology_note:
-        "Registry Connect v0 — indicative AUROS mapping from serial. Verify retirement on official registry before procurement.",
+        match === "live"
+          ? "Registry Connect v1 — live Verra registry data + AUROS CQS. Verify retirement before procurement."
+          : "Registry Connect — indicative AUROS mapping. Verify retirement on official registry before procurement.",
     },
   };
 }
 
-/** Batch / text resolver — accepts registry serial strings. */
-export function resolveRegistrySerialText(text: string): ReturnType<typeof lookupRegistryConnect> {
+export async function resolveRegistrySerialText(
+  text: string
+): Promise<Awaited<ReturnType<typeof lookupRegistryConnect>>> {
   return lookupRegistryConnect({ q: text });
 }
 
 export { parseRegistryConnectInput, parseRegistryQuery } from "./parse-query";
 export { findRegistryCatalogEntry, listRegistryConnectSerials, REGISTRY_CONNECT_CATALOG } from "./catalog";
+export { fetchVerraProjectLive } from "./fetch-verra";

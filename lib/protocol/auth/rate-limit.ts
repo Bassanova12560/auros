@@ -1,8 +1,12 @@
 import { checkRateLimit as checkMemoryRateLimit } from "@/lib/rate-limit";
 
-import { FREE_TIER_MONTHLY_LIMIT } from "../constants";
+import {
+  ENTERPRISE_TIER_MONTHLY_LIMIT,
+  FREE_TIER_MONTHLY_LIMIT,
+  PREMIUM_TIER_MONTHLY_LIMIT,
+} from "../constants";
 import { monthQuotaResetUnix } from "../rate-limit-context";
-import { getKeyUsage, incrementKeyUsage } from "./keys";
+import { findKeyRecord, getKeyUsage, incrementKeyUsage, type ApiKeyTier } from "./keys";
 
 const IP_BURST_LIMIT = 30;
 const IP_BURST_WINDOW_MS = 60_000;
@@ -44,11 +48,23 @@ function monthBucket(): string {
   return `${now.getUTCFullYear()}-${String(now.getUTCMonth() + 1).padStart(2, "0")}`;
 }
 
+function monthlyLimitForTier(tier: ApiKeyTier, isDemo: boolean): number {
+  if (isDemo) return 50;
+  if (tier === "enterprise") return ENTERPRISE_TIER_MONTHLY_LIMIT;
+  if (tier === "premium" || tier === "monitor") return PREMIUM_TIER_MONTHLY_LIMIT;
+  return FREE_TIER_MONTHLY_LIMIT;
+}
+
 export async function checkProtocolRateLimit(
   keyId: string,
   isDemo: boolean
 ): Promise<ProtocolRateLimitResult> {
-  const limit = isDemo ? 50 : FREE_TIER_MONTHLY_LIMIT;
+  let tier: ApiKeyTier = "free";
+  if (!isDemo && keyId !== "demo") {
+    const record = await findKeyRecord(keyId);
+    if (record) tier = record.tier;
+  }
+  const limit = monthlyLimitForTier(tier, isDemo);
   const reset = monthQuotaResetUnix();
   const bucket = monthBucket();
   const redisKey = `auros:protocol:${keyId}:${bucket}`;

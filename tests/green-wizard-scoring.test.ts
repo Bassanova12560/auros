@@ -76,22 +76,22 @@ describe("green/wizard-scores", () => {
 });
 
 describe("green/carbon-quality-batch", () => {
-  it("resolves compare id toucan", () => {
-    const out = resolveCarbonQualityBatchItem({ id: "toucan" });
+  it("resolves compare id toucan", async () => {
+    const out = await resolveCarbonQualityBatchItem({ id: "toucan" });
     assert.equal(out.ok, true);
     if (out.ok) assert.ok(out.result.score > 0);
   });
 
-  it("resolves free text profile", () => {
-    const out = resolveCarbonQualityBatchItem({
+  it("resolves free text profile", async () => {
+    const out = await resolveCarbonQualityBatchItem({
       text: "Gold Standard credits retired additionality permanence CCP",
     });
     assert.equal(out.ok, true);
     if (out.ok) assert.ok(out.result.score >= 40);
   });
 
-  it("rejects unknown compare id", () => {
-    const out = resolveCarbonQualityBatchItem({ id: "unknown-protocol-xyz" });
+  it("rejects unknown compare id", async () => {
+    const out = await resolveCarbonQualityBatchItem({ id: "unknown-protocol-xyz" });
     assert.equal(out.ok, false);
     if (!out.ok) assert.equal(out.code, "not_found");
   });

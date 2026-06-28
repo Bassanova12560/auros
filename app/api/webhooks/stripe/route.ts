@@ -6,8 +6,10 @@ import { fulfillJurisdictionPayment, fulfillWalkInPayment, parseCheckoutMetadata
 import { fulfillAcademyDiplomaPayment } from "@/lib/academy/fulfill-diploma-payment";
 import { parseAcademyDiplomaMetadata } from "@/lib/academy/diploma-checkout";
 import { fulfillGreenImpactPaymentFromStripe } from "@/lib/green/fulfill-impact-payment";
+import { fulfillGreenApiPremiumSubscription, downgradeGreenApiPremiumByEmail } from "@/lib/green/fulfill-green-api-subscription";
 import { getStripe, stripeWebhookSecret } from "@/lib/stripe/jurisdiction-checkout";
 import { parseGreenImpactCheckoutMetadata } from "@/lib/stripe/green-impact-checkout";
+import { parseGreenApiPremiumMetadata } from "@/lib/stripe/green-api-checkout";
 import { parseWizardCheckoutMetadata } from "@/lib/stripe/wizard-checkout";
 import { fulfillWizardPayment } from "@/lib/wizard/fulfill-payment";
 
@@ -59,6 +61,12 @@ export async function POST(request: Request) {
       return NextResponse.json({ received: true });
     }
 
+    const greenApiMeta = parseGreenApiPremiumMetadata(sessionMeta);
+    if (greenApiMeta) {
+      await fulfillGreenApiPremiumSubscription(session);
+      return NextResponse.json({ received: true });
+    }
+
     const meta = parseCheckoutMetadata(
       (session.metadata ?? {}) as Record<string, string>
     );
@@ -81,6 +89,15 @@ export async function POST(request: Request) {
         tier: meta.tier,
         locale: meta.locale,
       });
+    }
+  }
+
+  if (event.type === "customer.subscription.deleted") {
+    const subscription = event.data.object as Stripe.Subscription;
+    const meta = (subscription.metadata ?? {}) as Record<string, string>;
+    const parsed = parseGreenApiPremiumMetadata(meta);
+    if (parsed) {
+      await downgradeGreenApiPremiumByEmail(parsed.email);
     }
   }
 

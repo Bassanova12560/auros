@@ -15,11 +15,14 @@ export type CarbonQualityBatchInput = {
   serial?: string;
 };
 
-export function resolveCarbonQualityBatchItem(
+export async function resolveCarbonQualityBatchItem(
   item: CarbonQualityBatchInput
-): { ok: true; result: CarbonQualityScore; registry_serial?: string } | { ok: false; code: string; message: string } {
+): Promise<
+  | { ok: true; result: CarbonQualityScore; registry_serial?: string }
+  | { ok: false; code: string; message: string }
+> {
   if (item.registry && item.serial) {
-    const outcome = lookupRegistryConnect({ registry: item.registry, serial: item.serial });
+    const outcome = await lookupRegistryConnect({ registry: item.registry, serial: item.serial });
     if (!outcome.ok) {
       return { ok: false, code: outcome.code, message: outcome.message };
     }
@@ -31,7 +34,7 @@ export function resolveCarbonQualityBatchItem(
   }
 
   if (item.serial && !item.id && !item.text) {
-    const outcome = lookupRegistryConnect({ serial: item.serial });
+    const outcome = await lookupRegistryConnect({ serial: item.serial });
     if (!outcome.ok) {
       return { ok: false, code: outcome.code, message: outcome.message };
     }

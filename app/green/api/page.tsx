@@ -2,6 +2,7 @@ import Link from "next/link";
 
 import { FocusPageShell } from "@/app/_components/FocusPageShell";
 import { PrimaryButton } from "@/app/_components/ui/PrimaryButton";
+import { GreenApiPremiumCheckout } from "@/app/green/api/_components/GreenApiPremiumCheckout";
 import { absoluteUrl } from "@/lib/comparators/site";
 import {
   GREEN_ANON_DAILY_LIMIT,
@@ -137,6 +138,10 @@ curl -X POST ${BASE}/api/v1/green/carbon-quality/batch \\
   -H "Content-Type: application/json" \\
   -d '{"items":[{"id":"toucan"},{"id":"moss"}]}'`}
           </pre>
+        </section>
+
+        <section>
+          <GreenApiPremiumCheckout />
         </section>
 
         <section>

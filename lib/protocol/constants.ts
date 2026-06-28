@@ -10,5 +10,9 @@ export const DEMO_API_KEY = "auros_pk_test_demo";
 
 export const FREE_TIER_MONTHLY_LIMIT = 1000;
 
+export const PREMIUM_TIER_MONTHLY_LIMIT = 25_000;
+
+export const ENTERPRISE_TIER_MONTHLY_LIMIT = 100_000;
+
 export const KEY_PREFIX_LIVE = "auros_pk_live_";
 export const KEY_PREFIX_TEST = "auros_pk_test_";

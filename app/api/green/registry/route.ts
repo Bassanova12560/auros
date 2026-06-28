@@ -31,7 +31,7 @@ export async function GET(req: Request) {
     );
   }
 
-  const outcome = lookupRegistryConnect({ serial, registry, q });
+  const outcome = await lookupRegistryConnect({ serial, registry, q });
   if (!outcome.ok) {
     return greenApiError(outcome.code, outcome.message, 422, authResult.auth);
   }

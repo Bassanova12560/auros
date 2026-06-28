@@ -78,6 +78,83 @@ function generateRawKey(prefix: "live" | "test"): string {
   return prefix === "live" ? `${KEY_PREFIX_LIVE}${token}` : `${KEY_PREFIX_TEST}${token}`;
 }
 
+async function trySupabaseFindByEmail(email: string): Promise<ApiKeyRecord | null> {
+  if (!isSupabaseConfigured()) return null;
+  try {
+    const { getSupabaseServerClient } = await import("@/lib/supabase/server");
+    const supabase = getSupabaseServerClient();
+    const { data, error } = await supabase
+      .from("api_keys")
+      .select("*")
+      .eq("email", email.toLowerCase())
+      .order("created_at", { ascending: false })
+      .limit(1)
+      .maybeSingle();
+    if (error || !data) return null;
+    return data as ApiKeyRecord;
+  } catch {
+    return null;
+  }
+}
+
+async function trySupabaseUpdateTier(keyHash: string, tier: ApiKeyTier): Promise<boolean> {
+  if (!isSupabaseConfigured()) return false;
+  try {
+    const { getSupabaseServerClient } = await import("@/lib/supabase/server");
+    const supabase = getSupabaseServerClient();
+    const { error } = await supabase.from("api_keys").update({ tier }).eq("key_hash", keyHash);
+    return !error;
+  } catch {
+    return false;
+  }
+}
+
+export async function findKeyByEmail(email: string): Promise<ApiKeyRecord | null> {
+  const normalized = email.trim().toLowerCase();
+  if (!normalized.includes("@")) return null;
+
+  if (isSupabaseConfigured()) {
+    const record = await trySupabaseFindByEmail(normalized);
+    if (record) {
+      memoryStore.set(record.key_hash, record);
+      return record;
+    }
+  }
+
+  for (const record of memoryStore.values()) {
+    if (record.email === normalized) return record;
+  }
+  const fromFile = loadFileStore().find((r) => r.email === normalized);
+  if (fromFile) {
+    memoryStore.set(fromFile.key_hash, fromFile);
+    return fromFile;
+  }
+  return null;
+}
+
+export async function upgradeApiKeyTierByEmail(
+  email: string,
+  tier: ApiKeyTier
+): Promise<boolean> {
+  const record = await findKeyByEmail(email);
+  if (!record) return false;
+
+  record.tier = tier;
+  memoryStore.set(record.key_hash, record);
+
+  if (isSupabaseConfigured()) {
+    const ok = await trySupabaseUpdateTier(record.key_hash, tier);
+    if (!ok) {
+      const all = [...memoryStore.values()];
+      saveFileStore(all);
+    }
+  } else {
+    const all = [...memoryStore.values()];
+    saveFileStore(all);
+  }
+  return true;
+}
+
 async function trySupabaseUpsert(record: ApiKeyRecord): Promise<boolean> {
   if (!isSupabaseConfigured()) {
     return false;
