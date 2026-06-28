@@ -155,6 +155,34 @@ curl -X POST ${BASE}/api/v1/green/carbon-quality/batch \\
 
         <section>
           <h2 className="font-mono text-[11px] uppercase tracking-wide text-white/45">
+            SDK npm
+          </h2>
+          <pre className="mt-3 overflow-x-auto rounded-xl bg-black/40 p-4 font-mono text-xs text-white/70">
+{`npm install @adrien1212balitrand/auros-green
+
+import { AurosGreen } from "@adrien1212balitrand/auros-green";
+const green = new AurosGreen({ apiKey: "auros_pk_live_…" });
+const { score } = await green.getScore("toucan");`}
+          </pre>
+        </section>
+
+        <section>
+          <h2 className="font-mono text-[11px] uppercase tracking-wide text-white/45">
+            Webhooks &amp; RSS (Premium)
+          </h2>
+          <pre className="mt-3 overflow-x-auto rounded-xl bg-black/40 p-4 font-mono text-xs text-white/70">
+{`# Webhook Green Index movers (premium)
+curl -X POST ${BASE}/api/v1/webhooks \\
+  -H "Authorization: Bearer YOUR_KEY" \\
+  -d '{"url":"https://your.app/hooks/green","events":["green.index.changelog"]}'
+
+# RSS presse
+${BASE}/api/green/changelog/rss`}
+          </pre>
+        </section>
+
+        <section>
+          <h2 className="font-mono text-[11px] uppercase tracking-wide text-white/45">
             Catalog ids ({catalog.length})
           </h2>
           <p className="mt-2 font-mono text-xs text-white/50">{catalog.join(" · ")}</p>

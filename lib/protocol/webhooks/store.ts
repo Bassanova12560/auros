@@ -144,6 +144,34 @@ export async function listWebhooksForKey(keyHash: string): Promise<WebhookRecord
   return memoryStore.get(keyHash) ?? [];
 }
 
+/** All active webhooks subscribed to a given event (any API key). */
+export async function listWebhooksForEvent(event: string): Promise<WebhookRecord[]> {
+  const byId = new Map<string, WebhookRecord>();
+
+  if (isSupabaseConfigured()) {
+    try {
+      const supabase = await supabaseClient();
+      const { data } = await supabase
+        .from("protocol_webhooks")
+        .select("*")
+        .eq("active", true);
+      for (const row of (data ?? []) as WebhookRecord[]) {
+        if (row.events.includes(event)) byId.set(row.id, row);
+      }
+    } catch {
+      // fall through to memory
+    }
+  }
+
+  for (const list of memoryStore.values()) {
+    for (const wh of list) {
+      if (wh.active && wh.events.includes(event)) byId.set(wh.id, wh);
+    }
+  }
+
+  return [...byId.values()];
+}
+
 export async function deleteWebhook(
   id: string,
   keyHash: string

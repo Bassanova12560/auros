@@ -944,7 +944,7 @@ export async function POST(req: Request) {
         paragraphs: [
           "POST /api/v1/regulatory/subscribe — filtre par juridictions et tags.",
           "GET/DELETE /api/v1/regulatory/subscribe/:id — statut et désinscription.",
-          "Enregistrez aussi POST /api/v1/webhooks avec l'événement `regulatory.update` pour un endpoint global.",
+          "Enregistrez aussi POST /api/v1/webhooks avec l'événement `green.index.changelog` (premium) pour les movers mensuels Green Index.",
         ],
         code: `curl -X POST ${BASE}/api/v1/regulatory/subscribe \\
   -H "Authorization: Bearer auros_pk_live_xxx" \\

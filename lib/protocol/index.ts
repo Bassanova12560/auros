@@ -111,7 +111,7 @@ export {
 } from "./regulatory/subscribe-store";
 export { dispatchRegulatoryFeedUpdates } from "./regulatory/dispatch-updates";
 export { dossierRequestSchema, DOSSIER_SECTIONS } from "./schemas/dossier";
-export { registerWebhook, listWebhooksForKey, deleteWebhook, getWebhook } from "./webhooks/store";
+export { registerWebhook, listWebhooksForKey, listWebhooksForEvent, deleteWebhook, getWebhook } from "./webhooks/store";
 export {
   WEBHOOK_MAX_DELIVERY_ATTEMPTS,
   WEBHOOK_RETRY_BACKOFF_MS,

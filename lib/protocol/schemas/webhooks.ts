@@ -5,6 +5,7 @@ import { ALERT_TYPES } from "./monitor";
 export const WEBHOOK_EVENT_TYPES = [
   ...ALERT_TYPES,
   "regulatory.update",
+  "green.index.changelog",
 ] as const;
 
 export const webhookRegisterSchema = z.object({

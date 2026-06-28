@@ -13,6 +13,7 @@ import { lookupGreenScoreById } from "@/lib/green/api/score-lookup";
 
 import { findRegistryCatalogEntry } from "./catalog";
 import { fetchVerraProjectLive, providerSupportsLiveFetch } from "./fetch-verra";
+import { fetchGoldStandardProjectLive, providerSupportsGoldStandardLive } from "./fetch-gold-standard";
 import { parseRegistryConnectInput, type ParsedRegistryQuery } from "./parse-query";
 import type {
   RegistryConnectLookupInput,
@@ -143,6 +144,33 @@ async function resolveContext(parsed: ParsedRegistryQuery): Promise<{
 
   if (providerSupportsLiveFetch(parsed.provider)) {
     const live = await fetchVerraProjectLive(parsed.serial);
+    if (live) {
+      const projectType = mapProjectType(live.project_type);
+      const profile = profileFromProviderAndContext(
+        parsed.provider,
+        live.description,
+        projectType
+      );
+      return {
+        match: "live",
+        result: {
+          match: "live",
+          provider: parsed.provider,
+          serial: parsed.serial,
+          project_name: live.project_name,
+          country: live.country,
+          vintage_year: null,
+          compare_id: null,
+          registry_urls: urls,
+        },
+        profile,
+        natureText: live.description,
+      };
+    }
+  }
+
+  if (providerSupportsGoldStandardLive(parsed.provider)) {
+    const live = await fetchGoldStandardProjectLive(parsed.serial);
     if (live) {
       const projectType = mapProjectType(live.project_type);
       const profile = profileFromProviderAndContext(
