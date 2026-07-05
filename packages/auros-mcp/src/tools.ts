@@ -161,6 +161,62 @@ export const AUROS_MCP_TOOLS = [
     handler: (client: AurosApiClient, args: Record<string, unknown>) => client.compare(args),
   },
   {
+    name: "green_watt_score",
+    description:
+      "Free public Watt Score (0–100) for an AUROS Green energy compare reference (solar, wind, REC, PPA). No auth required.",
+    schema: {
+      id: z.string().describe("Compare reference id, e.g. sunexchange"),
+    },
+    handler: (client: AurosApiClient, args: Record<string, unknown>) =>
+      client.greenWattScore(String(args.id)),
+  },
+  {
+    name: "green_carbon_quality",
+    description:
+      "Free public Carbon Quality Score (CQS, 0–100) for an AUROS Green carbon compare reference. No auth required.",
+    schema: {
+      id: z.string().describe("Compare reference id, e.g. toucan"),
+    },
+    handler: (client: AurosApiClient, args: Record<string, unknown>) =>
+      client.greenCarbonQuality(String(args.id)),
+  },
+  {
+    name: "green_watt_batch",
+    description:
+      "Batch Watt Scores for up to 50 energy assets. Each item: id (compare ref) or text (free-form). Counts as 1 quota unit.",
+    schema: {
+      items: z
+        .array(
+          z.object({
+            id: z.string().optional(),
+            text: z.string().min(10).optional(),
+          })
+        )
+        .min(1)
+        .max(50),
+    },
+    handler: (client: AurosApiClient, args: Record<string, unknown>) =>
+      client.greenWattBatch(args),
+  },
+  {
+    name: "green_carbon_quality_batch",
+    description:
+      "Batch Carbon Quality Scores for up to 50 carbon credits. Each item: id or text. Counts as 1 quota unit.",
+    schema: {
+      items: z
+        .array(
+          z.object({
+            id: z.string().optional(),
+            text: z.string().min(10).optional(),
+          })
+        )
+        .min(1)
+        .max(50),
+    },
+    handler: (client: AurosApiClient, args: Record<string, unknown>) =>
+      client.greenCarbonQualityBatch(args),
+  },
+  {
     name: "regulatory_feed",
     description:
       "Curated MiCA/ESMA/AMF/BaFin regulatory feed (premium key required). Filter by jurisdiction, tag, since date.",

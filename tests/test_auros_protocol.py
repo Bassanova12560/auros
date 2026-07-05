@@ -107,6 +107,28 @@ class AurosProtocolClientTest(unittest.TestCase):
         self.assertEqual(ctx.exception.code, "unauthorized")
         self.assertEqual(ctx.exception.status, 401)
 
+    @patch("auros.client.httpx.Client")
+    def test_green_watt_score_skips_auth(self, client_cls: MagicMock) -> None:
+        http = MagicMock()
+        client_cls.return_value = http
+        http.request.return_value = MagicMock(
+            is_success=True,
+            status_code=200,
+            json=lambda: {
+                "ok": True,
+                "id": "sunexchange",
+                "watt_score": {"rating": 72, "tier": "mid"},
+            },
+        )
+
+        client = AurosProtocol(api_key="auros_pk_test_demo")
+        result = client.green_watt_score("sunexchange")
+
+        self.assertEqual(result["watt_score"]["rating"], 72)
+        call = http.request.call_args
+        self.assertIn("/api/green/watt/sunexchange", call.args[1])
+        self.assertNotIn("Authorization", call.kwargs["headers"])
+
 
 if __name__ == "__main__":
     unittest.main()

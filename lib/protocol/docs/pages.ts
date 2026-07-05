@@ -302,6 +302,15 @@ console.log(batch.succeeded, batch.items[0]?.score_id);`,
           "Le CQS est un signal AUROS — pas une certification ICVCM/Verra. Voir aussi /data/green-index et l'API Watt (/developers/docs/endpoint-green-watt).",
         ],
       },
+      {
+        heading: "SDK",
+        code: `const cqs = await client.greenCarbonQuality("toucan");
+const batch = await client.greenCarbonQualityBatch({
+  items: [{ id: "toucan" }, { text: "Gold Standard credits retired CCP" }],
+});`,
+        language: "typescript",
+        paragraphs: ["Python : `client.green_carbon_quality(\"toucan\")`, `client.green_carbon_quality_batch(items=[...])`."],
+      },
     ],
   },
   {
@@ -353,6 +362,15 @@ console.log(batch.succeeded, batch.items[0]?.score_id);`,
         paragraphs: [
           "Le Watt Score est un signal valeur énergétique AUROS — pas un audit de production. Voir aussi /data/green-index et /data/uhi-index.",
         ],
+      },
+      {
+        heading: "SDK",
+        code: `const watt = await client.greenWattScore("sunexchange");
+const batch = await client.greenWattBatch({
+  items: [{ id: "sunexchange" }, { text: "Solar 12 MW PPA production MWh" }],
+});`,
+        language: "typescript",
+        paragraphs: ["Python : `client.green_watt_score(\"sunexchange\")`, `client.green_watt_batch(items=[...])`."],
       },
     ],
   },
@@ -857,7 +875,7 @@ export async function POST(req: Request) {
     slug: "mcp-server",
     title: "MCP server (Cursor & Claude Desktop)",
     description:
-      "Exposez AUROS Protocol comme serveur MCP — 8 outils pour agents IA : score MiCA, catalogue RWA, juridictions, compare.",
+      "Exposez AUROS Protocol comme serveur MCP — 12 outils pour agents IA : score MiCA, catalogue RWA, Green Watt/CQS, juridictions, compare.",
     category: "getting-started",
     categoryLabel: "Démarrage",
     relatedSlugs: ["quickstart", "authentication", "endpoint-score"],
@@ -916,6 +934,10 @@ export async function POST(req: Request) {
           "• `jurisdictions` — GET /api/v1/jurisdictions (classement réglementaire)",
           "• `checklist` — POST /api/v1/checklist (20+ items compliance)",
           "• `compare` — POST /api/v1/compare (2–4 produits side-by-side)",
+          "• `green_watt_score` — GET /api/green/watt/{id} (public, énergie)",
+          "• `green_carbon_quality` — GET /api/green/carbon-quality/{id} (public, carbone)",
+          "• `green_watt_batch` — POST /api/v1/green/watt/batch (max 50 items, 1 unité quota)",
+          "• `green_carbon_quality_batch` — POST /api/v1/green/carbon-quality/batch (max 50 items)",
           "• `regulatory_feed` — GET /api/v1/regulatory/feed (premium, feed ESMA/AMF/BaFin)",
           "• `status` — GET /api/v1/status (santé API, sans auth)",
         ],

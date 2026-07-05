@@ -404,3 +404,97 @@ export type WebhookRegisterResponse = {
   signature_header: string;
   signature_algorithm: string;
 };
+
+export type WattScoreTier = "high" | "mid" | "early";
+
+export type WattScore = {
+  rating: number;
+  lifetime_gwh: number | null;
+  energy_value_eur: number | null;
+  tier: WattScoreTier;
+};
+
+export type CarbonQualityTier = "premium" | "acceptable" | "caution" | "avoid";
+
+export type CarbonQualityScore = {
+  score: number;
+  tier: CarbonQualityTier;
+  registry?: string;
+  ccp_aligned?: boolean | null;
+  priority_keys?: string[];
+};
+
+export type GreenWattPublicResponse = {
+  ok: true;
+  id: string;
+  name: string;
+  watt_score: WattScore;
+  disclaimer: string;
+  batch_api: string;
+  companion_api?: string;
+  docs: string;
+  generated_at: string;
+};
+
+export type GreenCqsPublicResponse = {
+  ok: true;
+  id: string;
+  name: string;
+  carbon_quality: CarbonQualityScore;
+  disclaimer: string;
+  batch_api: string;
+  companion_api?: string;
+  docs: string;
+  generated_at: string;
+};
+
+export type GreenBatchItemInput = {
+  id?: string;
+  text?: string;
+};
+
+export type GreenWattBatchRequest = {
+  items: GreenBatchItemInput[];
+};
+
+export type GreenCqsBatchRequest = {
+  items: GreenBatchItemInput[];
+};
+
+export type GreenBatchErrorItem = {
+  index: number;
+  ok: false;
+  error: { code: string; message: string };
+};
+
+export type GreenWattBatchSuccessItem = {
+  index: number;
+  ok: true;
+  id: string | null;
+  watt_score: WattScore;
+};
+
+export type GreenCqsBatchSuccessItem = {
+  index: number;
+  ok: true;
+  id: string | null;
+  carbon_quality: CarbonQualityScore;
+};
+
+export type GreenWattBatchResponse = {
+  disclaimer: string;
+  total: number;
+  succeeded: number;
+  failed: number;
+  items: Array<GreenWattBatchSuccessItem | GreenBatchErrorItem>;
+  meta: ProtocolMeta;
+};
+
+export type GreenCqsBatchResponse = {
+  disclaimer: string;
+  total: number;
+  succeeded: number;
+  failed: number;
+  items: Array<GreenCqsBatchSuccessItem | GreenBatchErrorItem>;
+  meta: ProtocolMeta;
+};

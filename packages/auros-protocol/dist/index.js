@@ -96,8 +96,31 @@ var AurosProtocol = class {
   async createKey(body) {
     return this.request("POST", "/api/v1/keys", body, false);
   }
+  /** Free public read — Watt Score for an AUROS Green compare reference. */
+  async greenWattScore(id) {
+    return this.getPublic(
+      `/api/green/watt/${encodeURIComponent(id)}`
+    );
+  }
+  /** Free public read — Carbon Quality Score for an AUROS Green compare reference. */
+  async greenCarbonQuality(id) {
+    return this.getPublic(
+      `/api/green/carbon-quality/${encodeURIComponent(id)}`
+    );
+  }
+  /** Batch Watt Scores — up to 50 energy assets per call (1 quota unit). */
+  async greenWattBatch(body) {
+    return this.post("/api/v1/green/watt/batch", body);
+  }
+  /** Batch Carbon Quality Scores — up to 50 carbon credits per call (1 quota unit). */
+  async greenCarbonQualityBatch(body) {
+    return this.post("/api/v1/green/carbon-quality/batch", body);
+  }
   async get(path) {
     return this.request("GET", path);
+  }
+  async getPublic(path) {
+    return this.request("GET", path, void 0, false);
   }
   async post(path, body) {
     return this.request("POST", path, body);
