@@ -48,6 +48,8 @@ export function GreenLabelForm() {
   const [description, setDescription] = useState("");
   const [documentFile, setDocumentFile] = useState<File | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const [paying, setPaying] = useState(false);
+  const [payError, setPayError] = useState(false);
   const [error, setError] = useState<
     "invalid" | "rate_limit" | "document_type" | "document_size" | "document_upload" | null
   >(null);
@@ -132,15 +134,60 @@ export function GreenLabelForm() {
   }
 
   if (submitted) {
+    const applicationId = submitted.id;
+    const projectName = submitted.projectName;
+
+    async function startCheckout() {
+      setPaying(true);
+      setPayError(false);
+      try {
+        const res = await fetch("/api/green/label/checkout", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            applicationId,
+            email: email.trim().toLowerCase(),
+            locale,
+          }),
+        });
+        const json = (await res.json()) as { url?: string; error?: string };
+        if (!res.ok || !json.url) {
+          setPayError(true);
+          setPaying(false);
+          return;
+        }
+        window.location.href = json.url;
+      } catch {
+        setPayError(true);
+        setPaying(false);
+      }
+    }
+
     return (
       <GreenPanel className="p-8 text-center" role="status">
         <p className="font-display text-xl font-semibold text-white">{f.success}</p>
-        <p className="mt-2 text-sm text-white/55">{submitted.projectName}</p>
+        <p className="mt-2 text-sm text-white/55">{projectName}</p>
         <p className="mt-4 text-xs text-white/40">{f.successHint}</p>
         <p className="mt-2 font-mono text-[10px] text-green-royal-bright">
-          {f.applicationId(submitted.id)}
+          {f.applicationId(applicationId)}
         </p>
-        <p className="mt-2 text-xs text-white/40">{f.successStatus}</p>
+        <div className="mt-6">
+          <button
+            type="button"
+            onClick={() => void startCheckout()}
+            disabled={paying}
+            className={`green-btn-primary rounded-lg px-6 py-3.5 text-sm font-semibold disabled:opacity-50 ${greenBtnClass}`}
+          >
+            {paying ? f.payProcessing : f.payReview}
+          </button>
+          <p className="mt-2 text-xs text-white/40">{f.payNote}</p>
+          {payError ? (
+            <p className="mt-2 text-sm text-amber-400/90" role="alert">
+              {f.payStripeError}
+            </p>
+          ) : null}
+        </div>
+        <p className="mt-4 text-xs text-white/40">{f.successStatus}</p>
         <div className="mt-6 flex flex-wrap justify-center gap-3">
           <Link
             href="/green/my"
