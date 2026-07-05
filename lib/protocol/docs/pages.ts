@@ -261,7 +261,7 @@ console.log(batch.succeeded, batch.items[0]?.score_id);`,
     slug: "endpoint-green-carbon-quality",
     title: "Carbon Quality Score (CQS) — Green API",
     description:
-      "Score indicatif 0–100 par crédit carbone — lecture publique gratuite par id, batch jusqu'à 50 items avec clé API.",
+      "Score indicatif 0–100 par crédit carbone — lecture publique gratuite par id, batch premium jusqu'à 50 items.",
     category: "endpoints",
     categoryLabel: "Endpoints",
     relatedSlugs: ["endpoint-green-watt", "endpoint-score-batch", "authentication", "endpoint-compare"],
@@ -276,14 +276,15 @@ console.log(batch.succeeded, batch.items[0]?.score_id);`,
         language: "bash",
       },
       {
-        heading: "POST batch (clé API)",
+        heading: "POST batch (clé premium)",
         paragraphs: [
           "Jusqu'à **50 crédits** par appel — portfolio corporate ou pipeline M&A.",
           "`id` = référence comparateur AUROS, ou `text` = description libre (min 10 caractères).",
+          "**Tier premium** : clé `auros_pk_live_*` ou plan Monitor — les clés test gratuites reçoivent 403.",
           "Compte au quota mensuel Protocol — licence volume : /partners.",
         ],
         code: `curl -X POST ${BASE}/api/v1/green/carbon-quality/batch \\
-  -H "Authorization: Bearer ${DEMO_API_KEY}" \\
+  -H "Authorization: Bearer auros_pk_live_xxxxxxxx" \\
   -H "Content-Type: application/json" \\
   -d '{"items":[{"id":"toucan"},{"text":"Gold Standard forestry credits retired 2024 Verra"}]}'`,
         language: "bash",
@@ -317,7 +318,7 @@ const batch = await client.greenCarbonQualityBatch({
     slug: "endpoint-green-watt",
     title: "Watt Score — Green API",
     description:
-      "Score indicatif 0–100 pour actifs énergétiques — lecture publique gratuite par id, batch jusqu'à 50 items avec clé API.",
+      "Score indicatif 0–100 pour actifs énergétiques — lecture publique gratuite par id, batch premium jusqu'à 50 items.",
     category: "endpoints",
     categoryLabel: "Endpoints",
     relatedSlugs: ["endpoint-green-carbon-quality", "endpoint-score-batch", "authentication", "endpoint-compare"],
@@ -332,14 +333,15 @@ const batch = await client.greenCarbonQualityBatch({
         language: "bash",
       },
       {
-        heading: "POST batch (clé API)",
+        heading: "POST batch (clé premium)",
         paragraphs: [
           "Jusqu'à **50 actifs énergétiques** par appel — portfolio solaire, REC, PPA.",
           "`id` = référence comparateur AUROS, ou `text` = description libre (min 10 caractères, mots-clés solar/wind/PPA/REC…).",
+          "**Tier premium** : clé `auros_pk_live_*` ou plan Monitor — les clés test gratuites reçoivent 403.",
           "Compte au quota mensuel Protocol — licence volume : /partners.",
         ],
         code: `curl -X POST ${BASE}/api/v1/green/watt/batch \\
-  -H "Authorization: Bearer ${DEMO_API_KEY}" \\
+  -H "Authorization: Bearer auros_pk_live_xxxxxxxx" \\
   -H "Content-Type: application/json" \\
   -d '{"items":[{"id":"sunexchange"},{"text":"Solar farm 12 MW PPA signed production MWh France"}]}'`,
         language: "bash",

@@ -183,7 +183,7 @@ export const AUROS_MCP_TOOLS = [
   {
     name: "green_watt_batch",
     description:
-      "Batch Watt Scores for up to 50 energy assets. Each item: id (compare ref) or text (free-form). Counts as 1 quota unit.",
+      "Batch Watt Scores for up to 50 energy assets (premium key required). Each item: id (compare ref) or text (free-form). Counts as 1 quota unit.",
     schema: {
       items: z
         .array(
@@ -201,7 +201,7 @@ export const AUROS_MCP_TOOLS = [
   {
     name: "green_carbon_quality_batch",
     description:
-      "Batch Carbon Quality Scores for up to 50 carbon credits. Each item: id or text. Counts as 1 quota unit.",
+      "Batch Carbon Quality Scores for up to 50 carbon credits (premium key required). Each item: id or text. Counts as 1 quota unit.",
     schema: {
       items: z
         .array(
