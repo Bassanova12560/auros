@@ -1072,6 +1072,51 @@ paths:
           $ref: "#/components/responses/PremiumRequired"
         "429":
           $ref: "#/components/responses/RateLimit"
+  /api/green/h2o/{id}:
+    get:
+      tags: [Green]
+      summary: Public H₂O Score by hydrological catalog id
+      operationId: greenH2oScore
+      security: []
+      description: |
+        Free public read — indicative H₂O Score (0–100) for AUROS water compare references.
+        Listing-grade attestation requires AUROS Hydrological Passport dossier (`passport_required`).
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          example: pilot-concession-france
+      responses:
+        "200":
+          description: H₂O Score result
+        "404":
+          description: Unknown water reference id
+  /api/v1/green/h2o/batch:
+    post:
+      tags: [Green]
+      summary: Batch H₂O Scores
+      operationId: greenH2oBatch
+      description: |
+        Score up to 50 hydrological assets per call. Premium API key required.
+      responses:
+        "200":
+          description: Batch H₂O Score results
+        "403":
+          $ref: "#/components/responses/PremiumRequired"
+  /api/eau/check:
+    post:
+      tags: [Green]
+      summary: Hydrological readiness check (embed)
+      operationId: eauCheck
+      security: []
+      description: Free embeddable H₂O Score preview with passport unlock URL.
+      responses:
+        "200":
+          description: H₂O preview result
+        "422":
+          description: Not a hydrological asset
   /api/green/carbon-quality/{id}:
     get:
       tags: [Green]

@@ -49,7 +49,7 @@ describe("comment-tokeniser/landings", () => {
   it("includes revenue links on eau landing only", () => {
     const eau = getCommentTokeniserCopy("eau", "fr");
     assert.equal(eau.revenueLinks?.length, 3);
-    assert.ok(eau.revenueLinks?.every((l) => l.href.startsWith("/")));
+    assert.ok(eau.revenueLinks?.some((l) => l.href === "/eau"));
 
     const immo = getCommentTokeniserCopy("immobilier", "fr");
     assert.equal(immo.revenueLinks, undefined);

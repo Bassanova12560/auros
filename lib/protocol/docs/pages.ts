@@ -315,6 +315,66 @@ const batch = await client.greenCarbonQualityBatch({
     ],
   },
   {
+    slug: "endpoint-green-h2o",
+    title: "H₂O Score — Hydrological API",
+    description:
+      "Score indicatif 0–100 pour actifs hydriques — concessions, droits d'eau, dessalement, blue bonds. Lecture publique gratuite, batch premium.",
+    category: "endpoints",
+    categoryLabel: "Endpoints",
+    relatedSlugs: ["endpoint-green-watt", "endpoint-green-carbon-quality", "authentication"],
+    sections: [
+      {
+        heading: "GET public (gratuit)",
+        paragraphs: [
+          "Référence catalogue hydrique AUROS (`pilot-concession-france`, `blue-bond-seychelles`…) — pas d'authentification.",
+          "Retourne `passport_required: true` pour les descriptions libres — le Passeport Hydrique vérifiable passe par le dossier AUROS.",
+        ],
+        code: `curl ${BASE}/api/green/h2o/pilot-concession-france`,
+        language: "bash",
+      },
+      {
+        heading: "POST check embed (gratuit)",
+        paragraphs: [
+          "Widget readiness — `POST /api/eau/check` avec `{ \"text\": \"...\" }` (min 10 caractères).",
+          "Usage : landing /eau, due diligence rapide, funnel vers wizard dossier.",
+        ],
+        code: `curl -X POST ${BASE}/api/eau/check \\
+  -H "Content-Type: application/json" \\
+  -d '{"text":"Concession eau potable 15 ans 2 Mm³/an SPV France audit hydrologique"}'`,
+        language: "bash",
+      },
+      {
+        heading: "POST batch (clé premium)",
+        paragraphs: [
+          "Jusqu'à **50 actifs hydriques** par appel — portefeuilles concessions, blue bonds, utilities.",
+          "**Tier premium** : clé `auros_pk_live_*` ou plan Monitor.",
+        ],
+        code: `curl -X POST ${BASE}/api/v1/green/h2o/batch \\
+  -H "Authorization: Bearer auros_pk_live_xxxxxxxx" \\
+  -H "Content-Type: application/json" \\
+  -d '{"items":[{"id":"pilot-concession-france"},{"text":"Water rights 500000 m3/year concession 12 years"}]}'`,
+        language: "bash",
+      },
+      {
+        heading: "Réponse (extrait)",
+        code: `{
+  "h2o_score": {
+    "rating": 74,
+    "tier": "high",
+    "asset_class": "concession",
+    "passport_required": true,
+    "passport_unlock_url": "https://getauros.com/comment-tokeniser/eau",
+    "preview_id": "h2o-preview-abc123"
+  }
+}`,
+        language: "json",
+        paragraphs: [
+          "Le H₂O Score est un signal de readiness hydrique AUROS — pas un audit de concession. Hub : /eau.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "endpoint-green-watt",
     title: "Watt Score — Green API",
     description:

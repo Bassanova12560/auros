@@ -563,10 +563,10 @@ const COPY: Record<CommentTokeniserSlug, Record<Locale, CommentTokeniserCopy>> =
         "Concession eau potable 15 ans, débit contractuel 2 Mm³/an, SPV France, reporting hydrique et Taxonomie EU en cours, investisseurs institutionnels.",
       revenueLinks: [
         {
-          href: "/green/impact-report",
-          label: "Rapport d'impact hydrique",
-          detail: "PDF Taxonomie EU + RTMS — à partir de 49 €, indicatif.",
-          trackId: "impact_report",
+          href: "/eau",
+          label: "Passeport Hydrique AUROS",
+          detail: "H₂O Score + readiness vérifiable — rail infra avant toute émission.",
+          trackId: "h2o_passport",
         },
         {
           href: "/green/label",
@@ -575,10 +575,10 @@ const COPY: Record<CommentTokeniserSlug, Record<Locale, CommentTokeniserCopy>> =
           trackId: "green_label",
         },
         {
-          href: "/developers",
-          label: "API Watt Score",
-          detail: "Scoring batch solaire, éolien, hydro — clé API premium.",
-          trackId: "watt_api",
+          href: "/developers/docs/endpoint-green-h2o",
+          label: "API H₂O Score",
+          detail: "Scoring batch concessions & blue bonds — clé API premium.",
+          trackId: "h2o_api",
         },
       ],
     },
@@ -607,10 +607,10 @@ const COPY: Record<CommentTokeniserSlug, Record<Locale, CommentTokeniserCopy>> =
         "15-year drinking-water concession, 2 Mm³/year contracted flow, France SPV, hydrological and EU Taxonomy reporting in progress, institutional investors.",
       revenueLinks: [
         {
-          href: "/green/impact-report",
-          label: "Hydrological impact report",
-          detail: "EU Taxonomy + RTMS PDF — from €49, indicative.",
-          trackId: "impact_report",
+          href: "/eau",
+          label: "AUROS Hydrological Passport",
+          detail: "H₂O Score + verifiable readiness — infra rail before any issuance.",
+          trackId: "h2o_passport",
         },
         {
           href: "/green/label",
@@ -619,10 +619,10 @@ const COPY: Record<CommentTokeniserSlug, Record<Locale, CommentTokeniserCopy>> =
           trackId: "green_label",
         },
         {
-          href: "/developers",
-          label: "Watt Score API",
-          detail: "Batch scoring solar, wind, hydro — premium API key.",
-          trackId: "watt_api",
+          href: "/developers/docs/endpoint-green-h2o",
+          label: "H₂O Score API",
+          detail: "Batch scoring concessions & blue bonds — premium API key.",
+          trackId: "h2o_api",
         },
       ],
     },
@@ -651,10 +651,10 @@ const COPY: Record<CommentTokeniserSlug, Record<Locale, CommentTokeniserCopy>> =
         "Concesión agua potable 15 años, caudal contractual 2 Mm³/año, SPV Francia, reporting hídrico y Taxonomía UE en curso, inversores institucionales.",
       revenueLinks: [
         {
-          href: "/green/impact-report",
-          label: "Informe de impacto hídrico",
-          detail: "PDF Taxonomía UE + RTMS — desde 49 €, indicativo.",
-          trackId: "impact_report",
+          href: "/eau",
+          label: "Pasaporte Hídrico AUROS",
+          detail: "H₂O Score + readiness verificable — raíl infra antes de emitir.",
+          trackId: "h2o_passport",
         },
         {
           href: "/green/label",
@@ -663,10 +663,10 @@ const COPY: Record<CommentTokeniserSlug, Record<Locale, CommentTokeniserCopy>> =
           trackId: "green_label",
         },
         {
-          href: "/developers",
-          label: "API Watt Score",
-          detail: "Scoring batch solar, eólico, hidro — clave API premium.",
-          trackId: "watt_api",
+          href: "/developers/docs/endpoint-green-h2o",
+          label: "API H₂O Score",
+          detail: "Scoring batch concesiones y blue bonds — clave API premium.",
+          trackId: "h2o_api",
         },
       ],
     },

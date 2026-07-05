@@ -205,6 +205,7 @@ export const GREEN_ESG_TERMS: GlossaryTerm[] = [
       "La tokenisation eau combine contrats long terme sur volumes, reporting hydrique et critères Taxonomie (DNSH eau). AUROS structure le dossier RWA amont : wizard Green, Watt Score (hydro), rapport d'impact et Label Verified en option. Pas de promesse de liquidité secondaire ni d'agrément régulateur.",
     relatedTerms: ["tokenisation-energie", "rtms", "green-bond", "taxonomie-europeenne"],
     internalLinks: [
+      { href: "/eau", label: "Passeport Hydrique AUROS" },
       { href: "/comment-tokeniser/eau", label: "Guide tokeniser l'eau" },
       { href: "/green/impact-report", label: "Rapport d'impact Green" },
       { href: "/green/label", label: "Label Green Verified" },
