@@ -1,3 +1,5 @@
+import { buildEauEmbedUrl } from "@/lib/eau/embed";
+
 import { maskPartnerEmail } from "./mask-email";
 import {
   listPartnerReferrals,
@@ -30,6 +32,8 @@ export type PartnerPortalSnapshot = {
   total: number;
   indicativeCommissionEur: number;
   wizardUrl: string;
+  embedUrl: string;
+  eauGuideUrl: string;
   recent: PartnerPortalActivity[];
 };
 
@@ -77,6 +81,10 @@ export async function getPartnerPortalSnapshot(
   const wizardUrl = new URL("/wizard", siteOrigin.replace(/\/$/, ""));
   wizardUrl.searchParams.set("partner", code);
 
+  const origin = siteOrigin.replace(/\/$/, "");
+  const eauGuide = new URL("/comment-tokeniser/eau", origin);
+  eauGuide.searchParams.set("partner", code);
+
   return {
     partnerCode: code,
     leads,
@@ -89,6 +97,8 @@ export async function getPartnerPortalSnapshot(
       submittedDossiers,
     ),
     wizardUrl: wizardUrl.toString(),
+    embedUrl: buildEauEmbedUrl({ partner: code, origin }),
+    eauGuideUrl: eauGuide.toString(),
     recent: filtered.slice(0, 12).map(toActivity),
   };
 }

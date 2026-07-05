@@ -19,6 +19,9 @@ export type PartnerPortalMessages = {
   indicativeDisclaimer: string;
   wizardLink: string;
   copyWizard: string;
+  embedLink: string;
+  copyEmbed: string;
+  eauGuideLink: string;
   copied: string;
   recentTitle: string;
   colType: string;
@@ -53,6 +56,9 @@ const FR: PartnerPortalMessages = {
     "Estimation non contractuelle — paliers selon accord partenaire signé.",
   wizardLink: "Lien wizard partenaire",
   copyWizard: "Copier le lien",
+  embedLink: "Widget H₂O (iframe)",
+  copyEmbed: "Copier l'embed",
+  eauGuideLink: "Guide tokeniser l'eau",
   copied: "Copié",
   recentTitle: "Activité récente",
   colType: "Type",
@@ -87,6 +93,9 @@ const EN: PartnerPortalMessages = {
   indicativeDisclaimer: "Non-binding estimate — tiers per signed partner agreement.",
   wizardLink: "Partner wizard link",
   copyWizard: "Copy link",
+  embedLink: "H₂O widget (iframe)",
+  copyEmbed: "Copy embed",
+  eauGuideLink: "Water tokenization guide",
   copied: "Copied",
   recentTitle: "Recent activity",
   colType: "Type",
@@ -121,6 +130,9 @@ const ES: PartnerPortalMessages = {
   indicativeDisclaimer: "Estimación no vinculante — según acuerdo firmado.",
   wizardLink: "Enlace wizard socio",
   copyWizard: "Copiar enlace",
+  embedLink: "Widget H₂O (iframe)",
+  copyEmbed: "Copiar embed",
+  eauGuideLink: "Guía tokenizar agua",
   copied: "Copiado",
   recentTitle: "Actividad reciente",
   colType: "Tipo",

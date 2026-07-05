@@ -217,6 +217,34 @@ export const AUROS_MCP_TOOLS = [
       client.greenCarbonQualityBatch(args),
   },
   {
+    name: "green_h2o_score",
+    description:
+      "Free public H₂O Score (0–100) for hydrological assets — concessions, water rights, blue bonds. No auth required.",
+    schema: {
+      id: z.string().describe("Water reference id, e.g. pilot-concession-france"),
+    },
+    handler: (client: AurosApiClient, args: Record<string, unknown>) =>
+      client.greenH2oScore(String(args.id)),
+  },
+  {
+    name: "green_h2o_batch",
+    description:
+      "Batch H₂O Scores for up to 50 hydrological assets (premium key required). Each item: id or text. Counts as 1 quota unit.",
+    schema: {
+      items: z
+        .array(
+          z.object({
+            id: z.string().optional(),
+            text: z.string().min(10).optional(),
+          })
+        )
+        .min(1)
+        .max(50),
+    },
+    handler: (client: AurosApiClient, args: Record<string, unknown>) =>
+      client.greenH2oBatch(args),
+  },
+  {
     name: "regulatory_feed",
     description:
       "Curated MiCA/ESMA/AMF/BaFin regulatory feed (premium key required). Filter by jurisdiction, tag, since date.",

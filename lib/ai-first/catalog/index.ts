@@ -16,6 +16,7 @@ import {
 import { miscPages } from "./misc-pages";
 import { buildSeoLandingPages } from "./seo-landing-pages";
 import { buildCommentTokeniserHubPage, buildCommentTokeniserLandingPages } from "./comment-tokeniser-pages";
+import { buildEauHubPage } from "./eau-pages";
 import { contentPages } from "./content-pages";
 import { glossaryPages } from "./glossary-pages";
 import { protocolDocsPages } from "./protocol-docs-pages";
@@ -38,6 +39,7 @@ export function getAllAiFirstPages(): AiFirstPage[] {
     ...buildSeoLandingPages(),
     buildCommentTokeniserHubPage(),
     ...buildCommentTokeniserLandingPages(),
+    buildEauHubPage(),
     ...academyPages,
     ...greenPages,
     ...contentPages,

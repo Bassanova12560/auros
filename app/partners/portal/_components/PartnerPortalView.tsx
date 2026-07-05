@@ -39,6 +39,7 @@ export function PartnerPortalView() {
   const [error, setError] = useState<string | null>(null);
   const [snapshot, setSnapshot] = useState<PartnerPortalSnapshot | null>(null);
   const [copied, setCopied] = useState(false);
+  const [copiedEmbed, setCopiedEmbed] = useState(false);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -62,6 +63,17 @@ export function PartnerPortalView() {
       await navigator.clipboard.writeText(snapshot.wizardUrl);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
+    } catch {
+      // ignore
+    }
+  }
+
+  async function copyEmbedLink() {
+    if (!snapshot?.embedUrl) return;
+    try {
+      await navigator.clipboard.writeText(snapshot.embedUrl);
+      setCopiedEmbed(true);
+      setTimeout(() => setCopiedEmbed(false), 2000);
     } catch {
       // ignore
     }
@@ -161,6 +173,36 @@ export function PartnerPortalView() {
             >
               {copied ? m.copied : m.copyWizard}
             </button>
+          </BezelCard>
+
+          <BezelCard innerClassName="p-6 md:p-8" animate>
+            <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-cyan-300/60">
+              {m.embedLink}
+            </p>
+            <p className="mt-2 break-all font-mono text-xs text-white/60">
+              {snapshot.embedUrl}
+            </p>
+            <div className="mt-4 flex flex-wrap gap-3">
+              <button
+                type="button"
+                onClick={() => void copyEmbedLink()}
+                className="rounded-full border border-white/15 px-5 py-2 text-sm text-white/70 transition hover:border-white/30 hover:text-white"
+              >
+                {copiedEmbed ? m.copied : m.copyEmbed}
+              </button>
+              <Link
+                href="/eau/embed/docs"
+                className="inline-flex items-center rounded-full border border-white/10 px-5 py-2 text-sm text-white/50 hover:text-white/80"
+              >
+                {m.eauGuideLink} →
+              </Link>
+              <Link
+                href={snapshot.eauGuideUrl}
+                className="inline-flex items-center rounded-full border border-white/10 px-5 py-2 text-sm text-white/50 hover:text-white/80"
+              >
+                /comment-tokeniser/eau
+              </Link>
+            </div>
           </BezelCard>
 
           {snapshot.recent.length > 0 ? (

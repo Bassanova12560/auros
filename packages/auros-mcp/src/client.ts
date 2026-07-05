@@ -75,6 +75,14 @@ export class AurosApiClient {
     return this.request("POST", "/api/v1/green/carbon-quality/batch", body);
   }
 
+  async greenH2oScore(id: string): Promise<unknown> {
+    return this.request("GET", `/api/green/h2o/${encodeURIComponent(id)}`, undefined, undefined, false);
+  }
+
+  async greenH2oBatch(body: Record<string, unknown>): Promise<unknown> {
+    return this.request("POST", "/api/v1/green/h2o/batch", body);
+  }
+
   private async request(
     method: string,
     path: string,
