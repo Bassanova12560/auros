@@ -328,6 +328,10 @@ export type GreenMessages = {
       submitting: string;
       success: string;
       successHint: string;
+      payReview: string;
+      payProcessing: string;
+      payNote: string;
+      payStripeError: string;
       successMy: string;
       successStandards: string;
       successRegistry: string;
@@ -1149,7 +1153,7 @@ const FR: GreenMessages = {
   label: {
     eyebrow: "Candidature",
     title: "Label Auros Green Verified",
-    pricingNote: "Candidature gratuite · Retour écrit sous 5 jours ouvrés",
+    pricingNote: "Revue documentaire RTMS : 300 € · Retour sous 5 jours ouvrés",
     intro:
       "Soumettez votre projet pour une revue documentaire. Le label public n'est accordé qu'après validation RTMS — pas de badge automatique.",
     scopeTitle: "Ce que la candidature couvre",
@@ -1179,9 +1183,13 @@ const FR: GreenMessages = {
       back: "Retour",
       submit: "Envoyer la candidature",
       submitting: "Envoi…",
-      success: "Candidature reçue — nous revenons vers vous sous 5 jours ouvrés.",
+      success: "Candidature enregistrée — réglez la revue documentaire pour lancer l'analyse RTMS.",
       successHint:
         "Consultez les standards RTMS pendant la revue documentaire (5 jours ouvrés).",
+      payReview: "Payer la revue documentaire (300 €)",
+      payProcessing: "Redirection Stripe…",
+      payNote: "Paiement sécurisé Stripe — facture par e-mail.",
+      payStripeError: "Paiement indisponible — réessayez ou écrivez-nous.",
       successMy: "Mes fiches",
       successStandards: "Standards RTMS",
       successRegistry: "Registre public",
@@ -2061,7 +2069,7 @@ const EN: GreenMessages = {
   label: {
     eyebrow: "Application",
     title: "Auros Green Verified label",
-    pricingNote: "Free application · Written response within 5 business days",
+    pricingNote: "RTMS document review: €300 · Response within 5 business days",
     intro:
       "Submit your project for document review. Public label is granted only after RTMS validation — no automatic badge.",
     scopeTitle: "What the application covers",
@@ -2091,8 +2099,12 @@ const EN: GreenMessages = {
       back: "Back",
       submit: "Submit application",
       submitting: "Sending…",
-      success: "Application received — we will respond within 5 business days.",
+      success: "Application saved — pay the document review fee to start RTMS analysis.",
       successHint: "Review RTMS standards while we assess your dossier (5 business days).",
+      payReview: "Pay document review (€300)",
+      payProcessing: "Redirecting to Stripe…",
+      payNote: "Secure Stripe payment — invoice by email.",
+      payStripeError: "Payment unavailable — retry or contact us.",
       successMy: "My listings",
       successStandards: "RTMS standards",
       successRegistry: "Public registry",
@@ -2975,7 +2987,7 @@ const ES: GreenMessages = {
   label: {
     eyebrow: "Solicitud",
     title: "Etiqueta Auros Green Verified",
-    pricingNote: "Solicitud gratuita · Respuesta escrita en 5 días hábiles",
+    pricingNote: "Revisión documental RTMS: 300 € · Respuesta en 5 días hábiles",
     intro:
       "Envíe su proyecto para revisión documental. La etiqueta pública se concede solo tras validación RTMS — sin badge automático.",
     scopeTitle: "Qué cubre la solicitud",
@@ -3005,9 +3017,13 @@ const ES: GreenMessages = {
       back: "Volver",
       submit: "Enviar solicitud",
       submitting: "Enviando…",
-      success: "Solicitud recibida — respondemos en 5 días hábiles.",
+      success: "Solicitud guardada — pague la revisión documental para iniciar el análisis RTMS.",
       successHint:
         "Consulte los estándares RTMS durante la revisión (5 días hábiles).",
+      payReview: "Pagar revisión documental (300 €)",
+      payProcessing: "Redirigiendo a Stripe…",
+      payNote: "Pago seguro Stripe — factura por correo.",
+      payStripeError: "Pago no disponible — reintente o contáctenos.",
       successMy: "Mis fichas",
       successStandards: "Estándares RTMS",
       successRegistry: "Registro público",
