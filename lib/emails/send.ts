@@ -73,9 +73,11 @@ import {
   wizardProPaymentUserEmail,
   wizardProPaymentInternalEmail,
   wizardResumeReminderEmail,
+  leadNurtureEmail,
   type WizardProPaymentEmailData,
   type WizardProPaymentInternalEmailData,
   type WizardResumeReminderEmailData,
+  type LeadNurtureEmailData,
 } from "./templates";
 
 function getResend(): Resend | null {
@@ -286,6 +288,14 @@ export async function sendWizardResumeReminder(
   data: WizardResumeReminderEmailData
 ): Promise<boolean> {
   const { subject, html } = wizardResumeReminderEmail(data);
+  return sendSafe({ to, subject, html });
+}
+
+export async function sendLeadNurture(
+  to: string,
+  data: LeadNurtureEmailData
+): Promise<boolean> {
+  const { subject, html } = leadNurtureEmail(data);
   return sendSafe({ to, subject, html });
 }
 

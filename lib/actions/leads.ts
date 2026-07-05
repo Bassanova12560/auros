@@ -40,6 +40,9 @@ export async function saveLeadAction(
   const referredBy = normalizePartnerCode(input.referredBy ?? null);
 
   const supabase = getSupabaseServerClient();
+  const locale =
+    input.locale && isLocale(input.locale) ? input.locale : null;
+
   const { data, error } = await supabase
     .from("leads")
     .insert({
@@ -52,6 +55,7 @@ export async function saveLeadAction(
           : null,
       consent: true,
       referred_by: referredBy,
+      locale,
     })
     .select("id")
     .single();
@@ -71,13 +75,12 @@ export async function saveLeadAction(
     Number.isFinite(input.score)
   ) {
     const tier = tierFromScore(input.score);
-    const locale =
-      input.locale && isLocale(input.locale) ? input.locale : "fr";
+    const emailLocale = locale ?? "fr";
     void sendLeadScore(email, {
       score: Math.round(input.score),
       tierLabel: tier.label,
       assetType: input.assetType?.trim() || "Your asset",
-      locale,
+      locale: emailLocale,
     });
   }
 
