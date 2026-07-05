@@ -99,12 +99,22 @@ export function GreenScoringPanel({ scores }: Props) {
         >
           {copy.compareLink}
         </Link>
-        <Link
-          href="/developers/docs/endpoint-green-carbon-quality"
-          className="text-xs uppercase tracking-wider text-emerald-500/70 hover:text-emerald-400"
-        >
-          {copy.apiLink}
-        </Link>
+        {scores.watt ? (
+          <Link
+            href="/developers/docs/endpoint-green-watt"
+            className="text-xs uppercase tracking-wider text-emerald-500/70 hover:text-emerald-400"
+          >
+            {copy.wattApiLink}
+          </Link>
+        ) : null}
+        {scores.carbon_quality ? (
+          <Link
+            href="/developers/docs/endpoint-green-carbon-quality"
+            className="text-xs uppercase tracking-wider text-emerald-500/70 hover:text-emerald-400"
+          >
+            {copy.apiLink}
+          </Link>
+        ) : null}
       </div>
     </div>
   );

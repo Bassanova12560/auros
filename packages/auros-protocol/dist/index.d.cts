@@ -329,6 +329,89 @@ type WebhookRegisterResponse = {
     signature_header: string;
     signature_algorithm: string;
 };
+type WattScoreTier = "high" | "mid" | "early";
+type WattScore = {
+    rating: number;
+    lifetime_gwh: number | null;
+    energy_value_eur: number | null;
+    tier: WattScoreTier;
+};
+type CarbonQualityTier = "premium" | "acceptable" | "caution" | "avoid";
+type CarbonQualityScore = {
+    score: number;
+    tier: CarbonQualityTier;
+    registry?: string;
+    ccp_aligned?: boolean | null;
+    priority_keys?: string[];
+};
+type GreenWattPublicResponse = {
+    ok: true;
+    id: string;
+    name: string;
+    watt_score: WattScore;
+    disclaimer: string;
+    batch_api: string;
+    companion_api?: string;
+    docs: string;
+    generated_at: string;
+};
+type GreenCqsPublicResponse = {
+    ok: true;
+    id: string;
+    name: string;
+    carbon_quality: CarbonQualityScore;
+    disclaimer: string;
+    batch_api: string;
+    companion_api?: string;
+    docs: string;
+    generated_at: string;
+};
+type GreenBatchItemInput = {
+    id?: string;
+    text?: string;
+};
+type GreenWattBatchRequest = {
+    items: GreenBatchItemInput[];
+};
+type GreenCqsBatchRequest = {
+    items: GreenBatchItemInput[];
+};
+type GreenBatchErrorItem = {
+    index: number;
+    ok: false;
+    error: {
+        code: string;
+        message: string;
+    };
+};
+type GreenWattBatchSuccessItem = {
+    index: number;
+    ok: true;
+    id: string | null;
+    watt_score: WattScore;
+};
+type GreenCqsBatchSuccessItem = {
+    index: number;
+    ok: true;
+    id: string | null;
+    carbon_quality: CarbonQualityScore;
+};
+type GreenWattBatchResponse = {
+    disclaimer: string;
+    total: number;
+    succeeded: number;
+    failed: number;
+    items: Array<GreenWattBatchSuccessItem | GreenBatchErrorItem>;
+    meta: ProtocolMeta;
+};
+type GreenCqsBatchResponse = {
+    disclaimer: string;
+    total: number;
+    succeeded: number;
+    failed: number;
+    items: Array<GreenCqsBatchSuccessItem | GreenBatchErrorItem>;
+    meta: ProtocolMeta;
+};
 
 declare class AurosProtocol {
     private readonly apiKey;
@@ -359,7 +442,16 @@ declare class AurosProtocol {
     }>;
     /** Create a free-tier API key (no auth required). */
     createKey(body: CreateKeyRequest): Promise<CreateKeyResponse>;
+    /** Free public read — Watt Score for an AUROS Green compare reference. */
+    greenWattScore(id: string): Promise<GreenWattPublicResponse>;
+    /** Free public read — Carbon Quality Score for an AUROS Green compare reference. */
+    greenCarbonQuality(id: string): Promise<GreenCqsPublicResponse>;
+    /** Batch Watt Scores — up to 50 energy assets per call (1 quota unit). */
+    greenWattBatch(body: GreenWattBatchRequest): Promise<GreenWattBatchResponse>;
+    /** Batch Carbon Quality Scores — up to 50 carbon credits per call (1 quota unit). */
+    greenCarbonQualityBatch(body: GreenCqsBatchRequest): Promise<GreenCqsBatchResponse>;
     private get;
+    private getPublic;
     private post;
     private request;
 }
@@ -371,4 +463,4 @@ declare class AurosProtocolError extends Error {
     static fromResponse(status: number, body: ProtocolErrorBody): AurosProtocolError;
 }
 
-export { type AlertType, type AssetClass, type AssetType, AurosProtocol, AurosProtocolError, type AurosProtocolOptions, type ChecklistItem, type ChecklistRequest, type ChecklistResponse, type CompareCellHighlight, type CompareProduct, type CompareRequest, type CompareResponse, type CreateKeyRequest, type CreateKeyResponse, type DossierRequest, type DossierResponse, type DossierSection, type EuNexus, type InvestorType, type IssuerType, type JurisdictionItem, type JurisdictionsAssetType, type JurisdictionsQuery, type JurisdictionsResponse, type MicaClassification, type MonitorRequest, type MonitorResponse, type ProductCategory, type ProductItem, type ProductsQuery, type ProductsResponse, type ProtocolErrorBody, type ProtocolMeta, type RecommendedJurisdiction, type RecommendedPlatform, type RiskTier, type ScoreBatchErrorItem, type ScoreBatchRequest, type ScoreBatchResponse, type ScoreBatchResultItem, type ScoreBatchSuccessItem, type ScoreBreakdown, type ScoreHistoryEntry, type ScoreHistoryResponse, type ScoreRequest, type ScoreResponse, type ScoreStatus, type WebhookItem, type WebhookRegisterRequest, type WebhookRegisterResponse, type WebhooksListResponse, type WhitepaperStatus };
+export { type AlertType, type AssetClass, type AssetType, AurosProtocol, AurosProtocolError, type AurosProtocolOptions, type CarbonQualityScore, type CarbonQualityTier, type ChecklistItem, type ChecklistRequest, type ChecklistResponse, type CompareCellHighlight, type CompareProduct, type CompareRequest, type CompareResponse, type CreateKeyRequest, type CreateKeyResponse, type DossierRequest, type DossierResponse, type DossierSection, type EuNexus, type GreenBatchErrorItem, type GreenBatchItemInput, type GreenCqsBatchRequest, type GreenCqsBatchResponse, type GreenCqsBatchSuccessItem, type GreenCqsPublicResponse, type GreenWattBatchRequest, type GreenWattBatchResponse, type GreenWattBatchSuccessItem, type GreenWattPublicResponse, type InvestorType, type IssuerType, type JurisdictionItem, type JurisdictionsAssetType, type JurisdictionsQuery, type JurisdictionsResponse, type MicaClassification, type MonitorRequest, type MonitorResponse, type ProductCategory, type ProductItem, type ProductsQuery, type ProductsResponse, type ProtocolErrorBody, type ProtocolMeta, type RecommendedJurisdiction, type RecommendedPlatform, type RiskTier, type ScoreBatchErrorItem, type ScoreBatchRequest, type ScoreBatchResponse, type ScoreBatchResultItem, type ScoreBatchSuccessItem, type ScoreBreakdown, type ScoreHistoryEntry, type ScoreHistoryResponse, type ScoreRequest, type ScoreResponse, type ScoreStatus, type WattScore, type WattScoreTier, type WebhookItem, type WebhookRegisterRequest, type WebhookRegisterResponse, type WebhooksListResponse, type WhitepaperStatus };

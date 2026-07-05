@@ -264,7 +264,7 @@ console.log(batch.succeeded, batch.items[0]?.score_id);`,
       "Score indicatif 0–100 par crédit carbone — lecture publique gratuite par id, batch jusqu'à 50 items avec clé API.",
     category: "endpoints",
     categoryLabel: "Endpoints",
-    relatedSlugs: ["endpoint-score-batch", "authentication", "endpoint-compare"],
+    relatedSlugs: ["endpoint-green-watt", "endpoint-score-batch", "authentication", "endpoint-compare"],
     sections: [
       {
         heading: "GET public (gratuit)",
@@ -299,8 +299,78 @@ console.log(batch.succeeded, batch.items[0]?.score_id);`,
 }`,
         language: "json",
         paragraphs: [
-          "Le CQS est un signal AUROS — pas une certification ICVCM/Verra. Voir aussi /data/green-index.",
+          "Le CQS est un signal AUROS — pas une certification ICVCM/Verra. Voir aussi /data/green-index et l'API Watt (/developers/docs/endpoint-green-watt).",
         ],
+      },
+      {
+        heading: "SDK",
+        code: `const cqs = await client.greenCarbonQuality("toucan");
+const batch = await client.greenCarbonQualityBatch({
+  items: [{ id: "toucan" }, { text: "Gold Standard credits retired CCP" }],
+});`,
+        language: "typescript",
+        paragraphs: ["Python : `client.green_carbon_quality(\"toucan\")`, `client.green_carbon_quality_batch(items=[...])`."],
+      },
+    ],
+  },
+  {
+    slug: "endpoint-green-watt",
+    title: "Watt Score — Green API",
+    description:
+      "Score indicatif 0–100 pour actifs énergétiques — lecture publique gratuite par id, batch jusqu'à 50 items avec clé API.",
+    category: "endpoints",
+    categoryLabel: "Endpoints",
+    relatedSlugs: ["endpoint-green-carbon-quality", "endpoint-score-batch", "authentication", "endpoint-compare"],
+    sections: [
+      {
+        heading: "GET public (gratuit)",
+        paragraphs: [
+          "Une référence comparateur Green énergie (`sunexchange`, `energy-web`…) — pas d'authentification.",
+          "Usage presse, due diligence rapide, intégration widget.",
+        ],
+        code: `curl ${BASE}/api/green/watt/sunexchange`,
+        language: "bash",
+      },
+      {
+        heading: "POST batch (clé API)",
+        paragraphs: [
+          "Jusqu'à **50 actifs énergétiques** par appel — portfolio solaire, REC, PPA.",
+          "`id` = référence comparateur AUROS, ou `text` = description libre (min 10 caractères, mots-clés solar/wind/PPA/REC…).",
+          "Compte au quota mensuel Protocol — licence volume : /partners.",
+        ],
+        code: `curl -X POST ${BASE}/api/v1/green/watt/batch \\
+  -H "Authorization: Bearer ${DEMO_API_KEY}" \\
+  -H "Content-Type: application/json" \\
+  -d '{"items":[{"id":"sunexchange"},{"text":"Solar farm 12 MW PPA signed production MWh France"}]}'`,
+        language: "bash",
+      },
+      {
+        heading: "Réponse batch (extrait)",
+        code: `{
+  "total": 2,
+  "succeeded": 2,
+  "items": [
+    {
+      "index": 0,
+      "ok": true,
+      "id": "sunexchange",
+      "watt_score": { "rating": 72, "tier": "mid", "lifetime_gwh": 1.8, "energy_value_eur": 270000 }
+    }
+  ]
+}`,
+        language: "json",
+        paragraphs: [
+          "Le Watt Score est un signal valeur énergétique AUROS — pas un audit de production. Voir aussi /data/green-index et /data/uhi-index.",
+        ],
+      },
+      {
+        heading: "SDK",
+        code: `const watt = await client.greenWattScore("sunexchange");
+const batch = await client.greenWattBatch({
+  items: [{ id: "sunexchange" }, { text: "Solar 12 MW PPA production MWh" }],
+});`,
+        language: "typescript",
+        paragraphs: ["Python : `client.green_watt_score(\"sunexchange\")`, `client.green_watt_batch(items=[...])`."],
       },
     ],
   },
@@ -805,7 +875,7 @@ export async function POST(req: Request) {
     slug: "mcp-server",
     title: "MCP server (Cursor & Claude Desktop)",
     description:
-      "Exposez AUROS Protocol comme serveur MCP — 8 outils pour agents IA : score MiCA, catalogue RWA, juridictions, compare.",
+      "Exposez AUROS Protocol comme serveur MCP — 12 outils pour agents IA : score MiCA, catalogue RWA, Green Watt/CQS, juridictions, compare.",
     category: "getting-started",
     categoryLabel: "Démarrage",
     relatedSlugs: ["quickstart", "authentication", "endpoint-score"],
@@ -864,6 +934,10 @@ export async function POST(req: Request) {
           "• `jurisdictions` — GET /api/v1/jurisdictions (classement réglementaire)",
           "• `checklist` — POST /api/v1/checklist (20+ items compliance)",
           "• `compare` — POST /api/v1/compare (2–4 produits side-by-side)",
+          "• `green_watt_score` — GET /api/green/watt/{id} (public, énergie)",
+          "• `green_carbon_quality` — GET /api/green/carbon-quality/{id} (public, carbone)",
+          "• `green_watt_batch` — POST /api/v1/green/watt/batch (max 50 items, 1 unité quota)",
+          "• `green_carbon_quality_batch` — POST /api/v1/green/carbon-quality/batch (max 50 items)",
           "• `regulatory_feed` — GET /api/v1/regulatory/feed (premium, feed ESMA/AMF/BaFin)",
           "• `status` — GET /api/v1/status (santé API, sans auth)",
         ],

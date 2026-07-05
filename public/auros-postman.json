@@ -357,6 +357,8 @@
         }
       ]
     },
+    {
+      "name": "Keys",
       "item": [
         {
           "name": "POST /api/v1/keys",
@@ -381,6 +383,78 @@
               "path": ["api", "v1", "keys"]
             },
             "description": "Request a free-tier API key (100 requests/month). No authentication required. The raw key is returned once — store securely."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Green",
+      "description": "AUROS Green scoring — Watt Score (energy) and Carbon Quality Score (CQS). Public GET endpoints need no auth; batch endpoints require Bearer API key.",
+      "item": [
+        {
+          "name": "GET /api/green/watt/{id}",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/green/watt/sunexchange",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "green", "watt", "sunexchange"]
+            },
+            "description": "Free public Watt Score for an energy compare reference (solar, wind, REC, PPA)."
+          },
+          "response": []
+        },
+        {
+          "name": "POST /api/v1/green/watt/batch",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"items\": [\n    { \"id\": \"sunexchange\" },\n    { \"text\": \"Solar farm 12 MW PPA signed production MWh France\" }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/green/watt/batch",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "green", "watt", "batch"]
+            },
+            "description": "Batch Watt Scores — up to 50 items, counts as 1 quota unit."
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/green/carbon-quality/{id}",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/green/carbon-quality/toucan",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "green", "carbon-quality", "toucan"]
+            },
+            "description": "Free public Carbon Quality Score for a carbon compare reference."
+          },
+          "response": []
+        },
+        {
+          "name": "POST /api/v1/green/carbon-quality/batch",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"items\": [\n    { \"id\": \"toucan\" },\n    { \"text\": \"Gold Standard forestry credits retired 2024 Verra\" }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/green/carbon-quality/batch",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "v1", "green", "carbon-quality", "batch"]
+            },
+            "description": "Batch CQS — up to 50 items, counts as 1 quota unit."
           },
           "response": []
         }

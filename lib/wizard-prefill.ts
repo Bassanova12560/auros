@@ -14,7 +14,8 @@ export type WizardPrefillFromTool =
   | "csrd-checker"
   | "estimate"
   | "cost-estimator"
-  | "jurisdiction-picker";
+  | "jurisdiction-picker"
+  | "comment-tokeniser";
 
 export type WizardPrefill = {
   assetType: string;

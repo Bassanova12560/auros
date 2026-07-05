@@ -42,7 +42,7 @@ async function main() {
     process.exit(1);
   }
 
-  let sessionId = sessionIdFromArgs();
+  const sessionId = sessionIdFromArgs();
   if (!sessionId) {
     console.error("Usage: npm run stripe:complete-test -- cs_test_...");
     process.exit(1);

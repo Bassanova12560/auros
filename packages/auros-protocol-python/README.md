@@ -40,6 +40,10 @@ print(result["score"], result["grade"], result["mica_classification"])
 | `compare(**body)` | `POST /api/v1/compare` | Bearer |
 | `status()` | `GET /api/v1/status` | None |
 | `create_key(email)` | `POST /api/v1/keys` | None |
+| `green_watt_score(id)` | `GET /api/green/watt/{id}` | None |
+| `green_carbon_quality(id)` | `GET /api/green/carbon-quality/{id}` | None |
+| `green_watt_batch(**body)` | `POST /api/v1/green/watt/batch` | Bearer |
+| `green_carbon_quality_batch(**body)` | `POST /api/v1/green/carbon-quality/batch` | Bearer |
 
 ## Examples
 
@@ -71,6 +75,18 @@ print(health["status"], health["version"])
 # Free API key
 key_resp = client.create_key("you@company.com")
 print(key_resp["api_key"])
+
+# Green scoring
+watt = client.green_watt_score("sunexchange")
+print(watt["watt_score"]["rating"])
+
+batch = client.green_watt_batch(
+    items=[
+        {"id": "sunexchange"},
+        {"text": "Solar farm 12 MW PPA production MWh"},
+    ]
+)
+print(batch["succeeded"])
 ```
 
 ## Context manager

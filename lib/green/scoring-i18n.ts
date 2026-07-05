@@ -17,6 +17,7 @@ export type GreenScoringCopy = {
   disclaimer: string;
   compareLink: string;
   apiLink: string;
+  wattApiLink: string;
   priorities: Record<WizardGreenScorePriorityKey, string>;
 };
 
@@ -33,6 +34,7 @@ const FR: GreenScoringCopy = {
     "Signaux AUROS — pas une certification Verra, ICVCM ou audit tiers. Hypothèses de capacité et prix énergie indicatives.",
   compareLink: "Comparateur Green →",
   apiLink: "API CQS publique →",
+  wattApiLink: "API Watt publique →",
   priorities: {
     watt_capacity: "Préciser la capacité installée (MW/MWh) dans la description.",
     watt_ppa: "Documenter un PPA ou contrat d'achat énergie signé.",
@@ -57,6 +59,7 @@ const EN: GreenScoringCopy = {
     "AUROS signals — not Verra, ICVCM or third-party certification. Capacity and energy price assumptions are indicative.",
   compareLink: "Green comparator →",
   apiLink: "Public CQS API →",
+  wattApiLink: "Public Watt API →",
   priorities: {
     watt_capacity: "Specify installed capacity (MW/MWh) in the description.",
     watt_ppa: "Document a signed PPA or energy offtake contract.",
@@ -81,6 +84,7 @@ const ES: GreenScoringCopy = {
     "Señales AUROS — no certificación Verra, ICVCM ni auditoría de terceros.",
   compareLink: "Comparador Green →",
   apiLink: "API CQS pública →",
+  wattApiLink: "API Watt pública →",
   priorities: {
     watt_capacity: "Precise capacidad instalada (MW/MWh) en la descripción.",
     watt_ppa: "Documente un PPA o contrato de compra de energía firmado.",

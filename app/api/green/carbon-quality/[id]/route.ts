@@ -32,6 +32,7 @@ export async function GET(
     disclaimer:
       "Indicative AUROS Carbon Quality Score — not a Verra/ICVCM certification.",
     batch_api: "/api/v1/green/carbon-quality/batch",
+    companion_api: "/api/green/watt/{id}",
     docs: "/developers/docs/endpoint-green-carbon-quality",
     generated_at: new Date().toISOString(),
   });

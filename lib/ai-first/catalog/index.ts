@@ -15,6 +15,7 @@ import {
 } from "./jurisdictions-pages";
 import { miscPages } from "./misc-pages";
 import { buildSeoLandingPages } from "./seo-landing-pages";
+import { buildCommentTokeniserHubPage, buildCommentTokeniserLandingPages } from "./comment-tokeniser-pages";
 import { contentPages } from "./content-pages";
 import { glossaryPages } from "./glossary-pages";
 import { protocolDocsPages } from "./protocol-docs-pages";
@@ -35,6 +36,8 @@ export function getAllAiFirstPages(): AiFirstPage[] {
     starterKitPage,
     ...buildComparatorPages(),
     ...buildSeoLandingPages(),
+    buildCommentTokeniserHubPage(),
+    ...buildCommentTokeniserLandingPages(),
     ...academyPages,
     ...greenPages,
     ...contentPages,

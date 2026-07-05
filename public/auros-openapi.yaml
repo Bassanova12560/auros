@@ -50,6 +50,8 @@ tags:
     description: Monitor, dossier, webhooks — requires live key or paid tier
   - name: Status
     description: Public health checks — no auth
+  - name: Green
+    description: AUROS Green scoring — Watt Score, Carbon Quality Score (CQS)
 paths:
   /api/v1/status:
     get:
@@ -991,6 +993,156 @@ paths:
           description: Not found
         "403":
           $ref: "#/components/responses/PremiumRequired"
+  /api/green/watt/{id}:
+    get:
+      tags: [Green]
+      summary: Public Watt Score by catalog id
+      operationId: greenWattScore
+      security: []
+      description: |
+        Free public read — indicative Watt Score (0–100) for an AUROS Green compare reference
+        (solar, wind, REC, PPA). Returns `not_energy_asset` (422) for carbon-only references.
+
+        **No authentication.** For portfolio batch scoring use `POST /api/v1/green/watt/batch`.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          example: sunexchange
+      responses:
+        "200":
+          description: Watt Score result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GreenWattPublicResponse"
+        "404":
+          description: Unknown compare reference id
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GreenNotFoundError"
+        "422":
+          description: Reference is not an energy asset
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GreenAssetTypeError"
+  /api/v1/green/watt/batch:
+    post:
+      tags: [Green]
+      summary: Batch Watt Scores
+      operationId: greenWattBatch
+      description: |
+        Score up to **50 energy assets** in one call — solar portfolios, REC pipelines, PPA due diligence.
+
+        Each item accepts either:
+        - `id` — AUROS Green compare reference (e.g. `sunexchange`)
+        - `text` — free-form description (min 10 chars; keywords solar, wind, PPA, REC, MWh…)
+
+        **Partial success:** invalid items return `{ ok: false, error }` at their index.
+
+        **Quota:** counts as **1 request** against the monthly API key quota.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GreenWattBatchRequest"
+            example:
+              items:
+                - id: sunexchange
+                - text: "Solar farm 12 MW PPA signed production MWh France"
+      responses:
+        "200":
+          description: Batch Watt Score results (may include per-item errors)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GreenWattBatchResponse"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "429":
+          $ref: "#/components/responses/RateLimit"
+  /api/green/carbon-quality/{id}:
+    get:
+      tags: [Green]
+      summary: Public Carbon Quality Score by catalog id
+      operationId: greenCarbonQuality
+      security: []
+      description: |
+        Free public read — indicative Carbon Quality Score (CQS, 0–100) for an AUROS Green
+        compare carbon reference. Returns `not_carbon_asset` (422) for energy-only references.
+
+        **No authentication.** For portfolio batch scoring use `POST /api/v1/green/carbon-quality/batch`.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          example: toucan
+      responses:
+        "200":
+          description: Carbon Quality Score result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GreenCqsPublicResponse"
+        "404":
+          description: Unknown compare reference id
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GreenNotFoundError"
+        "422":
+          description: Reference is not a carbon asset
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GreenAssetTypeError"
+  /api/v1/green/carbon-quality/batch:
+    post:
+      tags: [Green]
+      summary: Batch Carbon Quality Scores
+      operationId: greenCarbonQualityBatch
+      description: |
+        Score up to **50 carbon credits** in one call — corporate portfolio or M&A pipeline.
+
+        Each item accepts either:
+        - `id` — AUROS Green compare reference (e.g. `toucan`)
+        - `text` — free-form description (min 10 chars)
+
+        **Partial success:** invalid items return `{ ok: false, error }` at their index.
+
+        **Quota:** counts as **1 request** against the monthly API key quota.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GreenCqsBatchRequest"
+            example:
+              items:
+                - id: toucan
+                - text: "Gold Standard forestry credits retired 2024 Verra"
+      responses:
+        "200":
+          description: Batch CQS results (may include per-item errors)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GreenCqsBatchResponse"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "429":
+          $ref: "#/components/responses/RateLimit"
 components:
   securitySchemes:
     bearerAuth:
@@ -1718,6 +1870,194 @@ components:
             enum: [regulatory.update]
         status: { type: string, enum: [active] }
         created_at: { type: string, format: date-time }
+    WattScore:
+      type: object
+      required: [rating, lifetime_gwh, energy_value_eur, tier]
+      properties:
+        rating:
+          type: integer
+          minimum: 0
+          maximum: 100
+          description: Indicative energy-value credibility rating
+        lifetime_gwh:
+          type: number
+          nullable: true
+          description: Estimated lifetime energy production (GWh)
+        energy_value_eur:
+          type: integer
+          nullable: true
+          description: Indicative lifetime energy value (EUR)
+        tier:
+          type: string
+          enum: [high, mid, early]
+    CarbonQualityScore:
+      type: object
+      required: [score, tier]
+      properties:
+        score:
+          type: integer
+          minimum: 0
+          maximum: 100
+        tier:
+          type: string
+          enum: [premium, acceptable, caution, avoid]
+        registry:
+          type: string
+          enum: [verra, gold_standard, mixed, unknown]
+        ccp_aligned:
+          type: boolean
+          nullable: true
+    GreenNotFoundError:
+      type: object
+      properties:
+        ok: { type: boolean, example: false }
+        error: { type: string, example: not_found }
+    GreenAssetTypeError:
+      type: object
+      properties:
+        ok: { type: boolean, example: false }
+        error:
+          type: string
+          enum: [not_energy_asset, not_carbon_asset]
+        id: { type: string }
+    GreenWattPublicResponse:
+      type: object
+      properties:
+        ok: { type: boolean, example: true }
+        id: { type: string }
+        name: { type: string }
+        watt_score:
+          $ref: "#/components/schemas/WattScore"
+        disclaimer: { type: string }
+        batch_api: { type: string, example: /api/v1/green/watt/batch }
+        docs: { type: string, format: uri }
+        generated_at: { type: string, format: date-time }
+    GreenCqsPublicResponse:
+      type: object
+      properties:
+        ok: { type: boolean, example: true }
+        id: { type: string }
+        name: { type: string }
+        carbon_quality:
+          $ref: "#/components/schemas/CarbonQualityScore"
+        disclaimer: { type: string }
+        batch_api: { type: string, example: /api/v1/green/carbon-quality/batch }
+        docs: { type: string, format: uri }
+        generated_at: { type: string, format: date-time }
+    GreenWattBatchRequest:
+      type: object
+      required: [items]
+      properties:
+        items:
+          type: array
+          minItems: 1
+          maxItems: 50
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                description: AUROS Green compare reference id
+              text:
+                type: string
+                minLength: 10
+                description: Free-form energy asset description
+            description: Each item needs `id` or `text`
+    GreenCqsBatchRequest:
+      type: object
+      required: [items]
+      properties:
+        items:
+          type: array
+          minItems: 1
+          maxItems: 50
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                description: AUROS Green compare reference id
+              text:
+                type: string
+                minLength: 10
+                description: Free-form carbon credit description
+            description: Each item needs `id` or `text`
+    GreenWattBatchItemOk:
+      type: object
+      properties:
+        index: { type: integer }
+        ok: { type: boolean, example: true }
+        id: { type: string, nullable: true }
+        watt_score:
+          $ref: "#/components/schemas/WattScore"
+    GreenWattBatchItemError:
+      type: object
+      properties:
+        index: { type: integer }
+        ok: { type: boolean, example: false }
+        error:
+          type: object
+          properties:
+            code:
+              type: string
+              enum: [not_found, not_energy_asset, validation_error]
+            message: { type: string }
+    GreenWattBatchResponse:
+      type: object
+      properties:
+        disclaimer: { type: string }
+        total: { type: integer }
+        succeeded: { type: integer }
+        failed: { type: integer }
+        items:
+          type: array
+          items:
+            oneOf:
+              - $ref: "#/components/schemas/GreenWattBatchItemOk"
+              - $ref: "#/components/schemas/GreenWattBatchItemError"
+        meta:
+          type: object
+          properties:
+            version: { type: string, example: "1.0" }
+            computed_at: { type: string, format: date-time }
+    GreenCqsBatchItemOk:
+      type: object
+      properties:
+        index: { type: integer }
+        ok: { type: boolean, example: true }
+        id: { type: string, nullable: true }
+        carbon_quality:
+          $ref: "#/components/schemas/CarbonQualityScore"
+    GreenCqsBatchItemError:
+      type: object
+      properties:
+        index: { type: integer }
+        ok: { type: boolean, example: false }
+        error:
+          type: object
+          properties:
+            code:
+              type: string
+              enum: [not_found, not_carbon_asset, validation_error]
+            message: { type: string }
+    GreenCqsBatchResponse:
+      type: object
+      properties:
+        disclaimer: { type: string }
+        total: { type: integer }
+        succeeded: { type: integer }
+        failed: { type: integer }
+        items:
+          type: array
+          items:
+            oneOf:
+              - $ref: "#/components/schemas/GreenCqsBatchItemOk"
+              - $ref: "#/components/schemas/GreenCqsBatchItemError"
+        meta:
+          type: object
+          properties:
+            version: { type: string, example: "1.0" }
+            computed_at: { type: string, format: date-time }
   responses:
     Unauthorized:
       description: Missing or invalid API key
