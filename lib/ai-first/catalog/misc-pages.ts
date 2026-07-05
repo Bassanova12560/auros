@@ -16,7 +16,26 @@ export const partnersPage = enrichPage({
   intents: ["Devenir partenaire AUROS", "Intégration plateforme RWA"],
   audience: ["plateformes RWA", "cabinet avocats", "custodians", "tech providers"],
   facts: [{ key: "Contact", value: "Formulaire /partners#contact" }],
-  relatedPaths: ["/", "/jurisdictions"],
+  relatedPaths: ["/", "/jurisdictions", "/partners/portal"],
+});
+
+export const partnersPortalPage = enrichPage({
+  id: "partners-portal",
+  path: "/partners/portal",
+  title: "Portail partenaire | Suivi apporteurs AUROS",
+  description:
+    "Tableau de bord partenaires apporteurs — leads et dossiers attribués via code ?partner=, commission indicative.",
+  summary:
+    "Portail partenaire AUROS phase C : consultez les attributions referred_by, copiez votre lien wizard, suivi indicatif.",
+  contentType: "guide",
+  language: "multi",
+  indexable: false,
+  lastUpdated: "2026-07-05",
+  keywords: ["portail partenaire AUROS", "referred_by", "apporteur affaires RWA"],
+  intents: ["Voir mes dossiers amenés", "Code partenaire AUROS"],
+  audience: ["cabinet avocats", "family office", "CGP", "intégrateurs"],
+  facts: [{ key: "Accès", value: "Code partenaire attribué par AUROS" }],
+  relatedPaths: ["/partners", "/wizard"],
 });
 
 export const legalPage = enrichPage({
@@ -111,4 +130,11 @@ export const aboutPage = enrichPage({
   relatedPaths: ["/", "/jurisdictions", "/partners", "/legal"],
 });
 
-export const miscPages = [partnersPage, aboutPage, legalPage, privacyPage, termsPage];
+export const miscPages = [
+  partnersPage,
+  partnersPortalPage,
+  aboutPage,
+  legalPage,
+  privacyPage,
+  termsPage,
+];
