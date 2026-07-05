@@ -15,6 +15,9 @@ import type {
   GreenWattBatchRequest,
   GreenWattBatchResponse,
   GreenWattPublicResponse,
+  GreenH2oBatchRequest,
+  GreenH2oBatchResponse,
+  GreenH2oPublicResponse,
   JurisdictionsQuery,
   JurisdictionsResponse,
   MonitorRequest,
@@ -154,6 +157,18 @@ export class AurosProtocol {
     body: GreenCqsBatchRequest
   ): Promise<GreenCqsBatchResponse> {
     return this.post<GreenCqsBatchResponse>("/api/v1/green/carbon-quality/batch", body);
+  }
+
+  /** Free public read — H₂O Score for a hydrological catalog reference. */
+  async greenH2oScore(id: string): Promise<GreenH2oPublicResponse> {
+    return this.getPublic<GreenH2oPublicResponse>(
+      `/api/green/h2o/${encodeURIComponent(id)}`
+    );
+  }
+
+  /** Batch H₂O Scores — up to 50 hydrological assets per call (1 quota unit). */
+  async greenH2oBatch(body: GreenH2oBatchRequest): Promise<GreenH2oBatchResponse> {
+    return this.post<GreenH2oBatchResponse>("/api/v1/green/h2o/batch", body);
   }
 
   private async get<T>(path: string): Promise<T> {

@@ -75,6 +75,17 @@ export function GreenHubView({ marketSnapshot, impact, registrySnapshot }: Props
               {m.hub.registerCta} →
             </Link>
             <Link
+              href="/eau"
+              className="font-mono text-[11px] tracking-wide text-cyan-300/50 transition-colors duration-300 hover:text-cyan-200/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+            >
+              {locale === "fr"
+                ? "Passeport hydrique H₂O"
+                : locale === "es"
+                  ? "Pasaporte hídrico H₂O"
+                  : "H₂O Hydrological Passport"}{" "}
+              →
+            </Link>
+            <Link
               href="/green/my"
               className="font-mono text-[11px] tracking-wide text-white/40 transition-colors duration-300 hover:text-white/70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
             >

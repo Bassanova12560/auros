@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 
 import { notifyAcademyWaitlistSignup } from "@/lib/academy/waitlist-notify";
+import { saveAcademyWaitlistSignup } from "@/lib/academy/waitlist-store";
 import { checkRateLimit, getRequestIp } from "@/lib/rate-limit";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -30,6 +31,14 @@ export async function POST(req: Request) {
 
   if (!email || !EMAIL_RE.test(email) || email.length > 254) {
     return NextResponse.json({ ok: false, error: "invalid_email" }, { status: 400 });
+  }
+
+  const saved = await saveAcademyWaitlistSignup({ email, track, locale });
+  if (!saved.ok) {
+    return NextResponse.json(
+      { ok: false, error: saved.error },
+      { status: saved.error === "database" ? 503 : 400 },
+    );
   }
 
   const result = await notifyAcademyWaitlistSignup({ email, track, locale });

@@ -42,6 +42,8 @@ const PRIORITY: Record<string, number> = {
   "/faq": 0.82,
   "/ressources": 0.81,
   "/comment-tokeniser": 0.86,
+  "/eau": 0.9,
+  "/eau/embed": 0.88,
   "/glossary": 0.8,
   "/glossary/term": 0.72,
   "/how-it-works": 0.8,

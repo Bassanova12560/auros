@@ -6,8 +6,10 @@ import { fulfillJurisdictionPayment, fulfillWalkInPayment, parseCheckoutMetadata
 import { fulfillAcademyDiplomaPayment } from "@/lib/academy/fulfill-diploma-payment";
 import { parseAcademyDiplomaMetadata } from "@/lib/academy/diploma-checkout";
 import { fulfillGreenImpactPaymentFromStripe } from "@/lib/green/fulfill-impact-payment";
+import { fulfillGreenLabelPaymentFromStripe } from "@/lib/green/fulfill-label-payment";
 import { getStripe, stripeWebhookSecret } from "@/lib/stripe/jurisdiction-checkout";
 import { parseGreenImpactCheckoutMetadata } from "@/lib/stripe/green-impact-checkout";
+import { parseGreenLabelCheckoutMetadata } from "@/lib/stripe/green-label-checkout";
 import { parseWizardCheckoutMetadata } from "@/lib/stripe/wizard-checkout";
 import { fulfillWizardPayment } from "@/lib/wizard/fulfill-payment";
 
@@ -56,6 +58,12 @@ export async function POST(request: Request) {
     const greenImpactMeta = parseGreenImpactCheckoutMetadata(sessionMeta);
     if (greenImpactMeta) {
       await fulfillGreenImpactPaymentFromStripe(session);
+      return NextResponse.json({ received: true });
+    }
+
+    const greenLabelMeta = parseGreenLabelCheckoutMetadata(sessionMeta);
+    if (greenLabelMeta) {
+      await fulfillGreenLabelPaymentFromStripe(session);
       return NextResponse.json({ received: true });
     }
 

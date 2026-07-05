@@ -5,6 +5,7 @@ export type PartnersMessages = {
   title: string;
   subtitle: string;
   cta: string;
+  portalCta: string;
   howTitle: string;
   steps: Array<{ number: string; title: string; description: string }>;
   receiveTitle: string;
@@ -12,6 +13,8 @@ export type PartnersMessages = {
   integrationsTitle: string;
   integrationsBody: string;
   integrationsNote: string;
+  integrationsEauLink: string;
+  integrationsEmbedLink: string;
   pricingTitle: string;
   tiers: Array<{
     name: string;
@@ -43,6 +46,7 @@ const FR: PartnersMessages = {
   subtitle:
     "Recevez des dossiers pré-formatés de propriétaires qualifiés. Zéro développement côté plateforme.",
   cta: "Demander l'intégration",
+  portalCta: "Tableau de bord apporteur",
   howTitle: "Comment ça fonctionne",
   steps: [
     {
@@ -85,8 +89,10 @@ const FR: PartnersMessages = {
   ],
   integrationsTitle: "Partenariats",
   integrationsBody:
-    "Aucune intégration commerciale annoncée pour l'instant — le programme ouvre sur candidature.",
+    "Widget H₂O Score intégrable (iframe) — readiness hydrique gratuite, Passeport AUROS avec code partenaire `?partner=CODE`. Voir /eau/embed/docs.",
   integrationsNote: "Pas de promotion de marques tierces sans accord signé.",
+  integrationsEauLink: "Hub hydrique /eau",
+  integrationsEmbedLink: "Docs widget H₂O",
   pricingTitle: "Tarifs plateformes",
   tiers: [
     {
@@ -160,6 +166,7 @@ const EN: PartnersMessages = {
   subtitle:
     "Receive pre-formatted dossiers from qualified asset owners. Zero platform-side development.",
   cta: "Request integration",
+  portalCta: "Referral dashboard",
   howTitle: "How it works for platforms",
   steps: [
     {
@@ -202,8 +209,10 @@ const EN: PartnersMessages = {
   ],
   integrationsTitle: "Partnerships",
   integrationsBody:
-    "No commercial integrations announced yet — the program opens on application.",
+    "Embeddable H₂O Score widget (iframe) — free hydrological preview, AUROS Passport with `?partner=CODE`. See /eau/embed/docs.",
   integrationsNote: "No third-party brands promoted without a signed agreement.",
+  integrationsEauLink: "Water hub /eau",
+  integrationsEmbedLink: "H₂O widget docs",
   pricingTitle: "Pricing for platforms",
   tiers: [
     {
@@ -278,12 +287,15 @@ const ES: PartnersMessages = {
   subtitle:
     "Reciba expedientes preformateados de propietarios cualificados. Sin desarrollo en su plataforma.",
   cta: "Solicitar integración",
+  portalCta: "Panel de referidos",
   howTitle: "Cómo funciona para plataformas",
   receiveTitle: "Lo que recibe",
   integrationsTitle: "Alianzas",
   integrationsBody:
-    "Sin integraciones comerciales anunciadas por ahora — el programa abre por solicitud.",
+    "Widget H₂O Score integrable (iframe) — preview hídrico gratuito, Pasaporte AUROS con `?partner=CODE`. Ver /eau/embed/docs.",
   integrationsNote: "Sin promoción de marcas externas sin acuerdo firmado.",
+  integrationsEauLink: "Hub hídrico /eau",
+  integrationsEmbedLink: "Docs widget H₂O",
   pricingTitle: "Precios para plataformas",
   contactTitle: "Contacto",
   form: {

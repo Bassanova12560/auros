@@ -24,3 +24,13 @@ export function prefillFromCommentTokeniser(
     valueBucket: landing.defaultValueEur >= 2_000_000 ? "over_2m" : "500k_2m",
   };
 }
+
+export function wizardEntryPathForCommentTokeniser(
+  slug: CommentTokeniserSlug
+): string {
+  const landing = getCommentTokeniserLanding(slug);
+  if (landing?.greenWizard) {
+    return "/wizard?type=green&asset=renewable";
+  }
+  return "/wizard";
+}

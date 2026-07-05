@@ -25,7 +25,25 @@ const nextConfig: NextConfig = {
     "pdf-parse",
   ],
   async headers() {
+    const embedHeaders = [
+      { key: "X-DNS-Prefetch-Control", value: "on" },
+      { key: "X-Content-Type-Options", value: "nosniff" },
+      { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+      {
+        key: "Content-Security-Policy",
+        value: "frame-ancestors *",
+      },
+      {
+        key: "Permissions-Policy",
+        value: "camera=(), microphone=(), geolocation=()",
+      },
+    ];
+
     return [
+      {
+        source: "/eau/embed/:path*",
+        headers: embedHeaders,
+      },
       {
         source: "/(.*)",
         headers: securityHeaders,

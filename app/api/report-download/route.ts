@@ -6,6 +6,7 @@ import {
   CURRENT_EDITION,
   notifyReportDownloadSignup,
 } from "@/lib/state-of-rwa-issuers";
+import { saveReportDownloadSignup } from "@/lib/state-of-rwa-issuers/signup-store";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -41,6 +42,14 @@ export async function POST(req: Request) {
   }
   if (!name || name.length < 2 || name.length > 120) {
     return NextResponse.json({ ok: false, error: "invalid_name" }, { status: 400 });
+  }
+
+  const saved = await saveReportDownloadSignup({ name, email, edition, locale });
+  if (!saved.ok) {
+    return NextResponse.json(
+      { ok: false, error: saved.error },
+      { status: saved.error === "database" ? 503 : 400 },
+    );
   }
 
   const result = await notifyReportDownloadSignup({ name, email, edition, locale });

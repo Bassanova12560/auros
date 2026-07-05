@@ -19,7 +19,7 @@ const SECTIONS = [
     title: "Démarrer avec AUROS",
     links: [
       { href: "/how-it-works", label: "Comment ça marche", desc: "Trois étapes jusqu'au dossier RWA." },
-      { href: "/comment-tokeniser", label: "Comment tokeniser mon actif", desc: "Guides immobilier, art, fonds, obligations, crédit privé et énergie — wizard prérempli." },
+      { href: "/comment-tokeniser", label: "Comment tokeniser mon actif", desc: "Guides immobilier, art, fonds, obligations, crédit privé, énergie et eau — wizard prérempli." },
       { href: "/estimate", label: "Score de préparation", desc: "Test indicatif en une phrase, sans compte." },
       { href: "/tools", label: "Outils tokenisation RWA", desc: "4 outils gratuits — MiCA, rendement, juridiction et coût indicatif." },
       { href: "/wizard", label: "Wizard tokenisation", desc: "Parcours gratuit — score et data room." },

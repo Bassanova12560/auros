@@ -135,6 +135,44 @@ function runEnvChecks(): Check[] {
     );
   }
 
+  const ecosystem: { key: string; level: Check["level"]; hint: string }[] = [
+    {
+      key: "CRON_SECRET",
+      level: "warn",
+      hint: "Required for Vercel crons (lead-nurture, Green, protocol-monitor)",
+    },
+    {
+      key: "STRIPE_SECRET_KEY",
+      level: "warn",
+      hint: "Green Label 300 € checkout",
+    },
+    {
+      key: "STRIPE_WEBHOOK_SECRET",
+      level: "warn",
+      hint: "Stripe webhook /api/webhooks/stripe",
+    },
+  ];
+
+  for (const { key, level, hint } of ecosystem) {
+    if (has(key)) {
+      push(checks, key, "ok", `${key} is set`);
+    } else {
+      push(checks, key, level, `${key} missing — ${hint}`);
+    }
+  }
+
+  if (has("PARTNER_WEBHOOK_URL")) {
+    push(checks, "PARTNER_WEBHOOK_URL", "ok", "Partner webhook URL configured");
+    if (!has("PARTNER_WEBHOOK_SECRET")) {
+      push(
+        checks,
+        "PARTNER_WEBHOOK_SECRET",
+        "warn",
+        "PARTNER_WEBHOOK_URL set without PARTNER_WEBHOOK_SECRET"
+      );
+    }
+  }
+
   return checks;
 }
 
@@ -160,6 +198,12 @@ async function runHttpChecks(base: string): Promise<Check[]> {
     { path: "/comment-tokeniser/obligations", expect: 200 },
     { path: "/comment-tokeniser/credit-prive", expect: 200 },
     { path: "/comment-tokeniser/energie", expect: 200 },
+    { path: "/comment-tokeniser/eau", expect: 200 },
+    { path: "/eau", expect: 200 },
+    { path: "/eau/embed", expect: 200 },
+    { path: "/eau/embed/docs", expect: 200 },
+    { path: "/api/green/h2o/pilot-concession-france", expect: 200 },
+    { path: "/partners/portal", expect: 200 },
     { path: "/api/uhi/index", expect: 200 },
     {
       path: "/api/simulate",
@@ -195,6 +239,44 @@ async function runHttpChecks(base: string): Promise<Check[]> {
         `GET ${path} failed — ${err instanceof Error ? err.message : String(err)}`
       );
     }
+  }
+
+  const eauCheckUrl = `${base.replace(/\/$/, "")}/api/eau/check`;
+  try {
+    const res = await fetch(eauCheckUrl, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        text: "Concession eau potable 15 ans 2 Mm³/an SPV France audit hydrologique",
+      }),
+    });
+    if (res.status === 200) {
+      const json = (await res.json()) as { ok?: boolean; passport_required?: boolean };
+      if (json.ok && json.passport_required === true) {
+        push(checks, "http/api/eau/check", "ok", "POST /api/eau/check → 200 + passport_required");
+      } else {
+        push(
+          checks,
+          "http/api/eau/check",
+          "warn",
+          `POST /api/eau/check → 200 but unexpected body (ok=${String(json.ok)})`
+        );
+      }
+    } else {
+      push(
+        checks,
+        "http/api/eau/check",
+        "warn",
+        `POST /api/eau/check → ${res.status} (expected 200)`
+      );
+    }
+  } catch (err) {
+    push(
+      checks,
+      "http/api/eau/check",
+      "fail",
+      `POST /api/eau/check failed — ${err instanceof Error ? err.message : String(err)}`
+    );
   }
 
   return checks;

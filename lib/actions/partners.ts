@@ -5,6 +5,7 @@ import {
   sendPartnerConfirmation,
   sendPartnerInternal,
 } from "@/lib/emails/send";
+import { normalizePartnerCode } from "@/lib/partner-attribution";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 
 export type SavePartnerInput = {
@@ -56,6 +57,23 @@ export async function savePartnerAction(
       error: "database",
       message: error?.message ?? "Insert failed",
     };
+  }
+
+  const partnerCode = normalizePartnerCode(
+    input.company.trim().replace(/\s+/g, "-"),
+  );
+  if (partnerCode) {
+    const { error: codeError } = await supabase.from("partner_codes").upsert(
+      {
+        code: partnerCode,
+        label: input.company.trim(),
+        active: true,
+      },
+      { onConflict: "code" },
+    );
+    if (codeError) {
+      console.warn("[savePartnerAction/partner_codes]", codeError.message);
+    }
   }
 
   void sendPartnerConfirmation(email, {

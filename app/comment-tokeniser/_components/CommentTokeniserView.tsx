@@ -12,9 +12,18 @@ import {
   getCommentTokeniserDisclaimer,
   type CommentTokeniserLanding,
 } from "@/lib/comment-tokeniser/landings";
-import { prefillFromCommentTokeniser } from "@/lib/comment-tokeniser/prefill";
+import {
+  prefillFromCommentTokeniser,
+  wizardEntryPathForCommentTokeniser,
+} from "@/lib/comment-tokeniser/prefill";
 import { saveWizardPrefill } from "@/lib/wizard-prefill";
 import { track } from "@/lib/analytics";
+
+const REVENUE_SECTION_LABEL: Record<string, string> = {
+  fr: "Suite AUROS — infra & Green",
+  en: "AUROS suite — infra & Green",
+  es: "Suite AUROS — infra y Green",
+};
 
 export function CommentTokeniserView({ landing }: { landing: CommentTokeniserLanding }) {
   const { locale } = useLocale();
@@ -24,7 +33,7 @@ export function CommentTokeniserView({ landing }: { landing: CommentTokeniserLan
   function startWizard() {
     saveWizardPrefill(prefillFromCommentTokeniser(landing.slug, locale));
     track("comment_tokeniser_cta", { slug: landing.slug, locale });
-    router.push("/wizard");
+    router.push(wizardEntryPathForCommentTokeniser(landing.slug));
   }
 
   return (
@@ -66,6 +75,42 @@ export function CommentTokeniserView({ landing }: { landing: CommentTokeniserLan
           ))}
         </ol>
       </BezelCard>
+
+      {copy.revenueLinks ? (
+        <BezelCard
+          className="mt-4 border-cyan-500/10"
+          innerClassName="p-6 md:p-8"
+          animate
+        >
+          <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-cyan-300/60">
+            {REVENUE_SECTION_LABEL[locale] ?? REVENUE_SECTION_LABEL.fr}
+          </p>
+          <ul className="mt-4 space-y-3">
+            {copy.revenueLinks.map((link) => (
+              <li key={link.trackId}>
+                <Link
+                  href={link.href}
+                  onClick={() =>
+                    track("comment_tokeniser_revenue", {
+                      slug: landing.slug,
+                      trackId: link.trackId,
+                      locale,
+                    })
+                  }
+                  className="group block rounded-xl border border-white/[0.06] bg-black/30 px-4 py-3 transition hover:border-cyan-500/25 hover:bg-cyan-500/[0.04]"
+                >
+                  <p className="text-sm font-medium text-white/85 group-hover:text-white">
+                    {link.label}
+                  </p>
+                  <p className="mt-1 text-xs leading-relaxed text-white/45">
+                    {link.detail}
+                  </p>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </BezelCard>
+      ) : null}
 
       <div className="mt-8 flex flex-wrap gap-3">
         <PrimaryButton type="button" onClick={startWizard}>

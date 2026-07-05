@@ -498,3 +498,50 @@ export type GreenCqsBatchResponse = {
   items: Array<GreenCqsBatchSuccessItem | GreenBatchErrorItem>;
   meta: ProtocolMeta;
 };
+
+export type H2oScoreTier = "high" | "mid" | "low";
+
+export type H2oScore = {
+  rating: number;
+  tier: H2oScoreTier;
+  asset_class: string;
+  priority_keys: string[];
+  flow_m3_per_year: number | null;
+  concession_years: number | null;
+  passport_status: string;
+  passport_required: boolean;
+  passport_unlock_url: string;
+  preview_id: string;
+};
+
+export type GreenH2oPublicResponse = {
+  ok: true;
+  id: string;
+  name: string;
+  h2o_score: H2oScore;
+  disclaimer: string;
+  batch_api: string;
+  passport_unlock: string;
+  docs: string;
+  generated_at: string;
+};
+
+export type GreenH2oBatchRequest = {
+  items: GreenBatchItemInput[];
+};
+
+export type GreenH2oBatchSuccessItem = {
+  index: number;
+  ok: true;
+  id: string | null;
+  h2o_score: H2oScore;
+};
+
+export type GreenH2oBatchResponse = {
+  disclaimer: string;
+  total: number;
+  succeeded: number;
+  failed: number;
+  items: Array<GreenH2oBatchSuccessItem | GreenBatchErrorItem>;
+  meta: ProtocolMeta;
+};

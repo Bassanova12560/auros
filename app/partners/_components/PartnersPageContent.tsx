@@ -26,8 +26,14 @@ export function PartnersPageContent() {
               {m.title}
             </h1>
             <p className="page-intro mt-6 max-w-xl text-lg">{m.subtitle}</p>
-            <div className="green-hub-fade-in-delay mt-10">
+            <div className="green-hub-fade-in-delay mt-10 flex flex-wrap gap-3">
               <PrimaryButton href="#contact">{m.cta}</PrimaryButton>
+              <Link
+                href="/partners/portal"
+                className="inline-flex items-center rounded-full border border-white/15 px-6 py-3 text-sm text-white/70 transition hover:border-white/30 hover:text-white"
+              >
+                {m.portalCta} →
+              </Link>
             </div>
           </div>
         </section>
@@ -81,6 +87,26 @@ export function PartnersPageContent() {
             </h2>
             <p className="mt-6 text-lg text-white/90">{m.integrationsBody}</p>
             <p className="mt-3 text-xs text-secondary">{m.integrationsNote}</p>
+            <div className="mt-6 flex flex-wrap justify-center gap-4 text-sm">
+              <Link
+                href="/eau"
+                className="text-white/70 underline hover:text-white"
+              >
+                {m.integrationsEauLink} →
+              </Link>
+              <Link
+                href="/eau/embed/docs"
+                className="text-white/70 underline hover:text-white"
+              >
+                {m.integrationsEmbedLink} →
+              </Link>
+              <Link
+                href="/partners/portal"
+                className="text-white/70 underline hover:text-white"
+              >
+                {m.portalCta} →
+              </Link>
+            </div>
           </div>
         </section>
 

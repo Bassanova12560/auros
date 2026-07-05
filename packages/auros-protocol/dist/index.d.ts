@@ -412,6 +412,47 @@ type GreenCqsBatchResponse = {
     items: Array<GreenCqsBatchSuccessItem | GreenBatchErrorItem>;
     meta: ProtocolMeta;
 };
+type H2oScoreTier = "high" | "mid" | "low";
+type H2oScore = {
+    rating: number;
+    tier: H2oScoreTier;
+    asset_class: string;
+    priority_keys: string[];
+    flow_m3_per_year: number | null;
+    concession_years: number | null;
+    passport_status: string;
+    passport_required: boolean;
+    passport_unlock_url: string;
+    preview_id: string;
+};
+type GreenH2oPublicResponse = {
+    ok: true;
+    id: string;
+    name: string;
+    h2o_score: H2oScore;
+    disclaimer: string;
+    batch_api: string;
+    passport_unlock: string;
+    docs: string;
+    generated_at: string;
+};
+type GreenH2oBatchRequest = {
+    items: GreenBatchItemInput[];
+};
+type GreenH2oBatchSuccessItem = {
+    index: number;
+    ok: true;
+    id: string | null;
+    h2o_score: H2oScore;
+};
+type GreenH2oBatchResponse = {
+    disclaimer: string;
+    total: number;
+    succeeded: number;
+    failed: number;
+    items: Array<GreenH2oBatchSuccessItem | GreenBatchErrorItem>;
+    meta: ProtocolMeta;
+};
 
 declare class AurosProtocol {
     private readonly apiKey;
@@ -450,6 +491,10 @@ declare class AurosProtocol {
     greenWattBatch(body: GreenWattBatchRequest): Promise<GreenWattBatchResponse>;
     /** Batch Carbon Quality Scores — up to 50 carbon credits per call (1 quota unit). */
     greenCarbonQualityBatch(body: GreenCqsBatchRequest): Promise<GreenCqsBatchResponse>;
+    /** Free public read — H₂O Score for a hydrological catalog reference. */
+    greenH2oScore(id: string): Promise<GreenH2oPublicResponse>;
+    /** Batch H₂O Scores — up to 50 hydrological assets per call (1 quota unit). */
+    greenH2oBatch(body: GreenH2oBatchRequest): Promise<GreenH2oBatchResponse>;
     private get;
     private getPublic;
     private post;
@@ -463,4 +508,4 @@ declare class AurosProtocolError extends Error {
     static fromResponse(status: number, body: ProtocolErrorBody): AurosProtocolError;
 }
 
-export { type AlertType, type AssetClass, type AssetType, AurosProtocol, AurosProtocolError, type AurosProtocolOptions, type CarbonQualityScore, type CarbonQualityTier, type ChecklistItem, type ChecklistRequest, type ChecklistResponse, type CompareCellHighlight, type CompareProduct, type CompareRequest, type CompareResponse, type CreateKeyRequest, type CreateKeyResponse, type DossierRequest, type DossierResponse, type DossierSection, type EuNexus, type GreenBatchErrorItem, type GreenBatchItemInput, type GreenCqsBatchRequest, type GreenCqsBatchResponse, type GreenCqsBatchSuccessItem, type GreenCqsPublicResponse, type GreenWattBatchRequest, type GreenWattBatchResponse, type GreenWattBatchSuccessItem, type GreenWattPublicResponse, type InvestorType, type IssuerType, type JurisdictionItem, type JurisdictionsAssetType, type JurisdictionsQuery, type JurisdictionsResponse, type MicaClassification, type MonitorRequest, type MonitorResponse, type ProductCategory, type ProductItem, type ProductsQuery, type ProductsResponse, type ProtocolErrorBody, type ProtocolMeta, type RecommendedJurisdiction, type RecommendedPlatform, type RiskTier, type ScoreBatchErrorItem, type ScoreBatchRequest, type ScoreBatchResponse, type ScoreBatchResultItem, type ScoreBatchSuccessItem, type ScoreBreakdown, type ScoreHistoryEntry, type ScoreHistoryResponse, type ScoreRequest, type ScoreResponse, type ScoreStatus, type WattScore, type WattScoreTier, type WebhookItem, type WebhookRegisterRequest, type WebhookRegisterResponse, type WebhooksListResponse, type WhitepaperStatus };
+export { type AlertType, type AssetClass, type AssetType, AurosProtocol, AurosProtocolError, type AurosProtocolOptions, type CarbonQualityScore, type CarbonQualityTier, type ChecklistItem, type ChecklistRequest, type ChecklistResponse, type CompareCellHighlight, type CompareProduct, type CompareRequest, type CompareResponse, type CreateKeyRequest, type CreateKeyResponse, type DossierRequest, type DossierResponse, type DossierSection, type EuNexus, type GreenBatchErrorItem, type GreenBatchItemInput, type GreenCqsBatchRequest, type GreenCqsBatchResponse, type GreenCqsBatchSuccessItem, type GreenCqsPublicResponse, type GreenH2oBatchRequest, type GreenH2oBatchResponse, type GreenH2oBatchSuccessItem, type GreenH2oPublicResponse, type GreenWattBatchRequest, type GreenWattBatchResponse, type GreenWattBatchSuccessItem, type GreenWattPublicResponse, type H2oScore, type H2oScoreTier, type InvestorType, type IssuerType, type JurisdictionItem, type JurisdictionsAssetType, type JurisdictionsQuery, type JurisdictionsResponse, type MicaClassification, type MonitorRequest, type MonitorResponse, type ProductCategory, type ProductItem, type ProductsQuery, type ProductsResponse, type ProtocolErrorBody, type ProtocolMeta, type RecommendedJurisdiction, type RecommendedPlatform, type RiskTier, type ScoreBatchErrorItem, type ScoreBatchRequest, type ScoreBatchResponse, type ScoreBatchResultItem, type ScoreBatchSuccessItem, type ScoreBreakdown, type ScoreHistoryEntry, type ScoreHistoryResponse, type ScoreRequest, type ScoreResponse, type ScoreStatus, type WattScore, type WattScoreTier, type WebhookItem, type WebhookRegisterRequest, type WebhookRegisterResponse, type WebhooksListResponse, type WhitepaperStatus };
