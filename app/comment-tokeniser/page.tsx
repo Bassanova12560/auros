@@ -25,7 +25,7 @@ export default function CommentTokeniserHubPage() {
       </h1>
       <p className="mt-4 text-lg text-white/55">
         Guides indicatifs par classe d&apos;actif — chaque parcours préremplit le wizard dossier
-        AUROS (immobilier, art, fonds, obligations, crédit privé, énergie). Indicatif uniquement,
+        AUROS (immobilier, art, fonds, obligations, crédit privé, énergie et eau). Indicatif uniquement,
         sans engagement.
       </p>
       <ul className="mt-10 space-y-4">

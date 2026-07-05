@@ -6,13 +6,23 @@ export type CommentTokeniserSlug =
   | "fonds"
   | "obligations"
   | "credit-prive"
-  | "energie";
+  | "energie"
+  | "eau";
 
 export type CommentTokeniserLanding = {
   slug: CommentTokeniserSlug;
   wizardAssetType: string;
   defaultValueEur: number;
   defaultCountry: string;
+  /** Green wizard entry (?type=green&asset=renewable) for infra actifs */
+  greenWizard?: boolean;
+};
+
+export type CommentTokeniserRevenueLink = {
+  href: string;
+  label: string;
+  detail: string;
+  trackId: string;
 };
 
 export type CommentTokeniserCopy = {
@@ -27,6 +37,12 @@ export type CommentTokeniserCopy = {
   ctaEstimate: string;
   ctaJurisdictions: string;
   defaultDescription: string;
+  /** Max 3 paid AUROS paths — infrastructure landings only */
+  revenueLinks?: [
+    CommentTokeniserRevenueLink,
+    CommentTokeniserRevenueLink,
+    CommentTokeniserRevenueLink,
+  ];
 };
 
 const LANDINGS: CommentTokeniserLanding[] = [
@@ -65,6 +81,14 @@ const LANDINGS: CommentTokeniserLanding[] = [
     wizardAssetType: "Renewable energy",
     defaultValueEur: 4_000_000,
     defaultCountry: "France",
+    greenWizard: true,
+  },
+  {
+    slug: "eau",
+    wizardAssetType: "Renewable energy",
+    defaultValueEur: 3_500_000,
+    defaultCountry: "France",
+    greenWizard: true,
   },
 ];
 
@@ -511,6 +535,140 @@ const COPY: Record<CommentTokeniserSlug, Record<Locale, CommentTokeniserCopy>> =
       ctaJurisdictions: "Comparar jurisdicciones",
       defaultDescription:
         "Parque solar 25 MW en Francia, PPA firmado, SPV dedicado, reporting carbono en curso, inversores profesionales UE.",
+    },
+  },
+  eau: {
+    fr: {
+      title: "Comment tokeniser l'eau : droits, hydrique & blue bonds | AUROS",
+      description:
+        "Guide indicatif RWA hydrique : droits d'eau, dessalement, barrages, contrats m³ et Taxonomie EU — wizard AUROS, Watt Score et Label Green.",
+      h1: "Comment tokeniser un actif hydrique",
+      intro:
+        "L'eau tokenisée (droits d'usage, concessions, infra dessalement ou hydro) exige des flux mesurables et un cadre ESG crédible. AUROS structure le dossier indicatif en 4 parties — scoring Watt, RTMS et revue documentaire en option, sans promesse de déploiement on-chain.",
+      priorities: [
+        "Ancrer le contrat économique : volume m³/an, durée, indexation et contrepartie investisseur qualifié.",
+        "Préparer 3 pièces prioritaires : titre/concession, audit hydrologique, reporting eau & DNSH Taxonomie.",
+        "Tester le score d'admission et le Watt Score indicatif — revue humaine AUROS sur dossier soumis.",
+      ],
+      parts: [
+        { label: "Actif", detail: "Type hydrique, capacité m³, pays — ~2 min" },
+        { label: "Stratégie", detail: "Blue bond, SPV, investisseurs, calendrier" },
+        { label: "Conformité", detail: "MiCA, CSRD, data room, RTMS eau" },
+        { label: "Récap", detail: "Watt score, studio Green, PDF dossier" },
+      ],
+      ctaWizard: "Créer mon dossier hydrique",
+      ctaEstimate: "Score rapide gratuit",
+      ctaJurisdictions: "Comparer les juridictions",
+      defaultDescription:
+        "Concession eau potable 15 ans, débit contractuel 2 Mm³/an, SPV France, reporting hydrique et Taxonomie EU en cours, investisseurs institutionnels.",
+      revenueLinks: [
+        {
+          href: "/green/impact-report",
+          label: "Rapport d'impact hydrique",
+          detail: "PDF Taxonomie EU + RTMS — à partir de 49 €, indicatif.",
+          trackId: "impact_report",
+        },
+        {
+          href: "/green/label",
+          label: "Label Green Verified",
+          detail: "Revue documentaire complète du dossier infra — candidature en ligne.",
+          trackId: "green_label",
+        },
+        {
+          href: "/developers",
+          label: "API Watt Score",
+          detail: "Scoring batch solaire, éolien, hydro — clé API premium.",
+          trackId: "watt_api",
+        },
+      ],
+    },
+    en: {
+      title: "How to tokenize water assets: rights, hydro & blue bonds | AUROS",
+      description:
+        "Indicative water RWA guide: water rights, desalination, hydro, m³ contracts and EU Taxonomy — AUROS wizard, Watt Score and Green Label.",
+      h1: "How to tokenize water & hydrological assets",
+      intro:
+        "Tokenized water (usage rights, concessions, desalination or hydro infra) needs measurable flows and credible ESG framing. AUROS structures the indicative dossier in four parts — optional Watt scoring, RTMS and document review, no on-chain deployment promise.",
+      priorities: [
+        "Anchor the economic contract: m³/year volume, tenor, indexation and qualified-investor counterparty.",
+        "Prepare 3 priority documents: title/concession, hydrological audit, water & DNSH Taxonomy reporting.",
+        "Test admission score and indicative Watt Score — human AUROS review on submitted dossier.",
+      ],
+      parts: [
+        { label: "Asset", detail: "Water type, m³ capacity, country — ~2 min" },
+        { label: "Strategy", detail: "Blue bond, SPV, investors, timeline" },
+        { label: "Compliance", detail: "MiCA, CSRD, data room, water RTMS" },
+        { label: "Summary", detail: "Watt score, Green studio, PDF dossier" },
+      ],
+      ctaWizard: "Start my water dossier",
+      ctaEstimate: "Free quick score",
+      ctaJurisdictions: "Compare jurisdictions",
+      defaultDescription:
+        "15-year drinking-water concession, 2 Mm³/year contracted flow, France SPV, hydrological and EU Taxonomy reporting in progress, institutional investors.",
+      revenueLinks: [
+        {
+          href: "/green/impact-report",
+          label: "Hydrological impact report",
+          detail: "EU Taxonomy + RTMS PDF — from €49, indicative.",
+          trackId: "impact_report",
+        },
+        {
+          href: "/green/label",
+          label: "Green Verified label",
+          detail: "Full documentary review of infra dossier — apply online.",
+          trackId: "green_label",
+        },
+        {
+          href: "/developers",
+          label: "Watt Score API",
+          detail: "Batch scoring solar, wind, hydro — premium API key.",
+          trackId: "watt_api",
+        },
+      ],
+    },
+    es: {
+      title: "Cómo tokenizar el agua: derechos, hidráulica y blue bonds | AUROS",
+      description:
+        "Guía indicativa RWA hídrica: derechos de agua, desalinización, presas, contratos m³ y Taxonomía UE — wizard AUROS, Watt Score y Label Green.",
+      h1: "Cómo tokenizar un activo hídrico",
+      intro:
+        "El agua tokenizada (derechos de uso, concesiones, desalinización o infra hidro) exige flujos medibles y marco ESG creíble. AUROS estructura el dossier indicativo en 4 partes — scoring Watt, RTMS y revisión documental opcionales, sin promesa de despliegue on-chain.",
+      priorities: [
+        "Anclar el contrato económico: volumen m³/año, plazo, indexación e inversor cualificado.",
+        "Preparar 3 documentos prioritarios: título/concesión, auditoría hidrológica, reporting agua y DNSH Taxonomía.",
+        "Probar puntuación de admisión y Watt Score indicativo — revisión humana AUROS al enviar dossier.",
+      ],
+      parts: [
+        { label: "Activo", detail: "Tipo hídrico, capacidad m³, país — ~2 min" },
+        { label: "Estrategia", detail: "Blue bond, SPV, inversores, calendario" },
+        { label: "Cumplimiento", detail: "MiCA, CSRD, data room, RTMS agua" },
+        { label: "Resumen", detail: "Puntuación Watt, estudio Green, PDF dossier" },
+      ],
+      ctaWizard: "Crear mi dossier hídrico",
+      ctaEstimate: "Puntuación rápida gratis",
+      ctaJurisdictions: "Comparar jurisdicciones",
+      defaultDescription:
+        "Concesión agua potable 15 años, caudal contractual 2 Mm³/año, SPV Francia, reporting hídrico y Taxonomía UE en curso, inversores institucionales.",
+      revenueLinks: [
+        {
+          href: "/green/impact-report",
+          label: "Informe de impacto hídrico",
+          detail: "PDF Taxonomía UE + RTMS — desde 49 €, indicativo.",
+          trackId: "impact_report",
+        },
+        {
+          href: "/green/label",
+          label: "Label Green Verified",
+          detail: "Revisión documental completa del dossier infra — candidatura online.",
+          trackId: "green_label",
+        },
+        {
+          href: "/developers",
+          label: "API Watt Score",
+          detail: "Scoring batch solar, eólico, hidro — clave API premium.",
+          trackId: "watt_api",
+        },
+      ],
     },
   },
 };
