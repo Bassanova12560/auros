@@ -2,6 +2,21 @@ import { createClient, type PostgrestError, type SupabaseClient } from "@supabas
 
 import { isAcademyProduction } from "./security";
 
+/** In-memory replay guard when Supabase is unavailable (local dev / CI). */
+const devConsumedSessions = new Set<string>();
+
+function sessionKey(sessionId: string, kind: "challenge" | "renewal"): string {
+  return `${kind}:${sessionId}`;
+}
+
+function consumeInMemory(key: string): ConsumeSessionResult {
+  if (devConsumedSessions.has(key)) {
+    return { ok: false, reason: "already_used" };
+  }
+  devConsumedSessions.add(key);
+  return { ok: true };
+}
+
 function getAdminClient(): SupabaseClient | null {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL?.trim();
   const key = process.env.SUPABASE_SECRET_KEY?.trim();
@@ -37,13 +52,13 @@ export async function consumeAcademySession(
     return { ok: false, reason: "database_unavailable" };
   }
 
+  const key = sessionKey(sessionId, kind);
   const supabase = getAdminClient();
   if (!supabase) {
     if (isAcademyProduction()) {
       return { ok: false, reason: "database_unavailable" };
     }
-    console.warn("[academy] supabase env missing — dev skip consume");
-    return { ok: true };
+    return consumeInMemory(key);
   }
 
   try {
@@ -59,17 +74,20 @@ export async function consumeAcademySession(
     }
 
     if (isMissingTable(error) && !isAcademyProduction()) {
-      console.warn("[academy] consumed_sessions table missing — dev skip");
-      return { ok: true };
+      console.warn("[academy] consumed_sessions table missing — in-memory fallback");
+      return consumeInMemory(key);
     }
 
     console.error("[academy] consume session failed", error);
+    if (!isAcademyProduction()) {
+      return consumeInMemory(key);
+    }
     return { ok: false, reason: "database_unavailable" };
   } catch (err) {
     console.error("[academy] consume session error", err);
     if (isAcademyProduction()) {
       return { ok: false, reason: "database_unavailable" };
     }
-    return { ok: true };
+    return consumeInMemory(key);
   }
 }
