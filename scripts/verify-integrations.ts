@@ -105,6 +105,37 @@ async function main() {
       : "Webhook: not set (optional — leads still email)"
   );
 
+  const { data: leadCols, error: leadColsError } = await sb
+    .from("leads")
+    .select("referred_by, nurture_step, locale")
+    .limit(0);
+  if (leadColsError?.message?.includes("column")) {
+    console.error(
+      "Supabase WARN: leads nurture/partner columns missing — run migrations 0029–0032"
+    );
+  } else {
+    console.log("Supabase OK: leads.referred_by + nurture columns present");
+  }
+
+  const { error: dossierRefError } = await sb
+    .from("dossiers")
+    .select("referred_by")
+    .limit(0);
+  if (dossierRefError?.message?.includes("column")) {
+    console.error(
+      "Supabase WARN: dossiers.referred_by missing — run migration 0029/0030"
+    );
+  } else {
+    console.log("Supabase OK: dossiers.referred_by present");
+  }
+
+  const cron = process.env.CRON_SECRET?.trim();
+  console.log(
+    cron
+      ? "Cron: CRON_SECRET set (lead-nurture + Green crons)"
+      : "Cron: CRON_SECRET missing — Vercel crons will 401"
+  );
+
   console.log("\nAll integration checks passed.");
 }
 

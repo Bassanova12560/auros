@@ -141,6 +141,8 @@ Voir `docs/OPS-SOLO.md` — e-mail statut optionnel via script.
 
 ```bash
 npm run partner:pilot-kit          # PARTNER_CODE=... requis
+npm run partner:pilot-kit -- --email   # + CONTACT_NAME, COMPANY, LOCALE
+npm run ecosystem:check            # prod:check + verify:integrations
 npm run verify:integrations        # smoke intégrations optionnelles
 ```
 

@@ -13,6 +13,8 @@ export type PartnersMessages = {
   integrationsTitle: string;
   integrationsBody: string;
   integrationsNote: string;
+  integrationsEauLink: string;
+  integrationsEmbedLink: string;
   pricingTitle: string;
   tiers: Array<{
     name: string;
@@ -89,6 +91,8 @@ const FR: PartnersMessages = {
   integrationsBody:
     "Widget H₂O Score intégrable (iframe) — readiness hydrique gratuite, Passeport AUROS avec code partenaire `?partner=CODE`. Voir /eau/embed/docs.",
   integrationsNote: "Pas de promotion de marques tierces sans accord signé.",
+  integrationsEauLink: "Hub hydrique /eau",
+  integrationsEmbedLink: "Docs widget H₂O",
   pricingTitle: "Tarifs plateformes",
   tiers: [
     {
@@ -207,6 +211,8 @@ const EN: PartnersMessages = {
   integrationsBody:
     "Embeddable H₂O Score widget (iframe) — free hydrological preview, AUROS Passport with `?partner=CODE`. See /eau/embed/docs.",
   integrationsNote: "No third-party brands promoted without a signed agreement.",
+  integrationsEauLink: "Water hub /eau",
+  integrationsEmbedLink: "H₂O widget docs",
   pricingTitle: "Pricing for platforms",
   tiers: [
     {
@@ -288,6 +294,8 @@ const ES: PartnersMessages = {
   integrationsBody:
     "Widget H₂O Score integrable (iframe) — preview hídrico gratuito, Pasaporte AUROS con `?partner=CODE`. Ver /eau/embed/docs.",
   integrationsNote: "Sin promoción de marcas externas sin acuerdo firmado.",
+  integrationsEauLink: "Hub hídrico /eau",
+  integrationsEmbedLink: "Docs widget H₂O",
   pricingTitle: "Precios para plataformas",
   contactTitle: "Contacto",
   form: {

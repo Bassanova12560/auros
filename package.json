@@ -38,6 +38,7 @@
     "db:bootstrap:green": "npm run db:bootstrap:green-label && npm run db:bootstrap:green-registry && npm run db:bootstrap:green-phase3 && npm run db:bootstrap:green-market",
     "prod:check:http": "npx tsx scripts/prod-preflight.ts --http",
     "partner:pilot-kit": "npx tsx scripts/partner-pilot-kit.ts",
+    "ecosystem:check": "npm run prod:check && npm run verify:integrations",
     "seo:submit": "npx tsx scripts/seo-submit.ts",
     "listings:generate": "npx tsx scripts/listings/generate.ts"
   },

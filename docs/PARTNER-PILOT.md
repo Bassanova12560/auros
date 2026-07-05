@@ -18,6 +18,8 @@ Le code est **libre** — il suffit de l'utiliser dans les URLs. Aucune table d'
 
 ```bash
 PARTNER_CODE=UTILITIES_FR npm run partner:pilot-kit
+PARTNER_CODE=UTILITIES_FR CONTACT_NAME="Jean" COMPANY="Veolia" npm run partner:pilot-kit -- --email
+PARTNER_CODE=UTILITIES_FR npm run partner:pilot-kit -- --write
 ```
 
 Avec export fichier :
@@ -28,6 +30,12 @@ PARTNER_CODE=UTILITIES_FR SITE_URL=https://getauros.com npm run partner:pilot-ki
 ```
 
 Le kit contient : liens wizard, guide eau, embed, snippets iframe/JS, commandes curl, smoke tests.
+
+**Email pilote** (brouillon FR/EN/ES) :
+
+```bash
+PARTNER_CODE=UTILITIES_FR CONTACT_NAME="Marie" COMPANY="UtilityCo" LOCALE=fr npm run partner:pilot-kit -- --email
+```
 
 ---
 
