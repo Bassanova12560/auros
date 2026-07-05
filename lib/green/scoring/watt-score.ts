@@ -136,24 +136,21 @@ export function parseCapacityMwFromText(text: string): number | undefined {
   return undefined;
 }
 
-export function computeWattScoreForWizard(data: WizardData): WattScoreResult | null {
-  const text = [
-    data.description,
-    data.additionalNotes,
-    data.incomeDescription,
-    data.assetType,
-  ]
-    .filter(Boolean)
-    .join(" ");
+const ENERGY_TEXT_RE =
+  /solar|solaire|éolien|wind|hydro|mwh|kwh|rec|ppa|renewable|renouvelable|megapack|battery|batterie/;
 
+export type WattScoreTextHints = {
+  country?: string;
+  documentsCount?: number;
+};
+
+/** Free-text Watt Score — batch API and wizard reuse. */
+export function computeWattScoreFromText(
+  text: string,
+  hints: WattScoreTextHints = {}
+): WattScoreResult | null {
   const lower = text.toLowerCase();
-  const isEnergy =
-    data.assetType === GREEN_WIZARD_ASSET_TYPE ||
-    /solar|solaire|éolien|wind|hydro|mwh|kwh|rec|ppa|renewable|renouvelable|megapack|battery|batterie/.test(
-      lower
-    );
-
-  if (!isEnergy) return null;
+  if (!ENERGY_TEXT_RE.test(lower)) return null;
 
   const capacityMw = parseCapacityMwFromText(text) ?? 10;
   const isBattery = /megapack|battery|batterie|mwh|storage|stockage/.test(lower);
@@ -175,8 +172,8 @@ export function computeWattScoreForWizard(data: WizardData): WattScoreResult | n
   let rating = 45;
   if (/ppa|contrat|offtake/.test(lower)) rating += 15;
   if (/mwh|kwh|production|meter|compteur/.test(lower)) rating += 12;
-  if (data.country?.trim()) rating += 5;
-  if (data.documents?.filter((d) => d !== "none").length >= 2) rating += 8;
+  if (hints.country?.trim()) rating += 5;
+  if ((hints.documentsCount ?? 0) >= 2) rating += 8;
   rating = Math.max(0, Math.min(100, rating));
 
   return {
@@ -185,6 +182,28 @@ export function computeWattScoreForWizard(data: WizardData): WattScoreResult | n
     energy_value_eur: energy.energy_value_eur,
     tier: tierFromRating(rating),
   };
+}
+
+export function computeWattScoreForWizard(data: WizardData): WattScoreResult | null {
+  const text = [
+    data.description,
+    data.additionalNotes,
+    data.incomeDescription,
+    data.assetType,
+  ]
+    .filter(Boolean)
+    .join(" ");
+
+  const lower = text.toLowerCase();
+  const isEnergy =
+    data.assetType === GREEN_WIZARD_ASSET_TYPE || ENERGY_TEXT_RE.test(lower);
+
+  if (!isEnergy) return null;
+
+  return computeWattScoreFromText(text, {
+    country: data.country,
+    documentsCount: data.documents?.filter((d) => d !== "none").length,
+  });
 }
 
 export function formatWattScoreDisplay(rating: number | null): string {

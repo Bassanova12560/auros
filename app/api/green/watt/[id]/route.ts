@@ -1,11 +1,11 @@
 import { NextResponse } from "next/server";
 
 import { GREEN_COMPARE_ROWS } from "@/lib/green/compare-data";
-import { computeCarbonQualityForCompareRow } from "@/lib/green/scoring/carbon-quality";
+import { computeWattScoreForCompareRow } from "@/lib/green/scoring/watt-score";
 
 export const revalidate = 3600;
 
-/** Free public read — Carbon Quality Score for a catalog reference id. */
+/** Free public read — Watt Score for a catalog reference id. */
 export async function GET(
   _req: Request,
   ctx: { params: Promise<{ id: string }> }
@@ -16,10 +16,10 @@ export async function GET(
     return NextResponse.json({ ok: false, error: "not_found" }, { status: 404 });
   }
 
-  const result = computeCarbonQualityForCompareRow(row);
+  const result = computeWattScoreForCompareRow(row);
   if (!result) {
     return NextResponse.json(
-      { ok: false, error: "not_carbon_asset", id },
+      { ok: false, error: "not_energy_asset", id },
       { status: 422 }
     );
   }
@@ -28,12 +28,12 @@ export async function GET(
     ok: true,
     id,
     name: row.name,
-    carbon_quality: result,
+    watt_score: result,
     disclaimer:
-      "Indicative AUROS Carbon Quality Score — not a Verra/ICVCM certification.",
-    batch_api: "/api/v1/green/carbon-quality/batch",
-    companion_api: "/api/green/watt/{id}",
-    docs: "/developers/docs/endpoint-green-carbon-quality",
+      "Indicative AUROS Watt Score — energy value signal, not a production audit.",
+    batch_api: "/api/v1/green/watt/batch",
+    companion_api: "/api/green/carbon-quality/{id}",
+    docs: "/developers/docs/endpoint-green-watt",
     generated_at: new Date().toISOString(),
   });
 }
