@@ -4,9 +4,14 @@ import { describe, it } from "node:test";
 import {
   buildEauCheckApiSnippet,
   buildEauEmbedIframeSnippet,
+  buildEauEmbedScriptSnippet,
   buildEauEmbedUrl,
   buildHydrologicalPassportUrl,
 } from "@/lib/eau/embed";
+import {
+  AUROS_EMBED_SOURCE,
+  isAurosH2oEmbedEvent,
+} from "@/lib/eau/embed-events";
 
 describe("eau/embed", () => {
   const origin = "https://getauros.com";
@@ -35,5 +40,33 @@ describe("eau/embed", () => {
     const curl = buildEauCheckApiSnippet(origin);
     assert.match(curl, /\/api\/eau\/check/);
     assert.match(curl, /Mm³/);
+  });
+
+  it("generates JS embed snippet with postMessage listener", () => {
+    const html = buildEauEmbedScriptSnippet({ partner: "UTIL", origin });
+    assert.match(html, /auros-h2o-embed/);
+    assert.match(html, /auros:h2o:score/);
+    assert.match(html, /partner=UTIL/);
+    assert.match(html, /addEventListener\("message"/);
+  });
+});
+
+describe("eau/embed-events", () => {
+  it("recognizes AUROS embed postMessage payloads", () => {
+    assert.equal(
+      isAurosH2oEmbedEvent({
+        source: AUROS_EMBED_SOURCE,
+        type: "auros:h2o:score",
+        payload: {
+          rating: 72,
+          tier: "ready",
+          preview_id: "h2o-preview-abc",
+          asset_class: "concession",
+          passport_required: true,
+        },
+      }),
+      true,
+    );
+    assert.equal(isAurosH2oEmbedEvent({ foo: "bar" }), false);
   });
 });

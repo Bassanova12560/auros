@@ -38,9 +38,18 @@ async function main() {
     targets.sitemap,
     ...pages
       .filter((p) =>
-        ["/", "/about", "/academy", "/academy/fondamentaux", "/jurisdictions", "/jurisdictions/starter-kit"].includes(
-          p.path
-        )
+        [
+          "/",
+          "/about",
+          "/academy",
+          "/academy/fondamentaux",
+          "/jurisdictions",
+          "/jurisdictions/starter-kit",
+          "/eau",
+          "/eau/embed/docs",
+          "/comment-tokeniser/eau",
+          "/partners/portal",
+        ].includes(p.path)
       )
       .map((p) => p.canonicalUrl),
     ...pages

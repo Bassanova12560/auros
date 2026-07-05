@@ -116,6 +116,16 @@ var AurosProtocol = class {
   async greenCarbonQualityBatch(body) {
     return this.post("/api/v1/green/carbon-quality/batch", body);
   }
+  /** Free public read — H₂O Score for a hydrological catalog reference. */
+  async greenH2oScore(id) {
+    return this.getPublic(
+      `/api/green/h2o/${encodeURIComponent(id)}`
+    );
+  }
+  /** Batch H₂O Scores — up to 50 hydrological assets per call (1 quota unit). */
+  async greenH2oBatch(body) {
+    return this.post("/api/v1/green/h2o/batch", body);
+  }
   async get(path) {
     return this.request("GET", path);
   }

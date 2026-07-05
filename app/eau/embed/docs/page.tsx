@@ -11,6 +11,7 @@ import { EAU_EMBED_DOCS_ROUTE } from "@/lib/eau/constants";
 import {
   buildEauCheckApiSnippet,
   buildEauEmbedIframeSnippet,
+  buildEauEmbedScriptSnippet,
   buildEauEmbedUrl,
 } from "@/lib/eau/embed";
 import { getEauHubCopy } from "@/lib/eau/i18n";
@@ -24,6 +25,9 @@ const DOCS_COPY = {
     partnerLabel: "Code partenaire (optionnel)",
     partnerPlaceholder: "UTILITIES_FR",
     iframeTitle: "Snippet iframe",
+    scriptTitle: "Snippet JS (postMessage)",
+    scriptNote:
+      "Écoutez auros:h2o:score et auros:h2o:passport pour déclencher votre CRM ou analytics.",
     apiTitle: "API headless",
     preview: "Aperçu live",
     copy: "Copier",
@@ -36,6 +40,9 @@ const DOCS_COPY = {
     partnerLabel: "Partner code (optional)",
     partnerPlaceholder: "UTILITIES_UK",
     iframeTitle: "Iframe snippet",
+    scriptTitle: "JS snippet (postMessage)",
+    scriptNote:
+      "Listen for auros:h2o:score and auros:h2o:passport to wire your CRM or analytics.",
     apiTitle: "Headless API",
     preview: "Live preview",
     copy: "Copy",
@@ -48,6 +55,9 @@ const DOCS_COPY = {
     partnerLabel: "Código partner (opcional)",
     partnerPlaceholder: "UTILITIES_ES",
     iframeTitle: "Snippet iframe",
+    scriptTitle: "Snippet JS (postMessage)",
+    scriptNote:
+      "Escuche auros:h2o:score y auros:h2o:passport para conectar su CRM o analytics.",
     apiTitle: "API headless",
     preview: "Vista previa",
     copy: "Copiar",
@@ -65,6 +75,10 @@ export default function EauEmbedDocsPage() {
 
   const iframeSnippet = useMemo(
     () => buildEauEmbedIframeSnippet({ partner: partner || null, origin }),
+    [partner, origin]
+  );
+  const scriptSnippet = useMemo(
+    () => buildEauEmbedScriptSnippet({ partner: partner || null, origin }),
     [partner, origin]
   );
   const embedUrl = useMemo(
@@ -118,6 +132,23 @@ export default function EauEmbedDocsPage() {
           onClick={() => void copyText("iframe", iframeSnippet)}
         >
           {copied === "iframe" ? copy.copied : copy.copy}
+        </PrimaryButton>
+      </BezelCard>
+
+      <BezelCard className="mt-4" innerClassName="p-6">
+        <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/40">
+          {copy.scriptTitle}
+        </p>
+        <p className="mt-2 text-xs text-white/45">{copy.scriptNote}</p>
+        <pre className="mt-4 overflow-x-auto rounded-xl bg-black/50 p-4 text-xs text-cyan-100/80">
+          {scriptSnippet}
+        </pre>
+        <PrimaryButton
+          type="button"
+          className="mt-4"
+          onClick={() => void copyText("script", scriptSnippet)}
+        >
+          {copied === "script" ? copy.copied : copy.copy}
         </PrimaryButton>
       </BezelCard>
 

@@ -9,6 +9,10 @@ import { BezelCard } from "@/app/_components/ui/BezelCard";
 import { PrimaryButton } from "@/app/_components/ui/PrimaryButton";
 import { getEauHubCopy } from "@/lib/eau/i18n";
 import { buildHydrologicalPassportUrl } from "@/lib/eau/embed";
+import {
+  emitAurosH2oEmbedEvent,
+  h2oScoreToEmbedPayload,
+} from "@/lib/eau/embed-events";
 import { eauPassportUnlockPath } from "@/lib/eau/passport";
 import { computeH2oScoreFromText, type H2oScoreResult } from "@/lib/green/scoring/h2o-score";
 import { prefillFromCommentTokeniser } from "@/lib/comment-tokeniser/prefill";
@@ -35,6 +39,14 @@ export function H2oReadinessChecker({ mode = "hub", partnerCode }: Props) {
     capturePartnerFromSearchParams(new URLSearchParams(window.location.search));
   }, []);
 
+  useEffect(() => {
+    if (!isEmbed) return;
+    emitAurosH2oEmbedEvent({
+      type: "auros:h2o:ready",
+      partner: partnerCode ?? getPartnerCode() ?? undefined,
+    });
+  }, [isEmbed, partnerCode]);
+
   function handleCheck(e: FormEvent) {
     e.preventDefault();
     const trimmed = text.trim();
@@ -57,6 +69,12 @@ export function H2oReadinessChecker({ mode = "hub", partnerCode }: Props) {
     }
     setError(null);
     setResult(scored);
+    if (isEmbed) {
+      emitAurosH2oEmbedEvent({
+        type: "auros:h2o:score",
+        payload: h2oScoreToEmbedPayload(scored),
+      });
+    }
     track("h2o_score_preview", {
       locale,
       rating: scored.rating,
@@ -78,6 +96,12 @@ export function H2oReadinessChecker({ mode = "hub", partnerCode }: Props) {
       from: isEmbed ? "eau_embed" : "eau_checker",
       partner: partner ?? undefined,
     });
+    if (isEmbed) {
+      emitAurosH2oEmbedEvent({
+        type: "auros:h2o:passport",
+        payload: { partner: partner ?? undefined },
+      });
+    }
 
     const target = buildHydrologicalPassportUrl({ partner });
     if (isEmbed && typeof window !== "undefined") {

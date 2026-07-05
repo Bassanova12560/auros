@@ -40,6 +40,7 @@ export function PartnerPortalView() {
   const [snapshot, setSnapshot] = useState<PartnerPortalSnapshot | null>(null);
   const [copied, setCopied] = useState(false);
   const [copiedEmbed, setCopiedEmbed] = useState(false);
+  const [copiedIframe, setCopiedIframe] = useState(false);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -74,6 +75,17 @@ export function PartnerPortalView() {
       await navigator.clipboard.writeText(snapshot.embedUrl);
       setCopiedEmbed(true);
       setTimeout(() => setCopiedEmbed(false), 2000);
+    } catch {
+      // ignore
+    }
+  }
+
+  async function copyIframeSnippet() {
+    if (!snapshot?.embedIframeSnippet) return;
+    try {
+      await navigator.clipboard.writeText(snapshot.embedIframeSnippet);
+      setCopiedIframe(true);
+      setTimeout(() => setCopiedIframe(false), 2000);
     } catch {
       // ignore
     }
@@ -189,6 +201,13 @@ export function PartnerPortalView() {
                 className="rounded-full border border-white/15 px-5 py-2 text-sm text-white/70 transition hover:border-white/30 hover:text-white"
               >
                 {copiedEmbed ? m.copied : m.copyEmbed}
+              </button>
+              <button
+                type="button"
+                onClick={() => void copyIframeSnippet()}
+                className="rounded-full border border-white/15 px-5 py-2 text-sm text-white/70 transition hover:border-white/30 hover:text-white"
+              >
+                {copiedIframe ? m.copied : m.copyIframe}
               </button>
               <Link
                 href="/eau/embed/docs"

@@ -21,6 +21,7 @@ export type PartnerPortalMessages = {
   copyWizard: string;
   embedLink: string;
   copyEmbed: string;
+  copyIframe: string;
   eauGuideLink: string;
   copied: string;
   recentTitle: string;
@@ -58,6 +59,7 @@ const FR: PartnerPortalMessages = {
   copyWizard: "Copier le lien",
   embedLink: "Widget H₂O (iframe)",
   copyEmbed: "Copier l'embed",
+  copyIframe: "Copier le snippet iframe",
   eauGuideLink: "Guide tokeniser l'eau",
   copied: "Copié",
   recentTitle: "Activité récente",
@@ -95,6 +97,7 @@ const EN: PartnerPortalMessages = {
   copyWizard: "Copy link",
   embedLink: "H₂O widget (iframe)",
   copyEmbed: "Copy embed",
+  copyIframe: "Copy iframe snippet",
   eauGuideLink: "Water tokenization guide",
   copied: "Copied",
   recentTitle: "Recent activity",
@@ -132,6 +135,7 @@ const ES: PartnerPortalMessages = {
   copyWizard: "Copiar enlace",
   embedLink: "Widget H₂O (iframe)",
   copyEmbed: "Copiar embed",
+  copyIframe: "Copiar snippet iframe",
   eauGuideLink: "Guía tokenizar agua",
   copied: "Copiado",
   recentTitle: "Actividad reciente",
