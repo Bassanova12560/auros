@@ -39,6 +39,7 @@
     "prod:check:http": "npx tsx scripts/prod-preflight.ts --http",
     "partner:pilot-kit": "npx tsx scripts/partner-pilot-kit.ts",
     "ecosystem:check": "npm run prod:check && npm run verify:integrations",
+    "ecosystem:bootstrap": "echo 'POST /api/admin/bootstrap-ecosystem with CRON_SECRET'",
     "seo:submit": "npx tsx scripts/seo-submit.ts",
     "listings:generate": "npx tsx scripts/listings/generate.ts"
   },

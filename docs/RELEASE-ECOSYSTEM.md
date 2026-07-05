@@ -26,6 +26,14 @@ Cette release consolide le funnel RWA Green et positionne AUROS comme **infrastr
 1. `0031_green_label_payment.sql`
 2. `0032_leads_nurture.sql`
 3. `0033_green_water_infrastructure.sql`
+4. `0034_ecosystem_functional.sql` — partner codes, embed events, waitlists, label bucket
+
+Or automated (Bearer `CRON_SECRET`):
+
+```bash
+curl -X POST -H "Authorization: Bearer $CRON_SECRET" \
+  https://getauros.com/api/admin/bootstrap-ecosystem
+```
 
 **Tests :** 557 passent · `npm run prod:check -- --http` après deploy
 

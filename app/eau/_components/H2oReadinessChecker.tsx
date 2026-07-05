@@ -31,6 +31,8 @@ export function H2oReadinessChecker({ mode = "hub", partnerCode }: Props) {
   const router = useRouter();
   const [text, setText] = useState("");
   const [result, setResult] = useState<H2oScoreResult | null>(null);
+  const [verifyPath, setVerifyPath] = useState<string | null>(null);
+  const [checking, setChecking] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const isEmbed = mode === "embed";
 
@@ -47,15 +49,69 @@ export function H2oReadinessChecker({ mode = "hub", partnerCode }: Props) {
     });
   }, [isEmbed, partnerCode]);
 
-  function handleCheck(e: FormEvent) {
+  async function recordEmbedActivity(
+    event: "h2o_score" | "h2o_passport_cta",
+    scored?: H2oScoreResult,
+  ) {
+    const partner = partnerCode ?? getPartnerCode();
+    if (!partner) return;
+    try {
+      await fetch("/api/eau/embed-event", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          partner,
+          event,
+          rating: scored?.rating,
+          tier: scored?.tier,
+          preview_id: scored?.preview_id,
+          locale,
+        }),
+      });
+    } catch {
+      // non-blocking
+    }
+  }
+
+  async function handleCheck(e: FormEvent) {
     e.preventDefault();
     const trimmed = text.trim();
     if (trimmed.length < 10) {
       setError("Min 10 caractères / characters");
       setResult(null);
+      setVerifyPath(null);
       return;
     }
-    const scored = computeH2oScoreFromText(trimmed);
+    setChecking(true);
+    let scored: H2oScoreResult | null = null;
+    let nextVerifyPath: string | null = null;
+
+    try {
+      const res = await fetch("/api/eau/check", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: trimmed }),
+      });
+      const data = (await res.json()) as {
+        ok?: boolean;
+        h2o_score?: H2oScoreResult;
+        verify_preview_path?: string;
+        error?: string;
+      };
+      if (data.ok && data.h2o_score) {
+        scored = data.h2o_score;
+        nextVerifyPath = data.verify_preview_path ?? null;
+      }
+    } catch {
+      scored = computeH2oScoreFromText(trimmed);
+    }
+
+    if (!scored) {
+      scored = computeH2oScoreFromText(trimmed);
+    }
+
+    setChecking(false);
+
     if (!scored) {
       setError(
         locale === "en"
@@ -65,15 +121,18 @@ export function H2oReadinessChecker({ mode = "hub", partnerCode }: Props) {
             : "Non reconnu comme hydrique — mentionnez m³, concession, droits d'eau ou blue bond."
       );
       setResult(null);
+      setVerifyPath(null);
       return;
     }
     setError(null);
     setResult(scored);
+    setVerifyPath(nextVerifyPath);
     if (isEmbed) {
       emitAurosH2oEmbedEvent({
         type: "auros:h2o:score",
         payload: h2oScoreToEmbedPayload(scored),
       });
+      void recordEmbedActivity("h2o_score", scored);
     }
     track("h2o_score_preview", {
       locale,
@@ -101,6 +160,7 @@ export function H2oReadinessChecker({ mode = "hub", partnerCode }: Props) {
         type: "auros:h2o:passport",
         payload: { partner: partner ?? undefined },
       });
+      void recordEmbedActivity("h2o_passport_cta", result ?? undefined);
     }
 
     const target = buildHydrologicalPassportUrl({ partner });
@@ -133,7 +193,9 @@ export function H2oReadinessChecker({ mode = "hub", partnerCode }: Props) {
           className="w-full resize-y rounded-xl border border-white/10 bg-black/40 px-4 py-3 text-sm text-white/80 placeholder:text-white/30 focus:border-cyan-500/30 focus:outline-none"
         />
         {error ? <p className="text-sm text-red-400/90">{error}</p> : null}
-        <PrimaryButton type="submit">{copy.checkerCta}</PrimaryButton>
+        <PrimaryButton type="submit" disabled={checking}>
+          {checking ? "…" : copy.checkerCta}
+        </PrimaryButton>
       </form>
 
       {result ? (
@@ -148,6 +210,16 @@ export function H2oReadinessChecker({ mode = "hub", partnerCode }: Props) {
           <p className="mt-2 text-sm text-cyan-200/70">{copy.tierLabels[result.tier]}</p>
           {!isEmbed ? (
             <p className="mt-1 font-mono text-[10px] text-white/35">{result.preview_id}</p>
+          ) : null}
+          {verifyPath ? (
+            <Link
+              href={verifyPath}
+              target={isEmbed ? "_blank" : undefined}
+              rel={isEmbed ? "noopener noreferrer" : undefined}
+              className="mt-2 inline-block text-xs text-cyan-300/80 underline hover:text-cyan-200"
+            >
+              {locale === "en" ? "Verify preview link" : locale === "es" ? "Enlace verificación" : "Lien de vérification preview"}
+            </Link>
           ) : null}
 
           <ul className="mt-4 space-y-2">

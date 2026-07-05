@@ -5,15 +5,19 @@ import { WATER_COMPARE_ROWS } from "@/lib/green/water-compare-data";
 import { computeH2oScoreForCompareRow } from "@/lib/green/scoring/h2o-score";
 import { getEauHubCopy } from "@/lib/eau/i18n";
 import { eauHubUrl } from "@/lib/eau/passport";
+import { verifyH2oPreviewVerifyToken } from "@/lib/eau/preview-token";
 
 type Props = { params: Promise<{ previewId: string }> };
 
 export default async function EauVerifyPreviewPage({ params }: Props) {
-  const { previewId } = await params;
+  const { previewId: rawToken } = await params;
+  const token = decodeURIComponent(rawToken);
   const copy = getEauHubCopy("fr");
 
-  const refRow = WATER_COMPARE_ROWS.find((r) => `h2o-ref-${r.id}` === previewId);
-  const score = refRow ? computeH2oScoreForCompareRow(refRow) : null;
+  const refRow = WATER_COMPARE_ROWS.find((r) => `h2o-ref-${r.id}` === token);
+  const catalogScore = refRow ? computeH2oScoreForCompareRow(refRow) : null;
+  const signed = verifyH2oPreviewVerifyToken(token);
+  const score = catalogScore ?? signed;
 
   return (
     <FocusPageShell path="/eau" width="2xl">
@@ -21,7 +25,7 @@ export default async function EauVerifyPreviewPage({ params }: Props) {
         AUROS · H₂O preview
       </p>
       <h1 className="mt-4 font-display text-3xl font-semibold text-white">
-        {previewId}
+        {signed?.preview_id ?? (refRow ? refRow.name : copy.checkerTitle)}
       </h1>
 
       {score ? (
@@ -30,15 +34,30 @@ export default async function EauVerifyPreviewPage({ params }: Props) {
             {score.rating}
             <span className="text-lg text-white/40">/100</span>
           </p>
-          <p className="mt-2 text-sm text-white/50">{refRow!.name}</p>
+          <p className="mt-2 text-sm text-cyan-200/70">
+            {copy.tierLabels[score.tier]}
+          </p>
+          {refRow ? (
+            <p className="mt-2 text-sm text-white/50">{refRow.name}</p>
+          ) : signed ? (
+            <p className="mt-2 font-mono text-[10px] text-white/35">
+              {signed.preview_id}
+            </p>
+          ) : null}
           <p className="mt-4 text-xs text-amber-200/70">{copy.previewBadge}</p>
+          <p className="mt-3 text-xs text-white/45">{copy.passportRequired}</p>
+          <Link
+            href="/wizard?type=green&asset=renewable"
+            className="mt-4 inline-flex rounded-full bg-red-600 px-5 py-2.5 text-sm font-semibold text-white"
+          >
+            {copy.checkerPassportCta}
+          </Link>
         </div>
       ) : (
         <p className="mt-6 text-sm text-white/55">
-          Preview indicatif — le Passeport Hydrique vérifiable (registre public AUROS Green)
-          s&apos;obtient après dossier complet sur{" "}
-          <Link href="/comment-tokeniser/eau" className="text-white underline">
-            getauros.com
+          Lien expiré ou invalide — relancez un check sur{" "}
+          <Link href="/eau" className="text-white underline">
+            {eauHubUrl()}
           </Link>
           .
         </p>

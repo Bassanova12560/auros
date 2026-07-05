@@ -1,6 +1,8 @@
 import { buildEauEmbedUrl, buildEauEmbedIframeSnippet, buildEauEmbedScriptSnippet } from "@/lib/eau/embed";
 
+import { countPartnerEmbedEvents } from "./embed-events";
 import { maskPartnerEmail } from "./mask-email";
+import { validatePartnerCode } from "./partner-codes";
 import {
   listPartnerReferrals,
   type PartnerReferralRow,
@@ -26,9 +28,11 @@ export type PartnerPortalActivity = {
 
 export type PartnerPortalSnapshot = {
   partnerCode: string;
+  partnerLabel: string | null;
   leads: number;
   dossiers: number;
   submittedDossiers: number;
+  embedEvents: number;
   total: number;
   indicativeCommissionEur: number;
   wizardUrl: string;
@@ -38,6 +42,16 @@ export type PartnerPortalSnapshot = {
   eauGuideUrl: string;
   recent: PartnerPortalActivity[];
 };
+
+export type PartnerPortalLookupError =
+  | "invalid_code"
+  | "not_registered"
+  | "inactive"
+  | "unavailable";
+
+export type PartnerPortalLookup =
+  | { ok: true; snapshot: PartnerPortalSnapshot }
+  | { ok: false; error: PartnerPortalLookupError };
 
 function toActivity(row: PartnerReferralRow): PartnerPortalActivity {
   return {
@@ -68,9 +82,23 @@ export function estimateIndicativeCommission(
 export async function getPartnerPortalSnapshot(
   partnerCode: string,
   siteOrigin = "https://getauros.com",
-): Promise<PartnerPortalSnapshot | null> {
+): Promise<PartnerPortalLookup> {
   const code = partnerCode.trim().toUpperCase();
-  if (code.length < 2) return null;
+  if (code.length < 2) return { ok: false, error: "invalid_code" };
+
+  const codeCheck = await validatePartnerCode(code);
+  if (!codeCheck.ok) {
+    if (codeCheck.reason === "invalid_format") {
+      return { ok: false, error: "invalid_code" };
+    }
+    if (codeCheck.reason === "database_unavailable") {
+      return { ok: false, error: "unavailable" };
+    }
+    if (codeCheck.reason === "not_registered") {
+      return { ok: false, error: "not_registered" };
+    }
+    return { ok: false, error: "inactive" };
+  }
 
   const rows = await listPartnerReferrals(code);
   const filtered = rows.filter((r) => r.partnerCode === code);
@@ -79,6 +107,7 @@ export async function getPartnerPortalSnapshot(
   const submittedDossiers = filtered.filter(
     (r) => r.recordType === "dossier" && r.status === "submitted",
   ).length;
+  const embedEvents = (await countPartnerEmbedEvents(code)) ?? 0;
 
   const wizardUrl = new URL("/wizard", siteOrigin.replace(/\/$/, ""));
   wizardUrl.searchParams.set("partner", code);
@@ -88,21 +117,26 @@ export async function getPartnerPortalSnapshot(
   eauGuide.searchParams.set("partner", code);
 
   return {
-    partnerCode: code,
-    leads,
-    dossiers,
-    submittedDossiers,
-    total: leads + dossiers,
-    indicativeCommissionEur: estimateIndicativeCommission(
+    ok: true,
+    snapshot: {
+      partnerCode: code,
+      partnerLabel: codeCheck.label ?? null,
       leads,
       dossiers,
       submittedDossiers,
-    ),
-    wizardUrl: wizardUrl.toString(),
-    embedUrl: buildEauEmbedUrl({ partner: code, origin }),
-    embedIframeSnippet: buildEauEmbedIframeSnippet({ partner: code, origin }),
-    embedScriptSnippet: buildEauEmbedScriptSnippet({ partner: code, origin }),
-    eauGuideUrl: eauGuide.toString(),
-    recent: filtered.slice(0, 12).map(toActivity),
+      embedEvents,
+      total: leads + dossiers,
+      indicativeCommissionEur: estimateIndicativeCommission(
+        leads,
+        dossiers,
+        submittedDossiers,
+      ),
+      wizardUrl: wizardUrl.toString(),
+      embedUrl: buildEauEmbedUrl({ partner: code, origin }),
+      embedIframeSnippet: buildEauEmbedIframeSnippet({ partner: code, origin }),
+      embedScriptSnippet: buildEauEmbedScriptSnippet({ partner: code, origin }),
+      eauGuideUrl: eauGuide.toString(),
+      recent: filtered.slice(0, 12).map(toActivity),
+    },
   };
 }

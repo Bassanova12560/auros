@@ -2,6 +2,8 @@ import { createHash } from "node:crypto";
 
 import { siteOrigin } from "@/lib/emails/constants";
 
+import { createH2oPreviewVerifyToken } from "./preview-token";
+
 /** Stable preview id for a hydrological description (not a verified passport). */
 export function h2oPreviewId(text: string): string {
   const hash = createHash("sha256")
@@ -11,8 +13,15 @@ export function h2oPreviewId(text: string): string {
   return `h2o-preview-${hash}`;
 }
 
-export function eauPassportVerifyPath(previewId: string): string {
-  return `/eau/verify/${encodeURIComponent(previewId)}`;
+export function eauPassportVerifyPath(previewIdOrToken: string): string {
+  return `/eau/verify/${encodeURIComponent(previewIdOrToken)}`;
+}
+
+export function eauPassportVerifyPathForScore(
+  result: Parameters<typeof createH2oPreviewVerifyToken>[0],
+): string {
+  const token = createH2oPreviewVerifyToken(result);
+  return eauPassportVerifyPath(token);
 }
 
 export function eauHubUrl(): string {

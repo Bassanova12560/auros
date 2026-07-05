@@ -1,7 +1,9 @@
 import { NextResponse } from "next/server";
 
 import { computeH2oScoreFromText } from "@/lib/green/scoring/h2o-score";
-import { eauPassportVerifyPath } from "@/lib/eau/passport";
+import {
+  eauPassportVerifyPathForScore,
+} from "@/lib/eau/passport";
 
 export const runtime = "nodejs";
 
@@ -45,7 +47,7 @@ export async function POST(request: Request) {
   return NextResponse.json({
     ok: true,
     h2o_score: result,
-    verify_preview_path: eauPassportVerifyPath(result.preview_id),
+    verify_preview_path: eauPassportVerifyPathForScore(result),
     narrative:
       "Preview only. Platforms and investors will require a verifiable AUROS Hydrological Passport (dossier + optional Green Verified label) for listing-grade attestation.",
     generated_at: new Date().toISOString(),

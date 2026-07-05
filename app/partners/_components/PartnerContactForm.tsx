@@ -42,6 +42,7 @@ export function PartnerContactForm() {
   const [monthlyVolume, setMonthlyVolume] = useState("");
   const [message, setMessage] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   const handleSubmit = useCallback(
     async (e: FormEvent) => {
@@ -60,6 +61,7 @@ export function PartnerContactForm() {
       }
 
       setSubmitting(true);
+      setSubmitError(null);
       const result = await savePartnerAction({
         company: payload.companyName,
         contactName: payload.contactName,
@@ -75,9 +77,23 @@ export function PartnerContactForm() {
           companyName: payload.companyName,
           contactName: payload.contactName,
         });
+      } else {
+        setSubmitError(
+          result.error === "database"
+            ? (locale === "en"
+                ? "Submission failed — please try again."
+                : locale === "es"
+                  ? "Error al enviar — inténtelo de nuevo."
+                  : "Échec de l'envoi — réessayez.")
+            : (locale === "en"
+                ? "Invalid form — check required fields."
+                : locale === "es"
+                  ? "Formulario inválido."
+                  : "Formulaire invalide."),
+        );
       }
     },
-    [companyName, contactName, email, platformType, monthlyVolume, message]
+    [companyName, contactName, email, platformType, monthlyVolume, message, locale]
   );
 
   if (submitted) {
@@ -190,6 +206,11 @@ export function PartnerContactForm() {
       >
         {submitting ? f.submitting : f.submit}
       </button>
+      {submitError ? (
+        <p className="mt-3 text-sm text-amber-300/90" role="alert">
+          {submitError}
+        </p>
+      ) : null}
     </form>
   );
 }

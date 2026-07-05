@@ -50,14 +50,22 @@ export function PartnerPortalView() {
     setLoading(false);
     if (!result.ok) {
       setSnapshot(null);
-      setError(result.error === "invalid_code" ? m.invalidCode : m.unavailable);
+      setError(
+        result.error === "invalid_code"
+          ? m.invalidCode
+          : result.error === "not_registered"
+            ? m.notRegistered
+            : result.error === "inactive"
+              ? m.inactiveCode
+              : m.unavailable,
+      );
       return;
     }
     if (result.snapshot) {
       savePartnerCode(result.snapshot.partnerCode);
       setSnapshot(result.snapshot);
     }
-  }, [code, m.invalidCode, m.unavailable]);
+  }, [code, m.invalidCode, m.inactiveCode, m.notRegistered, m.unavailable]);
 
   async function copyWizardLink() {
     if (!snapshot?.wizardUrl) return;
@@ -117,6 +125,9 @@ export function PartnerPortalView() {
       <h1 className="mt-4 font-display text-4xl font-semibold tracking-tight text-white">
         {m.title}
       </h1>
+      {snapshot?.partnerLabel ? (
+        <p className="mt-2 font-mono text-sm text-cyan-300/70">{snapshot.partnerLabel}</p>
+      ) : null}
       <p className="mt-4 text-lg text-white/55">{m.intro}</p>
 
       <BezelCard className="mt-10" innerClassName="p-6 md:p-8" animate>
@@ -154,11 +165,12 @@ export function PartnerPortalView() {
             </BezelCard>
           ) : (
             <>
-              <div className="grid gap-3 sm:grid-cols-3">
+              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
                 {[
                   { label: m.statsLeads, value: snapshot.leads },
                   { label: m.statsDossiers, value: snapshot.dossiers },
                   { label: m.statsSubmitted, value: snapshot.submittedDossiers },
+                  { label: m.statsEmbed, value: snapshot.embedEvents },
                 ].map((stat) => (
                   <BezelCard key={stat.label} innerClassName="p-5" animate>
                     <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/40">

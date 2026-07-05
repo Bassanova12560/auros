@@ -9,12 +9,15 @@ export type PartnerPortalMessages = {
   submit: string;
   loading: string;
   invalidCode: string;
+  notRegistered: string;
+  inactiveCode: string;
   unavailable: string;
   emptyTitle: string;
   emptyBody: string;
   statsLeads: string;
   statsDossiers: string;
   statsSubmitted: string;
+  statsEmbed: string;
   indicativeLabel: string;
   indicativeDisclaimer: string;
   wizardLink: string;
@@ -46,6 +49,8 @@ const FR: PartnerPortalMessages = {
   submit: "Afficher mon activité",
   loading: "Chargement…",
   invalidCode: "Code invalide — 2 caractères minimum (lettres, chiffres, tiret).",
+  notRegistered: "Code non enregistré — contactez AUROS pour activer votre partenariat.",
+  inactiveCode: "Code désactivé — contactez votre référent AUROS.",
   unavailable: "Service temporairement indisponible. Réessayez plus tard.",
   emptyTitle: "Aucune attribution pour l'instant",
   emptyBody:
@@ -53,6 +58,7 @@ const FR: PartnerPortalMessages = {
   statsLeads: "Leads",
   statsDossiers: "Dossiers",
   statsSubmitted: "Soumis",
+  statsEmbed: "Events widget H₂O",
   indicativeLabel: "Commission indicative",
   indicativeDisclaimer:
     "Estimation non contractuelle — paliers selon accord partenaire signé.",
@@ -86,6 +92,8 @@ const EN: PartnerPortalMessages = {
   submit: "Show my activity",
   loading: "Loading…",
   invalidCode: "Invalid code — at least 2 alphanumeric characters.",
+  notRegistered: "Code not registered — contact AUROS to activate your partnership.",
+  inactiveCode: "Code deactivated — contact your AUROS representative.",
   unavailable: "Service temporarily unavailable. Please try again later.",
   emptyTitle: "No attributions yet",
   emptyBody:
@@ -93,6 +101,7 @@ const EN: PartnerPortalMessages = {
   statsLeads: "Leads",
   statsDossiers: "Dossiers",
   statsSubmitted: "Submitted",
+  statsEmbed: "H₂O widget events",
   indicativeLabel: "Indicative commission",
   indicativeDisclaimer: "Non-binding estimate — tiers per signed partner agreement.",
   wizardLink: "Partner wizard link",
@@ -125,6 +134,8 @@ const ES: PartnerPortalMessages = {
   submit: "Ver mi actividad",
   loading: "Cargando…",
   invalidCode: "Código inválido — mínimo 2 caracteres alfanuméricos.",
+  notRegistered: "Código no registrado — contacte AUROS para activar su partnership.",
+  inactiveCode: "Código desactivado — contacte a su referente AUROS.",
   unavailable: "Servicio no disponible temporalmente.",
   emptyTitle: "Sin atribuciones aún",
   emptyBody:
@@ -132,6 +143,7 @@ const ES: PartnerPortalMessages = {
   statsLeads: "Leads",
   statsDossiers: "Dossiers",
   statsSubmitted: "Enviados",
+  statsEmbed: "Eventos widget H₂O",
   indicativeLabel: "Comisión indicativa",
   indicativeDisclaimer: "Estimación no vinculante — según acuerdo firmado.",
   wizardLink: "Enlace wizard socio",

@@ -1,12 +1,16 @@
 "use server";
 
 import { normalizePartnerCode } from "@/lib/partner-attribution";
-import { getPartnerPortalSnapshot } from "@/lib/partners/portal-data";
+import {
+  getPartnerPortalSnapshot,
+  type PartnerPortalLookupError,
+  type PartnerPortalSnapshot,
+} from "@/lib/partners/portal-data";
 import { SITE_URL } from "@/lib/comparators/site";
 
 export type PartnerPortalLookupResult =
-  | { ok: true; snapshot: Awaited<ReturnType<typeof getPartnerPortalSnapshot>> }
-  | { ok: false; error: "invalid_code" | "unavailable" };
+  | { ok: true; snapshot: PartnerPortalSnapshot }
+  | { ok: false; error: PartnerPortalLookupError };
 
 export async function lookupPartnerPortalAction(
   rawCode: string,
@@ -14,8 +18,8 @@ export async function lookupPartnerPortalAction(
   const code = normalizePartnerCode(rawCode);
   if (!code) return { ok: false, error: "invalid_code" };
 
-  const snapshot = await getPartnerPortalSnapshot(code, SITE_URL);
-  if (!snapshot) return { ok: false, error: "invalid_code" };
+  const result = await getPartnerPortalSnapshot(code, SITE_URL);
+  if (!result.ok) return { ok: false, error: result.error };
 
-  return { ok: true, snapshot };
+  return { ok: true, snapshot: result.snapshot };
 }
