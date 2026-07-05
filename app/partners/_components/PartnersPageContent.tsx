@@ -26,8 +26,14 @@ export function PartnersPageContent() {
               {m.title}
             </h1>
             <p className="page-intro mt-6 max-w-xl text-lg">{m.subtitle}</p>
-            <div className="green-hub-fade-in-delay mt-10">
+            <div className="green-hub-fade-in-delay mt-10 flex flex-wrap gap-3">
               <PrimaryButton href="#contact">{m.cta}</PrimaryButton>
+              <Link
+                href="/partners/portal"
+                className="inline-flex items-center rounded-full border border-white/15 px-6 py-3 text-sm text-white/70 transition hover:border-white/30 hover:text-white"
+              >
+                {m.portalCta} →
+              </Link>
             </div>
           </div>
         </section>
