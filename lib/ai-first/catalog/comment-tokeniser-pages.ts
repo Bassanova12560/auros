@@ -16,9 +16,9 @@ export function buildCommentTokeniserHubPage(): AiFirstPage {
     path: COMMENT_TOKENISER_ROUTE,
     title: "Comment tokeniser mon actif | Guides AUROS",
     description:
-      "Guides indicatifs par type d'actif — immobilier, art, fonds. Préparez un dossier RWA crédible en 4 parties avec le wizard AUROS gratuit.",
+      "Guides indicatifs par type d'actif — immobilier, art, fonds, obligations, crédit privé et énergie. Préparez un dossier RWA crédible en 4 parties avec le wizard AUROS gratuit.",
     summary:
-      "Hub SEO AUROS — comment tokeniser immobilier, art ou fonds en Europe. Chaque guide mène au wizard avec préremplissage actif.",
+      "Hub SEO AUROS — comment tokeniser immobilier, art, fonds, obligations, crédit privé ou énergie en Europe. Chaque guide mène au wizard avec préremplissage actif.",
     contentType: "guide",
     language: "multi",
     indexable: true,
@@ -28,11 +28,17 @@ export function buildCommentTokeniserHubPage(): AiFirstPage {
       "tokenisation immobilier guide",
       "tokeniser oeuvre art",
       "tokeniser fonds RWA",
+      "tokeniser obligations",
+      "tokeniser crédit privé",
+      "tokeniser énergie renouvelable",
     ],
     intents: [
       "Comment tokeniser mon immeuble",
       "Comment tokeniser une collection d'art",
       "Comment tokeniser un fonds d'investissement",
+      "Comment tokeniser des obligations",
+      "Comment tokeniser du crédit privé",
+      "Comment tokeniser un parc solaire",
     ],
     audience: ["promoteurs", "family office", "émetteurs RWA", "counsel"],
     facts: landings.map((l) => ({

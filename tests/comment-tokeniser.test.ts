@@ -11,10 +11,11 @@ import { prefillFromCommentTokeniser } from "@/lib/comment-tokeniser/prefill";
 import { buildCommentTokeniserLandingPages } from "@/lib/ai-first/catalog/comment-tokeniser-pages";
 
 describe("comment-tokeniser/landings", () => {
-  it("lists three asset guides", () => {
+  it("lists six asset guides", () => {
     const landings = getAllCommentTokeniserLandings();
-    assert.equal(landings.length, 3);
+    assert.equal(landings.length, 6);
     assert.ok(landings.some((l) => l.slug === "immobilier"));
+    assert.ok(landings.some((l) => l.slug === "energie"));
   });
 
   it("resolves slug immobilier", () => {
@@ -47,12 +48,17 @@ describe("comment-tokeniser/prefill", () => {
     assert.equal(prefill.fromTool, "comment-tokeniser");
     assert.ok(prefill.description && prefill.description.length > 10);
   });
+
+  it("prefills wizard for credit-prive", () => {
+    const prefill = prefillFromCommentTokeniser("credit-prive", "en");
+    assert.equal(prefill.assetType, "Private equity / SME shares");
+  });
 });
 
 describe("comment-tokeniser/catalog", () => {
   it("exports indexable landing pages", () => {
     const pages = buildCommentTokeniserLandingPages();
-    assert.equal(pages.length, 3);
+    assert.equal(pages.length, 6);
     assert.ok(pages.every((p) => p.indexable));
   });
 });

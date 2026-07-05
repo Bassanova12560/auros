@@ -1,6 +1,12 @@
 import type { Locale } from "@/lib/i18n";
 
-export type CommentTokeniserSlug = "immobilier" | "art" | "fonds";
+export type CommentTokeniserSlug =
+  | "immobilier"
+  | "art"
+  | "fonds"
+  | "obligations"
+  | "credit-prive"
+  | "energie";
 
 export type CommentTokeniserLanding = {
   slug: CommentTokeniserSlug;
@@ -41,6 +47,24 @@ const LANDINGS: CommentTokeniserLanding[] = [
     wizardAssetType: "Other",
     defaultValueEur: 5_000_000,
     defaultCountry: "Luxembourg",
+  },
+  {
+    slug: "obligations",
+    wizardAssetType: "Other",
+    defaultValueEur: 3_000_000,
+    defaultCountry: "Luxembourg",
+  },
+  {
+    slug: "credit-prive",
+    wizardAssetType: "Private equity / SME shares",
+    defaultValueEur: 2_000_000,
+    defaultCountry: "Luxembourg",
+  },
+  {
+    slug: "energie",
+    wizardAssetType: "Renewable energy",
+    defaultValueEur: 4_000_000,
+    defaultCountry: "France",
   },
 ];
 
@@ -265,6 +289,228 @@ const COPY: Record<CommentTokeniserSlug, Record<Locale, CommentTokeniserCopy>> =
       ctaJurisdictions: "Comparar jurisdicciones",
       defaultDescription:
         "Fondo inmobiliario tokenizado, partes profesionales UE, folleto borrador, SPV Luxemburgo.",
+    },
+  },
+  obligations: {
+    fr: {
+      title: "Comment tokeniser des obligations ou titres de créance | AUROS",
+      description:
+        "Guide indicatif pour structurer un dossier RWA obligations en Europe : prospectus, data room, MiCA et admission plateforme — wizard AUROS gratuit.",
+      h1: "Comment tokeniser des obligations",
+      intro:
+        "Les obligations tokenisées relèvent souvent d'un cadre titres financiers. AUROS vous aide à préparer le dossier indicatif — qualification, data room et score d'admission — avant conseils et plateformes.",
+      priorities: [
+        "Confirmer la qualification (titres vs utility) et le profil investisseur cible.",
+        "Aligner prospectus / note d'information et 3 pièces prioritaires de la data room.",
+        "Comparer Luxembourg, Irlande ou Suisse selon délai et coût de structuration.",
+      ],
+      parts: [
+        { label: "Actif", detail: "Émission, nominal, devise — ~2 min" },
+        { label: "Stratégie", detail: "Distribution, liquidité, plateforme cible" },
+        { label: "Conformité", detail: "Prospectus, MiCA, KYC/AML émetteur" },
+        { label: "Récap", detail: "Score admission, studio, PDF dossier" },
+      ],
+      ctaWizard: "Créer mon dossier obligations",
+      ctaEstimate: "Score rapide gratuit",
+      ctaJurisdictions: "Comparer les juridictions",
+      defaultDescription:
+        "Émission obligataire corporate EU, investisseurs professionnels, prospectus brouillon, SPV Luxembourg, data room en cours.",
+    },
+    en: {
+      title: "How to tokenize bonds or debt securities | AUROS",
+      description:
+        "Indicative guide to structure a tokenized bonds RWA dossier in Europe — prospectus, data room, MiCA and platform admission score.",
+      h1: "How to tokenize bonds",
+      intro:
+        "Tokenized bonds often fall under securities regulation. AUROS helps prepare the indicative dossier — qualification, data room and admission score — before counsel and platforms.",
+      priorities: [
+        "Confirm qualification (securities vs utility) and target investor profile.",
+        "Align prospectus and 3 priority data room documents.",
+        "Compare Luxembourg, Ireland or Switzerland on timeline and structuring cost.",
+      ],
+      parts: [
+        { label: "Asset", detail: "Issuance, nominal, currency — ~2 min" },
+        { label: "Strategy", detail: "Distribution, liquidity, target platform" },
+        { label: "Compliance", detail: "Prospectus, MiCA, issuer KYC/AML" },
+        { label: "Summary", detail: "Admission score, studio, PDF dossier" },
+      ],
+      ctaWizard: "Start my bonds dossier",
+      ctaEstimate: "Free quick score",
+      ctaJurisdictions: "Compare jurisdictions",
+      defaultDescription:
+        "EU corporate bond issuance, professional investors, draft prospectus, Luxembourg SPV, data room in progress.",
+    },
+    es: {
+      title: "Cómo tokenizar bonos u obligaciones | AUROS",
+      description:
+        "Guía indicativa para estructurar un dossier RWA de bonos en Europa — folleto, data room, MiCA y puntuación de admisión.",
+      h1: "Cómo tokenizar obligaciones",
+      intro:
+        "Los bonos tokenizados suelen encajar en regulación de valores. AUROS ayuda a preparar el dossier indicativo antes de asesores y plataformas.",
+      priorities: [
+        "Confirmar calificación (valores vs utility) e inversor objetivo.",
+        "Alinear folleto y 3 documentos prioritarios de la data room.",
+        "Comparar Luxemburgo, Irlanda o Suiza según plazo y coste.",
+      ],
+      parts: [
+        { label: "Activo", detail: "Emisión, nominal, divisa — ~2 min" },
+        { label: "Estrategia", detail: "Distribución, liquidez, plataforma" },
+        { label: "Cumplimiento", detail: "Folleto, MiCA, KYC/AML emisor" },
+        { label: "Resumen", detail: "Puntuación, estudio, PDF dossier" },
+      ],
+      ctaWizard: "Crear mi dossier obligaciones",
+      ctaEstimate: "Puntuación rápida gratis",
+      ctaJurisdictions: "Comparar jurisdicciones",
+      defaultDescription:
+        "Emisión de bonos corporativos UE, inversores profesionales, folleto borrador, SPV Luxemburgo, data room en curso.",
+    },
+  },
+  "credit-prive": {
+    fr: {
+      title: "Comment tokeniser du crédit privé | AUROS",
+      description:
+        "Préparer un dossier RWA crédit privé : structuration, data room, MiCA et admission plateforme — parcours wizard AUROS gratuit.",
+      h1: "Comment tokeniser du crédit privé",
+      intro:
+        "Le crédit privé tokenisé combine structuration dette et conformité investisseurs qualifiés. AUROS structure l'amont réglementaire indicatif — sans promesse de déploiement on-chain.",
+      priorities: [
+        "Clarifier le véhicule (fonds dette, prêt direct, parts tokenisées) et la juridiction.",
+        "Préparer 3 pièces prioritaires : term sheet, KYC emprunteur, politique risque crédit.",
+        "Tester le score d'admission plateforme — indicatif, revue humaine AUROS.",
+      ],
+      parts: [
+        { label: "Actif", detail: "Type de dette, ticket, durée" },
+        { label: "Stratégie", detail: "Investisseurs cibles, rendement, plateforme" },
+        { label: "Conformité", detail: "MiCA, data room, profil investisseur qualifié" },
+        { label: "Récap", detail: "Score, studio réglementaire, PDF" },
+      ],
+      ctaWizard: "Créer mon dossier crédit privé",
+      ctaEstimate: "Score rapide gratuit",
+      ctaJurisdictions: "Comparer les juridictions",
+      defaultDescription:
+        "Fonds de crédit privé mid-market EU, parts professionnelles, term sheet brouillon, SPV Luxembourg, data room en cours.",
+    },
+    en: {
+      title: "How to tokenize private credit | AUROS",
+      description:
+        "Prepare a private credit RWA dossier: structuring, data room, MiCA and platform admission — free AUROS wizard.",
+      h1: "How to tokenize private credit",
+      intro:
+        "Tokenized private credit blends debt structuring and qualified-investor compliance. AUROS structures the indicative regulated upstream — no on-chain deployment promise.",
+      priorities: [
+        "Clarify vehicle (debt fund, direct loan, tokenized units) and jurisdiction.",
+        "Prepare 3 priority documents: term sheet, borrower KYC, credit risk policy.",
+        "Test platform admission score — indicative, human AUROS review.",
+      ],
+      parts: [
+        { label: "Asset", detail: "Debt type, ticket size, tenor" },
+        { label: "Strategy", detail: "Target investors, yield, platform" },
+        { label: "Compliance", detail: "MiCA, data room, qualified investor profile" },
+        { label: "Summary", detail: "Score, regulatory studio, PDF" },
+      ],
+      ctaWizard: "Start my private credit dossier",
+      ctaEstimate: "Free quick score",
+      ctaJurisdictions: "Compare jurisdictions",
+      defaultDescription:
+        "EU mid-market private credit fund, professional units, draft term sheet, Luxembourg SPV, data room in progress.",
+    },
+    es: {
+      title: "Cómo tokenizar crédito privado | AUROS",
+      description:
+        "Preparar dossier RWA crédito privado: estructuración, data room, MiCA y admisión plataforma — wizard AUROS gratuito.",
+      h1: "Cómo tokenizar crédito privado",
+      intro:
+        "El crédito privado tokenizado combina estructuración de deuda y cumplimiento para inversores cualificados. AUROS estructura la fase previa regulada indicativa.",
+      priorities: [
+        "Aclarar vehículo (fondo deuda, préstamo directo, participaciones tokenizadas) y jurisdicción.",
+        "Preparar 3 documentos prioritarios: term sheet, KYC prestatario, política de riesgo.",
+        "Probar puntuación de admisión — indicativo, revisión humana AUROS.",
+      ],
+      parts: [
+        { label: "Activo", detail: "Tipo de deuda, ticket, plazo" },
+        { label: "Estrategia", detail: "Inversores, rendimiento, plataforma" },
+        { label: "Cumplimiento", detail: "MiCA, data room, inversor cualificado" },
+        { label: "Resumen", detail: "Puntuación, estudio, PDF" },
+      ],
+      ctaWizard: "Crear mi dossier crédito privado",
+      ctaEstimate: "Puntuación rápida gratis",
+      ctaJurisdictions: "Comparar jurisdicciones",
+      defaultDescription:
+        "Fondo de crédito privado mid-market UE, partes profesionales, term sheet borrador, SPV Luxemburgo, data room en curso.",
+    },
+  },
+  energie: {
+    fr: {
+      title: "Comment tokeniser un actif énergie ou renouvelable | AUROS",
+      description:
+        "Guide indicatif RWA énergie : parc solaire, éolien, Green RTMS, data room et MiCA — wizard AUROS avec scoring Watt intégré.",
+      h1: "Comment tokeniser un actif énergie",
+      intro:
+        "L'énergie renouvelable tokenisée exige traçabilité technique et conformité Green. AUROS combine wizard dossier, score Watt et RTMS indicatif — déploiement on-chain chez plateformes et conseils.",
+      priorities: [
+        "Documenter la capacité installée, les contrats PPA/offtake et la localisation.",
+        "Préparer 3 pièces prioritaires : due diligence technique, KYC SPV, reporting carbone.",
+        "Explorer le score Watt et l'admission plateforme — indicatif, revue humaine AUROS.",
+      ],
+      parts: [
+        { label: "Actif", detail: "Technologie, MW, pays — ~2 min" },
+        { label: "Stratégie", detail: "Investisseurs, Green label, plateforme" },
+        { label: "Conformité", detail: "MiCA, CSRD, data room, RTMS" },
+        { label: "Récap", detail: "Watt score, studio Green, PDF dossier" },
+      ],
+      ctaWizard: "Créer mon dossier énergie",
+      ctaEstimate: "Score rapide gratuit",
+      ctaJurisdictions: "Comparer les juridictions",
+      defaultDescription:
+        "Parc solaire 25 MW en France, PPA signé, SPV dédié, reporting carbone en cours, investisseurs professionnels EU.",
+    },
+    en: {
+      title: "How to tokenize renewable energy assets | AUROS",
+      description:
+        "Indicative RWA energy guide: solar, wind, Green RTMS, data room and MiCA — AUROS wizard with integrated Watt scoring.",
+      h1: "How to tokenize energy assets",
+      intro:
+        "Tokenized renewable energy needs technical traceability and Green compliance. AUROS combines dossier wizard, Watt score and indicative RTMS — on-chain deployment stays with platforms and counsel.",
+      priorities: [
+        "Document installed capacity, PPA/offtake contracts and location.",
+        "Prepare 3 priority documents: technical due diligence, SPV KYC, carbon reporting.",
+        "Explore Watt score and platform admission — indicative, human AUROS review.",
+      ],
+      parts: [
+        { label: "Asset", detail: "Technology, MW, country — ~2 min" },
+        { label: "Strategy", detail: "Investors, Green label, platform" },
+        { label: "Compliance", detail: "MiCA, CSRD, data room, RTMS" },
+        { label: "Summary", detail: "Watt score, Green studio, PDF dossier" },
+      ],
+      ctaWizard: "Start my energy dossier",
+      ctaEstimate: "Free quick score",
+      ctaJurisdictions: "Compare jurisdictions",
+      defaultDescription:
+        "25 MW solar park in France, signed PPA, dedicated SPV, carbon reporting in progress, EU professional investors.",
+    },
+    es: {
+      title: "Cómo tokenizar activos de energía renovable | AUROS",
+      description:
+        "Guía indicativa RWA energía: solar, eólico, Green RTMS, data room y MiCA — wizard AUROS con puntuación Watt integrada.",
+      h1: "Cómo tokenizar activos de energía",
+      intro:
+        "La energía renovable tokenizada requiere trazabilidad técnica y cumplimiento Green. AUROS combina wizard dossier, puntuación Watt y RTMS indicativo.",
+      priorities: [
+        "Documentar capacidad instalada, contratos PPA/offtake y ubicación.",
+        "Preparar 3 documentos prioritarios: due diligence técnica, KYC SPV, reporting carbono.",
+        "Explorar puntuación Watt y admisión plataforma — indicativo, revisión humana AUROS.",
+      ],
+      parts: [
+        { label: "Activo", detail: "Tecnología, MW, país — ~2 min" },
+        { label: "Estrategia", detail: "Inversores, etiqueta Green, plataforma" },
+        { label: "Cumplimiento", detail: "MiCA, CSRD, data room, RTMS" },
+        { label: "Resumen", detail: "Puntuación Watt, estudio Green, PDF dossier" },
+      ],
+      ctaWizard: "Crear mi dossier energía",
+      ctaEstimate: "Puntuación rápida gratis",
+      ctaJurisdictions: "Comparar jurisdicciones",
+      defaultDescription:
+        "Parque solar 25 MW en Francia, PPA firmado, SPV dedicado, reporting carbono en curso, inversores profesionales UE.",
     },
   },
 };
