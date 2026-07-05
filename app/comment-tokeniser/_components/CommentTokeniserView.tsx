@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 import { MobilePageShell } from "@/app/_components/ui/MobilePageShell";
@@ -70,18 +71,18 @@ export function CommentTokeniserView({ landing }: { landing: CommentTokeniserLan
         <PrimaryButton type="button" onClick={startWizard}>
           {copy.ctaWizard}
         </PrimaryButton>
-        <a
+        <Link
           href="/estimate"
           className="inline-flex items-center rounded-full border border-white/15 px-6 py-3 text-sm text-white/70 transition hover:border-white/30 hover:text-white"
         >
           {copy.ctaEstimate}
-        </a>
-        <a
+        </Link>
+        <Link
           href="/jurisdictions"
           className="inline-flex items-center rounded-full border border-white/10 px-6 py-3 text-sm text-white/45 transition hover:border-white/25 hover:text-white/70"
         >
           {copy.ctaJurisdictions}
-        </a>
+        </Link>
       </div>
 
       <p className="mt-12 text-xs leading-relaxed text-white/35">

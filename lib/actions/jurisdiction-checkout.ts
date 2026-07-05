@@ -34,7 +34,7 @@ export async function createJurisdictionCheckoutAction(input: {
 
   let email = input.email?.trim().toLowerCase();
   let customerName: string | undefined;
-  let leadId = input.leadId;
+  const leadId = input.leadId;
 
   if (leadId) {
     const { data: lead } = await supabase
