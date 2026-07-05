@@ -44,6 +44,7 @@ export function buildEauHubPage(): AiFirstPage {
       "/green/label",
       "/green/impact-report",
       "/developers/docs/endpoint-green-h2o",
+      "/eau/embed/docs",
       "/glossary/tokenisation-eau",
     ],
   });

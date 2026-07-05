@@ -333,6 +333,22 @@ const batch = await client.greenCarbonQualityBatch({
         language: "bash",
       },
       {
+        heading: "Widget iframe partenaire",
+        paragraphs: [
+          "Intégrez le checker sur votre site — `GET /eau/embed?partner=CODE` (autorisé cross-origin via CSP `frame-ancestors *`).",
+          "Documentation copy-paste : /eau/embed/docs",
+        ],
+        code: `<iframe
+  src="${BASE}/eau/embed?partner=UTILITIES_FR"
+  title="AUROS H₂O Score"
+  width="420"
+  height="580"
+  style="border:0;border-radius:16px;"
+  loading="lazy"
+></iframe>`,
+        language: "html",
+      },
+      {
         heading: "POST check embed (gratuit)",
         paragraphs: [
           "Widget readiness — `POST /api/eau/check` avec `{ \"text\": \"...\" }` (min 10 caractères).",

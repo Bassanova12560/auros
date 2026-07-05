@@ -81,6 +81,12 @@ export function PartnersPageContent() {
             </h2>
             <p className="mt-6 text-lg text-white/90">{m.integrationsBody}</p>
             <p className="mt-3 text-xs text-secondary">{m.integrationsNote}</p>
+            <Link
+              href="/eau/embed/docs"
+              className="mt-6 inline-block text-sm text-white/70 underline hover:text-white"
+            >
+              H₂O widget →
+            </Link>
           </div>
         </section>
 

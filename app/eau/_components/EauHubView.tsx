@@ -23,6 +23,7 @@ export function EauHubView() {
     { href: GREEN_REGISTRY_ROUTE, label: copy.links.registry },
     { href: GREEN_LABEL_ROUTE, label: copy.links.label },
     { href: "/developers/docs/endpoint-green-h2o", label: copy.links.api },
+    { href: "/eau/embed/docs", label: copy.links.embed },
     { href: GREEN_IMPACT_REPORT_ROUTE, label: copy.links.impact },
   ];
 
