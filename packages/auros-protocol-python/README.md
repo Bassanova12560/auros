@@ -42,8 +42,8 @@ print(result["score"], result["grade"], result["mica_classification"])
 | `create_key(email)` | `POST /api/v1/keys` | None |
 | `green_watt_score(id)` | `GET /api/green/watt/{id}` | None |
 | `green_carbon_quality(id)` | `GET /api/green/carbon-quality/{id}` | None |
-| `green_watt_batch(**body)` | `POST /api/v1/green/watt/batch` | Bearer |
-| `green_carbon_quality_batch(**body)` | `POST /api/v1/green/carbon-quality/batch` | Bearer |
+| `green_watt_batch(**body)` | `POST /api/v1/green/watt/batch` | Bearer (premium) |
+| `green_carbon_quality_batch(**body)` | `POST /api/v1/green/carbon-quality/batch` | Bearer (premium) |
 
 ## Examples
 

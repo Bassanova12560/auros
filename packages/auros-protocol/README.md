@@ -61,8 +61,8 @@ console.log(api_key); // store securely — shown once
 | `createKey(body)` | `POST /api/v1/keys` | None |
 | `greenWattScore(id)` | `GET /api/green/watt/:id` | None |
 | `greenCarbonQuality(id)` | `GET /api/green/carbon-quality/:id` | None |
-| `greenWattBatch(body)` | `POST /api/v1/green/watt/batch` | Bearer |
-| `greenCarbonQualityBatch(body)` | `POST /api/v1/green/carbon-quality/batch` | Bearer |
+| `greenWattBatch(body)` | `POST /api/v1/green/watt/batch` | Bearer (premium) |
+| `greenCarbonQualityBatch(body)` | `POST /api/v1/green/carbon-quality/batch` | Bearer (premium) |
 
 ## Examples
 
@@ -116,7 +116,7 @@ const checklist = await client.checklist({
 ### Green Watt & CQS
 
 ```ts
-// Public reads — no API key required on these routes (client still needs a key for batch)
+// Public reads — no API key required on these routes (batch calls need a premium live key)
 const watt = await client.greenWattScore("sunexchange");
 console.log(watt.watt_score.rating, watt.watt_score.tier);
 

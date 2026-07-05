@@ -1044,6 +1044,8 @@ paths:
 
         **Partial success:** invalid items return `{ ok: false, error }` at their index.
 
+        **Premium:** requires `auros_pk_live_*` or paid tier (Monitor / enterprise). Free test keys → 403.
+
         **Quota:** counts as **1 request** against the monthly API key quota.
       requestBody:
         required: true
@@ -1066,6 +1068,8 @@ paths:
           $ref: "#/components/responses/ValidationError"
         "401":
           $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/PremiumRequired"
         "429":
           $ref: "#/components/responses/RateLimit"
   /api/green/carbon-quality/{id}:
@@ -1119,6 +1123,8 @@ paths:
 
         **Partial success:** invalid items return `{ ok: false, error }` at their index.
 
+        **Premium:** requires `auros_pk_live_*` or paid tier (Monitor / enterprise). Free test keys → 403.
+
         **Quota:** counts as **1 request** against the monthly API key quota.
       requestBody:
         required: true
@@ -1141,6 +1147,8 @@ paths:
           $ref: "#/components/responses/ValidationError"
         "401":
           $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/PremiumRequired"
         "429":
           $ref: "#/components/responses/RateLimit"
 components:

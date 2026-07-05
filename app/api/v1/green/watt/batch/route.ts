@@ -1,9 +1,11 @@
 import {
   authenticateProtocolRequest,
+  checkPremiumAccess,
   protocolError,
   protocolJson,
   protocolRoute,
 } from "@/lib/protocol";
+import { findKeyRecord } from "@/lib/protocol/auth/keys";
 import { logProtocolUsage } from "@/lib/protocol/usage/log";
 import { wattBatchRequestSchema } from "@/lib/green/schemas/watt-batch";
 import { resolveWattBatchItem } from "@/lib/green/scoring/watt-batch";
@@ -11,6 +13,11 @@ import { resolveWattBatchItem } from "@/lib/green/scoring/watt-batch";
 export const POST = protocolRoute(async (req: Request) => {
   const auth = await authenticateProtocolRequest(req);
   if (!auth.ok) return auth.response;
+
+  const rawKey = req.headers.get("authorization")?.slice(7).trim() ?? "";
+  const record = await findKeyRecord(auth.ctx.keyHash);
+  const premium = checkPremiumAccess(rawKey, record);
+  if (!premium.allowed) return premium.response;
 
   let body: unknown;
   try {
@@ -56,7 +63,7 @@ export const POST = protocolRoute(async (req: Request) => {
 
   return protocolJson({
     disclaimer:
-      "Indicative AUROS Watt Score — energy value signal, not a production audit. Batch endpoint requires API key.",
+      "Indicative AUROS Watt Score — energy value signal, not a production audit. Batch endpoint requires premium API key (live or Monitor tier).",
     total: results.length,
     succeeded,
     failed: results.length - succeeded,
