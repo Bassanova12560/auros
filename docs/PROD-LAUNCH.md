@@ -26,6 +26,7 @@ Rapport : `scripts/prod-preflight-report.txt`
 | # | Action | Doc |
 |---|--------|-----|
 | 1.1 | SQL Editor → coller `supabase/migrations/000_all_combined.sql` → **Run** | `docs/SUPABASE-SETUP.md` |
+| 1.1b | Puis migrations incrémentales **dans l'ordre** : `0029`–`0033` (partenaires, nurture, eau) | `docs/RELEASE-ECOSYSTEM.md` |
 | 1.2 | Vérifier tables : `dossiers`, `dossier_files`, `leads`, `concierge_requests`, `partner_requests`, `dossier_shares` | Table Editor |
 | 1.3 | Storage → bucket **`dossier-files`** (privé) | `docs/SUPABASE-STORAGE.md` |
 | 1.4 | Copier URL + `anon` + `service_role` → `.env.local` puis Vercel | Project Settings → API |
@@ -106,6 +107,17 @@ Cocher sur l’URL de production :
 - [ ] Partage lien dossier
 - [ ] Concierge (si score/valeur éligibles)
 - [ ] Pages legal / privacy / cookies
+- [ ] **Écosystème Green / Eau** — voir `docs/GREEN-BETA-CHECKLIST.md` + `docs/EAU-PILOT.md`
+- [ ] `/eau` + `/eau/embed` + `POST /api/eau/check`
+- [ ] `/partners/portal` — lookup code partenaire test
+- [ ] Green Label checkout 300 € (Stripe test puis live)
+- [ ] Lead nurture cron (`CRON_SECRET` + migration `0032`)
+
+Kit pilote partenaire :
+
+```bash
+PARTNER_CODE=VOTRE_CODE npm run partner:pilot-kit
+```
 
 ---
 
@@ -119,12 +131,29 @@ Voir `docs/OPS-SOLO.md` — e-mail statut optionnel via script.
 
 ---
 
-## 8. Optionnel plus tard
+## 8. Écosystème partenaires & eau
+
+| Doc | Usage |
+|-----|--------|
+| `docs/RELEASE-ECOSYSTEM.md` | Message release + checklist merge/deploy |
+| `docs/PARTNER-PILOT.md` | Onboarding utilities / cabinets |
+| `docs/EAU-PILOT.md` | Rail H₂O, APIs, embed |
+
+```bash
+npm run partner:pilot-kit          # PARTNER_CODE=... requis
+npm run verify:integrations        # smoke intégrations optionnelles
+```
+
+---
+
+## 9. Optionnel plus tard
 
 | Variable | Usage |
 |----------|--------|
 | `PARTNER_WEBHOOK_URL` | Notification externe à la soumission |
 | `PARTNER_WEBHOOK_SECRET` | Header `X-Auros-Secret` |
+| `CRON_SECRET` | Crons Vercel (nurture, Green, protocol) |
+| `STRIPE_SECRET_KEY` / `STRIPE_WEBHOOK_SECRET` | Green Label + jurisdictions |
 | `SENTRY_DSN` | Monitoring erreurs |
 
 ---
@@ -142,6 +171,9 @@ GEMINI_API_KEY                # ou GROQ_API_KEY au minimum
 RESEND_API_KEY
 RESEND_FROM_EMAIL
 RESEND_INTERNAL_EMAIL
+CRON_SECRET                   # crons Vercel
+STRIPE_SECRET_KEY             # Green Label + jurisdictions
+STRIPE_WEBHOOK_SECRET
 ```
 
 ---
@@ -155,3 +187,6 @@ RESEND_INTERNAL_EMAIL
 | IA toujours template | `AUROS_SIMULATION=true` ou clés IA absentes |
 | Clerk redirect loop | Domaine prod non ajouté dans Clerk |
 | Liens e-mail cassés | `NEXT_PUBLIC_SITE_URL` encore en localhost |
+| Portail partenaire vide | Migration `referred_by` manquante (`0029`/`0030`) |
+| Nurture ne part pas | `CRON_SECRET` absent ou migration `0032` |
+| Green Label échoue | `STRIPE_*` ou migration `0031` |

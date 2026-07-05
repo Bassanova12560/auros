@@ -1,4 +1,4 @@
-import { buildEauEmbedUrl, buildEauEmbedIframeSnippet } from "@/lib/eau/embed";
+import { buildEauEmbedUrl, buildEauEmbedIframeSnippet, buildEauEmbedScriptSnippet } from "@/lib/eau/embed";
 
 import { maskPartnerEmail } from "./mask-email";
 import {
@@ -34,6 +34,7 @@ export type PartnerPortalSnapshot = {
   wizardUrl: string;
   embedUrl: string;
   embedIframeSnippet: string;
+  embedScriptSnippet: string;
   eauGuideUrl: string;
   recent: PartnerPortalActivity[];
 };
@@ -100,6 +101,7 @@ export async function getPartnerPortalSnapshot(
     wizardUrl: wizardUrl.toString(),
     embedUrl: buildEauEmbedUrl({ partner: code, origin }),
     embedIframeSnippet: buildEauEmbedIframeSnippet({ partner: code, origin }),
+    embedScriptSnippet: buildEauEmbedScriptSnippet({ partner: code, origin }),
     eauGuideUrl: eauGuide.toString(),
     recent: filtered.slice(0, 12).map(toActivity),
   };
