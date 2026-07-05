@@ -5,6 +5,7 @@ export type PartnersMessages = {
   title: string;
   subtitle: string;
   cta: string;
+  portalCta: string;
   howTitle: string;
   steps: Array<{ number: string; title: string; description: string }>;
   receiveTitle: string;
@@ -43,6 +44,7 @@ const FR: PartnersMessages = {
   subtitle:
     "Recevez des dossiers pré-formatés de propriétaires qualifiés. Zéro développement côté plateforme.",
   cta: "Demander l'intégration",
+  portalCta: "Tableau de bord apporteur",
   howTitle: "Comment ça fonctionne",
   steps: [
     {
@@ -160,6 +162,7 @@ const EN: PartnersMessages = {
   subtitle:
     "Receive pre-formatted dossiers from qualified asset owners. Zero platform-side development.",
   cta: "Request integration",
+  portalCta: "Referral dashboard",
   howTitle: "How it works for platforms",
   steps: [
     {
@@ -278,6 +281,7 @@ const ES: PartnersMessages = {
   subtitle:
     "Reciba expedientes preformateados de propietarios cualificados. Sin desarrollo en su plataforma.",
   cta: "Solicitar integración",
+  portalCta: "Panel de referidos",
   howTitle: "Cómo funciona para plataformas",
   receiveTitle: "Lo que recibe",
   integrationsTitle: "Alianzas",
