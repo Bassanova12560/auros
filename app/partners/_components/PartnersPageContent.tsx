@@ -89,6 +89,12 @@ export function PartnersPageContent() {
                 Green API →
               </Link>
               <Link
+                href="/eau/embed/docs"
+                className="inline-flex items-center rounded-full border border-white/15 px-5 py-2.5 text-sm text-white/80 hover:border-white/30"
+              >
+                H₂O widget →
+              </Link>
+              <Link
                 href="/green/press"
                 className="inline-flex items-center rounded-full border border-white/15 px-5 py-2.5 text-sm text-white/80 hover:border-white/30"
               >

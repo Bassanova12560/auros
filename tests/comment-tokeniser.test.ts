@@ -7,21 +7,31 @@ import {
   getCommentTokeniserCopy,
   getCommentTokeniserLanding,
 } from "@/lib/comment-tokeniser/landings";
-import { prefillFromCommentTokeniser } from "@/lib/comment-tokeniser/prefill";
+import {
+  prefillFromCommentTokeniser,
+  wizardEntryPathForCommentTokeniser,
+} from "@/lib/comment-tokeniser/prefill";
 import { buildCommentTokeniserLandingPages } from "@/lib/ai-first/catalog/comment-tokeniser-pages";
 
 describe("comment-tokeniser/landings", () => {
-  it("lists six asset guides", () => {
+  it("lists seven asset guides including eau", () => {
     const landings = getAllCommentTokeniserLandings();
-    assert.equal(landings.length, 6);
+    assert.equal(landings.length, 7);
     assert.ok(landings.some((l) => l.slug === "immobilier"));
     assert.ok(landings.some((l) => l.slug === "energie"));
+    assert.ok(landings.some((l) => l.slug === "eau"));
   });
 
   it("resolves slug immobilier", () => {
     const landing = getCommentTokeniserLanding("immobilier");
     assert.ok(landing);
     assert.equal(landing!.wizardAssetType, "Real estate");
+  });
+
+  it("marks infra landings as green wizard entry", () => {
+    assert.equal(getCommentTokeniserLanding("eau")!.greenWizard, true);
+    assert.equal(getCommentTokeniserLanding("energie")!.greenWizard, true);
+    assert.equal(getCommentTokeniserLanding("immobilier")!.greenWizard, undefined);
   });
 
   it("returns null for unknown slug", () => {
@@ -36,8 +46,18 @@ describe("comment-tokeniser/landings", () => {
     }
   });
 
+  it("includes revenue links on eau landing only", () => {
+    const eau = getCommentTokeniserCopy("eau", "fr");
+    assert.equal(eau.revenueLinks?.length, 3);
+    assert.ok(eau.revenueLinks?.some((l) => l.href === "/eau"));
+
+    const immo = getCommentTokeniserCopy("immobilier", "fr");
+    assert.equal(immo.revenueLinks, undefined);
+  });
+
   it("builds paths", () => {
     assert.equal(commentTokeniserPath("fonds"), "/comment-tokeniser/fonds");
+    assert.equal(commentTokeniserPath("eau"), "/comment-tokeniser/eau");
   });
 });
 
@@ -53,12 +73,27 @@ describe("comment-tokeniser/prefill", () => {
     const prefill = prefillFromCommentTokeniser("credit-prive", "en");
     assert.equal(prefill.assetType, "Private equity / SME shares");
   });
+
+  it("prefills water dossier with renewable asset type", () => {
+    const prefill = prefillFromCommentTokeniser("eau", "fr");
+    assert.equal(prefill.assetType, "Renewable energy");
+    assert.match(prefill.description ?? "", /m³|eau|hydrique/i);
+  });
+
+  it("routes infra landings to green wizard entry", () => {
+    assert.equal(
+      wizardEntryPathForCommentTokeniser("eau"),
+      "/wizard?type=green&asset=renewable"
+    );
+    assert.equal(wizardEntryPathForCommentTokeniser("immobilier"), "/wizard");
+  });
 });
 
 describe("comment-tokeniser/catalog", () => {
   it("exports indexable landing pages", () => {
     const pages = buildCommentTokeniserLandingPages();
-    assert.equal(pages.length, 6);
+    assert.equal(pages.length, 7);
     assert.ok(pages.every((p) => p.indexable));
+    assert.ok(pages.some((p) => p.path === "/comment-tokeniser/eau"));
   });
 });

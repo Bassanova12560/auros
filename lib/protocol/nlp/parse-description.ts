@@ -53,6 +53,13 @@ function detectAssetType(lower: string): ParsedAssetType {
   if (/gold|commodit|mati[eè]re|silver|oil/.test(lower)) {
     return "commodities";
   }
+  if (
+    /eau|water|hydrique|hydrological|concession\s+eau|water\s*rights|desal|dessalement|blue\s*bond|irrigation|potable|m³|m3/.test(
+      lower
+    )
+  ) {
+    return "commodities";
+  }
   if (/stablecoin|usdc|usdt|eurc/.test(lower)) {
     return "stablecoins";
   }

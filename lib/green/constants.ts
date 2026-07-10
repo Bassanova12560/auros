@@ -60,4 +60,4 @@ export type GreenLabelStatus = "certified" | "in_review" | "reference" | "not_la
 
 export type GreenLabelTier = "verified" | "pilot";
 
-export type GreenProjectType = "solar" | "wind" | "rec" | "carbon" | "ppa" | "other";
+export type GreenProjectType = "solar" | "wind" | "rec" | "carbon" | "ppa" | "water" | "other";

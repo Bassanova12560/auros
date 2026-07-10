@@ -137,7 +137,7 @@ export function parseCapacityMwFromText(text: string): number | undefined {
 }
 
 const ENERGY_TEXT_RE =
-  /solar|solaire|éolien|wind|hydro|mwh|kwh|rec|ppa|renewable|renouvelable|megapack|battery|batterie/;
+  /solar|solaire|éolien|wind|hydro|eau|water|m³|m3|desal|dessalement|hydrique|hydrological|mwh|kwh|rec|ppa|renewable|renouvelable|megapack|battery|batterie/;
 
 export type WattScoreTextHints = {
   country?: string;

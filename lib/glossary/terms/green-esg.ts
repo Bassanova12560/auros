@@ -188,10 +188,27 @@ export const GREEN_ESG_TERMS: GlossaryTerm[] = [
       "Représentation on-chain de droits sur production, PPA, certificats ou projets renouvelables.",
     extended:
       "La tokenisation énergie vise financement de parcs, liquidité sur créances PPA ou traçabilité REC. AUROS Green est dédié à ce segment avec marketplace, registre et label. L'ancrage contractuel et la mesure production priment sur le seul déploiement smart contract.",
-    relatedTerms: ["ppa-power-purchase", "rtms", "rwa-real-world-asset"],
+    relatedTerms: ["ppa-power-purchase", "rtms", "rwa-real-world-asset", "tokenisation-eau"],
     internalLinks: [
       { href: "/green/market", label: "Marketplace Green" },
       { href: "/green/register", label: "Registre projets" },
+      { href: "/comment-tokeniser/energie", label: "Guide tokeniser énergie" },
+    ],
+  },
+  {
+    slug: "tokenisation-eau",
+    title: "Tokenisation hydrique",
+    category: "green-esg",
+    shortDefinition:
+      "Représentation on-chain de droits d'eau, concessions, flux m³ ou infra dessalement / hydro.",
+    extended:
+      "La tokenisation eau combine contrats long terme sur volumes, reporting hydrique et critères Taxonomie (DNSH eau). AUROS structure le dossier RWA amont : wizard Green, Watt Score (hydro), rapport d'impact et Label Verified en option. Pas de promesse de liquidité secondaire ni d'agrément régulateur.",
+    relatedTerms: ["tokenisation-energie", "rtms", "green-bond", "taxonomie-europeenne"],
+    internalLinks: [
+      { href: "/eau", label: "Passeport Hydrique AUROS" },
+      { href: "/comment-tokeniser/eau", label: "Guide tokeniser l'eau" },
+      { href: "/green/impact-report", label: "Rapport d'impact Green" },
+      { href: "/green/label", label: "Label Green Verified" },
     ],
   },
   {

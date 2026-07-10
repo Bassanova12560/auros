@@ -44,6 +44,20 @@ export const GREEN_REGISTRY_PILOT_ENTRIES: GreenRegistryProjectRow[] = [
       es: "Caso piloto REC hidro — trazabilidad certificados verdes, label Verified AUROS Green.",
     },
   },
+  {
+    id: "pilot-registry-water-concession",
+    name: "Concession eau potable — Pilote RTMS",
+    projectType: "water",
+    country: "France",
+    labelTier: "verified",
+    certifiedAt: "2026-07-01T00:00:00Z",
+    verifyToken: "ag-pilot-water-fr-2026",
+    summaries: {
+      fr: "Cas pilote hydrique AUROS — concession eau potable, débit contractuel m³/an, reporting DNSH eau et Passeport Hydrique vérifiable.",
+      en: "AUROS water pilot — drinking-water concession, contracted m³/year flow, water DNSH reporting and verifiable Hydrological Passport.",
+      es: "Piloto hídrico AUROS — concesión agua potable, caudal contractual m³/año, reporting DNSH agua y Pasaporte Hídrico verificable.",
+    },
+  },
 ];
 
 export const GREEN_REGISTRY_PILOT_HEADER_FR =

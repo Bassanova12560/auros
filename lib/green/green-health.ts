@@ -10,6 +10,8 @@ export const GREEN_HEALTH_PATHS = [
   "/green/press",
   "/green/registry-connect",
   "/green/dpp",
+  "/eau",
+  "/comment-tokeniser/eau",
   "/data/green-index",
   "/data/nature-score",
 ] as const;

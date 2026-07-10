@@ -10,7 +10,9 @@ describe("green/health-paths", () => {
     assert.ok(GREEN_HEALTH_PATHS.includes("/green/api"));
     assert.ok(GREEN_HEALTH_PATHS.includes("/green/press"));
     assert.ok(GREEN_HEALTH_PATHS.includes("/data/nature-score"));
-    assert.ok(GREEN_HEALTH_PATHS.length >= 10);
+    assert.ok(GREEN_HEALTH_PATHS.includes("/eau"));
+    assert.ok(GREEN_HEALTH_PATHS.includes("/comment-tokeniser/eau"));
+    assert.ok(GREEN_HEALTH_PATHS.length >= 12);
   });
 });
 
