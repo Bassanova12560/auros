@@ -48,9 +48,18 @@ Copier **toutes** les valeurs de `.env.local` :
 Mettre à jour une variable en CLI :
 
 ```bash
+npm run green:sync-clerk   # pk/sk + URLs depuis .env.local → Vercel prod + preview
+npm run green:sync-stripe  # Stripe depuis .env.local → Vercel prod
+```
+
+Ou manuellement :
+
+```bash
 npx vercel env add NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY production
 npx vercel env add CLERK_SECRET_KEY production
 ```
+
+**Instance dev + domaine custom** : si vous n'avez que `pk_test_`, ajoutez `https://getauros.com` dans Clerk → Configure → Allowed origins (ou `npm run green:sync-clerk` après PATCH API).
 
 Puis **Redeploy** (obligatoire après changement de clés).
 
