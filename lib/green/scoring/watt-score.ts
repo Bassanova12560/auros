@@ -53,6 +53,12 @@ const DEFAULTS: Record<
     life_years: 15,
     energy_price_eur_per_kwh: 0.11,
   },
+  water: {
+    capacity_mw: 2,
+    sun_hours_per_year: 8000,
+    life_years: 25,
+    energy_price_eur_per_kwh: 0.05,
+  },
 };
 
 function tierFromRating(rating: number): WattScoreResult["tier"] {
@@ -109,6 +115,7 @@ function ratingForCompareRow(row: GreenCompareRow): number {
 
   if (row.type === "solar") rating += 4;
   if (row.type === "rec") rating += 2;
+  if (row.type === "water") rating += 3;
 
   return Math.max(0, Math.min(100, Math.round(rating)));
 }

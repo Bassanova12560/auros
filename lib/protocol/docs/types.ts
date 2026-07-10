@@ -2,7 +2,7 @@ export type ProtocolDocSection = {
   heading: string;
   paragraphs: string[];
   code?: string;
-  language?: "bash" | "typescript" | "python" | "json";
+  language?: "bash" | "typescript" | "python" | "json" | "html";
   links?: { href: string; label: string }[];
 };
 

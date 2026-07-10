@@ -217,6 +217,44 @@ export const AUROS_MCP_TOOLS = [
       client.greenCarbonQualityBatch(args),
   },
   {
+    name: "green_h2o_score",
+    description:
+      "Free public H₂O Score (0–100) for a hydrological catalog reference (concession, water rights, desalination, blue bond). No auth required.",
+    schema: {
+      id: z.string().describe("Hydrological compare reference id, e.g. pilot-concession-france"),
+    },
+    handler: (client: AurosApiClient, args: Record<string, unknown>) =>
+      client.greenH2oScore(String(args.id)),
+  },
+  {
+    name: "green_h2o_batch",
+    description:
+      "Batch H₂O Scores for hydrological assets (premium key required). Each item: id (catalog ref) or text (free-form). Counts as 1 quota unit.",
+    schema: {
+      items: z
+        .array(
+          z.object({
+            id: z.string().optional(),
+            text: z.string().min(10).optional(),
+          })
+        )
+        .min(1)
+        .max(50),
+    },
+    handler: (client: AurosApiClient, args: Record<string, unknown>) =>
+      client.greenH2oBatch(args),
+  },
+  {
+    name: "eau_check",
+    description:
+      "Public hydrological readiness check from free text (min 10 chars). Returns H₂O Score preview and passport unlock path. No auth required.",
+    schema: {
+      text: z.string().min(10).describe("Project description mentioning m³, concession, water rights, etc."),
+    },
+    handler: (client: AurosApiClient, args: Record<string, unknown>) =>
+      client.eauCheck({ text: args.text }),
+  },
+  {
     name: "regulatory_feed",
     description:
       "Curated MiCA/ESMA/AMF/BaFin regulatory feed (premium key required). Filter by jurisdiction, tag, since date.",

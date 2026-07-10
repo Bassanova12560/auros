@@ -176,13 +176,14 @@ export function H2oReadinessChecker({ mode = "hub", partnerCode }: Props) {
   }
 
   return (
-    <BezelCard
-      id="passport"
-      className="border-cyan-500/15"
-      innerClassName="p-6 md:p-8"
-      animate
-    >
-      {inner}
-    </BezelCard>
+    <div id="passport">
+      <BezelCard
+        className="border-cyan-500/15"
+        innerClassName="p-6 md:p-8"
+        animate
+      >
+        {inner}
+      </BezelCard>
+    </div>
   );
 }

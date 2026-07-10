@@ -21,6 +21,10 @@ import {
 import { WIZARD_ASSET_OPTIONS } from "../app/wizard/_components/Step1Asset";
 
 const GREEN_HUB_SECONDARY_HREFS = [
+  "/green/api",
+  "/green/registry-connect",
+  "/green/press",
+  "/green/dpp",
   "/green/comment-ca-marche",
   "/green/faq",
   "/green/blog",
