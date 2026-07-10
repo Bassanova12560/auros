@@ -1440,3 +1440,77 @@ export function wizardResumeReminderEmail(data: WizardResumeReminderEmailData) {
   );
   return { subject, html };
 }
+
+// --- Lead score nurture (score_widget → wizard) ---
+
+export type LeadNurtureEmailData = {
+  locale?: Locale;
+  step: 1 | 2;
+  wizardUrl: string;
+  score?: number | null;
+  assetType?: string | null;
+};
+
+export function leadNurtureEmail(data: LeadNurtureEmailData) {
+  const locale = data.locale ?? "fr";
+  const isFinal = data.step === 2;
+  const asset = data.assetType?.trim()
+    ? escapeHtml(data.assetType.trim())
+    : null;
+  const scoreLine =
+    typeof data.score === "number" && Number.isFinite(data.score)
+      ? locale === "en"
+        ? `Your indicative score: <strong>${data.score}/100</strong>.`
+        : locale === "es"
+          ? `Su puntuación indicativa: <strong>${data.score}/100</strong>.`
+          : `Votre score indicatif : <strong>${data.score}/100</strong>.`
+      : null;
+
+  const subject =
+    locale === "en"
+      ? isFinal
+        ? "Last step — structure your RWA dossier"
+        : "Your AUROS score is ready — next: the wizard"
+      : locale === "es"
+        ? isFinal
+          ? "Último paso — estructure su dossier RWA"
+          : "Su puntuación AUROS está lista — siguiente: el wizard"
+        : isFinal
+          ? "Dernière étape — structurez votre dossier RWA"
+          : "Votre score AUROS est prêt — prochaine étape : le wizard";
+
+  const body =
+    locale === "en"
+      ? isFinal
+        ? "Projects that complete the guided dossier in the first week move 3× faster toward platform admission. ~12 min guided or ~6 min express."
+        : "You received an indicative score — the next move is a structured dossier in four parts: asset, strategy, compliance, summary."
+      : locale === "es"
+        ? isFinal
+          ? "Los proyectos que completan el dossier guiado en la primera semana avanzan 3× más rápido hacia la admisión en plataforma. ~12 min guiado o ~6 min express."
+          : "Recibió una puntuación indicativa — el siguiente paso es un dossier estructurado en cuatro partes: activo, estrategia, conformidad, resumen."
+        : isFinal
+          ? "Les projets qui complètent le dossier guidé dans la première semaine avancent 3× plus vite vers l'admission plateforme. ~12 min guidé ou ~6 min express."
+          : "Vous avez reçu un score indicatif — prochaine étape : un dossier structuré en 4 parties (actif, stratégie, conformité, récap).";
+
+  const ctaLabel =
+    locale === "en"
+      ? isFinal
+        ? "Complete my dossier"
+        : "Start the wizard"
+      : locale === "es"
+        ? isFinal
+          ? "Completar mi dossier"
+          : "Iniciar el wizard"
+        : isFinal
+          ? "Compléter mon dossier"
+          : "Démarrer le wizard";
+
+  const html = layout(`
+    <p style="margin:0 0 12px;font-size:18px;font-weight:600;">${escapeHtml(subject)}</p>
+    <p style="margin:0 0 12px;color:${BRAND_MUTED};">${body}</p>
+    ${scoreLine ? `<p style="margin:0 0 8px;color:${BRAND_TEXT};">${scoreLine}</p>` : ""}
+    ${asset ? `<p style="margin:0 0 16px;color:${BRAND_MUTED};">${locale === "en" ? "Asset" : locale === "es" ? "Activo" : "Actif"} : <strong>${asset}</strong></p>` : ""}
+    ${cta(data.wizardUrl, ctaLabel)}`
+  );
+  return { subject, html };
+}
