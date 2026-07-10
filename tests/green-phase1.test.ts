@@ -25,6 +25,7 @@ const GREEN_HUB_SECONDARY_HREFS = [
   "/green/registry-connect",
   "/green/press",
   "/green/dpp",
+  "/eau",
   "/green/comment-ca-marche",
   "/green/faq",
   "/green/blog",

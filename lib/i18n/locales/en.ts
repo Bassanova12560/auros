@@ -442,6 +442,7 @@ export const en: Messages = {
     greenIndex: "AUROS Green Index",
     greenApi: "Green API",
     greenDpp: "DPP Bridge",
+    greenH2o: "H₂O Passport",
     uhiIndex: "AUROS UHI Index",
     quarterlyReport: "State of RWA Issuers",
     about: "About",

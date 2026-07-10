@@ -39,6 +39,7 @@ export function Footer() {
     { href: "/data/green-index", label: f.greenIndex },
     { href: "/green/api", label: f.greenApi },
     { href: "/green/dpp", label: f.greenDpp },
+    { href: "/eau", label: f.greenH2o },
     { href: "/data/uhi-index", label: f.uhiIndex },
     { href: "/data/state-of-rwa-issuers", label: f.quarterlyReport },
     { href: "/ressources", label: f.resources },

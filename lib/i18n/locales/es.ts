@@ -443,6 +443,7 @@ export const es: Messages = {
     greenIndex: "AUROS Green Index",
     greenApi: "Green API",
     greenDpp: "DPP Bridge",
+    greenH2o: "Pasaporte H₂O",
     uhiIndex: "AUROS UHI Index",
     quarterlyReport: "State of RWA Issuers",
     about: "Acerca de",

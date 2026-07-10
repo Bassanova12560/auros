@@ -3,6 +3,7 @@
 import Link from "next/link";
 
 import { useLocale } from "@/app/_components/i18n/LocaleProvider";
+import { EAU_ROUTE } from "@/lib/eau/constants";
 import { GREEN_API_DOCS_ROUTE } from "@/lib/green/api/constants";
 import {
   AUROS_WIZARD_ROUTE,
@@ -26,6 +27,7 @@ const NAV_ROUTES = [
   { href: GREEN_API_DOCS_ROUTE, key: "api" as const },
   { href: GREEN_REGISTRY_CONNECT_ROUTE, key: "registryConnect" as const },
   { href: GREEN_DPP_ROUTE, key: "dpp" as const },
+  { href: EAU_ROUTE, key: "h2o" as const },
   { href: GREEN_LABEL_ROUTE, key: "label" as const },
   { href: GREEN_COMPARE_ROUTE, key: "compare" as const },
   { href: GREEN_CSRD_CHECK_ROUTE, key: "csrdCheck" as const },

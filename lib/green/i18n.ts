@@ -20,6 +20,7 @@ export type GreenMessages = {
       registryConnect: string;
       press: string;
       dpp: string;
+      h2o: string;
     };
   };
   disclaimer: string;
@@ -544,6 +545,7 @@ const FR: GreenMessages = {
       registryConnect: "Registry Connect",
       press: "Presse",
       dpp: "DPP",
+      h2o: "H₂O",
     },
   },
   disclaimer:
@@ -810,6 +812,11 @@ const FR: GreenMessages = {
           title: "DPP Bridge",
           description: "Passeport produit EU JSON-LD — CQS, Watt, Nature depuis le catalogue Green.",
           href: "/green/dpp",
+        },
+        {
+          title: "Passeport Hydrique (H₂O)",
+          description: "H₂O Score, checker readiness et dossier RWA eau — concessions, blue bonds, droits d'eau.",
+          href: "/eau",
         },
         {
           title: "Comment ça marche",
@@ -1482,6 +1489,7 @@ const EN: GreenMessages = {
       registryConnect: "Registry Connect",
       press: "Press",
       dpp: "DPP",
+      h2o: "H₂O",
     },
   },
   disclaimer:
@@ -1748,6 +1756,11 @@ const EN: GreenMessages = {
           title: "DPP Bridge",
           description: "EU product passport JSON-LD — CQS, Watt, Nature from Green catalog.",
           href: "/green/dpp",
+        },
+        {
+          title: "Hydrological Passport (H₂O)",
+          description: "H₂O Score, readiness checker and water RWA dossier — concessions, blue bonds, water rights.",
+          href: "/eau",
         },
         {
           title: "How it works",
@@ -2418,6 +2431,7 @@ const ES: GreenMessages = {
       registryConnect: "Registry Connect",
       press: "Prensa",
       dpp: "DPP",
+      h2o: "H₂O",
     },
   },
   disclaimer:
@@ -2688,6 +2702,11 @@ const ES: GreenMessages = {
           title: "DPP Bridge",
           description: "Pasaporte digital UE JSON-LD — CQS, Watt, Nature desde catálogo Green.",
           href: "/green/dpp",
+        },
+        {
+          title: "Pasaporte Hídrico (H₂O)",
+          description: "H₂O Score, checker de readiness y dossier RWA agua — concesiones, blue bonds, derechos de agua.",
+          href: "/eau",
         },
         {
           title: "Cómo funciona",
