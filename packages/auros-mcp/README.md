@@ -20,6 +20,10 @@ Thin wrapper over `https://getauros.com/api/v1/*` — no local scoring logic.
 | `jurisdictions` | `GET /api/v1/jurisdictions` | Bearer |
 | `checklist` | `POST /api/v1/checklist` | Bearer |
 | `compare` | `POST /api/v1/compare` | Bearer |
+| `green_watt_score` | `GET /api/green/watt/{id}` | None |
+| `green_carbon_quality` | `GET /api/green/carbon-quality/{id}` | None |
+| `green_watt_batch` | `POST /api/v1/green/watt/batch` | Bearer |
+| `green_carbon_quality_batch` | `POST /api/v1/green/carbon-quality/batch` | Bearer |
 | `regulatory_feed` | `GET /api/v1/regulatory/feed` | Bearer (premium) |
 | `status` | `GET /api/v1/status` | None |
 | `green_score` | `GET /api/green/score/{id}` | Optional Bearer |

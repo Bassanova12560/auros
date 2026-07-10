@@ -232,4 +232,96 @@ describe("@adrien1212balitrand/auros-protocol SDK", () => {
   it("requires apiKey in constructor", () => {
     assert.throws(() => new AurosProtocol({ apiKey: "" }), /apiKey is required/);
   });
+
+  it("greenWattScore() fetches public endpoint without auth", async () => {
+    const client = new AurosProtocol({
+      apiKey: "auros_pk_test_demo",
+      fetch: mockFetch((url, init) => {
+        assert.ok(url.endsWith("/api/green/watt/sunexchange"));
+        assert.equal(init?.method, "GET");
+        const headers = init?.headers as Record<string, string>;
+        assert.equal(headers.Authorization, undefined);
+        return Response.json({
+          ok: true,
+          id: "sunexchange",
+          name: "SunExchange",
+          watt_score: {
+            rating: 72,
+            lifetime_gwh: 1.8,
+            energy_value_eur: 270000,
+            tier: "mid",
+          },
+          disclaimer: "test",
+          batch_api: "/api/v1/green/watt/batch",
+          docs: "/developers/docs/endpoint-green-watt",
+          generated_at: "2026-06-28T00:00:00.000Z",
+        });
+      }),
+    });
+
+    const result = await client.greenWattScore("sunexchange");
+    assert.equal(result.watt_score.rating, 72);
+  });
+
+  it("greenWattBatch() posts items array", async () => {
+    const client = new AurosProtocol({
+      apiKey: "auros_pk_test_demo",
+      fetch: mockFetch((url, init) => {
+        assert.ok(url.endsWith("/api/v1/green/watt/batch"));
+        const body = JSON.parse(init?.body as string);
+        assert.equal(body.items.length, 2);
+        return Response.json({
+          disclaimer: "test",
+          total: 2,
+          succeeded: 2,
+          failed: 0,
+          items: [
+            {
+              index: 0,
+              ok: true,
+              id: "sunexchange",
+              watt_score: { rating: 72, lifetime_gwh: 1.8, energy_value_eur: 270000, tier: "mid" },
+            },
+            {
+              index: 1,
+              ok: true,
+              id: null,
+              watt_score: { rating: 65, lifetime_gwh: 2.1, energy_value_eur: 300000, tier: "mid" },
+            },
+          ],
+          meta: { version: "1.0", computed_at: "2026-06-28T00:00:00.000Z" },
+        });
+      }),
+    });
+
+    const result = await client.greenWattBatch({
+      items: [{ id: "sunexchange" }, { text: "Solar farm 12 MW PPA production MWh" }],
+    });
+    assert.equal(result.succeeded, 2);
+  });
+
+  it("greenCarbonQuality() fetches public CQS endpoint", async () => {
+    const client = new AurosProtocol({
+      apiKey: "auros_pk_test_demo",
+      fetch: mockFetch((url, init) => {
+        assert.ok(url.endsWith("/api/green/carbon-quality/toucan"));
+        assert.equal(init?.method, "GET");
+        const headers = init?.headers as Record<string, string>;
+        assert.equal(headers.Authorization, undefined);
+        return Response.json({
+          ok: true,
+          id: "toucan",
+          name: "Toucan",
+          carbon_quality: { score: 62, tier: "acceptable" },
+          disclaimer: "test",
+          batch_api: "/api/v1/green/carbon-quality/batch",
+          docs: "/developers/docs/endpoint-green-carbon-quality",
+          generated_at: "2026-06-28T00:00:00.000Z",
+        });
+      }),
+    });
+
+    const result = await client.greenCarbonQuality("toucan");
+    assert.equal(result.carbon_quality.score, 62);
+  });
 });

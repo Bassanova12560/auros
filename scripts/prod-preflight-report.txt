@@ -1,4 +1,4 @@
-AUROS prod preflight — 2026-05-29T14:26:10.062Z
+AUROS prod preflight — 2026-06-27T22:31:26.939Z
 
 ## Environment
 [OK] NEXT_PUBLIC_SUPABASE_URL is set
@@ -15,7 +15,22 @@ AUROS prod preflight — 2026-05-29T14:26:10.062Z
 [OK] AUROS_SIMULATION is off
 [WARN] Clerk publishable key is pk_test_ — use production keys for real launch
 
-(Skip HTTP: run with --http or BASE_URL=... npm run prod:check -- --http)
+## HTTP (https://getauros.com)
+[OK] GET / → 200
+[OK] GET /wizard → 200
+[OK] GET /wizard?expert=1 → 200
+[OK] GET /privacy → 200
+[OK] GET /green → 200
+[OK] GET /green/market → 200
+[OK] GET /green/impact-report → 200
+[OK] GET /data/green-index → 200
+[OK] GET /api/green/index → 200
+[OK] GET /api/green/carbon-quality/toucan → 200
+[OK] GET /api/simulate → 403
+[OK] GET /green/register → 200
+[OK] GET /green/label → 200
+[OK] GET /green/compare → 200
+[OK] GET /green/rtms-assistant → 200
 
-Summary: 12 ok, 1 warn, 0 fail
+Summary: 27 ok, 1 warn, 0 fail
 → Ready for deploy smoke test.

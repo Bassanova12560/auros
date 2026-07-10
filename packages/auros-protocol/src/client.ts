@@ -9,6 +9,12 @@ import type {
   CreateKeyResponse,
   DossierRequest,
   DossierResponse,
+  GreenCqsBatchRequest,
+  GreenCqsBatchResponse,
+  GreenCqsPublicResponse,
+  GreenWattBatchRequest,
+  GreenWattBatchResponse,
+  GreenWattPublicResponse,
   JurisdictionsQuery,
   JurisdictionsResponse,
   MonitorRequest,
@@ -124,8 +130,38 @@ export class AurosProtocol {
     return this.request<CreateKeyResponse>("POST", "/api/v1/keys", body, false);
   }
 
+  /** Free public read — Watt Score for an AUROS Green compare reference. */
+  async greenWattScore(id: string): Promise<GreenWattPublicResponse> {
+    return this.getPublic<GreenWattPublicResponse>(
+      `/api/green/watt/${encodeURIComponent(id)}`
+    );
+  }
+
+  /** Free public read — Carbon Quality Score for an AUROS Green compare reference. */
+  async greenCarbonQuality(id: string): Promise<GreenCqsPublicResponse> {
+    return this.getPublic<GreenCqsPublicResponse>(
+      `/api/green/carbon-quality/${encodeURIComponent(id)}`
+    );
+  }
+
+  /** Batch Watt Scores — up to 50 energy assets per call (1 quota unit). */
+  async greenWattBatch(body: GreenWattBatchRequest): Promise<GreenWattBatchResponse> {
+    return this.post<GreenWattBatchResponse>("/api/v1/green/watt/batch", body);
+  }
+
+  /** Batch Carbon Quality Scores — up to 50 carbon credits per call (1 quota unit). */
+  async greenCarbonQualityBatch(
+    body: GreenCqsBatchRequest
+  ): Promise<GreenCqsBatchResponse> {
+    return this.post<GreenCqsBatchResponse>("/api/v1/green/carbon-quality/batch", body);
+  }
+
   private async get<T>(path: string): Promise<T> {
     return this.request<T>("GET", path);
+  }
+
+  private async getPublic<T>(path: string): Promise<T> {
+    return this.request<T>("GET", path, undefined, false);
   }
 
   private async post<T>(path: string, body: unknown): Promise<T> {

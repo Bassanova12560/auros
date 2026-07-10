@@ -3,6 +3,8 @@ import { describe, it } from "node:test";
 
 import { getGreenScoringCopy } from "@/lib/green/scoring-i18n";
 import { resolveCarbonQualityBatchItem } from "@/lib/green/scoring/carbon-quality-batch";
+import { resolveWattBatchItem } from "@/lib/green/scoring/watt-batch";
+import { computeWattScoreFromText } from "@/lib/green/scoring/watt-score";
 import { computeWizardGreenScores } from "@/lib/green/scoring/wizard-green-scores";
 import { GREEN_WIZARD_ASSET_TYPE } from "@/lib/green/constants";
 import type { WizardData } from "@/lib/wizard-types";
@@ -97,11 +99,50 @@ describe("green/carbon-quality-batch", () => {
   });
 });
 
+describe("green/watt-batch", () => {
+  it("resolves compare id sunexchange", () => {
+    const out = resolveWattBatchItem({ id: "sunexchange" });
+    assert.equal(out.ok, true);
+    if (out.ok) assert.ok(out.result.rating > 0);
+  });
+
+  it("resolves free text energy profile", () => {
+    const out = resolveWattBatchItem({
+      text: "Solar farm 12 MW PPA signed production MWh France",
+    });
+    assert.equal(out.ok, true);
+    if (out.ok) assert.ok(out.result.rating >= 40);
+  });
+
+  it("rejects carbon compare id", () => {
+    const out = resolveWattBatchItem({ id: "toucan" });
+    assert.equal(out.ok, false);
+    if (!out.ok) assert.equal(out.code, "not_energy_asset");
+  });
+
+  it("rejects non-energy text", () => {
+    const out = resolveWattBatchItem({
+      text: "Generic corporate bond Luxembourg SPV",
+    });
+    assert.equal(out.ok, false);
+    if (!out.ok) assert.equal(out.code, "not_energy_asset");
+  });
+});
+
+describe("green/watt-score-text", () => {
+  it("parses capacity from description", () => {
+    const result = computeWattScoreFromText("Parc solaire 25 MW PPA production MWh");
+    assert.ok(result);
+    assert.ok(result!.lifetime_gwh != null && result!.lifetime_gwh > 0);
+  });
+});
+
 describe("green/scoring-i18n", () => {
   it("exposes copy in FR/EN/ES", () => {
     for (const locale of ["fr", "en", "es"] as const) {
       const copy = getGreenScoringCopy(locale);
       assert.ok(copy.wattLabel.length > 3);
+      assert.ok(copy.wattApiLink.length > 5);
       assert.ok(copy.priorities.cqs_ccp.length > 10);
     }
   });

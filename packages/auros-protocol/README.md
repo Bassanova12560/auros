@@ -59,6 +59,10 @@ console.log(api_key); // store securely — shown once
 | `webhooks()` | `GET /api/v1/webhooks` | Bearer (premium) |
 | `deleteWebhook(id)` | `DELETE /api/v1/webhooks/:id` | Bearer (premium) |
 | `createKey(body)` | `POST /api/v1/keys` | None |
+| `greenWattScore(id)` | `GET /api/green/watt/:id` | None |
+| `greenCarbonQuality(id)` | `GET /api/green/carbon-quality/:id` | None |
+| `greenWattBatch(body)` | `POST /api/v1/green/watt/batch` | Bearer (premium) |
+| `greenCarbonQualityBatch(body)` | `POST /api/v1/green/carbon-quality/batch` | Bearer (premium) |
 
 ## Examples
 
@@ -107,6 +111,22 @@ const checklist = await client.checklist({
   jurisdiction: "luxembourg",
   structure: "spv",
 });
+```
+
+### Green Watt & CQS
+
+```ts
+// Public reads — no API key required on these routes (batch calls need a premium live key)
+const watt = await client.greenWattScore("sunexchange");
+console.log(watt.watt_score.rating, watt.watt_score.tier);
+
+const batch = await client.greenWattBatch({
+  items: [
+    { id: "sunexchange" },
+    { text: "Solar farm 12 MW PPA signed production MWh France" },
+  ],
+});
+console.log(batch.succeeded, batch.items[0]);
 ```
 
 ## Configuration

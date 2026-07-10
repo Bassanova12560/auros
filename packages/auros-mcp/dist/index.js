@@ -48,19 +48,31 @@ var AurosApiClient = class {
     return this.request("GET", `/api/green/score/${encodeURIComponent(id)}`, void 0, void 0, false);
   }
   async greenRegistry(serial) {
-    return this.request(
-      "GET",
-      "/api/green/registry",
-      void 0,
-      { serial },
-      false
-    );
+    return this.request("GET", "/api/green/registry", void 0, { serial }, false);
   }
   async greenNatureIndex() {
     return this.request("GET", "/api/green/nature-index", void 0, void 0, false);
   }
   async greenApiStatus() {
     return this.request("GET", "/api/green/status", void 0, void 0, false);
+  }
+  async greenWattScore(id) {
+    return this.request("GET", `/api/green/watt/${encodeURIComponent(id)}`, void 0, void 0, false);
+  }
+  async greenCarbonQuality(id) {
+    return this.request(
+      "GET",
+      `/api/green/carbon-quality/${encodeURIComponent(id)}`,
+      void 0,
+      void 0,
+      false
+    );
+  }
+  async greenWattBatch(body) {
+    return this.request("POST", "/api/v1/green/watt/batch", body);
+  }
+  async greenCarbonQualityBatch(body) {
+    return this.request("POST", "/api/v1/green/carbon-quality/batch", body);
   }
   async request(method, path, body, query, auth = true) {
     const params = new URLSearchParams();
@@ -224,6 +236,48 @@ var AUROS_MCP_TOOLS = [
       limit: z.number().int().optional()
     },
     handler: (client2, args) => client2.compare(args)
+  },
+  {
+    name: "green_watt_score",
+    description: "Free public Watt Score (0\u2013100) for an AUROS Green energy compare reference (solar, wind, REC, PPA). No auth required.",
+    schema: {
+      id: z.string().describe("Compare reference id, e.g. sunexchange")
+    },
+    handler: (client2, args) => client2.greenWattScore(String(args.id))
+  },
+  {
+    name: "green_carbon_quality",
+    description: "Free public Carbon Quality Score (CQS, 0\u2013100) for an AUROS Green carbon compare reference. No auth required.",
+    schema: {
+      id: z.string().describe("Compare reference id, e.g. toucan")
+    },
+    handler: (client2, args) => client2.greenCarbonQuality(String(args.id))
+  },
+  {
+    name: "green_watt_batch",
+    description: "Batch Watt Scores for up to 50 energy assets (premium key required). Each item: id (compare ref) or text (free-form). Counts as 1 quota unit.",
+    schema: {
+      items: z.array(
+        z.object({
+          id: z.string().optional(),
+          text: z.string().min(10).optional()
+        })
+      ).min(1).max(50)
+    },
+    handler: (client2, args) => client2.greenWattBatch(args)
+  },
+  {
+    name: "green_carbon_quality_batch",
+    description: "Batch Carbon Quality Scores for up to 50 carbon credits (premium key required). Each item: id or text. Counts as 1 quota unit.",
+    schema: {
+      items: z.array(
+        z.object({
+          id: z.string().optional(),
+          text: z.string().min(10).optional()
+        })
+      ).min(1).max(50)
+    },
+    handler: (client2, args) => client2.greenCarbonQualityBatch(args)
   },
   {
     name: "regulatory_feed",

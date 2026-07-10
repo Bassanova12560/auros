@@ -105,8 +105,8 @@ export function resolveLiveMarketActors(
   const hideDemo = referencedCount >= GREEN_MIN_REFERENCED_TO_HIDE_DEMO;
 
   const nonDemoActors = dbActors.filter((a) => a.listingTier !== "demo");
-  let actors = hideDemo ? nonDemoActors : dbActors;
-  let offers = hideDemo
+  const actors = hideDemo ? nonDemoActors : dbActors;
+  const offers = hideDemo
     ? dbOffers.filter((o) => o.listingTier !== "demo")
     : dbOffers;
 

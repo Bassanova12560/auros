@@ -92,6 +92,26 @@ class AurosProtocol:
     def create_key(self, email: str) -> dict[str, Any]:
         return self._request("POST", "/api/v1/keys", json={"email": email}, auth=False)
 
+    def green_watt_score(self, reference_id: str) -> dict[str, Any]:
+        return self._request(
+            "GET",
+            f"/api/green/watt/{reference_id}",
+            auth=False,
+        )
+
+    def green_carbon_quality(self, reference_id: str) -> dict[str, Any]:
+        return self._request(
+            "GET",
+            f"/api/green/carbon-quality/{reference_id}",
+            auth=False,
+        )
+
+    def green_watt_batch(self, **body: Any) -> dict[str, Any]:
+        return self._post("/api/v1/green/watt/batch", body)
+
+    def green_carbon_quality_batch(self, **body: Any) -> dict[str, Any]:
+        return self._post("/api/v1/green/carbon-quality/batch", body)
+
     def _get(self, path: str, params: dict[str, Any]) -> dict[str, Any]:
         filtered = {k: v for k, v in params.items() if v is not None}
         return self._request("GET", path, params=filtered)

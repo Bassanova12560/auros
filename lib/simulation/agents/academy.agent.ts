@@ -26,13 +26,13 @@ import {
   encodeSignedPayload,
 } from "@/lib/academy/session-token";
 import type { ChallengeSessionPayload } from "@/lib/academy/types";
+import { readFileSync } from "node:fs";
 import { check, warnCheck, type SimCheck } from "@/lib/simulation/types";
 
 const AGENT = "academy";
 
 function loadEnvLocal(): void {
   try {
-    const { readFileSync } = require("node:fs") as typeof import("node:fs");
     const raw = readFileSync(".env.local", "utf8");
     for (const line of raw.split("\n")) {
       const t = line.trim();

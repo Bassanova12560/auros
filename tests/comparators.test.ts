@@ -526,7 +526,7 @@ describe("comparators/compare-selection", () => {
   });
 
   it("toggles selection and blocks beyond max", () => {
-    let ids = ["a", "b", "c", "d"];
+    const ids = ["a", "b", "c", "d"];
     const full = toggleCompareProductId(ids, "e");
     assert.equal(full.added, false);
     assert.equal(full.reason, "full");
