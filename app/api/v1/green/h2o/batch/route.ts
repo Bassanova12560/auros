@@ -58,7 +58,7 @@ export const POST = protocolRoute(async (req: Request) => {
 
   return protocolJson({
     disclaimer:
-      "Indicative AUROS H₂O Score — hydrological readiness signal. passport_required=true means a verifiable Passeport Hydrique AUROS dossier is required for listing-grade attestation. Batch endpoint requires premium API key.",
+      "Indicative AUROS H₂O Score — hydrological readiness signal. passport_required=true means a verifiable Passeport Hydrique AUROS dossier is required for listing-grade attestation. Batch endpoint requires paid premium tier — a free auros_pk_live_* key is not enough.",
     total: results.length,
     succeeded,
     failed: results.length - succeeded,

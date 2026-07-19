@@ -152,6 +152,18 @@ export function GreenIndexView({ payload }: Props) {
             {copy.downloadCsv}
           </PrimaryButton>
           <Link
+            href="/data/terminal"
+            className="inline-flex items-center rounded-full border border-white/15 px-5 py-2.5 text-sm text-white/80 hover:border-white/30"
+          >
+            Data Terminal →
+          </Link>
+          <Link
+            href="/data/licence"
+            className="inline-flex items-center rounded-full border border-white/15 px-5 py-2.5 text-sm text-white/80 hover:border-white/30"
+          >
+            Licence →
+          </Link>
+          <Link
             href="/data/nature-score"
             className="inline-flex items-center rounded-full border border-white/15 px-5 py-2.5 text-sm text-white/80 hover:border-white/30"
           >

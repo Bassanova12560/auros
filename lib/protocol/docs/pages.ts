@@ -423,7 +423,7 @@ const batch = await client.greenCarbonQualityBatch({
         heading: "POST batch (clé premium)",
         paragraphs: [
           "Jusqu'à **50 actifs hydriques** par appel — portefeuilles concessions, blue bonds, utilities.",
-          "**Tier premium** : clé `auros_pk_live_*` ou plan Monitor.",
+          "**Tier premium** (abonnement payant : Green API Premium / Monitor / Enterprise) — une clé `auros_pk_live_*` gratuite ne suffit pas.",
         ],
         code: `curl -X POST ${BASE}/api/v1/green/h2o/batch \\
   -H "Authorization: Bearer auros_pk_live_xxxxxxxx" \\
@@ -473,8 +473,8 @@ const batch = await client.greenCarbonQualityBatch({
         paragraphs: [
           "Jusqu'à **50 actifs énergétiques** par appel — portfolio solaire, REC, PPA.",
           "`id` = référence comparateur AUROS, ou `text` = description libre (min 10 caractères, mots-clés solar/wind/PPA/REC…).",
-          "**Tier premium** : clé `auros_pk_live_*` ou plan Monitor — les clés test gratuites reçoivent 403.",
-          "Compte au quota mensuel Protocol — licence volume : /partners.",
+          "**Tier premium** (abonnement payant : Green API Premium / Monitor / Enterprise) — une clé `auros_pk_live_*` gratuite ne suffit pas (HTTP 403).",
+          "Compte au quota mensuel Protocol — redistribution commerciale du feed : /data/licence.",
         ],
         code: `curl -X POST ${BASE}/api/v1/green/watt/batch \\
   -H "Authorization: Bearer auros_pk_live_xxxxxxxx" \\

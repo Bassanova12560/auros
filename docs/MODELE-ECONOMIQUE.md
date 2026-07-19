@@ -20,6 +20,7 @@ Le déploiement on-chain, le KYC opérationnel et l’émission restent chez **p
 |---------|--------|----------------|
 | **Maintenant** | Valeur gratuite / lead gen → concierge, revue, confiance | En place (wizard, dossier, emails) |
 | **Court terme** | Prestation humaine AUROS (revue dossier, accompagnement) | Partiel (`concierge`, soumission) |
+| **Court terme** | **Green API Premium** 299 €/mo + licence redistribution | Live (`/data/terminal`, `/green/api`) |
 | **Moyen terme** | **Partenaires apporteurs** (% sur actif ou contrat amené) | **À construire** (voir ci-dessous) |
 | **Moyen terme** | Contenu SEO + pages « Comment tokeniser [actif] » | Roadmap marketing |
 | **Long terme** | Automatisation contenu (guides, comparatifs plateformes) | Roadmap produit |
@@ -35,6 +36,20 @@ Problème **#2** : tokens illiquides après émission → **Liquidity Bridge** (
 Pitch détaillé : `docs/PROPOSITION-PLATEFORMES.md`
 
 Revenus possibles côté plateforme : fee par dossier accepté, rev share onboarding, puis fees/spread sur module liquidité.
+
+---
+
+## Green data API (après Issuer Pipeline)
+
+Ligne de revenu **data** distincte du pipeline émetteurs : packaging des scores déjà live (Index, CQS, Watt, H₂O).
+
+| Offre | Prix | Surface |
+|-------|------|---------|
+| Index / CSV public | Gratuit (CC-BY-4.0) | `/data/green-index`, `/data/licence` |
+| **Green API Premium** | **299 €/mo** (`green_api_premium`) | `/green/api#premium`, checkout Stripe existant |
+| Redistribution commerciale du feed | Sur devis partenaires | `/partners?intent=data-licence#contact` |
+
+Terminal unique : `/data/terminal` — pas de nouveau SKU Stripe ; on vend mieux le Premium existant.
 
 ---
 

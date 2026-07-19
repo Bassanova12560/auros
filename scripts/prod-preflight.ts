@@ -152,6 +152,8 @@ async function runHttpChecks(base: string): Promise<Check[]> {
     { path: "/green/market", expect: 200 },
     { path: "/green/impact-report", expect: 200 },
     { path: "/data/green-index", expect: 200 },
+    { path: "/data/terminal", expect: 200 },
+    { path: "/data/licence", expect: 200 },
     { path: "/api/green/index", expect: 200 },
     { path: "/api/green/carbon-quality/toucan", expect: 200 },
     { path: "/api/green/watt/sunexchange", expect: 200 },

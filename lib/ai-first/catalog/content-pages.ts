@@ -297,11 +297,93 @@ export const greenIndexPage = enrichPage({
     GREEN_ROUTE,
     "/green/compare",
     "/green/api",
+    "/data/terminal",
+    "/data/licence",
     "/data/rwa-index",
     "/data/uhi-index",
     AUROS_RESOURCES_ROUTE,
     "/wizard",
   ],
+});
+
+export const greenDataTerminalPage = enrichPage({
+  id: "green-data-terminal",
+  path: "/data/terminal",
+  title: "AUROS Green Data Terminal — Index, CQS, Watt, H₂O",
+  description:
+    "Terminal data Green RWA : Index, samples CQS/Watt/H₂O, changelog et CTA API Premium 299 €/mo.",
+  summary:
+    "Packaging unique des APIs Green existantes — lecture index + samples live + licence Premium.",
+  contentType: "guide",
+  language: "multi",
+  indexable: true,
+  lastUpdated: "2026-07-19",
+  keywords: [
+    "AUROS Green Data Terminal",
+    "Green API Premium",
+    "Carbon Quality Score API",
+    "Watt Score",
+    "H2O Score",
+  ],
+  intents: [
+    "Lire les scores Green RWA en un seul endroit",
+    "Brancher l'API CQS Watt H2O",
+  ],
+  audience: ["analystes", "développeurs", "data partners", "LLM crawlers"],
+  facts: [
+    { key: "Surface", value: "/data/terminal" },
+    { key: "API hub", value: "/green/api" },
+    { key: "Premium", value: "299 €/mo — green_api_premium" },
+    { key: "Licence", value: "/data/licence" },
+  ],
+  faq: [
+    {
+      question: "Le terminal est-il gratuit ?",
+      answer:
+        "La lecture index et les GET publics sont gratuits. Les batch Watt/H₂O et quotas élevés nécessitent Green API Premium.",
+    },
+  ],
+  relatedPaths: [
+    "/data/green-index",
+    "/data/licence",
+    "/green/api",
+    "/eau",
+    GREEN_ROUTE,
+  ],
+});
+
+export const greenDataLicencePage = enrichPage({
+  id: "green-data-licence",
+  path: "/data/licence",
+  title: "Licence data Green AUROS — CC-BY, API Premium, redistribution",
+  description:
+    "Trois niveaux : index public CC-BY-4.0, API Premium 299 €/mo, redistribution commerciale sur devis partenaires.",
+  summary:
+    "Clarifie free vs API Premium vs redistribution — sans nouveau SKU Stripe.",
+  contentType: "guide",
+  language: "multi",
+  indexable: true,
+  lastUpdated: "2026-07-19",
+  keywords: [
+    "licence AUROS Green",
+    "CC-BY Green Index",
+    "API Premium redistribution",
+  ],
+  intents: ["Licence commerciale Green Index", "Redistribuer le feed AUROS"],
+  audience: ["data partners", "terminaux tiers", "juridique"],
+  facts: [
+    { key: "Free", value: "CC-BY-4.0 + citation AUROS Green Index" },
+    { key: "API", value: "Premium 299 €/mo — usage API, pas redistribution produit" },
+    { key: "Redistrib", value: "/partners?intent=data-licence#contact" },
+  ],
+  faq: [
+    {
+      question: "Puis-je republier l'index comme produit ?",
+      answer:
+        "Non avec le seul API Premium — demandez une licence redistribution via /partners.",
+    },
+  ],
+  relatedPaths: ["/data/terminal", "/data/green-index", "/green/api", "/partners"],
 });
 
 export const greenApiPage = enrichPage({
@@ -1190,6 +1272,8 @@ export const contentPages: AiFirstPage[] = [
   resourcesPage,
   rwaIndexPage,
   greenIndexPage,
+  greenDataTerminalPage,
+  greenDataLicencePage,
   greenApiPage,
   greenPressPage,
   greenRegistryConnectPage,

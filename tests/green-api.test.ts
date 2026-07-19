@@ -61,8 +61,13 @@ describe("green/api", () => {
     const spec = buildGreenApiOpenApiSpec();
     assert.equal(spec.openapi, "3.0.3");
     assert.ok(spec.paths["/api/green/score/{id}"]);
+    assert.ok(spec.paths["/api/green/watt/{id}"]);
+    assert.ok(spec.paths["/api/green/h2o/{id}"]);
+    assert.ok(spec.paths["/api/v1/green/watt/batch"]);
+    assert.ok(spec.paths["/api/v1/green/h2o/batch"]);
     assert.ok(spec.paths["/api/v1/keys"]);
     assert.ok(spec.info.description.includes("1000"));
+    assert.ok(spec.info.description.toLowerCase().includes("premium"));
   });
 
   it("free tier monthly limit is 1000", () => {

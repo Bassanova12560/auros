@@ -25,6 +25,7 @@ export type EauHubCopy = {
     api: string;
     impact: string;
     embed: string;
+    terminal: string;
   };
   priorityLabels: Record<H2oPriorityKey, string>;
   tierLabels: { high: string; mid: string; low: string };
@@ -66,6 +67,7 @@ const COPY: Record<Locale, EauHubCopy> = {
       api: "API H₂O Score",
       impact: "Rapport d'impact",
       embed: "Widget partenaire (iframe)",
+      terminal: "Green Data Terminal",
     },
     priorityLabels: {
       flow_metering: "Mesure des flux m³/an (compteur ou audit)",
@@ -117,6 +119,7 @@ const COPY: Record<Locale, EauHubCopy> = {
       api: "H₂O Score API",
       impact: "Impact report",
       embed: "Partner widget (iframe)",
+      terminal: "Green Data Terminal",
     },
     priorityLabels: {
       flow_metering: "m³/year flow metering (meter or audit)",
@@ -168,6 +171,7 @@ const COPY: Record<Locale, EauHubCopy> = {
       api: "API H₂O Score",
       impact: "Informe de impacto",
       embed: "Widget partner (iframe)",
+      terminal: "Green Data Terminal",
     },
     priorityLabels: {
       flow_metering: "Medición flujos m³/año (contador o auditoría)",

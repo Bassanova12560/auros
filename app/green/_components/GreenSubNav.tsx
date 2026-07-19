@@ -3,6 +3,7 @@
 import Link from "next/link";
 
 import { useLocale } from "@/app/_components/i18n/LocaleProvider";
+import { DATA_TERMINAL_ROUTE } from "@/lib/data-terminal/constants";
 import { GREEN_API_DOCS_ROUTE } from "@/lib/green/api/constants";
 import {
   AUROS_WIZARD_ROUTE,
@@ -41,12 +42,20 @@ export function GreenSubNav() {
             {nav[route.key]}
           </Link>
         ))}
-        <Link
-          href={GREEN_API_DOCS_ROUTE}
-          className="ml-auto font-mono text-[10px] uppercase tracking-wider text-white/30 transition hover:text-white/55"
-        >
-          {nav.api}
-        </Link>
+        <div className="ml-auto flex items-center gap-x-4">
+          <Link
+            href={DATA_TERMINAL_ROUTE}
+            className="font-mono text-[10px] uppercase tracking-wider text-white/30 transition hover:text-white/55"
+          >
+            Terminal
+          </Link>
+          <Link
+            href={GREEN_API_DOCS_ROUTE}
+            className="font-mono text-[10px] uppercase tracking-wider text-white/30 transition hover:text-white/55"
+          >
+            {nav.api}
+          </Link>
+        </div>
       </div>
     </nav>
   );

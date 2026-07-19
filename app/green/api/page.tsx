@@ -4,6 +4,7 @@ import { FocusPageShell } from "@/app/_components/FocusPageShell";
 import { PrimaryButton } from "@/app/_components/ui/PrimaryButton";
 import { GreenApiPremiumCheckout } from "@/app/green/api/_components/GreenApiPremiumCheckout";
 import { absoluteUrl } from "@/lib/comparators/site";
+import { DATA_LICENCE_ROUTE, DATA_TERMINAL_ROUTE } from "@/lib/data-terminal/constants";
 import {
   GREEN_ANON_DAILY_LIMIT,
   GREEN_API_DOCS_ROUTE,
@@ -35,6 +36,24 @@ const ENDPOINTS = [
     method: "POST",
     path: "/api/green/score/analyze",
     desc: "CQS depuis texte libre (due diligence rapide)",
+    free: true,
+  },
+  {
+    method: "GET",
+    path: "/api/green/carbon-quality/{id}",
+    desc: "Carbon Quality Score (legacy)",
+    free: true,
+  },
+  {
+    method: "GET",
+    path: "/api/green/watt/{id}",
+    desc: "Watt Score — actifs énergétiques",
+    free: true,
+  },
+  {
+    method: "GET",
+    path: "/api/green/h2o/{id}",
+    desc: "H₂O Score — actifs hydriques",
     free: true,
   },
   {
@@ -76,7 +95,19 @@ const ENDPOINTS = [
   {
     method: "POST",
     path: "/api/v1/green/carbon-quality/batch",
-    desc: `Batch CQS — clé API requise (max ${GREEN_FREE_BATCH_MAX_ITEMS} free)`,
+    desc: `Batch CQS — clé API (max ${GREEN_FREE_BATCH_MAX_ITEMS} free · 50 premium)`,
+    free: false,
+  },
+  {
+    method: "POST",
+    path: "/api/v1/green/watt/batch",
+    desc: "Batch Watt — tier premium requis (pas une clé free auros_pk_live_*)",
+    free: false,
+  },
+  {
+    method: "POST",
+    path: "/api/v1/green/h2o/batch",
+    desc: "Batch H₂O — tier premium requis (pas une clé free auros_pk_live_*)",
     free: false,
   },
 ];
@@ -172,7 +203,7 @@ curl -X POST ${BASE}/api/v1/green/carbon-quality/batch \\
           </pre>
         </section>
 
-        <section>
+        <section id="premium" className="scroll-mt-28">
           <GreenApiPremiumCheckout />
         </section>
 
@@ -234,6 +265,18 @@ ${BASE}/api/green/changelog/rss`}
         <div className="flex flex-wrap justify-center gap-3">
           <PrimaryButton href={GREEN_API_OPENAPI_PATH}>OpenAPI JSON</PrimaryButton>
           <Link
+            href={DATA_TERMINAL_ROUTE}
+            className="inline-flex items-center rounded-full border border-white/15 px-5 py-2.5 text-sm text-white/80"
+          >
+            Data Terminal →
+          </Link>
+          <Link
+            href={DATA_LICENCE_ROUTE}
+            className="inline-flex items-center rounded-full border border-white/15 px-5 py-2.5 text-sm text-white/80"
+          >
+            Licence data →
+          </Link>
+          <Link
             href="/developers/docs/endpoint-green-carbon-quality"
             className="inline-flex items-center rounded-full border border-white/15 px-5 py-2.5 text-sm text-white/80"
           >
@@ -270,10 +313,10 @@ ${BASE}/api/green/changelog/rss`}
             Communiqué presse →
           </Link>
           <Link
-            href="/partners"
+            href={`${GREEN_API_DOCS_ROUTE}#premium`}
             className="inline-flex items-center rounded-full border border-white/15 px-5 py-2.5 text-sm text-white/80"
           >
-            Licence premium →
+            API Premium →
           </Link>
         </div>
       </div>

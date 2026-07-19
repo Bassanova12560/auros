@@ -6,6 +6,7 @@ import {
   GREEN_API_OPENAPI_PATH,
   GREEN_FREE_BATCH_MAX_ITEMS,
   GREEN_FREE_BULK_MAX_IDS,
+  GREEN_PREMIUM_BATCH_MAX_ITEMS,
 } from "./constants";
 import { listGreenScoreCatalogIds } from "./score-lookup";
 
@@ -15,9 +16,9 @@ export function buildGreenApiOpenApiSpec() {
     openapi: "3.0.3",
     info: {
       title: "AUROS Green API",
-      version: "1.0.0",
+      version: "1.1.0",
       description:
-        "Free public API for Carbon Quality Score (CQS), Watt Score and AUROS Green Index data. Anonymous: 100 req/day. Free API key: 1000 req/month + batch.",
+        "Public API for Carbon Quality Score (CQS), Watt Score, H₂O Score and AUROS Green Index. Anonymous: 100 req/day. Free API key: 1000 req/month. Batch Watt/H₂O and large CQS batches require paid premium tier (not merely an auros_pk_live_* free key).",
       contact: { name: "AUROS", url: base },
     },
     servers: [{ url: base }],
@@ -61,6 +62,18 @@ export function buildGreenApiOpenApiSpec() {
       "/api/green/carbon-quality/{id}": {
         get: { summary: "Carbon Quality Score only (legacy)" },
       },
+      "/api/green/watt/{id}": {
+        get: {
+          summary: "Watt Score for energy catalog id (public)",
+          parameters: [{ name: "id", in: "path", required: true, schema: { type: "string" } }],
+        },
+      },
+      "/api/green/h2o/{id}": {
+        get: {
+          summary: "H₂O Score for hydrological catalog id (public)",
+          parameters: [{ name: "id", in: "path", required: true, schema: { type: "string" } }],
+        },
+      },
       "/api/green/index": { get: { summary: "Green RWA Index JSON feed" } },
       "/api/green/changelog": { get: { summary: "Monthly index movers" } },
       "/api/green/nature-index": { get: { summary: "Nature Score Index ranking (biodiversity)" } },
@@ -75,7 +88,7 @@ export function buildGreenApiOpenApiSpec() {
       },
       "/api/green/score/{id}/history": {
         get: {
-          summary: "Monthly score history (Premium API key)",
+          summary: "Monthly score history (Premium tier)",
           security: [{ bearerAuth: [] }],
           parameters: [{ name: "id", in: "path", required: true, schema: { type: "string" } }],
         },
@@ -98,7 +111,19 @@ export function buildGreenApiOpenApiSpec() {
       },
       "/api/v1/green/carbon-quality/batch": {
         post: {
-          summary: `Batch CQS (API key required, max ${GREEN_FREE_BATCH_MAX_ITEMS} free)`,
+          summary: `Batch CQS (API key required; max ${GREEN_FREE_BATCH_MAX_ITEMS} free, ${GREEN_PREMIUM_BATCH_MAX_ITEMS} premium tier)`,
+          security: [{ bearerAuth: [] }],
+        },
+      },
+      "/api/v1/green/watt/batch": {
+        post: {
+          summary: `Batch Watt Score (premium tier required, max ${GREEN_PREMIUM_BATCH_MAX_ITEMS}) — free auros_pk_live_* keys are not enough`,
+          security: [{ bearerAuth: [] }],
+        },
+      },
+      "/api/v1/green/h2o/batch": {
+        post: {
+          summary: `Batch H₂O Score (premium tier required, max ${GREEN_PREMIUM_BATCH_MAX_ITEMS}) — free auros_pk_live_* keys are not enough`,
           security: [{ bearerAuth: [] }],
         },
       },
@@ -117,6 +142,7 @@ export function buildGreenApiOpenApiSpec() {
       anonymous_daily: GREEN_ANON_DAILY_LIMIT,
       free_monthly: 1000,
       free_batch_max: GREEN_FREE_BATCH_MAX_ITEMS,
+      premium_batch_max: GREEN_PREMIUM_BATCH_MAX_ITEMS,
     },
     "x-openapi-self": absoluteUrl(GREEN_API_OPENAPI_PATH),
   };

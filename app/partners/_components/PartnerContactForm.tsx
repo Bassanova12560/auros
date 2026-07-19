@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useState, type FormEvent } from "react";
+import { useCallback, useEffect, useState, type FormEvent } from "react";
 
 import { useLocale } from "@/app/_components/i18n/LocaleProvider";
 import { savePartnerAction } from "@/lib/actions/partners";
@@ -23,6 +23,9 @@ const MONTHLY_VOLUMES = [
   "200+ dossiers",
 ] as const;
 
+const DATA_LICENCE_MESSAGE =
+  "Demande de licence redistribution commerciale — Green Data (Index / API).";
+
 const inputClass =
   "w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white placeholder:text-white/40 outline-none focus:border-white/40";
 
@@ -42,6 +45,14 @@ export function PartnerContactForm() {
   const [monthlyVolume, setMonthlyVolume] = useState("");
   const [message, setMessage] = useState("");
   const [submitting, setSubmitting] = useState(false);
+
+  useEffect(() => {
+    const intent = new URLSearchParams(window.location.search).get("intent");
+    if (intent === "data-licence" || intent === "data_licence") {
+      setMessage((prev) => prev || DATA_LICENCE_MESSAGE);
+      setPlatformType((prev) => prev || "Other");
+    }
+  }, []);
 
   const handleSubmit = useCallback(
     async (e: FormEvent) => {

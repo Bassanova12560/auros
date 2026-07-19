@@ -63,7 +63,7 @@ export const POST = protocolRoute(async (req: Request) => {
 
   return protocolJson({
     disclaimer:
-      "Indicative AUROS Watt Score — energy value signal, not a production audit. Batch endpoint requires premium API key (live or Monitor tier).",
+      "Indicative AUROS Watt Score — energy value signal, not a production audit. Batch endpoint requires paid premium tier (Monitor / Green API Premium / Enterprise) — a free auros_pk_live_* key is not enough.",
     total: results.length,
     succeeded,
     failed: results.length - succeeded,
