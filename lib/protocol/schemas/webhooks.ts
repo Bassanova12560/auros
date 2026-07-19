@@ -6,6 +6,8 @@ export const WEBHOOK_EVENT_TYPES = [
   ...ALERT_TYPES,
   "regulatory.update",
   "green.index.changelog",
+  "chargeflow.unit.minted",
+  "chargeflow.unit.retired",
 ] as const;
 
 export const webhookRegisterSchema = z.object({

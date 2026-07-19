@@ -257,4 +257,33 @@ describe("chargeflow uniqueness + retirement", () => {
     assert.equal(batch[0]?.ok, false);
     assert.equal(batch[1]?.ok, true);
   });
+
+  it("skips ChargeFlow webhooks for demo key", async () => {
+    const { notifyChargeflowWebhooks, CHARGEFLOW_WEBHOOK_MINTED } =
+      await import("../lib/chargeflow/webhooks");
+    const result = await notifyChargeflowWebhooks("demo", CHARGEFLOW_WEBHOOK_MINTED, {
+      id: "cfu_e_demo",
+      unit_kind: "e",
+      content_hash: "a".repeat(64),
+      signature: "b".repeat(64),
+      key_hash: "demo",
+      status: "active",
+      retired_at: null,
+      retire_reason: null,
+      operator_id: null,
+      external_ref: "x",
+      public: {
+        standard: "AUROS-ChargeFlow-CFU-E",
+        unit_kind: "e",
+        energy_kwh: 1,
+        started_at: "2026-07-19T10:00:00Z",
+        ended_at: "2026-07-19T11:00:00Z",
+        issued_at: "2026-07-19T12:00:00Z",
+      },
+      created_at: "2026-07-19T12:00:00Z",
+      disclaimer: "test",
+    });
+    assert.equal(result.matched, 0);
+    assert.equal(result.fired, 0);
+  });
 });

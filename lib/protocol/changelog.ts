@@ -25,6 +25,23 @@ export type ProtocolChangelogEntry = {
 /** Single source for `/developers/changelog` and GET `/api/v1/changelog`. Newest first. */
 export const PROTOCOL_CHANGELOG: ProtocolChangelogEntry[] = [
   {
+    id: "chargeflow-webhooks-export",
+    date: "2026-07-19",
+    title: "ChargeFlow webhooks + console export",
+    summary:
+      "Événements chargeflow.unit.minted / retired, export CSV/JSON depuis la console opérateur.",
+    details: [
+      "Webhooks Premium par clé API — mint E/W/F et retire (pas de demo).",
+      "Console /green/chargeflow/console — download CSV et JSON de la liste filtrée.",
+    ],
+    links: [
+      { href: "/green/chargeflow/console", label: "Console" },
+      { href: "/developers/docs/endpoint-webhooks", label: "Docs webhooks" },
+    ],
+    tags: ["chargeflow", "webhooks", "premium"],
+    status: "released",
+  },
+  {
     id: "chargeflow-ops-console-batch-npm",
     date: "2026-07-19",
     title: "ChargeFlow ops — list, console, batch, SDK 1.0.2",

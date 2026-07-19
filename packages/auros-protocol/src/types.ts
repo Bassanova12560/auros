@@ -320,6 +320,13 @@ export type AlertType =
   | "new_requirement"
   | "deadline_approaching";
 
+export type WebhookEventType =
+  | AlertType
+  | "regulatory.update"
+  | "green.index.changelog"
+  | "chargeflow.unit.minted"
+  | "chargeflow.unit.retired";
+
 export type MonitorRequest = {
   asset_type: AssetType;
   jurisdiction: string;
@@ -558,7 +565,7 @@ export type ChargeflowBatchResponse = {
 
 export type WebhookRegisterRequest = {
   url: string;
-  events?: AlertType[];
+  events?: WebhookEventType[];
 };
 
 export type WebhookItem = {

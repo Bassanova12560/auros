@@ -11,7 +11,7 @@ import {
 import {
   chargeflowPublicResponse,
   chargeflowRetireRequestSchema,
-  retireChargeflowRecord,
+  retireChargeflowUnit,
 } from "@/lib/chargeflow";
 
 type RouteContext = { params: Promise<{ id: string }> };
@@ -48,7 +48,7 @@ export const POST = protocolRoute(async (req: Request, context: RouteContext) =>
     );
   }
 
-  const result = await retireChargeflowRecord(
+  const result = await retireChargeflowUnit(
     id,
     auth.ctx.keyHash,
     parsed.data.reason

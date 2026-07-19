@@ -18,6 +18,7 @@ Commercial ICP flottes/CPO : `/green/chargeflow/fleets` (no Tesla partnership cl
 
 - Mint Premium · uniqueness on active `(kind, key, operator_key, external_ref)` · retire without re-signing
 - List `GET /api/v1/chargeflow` · batch `POST …/batch` (E/W/F, max 50) · console `/green/chargeflow/console`
+- Webhooks : `chargeflow.unit.minted` / `chargeflow.unit.retired` (Premium, same API key)
 - Verify UI `/chargeflow/{id}` · OpenAPI `/auros-openapi.yaml`
 - SDK : `@adrien1212balitrand/auros-protocol` (`createChargeflowE/W/F`, `listChargeflow`, `*Batch`, `retireChargeflow`, …)
 

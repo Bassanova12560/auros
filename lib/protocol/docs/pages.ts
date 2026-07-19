@@ -1351,7 +1351,8 @@ curl "${BASE}/api/v1/attest/verify?hash=<64hex>&sig=<64hex>"`,
           "POST /api/v1/chargeflow/batch — jusqu'à 50 CFU-E, succès partiel.",
           "GET /api/v1/chargeflow/verify?id=cfu_e_…",
           "POST /api/v1/chargeflow/{id}/retire — Premium, même clé API (status=retired, hash inchangé).",
-          "Page UI : /chargeflow/{id} · Demo : POST /api/v1/chargeflow/demo · Console : /green/chargeflow/console",
+          "Webhooks : `chargeflow.unit.minted` / `chargeflow.unit.retired` (POST /api/v1/webhooks).",
+          "Page UI : /chargeflow/{id} · Demo : POST /api/v1/chargeflow/demo · Console : /green/chargeflow/console (export CSV/JSON)",
         ],
         code: `curl "${BASE}/api/v1/chargeflow?kind=e&status=active" \\
   -H "Authorization: Bearer auros_pk_live_xxx"
@@ -1471,7 +1472,7 @@ curl -X POST ${BASE}/api/v1/chargeflow/cfu_e_…/retire \\
   -H "Content-Type: application/json" \\
   -d '{
     "url": "https://your.app/hooks/auros",
-    "events": ["regulation_update", "new_requirement", "regulatory.update"]
+    "events": ["regulation_update", "new_requirement", "regulatory.update", "chargeflow.unit.minted", "chargeflow.unit.retired"]
   }'`,
         language: "bash",
       },
@@ -1481,6 +1482,7 @@ curl -X POST ${BASE}/api/v1/chargeflow/cfu_e_…/retire \\
           "Chaque payload POST inclut `X-AUROS-Signature: sha256=<hmac>` signé avec `WEBHOOK_SECRET` (côté AUROS).",
           "GET /api/v1/webhooks — liste. DELETE /api/v1/webhooks/:id — suppression.",
           "Événement `regulatory.update` — voir /developers/docs/regulatory-feed.",
+          "ChargeFlow : `chargeflow.unit.minted` / `chargeflow.unit.retired` — dispatch à chaque mint/retire sur la même clé API.",
         ],
       },
       {

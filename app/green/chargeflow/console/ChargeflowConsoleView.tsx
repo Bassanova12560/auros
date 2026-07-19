@@ -113,6 +113,58 @@ export function ChargeflowConsoleView() {
     }
   }
 
+  function downloadBlob(filename: string, content: string, mime: string) {
+    const blob = new Blob([content], { type: mime });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  function exportCsv() {
+    const header = [
+      "id",
+      "unit_kind",
+      "status",
+      "quantity",
+      "external_ref",
+      "operator_id",
+      "content_hash",
+      "created_at",
+      "retired_at",
+    ];
+    const rows = items.map((item) =>
+      [
+        item.id,
+        item.unit_kind,
+        item.status,
+        quantityLabel(item),
+        item.external_ref,
+        item.operator_id ?? "",
+        item.content_hash,
+        item.created_at,
+        item.retired_at ?? "",
+      ]
+        .map((cell) => `"${String(cell).replaceAll('"', '""')}"`)
+        .join(",")
+    );
+    downloadBlob(
+      `chargeflow-units-${new Date().toISOString().slice(0, 10)}.csv`,
+      [header.join(","), ...rows].join("\n"),
+      "text/csv;charset=utf-8"
+    );
+  }
+
+  function exportJson() {
+    downloadBlob(
+      `chargeflow-units-${new Date().toISOString().slice(0, 10)}.json`,
+      JSON.stringify({ total: items.length, items }, null, 2),
+      "application/json"
+    );
+  }
+
   return (
     <div className="space-y-10">
       <header className="space-y-3">
@@ -176,10 +228,26 @@ export function ChargeflowConsoleView() {
               <option value="retired">Retired</option>
             </select>
           </label>
-          <div className="flex items-end">
+          <div className="flex items-end gap-2">
             <PrimaryButton type="button" onClick={load} disabled={loading}>
               {loading ? "Chargement…" : "Charger"}
             </PrimaryButton>
+            <button
+              type="button"
+              disabled={items.length === 0}
+              onClick={exportCsv}
+              className="min-h-[44px] rounded-full border border-white/20 px-4 font-mono text-[11px] uppercase tracking-wider text-white/60 transition hover:border-white/40 hover:text-white disabled:opacity-30"
+            >
+              CSV
+            </button>
+            <button
+              type="button"
+              disabled={items.length === 0}
+              onClick={exportJson}
+              className="min-h-[44px] rounded-full border border-white/20 px-4 font-mono text-[11px] uppercase tracking-wider text-white/60 transition hover:border-white/40 hover:text-white disabled:opacity-30"
+            >
+              JSON
+            </button>
           </div>
         </div>
         {error ? (

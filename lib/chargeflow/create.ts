@@ -23,14 +23,28 @@ import {
   chargeflowVerifyUrl,
   createChargeflowRecord,
   findActiveChargeflowConflict,
+  getChargeflowById,
   retireChargeflowRecord,
   type ChargeflowRecord,
 } from "./store";
+import {
+  CHARGEFLOW_WEBHOOK_MINTED,
+  CHARGEFLOW_WEBHOOK_RETIRED,
+  notifyChargeflowWebhooks,
+} from "./webhooks";
 
 export type CreateChargeflowResult = {
   record: ChargeflowRecord;
   verify_url: string;
 };
+
+async function afterMint(keyHash: string, record: ChargeflowRecord): Promise<void> {
+  try {
+    await notifyChargeflowWebhooks(keyHash, CHARGEFLOW_WEBHOOK_MINTED, record);
+  } catch {
+    // never fail mint on webhook
+  }
+}
 
 export async function createChargeflowUnit(
   keyHash: string,
@@ -92,6 +106,7 @@ export async function createChargeflowUnit(
     unitId,
   });
   const record = await createChargeflowRecord(draft);
+  await afterMint(keyHash, record);
 
   return {
     record,
@@ -158,6 +173,7 @@ export async function createChargeflowWUnit(
     unitId,
   });
   const record = await createChargeflowRecord(draft);
+  await afterMint(keyHash, record);
 
   return {
     record,
@@ -225,6 +241,7 @@ export async function createChargeflowFUnit(
     unitId,
   });
   const record = await createChargeflowRecord(draft);
+  await afterMint(keyHash, record);
 
   return {
     record,
@@ -355,3 +372,31 @@ export async function createChargeflowFBatch(
 }
 
 export { retireChargeflowRecord };
+
+export async function retireChargeflowUnit(
+  id: string,
+  keyHash: string,
+  reason?: string
+): Promise<
+  | { record: ChargeflowRecord; newly_retired: boolean }
+  | { error: string; status: number }
+> {
+  const existing = await getChargeflowById(id);
+  const wasActive = existing?.status === "active";
+  const result = await retireChargeflowRecord(id, keyHash, reason);
+  if ("error" in result) return result;
+  const newly_retired = Boolean(wasActive && result.record.status === "retired");
+  if (newly_retired) {
+    try {
+      await notifyChargeflowWebhooks(
+        keyHash,
+        CHARGEFLOW_WEBHOOK_RETIRED,
+        result.record
+      );
+    } catch {
+      // never fail retire on webhook
+    }
+  }
+  return { record: result.record, newly_retired };
+}
+
