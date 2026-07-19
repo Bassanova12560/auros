@@ -19,7 +19,8 @@ export function sha256Hex(payload: string): string {
 }
 
 export function newChargeflowUnitId(kind: ChargeflowUnitKind = "e"): string {
-  const prefix = kind === "w" ? "cfu_w_" : "cfu_e_";
+  const prefix =
+    kind === "w" ? "cfu_w_" : kind === "f" ? "cfu_f_" : "cfu_e_";
   return `${prefix}${randomBytes(12).toString("hex")}`;
 }
 
@@ -39,7 +40,7 @@ export function verifyChargeflowSignature(
   signature: string,
   kind?: ChargeflowUnitKind
 ): boolean {
-  const kinds: ChargeflowUnitKind[] = kind ? [kind] : ["e", "w"];
+  const kinds: ChargeflowUnitKind[] = kind ? [kind] : ["e", "w", "f"];
   for (const k of kinds) {
     const expected = signChargeflowHash(contentHash, k);
     if (!expected || !signature?.trim()) continue;

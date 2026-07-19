@@ -1,13 +1,17 @@
 export {
   CHARGEFLOW_ROUTE,
   CHARGEFLOW_W_ROUTE,
+  CHARGEFLOW_F_ROUTE,
+  CHARGEFLOW_FLEETS_ROUTE,
   CHARGEFLOW_VERIFY_BASE,
   CHARGEFLOW_STANDARD,
   CHARGEFLOW_STANDARD_E,
   CHARGEFLOW_STANDARD_W,
+  CHARGEFLOW_STANDARD_F,
   CHARGEFLOW_HMAC_PREFIX,
   CHARGEFLOW_HMAC_PREFIX_E,
   CHARGEFLOW_HMAC_PREFIX_W,
+  CHARGEFLOW_HMAC_PREFIX_F,
   kindFromUnitId,
   type ChargeflowUnitKind,
   type ChargeflowStatus,
@@ -17,11 +21,15 @@ export {
   chargeflowSessionSchema,
   chargeflowWCreateRequestSchema,
   chargeflowFlowSchema,
+  chargeflowFCreateRequestSchema,
+  chargeflowWindowSchema,
   chargeflowRetireRequestSchema,
   type ChargeflowCreateRequest,
   type ChargeflowSession,
   type ChargeflowWCreateRequest,
   type ChargeflowFlow,
+  type ChargeflowFCreateRequest,
+  type ChargeflowWindow,
   type ChargeflowRetireRequest,
 } from "./schema";
 export {
@@ -36,6 +44,7 @@ export {
 export {
   buildChargeflowCanonical,
   buildChargeflowWCanonical,
+  buildChargeflowFCanonical,
   stableStringify,
   chargeflowContentSha256,
   CHARGEFLOW_DISCLAIMER,
@@ -45,6 +54,7 @@ export {
 export {
   enrichChargeflowWithWatt,
   enrichChargeflowWithH2o,
+  enrichChargeflowWithFlex,
 } from "./enrich";
 export {
   createChargeflowRecord,
@@ -59,6 +69,7 @@ export {
 export {
   createChargeflowUnit,
   createChargeflowWUnit,
+  createChargeflowFUnit,
   chargeflowPublicResponse,
   type CreateChargeflowResult,
 } from "./create";

@@ -419,6 +419,83 @@ export type AttestVerifyResponse = {
   created_at?: string;
 };
 
+export type ChargeflowCreateRequest = {
+  session: {
+    external_session_id: string;
+    started_at: string;
+    ended_at: string;
+    energy_kwh: number;
+    operator_id?: string;
+    source_format?: "ocpi" | "ocpp_summary" | "csv" | "json_custom";
+    location?: { country?: string; site_id?: string; connector_id?: string };
+    vehicle_ref?: string;
+  };
+  attributes?: {
+    renewable_claim?: "none" | "go" | "rec" | "ppa_matched" | "unknown";
+    grid_mix_note?: string;
+    compare_ref_id?: string;
+  };
+};
+
+export type ChargeflowWCreateRequest = {
+  flow: {
+    external_flow_id: string;
+    started_at: string;
+    ended_at: string;
+    volume_m3: number;
+    operator_id?: string;
+    source_format?: "csv" | "scada_summary" | "json_custom";
+    location?: { country?: string; site_id?: string; basin_id?: string };
+  };
+  attributes?: {
+    asset_class_hint?: string;
+    compare_ref_id?: string;
+    notes?: string;
+  };
+};
+
+export type ChargeflowFCreateRequest = {
+  window: {
+    external_window_id: string;
+    started_at: string;
+    ended_at: string;
+    capacity_kw: number;
+    direction?: "up" | "down" | "both";
+    operator_id?: string;
+    source_format?: "csv" | "scada_summary" | "json_custom";
+    location?: { country?: string; site_id?: string; asset_id?: string };
+  };
+  attributes?: {
+    program_hint?: "fcr" | "afrr" | "mfrr" | "demand_response" | "unknown";
+    compare_ref_id?: string;
+    notes?: string;
+  };
+};
+
+export type ChargeflowResponse = {
+  id: string;
+  unit_kind: "e" | "w" | "f";
+  content_hash: string;
+  signature: string;
+  verify_url: string;
+  status: "active" | "retired";
+  retired_at?: string | null;
+  retire_reason?: string | null;
+  public: Record<string, unknown>;
+  created_at: string;
+  disclaimer: string;
+  valid: boolean;
+};
+
+export type ChargeflowVerifyResponse = ChargeflowResponse | {
+  valid: boolean;
+  id?: string;
+  content_hash?: string;
+  signature?: string;
+  reason?: string;
+  disclaimer?: string;
+};
+
 export type WebhookRegisterRequest = {
   url: string;
   events?: AlertType[];

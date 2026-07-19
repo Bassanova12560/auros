@@ -1,11 +1,13 @@
 import {
   CHARGEFLOW_STANDARD_E,
+  CHARGEFLOW_STANDARD_F,
   CHARGEFLOW_STANDARD_W,
   standardForKind,
   type ChargeflowUnitKind,
 } from "./constants";
 import type {
   ChargeflowCreateRequest,
+  ChargeflowFCreateRequest,
   ChargeflowWCreateRequest,
 } from "./schema";
 import { sha256Hex } from "./signing";
@@ -18,6 +20,8 @@ export type ChargeflowAurosEnrichment = {
   h2o_tier?: "high" | "mid" | "low" | null;
   h2o_asset_class?: string | null;
   flow_m3_indicative?: number | null;
+  capacity_kw_indicative?: number | null;
+  program_hint?: string | null;
 };
 
 export type ChargeflowCanonicalE = {
@@ -75,13 +79,47 @@ export type ChargeflowCanonicalW = {
   disclaimer: string;
 };
 
-export type ChargeflowCanonical = ChargeflowCanonicalE | ChargeflowCanonicalW;
+export type ChargeflowCanonicalF = {
+  v: 1;
+  standard: typeof CHARGEFLOW_STANDARD_F;
+  unit_id: string;
+  issued_at: string;
+  window: {
+    external_window_id: string;
+    started_at: string;
+    ended_at: string;
+    capacity_kw: number;
+    direction: string;
+    location?: {
+      country?: string;
+      site_id?: string;
+      asset_id?: string;
+    };
+    operator_id?: string;
+    source_format: string;
+  };
+  attributes?: {
+    program_hint?: string;
+    compare_ref_id?: string;
+    notes?: string;
+  };
+  auros: ChargeflowAurosEnrichment;
+  disclaimer: string;
+};
+
+export type ChargeflowCanonical =
+  | ChargeflowCanonicalE
+  | ChargeflowCanonicalW
+  | ChargeflowCanonicalF;
 
 const DISCLAIMER_E =
   "AUROS ChargeFlow CFU-E — indicative off-chain flow registration. Not a security token, legal certificate of origin, or CPO partnership endorsement.";
 
 const DISCLAIMER_W =
   "AUROS ChargeFlow CFU-W — indicative off-chain hydrological flow registration. Not a security token, water right title, or concession endorsement.";
+
+const DISCLAIMER_F =
+  "AUROS ChargeFlow CFU-F — indicative off-chain flexibility window registration. Not a capacity market product, balancing service contract, or CPO endorsement.";
 
 /** Deterministic JSON stringify (sorted object keys). */
 export function stableStringify(value: unknown): string {
@@ -175,6 +213,44 @@ export function buildChargeflowWCanonical(
   };
 }
 
+export function buildChargeflowFCanonical(
+  unitId: string,
+  input: ChargeflowFCreateRequest,
+  auros: ChargeflowAurosEnrichment,
+  issuedAt: string
+): ChargeflowCanonicalF {
+  const window = input.window;
+  return {
+    v: 1,
+    standard: CHARGEFLOW_STANDARD_F,
+    unit_id: unitId,
+    issued_at: issuedAt,
+    window: {
+      external_window_id: window.external_window_id,
+      started_at: window.started_at,
+      ended_at: window.ended_at,
+      capacity_kw: window.capacity_kw,
+      direction: window.direction,
+      ...(window.location ? { location: window.location } : {}),
+      ...(window.operator_id ? { operator_id: window.operator_id } : {}),
+      source_format: window.source_format,
+    },
+    ...(input.attributes
+      ? {
+          attributes: {
+            program_hint: input.attributes.program_hint ?? "unknown",
+            ...(input.attributes.compare_ref_id
+              ? { compare_ref_id: input.attributes.compare_ref_id }
+              : {}),
+            ...(input.attributes.notes ? { notes: input.attributes.notes } : {}),
+          },
+        }
+      : {}),
+    auros,
+    disclaimer: DISCLAIMER_F,
+  };
+}
+
 export function chargeflowContentSha256(
   canonical: ChargeflowCanonical
 ): string {
@@ -182,7 +258,14 @@ export function chargeflowContentSha256(
 }
 
 export function disclaimerForKind(kind: ChargeflowUnitKind): string {
-  return kind === "w" ? DISCLAIMER_W : DISCLAIMER_E;
+  if (kind === "w") return DISCLAIMER_W;
+  if (kind === "f") return DISCLAIMER_F;
+  return DISCLAIMER_E;
 }
 
-export { DISCLAIMER_E as CHARGEFLOW_DISCLAIMER, DISCLAIMER_W as CHARGEFLOW_W_DISCLAIMER, standardForKind };
+export {
+  DISCLAIMER_E as CHARGEFLOW_DISCLAIMER,
+  DISCLAIMER_W as CHARGEFLOW_W_DISCLAIMER,
+  DISCLAIMER_F as CHARGEFLOW_F_DISCLAIMER,
+  standardForKind,
+};

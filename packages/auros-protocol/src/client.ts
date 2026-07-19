@@ -4,6 +4,11 @@ import type {
   AttestCreateRequest,
   AttestResponse,
   AttestVerifyResponse,
+  ChargeflowCreateRequest,
+  ChargeflowFCreateRequest,
+  ChargeflowResponse,
+  ChargeflowVerifyResponse,
+  ChargeflowWCreateRequest,
   ChecklistRequest,
   ChecklistResponse,
   CompareRequest,
@@ -132,6 +137,55 @@ export class AurosProtocol {
     const qs = params.toString();
     return this.getPublic<AttestVerifyResponse>(
       `/api/v1/attest/verify${qs ? `?${qs}` : ""}`
+    );
+  }
+
+  async createChargeflowE(
+    body: ChargeflowCreateRequest
+  ): Promise<ChargeflowResponse> {
+    return this.post<ChargeflowResponse>("/api/v1/chargeflow", body);
+  }
+
+  async createChargeflowW(
+    body: ChargeflowWCreateRequest
+  ): Promise<ChargeflowResponse> {
+    return this.post<ChargeflowResponse>("/api/v1/chargeflow/w", body);
+  }
+
+  async createChargeflowF(
+    body: ChargeflowFCreateRequest
+  ): Promise<ChargeflowResponse> {
+    return this.post<ChargeflowResponse>("/api/v1/chargeflow/f", body);
+  }
+
+  async getChargeflow(id: string): Promise<ChargeflowResponse> {
+    return this.getPublic<ChargeflowResponse>(
+      `/api/v1/chargeflow/${encodeURIComponent(id)}`
+    );
+  }
+
+  async verifyChargeflow(query: {
+    id?: string;
+    hash?: string;
+    sig?: string;
+  }): Promise<ChargeflowVerifyResponse> {
+    const params = new URLSearchParams();
+    if (query.id) params.set("id", query.id);
+    if (query.hash) params.set("hash", query.hash);
+    if (query.sig) params.set("sig", query.sig);
+    const qs = params.toString();
+    return this.getPublic<ChargeflowVerifyResponse>(
+      `/api/v1/chargeflow/verify${qs ? `?${qs}` : ""}`
+    );
+  }
+
+  async retireChargeflow(
+    id: string,
+    body: { reason?: string } = {}
+  ): Promise<ChargeflowResponse> {
+    return this.post<ChargeflowResponse>(
+      `/api/v1/chargeflow/${encodeURIComponent(id)}/retire`,
+      body
     );
   }
 

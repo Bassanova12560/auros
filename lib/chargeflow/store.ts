@@ -23,6 +23,9 @@ export type ChargeflowPublicSnapshot = {
   external_session_id?: string;
   volume_m3?: number;
   external_flow_id?: string;
+  capacity_kw?: number;
+  external_window_id?: string;
+  direction?: string;
   started_at: string;
   ended_at: string;
   operator_id?: string;
@@ -35,6 +38,8 @@ export type ChargeflowPublicSnapshot = {
   h2o_tier?: "high" | "mid" | "low" | null;
   h2o_asset_class?: string | null;
   flow_m3_indicative?: number | null;
+  capacity_kw_indicative?: number | null;
+  program_hint?: string | null;
   issued_at: string;
 };
 
@@ -74,6 +79,7 @@ function normalizeRecord(raw: ChargeflowRecord): ChargeflowRecord {
       raw.external_ref ??
       raw.public?.external_session_id ??
       raw.public?.external_flow_id ??
+      raw.public?.external_window_id ??
       raw.id,
     public: {
       ...raw.public,
@@ -409,6 +415,37 @@ export function buildPublicSnapshotW(
     h2o_tier: auros.h2o_tier ?? null,
     h2o_asset_class: auros.h2o_asset_class ?? null,
     flow_m3_indicative: auros.flow_m3_indicative ?? volumeM3,
+    issued_at: issuedAt,
+  };
+}
+
+export function buildPublicSnapshotF(
+  issuedAt: string,
+  capacityKw: number,
+  externalWindowId: string,
+  startedAt: string,
+  endedAt: string,
+  auros: ChargeflowAurosEnrichment,
+  extras: {
+    operator_id?: string;
+    country?: string;
+    direction?: string;
+  }
+): ChargeflowPublicSnapshot {
+  return {
+    standard: standardForKind("f"),
+    unit_kind: "f",
+    capacity_kw: capacityKw,
+    external_window_id: externalWindowId,
+    started_at: startedAt,
+    ended_at: endedAt,
+    ...(extras.direction ? { direction: extras.direction } : {}),
+    ...(extras.operator_id ? { operator_id: extras.operator_id } : {}),
+    ...(extras.country ? { country: extras.country } : {}),
+    watt_rating: auros.watt_rating ?? null,
+    watt_tier: auros.watt_tier ?? null,
+    capacity_kw_indicative: auros.capacity_kw_indicative ?? capacityKw,
+    program_hint: auros.program_hint ?? null,
     issued_at: issuedAt,
   };
 }

@@ -199,7 +199,21 @@ export function ChargeflowPitchView() {
         </ul>
         <p className="text-xs text-white/35">
           Compatible Supercharger-class / CPO / flottes. Aucune claim de partnership
-          Tesla. Voir{" "}
+          Tesla.{" "}
+          <Link
+            href="/green/chargeflow/fleets"
+            className="text-white/55 underline-offset-2 hover:underline"
+          >
+            Tunnel flottes
+          </Link>
+          {" · "}
+          <Link
+            href="/green/chargeflow/flex"
+            className="text-white/55 underline-offset-2 hover:underline"
+          >
+            CFU-F
+          </Link>
+          . Voir{" "}
           <Link
             href="/developers/docs/endpoint-chargeflow"
             className="text-white/55 underline-offset-2 hover:underline"

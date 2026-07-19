@@ -1408,6 +1408,47 @@ curl -X POST ${BASE}/api/v1/chargeflow/cfu_e_…/retire \\
     ],
   },
   {
+    slug: "endpoint-chargeflow-f",
+    title: "POST /api/v1/chargeflow/f (Premium)",
+    description:
+      "AUROS ChargeFlow CFU-F — enregistre une fenêtre de flexibilité kW en unité hashée + HMAC, avec Watt companion.",
+    category: "endpoints",
+    categoryLabel: "Endpoints",
+    relatedSlugs: ["endpoint-chargeflow", "endpoint-chargeflow-w", "endpoint-green-watt"],
+    sections: [
+      {
+        heading: "Enregistrer une CFU-F",
+        paragraphs: [
+          "Premium. Entrée : JSON window (capacity_kw + fenêtre). Sortie : `cfu_f_*`, HMAC `auros-cfu-f:v1:`.",
+          "UI : /green/chargeflow/flex · tunnel flottes : /green/chargeflow/fleets.",
+        ],
+        code: `curl -X POST ${BASE}/api/v1/chargeflow/f \\
+  -H "Authorization: Bearer auros_pk_live_xxx" \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "window": {
+      "external_window_id": "win_001",
+      "started_at": "2026-07-19T18:00:00Z",
+      "ended_at": "2026-07-19T20:00:00Z",
+      "capacity_kw": 250,
+      "direction": "down",
+      "operator_id": "fleet_demo",
+      "source_format": "json_custom"
+    },
+    "attributes": { "program_hint": "afrr" }
+  }'`,
+        language: "bash",
+      },
+      {
+        heading: "Vérifier",
+        paragraphs: [
+          "GET /api/v1/chargeflow/f/verify?id=cfu_f_…",
+          "Demo : POST /api/v1/chargeflow/f/demo",
+        ],
+      },
+    ],
+  },
+  {
     slug: "endpoint-webhooks",
     title: "POST /api/v1/webhooks (Premium)",
     description: "Enregistrer des endpoints webhook signés HMAC pour alertes Protocol.",

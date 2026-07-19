@@ -4,6 +4,7 @@ import { computeWattScoreFromText } from "@/lib/green/scoring/watt-score";
 import type { ChargeflowAurosEnrichment } from "./canonical";
 import type {
   ChargeflowCreateRequest,
+  ChargeflowFCreateRequest,
   ChargeflowWCreateRequest,
 } from "./schema";
 
@@ -84,5 +85,38 @@ export function enrichChargeflowWithH2o(
     h2o_tier: h2o.tier,
     h2o_asset_class: h2o.asset_class,
     flow_m3_indicative: input.flow.volume_m3,
+  };
+}
+
+/** Watt companion for flexibility windows (indicative). */
+export function enrichChargeflowWithFlex(
+  input: ChargeflowFCreateRequest
+): ChargeflowAurosEnrichment {
+  const program = input.attributes?.program_hint ?? "unknown";
+  const country = input.window.location?.country ?? "";
+  const text = [
+    "EV charging flexibility kW demand response renewable",
+    `${input.window.capacity_kw} kW`,
+    program !== "unknown" ? program : "afrr",
+    input.window.direction,
+    country,
+    input.window.operator_id ?? "",
+  ]
+    .filter(Boolean)
+    .join(" ");
+
+  const watt = computeWattScoreFromText(text, { country: country || undefined });
+  const rating =
+    watt?.rating ??
+    Math.max(
+      30,
+      Math.min(85, Math.round(40 + Math.log10(input.window.capacity_kw + 1) * 12))
+    );
+
+  return {
+    watt_rating: rating,
+    watt_tier: rating >= 70 ? "high" : rating >= 45 ? "mid" : "early",
+    capacity_kw_indicative: input.window.capacity_kw,
+    program_hint: program,
   };
 }

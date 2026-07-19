@@ -74,6 +74,40 @@ export const chargeflowWCreateRequestSchema = z.object({
   attributes: chargeflowWAttributesSchema,
 });
 
+export const chargeflowWindowSchema = z.object({
+  external_window_id: z.string().min(1).max(128),
+  started_at: z.string().min(10).max(40),
+  ended_at: z.string().min(10).max(40),
+  capacity_kw: z.number().positive().max(1_000_000),
+  direction: z.enum(["up", "down", "both"]).default("both"),
+  location: z
+    .object({
+      country: z.string().max(64).optional(),
+      site_id: z.string().max(128).optional(),
+      asset_id: z.string().max(128).optional(),
+    })
+    .optional(),
+  operator_id: z.string().max(128).optional(),
+  source_format: z
+    .enum(["csv", "scada_summary", "json_custom"])
+    .default("json_custom"),
+});
+
+export const chargeflowFAttributesSchema = z
+  .object({
+    program_hint: z
+      .enum(["fcr", "afrr", "mfrr", "demand_response", "unknown"])
+      .default("unknown"),
+    compare_ref_id: z.string().max(64).optional(),
+    notes: z.string().max(500).optional(),
+  })
+  .optional();
+
+export const chargeflowFCreateRequestSchema = z.object({
+  window: chargeflowWindowSchema,
+  attributes: chargeflowFAttributesSchema,
+});
+
 export const chargeflowRetireRequestSchema = z.object({
   reason: z.string().max(500).optional(),
 });
@@ -84,6 +118,10 @@ export type ChargeflowWCreateRequest = z.infer<
   typeof chargeflowWCreateRequestSchema
 >;
 export type ChargeflowFlow = z.infer<typeof chargeflowFlowSchema>;
+export type ChargeflowFCreateRequest = z.infer<
+  typeof chargeflowFCreateRequestSchema
+>;
+export type ChargeflowWindow = z.infer<typeof chargeflowWindowSchema>;
 export type ChargeflowRetireRequest = z.infer<
   typeof chargeflowRetireRequestSchema
 >;

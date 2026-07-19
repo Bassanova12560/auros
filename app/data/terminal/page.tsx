@@ -240,6 +240,13 @@ export default async function DataTerminalPage() {
           >
             CFU-W
           </Link>
+          <span className="text-white/20">·</span>
+          <Link
+            href="/green/chargeflow/fleets"
+            className="font-mono text-xs uppercase tracking-wider text-white/50 hover:text-white/80"
+          >
+            Fleets
+          </Link>
         </section>
       </div>
     </FocusPageShell>

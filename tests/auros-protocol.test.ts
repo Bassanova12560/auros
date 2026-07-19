@@ -88,6 +88,64 @@ describe("@adrien1212balitrand/auros-protocol SDK", () => {
     assert.equal(result.valid, true);
   });
 
+  it("createChargeflowE() posts CFU-E mint", async () => {
+    const client = new AurosProtocol({
+      apiKey: "auros_pk_live_xxx",
+      fetch: mockFetch((url, init) => {
+        assert.ok(url.endsWith("/api/v1/chargeflow"));
+        assert.equal(init?.method, "POST");
+        return Response.json({
+          id: "cfu_e_abc",
+          unit_kind: "e",
+          content_hash: "a".repeat(64),
+          signature: "b".repeat(64),
+          verify_url: "https://getauros.com/chargeflow/cfu_e_abc",
+          status: "active",
+          public: { energy_kwh: 10 },
+          created_at: "2026-07-19T00:00:00.000Z",
+          disclaimer: "test",
+          valid: true,
+        });
+      }),
+    });
+    const result = await client.createChargeflowE({
+      session: {
+        external_session_id: "s1",
+        started_at: "2026-07-19T10:00:00Z",
+        ended_at: "2026-07-19T11:00:00Z",
+        energy_kwh: 10,
+      },
+    });
+    assert.equal(result.unit_kind, "e");
+    assert.equal(result.id, "cfu_e_abc");
+  });
+
+  it("retireChargeflow() posts retire", async () => {
+    const client = new AurosProtocol({
+      apiKey: "auros_pk_live_xxx",
+      fetch: mockFetch((url, init) => {
+        assert.ok(url.includes("/api/v1/chargeflow/cfu_e_abc/retire"));
+        assert.equal(init?.method, "POST");
+        return Response.json({
+          id: "cfu_e_abc",
+          unit_kind: "e",
+          content_hash: "a".repeat(64),
+          signature: "b".repeat(64),
+          verify_url: "https://getauros.com/chargeflow/cfu_e_abc",
+          status: "retired",
+          public: {},
+          created_at: "2026-07-19T00:00:00.000Z",
+          disclaimer: "test",
+          valid: true,
+        });
+      }),
+    });
+    const result = await client.retireChargeflow("cfu_e_abc", {
+      reason: "cited",
+    });
+    assert.equal(result.status, "retired");
+  });
+
   it("scoreBatch() posts items array", async () => {
     const client = new AurosProtocol({
       apiKey: "auros_pk_test_demo",

@@ -1035,6 +1035,64 @@ paths:
       responses:
         "200":
           description: Demo unit
+  /api/v1/chargeflow/f:
+    post:
+      tags: [Premium]
+      summary: Register CFU-F flexibility window unit
+      operationId: createChargeflowCfuF
+      description: |
+        Premium. Off-chain ChargeFlow Unit Flex — SHA-256 + HMAC (`auros-cfu-f:v1:`) + Watt companion.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ChargeflowFCreateRequest"
+      responses:
+        "200":
+          description: CFU-F registered
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ChargeflowResponse"
+        "409":
+          description: Active unit already exists for this window
+        "403":
+          $ref: "#/components/responses/PremiumRequired"
+  /api/v1/chargeflow/f/verify:
+    get:
+      tags: [Public]
+      summary: Verify CFU-F unit
+      operationId: verifyChargeflowF
+      security: []
+      parameters:
+        - name: id
+          in: query
+          schema: { type: string }
+        - name: hash
+          in: query
+          schema: { type: string }
+        - name: sig
+          in: query
+          schema: { type: string }
+      responses:
+        "200":
+          description: Verification result
+  /api/v1/chargeflow/f/demo:
+    post:
+      tags: [Public]
+      summary: Sandbox CFU-F mint
+      operationId: demoChargeflowCfuF
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ChargeflowFCreateRequest"
+      responses:
+        "200":
+          description: Demo unit
   /api/v1/webhooks:
     post:
       tags: [Premium]
@@ -2155,11 +2213,44 @@ components:
             asset_class_hint: { type: string }
             compare_ref_id: { type: string }
             notes: { type: string }
+    ChargeflowFCreateRequest:
+      type: object
+      required: [window]
+      properties:
+        window:
+          type: object
+          required: [external_window_id, started_at, ended_at, capacity_kw]
+          properties:
+            external_window_id: { type: string }
+            started_at: { type: string }
+            ended_at: { type: string }
+            capacity_kw: { type: number }
+            direction:
+              type: string
+              enum: [up, down, both]
+            operator_id: { type: string }
+            source_format:
+              type: string
+              enum: [csv, scada_summary, json_custom]
+            location:
+              type: object
+              properties:
+                country: { type: string }
+                site_id: { type: string }
+                asset_id: { type: string }
+        attributes:
+          type: object
+          properties:
+            program_hint:
+              type: string
+              enum: [fcr, afrr, mfrr, demand_response, unknown]
+            compare_ref_id: { type: string }
+            notes: { type: string }
     ChargeflowResponse:
       type: object
       properties:
         id: { type: string }
-        unit_kind: { type: string, enum: [e, w] }
+        unit_kind: { type: string, enum: [e, w, f] }
         content_hash: { type: string }
         signature: { type: string }
         verify_url: { type: string, format: uri }

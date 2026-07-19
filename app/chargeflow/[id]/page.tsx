@@ -16,6 +16,12 @@ function shortHash(hash: string): string {
   return `${hash.slice(0, 10)}…${hash.slice(-8)}`;
 }
 
+function kindLabel(kind: string): string {
+  if (kind === "w") return "CFU-W";
+  if (kind === "f") return "CFU-F";
+  return "CFU-E";
+}
+
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { id } = await params;
   const record = await getChargeflowById(decodeURIComponent(id));
@@ -25,14 +31,16 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       robots: { index: false, follow: false },
     };
   }
-  const kind = record.unit_kind === "w" ? "CFU-W" : "CFU-E";
+  const label = kindLabel(record.unit_kind);
   const detail =
     record.unit_kind === "w"
       ? `${record.public.volume_m3 ?? "—"} m³`
-      : `${record.public.energy_kwh ?? "—"} kWh`;
+      : record.unit_kind === "f"
+        ? `${record.public.capacity_kw ?? "—"} kW`
+        : `${record.public.energy_kwh ?? "—"} kWh`;
   return {
     title: `ChargeFlow ${record.id} | AUROS`,
-    description: `AUROS ${kind} — ${detail}, status ${record.status}.`,
+    description: `AUROS ${label} — ${detail}, status ${record.status}.`,
     robots: { index: false, follow: false },
   };
 }
@@ -48,7 +56,7 @@ export default async function ChargeflowVerifyPage({ params }: PageProps) {
     record.content_hash,
     record.signature
   );
-  const isW = record.unit_kind === "w";
+  const kind = record.unit_kind;
   const issued = (() => {
     try {
       return new Date(record.created_at).toLocaleDateString("fr-FR", {
@@ -61,6 +69,27 @@ export default async function ChargeflowVerifyPage({ params }: PageProps) {
     }
   })();
 
+  const verifyApi =
+    kind === "w"
+      ? `/api/v1/chargeflow/w/verify?id=${encodeURIComponent(record.id)}`
+      : kind === "f"
+        ? `/api/v1/chargeflow/f/verify?id=${encodeURIComponent(record.id)}`
+        : `/api/v1/chargeflow/verify?id=${encodeURIComponent(record.id)}`;
+
+  const docsHref =
+    kind === "w"
+      ? "/developers/docs/endpoint-chargeflow-w"
+      : kind === "f"
+        ? "/developers/docs/endpoint-chargeflow-f"
+        : "/developers/docs/endpoint-chargeflow";
+
+  const homeHref =
+    kind === "w"
+      ? "/eau/chargeflow"
+      : kind === "f"
+        ? "/green/chargeflow/flex"
+        : "/green/chargeflow";
+
   return (
     <div className="page-inner page-inner--2xl mx-auto px-4 pb-16 pt-10 md:px-6">
       <BezelCard innerClassName="p-6 md:p-10">
@@ -68,7 +97,7 @@ export default async function ChargeflowVerifyPage({ params }: PageProps) {
           AUROS ChargeFlow
         </p>
         <h1 className="mt-4 font-display text-3xl font-semibold text-white">
-          {isW ? "CFU-W Unit" : "CFU-E Unit"}
+          {kindLabel(kind)} Unit
         </h1>
         <p className="mt-2 flex flex-wrap gap-3 font-mono text-xs uppercase tracking-wider">
           <span className={valid ? "text-white/70" : "text-white/45"}>
@@ -76,7 +105,9 @@ export default async function ChargeflowVerifyPage({ params }: PageProps) {
           </span>
           <span
             className={
-              record.status === "retired" ? "text-amber-400/80" : "text-emerald-400/80"
+              record.status === "retired"
+                ? "text-amber-400/80"
+                : "text-emerald-400/80"
             }
           >
             {record.status === "retired" ? "Retired" : "Active"}
@@ -90,7 +121,7 @@ export default async function ChargeflowVerifyPage({ params }: PageProps) {
             </dt>
             <dd className="mt-1 font-mono text-sm text-white/85">{record.id}</dd>
           </div>
-          {isW ? (
+          {kind === "w" ? (
             <>
               <div>
                 <dt className="font-mono text-[10px] uppercase tracking-wider text-white/35">
@@ -107,9 +138,6 @@ export default async function ChargeflowVerifyPage({ params }: PageProps) {
                 <dd className="mt-1 text-white/75">
                   {record.public.h2o_rating ?? "—"}
                   {record.public.h2o_tier ? ` · ${record.public.h2o_tier}` : ""}
-                  {record.public.h2o_asset_class
-                    ? ` · ${record.public.h2o_asset_class}`
-                    : ""}
                 </dd>
               </div>
               <div>
@@ -118,6 +146,39 @@ export default async function ChargeflowVerifyPage({ params }: PageProps) {
                 </dt>
                 <dd className="mt-1 font-mono text-sm text-white/75">
                   {record.public.external_flow_id}
+                </dd>
+              </div>
+            </>
+          ) : kind === "f" ? (
+            <>
+              <div>
+                <dt className="font-mono text-[10px] uppercase tracking-wider text-white/35">
+                  Capacity
+                </dt>
+                <dd className="mt-1 text-lg text-white">
+                  {record.public.capacity_kw} kW
+                  {record.public.direction
+                    ? ` · ${record.public.direction}`
+                    : ""}
+                </dd>
+              </div>
+              <div>
+                <dt className="font-mono text-[10px] uppercase tracking-wider text-white/35">
+                  Watt companion
+                </dt>
+                <dd className="mt-1 text-white/75">
+                  {record.public.watt_rating ?? "—"}
+                  {record.public.program_hint
+                    ? ` · ${record.public.program_hint}`
+                    : ""}
+                </dd>
+              </div>
+              <div>
+                <dt className="font-mono text-[10px] uppercase tracking-wider text-white/35">
+                  Window
+                </dt>
+                <dd className="mt-1 font-mono text-sm text-white/75">
+                  {record.public.external_window_id}
                 </dd>
               </div>
             </>
@@ -201,27 +262,19 @@ export default async function ChargeflowVerifyPage({ params }: PageProps) {
 
         <div className="mt-8 flex flex-wrap gap-4">
           <Link
-            href={
-              isW
-                ? `/api/v1/chargeflow/w/verify?id=${encodeURIComponent(record.id)}`
-                : `/api/v1/chargeflow/verify?id=${encodeURIComponent(record.id)}`
-            }
+            href={verifyApi}
             className="font-mono text-xs uppercase tracking-wider text-white/55 underline-offset-4 hover:text-white hover:underline"
           >
             JSON verify API
           </Link>
           <Link
-            href={
-              isW
-                ? "/developers/docs/endpoint-chargeflow-w"
-                : "/developers/docs/endpoint-chargeflow"
-            }
+            href={docsHref}
             className="font-mono text-xs uppercase tracking-wider text-white/55 underline-offset-4 hover:text-white hover:underline"
           >
             Documentation
           </Link>
           <Link
-            href={isW ? "/eau/chargeflow" : "/green/chargeflow"}
+            href={homeHref}
             className="font-mono text-xs uppercase tracking-wider text-white/55 underline-offset-4 hover:text-white hover:underline"
           >
             ChargeFlow

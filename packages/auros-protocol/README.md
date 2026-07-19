@@ -55,6 +55,14 @@ console.log(api_key); // store securely — shown once
 | `getMonitor(id)` | `GET /api/v1/monitor/:id` | Bearer (premium) |
 | `deleteMonitor(id)` | `DELETE /api/v1/monitor/:id` | Bearer (premium) |
 | `dossier(body)` | `POST /api/v1/dossier` | Bearer (premium) |
+| `attest(body)` | `POST /api/v1/attest` | Bearer (premium) |
+| `verifyAttest(query)` | `GET /api/v1/attest/verify` | None |
+| `createChargeflowE(body)` | `POST /api/v1/chargeflow` | Bearer (premium) |
+| `createChargeflowW(body)` | `POST /api/v1/chargeflow/w` | Bearer (premium) |
+| `createChargeflowF(body)` | `POST /api/v1/chargeflow/f` | Bearer (premium) |
+| `getChargeflow(id)` | `GET /api/v1/chargeflow/:id` | None |
+| `verifyChargeflow(query)` | `GET /api/v1/chargeflow/verify` | None |
+| `retireChargeflow(id, body?)` | `POST /api/v1/chargeflow/:id/retire` | Bearer (premium) |
 | `registerWebhook(body)` | `POST /api/v1/webhooks` | Bearer (premium) |
 | `webhooks()` | `GET /api/v1/webhooks` | Bearer (premium) |
 | `deleteWebhook(id)` | `DELETE /api/v1/webhooks/:id` | Bearer (premium) |

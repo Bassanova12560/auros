@@ -1,19 +1,23 @@
 import {
   buildChargeflowCanonical,
+  buildChargeflowFCanonical,
   buildChargeflowWCanonical,
   chargeflowContentSha256,
 } from "./canonical";
 import {
+  enrichChargeflowWithFlex,
   enrichChargeflowWithH2o,
   enrichChargeflowWithWatt,
 } from "./enrich";
 import type {
   ChargeflowCreateRequest,
+  ChargeflowFCreateRequest,
   ChargeflowWCreateRequest,
 } from "./schema";
 import { newChargeflowUnitId, requireChargeflowSignature } from "./signing";
 import {
   buildPublicSnapshotE,
+  buildPublicSnapshotF,
   buildPublicSnapshotW,
   chargeflowRecordFromParts,
   chargeflowVerifyUrl,
@@ -151,6 +155,73 @@ export async function createChargeflowWUnit(
     unitKind: "w",
     externalRef,
     operatorId: input.flow.operator_id,
+    unitId,
+  });
+  const record = await createChargeflowRecord(draft);
+
+  return {
+    record,
+    verify_url: chargeflowVerifyUrl(record.id),
+  };
+}
+
+export async function createChargeflowFUnit(
+  keyHash: string,
+  input: ChargeflowFCreateRequest
+): Promise<CreateChargeflowResult | { error: string; status: number }> {
+  const externalRef = input.window.external_window_id;
+  const conflict = await findActiveChargeflowConflict(
+    "f",
+    keyHash,
+    input.window.operator_id,
+    externalRef
+  );
+  if (conflict) {
+    return {
+      error: `Active CFU-F already exists for this window (${conflict.id}). Retire it before re-minting.`,
+      status: 409,
+    };
+  }
+
+  const unitId = newChargeflowUnitId("f");
+  const issuedAt = new Date().toISOString();
+  const auros = enrichChargeflowWithFlex(input);
+  const canonical = buildChargeflowFCanonical(unitId, input, auros, issuedAt);
+  const contentHash = chargeflowContentSha256(canonical);
+
+  let signature: string;
+  try {
+    signature = requireChargeflowSignature(contentHash, "f");
+  } catch {
+    return {
+      error:
+        "ChargeFlow signing is not configured (set ATTEST_SIGNING_KEY or CRON_SECRET)",
+      status: 503,
+    };
+  }
+
+  const publicSnapshot = buildPublicSnapshotF(
+    issuedAt,
+    input.window.capacity_kw,
+    input.window.external_window_id,
+    input.window.started_at,
+    input.window.ended_at,
+    auros,
+    {
+      operator_id: input.window.operator_id,
+      country: input.window.location?.country,
+      direction: input.window.direction,
+    }
+  );
+
+  const draft = chargeflowRecordFromParts({
+    keyHash,
+    contentHash,
+    signature,
+    publicSnapshot,
+    unitKind: "f",
+    externalRef,
+    operatorId: input.window.operator_id,
     unitId,
   });
   const record = await createChargeflowRecord(draft);

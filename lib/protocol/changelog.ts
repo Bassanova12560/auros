@@ -25,6 +25,24 @@ export type ProtocolChangelogEntry = {
 /** Single source for `/developers/changelog` and GET `/api/v1/changelog`. Newest first. */
 export const PROTOCOL_CHANGELOG: ProtocolChangelogEntry[] = [
   {
+    id: "chargeflow-cfu-f-sdk-fleets",
+    date: "2026-07-19",
+    title: "CFU-F flex + SDK ChargeFlow + tunnel fleets",
+    summary:
+      "POST /api/v1/chargeflow/f, méthodes SDK create/get/verify/retire, landing /green/chargeflow/fleets.",
+    details: [
+      "CFU-F : fenêtre kW + HMAC auros-cfu-f:v1: + Watt companion.",
+      "SDK @adrien1212balitrand/auros-protocol — ChargeFlow E/W/F.",
+      "Tunnel commercial flottes/CPO sans claim Tesla.",
+    ],
+    links: [
+      { href: "/developers/docs/endpoint-chargeflow-f", label: "Docs CFU-F" },
+      { href: "/green/chargeflow/fleets", label: "Tunnel fleets" },
+    ],
+    tags: ["chargeflow", "sdk", "premium"],
+    status: "released",
+  },
+  {
     id: "chargeflow-v01-cfu-w",
     date: "2026-07-19",
     title: "ChargeFlow v0.1 — unicité, retirement & CFU-W",

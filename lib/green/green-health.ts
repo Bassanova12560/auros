@@ -11,6 +11,8 @@ export const GREEN_HEALTH_PATHS = [
   "/green/registry-connect",
   "/green/dpp",
   "/green/chargeflow",
+  "/green/chargeflow/flex",
+  "/green/chargeflow/fleets",
   "/eau/chargeflow",
   "/eau",
   "/comment-tokeniser/eau",

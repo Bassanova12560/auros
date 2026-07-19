@@ -7,6 +7,7 @@ import {
   chargeflowContentSha256,
   chargeflowCreateRequestSchema,
   chargeflowWCreateRequestSchema,
+  createChargeflowFUnit,
   createChargeflowUnit,
   createChargeflowWUnit,
   enrichChargeflowWithH2o,
@@ -176,5 +177,32 @@ describe("chargeflow uniqueness + retirement", () => {
     assert.ok(result.record.id.startsWith("cfu_w_"));
     assert.equal(result.record.unit_kind, "w");
     assert.ok(typeof result.record.public.h2o_rating === "number");
+  });
+
+  it("mints CFU-F with watt companion", async () => {
+    const key = `test_key_${Date.now()}_f`;
+    const input = {
+      window: {
+        external_window_id: `win_${Date.now()}`,
+        started_at: "2026-07-19T18:00:00Z",
+        ended_at: "2026-07-19T20:00:00Z",
+        capacity_kw: 250,
+        direction: "down" as const,
+        operator_id: "fleet_demo",
+        source_format: "json_custom" as const,
+      },
+      attributes: { program_hint: "afrr" as const },
+    };
+    const result = await createChargeflowFUnit(key, input);
+    assert.ok(!("error" in result));
+    assert.ok(result.record.id.startsWith("cfu_f_"));
+    assert.equal(result.record.unit_kind, "f");
+    assert.ok(typeof result.record.public.watt_rating === "number");
+    const sig = signChargeflowHash(result.record.content_hash, "f");
+    assert.ok(sig);
+    assert.equal(
+      verifyChargeflowSignature(result.record.content_hash, sig!, "f"),
+      true
+    );
   });
 });
