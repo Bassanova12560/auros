@@ -1,0 +1,47 @@
+# Deploy production to Vercel on every push to main.
+# Fallback when the Vercel↔GitHub App link is broken.
+#
+# Required GitHub Actions secrets:
+#   VERCEL_TOKEN       — https://vercel.com/account/tokens
+#   VERCEL_ORG_ID      — team_IBN99LMW1bdclKpsNdqEo36J
+#   VERCEL_PROJECT_ID  — prj_Iwegxo1eUkr3qcZUhnQCYbqvWdPi
+#
+# Prefer native Git integration when available:
+#   Vercel → Project → Settings → Git → Connect
+#   GitHub → Settings → Applications → Vercel → grant repo Bassanova12560/auros
+
+name: Deploy Vercel
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: vercel-prod
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+
+      - name: Install Vercel CLI
+        run: npm install -g vercel@56
+
+      - name: Pull Vercel env
+        run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: Build
+        run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: Deploy prebuilt
+        run: vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}

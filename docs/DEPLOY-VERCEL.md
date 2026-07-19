@@ -10,13 +10,33 @@ git push origin main
 
 ### Auto-deploy GitHub (recommandé)
 
-Si les pushes ne déclenchent plus de build Vercel :
+Deux chemins — **A (natif)** préféré, **B (Actions)** si `vercel git connect` échoue.
+
+#### A — Intégration Git Vercel (natif)
+
+1. Ouvrir [Installer / configurer l’app Vercel sur GitHub](https://github.com/apps/vercel) → **Configure** → autoriser le repo `Bassanova12560/auros` (ou *All repositories*).
+2. Dans [Vercel → auros → Settings → Git](https://vercel.com/adrienbalitrand-7929s-projects/auros/settings/git) : Connect `Bassanova12560/auros`, Production Branch = `main`.
+3. CLI (après l’étape 1) :
 
 ```bash
 npx vercel git connect https://github.com/Bassanova12560/auros.git
 ```
 
-Vérifier dans **Vercel → Project → Settings → Git** : repo connecté, branche `main`, Production Branch = `main`.
+Si l’erreur *Failed to connect… access* revient : l’app GitHub n’a pas encore accès au repo — reprendre l’étape 1.
+
+#### B — Fallback GitHub Actions
+
+Workflow [`.github/workflows/deploy-vercel.yml`](../.github/workflows/deploy-vercel.yml) : push `main` → build + deploy prod.
+
+Secrets GitHub (`Settings → Secrets and variables → Actions`) :
+
+| Secret | Valeur |
+|--------|--------|
+| `VERCEL_TOKEN` | [Create Token](https://vercel.com/account/tokens) |
+| `VERCEL_ORG_ID` | `team_IBN99LMW1bdclKpsNdqEo36J` |
+| `VERCEL_PROJECT_ID` | `prj_Iwegxo1eUkr3qcZUhnQCYbqvWdPi` |
+
+Puis *Actions → Deploy Vercel → Run workflow* pour tester.
 
 Sinon déploiement manuel :
 
