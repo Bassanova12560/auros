@@ -225,6 +225,7 @@ export type GreenMessages = {
       compare: string;
       label: string;
       chargeflow: string;
+      fleets: string;
       assistant: string;
       assistantTitle: string;
       assistantBeta: string;
@@ -1079,6 +1080,7 @@ const FR: GreenMessages = {
       compare: "Comparateur",
       label: "Candidature label",
       chargeflow: "ChargeFlow CFU-E",
+      fleets: "ChargeFlow flottes / CPO",
       assistant: "Assistant RTMS (bêta)",
       assistantTitle: "Assistant RTMS",
       assistantBeta: "bêta",
@@ -2024,6 +2026,7 @@ const EN: GreenMessages = {
       compare: "Comparator",
       label: "Label application",
       chargeflow: "ChargeFlow CFU-E",
+      fleets: "ChargeFlow fleets / CPO",
       assistant: "RTMS assistant (beta)",
       assistantTitle: "RTMS assistant",
       assistantBeta: "beta",
@@ -2971,6 +2974,7 @@ const ES: GreenMessages = {
       compare: "Comparador",
       label: "Solicitud etiqueta",
       chargeflow: "ChargeFlow CFU-E",
+      fleets: "ChargeFlow flotas / CPO",
       assistant: "Asistente RTMS (beta)",
       assistantTitle: "Asistente RTMS",
       assistantBeta: "beta",
