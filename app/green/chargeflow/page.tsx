@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 import { AiFirstPageJsonLd } from "@/app/_components/ai-first/AiFirstPageJsonLd";
-import { CHARGEFLOW_ROUTE } from "@/lib/chargeflow";
+import { CHARGEFLOW_ROUTE } from "@/lib/chargeflow/constants";
 import { metadataFromPath } from "@/lib/seo/metadata";
 
 import { ChargeflowPitchView } from "./ChargeflowPitchView";

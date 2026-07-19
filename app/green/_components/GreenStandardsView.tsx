@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useCallback } from "react";
 
 import { useLocale } from "@/app/_components/i18n/LocaleProvider";
-import { CHARGEFLOW_ROUTE } from "@/lib/chargeflow";
+import { CHARGEFLOW_ROUTE } from "@/lib/chargeflow/constants";
 import {
   GREEN_COMPARE_ROUTE,
   GREEN_LABEL_ROUTE,
