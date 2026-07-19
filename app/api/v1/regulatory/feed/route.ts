@@ -10,6 +10,7 @@ import { findKeyRecord } from "@/lib/protocol/auth/keys";
 import {
   queryRegulatoryFeed,
   REGULATORY_FEED_LAST_UPDATED,
+  REGULATORY_RULES_VERSION,
   toPublicFeedItem,
 } from "@/lib/protocol/regulatory/feed";
 import { logProtocolUsage } from "@/lib/protocol/usage/log";
@@ -40,13 +41,15 @@ export const GET = protocolRoute(async (req: Request) => {
 
   return protocolJson({
     last_updated: REGULATORY_FEED_LAST_UPDATED,
+    rules_version: REGULATORY_RULES_VERSION,
     total: items.length,
     query: parsed.data,
     items: items.map(toPublicFeedItem),
     meta: {
       version: "1.0",
       source: "curated",
-      note: "v1 curated feed — v2 will add live ESMA/AMF/BaFin polling.",
+      twin: "regulatory_lite",
+      note: "Curated versioned ruleset (Regulatory Twin lite). Live regulator polling is roadmap — not this feed.",
     },
   });
 });

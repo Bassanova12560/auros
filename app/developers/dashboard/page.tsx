@@ -11,6 +11,9 @@ import {
   deliveryToPublic,
   listRecentDeliveriesForKey,
 } from "@/lib/protocol/webhooks/deliveries";
+import { listMonitorsForKey } from "@/lib/protocol/monitor/store";
+import { computeMonitorRegulatoryDelta } from "@/lib/protocol/monitor/delta";
+import { monitorAssetLimitForRecord } from "@/lib/protocol/auth/premium";
 
 export const DEVELOPERS_DASHBOARD_ROUTE = "/developers/dashboard";
 
@@ -29,6 +32,8 @@ export default async function DevelopersDashboardPage({
 
   let keyHash: string | null = null;
   let tier = "free";
+  let monitorPlan: string | null = null;
+  let monitorLimit = 5;
   let error: string | null = null;
 
   if (rawKey) {
@@ -36,7 +41,11 @@ export default async function DevelopersDashboardPage({
     if (validation.valid && validation.keyHash) {
       keyHash = validation.keyHash;
       const record = await findKeyRecord(keyHash);
-      if (record) tier = record.tier;
+      if (record) {
+        tier = record.tier;
+        monitorPlan = record.monitor_plan ?? null;
+        monitorLimit = monitorAssetLimitForRecord(record);
+      }
     } else {
       error = "Clé API invalide";
     }
@@ -45,7 +54,11 @@ export default async function DevelopersDashboardPage({
     if (!keyHash) error = "Aucune clé trouvée pour cet email";
     else {
       const record = await findKeyRecord(keyHash);
-      if (record) tier = record.tier;
+      if (record) {
+        tier = record.tier;
+        monitorPlan = record.monitor_plan ?? null;
+        monitorLimit = monitorAssetLimitForRecord(record);
+      }
     }
   } else {
     error = "Fournissez ?email= ou ?key= (Bearer value) pour voir vos stats";
@@ -59,6 +72,11 @@ export default async function DevelopersDashboardPage({
   const deliveries =
     keyHash && !error && tier !== "free"
       ? await listRecentDeliveriesForKey(keyHash, 15)
+      : [];
+
+  const monitors =
+    keyHash && !error && tier !== "free"
+      ? await listMonitorsForKey(keyHash)
       : [];
 
   return (
@@ -94,7 +112,13 @@ export default async function DevelopersDashboardPage({
               </div>
               <div>
                 <p className="font-mono text-[10px] text-emerald-400/80">Tier</p>
-                <p className="mt-1 font-display text-2xl text-white">{tier}</p>
+                <p className="mt-1 font-display text-2xl text-white">
+                  {tier}
+                  {monitorPlan ? ` · ${monitorPlan}` : ""}
+                </p>
+                {tier !== "free" ? (
+                  <p className="text-xs text-white/40">Monitor cap {monitorLimit}</p>
+                ) : null}
               </div>
             </div>
           )}
@@ -113,6 +137,44 @@ export default async function DevelopersDashboardPage({
             </div>
           )}
         </section>
+
+        {monitors.length > 0 && (
+          <section className="card-flat mt-6 px-5 py-5">
+            <h2 className="font-mono text-[11px] text-white/45">
+              Monitors · Regulatory Twin
+            </h2>
+            <p className="mt-2 text-xs text-white/40">
+              Delta = feed items hors baseline de création · GET /api/v1/monitor/:id/delta
+            </p>
+            <ul className="mt-4 space-y-3">
+              {monitors.map((m) => {
+                const delta = computeMonitorRegulatoryDelta(m);
+                return (
+                  <li
+                    key={m.id}
+                    className="rounded-lg border border-white/8 px-3 py-3 text-sm text-white/60"
+                  >
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                      <span className="font-mono text-[10px] text-emerald-400/80">
+                        {m.id}
+                      </span>
+                      <span className="font-mono text-[10px] text-white/35">
+                        rules {m.rules_version}
+                      </span>
+                    </div>
+                    <p className="mt-1 text-xs text-white/50">
+                      {m.asset_type} · {m.jurisdiction}
+                    </p>
+                    <p className="mt-1 font-mono text-[10px] text-amber-400/80">
+                      delta {delta.item_count} · impact {delta.impact_sum}
+                      {delta.rules_version_changed ? " · ruleset changed" : ""}
+                    </p>
+                  </li>
+                );
+              })}
+            </ul>
+          </section>
+        )}
 
         {deliveries.length > 0 && (
           <section className="card-flat mt-6 px-5 py-5">

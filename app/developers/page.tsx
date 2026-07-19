@@ -9,6 +9,7 @@ import { PROTOCOL_DOCS_ROUTE } from "@/lib/protocol/docs";
 
 import { DeveloperBrandMark } from "./_components/DeveloperBrandMark";
 import { DeveloperPlayground } from "./_components/DeveloperPlayground";
+import { MonitorCheckoutForm } from "./_components/MonitorCheckoutForm";
 
 export const DEVELOPERS_ROUTE = "/developers";
 
@@ -96,12 +97,17 @@ const PREMIUM_ENDPOINTS = [
   {
     method: "POST",
     path: "/api/v1/monitor",
-    desc: "Surveiller un actif — alertes MiCA, webhooks ESMA (premium).",
+    desc: "Surveiller un actif — alertes MiCA, snapshot Twin rules_version (premium).",
+  },
+  {
+    method: "GET",
+    path: "/api/v1/monitor/{id}/delta",
+    desc: "Regulatory Twin lite — delta feed hors baseline + impact_on_score.",
   },
   {
     method: "POST",
     path: "/api/v1/dossier",
-    desc: "Rapport institutionnel PDF/JSON — score + checklist (premium).",
+    desc: "Rapport institutionnel PDF/JSON — score + checklist + delta Twin (premium).",
   },
   {
     method: "POST",
@@ -208,15 +214,22 @@ console.log(result.score, result.grade);`}
           </pre>
         </section>
 
-        <section className="mt-10 border border-amber-500/20 bg-amber-500/[0.04] px-5 py-5">
+        <section
+          id="monitor"
+          className="mt-10 scroll-mt-28 border border-amber-500/20 bg-amber-500/[0.04] px-5 py-5"
+        >
           <h2 className="font-mono text-[11px] tracking-wide text-amber-400/80">
-            Premium — Monitor · Dossier · Attest · Webhooks
+            Premium — Monitor · Regulatory Twin · Dossier · Attest
           </h2>
           <p className="mt-3 text-sm font-light text-white/55">
-            Clé <code className="text-white/70">auros_pk_live_*</code> requise. Tarifs indicatifs :
-            49€/mo (5 actifs monitorés), 199€/mo (25 actifs). Rapports PDF institutionnels et
-            webhooks HMAC pour veille MiCA automatisée.
+            Self-serve : Monitor Starter 49 €/mo (5 actifs) ou Pro 199 €/mo (25 actifs).
+            Regulatory Twin lite = snapshot <code className="text-white/70">rules_version</code>{" "}
+            + <code className="text-white/70">GET /api/v1/monitor/:id/delta</code>. Enterprise
+            (100+ actifs) sur devis.
           </p>
+          <div className="mt-5">
+            <MonitorCheckoutForm />
+          </div>
           <div className="mt-5 grid gap-4 sm:grid-cols-3">
             {PREMIUM_ENDPOINTS.map((ep) => (
               <div key={ep.path} className="rounded-lg border border-white/[0.06] px-4 py-3">

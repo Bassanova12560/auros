@@ -7,9 +7,14 @@ import { fulfillAcademyDiplomaPayment } from "@/lib/academy/fulfill-diploma-paym
 import { parseAcademyDiplomaMetadata } from "@/lib/academy/diploma-checkout";
 import { fulfillGreenImpactPaymentFromStripe } from "@/lib/green/fulfill-impact-payment";
 import { fulfillGreenApiPremiumSubscription, downgradeGreenApiPremiumByEmail } from "@/lib/green/fulfill-green-api-subscription";
+import {
+  fulfillMonitorSubscription,
+  downgradeMonitorByEmail,
+} from "@/lib/protocol/monitor/fulfill-subscription";
 import { getStripe, stripeWebhookSecret } from "@/lib/stripe/jurisdiction-checkout";
 import { parseGreenImpactCheckoutMetadata } from "@/lib/stripe/green-impact-checkout";
 import { parseGreenApiPremiumMetadata } from "@/lib/stripe/green-api-checkout";
+import { parseMonitorCheckoutMetadata } from "@/lib/stripe/monitor-checkout";
 import { parseWizardCheckoutMetadata } from "@/lib/stripe/wizard-checkout";
 import { fulfillWizardPayment } from "@/lib/wizard/fulfill-payment";
 
@@ -67,6 +72,12 @@ export async function POST(request: Request) {
       return NextResponse.json({ received: true });
     }
 
+    const monitorMeta = parseMonitorCheckoutMetadata(sessionMeta);
+    if (monitorMeta) {
+      await fulfillMonitorSubscription(session);
+      return NextResponse.json({ received: true });
+    }
+
     const meta = parseCheckoutMetadata(
       (session.metadata ?? {}) as Record<string, string>
     );
@@ -95,9 +106,13 @@ export async function POST(request: Request) {
   if (event.type === "customer.subscription.deleted") {
     const subscription = event.data.object as Stripe.Subscription;
     const meta = (subscription.metadata ?? {}) as Record<string, string>;
-    const parsed = parseGreenApiPremiumMetadata(meta);
-    if (parsed) {
-      await downgradeGreenApiPremiumByEmail(parsed.email);
+    const greenParsed = parseGreenApiPremiumMetadata(meta);
+    if (greenParsed) {
+      await downgradeGreenApiPremiumByEmail(greenParsed.email);
+    }
+    const monitorParsed = parseMonitorCheckoutMetadata(meta);
+    if (monitorParsed) {
+      await downgradeMonitorByEmail(monitorParsed.email);
     }
   }
 

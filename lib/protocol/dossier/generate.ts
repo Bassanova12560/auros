@@ -10,6 +10,9 @@ import type { DossierRequest } from "../schemas/dossier";
 import type { ScoreRequest } from "../schemas/score";
 import type { ProtocolScoreResult } from "../scoring/compute-score";
 import { DOSSIER_SECTIONS } from "../schemas/dossier";
+import { getMonitor } from "../monitor/store";
+import { computeMonitorRegulatoryDelta } from "../monitor/delta";
+import { listMonitorsForKey } from "../monitor/store";
 
 export type DossierPayload = {
   id: string;
@@ -26,6 +29,18 @@ export type DossierPayload = {
   locale: "fr" | "en" | "es";
   created_at: string;
   full_report_url: string;
+  regulatory_delta?: {
+    monitor_id: string;
+    rules_version: string;
+    item_count: number;
+    impact_sum: number;
+    items: Array<{
+      id: string;
+      title: string;
+      severity: string;
+      impact_on_score: number;
+    }>;
+  } | null;
 };
 
 const memoryStore = new Map<string, DossierPayload>();
@@ -100,6 +115,48 @@ export async function generateDossierPayload(
   }
 
   const id = input.score_id?.trim() || `dos_${randomBytes(12).toString("hex")}`;
+
+  let regulatory_delta: DossierPayload["regulatory_delta"] = null;
+  const monitorId = input.monitor_id?.trim();
+  if (monitorId) {
+    const monitor = await getMonitor(monitorId, keyHash);
+    if (monitor) {
+      const delta = computeMonitorRegulatoryDelta(monitor);
+      regulatory_delta = {
+        monitor_id: monitor.id,
+        rules_version: delta.rules_version,
+        item_count: delta.item_count,
+        impact_sum: delta.impact_sum,
+        items: delta.items.slice(0, 10).map((item) => ({
+          id: item.id,
+          title: item.title,
+          severity: item.severity,
+          impact_on_score: item.impact_on_score,
+        })),
+      };
+    }
+  } else {
+    const monitors = await listMonitorsForKey(keyHash);
+    const latest = monitors[0];
+    if (latest) {
+      const delta = computeMonitorRegulatoryDelta(latest);
+      if (delta.item_count > 0 || delta.rules_version_changed) {
+        regulatory_delta = {
+          monitor_id: latest.id,
+          rules_version: delta.rules_version,
+          item_count: delta.item_count,
+          impact_sum: delta.impact_sum,
+          items: delta.items.slice(0, 10).map((item) => ({
+            id: item.id,
+            title: item.title,
+            severity: item.severity,
+            impact_on_score: item.impact_on_score,
+          })),
+        };
+      }
+    }
+  }
+
   const payload: DossierPayload = {
     id,
     key_hash: keyHash,
@@ -110,6 +167,7 @@ export async function generateDossierPayload(
     locale: input.locale,
     created_at: new Date().toISOString(),
     full_report_url: score.meta.full_report_url,
+    regulatory_delta,
   };
 
   memoryStore.set(id, payload);
@@ -141,5 +199,6 @@ export function dossierJsonExport(payload: DossierPayload): Record<string, unkno
     score: payload.score,
     checklist: payload.checklist,
     sections: payload.sections,
+    regulatory_delta: payload.regulatory_delta ?? null,
   };
 }

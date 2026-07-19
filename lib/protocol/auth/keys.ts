@@ -21,12 +21,16 @@ export function isSupabaseConfigured(): boolean {
 
 export type ApiKeyTier = "free" | "premium" | "monitor" | "enterprise";
 
+export type MonitorPlanOnKey = "starter" | "pro";
+
 export type ApiKeyRecord = {
   id: string;
   email: string;
   key_hash: string;
   prefix: "live" | "test";
   tier: ApiKeyTier;
+  /** Set when tier=monitor via Stripe Starter/Pro checkout. */
+  monitor_plan?: MonitorPlanOnKey | null;
   created_at: string;
   requests_this_month: number;
   month_key: string;
@@ -97,12 +101,19 @@ async function trySupabaseFindByEmail(email: string): Promise<ApiKeyRecord | nul
   }
 }
 
-async function trySupabaseUpdateTier(keyHash: string, tier: ApiKeyTier): Promise<boolean> {
+async function trySupabaseUpdateTier(
+  keyHash: string,
+  tier: ApiKeyTier,
+  monitorPlan: MonitorPlanOnKey | null = null
+): Promise<boolean> {
   if (!isSupabaseConfigured()) return false;
   try {
     const { getSupabaseServerClient } = await import("@/lib/supabase/server");
     const supabase = getSupabaseServerClient();
-    const { error } = await supabase.from("api_keys").update({ tier }).eq("key_hash", keyHash);
+    const { error } = await supabase
+      .from("api_keys")
+      .update({ tier, monitor_plan: monitorPlan })
+      .eq("key_hash", keyHash);
     return !error;
   } catch {
     return false;
@@ -134,16 +145,26 @@ export async function findKeyByEmail(email: string): Promise<ApiKeyRecord | null
 
 export async function upgradeApiKeyTierByEmail(
   email: string,
-  tier: ApiKeyTier
+  tier: ApiKeyTier,
+  options?: { monitor_plan?: MonitorPlanOnKey | null }
 ): Promise<boolean> {
   const record = await findKeyByEmail(email);
   if (!record) return false;
 
   record.tier = tier;
+  if (options && "monitor_plan" in options) {
+    record.monitor_plan = options.monitor_plan ?? null;
+  } else if (tier !== "monitor") {
+    record.monitor_plan = null;
+  }
   memoryStore.set(record.key_hash, record);
 
   if (isSupabaseConfigured()) {
-    const ok = await trySupabaseUpdateTier(record.key_hash, tier);
+    const ok = await trySupabaseUpdateTier(
+      record.key_hash,
+      tier,
+      record.monitor_plan ?? null
+    );
     if (!ok) {
       const all = [...memoryStore.values()];
       saveFileStore(all);
@@ -168,6 +189,7 @@ async function trySupabaseUpsert(record: ApiKeyRecord): Promise<boolean> {
       key_hash: record.key_hash,
       prefix: record.prefix,
       tier: record.tier,
+      monitor_plan: record.monitor_plan ?? null,
       created_at: record.created_at,
       requests_this_month: record.requests_this_month,
       month_key: record.month_key,

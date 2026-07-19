@@ -40,6 +40,8 @@ export const GET = protocolRoute(async (req: Request, context: RouteContext) => 
     webhook_url: monitor.webhook_url,
     email: monitor.email,
     baseline_score: monitor.baseline_score,
+    rules_version: monitor.rules_version,
+    baseline_feed_ids: monitor.baseline_feed_ids,
     created_at: monitor.created_at,
     updated_at: monitor.updated_at,
     last_checked_at: monitor.last_checked_at,

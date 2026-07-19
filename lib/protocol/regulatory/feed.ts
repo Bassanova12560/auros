@@ -33,6 +33,9 @@ export type RegulatoryFeedItem = {
 /** When the curated feed was last reviewed / seeded. */
 export const REGULATORY_FEED_LAST_UPDATED = "2026-06-13";
 
+/** Alias — curated Regulatory Twin ruleset version. */
+export const REGULATORY_RULES_VERSION = REGULATORY_FEED_LAST_UPDATED;
+
 export const REGULATORY_FEED: RegulatoryFeedItem[] = [
   {
     id: "esma-2025-mica-casp-deadline",

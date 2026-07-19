@@ -90,11 +90,17 @@ export {
   regulatorySubscribeSchema,
 } from "./schemas/regulatory";
 export { WEBHOOK_EVENT_TYPES, webhookRegisterSchema } from "./schemas/webhooks";
-export { createMonitor, getMonitor, deleteMonitor, countActiveMonitors } from "./monitor/store";
-export { checkRegulatoryUpdates } from "./monitor/check-regulatory-updates";
+export {
+  createMonitor,
+  getMonitor,
+  deleteMonitor,
+  countActiveMonitors,
+  listMonitorsForKey,
+} from "./monitor/store";
 export {
   REGULATORY_FEED,
   REGULATORY_FEED_LAST_UPDATED,
+  REGULATORY_RULES_VERSION,
   REGULATORY_TAGS,
   queryRegulatoryFeed,
   filterFeedForMonitor,
@@ -102,6 +108,12 @@ export {
   toPublicFeedItem,
 } from "./regulatory/feed";
 export type { RegulatoryFeedItem, RegulatoryTag } from "./regulatory/feed";
+export {
+  computeMonitorRegulatoryDelta,
+  baselineFeedIdsForMonitor,
+} from "./monitor/delta";
+export type { RegulatoryDeltaResult } from "./monitor/delta";
+export { checkRegulatoryUpdates } from "./monitor/check-regulatory-updates";
 export {
   createRegulatorySubscription,
   getRegulatorySubscription,
@@ -111,6 +123,12 @@ export {
 } from "./regulatory/subscribe-store";
 export { dispatchRegulatoryFeedUpdates } from "./regulatory/dispatch-updates";
 export { dossierRequestSchema, DOSSIER_SECTIONS } from "./schemas/dossier";
+export {
+  MONITOR_PRODUCT,
+  MONITOR_STARTER_MONTHLY_EUR,
+  MONITOR_PRO_MONTHLY_EUR,
+} from "./monitor/pricing";
+export type { MonitorPlan } from "./monitor/pricing";
 export {
   attestCreateRequestSchema,
   createAttestation,

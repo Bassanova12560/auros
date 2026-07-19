@@ -5,6 +5,11 @@ import { join } from "node:path";
 import { isSupabaseConfigured } from "../auth/keys";
 import type { MonitorRequest } from "../schemas/monitor";
 
+import {
+  baselineFeedIdsForMonitor,
+  REGULATORY_RULES_VERSION,
+} from "./delta";
+
 export type MonitorRecord = {
   id: string;
   key_hash: string;
@@ -15,12 +20,26 @@ export type MonitorRecord = {
   webhook_url: string | null;
   alert_on: string[];
   baseline_score: number | null;
+  /** Twin snapshot — curated ruleset version at creation. */
+  rules_version: string;
+  /** Feed item ids matched at creation; delta = new matches outside this set. */
+  baseline_feed_ids: string[];
   status: "active" | "paused" | "deleted";
   created_at: string;
   updated_at: string;
   last_checked_at: string | null;
   last_alert_at: string | null;
 };
+
+function normalizeMonitorRow(data: MonitorRecord): MonitorRecord {
+  return {
+    ...data,
+    rules_version: data.rules_version ?? REGULATORY_RULES_VERSION,
+    baseline_feed_ids: Array.isArray(data.baseline_feed_ids)
+      ? data.baseline_feed_ids
+      : [],
+  };
+}
 
 const memoryStore = new Map<string, MonitorRecord>();
 const DATA_DIR = join(process.cwd(), ".data");
@@ -83,16 +102,24 @@ export async function createMonitor(
   email?: string
 ): Promise<MonitorRecord> {
   const now = new Date().toISOString();
+  const jurisdiction = input.jurisdiction.toLowerCase();
+  const baseline_feed_ids = baselineFeedIdsForMonitor({
+    jurisdiction,
+    asset_type: input.asset_type,
+    alert_on: input.alert_on,
+  });
   const record: MonitorRecord = {
     id: `mon_${randomBytes(12).toString("hex")}`,
     key_hash: keyHash,
     email: input.email ?? email ?? null,
     asset_type: input.asset_type,
-    jurisdiction: input.jurisdiction.toLowerCase(),
+    jurisdiction,
     structure: input.structure,
     webhook_url: input.webhook_url ?? null,
     alert_on: input.alert_on,
     baseline_score: input.baseline_score ?? null,
+    rules_version: REGULATORY_RULES_VERSION,
+    baseline_feed_ids,
     status: "active",
     created_at: now,
     updated_at: now,
@@ -115,6 +142,8 @@ export async function createMonitor(
         webhook_url: record.webhook_url,
         alert_on: record.alert_on,
         baseline_score: record.baseline_score,
+        rules_version: record.rules_version,
+        baseline_feed_ids: record.baseline_feed_ids,
         status: record.status,
         created_at: record.created_at,
         updated_at: record.updated_at,
@@ -147,7 +176,7 @@ export async function getMonitor(
         .neq("status", "deleted")
         .maybeSingle();
       if (data) {
-        const record = data as MonitorRecord;
+        const record = normalizeMonitorRow(data as MonitorRecord);
         memoryStore.set(id, record);
         return record;
       }
@@ -159,7 +188,30 @@ export async function getMonitor(
   if (!record || record.key_hash !== keyHash || record.status === "deleted") {
     return null;
   }
-  return record;
+  return normalizeMonitorRow(record);
+}
+
+export async function listMonitorsForKey(keyHash: string): Promise<MonitorRecord[]> {
+  if (isSupabaseConfigured()) {
+    try {
+      const supabase = await supabaseClient();
+      const { data } = await supabase
+        .from("protocol_monitors")
+        .select("*")
+        .eq("key_hash", keyHash)
+        .neq("status", "deleted")
+        .order("created_at", { ascending: false });
+      if (data) {
+        return (data as MonitorRecord[]).map(normalizeMonitorRow);
+      }
+    } catch {
+      // fall through
+    }
+  }
+  return [...memoryStore.values()]
+    .filter((m) => m.key_hash === keyHash && m.status !== "deleted")
+    .map(normalizeMonitorRow)
+    .sort((a, b) => Date.parse(b.created_at) - Date.parse(a.created_at));
 }
 
 export async function deleteMonitor(id: string, keyHash: string): Promise<boolean> {
@@ -198,12 +250,14 @@ export async function listActiveMonitors(): Promise<MonitorRecord[]> {
         .from("protocol_monitors")
         .select("*")
         .eq("status", "active");
-      if (data) return data as MonitorRecord[];
+      if (data) return (data as MonitorRecord[]).map(normalizeMonitorRow);
     } catch {
       // fall through
     }
   }
-  return [...memoryStore.values()].filter((m) => m.status === "active");
+  return [...memoryStore.values()]
+    .filter((m) => m.status === "active")
+    .map(normalizeMonitorRow);
 }
 
 export async function markMonitorChecked(

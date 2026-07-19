@@ -1,10 +1,29 @@
 import { KEY_PREFIX_LIVE } from "../constants";
 import type { ApiKeyRecord } from "./keys";
 import { protocolError } from "../response";
+import type { MonitorPlan } from "../monitor/pricing";
+import {
+  MONITOR_PRO_MONTHLY_EUR,
+  MONITOR_STARTER_MONTHLY_EUR,
+} from "../monitor/pricing";
 
 export const PREMIUM_PRICING = {
-  monitor_starter: { price_eur: 49, assets: 5, label: "Monitor Starter" },
-  monitor_pro: { price_eur: 199, assets: 25, label: "Monitor Pro" },
+  monitor_starter: {
+    price_eur: MONITOR_STARTER_MONTHLY_EUR,
+    assets: 5,
+    label: "Monitor Starter",
+  },
+  monitor_pro: {
+    price_eur: MONITOR_PRO_MONTHLY_EUR,
+    assets: 25,
+    label: "Monitor Pro",
+  },
+  monitor_enterprise: {
+    price_eur: null as number | null,
+    assets: 100,
+    label: "Monitor Enterprise",
+    from_eur: 1000,
+  },
 } as const;
 
 export function isPremiumTier(tier: ApiKeyRecord["tier"] | undefined): boolean {
@@ -32,23 +51,44 @@ export function checkPremiumAccess(
   };
 }
 
-/** Higher monitor asset caps for paid tiers (not merely live-prefixed free keys). */
+type LimitRecord = Pick<ApiKeyRecord, "tier"> & {
+  monitor_plan?: MonitorPlan | null;
+};
+
+/**
+ * Monitor asset caps:
+ * - Starter (monitor + starter) → 5
+ * - Pro (monitor + pro) / Green premium → 25
+ * - Enterprise → 100
+ * - free / unknown → defaultCap (5)
+ */
 export function monitorAssetLimitForRecord(
-  record?: Pick<ApiKeyRecord, "tier"> | null,
-  liveCap = 25,
+  record?: LimitRecord | null,
+  _legacyPaidCap = 25,
   defaultCap = 5
 ): number {
   if (!record) return defaultCap;
-  if (record.tier === "enterprise") return liveCap;
-  if (record.tier === "premium" || record.tier === "monitor") return liveCap;
+  if (record.tier === "enterprise") {
+    return PREMIUM_PRICING.monitor_enterprise.assets;
+  }
+  if (record.tier === "monitor") {
+    if (record.monitor_plan === "starter") {
+      return PREMIUM_PRICING.monitor_starter.assets;
+    }
+    return PREMIUM_PRICING.monitor_pro.assets;
+  }
+  if (record.tier === "premium") {
+    return PREMIUM_PRICING.monitor_pro.assets;
+  }
   return defaultCap;
 }
 
 export function premiumPricingMeta() {
   return {
     pricing: PREMIUM_PRICING,
-    upgrade_url: "https://getauros.com/developers#premium",
+    upgrade_url: "https://getauros.com/developers#monitor",
     contact: "contact@getauros.com",
+    enterprise: "Sales-led from €1 000/mo — contact@getauros.com",
   };
 }
 

@@ -39,6 +39,20 @@ Revenus possibles côté plateforme : fee par dossier accepté, rev share onboar
 
 ---
 
+## Monitor Protocol + Regulatory Twin
+
+Ligne de revenu **compliance SaaS** pour cabinets / CASPs :
+
+| Offre | Prix | Cap actifs |
+|-------|------|------------|
+| Monitor Starter | **49 €/mo** | 5 |
+| Monitor Pro | **199 €/mo** | 25 |
+| Monitor Enterprise | from **€1 000/mo** (sales) | 100+ |
+
+Checkout self-serve : `/developers#monitor`. Twin lite : `rules_version` + `GET /api/v1/monitor/:id/delta` (feed curated versionné — pas de scrape live).
+
+---
+
 ## Green data API (après Issuer Pipeline)
 
 Ligne de revenu **data** distincte du pipeline émetteurs : packaging des scores déjà live (Index, CQS, Watt, H₂O).

@@ -34,6 +34,8 @@ export const dossierRequestSchema = z
       })
       .optional(),
     locale: z.enum(["fr", "en", "es"]).default("fr"),
+    /** Optional monitor id — attaches Regulatory Twin delta to the dossier payload. */
+    monitor_id: z.string().max(128).optional(),
   })
   .refine((d) => Boolean(d.score_id?.trim()) || d.score !== undefined, {
     message: "Provide score_id or inline score payload",
