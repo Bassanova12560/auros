@@ -286,4 +286,43 @@ describe("chargeflow uniqueness + retirement", () => {
     assert.equal(result.matched, 0);
     assert.equal(result.fired, 0);
   });
+
+  it("maps OCPI CDR and CSV rows to CFU-E create requests", async () => {
+    const {
+      mapFromOcpiRequestToCreateItems,
+      chargeflowFromOcpiRequestSchema,
+    } = await import("../lib/chargeflow/ocpi-stub");
+    const stamp = Date.now();
+    const parsed = chargeflowFromOcpiRequestSchema.parse({
+      default_operator_id: "cpo_demo",
+      cdrs: [
+        {
+          id: `CDR_${stamp}`,
+          start_date_time: "2026-07-19T10:00:00Z",
+          end_date_time: "2026-07-19T10:42:00Z",
+          total_energy: 48.2,
+          country: "FR",
+          location_id: "LOC-1",
+        },
+      ],
+      csv_rows: [
+        {
+          external_session_id: `csv_${stamp}`,
+          started_at: "2026-07-19T11:00:00Z",
+          ended_at: "2026-07-19T11:30:00Z",
+          energy_kwh: 22.5,
+        },
+      ],
+    });
+    const items = mapFromOcpiRequestToCreateItems(parsed);
+    assert.equal(items.length, 2);
+    assert.equal(items[0]?.session.source_format, "ocpi");
+    assert.equal(items[0]?.session.energy_kwh, 48.2);
+    assert.equal(items[0]?.session.operator_id, "cpo_demo");
+    assert.equal(items[1]?.session.source_format, "csv");
+
+    const key = `test_key_ocpi_${stamp}`;
+    const batch = await createChargeflowEBatch(key, items);
+    assert.equal(summarizeChargeflowBatch(batch).succeeded, 2);
+  });
 });

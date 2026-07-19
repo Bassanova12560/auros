@@ -51,6 +51,12 @@ export default function ChargeflowFleetsPage() {
               <PrimaryButton href="/green/chargeflow/console" variant="ghost">
                 Console opérateur
               </PrimaryButton>
+              <PrimaryButton
+                href="/developers/docs/endpoint-chargeflow-ocpi"
+                variant="ghost"
+              >
+                Import OCPI / CSV
+              </PrimaryButton>
             </div>
           </header>
 

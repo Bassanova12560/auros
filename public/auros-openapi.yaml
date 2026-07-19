@@ -941,6 +941,31 @@ paths:
           $ref: "#/components/responses/PremiumRequired"
         "401":
           $ref: "#/components/responses/Unauthorized"
+  /api/v1/chargeflow/from-ocpi:
+    post:
+      tags: [Premium]
+      summary: Map offline OCPI CDR / CSV rows to CFU-E
+      operationId: createChargeflowFromOcpi
+      description: |
+        Premium. Offline stub — accepts OCPI-like CDRs and/or CSV session rows (max 50 total).
+        Not a live OCPI connection. Maps to CFU-E mint with source_format ocpi|csv.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ChargeflowFromOcpiRequest"
+      responses:
+        "200":
+          description: Batch mint result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ChargeflowFromOcpiResponse"
+        "403":
+          $ref: "#/components/responses/PremiumRequired"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
   /api/v1/chargeflow/verify:
     get:
       tags: [Public]
@@ -2422,6 +2447,53 @@ components:
           type: array
           items:
             type: object
+    ChargeflowFromOcpiRequest:
+      type: object
+      properties:
+        cdrs:
+          type: array
+          maxItems: 50
+          items:
+            type: object
+            required: [id, start_date_time, end_date_time, total_energy]
+            properties:
+              id: { type: string }
+              start_date_time: { type: string }
+              end_date_time: { type: string }
+              total_energy: { type: number }
+              country: { type: string }
+              location_id: { type: string }
+              evse_uid: { type: string }
+              connector_id: { type: string }
+              cpo_id: { type: string }
+              party_id: { type: string }
+              auth_id: { type: string }
+        csv_rows:
+          type: array
+          maxItems: 50
+          items:
+            type: object
+            required: [external_session_id, started_at, ended_at, energy_kwh]
+            properties:
+              external_session_id: { type: string }
+              started_at: { type: string }
+              ended_at: { type: string }
+              energy_kwh: { type: number }
+              country: { type: string }
+              site_id: { type: string }
+              connector_id: { type: string }
+              operator_id: { type: string }
+              vehicle_ref: { type: string }
+        default_operator_id: { type: string }
+        attributes:
+          $ref: "#/components/schemas/ChargeflowCreateRequest"
+    ChargeflowFromOcpiResponse:
+      allOf:
+        - $ref: "#/components/schemas/ChargeflowBatchResponse"
+        - type: object
+          properties:
+            source: { type: string, enum: [ocpi_stub] }
+            disclaimer: { type: string }
     WebhookRegisterRequest:
       type: object
       required: [url]
@@ -2437,6 +2509,9 @@ components:
               - new_requirement
               - deadline_approaching
               - regulatory.update
+              - green.index.changelog
+              - chargeflow.unit.minted
+              - chargeflow.unit.retired
     WebhookDelivery:
       type: object
       properties:

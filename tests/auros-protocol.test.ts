@@ -221,6 +221,51 @@ describe("@adrien1212balitrand/auros-protocol SDK", () => {
     assert.equal(result.succeeded, 1);
   });
 
+  it("createChargeflowFromOcpi() posts stub endpoint", async () => {
+    const client = new AurosProtocol({
+      apiKey: "auros_pk_live_xxx",
+      fetch: mockFetch((url, init) => {
+        assert.ok(url.endsWith("/api/v1/chargeflow/from-ocpi"));
+        assert.equal(init?.method, "POST");
+        return Response.json({
+          source: "ocpi_stub",
+          disclaimer: "test",
+          total: 1,
+          succeeded: 1,
+          failed: 0,
+          items: [
+            {
+              index: 0,
+              ok: true,
+              id: "cfu_e_ocpi",
+              unit_kind: "e",
+              content_hash: "a".repeat(64),
+              signature: "b".repeat(64),
+              verify_url: "https://getauros.com/chargeflow/cfu_e_ocpi",
+              status: "active",
+              public: {},
+              created_at: "2026-07-19T00:00:00.000Z",
+              disclaimer: "test",
+              valid: true,
+            },
+          ],
+        });
+      }),
+    });
+    const result = await client.createChargeflowFromOcpi({
+      cdrs: [
+        {
+          id: "CDR-1",
+          start_date_time: "2026-07-19T10:00:00Z",
+          end_date_time: "2026-07-19T11:00:00Z",
+          total_energy: 10,
+        },
+      ],
+    });
+    assert.equal(result.source, "ocpi_stub");
+    assert.equal(result.succeeded, 1);
+  });
+
   it("scoreBatch() posts items array", async () => {
     const client = new AurosProtocol({
       apiKey: "auros_pk_test_demo",

@@ -44,6 +44,17 @@ export {
   type ChargeflowFBatchRequest,
 } from "./schema";
 export {
+  ocpiCdrStubSchema,
+  chargeflowCsvRowSchema,
+  chargeflowFromOcpiRequestSchema,
+  mapOcpiCdrToCreateRequest,
+  mapCsvRowToCreateRequest,
+  mapFromOcpiRequestToCreateItems,
+  type OcpiCdrStub,
+  type ChargeflowCsvRow,
+  type ChargeflowFromOcpiRequest,
+} from "./ocpi-stub";
+export {
   isChargeflowContentHash,
   signChargeflowHash,
   verifyChargeflowSignature,

@@ -12,7 +12,8 @@
 | **CFU-W** | volume m³ | `cfu_w_*` | `auros-cfu-w:v1:` | `/eau/chargeflow` |
 | **CFU-F** | capacity kW window | `cfu_f_*` | `auros-cfu-f:v1:` | `/green/chargeflow/flex` |
 
-Commercial ICP flottes/CPO : `/green/chargeflow/fleets` (no Tesla partnership claims).
+Commercial ICP flottes/CPO : `/green/chargeflow/fleets` (no Tesla partnership claims).  
+Offline OCPI/CSV stub : `POST /api/v1/chargeflow/from-ocpi` (not live OCPI).
 
 ## Lifecycle
 
@@ -20,7 +21,7 @@ Commercial ICP flottes/CPO : `/green/chargeflow/fleets` (no Tesla partnership cl
 - List `GET /api/v1/chargeflow` · batch `POST …/batch` (E/W/F, max 50) · console `/green/chargeflow/console`
 - Webhooks : `chargeflow.unit.minted` / `chargeflow.unit.retired` (Premium, same API key)
 - Verify UI `/chargeflow/{id}` · OpenAPI `/auros-openapi.yaml`
-- SDK : `@adrien1212balitrand/auros-protocol` (`createChargeflowE/W/F`, `listChargeflow`, `*Batch`, `retireChargeflow`, …)
+- SDK : `@adrien1212balitrand/auros-protocol` (`createChargeflowE/W/F`, `listChargeflow`, `*Batch`, `createChargeflowFromOcpi`, `retireChargeflow`, …)
 
 ## Disclaimer
 

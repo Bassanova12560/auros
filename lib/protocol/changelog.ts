@@ -25,6 +25,23 @@ export type ProtocolChangelogEntry = {
 /** Single source for `/developers/changelog` and GET `/api/v1/changelog`. Newest first. */
 export const PROTOCOL_CHANGELOG: ProtocolChangelogEntry[] = [
   {
+    id: "chargeflow-ocpi-stub",
+    date: "2026-07-19",
+    title: "ChargeFlow OCPI/CSV stub → CFU-E",
+    summary:
+      "POST /api/v1/chargeflow/from-ocpi — mappe CDRs OCPI-like et lignes CSV vers mint CFU-E (offline, max 50).",
+    details: [
+      "Pas de client OCPI live — stub pour exports flottes/CPO.",
+      "SDK createChargeflowFromOcpi · docs endpoint-chargeflow-ocpi.",
+    ],
+    links: [
+      { href: "/developers/docs/endpoint-chargeflow-ocpi", label: "Docs OCPI stub" },
+      { href: "/green/chargeflow/fleets", label: "Tunnel fleets" },
+    ],
+    tags: ["chargeflow", "ocpi", "premium"],
+    status: "released",
+  },
+  {
     id: "chargeflow-webhooks-export",
     date: "2026-07-19",
     title: "ChargeFlow webhooks + console export",

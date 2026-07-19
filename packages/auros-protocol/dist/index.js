@@ -120,6 +120,13 @@ var AurosProtocol = class {
       body
     );
   }
+  /** Offline OCPI CDR / CSV rows → CFU-E batch (not a live OCPI client). */
+  async createChargeflowFromOcpi(body) {
+    return this.post(
+      "/api/v1/chargeflow/from-ocpi",
+      body
+    );
+  }
   async listChargeflow(query = {}) {
     const params = new URLSearchParams();
     if (query.kind) params.set("kind", query.kind);

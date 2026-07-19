@@ -563,6 +563,40 @@ export type ChargeflowBatchResponse = {
   meta?: ProtocolMeta;
 };
 
+export type ChargeflowFromOcpiRequest = {
+  cdrs?: Array<{
+    id: string;
+    start_date_time: string;
+    end_date_time: string;
+    total_energy: number;
+    country?: string;
+    location_id?: string;
+    evse_uid?: string;
+    connector_id?: string;
+    cpo_id?: string;
+    party_id?: string;
+    auth_id?: string;
+  }>;
+  csv_rows?: Array<{
+    external_session_id: string;
+    started_at: string;
+    ended_at: string;
+    energy_kwh: number;
+    country?: string;
+    site_id?: string;
+    connector_id?: string;
+    operator_id?: string;
+    vehicle_ref?: string;
+  }>;
+  default_operator_id?: string;
+  attributes?: ChargeflowCreateRequest["attributes"];
+};
+
+export type ChargeflowFromOcpiResponse = ChargeflowBatchResponse & {
+  source: "ocpi_stub";
+  disclaimer: string;
+};
+
 export type WebhookRegisterRequest = {
   url: string;
   events?: WebhookEventType[];

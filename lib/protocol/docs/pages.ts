@@ -1315,6 +1315,7 @@ curl "${BASE}/api/v1/attest/verify?hash=<64hex>&sig=<64hex>"`,
       "endpoint-attest",
       "endpoint-green-watt",
       "endpoint-chargeflow-w",
+      "endpoint-chargeflow-ocpi",
       "endpoint-dossier",
     ],
     sections: [
@@ -1453,6 +1454,53 @@ curl -X POST ${BASE}/api/v1/chargeflow/cfu_e_…/retire \\
           "GET /api/v1/chargeflow/f/verify?id=cfu_f_…",
           "Demo : POST /api/v1/chargeflow/f/demo",
         ],
+      },
+    ],
+  },
+  {
+    slug: "endpoint-chargeflow-ocpi",
+    title: "POST /api/v1/chargeflow/from-ocpi (Premium)",
+    description:
+      "Adaptateur offline OCPI CDR / CSV → CFU-E. Pas de connexion OCPI live.",
+    category: "endpoints",
+    categoryLabel: "Endpoints",
+    relatedSlugs: [
+      "endpoint-chargeflow",
+      "endpoint-chargeflow-w",
+      "endpoint-webhooks",
+    ],
+    sections: [
+      {
+        heading: "Importer des CDRs ou lignes CSV",
+        paragraphs: [
+          "Premium. Corps : `cdrs` (stub OCPI) et/ou `csv_rows` — 1 à 50 items au total.",
+          "Chaque item est mappé vers une CFU-E (`source_format: ocpi` ou `csv`) puis mint batch avec succès partiel.",
+          "Ce n'est pas un client OCPI live — pas de pull SCADA / tokens OCPI.",
+          "Tunnel flottes : /green/chargeflow/fleets · console : /green/chargeflow/console.",
+        ],
+        code: `curl -X POST ${BASE}/api/v1/chargeflow/from-ocpi \\
+  -H "Authorization: Bearer auros_pk_live_xxx" \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "default_operator_id": "cpo_demo",
+    "cdrs": [{
+      "id": "CDR-001",
+      "start_date_time": "2026-07-19T10:00:00Z",
+      "end_date_time": "2026-07-19T10:42:00Z",
+      "total_energy": 48.2,
+      "country": "FR",
+      "location_id": "LOC-1",
+      "cpo_id": "cpo_demo"
+    }],
+    "csv_rows": [{
+      "external_session_id": "csv_001",
+      "started_at": "2026-07-19T11:00:00Z",
+      "ended_at": "2026-07-19T11:30:00Z",
+      "energy_kwh": 22.5,
+      "country": "FR"
+    }]
+  }'`,
+        language: "bash",
       },
     ],
   },

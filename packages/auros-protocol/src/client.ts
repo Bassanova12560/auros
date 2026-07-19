@@ -10,6 +10,8 @@ import type {
   ChargeflowBatchRequestF,
   ChargeflowBatchRequestW,
   ChargeflowBatchResponse,
+  ChargeflowFromOcpiRequest,
+  ChargeflowFromOcpiResponse,
   ChargeflowListQuery,
   ChargeflowListResponse,
   ChargeflowResponse,
@@ -184,6 +186,16 @@ export class AurosProtocol {
   ): Promise<ChargeflowBatchResponse> {
     return this.post<ChargeflowBatchResponse>(
       "/api/v1/chargeflow/f/batch",
+      body
+    );
+  }
+
+  /** Offline OCPI CDR / CSV rows → CFU-E batch (not a live OCPI client). */
+  async createChargeflowFromOcpi(
+    body: ChargeflowFromOcpiRequest
+  ): Promise<ChargeflowFromOcpiResponse> {
+    return this.post<ChargeflowFromOcpiResponse>(
+      "/api/v1/chargeflow/from-ocpi",
       body
     );
   }

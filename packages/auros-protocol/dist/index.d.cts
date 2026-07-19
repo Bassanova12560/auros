@@ -482,6 +482,38 @@ type ChargeflowBatchResponse = {
     items: Array<ChargeflowBatchSuccessItem | ChargeflowBatchErrorItem>;
     meta?: ProtocolMeta;
 };
+type ChargeflowFromOcpiRequest = {
+    cdrs?: Array<{
+        id: string;
+        start_date_time: string;
+        end_date_time: string;
+        total_energy: number;
+        country?: string;
+        location_id?: string;
+        evse_uid?: string;
+        connector_id?: string;
+        cpo_id?: string;
+        party_id?: string;
+        auth_id?: string;
+    }>;
+    csv_rows?: Array<{
+        external_session_id: string;
+        started_at: string;
+        ended_at: string;
+        energy_kwh: number;
+        country?: string;
+        site_id?: string;
+        connector_id?: string;
+        operator_id?: string;
+        vehicle_ref?: string;
+    }>;
+    default_operator_id?: string;
+    attributes?: ChargeflowCreateRequest["attributes"];
+};
+type ChargeflowFromOcpiResponse = ChargeflowBatchResponse & {
+    source: "ocpi_stub";
+    disclaimer: string;
+};
 type WebhookRegisterRequest = {
     url: string;
     events?: WebhookEventType[];
@@ -624,6 +656,8 @@ declare class AurosProtocol {
     createChargeflowEBatch(body: ChargeflowBatchRequestE): Promise<ChargeflowBatchResponse>;
     createChargeflowWBatch(body: ChargeflowBatchRequestW): Promise<ChargeflowBatchResponse>;
     createChargeflowFBatch(body: ChargeflowBatchRequestF): Promise<ChargeflowBatchResponse>;
+    /** Offline OCPI CDR / CSV rows → CFU-E batch (not a live OCPI client). */
+    createChargeflowFromOcpi(body: ChargeflowFromOcpiRequest): Promise<ChargeflowFromOcpiResponse>;
     listChargeflow(query?: ChargeflowListQuery): Promise<ChargeflowListResponse>;
     getChargeflow(id: string): Promise<ChargeflowResponse>;
     verifyChargeflow(query: {
@@ -664,4 +698,4 @@ declare class AurosProtocolError extends Error {
     static fromResponse(status: number, body: ProtocolErrorBody): AurosProtocolError;
 }
 
-export { type AlertType, type AssetClass, type AssetType, type AttestCreateRequest, type AttestPublicSnapshot, type AttestResponse, type AttestVerifyResponse, AurosProtocol, AurosProtocolError, type AurosProtocolOptions, type CarbonQualityScore, type CarbonQualityTier, type ChargeflowBatchErrorItem, type ChargeflowBatchRequestE, type ChargeflowBatchRequestF, type ChargeflowBatchRequestW, type ChargeflowBatchResponse, type ChargeflowBatchSuccessItem, type ChargeflowCreateRequest, type ChargeflowFCreateRequest, type ChargeflowListItem, type ChargeflowListQuery, type ChargeflowListResponse, type ChargeflowResponse, type ChargeflowVerifyResponse, type ChargeflowWCreateRequest, type ChecklistItem, type ChecklistRequest, type ChecklistResponse, type CompareCellHighlight, type CompareProduct, type CompareRequest, type CompareResponse, type CreateKeyRequest, type CreateKeyResponse, type DossierRequest, type DossierResponse, type DossierSection, type EuNexus, type GreenBatchErrorItem, type GreenBatchItemInput, type GreenCqsBatchRequest, type GreenCqsBatchResponse, type GreenCqsBatchSuccessItem, type GreenCqsPublicResponse, type GreenWattBatchRequest, type GreenWattBatchResponse, type GreenWattBatchSuccessItem, type GreenWattPublicResponse, type InvestorType, type IssuerType, type JurisdictionItem, type JurisdictionsAssetType, type JurisdictionsQuery, type JurisdictionsResponse, type MicaClassification, type MonitorRequest, type MonitorResponse, type ProductCategory, type ProductItem, type ProductsQuery, type ProductsResponse, type ProtocolErrorBody, type ProtocolMeta, type RecommendedJurisdiction, type RecommendedPlatform, type RiskTier, type ScoreBatchErrorItem, type ScoreBatchRequest, type ScoreBatchResponse, type ScoreBatchResultItem, type ScoreBatchSuccessItem, type ScoreBreakdown, type ScoreHistoryEntry, type ScoreHistoryResponse, type ScoreRequest, type ScoreResponse, type ScoreStatus, type WattScore, type WattScoreTier, type WebhookEventType, type WebhookItem, type WebhookRegisterRequest, type WebhookRegisterResponse, type WebhooksListResponse, type WhitepaperStatus };
+export { type AlertType, type AssetClass, type AssetType, type AttestCreateRequest, type AttestPublicSnapshot, type AttestResponse, type AttestVerifyResponse, AurosProtocol, AurosProtocolError, type AurosProtocolOptions, type CarbonQualityScore, type CarbonQualityTier, type ChargeflowBatchErrorItem, type ChargeflowBatchRequestE, type ChargeflowBatchRequestF, type ChargeflowBatchRequestW, type ChargeflowBatchResponse, type ChargeflowBatchSuccessItem, type ChargeflowCreateRequest, type ChargeflowFCreateRequest, type ChargeflowFromOcpiRequest, type ChargeflowFromOcpiResponse, type ChargeflowListItem, type ChargeflowListQuery, type ChargeflowListResponse, type ChargeflowResponse, type ChargeflowVerifyResponse, type ChargeflowWCreateRequest, type ChecklistItem, type ChecklistRequest, type ChecklistResponse, type CompareCellHighlight, type CompareProduct, type CompareRequest, type CompareResponse, type CreateKeyRequest, type CreateKeyResponse, type DossierRequest, type DossierResponse, type DossierSection, type EuNexus, type GreenBatchErrorItem, type GreenBatchItemInput, type GreenCqsBatchRequest, type GreenCqsBatchResponse, type GreenCqsBatchSuccessItem, type GreenCqsPublicResponse, type GreenWattBatchRequest, type GreenWattBatchResponse, type GreenWattBatchSuccessItem, type GreenWattPublicResponse, type InvestorType, type IssuerType, type JurisdictionItem, type JurisdictionsAssetType, type JurisdictionsQuery, type JurisdictionsResponse, type MicaClassification, type MonitorRequest, type MonitorResponse, type ProductCategory, type ProductItem, type ProductsQuery, type ProductsResponse, type ProtocolErrorBody, type ProtocolMeta, type RecommendedJurisdiction, type RecommendedPlatform, type RiskTier, type ScoreBatchErrorItem, type ScoreBatchRequest, type ScoreBatchResponse, type ScoreBatchResultItem, type ScoreBatchSuccessItem, type ScoreBreakdown, type ScoreHistoryEntry, type ScoreHistoryResponse, type ScoreRequest, type ScoreResponse, type ScoreStatus, type WattScore, type WattScoreTier, type WebhookEventType, type WebhookItem, type WebhookRegisterRequest, type WebhookRegisterResponse, type WebhooksListResponse, type WhitepaperStatus };
