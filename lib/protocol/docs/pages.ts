@@ -1259,7 +1259,12 @@ export async function POST(req: Request) {
       "Attestation de readiness MiCA/RWA — hash SHA-256 canonique + signature HMAC, vérification publique.",
     category: "endpoints",
     categoryLabel: "Endpoints",
-    relatedSlugs: ["endpoint-dossier", "guide-institutional-reports", "endpoint-score"],
+    relatedSlugs: [
+      "endpoint-dossier",
+      "guide-institutional-reports",
+      "endpoint-score",
+      "endpoint-chargeflow",
+    ],
     sections: [
       {
         heading: "Créer une attestation",
@@ -1295,6 +1300,61 @@ curl "${BASE}/api/v1/attest/verify?hash=<64hex>&sig=<64hex>"`,
         paragraphs: [
           "Signal indicatif de readiness — pas un avis juridique, agrément ni conseil d'investissement.",
           "Clé serveur : ATTEST_SIGNING_KEY (sinon GREEN_EXPORT_SIGNING_KEY / CRON_SECRET).",
+        ],
+      },
+    ],
+  },
+  {
+    slug: "endpoint-chargeflow",
+    title: "POST /api/v1/chargeflow (Premium)",
+    description:
+      "AUROS ChargeFlow CFU-E — enregistre une session de charge kWh en unité de flux hashée + HMAC, avec Watt companion.",
+    category: "endpoints",
+    categoryLabel: "Endpoints",
+    relatedSlugs: ["endpoint-attest", "endpoint-green-watt", "endpoint-dossier"],
+    sections: [
+      {
+        heading: "Enregistrer une CFU-E",
+        paragraphs: [
+          "Premium. Entrée : JSON session (CPO / flotte / export type OCPI). Sortie : `cfu_e_*`, `content_hash`, `signature`, `verify_url`, enrichment Watt.",
+          "HMAC prefix : `auros-cfu-e:v1:` — même clé que les attestations (ATTEST_SIGNING_KEY).",
+          "Standard public : docs/CHARGEFLOW-STANDARD.md · UI : /green/chargeflow.",
+        ],
+        code: `curl -X POST ${BASE}/api/v1/chargeflow \\
+  -H "Authorization: Bearer auros_pk_live_xxx" \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "session": {
+      "external_session_id": "sess_001",
+      "started_at": "2026-07-19T10:00:00Z",
+      "ended_at": "2026-07-19T10:42:00Z",
+      "energy_kwh": 48.2,
+      "location": { "country": "FR" },
+      "operator_id": "cpo_demo",
+      "source_format": "json_custom"
+    },
+    "attributes": { "renewable_claim": "go" }
+  }'`,
+        language: "bash",
+      },
+      {
+        heading: "Vérifier (public)",
+        paragraphs: [
+          "GET /api/v1/chargeflow/verify?id=cfu_e_…",
+          "GET /api/v1/chargeflow/verify?hash=<sha256>&sig=<hmac>",
+          "GET /api/v1/chargeflow/{id} · page UI /chargeflow/{id}",
+          "Demo sandbox (rate-limitée) : POST /api/v1/chargeflow/demo",
+        ],
+        code: `curl "${BASE}/api/v1/chargeflow/verify?id=cfu_e_…"
+curl "${BASE}/api/v1/chargeflow/verify?hash=<64hex>&sig=<64hex>"`,
+        language: "bash",
+      },
+      {
+        heading: "Disclaimer & roadmap",
+        paragraphs: [
+          "Enregistrement off-chain indicatif — pas un token on-chain, pas un certificat d'origine, pas un partnership CPO.",
+          "CFU-F (flex) et CFU-W (eau) documentés dans le standard ; mint v0 = CFU-E only.",
+          "Proof-of-Flow roadmap : ZK selective disclosure, twin anomalies, OPC UA/MQTT.",
         ],
       },
     ],

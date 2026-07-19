@@ -226,6 +226,13 @@ export default async function DataTerminalPage() {
           >
             H₂O hub
           </Link>
+          <span className="text-white/20">·</span>
+          <Link
+            href="/green/chargeflow"
+            className="font-mono text-xs uppercase tracking-wider text-white/50 hover:text-white/80"
+          >
+            ChargeFlow CFU-E
+          </Link>
         </section>
       </div>
     </FocusPageShell>

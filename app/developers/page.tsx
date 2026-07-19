@@ -167,6 +167,11 @@ const ENDPOINTS = [
     path: "/api/v1/keys",
     desc: "Créer une clé gratuite (1000 req/mois) — sans auth.",
   },
+  {
+    method: "POST",
+    path: "/api/v1/chargeflow",
+    desc: "ChargeFlow CFU-E — session kWh → unité hashée + HMAC + Watt (Premium).",
+  },
 ] as const;
 
 export default function DevelopersPage() {
@@ -258,6 +263,11 @@ console.log(result.score, result.grade);`}
             <li>
               <Link href="/developers/docs/endpoint-attest" className="hover:text-white">
                 Docs Attestation →
+              </Link>
+            </li>
+            <li>
+              <Link href="/developers/docs/endpoint-chargeflow" className="hover:text-white">
+                Docs ChargeFlow CFU-E →
               </Link>
             </li>
             <li>

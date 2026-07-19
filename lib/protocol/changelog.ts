@@ -25,6 +25,24 @@ export type ProtocolChangelogEntry = {
 /** Single source for `/developers/changelog` and GET `/api/v1/changelog`. Newest first. */
 export const PROTOCOL_CHANGELOG: ProtocolChangelogEntry[] = [
   {
+    id: "chargeflow-cfu-e-v0",
+    date: "2026-07-19",
+    title: "AUROS ChargeFlow CFU-E v0",
+    summary:
+      "POST /api/v1/chargeflow — enregistre une session kWh en CFU-E (hash + HMAC + Watt), verify public et page /chargeflow/{id}.",
+    details: [
+      "Standard public docs/CHARGEFLOW-STANDARD.md — off-chain only, pas de smart contract.",
+      "Gate Protocol Premium (même SKU que attest). Demo sandbox : POST /api/v1/chargeflow/demo.",
+      "UI pitch /green/chargeflow · docs developers endpoint-chargeflow.",
+    ],
+    links: [
+      { href: "/developers/docs/endpoint-chargeflow", label: "Documentation ChargeFlow" },
+      { href: "/green/chargeflow", label: "Pitch + demo" },
+    ],
+    tags: ["chargeflow", "green", "premium"],
+    status: "released",
+  },
+  {
     id: "attest-api-v1",
     date: "2026-07-19",
     title: "Readiness Attestation API v1",

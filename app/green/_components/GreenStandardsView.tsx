@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useCallback } from "react";
 
 import { useLocale } from "@/app/_components/i18n/LocaleProvider";
+import { CHARGEFLOW_ROUTE } from "@/lib/chargeflow";
 import {
   GREEN_COMPARE_ROUTE,
   GREEN_LABEL_ROUTE,
@@ -51,6 +52,7 @@ export function GreenStandardsView() {
           { href: GREEN_REGISTRY_ROUTE, title: s.quickNav.registry },
           { href: GREEN_COMPARE_ROUTE, title: s.quickNav.compare },
           { href: GREEN_LABEL_ROUTE, title: s.quickNav.label },
+          { href: CHARGEFLOW_ROUTE, title: s.quickNav.chargeflow },
         ].map((item) => (
           <Link
             key={item.href}
