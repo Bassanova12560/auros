@@ -8,14 +8,17 @@ import {
   chargeflowCreateRequestSchema,
   chargeflowWCreateRequestSchema,
   createChargeflowFUnit,
+  createChargeflowEBatch,
   createChargeflowUnit,
   createChargeflowWUnit,
   enrichChargeflowWithH2o,
   enrichChargeflowWithWatt,
   isChargeflowContentHash,
+  listChargeflowForKey,
   retireChargeflowRecord,
   signChargeflowHash,
   stableStringify,
+  summarizeChargeflowBatch,
   verifyChargeflowSignature,
 } from "../lib/chargeflow";
 
@@ -204,5 +207,54 @@ describe("chargeflow uniqueness + retirement", () => {
       verifyChargeflowSignature(result.record.content_hash, sig!, "f"),
       true
     );
+  });
+
+  it("lists units for key and batch mints with partial success", async () => {
+    const key = `test_key_${Date.now()}_list`;
+    const sessA = `sess_batch_a_${Date.now()}`;
+    const sessB = `sess_batch_b_${Date.now()}`;
+    const itemOk = {
+      ...sampleE,
+      session: {
+        ...sampleE.session,
+        external_session_id: sessA,
+      },
+    };
+    const itemDup = {
+      ...sampleE,
+      session: {
+        ...sampleE.session,
+        external_session_id: sessA,
+      },
+    };
+    const itemOther = {
+      ...sampleE,
+      session: {
+        ...sampleE.session,
+        external_session_id: sessB,
+      },
+    };
+
+    const first = await createChargeflowUnit(key, itemOk);
+    assert.ok(!("error" in first));
+
+    const listed = await listChargeflowForKey(key, {
+      unit_kind: "e",
+      status: "active",
+    });
+    assert.ok(listed.total >= 1);
+    assert.ok(listed.items.some((i) => i.id === first.record.id));
+    assert.equal(
+      listed.items.find((i) => i.id === first.record.id)?.energy_kwh,
+      sampleE.session.energy_kwh
+    );
+
+    const batch = await createChargeflowEBatch(key, [itemDup, itemOther]);
+    const summary = summarizeChargeflowBatch(batch);
+    assert.equal(summary.total, 2);
+    assert.equal(summary.failed, 1);
+    assert.equal(summary.succeeded, 1);
+    assert.equal(batch[0]?.ok, false);
+    assert.equal(batch[1]?.ok, true);
   });
 });

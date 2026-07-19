@@ -112,6 +112,29 @@ export const chargeflowRetireRequestSchema = z.object({
   reason: z.string().max(500).optional(),
 });
 
+export const CHARGEFLOW_BATCH_MAX = 50;
+
+export const chargeflowEBatchRequestSchema = z.object({
+  items: z
+    .array(chargeflowCreateRequestSchema)
+    .min(1)
+    .max(CHARGEFLOW_BATCH_MAX),
+});
+
+export const chargeflowWBatchRequestSchema = z.object({
+  items: z
+    .array(chargeflowWCreateRequestSchema)
+    .min(1)
+    .max(CHARGEFLOW_BATCH_MAX),
+});
+
+export const chargeflowFBatchRequestSchema = z.object({
+  items: z
+    .array(chargeflowFCreateRequestSchema)
+    .min(1)
+    .max(CHARGEFLOW_BATCH_MAX),
+});
+
 export type ChargeflowCreateRequest = z.infer<typeof chargeflowCreateRequestSchema>;
 export type ChargeflowSession = z.infer<typeof chargeflowSessionSchema>;
 export type ChargeflowWCreateRequest = z.infer<
@@ -124,4 +147,13 @@ export type ChargeflowFCreateRequest = z.infer<
 export type ChargeflowWindow = z.infer<typeof chargeflowWindowSchema>;
 export type ChargeflowRetireRequest = z.infer<
   typeof chargeflowRetireRequestSchema
+>;
+export type ChargeflowEBatchRequest = z.infer<
+  typeof chargeflowEBatchRequestSchema
+>;
+export type ChargeflowWBatchRequest = z.infer<
+  typeof chargeflowWBatchRequestSchema
+>;
+export type ChargeflowFBatchRequest = z.infer<
+  typeof chargeflowFBatchRequestSchema
 >;

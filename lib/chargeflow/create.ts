@@ -249,4 +249,109 @@ export function chargeflowPublicResponse(record: ChargeflowRecord) {
   };
 }
 
+function errorCodeForCreateStatus(status: number): string {
+  if (status === 409) return "conflict";
+  if (status === 503) return "service_unavailable";
+  return "bad_request";
+}
+
+export type ChargeflowBatchResultItem =
+  | (ReturnType<typeof chargeflowPublicResponse> & {
+      index: number;
+      ok: true;
+    })
+  | {
+      index: number;
+      ok: false;
+      error: { code: string; message: string };
+    };
+
+export function summarizeChargeflowBatch(items: ChargeflowBatchResultItem[]) {
+  const succeeded = items.filter((i) => i.ok).length;
+  return {
+    total: items.length,
+    succeeded,
+    failed: items.length - succeeded,
+    items,
+  };
+}
+
+export async function createChargeflowEBatch(
+  keyHash: string,
+  items: ChargeflowCreateRequest[]
+): Promise<ChargeflowBatchResultItem[]> {
+  return Promise.all(
+    items.map(async (item, index) => {
+      const result = await createChargeflowUnit(keyHash, item);
+      if ("error" in result) {
+        return {
+          index,
+          ok: false as const,
+          error: {
+            code: errorCodeForCreateStatus(result.status),
+            message: result.error,
+          },
+        };
+      }
+      return {
+        index,
+        ok: true as const,
+        ...chargeflowPublicResponse(result.record),
+      };
+    })
+  );
+}
+
+export async function createChargeflowWBatch(
+  keyHash: string,
+  items: ChargeflowWCreateRequest[]
+): Promise<ChargeflowBatchResultItem[]> {
+  return Promise.all(
+    items.map(async (item, index) => {
+      const result = await createChargeflowWUnit(keyHash, item);
+      if ("error" in result) {
+        return {
+          index,
+          ok: false as const,
+          error: {
+            code: errorCodeForCreateStatus(result.status),
+            message: result.error,
+          },
+        };
+      }
+      return {
+        index,
+        ok: true as const,
+        ...chargeflowPublicResponse(result.record),
+      };
+    })
+  );
+}
+
+export async function createChargeflowFBatch(
+  keyHash: string,
+  items: ChargeflowFCreateRequest[]
+): Promise<ChargeflowBatchResultItem[]> {
+  return Promise.all(
+    items.map(async (item, index) => {
+      const result = await createChargeflowFUnit(keyHash, item);
+      if ("error" in result) {
+        return {
+          index,
+          ok: false as const,
+          error: {
+            code: errorCodeForCreateStatus(result.status),
+            message: result.error,
+          },
+        };
+      }
+      return {
+        index,
+        ok: true as const,
+        ...chargeflowPublicResponse(result.record),
+      };
+    })
+  );
+}
+
 export { retireChargeflowRecord };

@@ -208,6 +208,13 @@ export function ChargeflowPitchView() {
           </Link>
           {" · "}
           <Link
+            href="/green/chargeflow/console"
+            className="text-white/55 underline-offset-2 hover:underline"
+          >
+            Console
+          </Link>
+          {" · "}
+          <Link
             href="/green/chargeflow/flex"
             className="text-white/55 underline-offset-2 hover:underline"
           >

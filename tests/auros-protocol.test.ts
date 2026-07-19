@@ -146,6 +146,81 @@ describe("@adrien1212balitrand/auros-protocol SDK", () => {
     assert.equal(result.status, "retired");
   });
 
+  it("listChargeflow() gets with query", async () => {
+    const client = new AurosProtocol({
+      apiKey: "auros_pk_live_xxx",
+      fetch: mockFetch((url, init) => {
+        assert.ok(url.includes("/api/v1/chargeflow?kind=e&status=active"));
+        assert.equal(init?.method, "GET");
+        return Response.json({
+          total: 1,
+          limit: 50,
+          offset: 0,
+          items: [
+            {
+              id: "cfu_e_abc",
+              unit_kind: "e",
+              status: "active",
+              created_at: "2026-07-19T00:00:00.000Z",
+              retired_at: null,
+              operator_id: null,
+              external_ref: "s1",
+              content_hash: "a".repeat(64),
+              energy_kwh: 10,
+            },
+          ],
+        });
+      }),
+    });
+    const result = await client.listChargeflow({ kind: "e", status: "active" });
+    assert.equal(result.total, 1);
+    assert.equal(result.items[0]?.id, "cfu_e_abc");
+  });
+
+  it("createChargeflowEBatch() posts batch", async () => {
+    const client = new AurosProtocol({
+      apiKey: "auros_pk_live_xxx",
+      fetch: mockFetch((url, init) => {
+        assert.ok(url.endsWith("/api/v1/chargeflow/batch"));
+        assert.equal(init?.method, "POST");
+        return Response.json({
+          total: 1,
+          succeeded: 1,
+          failed: 0,
+          items: [
+            {
+              index: 0,
+              ok: true,
+              id: "cfu_e_batch",
+              unit_kind: "e",
+              content_hash: "a".repeat(64),
+              signature: "b".repeat(64),
+              verify_url: "https://getauros.com/chargeflow/cfu_e_batch",
+              status: "active",
+              public: {},
+              created_at: "2026-07-19T00:00:00.000Z",
+              disclaimer: "test",
+              valid: true,
+            },
+          ],
+        });
+      }),
+    });
+    const result = await client.createChargeflowEBatch({
+      items: [
+        {
+          session: {
+            external_session_id: "s1",
+            started_at: "2026-07-19T10:00:00Z",
+            ended_at: "2026-07-19T11:00:00Z",
+            energy_kwh: 10,
+          },
+        },
+      ],
+    });
+    assert.equal(result.succeeded, 1);
+  });
+
   it("scoreBatch() posts items array", async () => {
     const client = new AurosProtocol({
       apiKey: "auros_pk_test_demo",

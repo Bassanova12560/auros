@@ -6,6 +6,12 @@ import type {
   AttestVerifyResponse,
   ChargeflowCreateRequest,
   ChargeflowFCreateRequest,
+  ChargeflowBatchRequestE,
+  ChargeflowBatchRequestF,
+  ChargeflowBatchRequestW,
+  ChargeflowBatchResponse,
+  ChargeflowListQuery,
+  ChargeflowListResponse,
   ChargeflowResponse,
   ChargeflowVerifyResponse,
   ChargeflowWCreateRequest,
@@ -156,6 +162,44 @@ export class AurosProtocol {
     body: ChargeflowFCreateRequest
   ): Promise<ChargeflowResponse> {
     return this.post<ChargeflowResponse>("/api/v1/chargeflow/f", body);
+  }
+
+  async createChargeflowEBatch(
+    body: ChargeflowBatchRequestE
+  ): Promise<ChargeflowBatchResponse> {
+    return this.post<ChargeflowBatchResponse>("/api/v1/chargeflow/batch", body);
+  }
+
+  async createChargeflowWBatch(
+    body: ChargeflowBatchRequestW
+  ): Promise<ChargeflowBatchResponse> {
+    return this.post<ChargeflowBatchResponse>(
+      "/api/v1/chargeflow/w/batch",
+      body
+    );
+  }
+
+  async createChargeflowFBatch(
+    body: ChargeflowBatchRequestF
+  ): Promise<ChargeflowBatchResponse> {
+    return this.post<ChargeflowBatchResponse>(
+      "/api/v1/chargeflow/f/batch",
+      body
+    );
+  }
+
+  async listChargeflow(
+    query: ChargeflowListQuery = {}
+  ): Promise<ChargeflowListResponse> {
+    const params = new URLSearchParams();
+    if (query.kind) params.set("kind", query.kind);
+    if (query.status) params.set("status", query.status);
+    if (query.limit != null) params.set("limit", String(query.limit));
+    if (query.offset != null) params.set("offset", String(query.offset));
+    const qs = params.toString();
+    return this.get<ChargeflowListResponse>(
+      `/api/v1/chargeflow${qs ? `?${qs}` : ""}`
+    );
   }
 
   async getChargeflow(id: string): Promise<ChargeflowResponse> {

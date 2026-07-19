@@ -247,6 +247,13 @@ export default async function DataTerminalPage() {
           >
             Fleets
           </Link>
+          <span className="text-white/20">·</span>
+          <Link
+            href="/green/chargeflow/console"
+            className="font-mono text-xs uppercase tracking-wider text-white/50 hover:text-white/80"
+          >
+            Console
+          </Link>
         </section>
       </div>
     </FocusPageShell>

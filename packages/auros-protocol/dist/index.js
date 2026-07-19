@@ -83,6 +83,75 @@ var AurosProtocol = class {
   async dossier(body) {
     return this.post("/api/v1/dossier", body);
   }
+  async attest(body) {
+    return this.post("/api/v1/attest", body);
+  }
+  async verifyAttest(query) {
+    const params = new URLSearchParams();
+    if (query.id) params.set("id", query.id);
+    if (query.hash) params.set("hash", query.hash);
+    if (query.sig) params.set("sig", query.sig);
+    const qs = params.toString();
+    return this.getPublic(
+      `/api/v1/attest/verify${qs ? `?${qs}` : ""}`
+    );
+  }
+  async createChargeflowE(body) {
+    return this.post("/api/v1/chargeflow", body);
+  }
+  async createChargeflowW(body) {
+    return this.post("/api/v1/chargeflow/w", body);
+  }
+  async createChargeflowF(body) {
+    return this.post("/api/v1/chargeflow/f", body);
+  }
+  async createChargeflowEBatch(body) {
+    return this.post("/api/v1/chargeflow/batch", body);
+  }
+  async createChargeflowWBatch(body) {
+    return this.post(
+      "/api/v1/chargeflow/w/batch",
+      body
+    );
+  }
+  async createChargeflowFBatch(body) {
+    return this.post(
+      "/api/v1/chargeflow/f/batch",
+      body
+    );
+  }
+  async listChargeflow(query = {}) {
+    const params = new URLSearchParams();
+    if (query.kind) params.set("kind", query.kind);
+    if (query.status) params.set("status", query.status);
+    if (query.limit != null) params.set("limit", String(query.limit));
+    if (query.offset != null) params.set("offset", String(query.offset));
+    const qs = params.toString();
+    return this.get(
+      `/api/v1/chargeflow${qs ? `?${qs}` : ""}`
+    );
+  }
+  async getChargeflow(id) {
+    return this.getPublic(
+      `/api/v1/chargeflow/${encodeURIComponent(id)}`
+    );
+  }
+  async verifyChargeflow(query) {
+    const params = new URLSearchParams();
+    if (query.id) params.set("id", query.id);
+    if (query.hash) params.set("hash", query.hash);
+    if (query.sig) params.set("sig", query.sig);
+    const qs = params.toString();
+    return this.getPublic(
+      `/api/v1/chargeflow/verify${qs ? `?${qs}` : ""}`
+    );
+  }
+  async retireChargeflow(id, body = {}) {
+    return this.post(
+      `/api/v1/chargeflow/${encodeURIComponent(id)}/retire`,
+      body
+    );
+  }
   async registerWebhook(body) {
     return this.post("/api/v1/webhooks", body);
   }

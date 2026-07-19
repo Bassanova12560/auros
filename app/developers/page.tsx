@@ -215,8 +215,21 @@ const client = new AurosProtocol({ apiKey: "${DEMO_API_KEY}" });
 const result = await client.score({
   description: "Entrepôt retail Luxembourg €2.5M SPV professionnels",
 });
-console.log(result.score, result.grade);`}
+console.log(result.score, result.grade);
+
+// ChargeFlow (Premium) — list / mint / batch / retire
+const units = await client.listChargeflow({ kind: "e", status: "active" });
+await client.createChargeflowEBatch({ items: [/* … */] });`}
           </pre>
+          <p className="mt-3 text-xs text-white/40">
+            ChargeFlow console :{" "}
+            <Link
+              href="/green/chargeflow/console"
+              className="text-white/55 underline-offset-2 hover:underline"
+            >
+              /green/chargeflow/console
+            </Link>
+          </p>
         </section>
 
         <section

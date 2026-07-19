@@ -35,6 +35,7 @@
     "green:health": "npx tsx scripts/green-health.ts --prod",
     "green:deploy": "npm run test:green && npm run build && npx vercel --prod --yes && npm run green:sync",
     "green:publish-sdk": "npm publish ./packages/auros-green --access public",
+    "protocol:publish-sdk": "npm publish ./packages/auros-protocol --access public",
     "green:sync-stripe": "npx tsx scripts/sync-stripe-vercel.ts",
     "green:sync-clerk": "npx tsx scripts/sync-clerk-vercel.ts",
     "db:seed:green-phase3": "npx tsx scripts/seed-green-phase3-data.ts",

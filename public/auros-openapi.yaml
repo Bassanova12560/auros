@@ -857,6 +857,37 @@ paths:
         "404":
           description: Not found
   /api/v1/chargeflow:
+    get:
+      tags: [Premium]
+      summary: List ChargeFlow units for API key
+      operationId: listChargeflow
+      description: |
+        Premium. Returns CFU-E/W/F minted by this key. Filter with kind (e|w|f) and status (active|retired).
+        Console UI: /green/chargeflow/console.
+      parameters:
+        - name: kind
+          in: query
+          schema: { type: string, enum: [e, w, f] }
+        - name: status
+          in: query
+          schema: { type: string, enum: [active, retired] }
+        - name: limit
+          in: query
+          schema: { type: integer, minimum: 1, maximum: 100, default: 50 }
+        - name: offset
+          in: query
+          schema: { type: integer, minimum: 0, default: 0 }
+      responses:
+        "200":
+          description: Unit list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ChargeflowListResponse"
+        "403":
+          $ref: "#/components/responses/PremiumRequired"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
     post:
       tags: [Premium]
       summary: Register CFU-E charge session unit
@@ -886,6 +917,30 @@ paths:
           $ref: "#/components/responses/Unauthorized"
         "503":
           description: Signing key not configured
+  /api/v1/chargeflow/batch:
+    post:
+      tags: [Premium]
+      summary: Batch register CFU-E units
+      operationId: createChargeflowCfuEBatch
+      description: |
+        Premium. Up to 50 CFU-E mints per call. Partial success — per-item ok/error.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ChargeflowEBatchRequest"
+      responses:
+        "200":
+          description: Batch result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ChargeflowBatchResponse"
+        "403":
+          $ref: "#/components/responses/PremiumRequired"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
   /api/v1/chargeflow/verify:
     get:
       tags: [Public]
@@ -1001,6 +1056,27 @@ paths:
           description: Active unit already exists for this flow
         "403":
           $ref: "#/components/responses/PremiumRequired"
+  /api/v1/chargeflow/w/batch:
+    post:
+      tags: [Premium]
+      summary: Batch register CFU-W units
+      operationId: createChargeflowCfuWBatch
+      description: Premium. Up to 50 CFU-W mints; partial success.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ChargeflowWBatchRequest"
+      responses:
+        "200":
+          description: Batch result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ChargeflowBatchResponse"
+        "403":
+          $ref: "#/components/responses/PremiumRequired"
   /api/v1/chargeflow/w/verify:
     get:
       tags: [Public]
@@ -1057,6 +1133,27 @@ paths:
                 $ref: "#/components/schemas/ChargeflowResponse"
         "409":
           description: Active unit already exists for this window
+        "403":
+          $ref: "#/components/responses/PremiumRequired"
+  /api/v1/chargeflow/f/batch:
+    post:
+      tags: [Premium]
+      summary: Batch register CFU-F units
+      operationId: createChargeflowCfuFBatch
+      description: Premium. Up to 50 CFU-F mints; partial success.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ChargeflowFBatchRequest"
+      responses:
+        "200":
+          description: Batch result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ChargeflowBatchResponse"
         "403":
           $ref: "#/components/responses/PremiumRequired"
   /api/v1/chargeflow/f/verify:
@@ -2261,6 +2358,70 @@ components:
         created_at: { type: string, format: date-time }
         disclaimer: { type: string }
         valid: { type: boolean }
+    ChargeflowListItem:
+      type: object
+      properties:
+        id: { type: string }
+        unit_kind: { type: string, enum: [e, w, f] }
+        status: { type: string, enum: [active, retired] }
+        created_at: { type: string, format: date-time }
+        retired_at: { type: string, format: date-time, nullable: true }
+        operator_id: { type: string, nullable: true }
+        external_ref: { type: string }
+        content_hash: { type: string }
+        energy_kwh: { type: number }
+        volume_m3: { type: number }
+        capacity_kw: { type: number }
+    ChargeflowListResponse:
+      type: object
+      properties:
+        total: { type: integer }
+        limit: { type: integer }
+        offset: { type: integer }
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/ChargeflowListItem"
+    ChargeflowEBatchRequest:
+      type: object
+      required: [items]
+      properties:
+        items:
+          type: array
+          minItems: 1
+          maxItems: 50
+          items:
+            $ref: "#/components/schemas/ChargeflowCreateRequest"
+    ChargeflowWBatchRequest:
+      type: object
+      required: [items]
+      properties:
+        items:
+          type: array
+          minItems: 1
+          maxItems: 50
+          items:
+            $ref: "#/components/schemas/ChargeflowWCreateRequest"
+    ChargeflowFBatchRequest:
+      type: object
+      required: [items]
+      properties:
+        items:
+          type: array
+          minItems: 1
+          maxItems: 50
+          items:
+            $ref: "#/components/schemas/ChargeflowFCreateRequest"
+    ChargeflowBatchResponse:
+      type: object
+      properties:
+        total: { type: integer }
+        succeeded: { type: integer }
+        failed: { type: integer }
+        items:
+          type: array
+          items:
+            type: object
     WebhookRegisterRequest:
       type: object
       required: [url]

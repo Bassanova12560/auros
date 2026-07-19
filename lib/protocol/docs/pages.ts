@@ -1324,7 +1324,8 @@ curl "${BASE}/api/v1/attest/verify?hash=<64hex>&sig=<64hex>"`,
           "Premium. Entrée : JSON session (CPO / flotte / export type OCPI). Sortie : `cfu_e_*`, `content_hash`, `signature`, `verify_url`, enrichment Watt.",
           "HMAC prefix : `auros-cfu-e:v1:` — même clé que les attestations (ATTEST_SIGNING_KEY).",
           "Unicité serveur : 409 si une unité `active` existe déjà pour (clé, operator, external_session_id).",
-          "Standard public : docs/CHARGEFLOW-STANDARD.md · UI : /green/chargeflow.",
+          "Standard public : docs/CHARGEFLOW-STANDARD.md · UI : /green/chargeflow · console : /green/chargeflow/console.",
+          "Liste : GET /api/v1/chargeflow · batch : POST /api/v1/chargeflow/batch (max 50).",
         ],
         code: `curl -X POST ${BASE}/api/v1/chargeflow \\
   -H "Authorization: Bearer auros_pk_live_xxx" \\
@@ -1346,11 +1347,15 @@ curl "${BASE}/api/v1/attest/verify?hash=<64hex>&sig=<64hex>"`,
       {
         heading: "Vérifier & retirer",
         paragraphs: [
+          "GET /api/v1/chargeflow — liste Premium (filtres kind, status).",
+          "POST /api/v1/chargeflow/batch — jusqu'à 50 CFU-E, succès partiel.",
           "GET /api/v1/chargeflow/verify?id=cfu_e_…",
           "POST /api/v1/chargeflow/{id}/retire — Premium, même clé API (status=retired, hash inchangé).",
-          "Page UI : /chargeflow/{id} · Demo : POST /api/v1/chargeflow/demo",
+          "Page UI : /chargeflow/{id} · Demo : POST /api/v1/chargeflow/demo · Console : /green/chargeflow/console",
         ],
-        code: `curl "${BASE}/api/v1/chargeflow/verify?id=cfu_e_…"
+        code: `curl "${BASE}/api/v1/chargeflow?kind=e&status=active" \\
+  -H "Authorization: Bearer auros_pk_live_xxx"
+curl "${BASE}/api/v1/chargeflow/verify?id=cfu_e_…"
 curl -X POST ${BASE}/api/v1/chargeflow/cfu_e_…/retire \\
   -H "Authorization: Bearer auros_pk_live_xxx" \\
   -H "Content-Type: application/json" \\
@@ -1380,6 +1385,7 @@ curl -X POST ${BASE}/api/v1/chargeflow/cfu_e_…/retire \\
         paragraphs: [
           "Premium. Entrée : JSON flow (volume_m3 + contexte). Sortie : `cfu_w_*`, hash, HMAC (`auros-cfu-w:v1:`), enrichment H₂O.",
           "Même unicité / retirement que CFU-E. UI : /eau/chargeflow · verify /chargeflow/{id}.",
+          "Batch : POST /api/v1/chargeflow/w/batch (max 50).",
         ],
         code: `curl -X POST ${BASE}/api/v1/chargeflow/w \\
   -H "Authorization: Bearer auros_pk_live_xxx" \\
@@ -1420,7 +1426,8 @@ curl -X POST ${BASE}/api/v1/chargeflow/cfu_e_…/retire \\
         heading: "Enregistrer une CFU-F",
         paragraphs: [
           "Premium. Entrée : JSON window (capacity_kw + fenêtre). Sortie : `cfu_f_*`, HMAC `auros-cfu-f:v1:`.",
-          "UI : /green/chargeflow/flex · tunnel flottes : /green/chargeflow/fleets.",
+          "UI : /green/chargeflow/flex · tunnel flottes : /green/chargeflow/fleets · console : /green/chargeflow/console.",
+          "Batch : POST /api/v1/chargeflow/f/batch (max 50).",
         ],
         code: `curl -X POST ${BASE}/api/v1/chargeflow/f \\
   -H "Authorization: Bearer auros_pk_live_xxx" \\

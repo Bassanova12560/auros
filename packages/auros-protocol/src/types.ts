@@ -496,6 +496,66 @@ export type ChargeflowVerifyResponse = ChargeflowResponse | {
   disclaimer?: string;
 };
 
+export type ChargeflowListQuery = {
+  kind?: "e" | "w" | "f";
+  status?: "active" | "retired";
+  limit?: number;
+  offset?: number;
+};
+
+export type ChargeflowListItem = {
+  id: string;
+  unit_kind: "e" | "w" | "f";
+  status: "active" | "retired";
+  created_at: string;
+  retired_at: string | null;
+  operator_id: string | null;
+  external_ref: string;
+  content_hash: string;
+  energy_kwh?: number;
+  volume_m3?: number;
+  capacity_kw?: number;
+};
+
+export type ChargeflowListResponse = {
+  total: number;
+  limit: number;
+  offset: number;
+  items: ChargeflowListItem[];
+  meta?: ProtocolMeta;
+};
+
+export type ChargeflowBatchRequestE = {
+  items: ChargeflowCreateRequest[];
+};
+
+export type ChargeflowBatchRequestW = {
+  items: ChargeflowWCreateRequest[];
+};
+
+export type ChargeflowBatchRequestF = {
+  items: ChargeflowFCreateRequest[];
+};
+
+export type ChargeflowBatchSuccessItem = ChargeflowResponse & {
+  index: number;
+  ok: true;
+};
+
+export type ChargeflowBatchErrorItem = {
+  index: number;
+  ok: false;
+  error: { code: string; message: string };
+};
+
+export type ChargeflowBatchResponse = {
+  total: number;
+  succeeded: number;
+  failed: number;
+  items: Array<ChargeflowBatchSuccessItem | ChargeflowBatchErrorItem>;
+  meta?: ProtocolMeta;
+};
+
 export type WebhookRegisterRequest = {
   url: string;
   events?: AlertType[];

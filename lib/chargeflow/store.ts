@@ -8,6 +8,8 @@ import {
   type ChargeflowAurosEnrichment,
 } from "./canonical";
 import {
+  CHARGEFLOW_LIST_DEFAULT_LIMIT,
+  CHARGEFLOW_LIST_MAX_LIMIT,
   kindFromUnitId,
   resolveOperatorKey,
   standardForKind,
@@ -312,6 +314,113 @@ export async function getChargeflowById(
     return fromDb;
   }
   return null;
+}
+
+export type ChargeflowListQuery = {
+  unit_kind?: ChargeflowUnitKind;
+  status?: ChargeflowStatus;
+  limit?: number;
+  offset?: number;
+};
+
+export type ChargeflowListItem = {
+  id: string;
+  unit_kind: ChargeflowUnitKind;
+  status: ChargeflowStatus;
+  created_at: string;
+  retired_at: string | null;
+  operator_id: string | null;
+  external_ref: string;
+  content_hash: string;
+  energy_kwh?: number;
+  volume_m3?: number;
+  capacity_kw?: number;
+};
+
+export function toChargeflowListItem(
+  record: ChargeflowRecord
+): ChargeflowListItem {
+  const item: ChargeflowListItem = {
+    id: record.id,
+    unit_kind: record.unit_kind,
+    status: record.status,
+    created_at: record.created_at,
+    retired_at: record.retired_at,
+    operator_id: record.operator_id,
+    external_ref: record.external_ref,
+    content_hash: record.content_hash,
+  };
+  if (record.public.energy_kwh != null) item.energy_kwh = record.public.energy_kwh;
+  if (record.public.volume_m3 != null) item.volume_m3 = record.public.volume_m3;
+  if (record.public.capacity_kw != null) {
+    item.capacity_kw = record.public.capacity_kw;
+  }
+  return item;
+}
+
+function collectLocalRecordsForKey(keyHash: string): ChargeflowRecord[] {
+  const byId = new Map<string, ChargeflowRecord>();
+  for (const record of loadFileStore()) {
+    if (record.key_hash === keyHash) byId.set(record.id, record);
+  }
+  for (const record of memoryStore.values()) {
+    if (record.key_hash === keyHash) byId.set(record.id, record);
+  }
+  return [...byId.values()].sort(
+    (a, b) => Date.parse(b.created_at) - Date.parse(a.created_at)
+  );
+}
+
+export async function listChargeflowForKey(
+  keyHash: string,
+  query: ChargeflowListQuery = {}
+): Promise<{ items: ChargeflowListItem[]; total: number }> {
+  const limit = Math.min(
+    Math.max(query.limit ?? CHARGEFLOW_LIST_DEFAULT_LIMIT, 1),
+    CHARGEFLOW_LIST_MAX_LIMIT
+  );
+  const offset = Math.max(query.offset ?? 0, 0);
+
+  if (isSupabaseConfigured()) {
+    try {
+      const { getSupabaseServerClient } = await import("@/lib/supabase/server");
+      const supabase = getSupabaseServerClient();
+      let q = supabase
+        .from("protocol_chargeflow_units")
+        .select("*", { count: "exact" })
+        .eq("key_hash", keyHash)
+        .order("created_at", { ascending: false });
+      if (query.unit_kind) q = q.eq("unit_kind", query.unit_kind);
+      if (query.status) q = q.eq("status", query.status);
+      const { data, error, count } = await q.range(
+        offset,
+        offset + limit - 1
+      );
+      if (!error && data) {
+        const items = (data as Record<string, unknown>[]).map((row) => {
+          const record = rowToRecord(row);
+          memoryStore.set(record.id, record);
+          return toChargeflowListItem(record);
+        });
+        return { items, total: count ?? items.length };
+      }
+    } catch {
+      // fall through to local
+    }
+  }
+
+  let filtered = collectLocalRecordsForKey(keyHash);
+  if (query.unit_kind) {
+    filtered = filtered.filter((r) => r.unit_kind === query.unit_kind);
+  }
+  if (query.status) {
+    filtered = filtered.filter((r) => r.status === query.status);
+  }
+  const total = filtered.length;
+  const items = filtered
+    .slice(offset, offset + limit)
+    .map(toChargeflowListItem);
+  return { items, total };
 }
 
 export async function retireChargeflowRecord(

@@ -5,6 +5,7 @@ import { useCallback } from "react";
 
 import { useLocale } from "@/app/_components/i18n/LocaleProvider";
 import {
+  CHARGEFLOW_CONSOLE_ROUTE,
   CHARGEFLOW_FLEETS_ROUTE,
   CHARGEFLOW_ROUTE,
 } from "@/lib/chargeflow/constants";
@@ -57,6 +58,7 @@ export function GreenStandardsView() {
           { href: GREEN_LABEL_ROUTE, title: s.quickNav.label },
           { href: CHARGEFLOW_ROUTE, title: s.quickNav.chargeflow },
           { href: CHARGEFLOW_FLEETS_ROUTE, title: s.quickNav.fleets },
+          { href: CHARGEFLOW_CONSOLE_ROUTE, title: s.quickNav.console },
         ].map((item) => (
           <Link
             key={item.href}

@@ -303,6 +303,184 @@ type DossierResponse = {
     sections?: string[];
     data?: Record<string, unknown>;
 };
+type AttestCreateRequest = {
+    dossier_id?: string;
+    score_id?: string;
+    score?: ScoreRequest;
+    sections?: DossierSection[];
+    locale?: "fr" | "en" | "es";
+};
+type AttestPublicSnapshot = {
+    score: number;
+    grade: string;
+    status: string;
+    mica_classification: string;
+    sections: string[];
+    generated_at: string;
+};
+type AttestResponse = {
+    id: string;
+    content_hash: string;
+    signature: string;
+    verify_url: string;
+    dossier_id: string;
+    locale: string;
+    public: AttestPublicSnapshot;
+    created_at: string;
+    disclaimer: string;
+    valid: boolean;
+};
+type AttestVerifyResponse = {
+    valid: boolean;
+    id?: string;
+    content_hash?: string;
+    signature?: string;
+    reason?: string;
+    disclaimer?: string;
+    public?: AttestPublicSnapshot;
+    verify_url?: string;
+    dossier_id?: string;
+    locale?: string;
+    created_at?: string;
+};
+type ChargeflowCreateRequest = {
+    session: {
+        external_session_id: string;
+        started_at: string;
+        ended_at: string;
+        energy_kwh: number;
+        operator_id?: string;
+        source_format?: "ocpi" | "ocpp_summary" | "csv" | "json_custom";
+        location?: {
+            country?: string;
+            site_id?: string;
+            connector_id?: string;
+        };
+        vehicle_ref?: string;
+    };
+    attributes?: {
+        renewable_claim?: "none" | "go" | "rec" | "ppa_matched" | "unknown";
+        grid_mix_note?: string;
+        compare_ref_id?: string;
+    };
+};
+type ChargeflowWCreateRequest = {
+    flow: {
+        external_flow_id: string;
+        started_at: string;
+        ended_at: string;
+        volume_m3: number;
+        operator_id?: string;
+        source_format?: "csv" | "scada_summary" | "json_custom";
+        location?: {
+            country?: string;
+            site_id?: string;
+            basin_id?: string;
+        };
+    };
+    attributes?: {
+        asset_class_hint?: string;
+        compare_ref_id?: string;
+        notes?: string;
+    };
+};
+type ChargeflowFCreateRequest = {
+    window: {
+        external_window_id: string;
+        started_at: string;
+        ended_at: string;
+        capacity_kw: number;
+        direction?: "up" | "down" | "both";
+        operator_id?: string;
+        source_format?: "csv" | "scada_summary" | "json_custom";
+        location?: {
+            country?: string;
+            site_id?: string;
+            asset_id?: string;
+        };
+    };
+    attributes?: {
+        program_hint?: "fcr" | "afrr" | "mfrr" | "demand_response" | "unknown";
+        compare_ref_id?: string;
+        notes?: string;
+    };
+};
+type ChargeflowResponse = {
+    id: string;
+    unit_kind: "e" | "w" | "f";
+    content_hash: string;
+    signature: string;
+    verify_url: string;
+    status: "active" | "retired";
+    retired_at?: string | null;
+    retire_reason?: string | null;
+    public: Record<string, unknown>;
+    created_at: string;
+    disclaimer: string;
+    valid: boolean;
+};
+type ChargeflowVerifyResponse = ChargeflowResponse | {
+    valid: boolean;
+    id?: string;
+    content_hash?: string;
+    signature?: string;
+    reason?: string;
+    disclaimer?: string;
+};
+type ChargeflowListQuery = {
+    kind?: "e" | "w" | "f";
+    status?: "active" | "retired";
+    limit?: number;
+    offset?: number;
+};
+type ChargeflowListItem = {
+    id: string;
+    unit_kind: "e" | "w" | "f";
+    status: "active" | "retired";
+    created_at: string;
+    retired_at: string | null;
+    operator_id: string | null;
+    external_ref: string;
+    content_hash: string;
+    energy_kwh?: number;
+    volume_m3?: number;
+    capacity_kw?: number;
+};
+type ChargeflowListResponse = {
+    total: number;
+    limit: number;
+    offset: number;
+    items: ChargeflowListItem[];
+    meta?: ProtocolMeta;
+};
+type ChargeflowBatchRequestE = {
+    items: ChargeflowCreateRequest[];
+};
+type ChargeflowBatchRequestW = {
+    items: ChargeflowWCreateRequest[];
+};
+type ChargeflowBatchRequestF = {
+    items: ChargeflowFCreateRequest[];
+};
+type ChargeflowBatchSuccessItem = ChargeflowResponse & {
+    index: number;
+    ok: true;
+};
+type ChargeflowBatchErrorItem = {
+    index: number;
+    ok: false;
+    error: {
+        code: string;
+        message: string;
+    };
+};
+type ChargeflowBatchResponse = {
+    total: number;
+    succeeded: number;
+    failed: number;
+    items: Array<ChargeflowBatchSuccessItem | ChargeflowBatchErrorItem>;
+    meta?: ProtocolMeta;
+};
 type WebhookRegisterRequest = {
     url: string;
     events?: AlertType[];
@@ -433,6 +611,28 @@ declare class AurosProtocol {
         deleted: boolean;
     }>;
     dossier(body: DossierRequest): Promise<DossierResponse>;
+    attest(body: AttestCreateRequest): Promise<AttestResponse>;
+    verifyAttest(query: {
+        id?: string;
+        hash?: string;
+        sig?: string;
+    }): Promise<AttestVerifyResponse>;
+    createChargeflowE(body: ChargeflowCreateRequest): Promise<ChargeflowResponse>;
+    createChargeflowW(body: ChargeflowWCreateRequest): Promise<ChargeflowResponse>;
+    createChargeflowF(body: ChargeflowFCreateRequest): Promise<ChargeflowResponse>;
+    createChargeflowEBatch(body: ChargeflowBatchRequestE): Promise<ChargeflowBatchResponse>;
+    createChargeflowWBatch(body: ChargeflowBatchRequestW): Promise<ChargeflowBatchResponse>;
+    createChargeflowFBatch(body: ChargeflowBatchRequestF): Promise<ChargeflowBatchResponse>;
+    listChargeflow(query?: ChargeflowListQuery): Promise<ChargeflowListResponse>;
+    getChargeflow(id: string): Promise<ChargeflowResponse>;
+    verifyChargeflow(query: {
+        id?: string;
+        hash?: string;
+        sig?: string;
+    }): Promise<ChargeflowVerifyResponse>;
+    retireChargeflow(id: string, body?: {
+        reason?: string;
+    }): Promise<ChargeflowResponse>;
     registerWebhook(body: WebhookRegisterRequest): Promise<WebhookRegisterResponse>;
     webhooks(): Promise<WebhooksListResponse>;
     deleteWebhook(id: string): Promise<{
@@ -463,4 +663,4 @@ declare class AurosProtocolError extends Error {
     static fromResponse(status: number, body: ProtocolErrorBody): AurosProtocolError;
 }
 
-export { type AlertType, type AssetClass, type AssetType, AurosProtocol, AurosProtocolError, type AurosProtocolOptions, type CarbonQualityScore, type CarbonQualityTier, type ChecklistItem, type ChecklistRequest, type ChecklistResponse, type CompareCellHighlight, type CompareProduct, type CompareRequest, type CompareResponse, type CreateKeyRequest, type CreateKeyResponse, type DossierRequest, type DossierResponse, type DossierSection, type EuNexus, type GreenBatchErrorItem, type GreenBatchItemInput, type GreenCqsBatchRequest, type GreenCqsBatchResponse, type GreenCqsBatchSuccessItem, type GreenCqsPublicResponse, type GreenWattBatchRequest, type GreenWattBatchResponse, type GreenWattBatchSuccessItem, type GreenWattPublicResponse, type InvestorType, type IssuerType, type JurisdictionItem, type JurisdictionsAssetType, type JurisdictionsQuery, type JurisdictionsResponse, type MicaClassification, type MonitorRequest, type MonitorResponse, type ProductCategory, type ProductItem, type ProductsQuery, type ProductsResponse, type ProtocolErrorBody, type ProtocolMeta, type RecommendedJurisdiction, type RecommendedPlatform, type RiskTier, type ScoreBatchErrorItem, type ScoreBatchRequest, type ScoreBatchResponse, type ScoreBatchResultItem, type ScoreBatchSuccessItem, type ScoreBreakdown, type ScoreHistoryEntry, type ScoreHistoryResponse, type ScoreRequest, type ScoreResponse, type ScoreStatus, type WattScore, type WattScoreTier, type WebhookItem, type WebhookRegisterRequest, type WebhookRegisterResponse, type WebhooksListResponse, type WhitepaperStatus };
+export { type AlertType, type AssetClass, type AssetType, type AttestCreateRequest, type AttestPublicSnapshot, type AttestResponse, type AttestVerifyResponse, AurosProtocol, AurosProtocolError, type AurosProtocolOptions, type CarbonQualityScore, type CarbonQualityTier, type ChargeflowBatchErrorItem, type ChargeflowBatchRequestE, type ChargeflowBatchRequestF, type ChargeflowBatchRequestW, type ChargeflowBatchResponse, type ChargeflowBatchSuccessItem, type ChargeflowCreateRequest, type ChargeflowFCreateRequest, type ChargeflowListItem, type ChargeflowListQuery, type ChargeflowListResponse, type ChargeflowResponse, type ChargeflowVerifyResponse, type ChargeflowWCreateRequest, type ChecklistItem, type ChecklistRequest, type ChecklistResponse, type CompareCellHighlight, type CompareProduct, type CompareRequest, type CompareResponse, type CreateKeyRequest, type CreateKeyResponse, type DossierRequest, type DossierResponse, type DossierSection, type EuNexus, type GreenBatchErrorItem, type GreenBatchItemInput, type GreenCqsBatchRequest, type GreenCqsBatchResponse, type GreenCqsBatchSuccessItem, type GreenCqsPublicResponse, type GreenWattBatchRequest, type GreenWattBatchResponse, type GreenWattBatchSuccessItem, type GreenWattPublicResponse, type InvestorType, type IssuerType, type JurisdictionItem, type JurisdictionsAssetType, type JurisdictionsQuery, type JurisdictionsResponse, type MicaClassification, type MonitorRequest, type MonitorResponse, type ProductCategory, type ProductItem, type ProductsQuery, type ProductsResponse, type ProtocolErrorBody, type ProtocolMeta, type RecommendedJurisdiction, type RecommendedPlatform, type RiskTier, type ScoreBatchErrorItem, type ScoreBatchRequest, type ScoreBatchResponse, type ScoreBatchResultItem, type ScoreBatchSuccessItem, type ScoreBreakdown, type ScoreHistoryEntry, type ScoreHistoryResponse, type ScoreRequest, type ScoreResponse, type ScoreStatus, type WattScore, type WattScoreTier, type WebhookItem, type WebhookRegisterRequest, type WebhookRegisterResponse, type WebhooksListResponse, type WhitepaperStatus };

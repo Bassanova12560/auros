@@ -60,6 +60,10 @@ console.log(api_key); // store securely — shown once
 | `createChargeflowE(body)` | `POST /api/v1/chargeflow` | Bearer (premium) |
 | `createChargeflowW(body)` | `POST /api/v1/chargeflow/w` | Bearer (premium) |
 | `createChargeflowF(body)` | `POST /api/v1/chargeflow/f` | Bearer (premium) |
+| `createChargeflowEBatch(body)` | `POST /api/v1/chargeflow/batch` | Bearer (premium) |
+| `createChargeflowWBatch(body)` | `POST /api/v1/chargeflow/w/batch` | Bearer (premium) |
+| `createChargeflowFBatch(body)` | `POST /api/v1/chargeflow/f/batch` | Bearer (premium) |
+| `listChargeflow(query?)` | `GET /api/v1/chargeflow` | Bearer (premium) |
 | `getChargeflow(id)` | `GET /api/v1/chargeflow/:id` | None |
 | `verifyChargeflow(query)` | `GET /api/v1/chargeflow/verify` | None |
 | `retireChargeflow(id, body?)` | `POST /api/v1/chargeflow/:id/retire` | Bearer (premium) |

@@ -13,6 +13,7 @@ export const GREEN_HEALTH_PATHS = [
   "/green/chargeflow",
   "/green/chargeflow/flex",
   "/green/chargeflow/fleets",
+  "/green/chargeflow/console",
   "/eau/chargeflow",
   "/eau",
   "/comment-tokeniser/eau",

@@ -48,6 +48,9 @@ export default function ChargeflowFleetsPage() {
               >
                 Docs API
               </PrimaryButton>
+              <PrimaryButton href="/green/chargeflow/console" variant="ghost">
+                Console opérateur
+              </PrimaryButton>
             </div>
           </header>
 
@@ -89,6 +92,13 @@ export default function ChargeflowFleetsPage() {
               className="text-white/55 underline-offset-2 hover:underline"
             >
               CFU-W eau
+            </Link>{" "}
+            ·{" "}
+            <Link
+              href="/green/chargeflow/console"
+              className="text-white/55 underline-offset-2 hover:underline"
+            >
+              Console
             </Link>
           </p>
         </div>
