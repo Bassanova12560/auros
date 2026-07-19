@@ -25,6 +25,26 @@ export type ProtocolChangelogEntry = {
 /** Single source for `/developers/changelog` and GET `/api/v1/changelog`. Newest first. */
 export const PROTOCOL_CHANGELOG: ProtocolChangelogEntry[] = [
   {
+    id: "chargeflow-partner-connectors",
+    date: "2026-07-19",
+    title: "ChargeFlow partner connectors (Tesla / Total / OCPI)",
+    summary:
+      "Connecteurs sandbox+live Tesla Fleet, TotalEnergies OCPI, OCPI générique → CFU-E ; console sync ; SDK/MCP.",
+    details: [
+      "GET /api/v1/chargeflow/partners · POST …/partners/sync (Premium).",
+      "Sandbox fixtures 100 % fonctionnelles ; live avec credentials (non stockés).",
+      "@adrien1212balitrand/auros-protocol@1.0.6 · auros-mcp@1.2.1.",
+      "npm publish nécessite `npm login` (registry 401 sans auth).",
+      "Pas de claim de partnership officiel constructeur.",
+    ],
+    links: [
+      { href: "/developers/docs/endpoint-chargeflow-partners", label: "Docs partners" },
+      { href: "/green/chargeflow/console", label: "Console" },
+    ],
+    tags: ["chargeflow", "partners", "sdk", "mcp"],
+    status: "released",
+  },
+  {
     id: "chargeflow-mcp-operator-filter",
     date: "2026-07-19",
     title: "ChargeFlow MCP tools + operator_id filter",

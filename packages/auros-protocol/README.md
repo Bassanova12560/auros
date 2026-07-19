@@ -64,6 +64,8 @@ console.log(api_key); // store securely — shown once
 | `createChargeflowWBatch(body)` | `POST /api/v1/chargeflow/w/batch` | Bearer (premium) |
 | `createChargeflowFBatch(body)` | `POST /api/v1/chargeflow/f/batch` | Bearer (premium) |
 | `createChargeflowFromOcpi(body)` | `POST /api/v1/chargeflow/from-ocpi` | Bearer (premium) |
+| `listChargeflowPartners()` | `GET /api/v1/chargeflow/partners` | None |
+| `syncChargeflowPartner(body)` | `POST /api/v1/chargeflow/partners/sync` | Bearer (premium) |
 | `listChargeflow(query?)` | `GET /api/v1/chargeflow` | Bearer (premium) |
 | `getChargeflow(id)` | `GET /api/v1/chargeflow/:id` | None |
 | `verifyChargeflow(query)` | `GET /api/v1/chargeflow/verify` | None |

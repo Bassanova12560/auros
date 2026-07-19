@@ -397,6 +397,35 @@ export const AUROS_MCP_TOOLS = [
       client.createChargeflowFromOcpi(args),
   },
   {
+    name: "chargeflow_partners",
+    description:
+      "List ChargeFlow partner connectors (Tesla Fleet / TotalEnergies / generic OCPI). Public catalogue.",
+    schema: {},
+    handler: (client: AurosApiClient) => client.listChargeflowPartners(),
+  },
+  {
+    name: "chargeflow_partner_sync",
+    description:
+      "Sync partner sessions to CFU-E (Premium). mode=sandbox (fixtures) or live (credentials required). Not an official Tesla/Total partnership.",
+    schema: {
+      partner: z.enum(["tesla_fleet", "total_energies", "generic_ocpi"]),
+      mode: z.enum(["sandbox", "live"]).optional(),
+      operator_id: z.string().optional(),
+      limit: z.number().int().min(1).max(50).optional(),
+      credentials: z
+        .object({
+          access_token: z.string().optional(),
+          vin: z.string().optional(),
+          base_url: z.string().optional(),
+          token: z.string().optional(),
+          party_id: z.string().optional(),
+        })
+        .optional(),
+    },
+    handler: (client: AurosApiClient, args: Record<string, unknown>) =>
+      client.syncChargeflowPartner(args),
+  },
+  {
     name: "chargeflow_get",
     description: "Get a ChargeFlow unit by id (public verify).",
     schema: {

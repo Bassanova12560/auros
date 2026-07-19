@@ -1085,6 +1085,8 @@ export async function POST(req: Request) {
           "• `chargeflow_list` — GET /api/v1/chargeflow (Premium, filtres kind/status/operator_id)",
           "• `chargeflow_create_e` — POST /api/v1/chargeflow (Premium CFU-E)",
           "• `chargeflow_from_ocpi` — POST /api/v1/chargeflow/from-ocpi (stub offline)",
+          "• `chargeflow_partners` — GET /api/v1/chargeflow/partners (catalogue public)",
+          "• `chargeflow_partner_sync` — POST /api/v1/chargeflow/partners/sync (sandbox/live)",
           "• `chargeflow_get` — GET /api/v1/chargeflow/{id} (public)",
           "• `chargeflow_retire` — POST /api/v1/chargeflow/{id}/retire (Premium)",
         ],
@@ -1321,6 +1323,7 @@ curl "${BASE}/api/v1/attest/verify?hash=<64hex>&sig=<64hex>"`,
       "endpoint-green-watt",
       "endpoint-chargeflow-w",
       "endpoint-chargeflow-ocpi",
+      "endpoint-chargeflow-partners",
       "endpoint-dossier",
     ],
     sections: [
@@ -1356,6 +1359,7 @@ curl "${BASE}/api/v1/attest/verify?hash=<64hex>&sig=<64hex>"`,
           "GET /api/v1/chargeflow — liste Premium (filtres kind, status, operator_id).",
           "POST /api/v1/chargeflow/batch — jusqu'à 50 CFU-E, succès partiel.",
           "POST /api/v1/chargeflow/from-ocpi — import OCPI/CSV stub.",
+          "GET /api/v1/chargeflow/partners · POST …/partners/sync — connecteurs Tesla/Total/OCPI.",
           "GET /api/v1/chargeflow/verify?id=cfu_e_…",
           "POST /api/v1/chargeflow/{id}/retire — Premium, même clé API (status=retired, hash inchangé).",
           "Webhooks : `chargeflow.unit.minted` / `chargeflow.unit.retired` (POST /api/v1/webhooks).",
@@ -1472,6 +1476,7 @@ curl -X POST ${BASE}/api/v1/chargeflow/cfu_e_…/retire \\
     categoryLabel: "Endpoints",
     relatedSlugs: [
       "endpoint-chargeflow",
+      "endpoint-chargeflow-partners",
       "endpoint-chargeflow-w",
       "endpoint-webhooks",
     ],
@@ -1482,6 +1487,7 @@ curl -X POST ${BASE}/api/v1/chargeflow/cfu_e_…/retire \\
           "Premium. Corps : `cdrs` (stub OCPI) et/ou `csv_rows` — 1 à 50 items au total.",
           "Chaque item est mappé vers une CFU-E (`source_format: ocpi` ou `csv`) puis mint batch avec succès partiel.",
           "Ce n'est pas un client OCPI live — pas de pull SCADA / tokens OCPI.",
+          "Connecteurs partenaires (sandbox/live) : endpoint-chargeflow-partners.",
           "Tunnel flottes : /green/chargeflow/fleets · console : /green/chargeflow/console.",
         ],
         code: `curl -X POST ${BASE}/api/v1/chargeflow/from-ocpi \\
@@ -1507,6 +1513,50 @@ curl -X POST ${BASE}/api/v1/chargeflow/cfu_e_…/retire \\
     }]
   }'`,
         language: "bash",
+      },
+    ],
+  },
+  {
+    slug: "endpoint-chargeflow-partners",
+    title: "ChargeFlow partners sync (Premium)",
+    description:
+      "Connecteurs Tesla Fleet / TotalEnergies OCPI / OCPI générique — sandbox fixtures ou live credentials → CFU-E.",
+    category: "endpoints",
+    categoryLabel: "Endpoints",
+    relatedSlugs: [
+      "endpoint-chargeflow",
+      "endpoint-chargeflow-ocpi",
+      "mcp-server",
+    ],
+    sections: [
+      {
+        heading: "Catalogue & sync",
+        paragraphs: [
+          "GET /api/v1/chargeflow/partners — catalogue public (ids, modes, champs credentials).",
+          "POST /api/v1/chargeflow/partners/sync — Premium. `mode=sandbox` (fixtures, sans creds) ou `mode=live` (tokens en mémoire, non stockés).",
+          "Partners : `tesla_fleet` · `total_energies` · `generic_ocpi`.",
+          "Compatible format API uniquement — pas d'endorsement constructeur Tesla / TotalEnergies.",
+          "Console : /green/chargeflow/console · flottes : /green/chargeflow/fleets.",
+        ],
+        code: `curl ${BASE}/api/v1/chargeflow/partners
+curl -X POST ${BASE}/api/v1/chargeflow/partners/sync \\
+  -H "Authorization: Bearer auros_pk_live_xxx" \\
+  -H "Content-Type: application/json" \\
+  -d '{"partner":"tesla_fleet","mode":"sandbox","operator_id":"fleet_demo","limit":5}'
+curl -X POST ${BASE}/api/v1/chargeflow/partners/sync \\
+  -H "Authorization: Bearer auros_pk_live_xxx" \\
+  -H "Content-Type: application/json" \\
+  -d '{"partner":"total_energies","mode":"live","credentials":{"base_url":"https://ocpi.example.com","token":"…","party_id":"FR*TOT"}}'`,
+        language: "bash",
+      },
+      {
+        heading: "Credentials live",
+        paragraphs: [
+          "Tesla Fleet : `access_token` (+ `vin?`, `base_url?`).",
+          "TotalEnergies / OCPI générique : `base_url` + `token` (+ `party_id?`).",
+          "Sans credentials en live → 400 `credentials_required`.",
+          "SDK : listChargeflowPartners() · syncChargeflowPartner() · MCP chargeflow_partner_sync.",
+        ],
       },
     ],
   },

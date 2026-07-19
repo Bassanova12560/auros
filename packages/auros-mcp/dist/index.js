@@ -92,6 +92,18 @@ var AurosApiClient = class {
   async createChargeflowFromOcpi(body) {
     return this.request("POST", "/api/v1/chargeflow/from-ocpi", body);
   }
+  async listChargeflowPartners() {
+    return this.request(
+      "GET",
+      "/api/v1/chargeflow/partners",
+      void 0,
+      void 0,
+      false
+    );
+  }
+  async syncChargeflowPartner(body) {
+    return this.request("POST", "/api/v1/chargeflow/partners/sync", body);
+  }
   async getChargeflow(id) {
     return this.request(
       "GET",
@@ -456,6 +468,30 @@ var AUROS_MCP_TOOLS = [
       default_operator_id: z.string().optional()
     },
     handler: (client2, args) => client2.createChargeflowFromOcpi(args)
+  },
+  {
+    name: "chargeflow_partners",
+    description: "List ChargeFlow partner connectors (Tesla Fleet / TotalEnergies / generic OCPI). Public catalogue.",
+    schema: {},
+    handler: (client2) => client2.listChargeflowPartners()
+  },
+  {
+    name: "chargeflow_partner_sync",
+    description: "Sync partner sessions to CFU-E (Premium). mode=sandbox (fixtures) or live (credentials required). Not an official Tesla/Total partnership.",
+    schema: {
+      partner: z.enum(["tesla_fleet", "total_energies", "generic_ocpi"]),
+      mode: z.enum(["sandbox", "live"]).optional(),
+      operator_id: z.string().optional(),
+      limit: z.number().int().min(1).max(50).optional(),
+      credentials: z.object({
+        access_token: z.string().optional(),
+        vin: z.string().optional(),
+        base_url: z.string().optional(),
+        token: z.string().optional(),
+        party_id: z.string().optional()
+      }).optional()
+    },
+    handler: (client2, args) => client2.syncChargeflowPartner(args)
   },
   {
     name: "chargeflow_get",

@@ -33,6 +33,8 @@ Thin wrapper over `https://getauros.com/api/v1/*` — no local scoring logic.
 | `chargeflow_list` | `GET /api/v1/chargeflow` | Bearer (premium) |
 | `chargeflow_create_e` | `POST /api/v1/chargeflow` | Bearer (premium) |
 | `chargeflow_from_ocpi` | `POST /api/v1/chargeflow/from-ocpi` | Bearer (premium) |
+| `chargeflow_partners` | `GET /api/v1/chargeflow/partners` | None |
+| `chargeflow_partner_sync` | `POST /api/v1/chargeflow/partners/sync` | Bearer (premium) |
 | `chargeflow_get` | `GET /api/v1/chargeflow/:id` | None |
 | `chargeflow_retire` | `POST /api/v1/chargeflow/:id/retire` | Bearer (premium) |
 

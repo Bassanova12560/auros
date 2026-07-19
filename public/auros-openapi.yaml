@@ -969,6 +969,49 @@ paths:
           $ref: "#/components/responses/PremiumRequired"
         "401":
           $ref: "#/components/responses/Unauthorized"
+  /api/v1/chargeflow/partners:
+    get:
+      tags: [Public]
+      summary: List ChargeFlow partner connectors
+      operationId: listChargeflowPartners
+      security: []
+      description: |
+        Public catalogue of format-compatible connectors (Tesla Fleet, TotalEnergies OCPI, generic OCPI).
+        Not an official manufacturer partnership endorsement.
+      responses:
+        "200":
+          description: Partner catalogue
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ChargeflowPartnersListResponse"
+  /api/v1/chargeflow/partners/sync:
+    post:
+      tags: [Premium]
+      summary: Sync partner sessions to CFU-E
+      operationId: syncChargeflowPartner
+      description: |
+        Premium. Sandbox uses fixtures (no credentials). Live requires partner tokens (not stored).
+        Compatible API/format adapters only — not an official Tesla or TotalEnergies partnership.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ChargeflowPartnerSyncRequest"
+      responses:
+        "200":
+          description: Batch mint result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ChargeflowPartnerSyncResponse"
+        "400":
+          description: Validation or credentials_required
+        "403":
+          $ref: "#/components/responses/PremiumRequired"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
   /api/v1/chargeflow/verify:
     get:
       tags: [Public]
@@ -2496,6 +2539,63 @@ components:
         - type: object
           properties:
             source: { type: string, enum: [ocpi_stub] }
+            disclaimer: { type: string }
+    ChargeflowPartnersListResponse:
+      type: object
+      properties:
+        disclaimer: { type: string }
+        partners:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                enum: [tesla_fleet, total_energies, generic_ocpi]
+              label: { type: string }
+              description: { type: string }
+              modes:
+                type: array
+                items: { type: string, enum: [sandbox, live] }
+              credential_fields:
+                type: array
+                items: { type: string }
+              disclaimer: { type: string }
+    ChargeflowPartnerSyncRequest:
+      type: object
+      required: [partner]
+      properties:
+        partner:
+          type: string
+          enum: [tesla_fleet, total_energies, generic_ocpi]
+        mode:
+          type: string
+          enum: [sandbox, live]
+          default: sandbox
+        operator_id: { type: string }
+        limit: { type: integer, minimum: 1, maximum: 50 }
+        credentials:
+          type: object
+          properties:
+            access_token: { type: string }
+            vin: { type: string }
+            base_url: { type: string, format: uri }
+            token: { type: string }
+            party_id: { type: string }
+        sessions:
+          type: array
+          maxItems: 50
+          items: { type: object }
+    ChargeflowPartnerSyncResponse:
+      allOf:
+        - $ref: "#/components/schemas/ChargeflowBatchResponse"
+        - type: object
+          properties:
+            partner:
+              type: string
+              enum: [tesla_fleet, total_energies, generic_ocpi]
+            mode: { type: string, enum: [sandbox, live] }
+            source: { type: string }
             disclaimer: { type: string }
     WebhookRegisterRequest:
       type: object

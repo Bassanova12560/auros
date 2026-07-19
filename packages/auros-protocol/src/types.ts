@@ -598,6 +598,47 @@ export type ChargeflowFromOcpiResponse = ChargeflowBatchResponse & {
   disclaimer: string;
 };
 
+export type ChargeflowPartnerId =
+  | "tesla_fleet"
+  | "total_energies"
+  | "generic_ocpi";
+
+export type ChargeflowPartnerCatalogEntry = {
+  id: ChargeflowPartnerId;
+  label: string;
+  description: string;
+  modes: Array<"sandbox" | "live">;
+  credential_fields: string[];
+  disclaimer: string;
+};
+
+export type ChargeflowPartnersListResponse = {
+  disclaimer: string;
+  partners: ChargeflowPartnerCatalogEntry[];
+};
+
+export type ChargeflowPartnerSyncRequest = {
+  partner: ChargeflowPartnerId;
+  mode?: "sandbox" | "live";
+  operator_id?: string;
+  limit?: number;
+  credentials?: {
+    access_token?: string;
+    vin?: string;
+    base_url?: string;
+    token?: string;
+    party_id?: string;
+  };
+  sessions?: Record<string, unknown>[];
+};
+
+export type ChargeflowPartnerSyncResponse = ChargeflowBatchResponse & {
+  partner: ChargeflowPartnerId;
+  mode: "sandbox" | "live";
+  source: string;
+  disclaimer: string;
+};
+
 export type WebhookRegisterRequest = {
   url: string;
   events?: WebhookEventType[];

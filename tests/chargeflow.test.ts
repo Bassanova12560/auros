@@ -338,4 +338,64 @@ describe("chargeflow uniqueness + retirement", () => {
     const batch = await createChargeflowEBatch(key, items);
     assert.equal(summarizeChargeflowBatch(batch).succeeded, 2);
   });
+
+  it("syncs Tesla and Total sandbox partners to CFU-E", async () => {
+    const {
+      listChargeflowPartnerCatalog,
+      syncPartnerSessions,
+      mapTeslaChargeRowsToCdrs,
+    } = await import("../lib/chargeflow/partners");
+
+    const catalog = listChargeflowPartnerCatalog();
+    assert.equal(catalog.length, 3);
+    assert.ok(catalog.some((p) => p.id === "tesla_fleet"));
+    assert.ok(catalog.some((p) => p.id === "total_energies"));
+
+    const mapped = mapTeslaChargeRowsToCdrs([
+      {
+        chargeId: "tesla-map-1",
+        chargeStartDateTime: "2026-07-19T08:00:00Z",
+        chargeStopDateTime: "2026-07-19T08:30:00Z",
+        energyAddedWh: 15_000,
+        vin: "5YJ3E1EA0KF000099",
+        country: "FR",
+      },
+    ]);
+    assert.equal(mapped.length, 1);
+    assert.equal(mapped[0]?.total_energy, 15);
+
+    const key = `test_key_partner_${Date.now()}`;
+    const tesla = await syncPartnerSessions({
+      partner: "tesla_fleet",
+      mode: "sandbox",
+      keyHash: key,
+      operator_id: "fleet_demo",
+      limit: 3,
+    });
+    assert.equal(tesla.ok, true);
+    if (tesla.ok) {
+      assert.ok(tesla.succeeded >= 1);
+      assert.equal(tesla.mode, "sandbox");
+    }
+
+    const total = await syncPartnerSessions({
+      partner: "total_energies",
+      mode: "sandbox",
+      keyHash: key,
+      limit: 2,
+    });
+    assert.equal(total.ok, true);
+    if (total.ok) assert.ok(total.succeeded >= 1);
+
+    const liveNoCreds = await syncPartnerSessions({
+      partner: "tesla_fleet",
+      mode: "live",
+      keyHash: key,
+    });
+    assert.equal(liveNoCreds.ok, false);
+    if (!liveNoCreds.ok) {
+      assert.equal(liveNoCreds.code, "credentials_required");
+      assert.equal(liveNoCreds.status, 400);
+    }
+  });
 });

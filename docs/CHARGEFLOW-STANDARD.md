@@ -2,9 +2,11 @@
 
 **Status:** public draft · institutional RWA prep  
 **Live units:** CFU-E (kWh), CFU-W (m³), CFU-F (kW window)  
-**Not in scope (later):** live OCPI/SCADA, ZK selective disclosure, on-chain ERC-1155, Tesla partnership claims.
+**Not in scope (later):** ZK selective disclosure, on-chain ERC-1155, official Tesla/Total partnership claims.
 
-**Remaining ops:** publish npm packages after `npm login` — `npm run protocol:publish-sdk` and `cd packages/auros-mcp && npm publish --access public`.
+**Partner connectors:** `GET /api/v1/chargeflow/partners` · `POST …/partners/sync` (sandbox fixtures or live credentials) — Tesla Fleet / TotalEnergies OCPI / generic OCPI format-compatible.
+
+**npm:** publish after `npm login` — `npm run protocol:publish-sdk` and `cd packages/auros-mcp && npm publish --access public`.
 
 ## Units
 
@@ -14,8 +16,9 @@
 | **CFU-W** | volume m³ | `cfu_w_*` | `auros-cfu-w:v1:` | `/eau/chargeflow` |
 | **CFU-F** | capacity kW window | `cfu_f_*` | `auros-cfu-f:v1:` | `/green/chargeflow/flex` |
 
-Commercial ICP flottes/CPO : `/green/chargeflow/fleets` (no Tesla partnership claims).  
-Offline OCPI/CSV stub : `POST /api/v1/chargeflow/from-ocpi` (not live OCPI).
+Commercial ICP flottes/CPO : `/green/chargeflow/fleets` (format-compatible Supercharger-class / CPO — no official partnership claims).  
+Offline OCPI/CSV stub : `POST /api/v1/chargeflow/from-ocpi`.  
+Partner sync : `POST /api/v1/chargeflow/partners/sync` (sandbox + live-ready).
 
 ## Lifecycle
 

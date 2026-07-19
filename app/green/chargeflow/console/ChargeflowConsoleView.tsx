@@ -71,6 +71,13 @@ export function ChargeflowConsoleView() {
   const [importJson, setImportJson] = useState("");
   const [importing, setImporting] = useState(false);
   const [importResult, setImportResult] = useState<string | null>(null);
+  const [partnerSyncing, setPartnerSyncing] = useState<string | null>(null);
+  const [partnerResult, setPartnerResult] = useState<string | null>(null);
+  const [teslaToken, setTeslaToken] = useState("");
+  const [teslaVin, setTeslaVin] = useState("");
+  const [totalBaseUrl, setTotalBaseUrl] = useState("");
+  const [totalToken, setTotalToken] = useState("");
+  const [totalPartyId, setTotalPartyId] = useState("FR*TOT");
 
   useEffect(() => {
     const stored = sessionStorage.getItem(STORAGE_KEY);
@@ -262,6 +269,87 @@ export function ChargeflowConsoleView() {
     }
   }
 
+  async function syncPartner(
+    partner: "tesla_fleet" | "total_energies" | "generic_ocpi",
+    mode: "sandbox" | "live"
+  ) {
+    const key = apiKey.trim();
+    if (!key) {
+      setError("Collez une clé Protocol Premium (Bearer).");
+      return;
+    }
+    sessionStorage.setItem(STORAGE_KEY, key);
+    setPartnerSyncing(`${partner}:${mode}`);
+    setPartnerResult(null);
+    setError(null);
+
+    const body: Record<string, unknown> = {
+      partner,
+      mode,
+      limit: 10,
+      ...(operatorId.trim() ? { operator_id: operatorId.trim() } : {}),
+    };
+
+    if (mode === "live") {
+      if (partner === "tesla_fleet") {
+        if (!teslaToken.trim()) {
+          setError("Live Tesla : access_token requis.");
+          setPartnerSyncing(null);
+          return;
+        }
+        body.credentials = {
+          access_token: teslaToken.trim(),
+          ...(teslaVin.trim() ? { vin: teslaVin.trim() } : {}),
+        };
+      } else {
+        if (!totalBaseUrl.trim() || !totalToken.trim()) {
+          setError("Live OCPI : base_url + token requis.");
+          setPartnerSyncing(null);
+          return;
+        }
+        body.credentials = {
+          base_url: totalBaseUrl.trim(),
+          token: totalToken.trim(),
+          ...(totalPartyId.trim() ? { party_id: totalPartyId.trim() } : {}),
+        };
+      }
+    }
+
+    try {
+      const res = await fetch("/api/v1/chargeflow/partners/sync", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${key}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(body),
+      });
+      const json = (await res.json()) as {
+        succeeded?: number;
+        total?: number;
+        failed?: number;
+        source?: string;
+        error?: { message?: string };
+      };
+      if (!res.ok) {
+        setError(json.error?.message ?? `Sync failed (${res.status})`);
+        return;
+      }
+      setPartnerResult(
+        `${partner} ${mode} — ${json.succeeded ?? 0}/${json.total ?? 0} CFU-E` +
+          (json.source ? ` · ${json.source}` : "") +
+          (json.failed ? ` · ${json.failed} échecs` : "")
+      );
+      setKind("e");
+      setStatus("active");
+      await load({ kind: "e", status: "active" });
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Network error");
+    } finally {
+      setPartnerSyncing(null);
+    }
+  }
+
   return (
     <div className="space-y-10">
       <header className="space-y-3">
@@ -272,8 +360,10 @@ export function ChargeflowConsoleView() {
           Vos unités ChargeFlow
         </h1>
         <p className="max-w-2xl text-sm leading-relaxed text-white/55">
-          Listez, importez (OCPI/CSV stub) et retirez les CFU liées à votre clé
-          Premium. La clé reste dans cette session navigateur uniquement.
+          Listez, synchronisez des connecteurs partenaires (Tesla Fleet /
+          TotalEnergies / OCPI), importez OCPI/CSV et retirez les CFU. Clé
+          Premium en session navigateur uniquement — pas d’endorsement
+          constructeur.
         </p>
       </header>
 
@@ -380,6 +470,121 @@ export function ChargeflowConsoleView() {
             Docs import OCPI
           </Link>
         </p>
+      </section>
+
+      <section className="space-y-5 border border-white/[0.08] bg-black/40 p-5 md:p-6">
+        <div>
+          <h2 className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/40">
+            Connecteurs partenaires
+          </h2>
+          <p className="mt-2 max-w-2xl text-sm text-white/50">
+            Sync sandbox (fixtures) ou live (credentials en mémoire, non
+            stockés). Compatible format API — pas de partnership officiel Tesla
+            / TotalEnergies.
+          </p>
+        </div>
+
+        <div className="grid gap-4 md:grid-cols-3">
+          {(
+            [
+              {
+                id: "tesla_fleet" as const,
+                title: "Tesla Fleet",
+                blurb: "Charge history Wh/VIN → CFU-E",
+              },
+              {
+                id: "total_energies" as const,
+                title: "TotalEnergies OCPI",
+                blurb: "CDR OCPI-like → CFU-E",
+              },
+              {
+                id: "generic_ocpi" as const,
+                title: "OCPI générique",
+                blurb: "Tout CPO OCPI 2.2 CDR",
+              },
+            ] as const
+          ).map((card) => (
+            <div
+              key={card.id}
+              className="space-y-3 border border-white/[0.06] bg-white/[0.02] p-4"
+            >
+              <h3 className="text-sm font-medium text-white">{card.title}</h3>
+              <p className="text-xs text-white/45">{card.blurb}</p>
+              <div className="flex flex-wrap gap-2">
+                <PrimaryButton
+                  type="button"
+                  onClick={() => syncPartner(card.id, "sandbox")}
+                  disabled={partnerSyncing != null}
+                >
+                  {partnerSyncing === `${card.id}:sandbox`
+                    ? "Sync…"
+                    : "Sandbox"}
+                </PrimaryButton>
+                <button
+                  type="button"
+                  onClick={() => syncPartner(card.id, "live")}
+                  disabled={partnerSyncing != null}
+                  className="min-h-[44px] rounded-full border border-white/20 px-4 font-mono text-[11px] uppercase tracking-wider text-white/60 transition hover:border-white/40 hover:text-white disabled:opacity-30"
+                >
+                  {partnerSyncing === `${card.id}:live` ? "Live…" : "Live"}
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="grid gap-4 md:grid-cols-2">
+          <div className="space-y-2">
+            <p className="font-mono text-[10px] uppercase tracking-[0.15em] text-white/35">
+              Credentials Tesla (live)
+            </p>
+            <input
+              type="password"
+              autoComplete="off"
+              value={teslaToken}
+              onChange={(e) => setTeslaToken(e.target.value)}
+              placeholder="access_token"
+              className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 font-mono text-xs text-white placeholder:text-white/30"
+            />
+            <input
+              type="text"
+              value={teslaVin}
+              onChange={(e) => setTeslaVin(e.target.value)}
+              placeholder="VIN (optionnel)"
+              className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 font-mono text-xs text-white placeholder:text-white/30"
+            />
+          </div>
+          <div className="space-y-2">
+            <p className="font-mono text-[10px] uppercase tracking-[0.15em] text-white/35">
+              Credentials OCPI Total / générique (live)
+            </p>
+            <input
+              type="url"
+              value={totalBaseUrl}
+              onChange={(e) => setTotalBaseUrl(e.target.value)}
+              placeholder="https://ocpi.example.com"
+              className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 font-mono text-xs text-white placeholder:text-white/30"
+            />
+            <input
+              type="password"
+              autoComplete="off"
+              value={totalToken}
+              onChange={(e) => setTotalToken(e.target.value)}
+              placeholder="token"
+              className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 font-mono text-xs text-white placeholder:text-white/30"
+            />
+            <input
+              type="text"
+              value={totalPartyId}
+              onChange={(e) => setTotalPartyId(e.target.value)}
+              placeholder="party_id"
+              className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 font-mono text-xs text-white placeholder:text-white/30"
+            />
+          </div>
+        </div>
+        {partnerResult ? (
+          <p className="text-sm text-emerald-400/90">{partnerResult}</p>
+        ) : null}
       </section>
 
       <section className="space-y-4 border border-white/[0.08] bg-black/40 p-5 md:p-6">

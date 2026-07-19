@@ -14,6 +14,9 @@ import type {
   ChargeflowFromOcpiResponse,
   ChargeflowListQuery,
   ChargeflowListResponse,
+  ChargeflowPartnerSyncRequest,
+  ChargeflowPartnerSyncResponse,
+  ChargeflowPartnersListResponse,
   ChargeflowResponse,
   ChargeflowVerifyResponse,
   ChargeflowWCreateRequest,
@@ -196,6 +199,21 @@ export class AurosProtocol {
   ): Promise<ChargeflowFromOcpiResponse> {
     return this.post<ChargeflowFromOcpiResponse>(
       "/api/v1/chargeflow/from-ocpi",
+      body
+    );
+  }
+
+  async listChargeflowPartners(): Promise<ChargeflowPartnersListResponse> {
+    return this.getPublic<ChargeflowPartnersListResponse>(
+      "/api/v1/chargeflow/partners"
+    );
+  }
+
+  async syncChargeflowPartner(
+    body: ChargeflowPartnerSyncRequest
+  ): Promise<ChargeflowPartnerSyncResponse> {
+    return this.post<ChargeflowPartnerSyncResponse>(
+      "/api/v1/chargeflow/partners/sync",
       body
     );
   }

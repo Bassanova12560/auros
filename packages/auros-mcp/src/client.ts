@@ -216,6 +216,20 @@ export class AurosApiClient {
     return this.request("POST", "/api/v1/chargeflow/from-ocpi", body);
   }
 
+  async listChargeflowPartners(): Promise<unknown> {
+    return this.request(
+      "GET",
+      "/api/v1/chargeflow/partners",
+      undefined,
+      undefined,
+      false
+    );
+  }
+
+  async syncChargeflowPartner(body: Record<string, unknown>): Promise<unknown> {
+    return this.request("POST", "/api/v1/chargeflow/partners/sync", body);
+  }
+
   async getChargeflow(id: string): Promise<unknown> {
     return this.request(
       "GET",

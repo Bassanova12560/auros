@@ -49,7 +49,7 @@ export default function ChargeflowFleetsPage() {
                 Docs API
               </PrimaryButton>
               <PrimaryButton href="/green/chargeflow/console" variant="ghost">
-                Console opérateur
+                Console + sync partenaires
               </PrimaryButton>
               <PrimaryButton
                 href="/developers/docs/endpoint-chargeflow-ocpi"
@@ -59,6 +59,17 @@ export default function ChargeflowFleetsPage() {
               </PrimaryButton>
             </div>
           </header>
+
+          <section className="mx-auto max-w-2xl space-y-3 text-center">
+            <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/40">
+              Connecteurs
+            </p>
+            <p className="text-sm leading-relaxed text-white/55">
+              Tesla Fleet, TotalEnergies OCPI et OCPI générique : sync sandbox
+              100 % fonctionnelle depuis la console ; live dès credentials.
+              Compatible format API — aucune claim de partnership officiel.
+            </p>
+          </section>
 
           <section className="grid gap-8 md:grid-cols-3">
             {[

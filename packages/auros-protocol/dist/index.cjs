@@ -154,6 +154,17 @@ var AurosProtocol = class {
       body
     );
   }
+  async listChargeflowPartners() {
+    return this.getPublic(
+      "/api/v1/chargeflow/partners"
+    );
+  }
+  async syncChargeflowPartner(body) {
+    return this.post(
+      "/api/v1/chargeflow/partners/sync",
+      body
+    );
+  }
   async listChargeflow(query = {}) {
     const params = new URLSearchParams();
     if (query.kind) params.set("kind", query.kind);
