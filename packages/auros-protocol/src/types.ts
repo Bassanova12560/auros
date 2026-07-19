@@ -375,6 +375,50 @@ export type DossierResponse = {
   data?: Record<string, unknown>;
 };
 
+export type AttestCreateRequest = {
+  dossier_id?: string;
+  score_id?: string;
+  score?: ScoreRequest;
+  sections?: DossierSection[];
+  locale?: "fr" | "en" | "es";
+};
+
+export type AttestPublicSnapshot = {
+  score: number;
+  grade: string;
+  status: string;
+  mica_classification: string;
+  sections: string[];
+  generated_at: string;
+};
+
+export type AttestResponse = {
+  id: string;
+  content_hash: string;
+  signature: string;
+  verify_url: string;
+  dossier_id: string;
+  locale: string;
+  public: AttestPublicSnapshot;
+  created_at: string;
+  disclaimer: string;
+  valid: boolean;
+};
+
+export type AttestVerifyResponse = {
+  valid: boolean;
+  id?: string;
+  content_hash?: string;
+  signature?: string;
+  reason?: string;
+  disclaimer?: string;
+  public?: AttestPublicSnapshot;
+  verify_url?: string;
+  dossier_id?: string;
+  locale?: string;
+  created_at?: string;
+};
+
 export type WebhookRegisterRequest = {
   url: string;
   events?: AlertType[];

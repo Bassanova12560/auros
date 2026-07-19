@@ -1,6 +1,9 @@
 import { AurosProtocolError } from "./errors";
 import type {
   AurosProtocolOptions,
+  AttestCreateRequest,
+  AttestResponse,
+  AttestVerifyResponse,
   ChecklistRequest,
   ChecklistResponse,
   CompareRequest,
@@ -111,6 +114,25 @@ export class AurosProtocol {
 
   async dossier(body: DossierRequest): Promise<DossierResponse> {
     return this.post<DossierResponse>("/api/v1/dossier", body);
+  }
+
+  async attest(body: AttestCreateRequest): Promise<AttestResponse> {
+    return this.post<AttestResponse>("/api/v1/attest", body);
+  }
+
+  async verifyAttest(query: {
+    id?: string;
+    hash?: string;
+    sig?: string;
+  }): Promise<AttestVerifyResponse> {
+    const params = new URLSearchParams();
+    if (query.id) params.set("id", query.id);
+    if (query.hash) params.set("hash", query.hash);
+    if (query.sig) params.set("sig", query.sig);
+    const qs = params.toString();
+    return this.getPublic<AttestVerifyResponse>(
+      `/api/v1/attest/verify${qs ? `?${qs}` : ""}`
+    );
   }
 
   async registerWebhook(body: WebhookRegisterRequest): Promise<WebhookRegisterResponse> {

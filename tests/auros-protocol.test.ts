@@ -52,6 +52,42 @@ describe("@adrien1212balitrand/auros-protocol SDK", () => {
     assert.equal(result.grade, "B-");
   });
 
+  it("attest() posts premium create payload", async () => {
+    const client = new AurosProtocol({
+      apiKey: "auros_pk_live_xxx",
+      baseUrl: "https://getauros.com",
+      fetch: mockFetch((url, init) => {
+        assert.ok(url.endsWith("/api/v1/attest"));
+        assert.equal(init?.method, "POST");
+        return Response.json({
+          id: "att_abc",
+          content_hash: "a".repeat(64),
+          signature: "b".repeat(64),
+          verify_url: "https://getauros.com/attest/att_abc",
+          dossier_id: "dos_1",
+          locale: "fr",
+          public: {
+            score: 70,
+            grade: "B",
+            status: "progress",
+            mica_classification: "financial_instrument",
+            sections: ["disclaimers"],
+            generated_at: "2026-07-19T00:00:00.000Z",
+          },
+          created_at: "2026-07-19T00:00:00.000Z",
+          disclaimer: "test",
+          valid: true,
+        });
+      }),
+    });
+
+    const result = await client.attest({
+      score: { description: "Entrepôt retail Luxembourg €2.5M SPV professionnels" },
+    });
+    assert.equal(result.id, "att_abc");
+    assert.equal(result.valid, true);
+  });
+
   it("scoreBatch() posts items array", async () => {
     const client = new AurosProtocol({
       apiKey: "auros_pk_test_demo",

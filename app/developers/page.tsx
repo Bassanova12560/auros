@@ -105,6 +105,11 @@ const PREMIUM_ENDPOINTS = [
   },
   {
     method: "POST",
+    path: "/api/v1/attest",
+    desc: "Attestation readiness — hash SHA-256 + HMAC, vérif publique /attest/{id}.",
+  },
+  {
+    method: "POST",
     path: "/api/v1/webhooks",
     desc: "Enregistrer webhooks signés HMAC (premium).",
   },
@@ -205,7 +210,7 @@ console.log(result.score, result.grade);`}
 
         <section className="mt-10 border border-amber-500/20 bg-amber-500/[0.04] px-5 py-5">
           <h2 className="font-mono text-[11px] tracking-wide text-amber-400/80">
-            Premium — Monitor · Dossier · Webhooks
+            Premium — Monitor · Dossier · Attest · Webhooks
           </h2>
           <p className="mt-3 text-sm font-light text-white/55">
             Clé <code className="text-white/70">auros_pk_live_*</code> requise. Tarifs indicatifs :
@@ -235,6 +240,11 @@ console.log(result.score, result.grade);`}
             <li>
               <Link href="/developers/docs/guide-institutional-reports" className="hover:text-white">
                 Guide rapports institutionnels →
+              </Link>
+            </li>
+            <li>
+              <Link href="/developers/docs/endpoint-attest" className="hover:text-white">
+                Docs Attestation →
               </Link>
             </li>
             <li>

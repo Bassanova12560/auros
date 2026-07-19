@@ -47,9 +47,11 @@ tags:
   - name: Keys
     description: API key management
   - name: Premium
-    description: Monitor, dossier, webhooks — requires live key or paid tier
+    description: Monitor, dossier, attest, webhooks — requires live key or paid tier
   - name: Status
     description: Public health checks — no auth
+  - name: Public
+    description: Public verify endpoints — no auth
   - name: Green
     description: AUROS Green scoring — Watt Score, Carbon Quality Score (CQS)
 paths:
@@ -780,6 +782,80 @@ paths:
           $ref: "#/components/responses/PremiumRequired"
         "401":
           $ref: "#/components/responses/Unauthorized"
+  /api/v1/attest:
+    post:
+      tags: [Premium]
+      summary: Create readiness attestation
+      operationId: createAttestation
+      description: |
+        Premium. SHA-256 of a canonical readiness snapshot + HMAC signature.
+        Public verify via GET /api/v1/attest/verify and UI /attest/{id}.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AttestCreateRequest"
+      responses:
+        "200":
+          description: Attestation created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AttestResponse"
+        "403":
+          $ref: "#/components/responses/PremiumRequired"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "503":
+          description: Signing key not configured
+  /api/v1/attest/verify:
+    get:
+      tags: [Public]
+      summary: Verify readiness attestation
+      operationId: verifyAttestation
+      security: []
+      description: |
+        Public. Query `id` for stored attestation, or `hash`+`sig` for stateless HMAC check.
+      parameters:
+        - name: id
+          in: query
+          schema: { type: string }
+        - name: hash
+          in: query
+          schema: { type: string, pattern: "^[a-f0-9]{64}$" }
+        - name: sig
+          in: query
+          schema: { type: string, pattern: "^[a-f0-9]{64}$" }
+      responses:
+        "200":
+          description: Verification result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AttestVerifyResponse"
+        "404":
+          description: Attestation not found
+  /api/v1/attest/{id}:
+    get:
+      tags: [Public]
+      summary: Get attestation by id
+      operationId: getAttestation
+      security: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: Attestation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AttestResponse"
+        "404":
+          description: Not found
   /api/v1/webhooks:
     post:
       tags: [Premium]
@@ -1797,6 +1873,53 @@ components:
         download_url: { type: string, format: uri }
         expires_in_hours: { type: integer }
         full_report_url: { type: string, format: uri }
+    AttestCreateRequest:
+      type: object
+      properties:
+        dossier_id: { type: string }
+        score_id: { type: string }
+        score:
+          $ref: "#/components/schemas/ScoreRequest"
+        sections:
+          type: array
+          items: { type: string }
+        locale:
+          type: string
+          enum: [fr, en, es]
+          default: fr
+    AttestResponse:
+      type: object
+      properties:
+        id: { type: string }
+        content_hash: { type: string }
+        signature: { type: string }
+        verify_url: { type: string, format: uri }
+        dossier_id: { type: string }
+        locale: { type: string }
+        public:
+          type: object
+          properties:
+            score: { type: number }
+            grade: { type: string }
+            status: { type: string }
+            mica_classification: { type: string }
+            sections:
+              type: array
+              items: { type: string }
+            generated_at: { type: string, format: date-time }
+        created_at: { type: string, format: date-time }
+        disclaimer: { type: string }
+        valid: { type: boolean }
+    AttestVerifyResponse:
+      type: object
+      properties:
+        valid: { type: boolean }
+        id: { type: string }
+        content_hash: { type: string }
+        signature: { type: string }
+        reason: { type: string }
+        disclaimer: { type: string }
+        public: { type: object }
     WebhookRegisterRequest:
       type: object
       required: [url]

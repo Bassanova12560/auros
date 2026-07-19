@@ -1223,7 +1223,7 @@ export async function POST(req: Request) {
       "Générer un rapport institutionnel PDF/JSON — score, checklist, juridictions.",
     category: "endpoints",
     categoryLabel: "Endpoints",
-    relatedSlugs: ["guide-institutional-reports", "endpoint-score"],
+    relatedSlugs: ["guide-institutional-reports", "endpoint-score", "endpoint-attest"],
     sections: [
       {
         heading: "Requête",
@@ -1248,6 +1248,53 @@ export async function POST(req: Request) {
           "Retourne `download_url` signé HMAC (24h) → GET /api/v1/dossier/pdf?token=…",
           "Lien wizard : `full_report_url` si le score référence un dossier AUROS complet.",
           "Indicatif uniquement — pas un avis juridique.",
+        ],
+      },
+    ],
+  },
+  {
+    slug: "endpoint-attest",
+    title: "POST /api/v1/attest (Premium)",
+    description:
+      "Attestation de readiness MiCA/RWA — hash SHA-256 canonique + signature HMAC, vérification publique.",
+    category: "endpoints",
+    categoryLabel: "Endpoints",
+    relatedSlugs: ["endpoint-dossier", "guide-institutional-reports", "endpoint-score"],
+    sections: [
+      {
+        heading: "Créer une attestation",
+        paragraphs: [
+          "Premium. Hash d'un snapshot canonique (score, grade, gaps, sections) — sans branding ni PII.",
+          "Réponse : `id`, `content_hash`, `signature`, `verify_url` (/attest/{id}).",
+        ],
+        code: `curl -X POST ${BASE}/api/v1/attest \\
+  -H "Authorization: Bearer auros_pk_live_xxx" \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "score": {
+      "description": "Entrepôt retail Luxembourg €2.5M SPV professionnels",
+      "asset_type": "real_estate"
+    },
+    "locale": "fr"
+  }'`,
+        language: "bash",
+      },
+      {
+        heading: "Vérifier (public)",
+        paragraphs: [
+          "GET /api/v1/attest/verify?id=att_… — snapshot public + validité crypto.",
+          "GET /api/v1/attest/verify?hash=<sha256>&sig=<hmac> — vérif stateless de la signature.",
+          "Page UI : /attest/{id} (noindex).",
+        ],
+        code: `curl "${BASE}/api/v1/attest/verify?id=att_…"
+curl "${BASE}/api/v1/attest/verify?hash=<64hex>&sig=<64hex>"`,
+        language: "bash",
+      },
+      {
+        heading: "Disclaimer",
+        paragraphs: [
+          "Signal indicatif de readiness — pas un avis juridique, agrément ni conseil d'investissement.",
+          "Clé serveur : ATTEST_SIGNING_KEY (sinon GREEN_EXPORT_SIGNING_KEY / CRON_SECRET).",
         ],
       },
     ],
@@ -1368,7 +1415,7 @@ curl -X POST ${BASE}/api/v1/webhooks/wh_abc123/replay \\
       "Générer des PDF MiCA readiness pour comités investissement, data rooms et audits internes.",
     category: "guides",
     categoryLabel: "Guides",
-    relatedSlugs: ["endpoint-dossier", "endpoint-score"],
+    relatedSlugs: ["endpoint-dossier", "endpoint-attest", "endpoint-score"],
     sections: [
       {
         heading: "Cas d'usage",
@@ -1376,6 +1423,7 @@ curl -X POST ${BASE}/api/v1/webhooks/wh_abc123/replay \\
           "Due diligence interne avant émission RWA tokenisée.",
           "Annexe indicatif au memo juridique (non substitut).",
           "Export JSON pour intégration BI/compliance dashboard.",
+          "Attestation publique (hash + HMAC) pour plateformes — POST /api/v1/attest.",
         ],
       },
       {
@@ -1387,7 +1435,8 @@ const dossier = await client.dossier({
   format: "pdf",
   sections: ["executive_summary", "score_breakdown", "checklist", "disclaimers"],
 });
-// Télécharger dossier.download_url dans les 24h`,
+// Télécharger dossier.download_url dans les 24h
+// Attestation partageable : POST /api/v1/attest → verify_url`,
         language: "typescript",
       },
       {

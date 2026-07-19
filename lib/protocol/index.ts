@@ -111,6 +111,18 @@ export {
 } from "./regulatory/subscribe-store";
 export { dispatchRegulatoryFeedUpdates } from "./regulatory/dispatch-updates";
 export { dossierRequestSchema, DOSSIER_SECTIONS } from "./schemas/dossier";
+export {
+  attestCreateRequestSchema,
+  createAttestation,
+  attestationPublicResponse,
+  getAttestationById,
+  verifyAttestSignature,
+  isAttestContentHash,
+  signAttestHash,
+  attestationContentSha256,
+  attestVerifyUrl,
+} from "./attest";
+export type { AttestCreateRequest, AttestationRecord } from "./attest";
 export { registerWebhook, listWebhooksForKey, listWebhooksForEvent, deleteWebhook, getWebhook } from "./webhooks/store";
 export {
   WEBHOOK_MAX_DELIVERY_ATTEMPTS,

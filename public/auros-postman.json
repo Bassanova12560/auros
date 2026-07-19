@@ -573,6 +573,58 @@
           ]
         },
         {
+          "name": "Attest",
+          "item": [
+            {
+              "name": "POST /api/v1/attest",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"score\": {\n    \"description\": \"Entrepôt retail Luxembourg €2.5M SPV professionnels\",\n    \"asset_type\": \"real_estate\"\n  },\n  \"locale\": \"fr\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/attest",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "v1", "attest"]
+                },
+                "description": "Premium. Create readiness attestation (SHA-256 + HMAC). Response includes verify_url /attest/{id}."
+              },
+              "response": []
+            },
+            {
+              "name": "GET /api/v1/attest/verify",
+              "request": {
+                "auth": {
+                  "type": "noauth"
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/v1/attest/verify?id={{attestId}}",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "v1", "attest", "verify"],
+                  "query": [
+                    {
+                      "key": "id",
+                      "value": "{{attestId}}",
+                      "description": "Attestation id from POST /api/v1/attest"
+                    }
+                  ]
+                },
+                "description": "Public verify by id (or hash+sig query params)."
+              },
+              "response": []
+            }
+          ]
+        },
+        {
           "name": "Regulatory Feed",
           "item": [
             {

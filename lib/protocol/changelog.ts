@@ -25,6 +25,24 @@ export type ProtocolChangelogEntry = {
 /** Single source for `/developers/changelog` and GET `/api/v1/changelog`. Newest first. */
 export const PROTOCOL_CHANGELOG: ProtocolChangelogEntry[] = [
   {
+    id: "attest-api-v1",
+    date: "2026-07-19",
+    title: "Readiness Attestation API v1",
+    summary:
+      "POST /api/v1/attest — hash SHA-256 canonique + HMAC, vérification publique GET /api/v1/attest/verify et page /attest/{id}.",
+    details: [
+      "Snapshot sans branding ni PII (score, grade, MiCA, gaps, sections).",
+      "Vérif par id ou hash+sig (stateless).",
+      "Clé ATTEST_SIGNING_KEY (fallback GREEN_EXPORT_SIGNING_KEY / CRON_SECRET).",
+    ],
+    links: [
+      { href: "/developers/docs/endpoint-attest", label: "Documentation attest" },
+      { href: "/auros-openapi.yaml", label: "OpenAPI spec" },
+    ],
+    tags: ["endpoint", "premium", "attestation"],
+    status: "released",
+  },
+  {
     id: "custom-scoring-weights",
     date: "2026-06-13",
     title: "Custom scoring weights & profiles",
