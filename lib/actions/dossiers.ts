@@ -197,7 +197,7 @@ export async function submitDossierAction(
   const supabase = getSupabaseServerClient();
   const { data: row, error: fetchError } = await supabase
     .from("dossiers")
-    .select("id, asset_type, data, score")
+    .select("id, asset_type, data, score, referred_by")
     .eq("id", dossierId)
     .eq("user_id", userId)
     .maybeSingle();
@@ -206,19 +206,6 @@ export async function submitDossierAction(
     return { ok: false, error: "database", message: fetchError.message };
   }
   if (!row) return { ok: false, error: "not_found" };
-
-  const { error } = await supabase
-    .from("dossiers")
-    .update({
-      status: "submitted",
-      submitted_at: new Date().toISOString(),
-    })
-    .eq("id", dossierId)
-    .eq("user_id", userId);
-
-  if (error) {
-    return { ok: false, error: "database", message: error.message };
-  }
 
   const { wizard: rawWizard } = splitDossierDataBlob(
     (row.data as Record<string, unknown>) ?? {}
@@ -230,6 +217,30 @@ export async function submitDossierAction(
 
   const userLocale: Locale =
     locale && isLocale(locale) ? locale : "fr";
+
+  const { resolvePlatformPartner } = await import(
+    "@/lib/platforms/resolve-platform"
+  );
+  const platformPartner = await resolvePlatformPartner({
+    wizardPlatform: wizard.platform,
+    referredBy: (row.referred_by as string | null) ?? null,
+  });
+
+  const { error } = await supabase
+    .from("dossiers")
+    .update({
+      status: "submitted",
+      submitted_at: new Date().toISOString(),
+      ...(platformPartner
+        ? { partner_platform_id: platformPartner.id }
+        : {}),
+    })
+    .eq("id", dossierId)
+    .eq("user_id", userId);
+
+  if (error) {
+    return { ok: false, error: "database", message: error.message };
+  }
 
   const emailPayload = {
     dossierId,
@@ -251,18 +262,22 @@ export async function submitDossierAction(
   const { notifyPlatformSubmitWebhook } = await import(
     "@/lib/webhooks/platform-submit"
   );
-  void notifyPlatformSubmitWebhook({
-    event: "dossier.submitted",
-    dossierId,
-    assetType: emailPayload.assetType,
-    score: emailPayload.score,
-    admissionPercent: emailPayload.admissionPercent,
-    platform: emailPayload.platform,
-    country: emailPayload.country,
-    email: emailPayload.email,
-    firstName: emailPayload.firstName,
-    submittedAt: new Date().toISOString(),
-  });
+  void notifyPlatformSubmitWebhook(
+    {
+      event: "dossier.submitted",
+      dossierId,
+      assetType: emailPayload.assetType,
+      score: emailPayload.score,
+      admissionPercent: emailPayload.admissionPercent,
+      platform: emailPayload.platform,
+      country: emailPayload.country,
+      email: emailPayload.email,
+      firstName: emailPayload.firstName,
+      submittedAt: new Date().toISOString(),
+      partnerPlatformId: platformPartner?.id,
+    },
+    platformPartner
+  );
 
   return { ok: true };
 }

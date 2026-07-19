@@ -11,16 +11,20 @@ import {
   summarizePartnerReferrals,
 } from "@/lib/partners/referral-report";
 import type {
+  PartnerKind,
   PartnerRecord,
   PartnerStats,
   PartnerStatus,
 } from "@/lib/partners/types";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 
-export type { PartnerRecord, PartnerStats, PartnerStatus };
+export type { PartnerKind, PartnerRecord, PartnerStats, PartnerStatus };
 export { suggestPartnerCode };
 
 function mapRow(row: Record<string, unknown>): PartnerRecord {
+  const kindRaw = String(row.kind ?? "apporteur");
+  const kind: PartnerKind =
+    kindRaw === "platform" ? "platform" : "apporteur";
   return {
     id: String(row.id),
     code: String(row.code),
@@ -29,6 +33,9 @@ function mapRow(row: Record<string, unknown>): PartnerRecord {
     contact_name: row.contact_name ? String(row.contact_name) : null,
     clerk_user_id: row.clerk_user_id ? String(row.clerk_user_id) : null,
     status: row.status as PartnerStatus,
+    kind,
+    webhook_url: row.webhook_url ? String(row.webhook_url) : null,
+    webhook_secret: row.webhook_secret ? String(row.webhook_secret) : null,
     created_at: String(row.created_at),
     activated_at: row.activated_at ? String(row.activated_at) : null,
   };
@@ -123,6 +130,9 @@ export type ActivatePartnerInput = {
   email?: string;
   code: string;
   clerkUserId?: string | null;
+  kind?: PartnerKind;
+  webhookUrl?: string | null;
+  webhookSecret?: string | null;
 };
 
 export async function activatePartner(
@@ -167,6 +177,15 @@ export async function activatePartner(
   };
   if (input.clerkUserId !== undefined) {
     patch.clerk_user_id = input.clerkUserId;
+  }
+  if (input.kind) {
+    patch.kind = input.kind;
+  }
+  if (input.webhookUrl !== undefined) {
+    patch.webhook_url = input.webhookUrl?.trim() || null;
+  }
+  if (input.webhookSecret !== undefined) {
+    patch.webhook_secret = input.webhookSecret?.trim() || null;
   }
 
   const { data, error } = await supabase

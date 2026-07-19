@@ -63,12 +63,31 @@ Les **petites plateformes** souffrent des deux plus que les géants (Centrifuge,
 
 ## Roadmap alignée
 
-| Phase | Focus | Preuve |
-|-------|--------|--------|
-| **0** | Prod + 1 plateforme pilote (issuer pipeline) | 5–10 dossiers, webhook soumission |
-| **1** | Contrat B2B + `partner_platform_id` sur dossiers | CA ou LOI |
-| **2** | Landing « tokeniser [actif] » → flux SEO | Volume leads |
-| **3** | **Liquidity Bridge** MVP (RFQ / 1 MM partenaire / 1 chaîne) | Pilote 1 token |
+| Phase | Focus | Preuve | Statut |
+|-------|--------|--------|--------|
+| **0** | Prod + 1 plateforme pilote (issuer pipeline) | 5–10 dossiers, webhook soumission | Live (webhook env + submit) |
+| **1** | `partner_platform_id` + inbox `/platforms/dashboard` + webhook par tenant | Triage in_review / needs_info / approved | **MVP live** |
+| **2** | Landing « tokeniser [actif] » → flux SEO | Volume leads | À venir |
+| **3** | **Liquidity Bridge** MVP (RFQ / 1 MM partenaire / 1 chaîne) | Pilote 1 token | À venir |
+
+### Ops — activer une plateforme
+
+```bash
+curl -X POST https://getauros.com/api/admin/partners/activate \
+  -H "Authorization: Bearer $CRON_SECRET" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email":"ops@platform.example",
+    "code":"PLAT-DEMO",
+    "kind":"platform",
+    "webhook_url":"https://platform.example/hooks/auros",
+    "webhook_secret":"…"
+  }'
+```
+
+Optionnel : `DEFAULT_PLATFORM_PARTNER_CODE=PLAT-DEMO` sur Vercel pour router les soumissions sans match wizard.
+
+Inbox : `/platforms/dashboard` (Clerk, partner `kind=platform`).
 
 Ne pas annoncer la brique 2 sur la home **avant** d’avoir une LOI issuer ou un partenaire MM.
 

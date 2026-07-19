@@ -34,6 +34,12 @@ export function PartnersPageContent() {
               >
                 {m.portalLink} →
               </Link>
+              <Link
+                href="/platforms/dashboard"
+                className="font-mono text-xs uppercase tracking-wider text-white/50 underline-offset-4 hover:text-white/80 hover:underline"
+              >
+                Platform inbox →
+              </Link>
             </div>
           </div>
         </section>

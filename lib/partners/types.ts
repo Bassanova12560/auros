@@ -1,5 +1,7 @@
 export type PartnerStatus = "pending" | "active" | "disabled";
 
+export type PartnerKind = "apporteur" | "platform";
+
 export type PartnerRecord = {
   id: string;
   code: string;
@@ -8,6 +10,9 @@ export type PartnerRecord = {
   contact_name: string | null;
   clerk_user_id: string | null;
   status: PartnerStatus;
+  kind: PartnerKind;
+  webhook_url: string | null;
+  webhook_secret: string | null;
   created_at: string;
   activated_at: string | null;
 };

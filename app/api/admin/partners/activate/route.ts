@@ -1,14 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 
 import { isCronAuthorized } from "@/lib/cron-auth";
-import { activatePartner } from "@/lib/partners/registry";
+import { activatePartner, type PartnerKind } from "@/lib/partners/registry";
 
 export const runtime = "nodejs";
 
 /**
  * POST — activate a partner (ops).
  * Authorization: Bearer CRON_SECRET
- * Body: { id? | email?, code, clerk_user_id? }
+ * Body: { id? | email?, code, clerk_user_id?, kind?, webhook_url?, webhook_secret? }
  */
 export async function POST(req: NextRequest) {
   if (!isCronAuthorized(req, { allowDevWithoutSecret: false })) {
@@ -32,6 +32,21 @@ export async function POST(req: NextRequest) {
       : raw.clerk_user_id === null
         ? null
         : undefined;
+  const kindRaw = typeof raw.kind === "string" ? raw.kind : undefined;
+  const kind: PartnerKind | undefined =
+    kindRaw === "platform" || kindRaw === "apporteur" ? kindRaw : undefined;
+  const webhookUrl =
+    typeof raw.webhook_url === "string"
+      ? raw.webhook_url
+      : raw.webhook_url === null
+        ? null
+        : undefined;
+  const webhookSecret =
+    typeof raw.webhook_secret === "string"
+      ? raw.webhook_secret
+      : raw.webhook_secret === null
+        ? null
+        : undefined;
 
   if (!id && !email) {
     return NextResponse.json(
@@ -40,7 +55,15 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const result = await activatePartner({ id, email, code, clerkUserId });
+  const result = await activatePartner({
+    id,
+    email,
+    code,
+    clerkUserId,
+    kind,
+    webhookUrl,
+    webhookSecret,
+  });
   if (!result.ok) {
     return NextResponse.json(
       { ok: false, error: result.message },
