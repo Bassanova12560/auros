@@ -25,6 +25,24 @@ export type ProtocolChangelogEntry = {
 /** Single source for `/developers/changelog` and GET `/api/v1/changelog`. Newest first. */
 export const PROTOCOL_CHANGELOG: ProtocolChangelogEntry[] = [
   {
+    id: "chargeflow-mcp-operator-filter",
+    date: "2026-07-19",
+    title: "ChargeFlow MCP tools + operator_id filter",
+    summary:
+      "Outils MCP list/mint/from-ocpi/get/retire ; GET /chargeflow?operator_id= ; SDK/MCP bumps.",
+    details: [
+      "@adrien1212balitrand/auros-mcp@1.2.0 — chargeflow_* tools.",
+      "@adrien1212balitrand/auros-protocol@1.0.5 — listChargeflow operator_id.",
+      "npm publish nécessite `npm login` sur le scope (non connecté ici).",
+    ],
+    links: [
+      { href: "/developers/docs/mcp-server", label: "MCP docs" },
+      { href: "/green/chargeflow/console", label: "Console" },
+    ],
+    tags: ["chargeflow", "mcp", "sdk"],
+    status: "released",
+  },
+  {
     id: "chargeflow-console-import",
     date: "2026-07-19",
     title: "Console ChargeFlow — import OCPI/CSV",

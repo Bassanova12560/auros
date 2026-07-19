@@ -206,6 +206,7 @@ export class AurosProtocol {
     const params = new URLSearchParams();
     if (query.kind) params.set("kind", query.kind);
     if (query.status) params.set("status", query.status);
+    if (query.operator_id) params.set("operator_id", query.operator_id);
     if (query.limit != null) params.set("limit", String(query.limit));
     if (query.offset != null) params.set("offset", String(query.offset));
     const qs = params.toString();

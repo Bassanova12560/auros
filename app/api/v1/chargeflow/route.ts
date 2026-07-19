@@ -31,6 +31,7 @@ export const GET = protocolRoute(async (req: Request) => {
   const url = new URL(req.url);
   const kindRaw = url.searchParams.get("kind");
   const statusRaw = url.searchParams.get("status");
+  const operatorRaw = url.searchParams.get("operator_id");
   const limitRaw = url.searchParams.get("limit");
   const offsetRaw = url.searchParams.get("offset");
 
@@ -58,6 +59,8 @@ export const GET = protocolRoute(async (req: Request) => {
     status = statusRaw;
   }
 
+  const operator_id = operatorRaw?.trim() || undefined;
+
   const limit = limitRaw
     ? Number.parseInt(limitRaw, 10)
     : CHARGEFLOW_LIST_DEFAULT_LIMIT;
@@ -80,6 +83,7 @@ export const GET = protocolRoute(async (req: Request) => {
   const listed = await listChargeflowForKey(auth.ctx.keyHash, {
     unit_kind,
     status,
+    operator_id,
     limit,
     offset,
   });

@@ -2,7 +2,9 @@
 
 **Status:** public draft · institutional RWA prep  
 **Live units:** CFU-E (kWh), CFU-W (m³), CFU-F (kW window)  
-**Not in scope:** on-chain mint, Tesla API, live OCPI/SCADA
+**Not in scope (later):** live OCPI/SCADA, ZK selective disclosure, on-chain ERC-1155, Tesla partnership claims.
+
+**Remaining ops:** publish npm packages after `npm login` — `npm run protocol:publish-sdk` and `cd packages/auros-mcp && npm publish --access public`.
 
 ## Units
 

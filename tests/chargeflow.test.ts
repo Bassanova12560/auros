@@ -249,6 +249,19 @@ describe("chargeflow uniqueness + retirement", () => {
       sampleE.session.energy_kwh
     );
 
+    const byOperator = await listChargeflowForKey(key, {
+      unit_kind: "e",
+      status: "active",
+      operator_id: sampleE.session.operator_id,
+    });
+    assert.ok(byOperator.items.every((i) => i.operator_id === "cpo_demo"));
+    assert.ok(byOperator.items.some((i) => i.id === first.record.id));
+
+    const missingOp = await listChargeflowForKey(key, {
+      operator_id: "operator_does_not_exist",
+    });
+    assert.equal(missingOp.total, 0);
+
     const batch = await createChargeflowEBatch(key, [itemDup, itemOther]);
     const summary = summarizeChargeflowBatch(batch);
     assert.equal(summary.total, 2);

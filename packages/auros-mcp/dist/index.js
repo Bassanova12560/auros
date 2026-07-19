@@ -74,6 +74,40 @@ var AurosApiClient = class {
   async greenCarbonQualityBatch(body) {
     return this.request("POST", "/api/v1/green/carbon-quality/batch", body);
   }
+  async greenH2oScore(id) {
+    return this.request("GET", `/api/green/h2o/${encodeURIComponent(id)}`, void 0, void 0, false);
+  }
+  async greenH2oBatch(body) {
+    return this.request("POST", "/api/v1/green/h2o/batch", body);
+  }
+  async eauCheck(body) {
+    return this.request("POST", "/api/eau/check", body, void 0, false);
+  }
+  async listChargeflow(query = {}) {
+    return this.request("GET", "/api/v1/chargeflow", void 0, query);
+  }
+  async createChargeflowE(body) {
+    return this.request("POST", "/api/v1/chargeflow", body);
+  }
+  async createChargeflowFromOcpi(body) {
+    return this.request("POST", "/api/v1/chargeflow/from-ocpi", body);
+  }
+  async getChargeflow(id) {
+    return this.request(
+      "GET",
+      `/api/v1/chargeflow/${encodeURIComponent(id)}`,
+      void 0,
+      void 0,
+      false
+    );
+  }
+  async retireChargeflow(id, body = {}) {
+    return this.request(
+      "POST",
+      `/api/v1/chargeflow/${encodeURIComponent(id)}/retire`,
+      body
+    );
+  }
   async request(method, path, body, query, auth = true) {
     const params = new URLSearchParams();
     if (query) {
@@ -268,7 +302,7 @@ var AUROS_MCP_TOOLS = [
   },
   {
     name: "green_carbon_quality_batch",
-    description: "Batch Carbon Quality Scores for up to 50 carbon credits (premium key required). Each item: id or text. Counts as 1 quota unit.",
+    description: "Batch Carbon Quality Scores \u2014 free tier: 10 items, premium: 50. Each item: id, text, or serial. Counts as 1 quota unit.",
     schema: {
       items: z.array(
         z.object({
@@ -278,6 +312,35 @@ var AUROS_MCP_TOOLS = [
       ).min(1).max(50)
     },
     handler: (client2, args) => client2.greenCarbonQualityBatch(args)
+  },
+  {
+    name: "green_h2o_score",
+    description: "Free public H\u2082O Score (0\u2013100) for a hydrological catalog reference (concession, water rights, desalination, blue bond). No auth required.",
+    schema: {
+      id: z.string().describe("Hydrological compare reference id, e.g. pilot-concession-france")
+    },
+    handler: (client2, args) => client2.greenH2oScore(String(args.id))
+  },
+  {
+    name: "green_h2o_batch",
+    description: "Batch H\u2082O Scores for hydrological assets (premium key required). Each item: id (catalog ref) or text (free-form). Counts as 1 quota unit.",
+    schema: {
+      items: z.array(
+        z.object({
+          id: z.string().optional(),
+          text: z.string().min(10).optional()
+        })
+      ).min(1).max(50)
+    },
+    handler: (client2, args) => client2.greenH2oBatch(args)
+  },
+  {
+    name: "eau_check",
+    description: "Public hydrological readiness check from free text (min 10 chars). Returns H\u2082O Score preview and passport unlock path. No auth required.",
+    schema: {
+      text: z.string().min(10).describe("Project description mentioning m\xB3, concession, water rights, etc.")
+    },
+    handler: (client2, args) => client2.eauCheck({ text: args.text })
   },
   {
     name: "regulatory_feed",
@@ -323,6 +386,95 @@ var AUROS_MCP_TOOLS = [
     description: "AUROS Green API health probes (score, registry, nature-index, openapi).",
     schema: {},
     handler: (client2) => client2.greenApiStatus()
+  },
+  {
+    name: "chargeflow_list",
+    description: "List ChargeFlow CFU units for the API key (Premium). Filter by kind (e|w|f), status, operator_id.",
+    schema: {
+      kind: z.enum(["e", "w", "f"]).optional(),
+      status: z.enum(["active", "retired"]).optional(),
+      operator_id: z.string().optional(),
+      limit: z.number().int().min(1).max(100).optional(),
+      offset: z.number().int().min(0).optional()
+    },
+    handler: (client2, args) => client2.listChargeflow(args)
+  },
+  {
+    name: "chargeflow_create_e",
+    description: "Mint a CFU-E charge session unit (Premium). Pass session + optional attributes.",
+    schema: {
+      session: z.object({
+        external_session_id: z.string(),
+        started_at: z.string(),
+        ended_at: z.string(),
+        energy_kwh: z.number(),
+        operator_id: z.string().optional(),
+        source_format: z.enum(["ocpi", "ocpp_summary", "csv", "json_custom"]).optional(),
+        location: z.object({
+          country: z.string().optional(),
+          site_id: z.string().optional(),
+          connector_id: z.string().optional()
+        }).optional(),
+        vehicle_ref: z.string().optional()
+      }).describe("Charge session payload"),
+      attributes: z.object({
+        renewable_claim: z.enum(["none", "go", "rec", "ppa_matched", "unknown"]).optional(),
+        grid_mix_note: z.string().optional(),
+        compare_ref_id: z.string().optional()
+      }).optional()
+    },
+    handler: (client2, args) => client2.createChargeflowE(args)
+  },
+  {
+    name: "chargeflow_from_ocpi",
+    description: "Offline OCPI CDR / CSV rows \u2192 CFU-E batch (Premium). Not a live OCPI client. Max 50 items.",
+    schema: {
+      cdrs: z.array(
+        z.object({
+          id: z.string(),
+          start_date_time: z.string(),
+          end_date_time: z.string(),
+          total_energy: z.number(),
+          country: z.string().optional(),
+          location_id: z.string().optional(),
+          cpo_id: z.string().optional(),
+          party_id: z.string().optional(),
+          auth_id: z.string().optional()
+        })
+      ).optional(),
+      csv_rows: z.array(
+        z.object({
+          external_session_id: z.string(),
+          started_at: z.string(),
+          ended_at: z.string(),
+          energy_kwh: z.number(),
+          country: z.string().optional(),
+          site_id: z.string().optional(),
+          operator_id: z.string().optional()
+        })
+      ).optional(),
+      default_operator_id: z.string().optional()
+    },
+    handler: (client2, args) => client2.createChargeflowFromOcpi(args)
+  },
+  {
+    name: "chargeflow_get",
+    description: "Get a ChargeFlow unit by id (public verify).",
+    schema: {
+      id: z.string().describe("cfu_e_* / cfu_w_* / cfu_f_*")
+    },
+    handler: (client2, args) => client2.getChargeflow(String(args.id))
+  },
+  {
+    name: "chargeflow_retire",
+    description: "Retire an active ChargeFlow unit (Premium, same API key).",
+    schema: {
+      id: z.string(),
+      reason: z.string().optional()
+    },
+    handler: (client2, args) => client2.retireChargeflow(String(args.id), {
+      reason: args.reason
+    })
   }
 ];
 function registerAurosTools(server2, client2) {

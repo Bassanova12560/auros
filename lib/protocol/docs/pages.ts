@@ -1082,6 +1082,11 @@ export async function POST(req: Request) {
           "• `green_registry` — GET /api/green/registry?serial=… (Verra/GS/Puro)",
           "• `green_nature_index` — GET /api/green/nature-index",
           "• `green_api_status` — GET /api/green/status",
+          "• `chargeflow_list` — GET /api/v1/chargeflow (Premium, filtres kind/status/operator_id)",
+          "• `chargeflow_create_e` — POST /api/v1/chargeflow (Premium CFU-E)",
+          "• `chargeflow_from_ocpi` — POST /api/v1/chargeflow/from-ocpi (stub offline)",
+          "• `chargeflow_get` — GET /api/v1/chargeflow/{id} (public)",
+          "• `chargeflow_retire` — POST /api/v1/chargeflow/{id}/retire (Premium)",
         ],
       },
       {
@@ -1348,14 +1353,15 @@ curl "${BASE}/api/v1/attest/verify?hash=<64hex>&sig=<64hex>"`,
       {
         heading: "Vérifier & retirer",
         paragraphs: [
-          "GET /api/v1/chargeflow — liste Premium (filtres kind, status).",
+          "GET /api/v1/chargeflow — liste Premium (filtres kind, status, operator_id).",
           "POST /api/v1/chargeflow/batch — jusqu'à 50 CFU-E, succès partiel.",
+          "POST /api/v1/chargeflow/from-ocpi — import OCPI/CSV stub.",
           "GET /api/v1/chargeflow/verify?id=cfu_e_…",
           "POST /api/v1/chargeflow/{id}/retire — Premium, même clé API (status=retired, hash inchangé).",
           "Webhooks : `chargeflow.unit.minted` / `chargeflow.unit.retired` (POST /api/v1/webhooks).",
-          "Page UI : /chargeflow/{id} · Demo : POST /api/v1/chargeflow/demo · Console : /green/chargeflow/console (export CSV/JSON)",
+          "Page UI : /chargeflow/{id} · Demo : POST /api/v1/chargeflow/demo · Console : /green/chargeflow/console (import + export)",
         ],
-        code: `curl "${BASE}/api/v1/chargeflow?kind=e&status=active" \\
+        code: `curl "${BASE}/api/v1/chargeflow?kind=e&status=active&operator_id=cpo_demo" \\
   -H "Authorization: Bearer auros_pk_live_xxx"
 curl "${BASE}/api/v1/chargeflow/verify?id=cfu_e_…"
 curl -X POST ${BASE}/api/v1/chargeflow/cfu_e_…/retire \\

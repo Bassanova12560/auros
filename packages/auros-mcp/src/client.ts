@@ -201,110 +201,90 @@ export class AurosApiClient {
 
 
   async eauCheck(body: Record<string, unknown>): Promise<unknown> {
-
     return this.request("POST", "/api/eau/check", body, undefined, false);
-
   }
 
+  async listChargeflow(query: Record<string, unknown> = {}): Promise<unknown> {
+    return this.request("GET", "/api/v1/chargeflow", undefined, query);
+  }
 
+  async createChargeflowE(body: Record<string, unknown>): Promise<unknown> {
+    return this.request("POST", "/api/v1/chargeflow", body);
+  }
+
+  async createChargeflowFromOcpi(body: Record<string, unknown>): Promise<unknown> {
+    return this.request("POST", "/api/v1/chargeflow/from-ocpi", body);
+  }
+
+  async getChargeflow(id: string): Promise<unknown> {
+    return this.request(
+      "GET",
+      `/api/v1/chargeflow/${encodeURIComponent(id)}`,
+      undefined,
+      undefined,
+      false
+    );
+  }
+
+  async retireChargeflow(
+    id: string,
+    body: Record<string, unknown> = {}
+  ): Promise<unknown> {
+    return this.request(
+      "POST",
+      `/api/v1/chargeflow/${encodeURIComponent(id)}/retire`,
+      body
+    );
+  }
 
   private async request(
-
     method: string,
-
     path: string,
-
     body?: Record<string, unknown>,
-
     query?: Record<string, unknown>,
-
     auth = true
-
   ): Promise<unknown> {
-
     const params = new URLSearchParams();
-
     if (query) {
-
       for (const [key, value] of Object.entries(query)) {
-
         if (value !== undefined && value !== null) {
-
           params.set(key, String(value));
-
         }
-
       }
-
     }
-
     const qs = params.toString();
-
     const url = `${this.baseUrl}${path}${qs ? `?${qs}` : ""}`;
 
-
-
     const headers: Record<string, string> = {
-
       Accept: "application/json",
-
       "X-AUROS-Protocol-Version": "1.0",
-
     };
-
     if (body !== undefined) {
-
       headers["Content-Type"] = "application/json";
-
     }
-
     if (auth) {
-
       headers.Authorization = `Bearer ${this.apiKey}`;
-
     }
-
-
 
     const res = await fetch(url, {
-
       method,
-
       headers,
-
       body: body !== undefined ? JSON.stringify(body) : undefined,
-
     });
 
-
-
     const json = (await res.json()) as unknown;
-
     if (!res.ok) {
-
       const err =
-
         typeof json === "object" && json !== null && "error" in json
-
           ? (json as { error?: { code?: string; message?: string } }).error
-
           : undefined;
-
       throw new Error(
-
         `[${err?.code ?? res.status}] ${err?.message ?? res.statusText} (${method} ${path})`
-
       );
-
     }
-
     return json;
-
   }
-
 }
-
-
 
 export { DEFAULT_DEMO_KEY, DEFAULT_BASE_URL };
 

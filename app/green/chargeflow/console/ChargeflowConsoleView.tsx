@@ -62,6 +62,7 @@ export function ChargeflowConsoleView() {
   const [apiKey, setApiKey] = useState("");
   const [kind, setKind] = useState<"" | "e" | "w" | "f">("");
   const [status, setStatus] = useState<"" | "active" | "retired">("active");
+  const [operatorId, setOperatorId] = useState("");
   const [items, setItems] = useState<ListItem[]>([]);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -81,6 +82,7 @@ export function ChargeflowConsoleView() {
     async (overrides?: {
       kind?: "" | "e" | "w" | "f";
       status?: "" | "active" | "retired";
+      operatorId?: string;
     }) => {
       const key = apiKey.trim();
       if (!key) {
@@ -92,10 +94,12 @@ export function ChargeflowConsoleView() {
       setError(null);
       const kindFilter = overrides?.kind ?? kind;
       const statusFilter = overrides?.status ?? status;
+      const operatorFilter = (overrides?.operatorId ?? operatorId).trim();
       try {
         const params = new URLSearchParams();
         if (kindFilter) params.set("kind", kindFilter);
         if (statusFilter) params.set("status", statusFilter);
+        if (operatorFilter) params.set("operator_id", operatorFilter);
         params.set("limit", "50");
         const res = await fetch(`/api/v1/chargeflow?${params}`, {
           headers: {
@@ -122,7 +126,7 @@ export function ChargeflowConsoleView() {
         setLoading(false);
       }
     },
-    [apiKey, kind, status]
+    [apiKey, kind, status, operatorId]
   );
 
   async function retire(id: string) {
@@ -320,6 +324,18 @@ export function ChargeflowConsoleView() {
               <option value="active">Active</option>
               <option value="retired">Retired</option>
             </select>
+          </label>
+          <label className="space-y-1">
+            <span className="block font-mono text-[10px] uppercase tracking-[0.15em] text-white/35">
+              Operator
+            </span>
+            <input
+              type="text"
+              value={operatorId}
+              onChange={(e) => setOperatorId(e.target.value)}
+              placeholder="cpo_demo"
+              className="w-40 rounded-lg border border-white/10 bg-black px-3 py-2 font-mono text-sm text-white placeholder:text-white/30"
+            />
           </label>
           <div className="flex items-end gap-2">
             <PrimaryButton type="button" onClick={load} disabled={loading}>

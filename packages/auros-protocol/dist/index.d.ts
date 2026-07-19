@@ -431,6 +431,7 @@ type ChargeflowVerifyResponse = ChargeflowResponse | {
 type ChargeflowListQuery = {
     kind?: "e" | "w" | "f";
     status?: "active" | "retired";
+    operator_id?: string;
     limit?: number;
     offset?: number;
 };

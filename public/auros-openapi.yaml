@@ -871,6 +871,9 @@ paths:
         - name: status
           in: query
           schema: { type: string, enum: [active, retired] }
+        - name: operator_id
+          in: query
+          schema: { type: string }
         - name: limit
           in: query
           schema: { type: integer, minimum: 1, maximum: 100, default: 50 }

@@ -319,6 +319,7 @@ export async function getChargeflowById(
 export type ChargeflowListQuery = {
   unit_kind?: ChargeflowUnitKind;
   status?: ChargeflowStatus;
+  operator_id?: string;
   limit?: number;
   offset?: number;
 };
@@ -392,6 +393,7 @@ export async function listChargeflowForKey(
         .order("created_at", { ascending: false });
       if (query.unit_kind) q = q.eq("unit_kind", query.unit_kind);
       if (query.status) q = q.eq("status", query.status);
+      if (query.operator_id) q = q.eq("operator_id", query.operator_id);
       const { data, error, count } = await q.range(
         offset,
         offset + limit - 1
@@ -415,6 +417,9 @@ export async function listChargeflowForKey(
   }
   if (query.status) {
     filtered = filtered.filter((r) => r.status === query.status);
+  }
+  if (query.operator_id) {
+    filtered = filtered.filter((r) => r.operator_id === query.operator_id);
   }
   const total = filtered.length;
   const items = filtered
