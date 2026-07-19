@@ -63,7 +63,32 @@ function main() {
   }
 
   const pk = env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY!.trim();
+  const sk = env.CLERK_SECRET_KEY!.trim();
   const mode = pk.startsWith("pk_live_") ? "live" : "test";
+  const forceTest = process.env.FORCE_CLERK_TEST_SYNC === "1";
+
+  if (mode === "test" && !forceTest) {
+    console.error(`
+Refusing to sync pk_test_ keys to Vercel production.
+
+Create a Clerk Production instance, then put in .env.local:
+  NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_live_…
+  CLERK_SECRET_KEY=sk_live_…
+
+Dashboard: https://dashboard.clerk.com → switch to Production → API Keys
+Also add domains: getauros.com, www.getauros.com
+Redirects: /sign-in, /sign-up, /dashboard
+
+Then re-run: npm run green:sync-clerk
+(Emergency override: FORCE_CLERK_TEST_SYNC=1)
+`);
+    process.exit(1);
+  }
+
+  if (mode === "live" && !sk.startsWith("sk_live_")) {
+    console.error("pk_live_ publishable key but CLERK_SECRET_KEY is not sk_live_ — aborting.");
+    process.exit(1);
+  }
 
   for (const key of KEYS) {
     const value = env[key]?.trim();
@@ -77,7 +102,7 @@ function main() {
   console.log(`\nClerk ${mode} keys synced to Vercel.`);
   if (mode === "test") {
     console.warn(
-      "⚠ Still pk_test_ — create a Production instance in Clerk Dashboard for pk_live_/sk_live_."
+      "⚠ FORCE_CLERK_TEST_SYNC=1 — production still on pk_test_. Replace with pk_live_ ASAP."
     );
   }
   console.log("Redeploy: npx vercel --prod");

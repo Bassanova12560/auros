@@ -65,9 +65,19 @@ Puis **Redeploy** (obligatoire après changement de clés).
 
 ## 3. Clerk (production)
 
-1. Clerk Dashboard → **Configure → Domains** : ajouter `getauros.com` (et `www.getauros.com` si utilisé).
-2. **API Keys** : copier les clés **Production** (`pk_live_` / `sk_live_`) dans Vercel (section 2).
-3. Vérifier : `npm run prod:check` ne doit plus afficher le warning `pk_test_`.
+1. Clerk Dashboard → basculer sur l’instance **Production** (pas Development).
+2. **Configure → Domains** : `getauros.com` + `www.getauros.com`.
+3. **API Keys** : copier `pk_live_…` + `sk_live_…` dans `.env.local`.
+4. Sync + redeploy :
+
+```bash
+npm run green:sync-clerk   # refuse pk_test_ → prod (sauf FORCE_CLERK_TEST_SYNC=1)
+npx vercel --prod
+```
+
+5. Vérifier : `npm run prod:check` ne doit plus afficher le warning `pk_test_`.
+
+**Instance dev + domaine custom (intérim)** : si vous n'avez que `pk_test_`, ajoutez `https://getauros.com` dans Clerk → Allowed origins. Ne pas resync vers Vercel sans `FORCE_CLERK_TEST_SYNC=1`.
 
 ## 4. Supabase
 
