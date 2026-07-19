@@ -1,15 +1,15 @@
 import { protocolError, protocolJson, protocolRoute } from "@/lib/protocol";
 import {
-  chargeflowCreateRequestSchema,
   chargeflowPublicResponse,
-  createChargeflowUnit,
+  chargeflowWCreateRequestSchema,
+  createChargeflowWUnit,
 } from "@/lib/chargeflow";
 import { checkRateLimitAsync, getRequestIp } from "@/lib/rate-limit";
 
-/** Public sandboxed mint for /green/chargeflow demo (rate-limited). */
+/** Public sandboxed CFU-W mint for /eau/chargeflow demo. */
 export const POST = protocolRoute(async (req: Request) => {
   const ip = getRequestIp(req);
-  const rate = await checkRateLimitAsync(`chargeflow-demo:${ip}`, 10, 3_600_000);
+  const rate = await checkRateLimitAsync(`chargeflow-w-demo:${ip}`, 10, 3_600_000);
   if (!rate.allowed) {
     return protocolError(
       "rate_limited",
@@ -25,7 +25,7 @@ export const POST = protocolRoute(async (req: Request) => {
     return protocolError("invalid_json", "Request body must be valid JSON", 400);
   }
 
-  const parsed = chargeflowCreateRequestSchema.safeParse(body);
+  const parsed = chargeflowWCreateRequestSchema.safeParse(body);
   if (!parsed.success) {
     return protocolError(
       "validation_error",
@@ -34,7 +34,7 @@ export const POST = protocolRoute(async (req: Request) => {
     );
   }
 
-  const result = await createChargeflowUnit("demo", parsed.data);
+  const result = await createChargeflowWUnit("demo", parsed.data);
   if ("error" in result) {
     const code = result.status === 409 ? "conflict" : "service_unavailable";
     return protocolError(code, result.error, result.status);
@@ -43,6 +43,6 @@ export const POST = protocolRoute(async (req: Request) => {
   return protocolJson({
     ...chargeflowPublicResponse(result.record),
     demo: true,
-    note: "Sandbox mint — production use POST /api/v1/chargeflow with Protocol Premium.",
+    note: "Sandbox mint — production use POST /api/v1/chargeflow/w with Protocol Premium.",
   });
 });

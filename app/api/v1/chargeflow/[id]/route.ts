@@ -2,7 +2,7 @@ import { protocolError, protocolJson, protocolRoute } from "@/lib/protocol";
 import {
   chargeflowPublicResponse,
   getChargeflowById,
-  verifyChargeflowSignature,
+  verifyChargeflowSignatureForId,
 } from "@/lib/chargeflow";
 import { checkRateLimitAsync, getRequestIp } from "@/lib/rate-limit";
 
@@ -30,7 +30,11 @@ export const GET = protocolRoute(async (req: Request, context: RouteContext) => 
     return protocolError("not_found", "ChargeFlow unit not found", 404);
   }
 
-  const valid = verifyChargeflowSignature(record.content_hash, record.signature);
+  const valid = verifyChargeflowSignatureForId(
+    record.id,
+    record.content_hash,
+    record.signature
+  );
   if (!valid) {
     return protocolJson({
       valid: false,

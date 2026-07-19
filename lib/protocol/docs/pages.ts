@@ -1311,13 +1311,19 @@ curl "${BASE}/api/v1/attest/verify?hash=<64hex>&sig=<64hex>"`,
       "AUROS ChargeFlow CFU-E — enregistre une session de charge kWh en unité de flux hashée + HMAC, avec Watt companion.",
     category: "endpoints",
     categoryLabel: "Endpoints",
-    relatedSlugs: ["endpoint-attest", "endpoint-green-watt", "endpoint-dossier"],
+    relatedSlugs: [
+      "endpoint-attest",
+      "endpoint-green-watt",
+      "endpoint-chargeflow-w",
+      "endpoint-dossier",
+    ],
     sections: [
       {
         heading: "Enregistrer une CFU-E",
         paragraphs: [
           "Premium. Entrée : JSON session (CPO / flotte / export type OCPI). Sortie : `cfu_e_*`, `content_hash`, `signature`, `verify_url`, enrichment Watt.",
           "HMAC prefix : `auros-cfu-e:v1:` — même clé que les attestations (ATTEST_SIGNING_KEY).",
+          "Unicité serveur : 409 si une unité `active` existe déjà pour (clé, operator, external_session_id).",
           "Standard public : docs/CHARGEFLOW-STANDARD.md · UI : /green/chargeflow.",
         ],
         code: `curl -X POST ${BASE}/api/v1/chargeflow \\
@@ -1338,23 +1344,65 @@ curl "${BASE}/api/v1/attest/verify?hash=<64hex>&sig=<64hex>"`,
         language: "bash",
       },
       {
-        heading: "Vérifier (public)",
+        heading: "Vérifier & retirer",
         paragraphs: [
           "GET /api/v1/chargeflow/verify?id=cfu_e_…",
-          "GET /api/v1/chargeflow/verify?hash=<sha256>&sig=<hmac>",
-          "GET /api/v1/chargeflow/{id} · page UI /chargeflow/{id}",
-          "Demo sandbox (rate-limitée) : POST /api/v1/chargeflow/demo",
+          "POST /api/v1/chargeflow/{id}/retire — Premium, même clé API (status=retired, hash inchangé).",
+          "Page UI : /chargeflow/{id} · Demo : POST /api/v1/chargeflow/demo",
         ],
         code: `curl "${BASE}/api/v1/chargeflow/verify?id=cfu_e_…"
-curl "${BASE}/api/v1/chargeflow/verify?hash=<64hex>&sig=<64hex>"`,
+curl -X POST ${BASE}/api/v1/chargeflow/cfu_e_…/retire \\
+  -H "Authorization: Bearer auros_pk_live_xxx" \\
+  -H "Content-Type: application/json" \\
+  -d '{"reason":"cited in ESG claim"}'`,
         language: "bash",
       },
       {
-        heading: "Disclaimer & roadmap",
+        heading: "Disclaimer",
         paragraphs: [
-          "Enregistrement off-chain indicatif — pas un token on-chain, pas un certificat d'origine, pas un partnership CPO.",
-          "CFU-F (flex) et CFU-W (eau) documentés dans le standard ; mint v0 = CFU-E only.",
-          "Proof-of-Flow roadmap : ZK selective disclosure, twin anomalies, OPC UA/MQTT.",
+          "Enregistrement off-chain indicatif — pas un token on-chain, pas un certificat d'origine.",
+          "CFU-W (eau) : POST /api/v1/chargeflow/w — voir endpoint-chargeflow-w.",
+        ],
+      },
+    ],
+  },
+  {
+    slug: "endpoint-chargeflow-w",
+    title: "POST /api/v1/chargeflow/w (Premium)",
+    description:
+      "AUROS ChargeFlow CFU-W — enregistre un flux hydrique m³ en unité de flux hashée + HMAC, avec H₂O companion.",
+    category: "endpoints",
+    categoryLabel: "Endpoints",
+    relatedSlugs: ["endpoint-chargeflow", "endpoint-green-h2o", "endpoint-attest"],
+    sections: [
+      {
+        heading: "Enregistrer une CFU-W",
+        paragraphs: [
+          "Premium. Entrée : JSON flow (volume_m3 + contexte). Sortie : `cfu_w_*`, hash, HMAC (`auros-cfu-w:v1:`), enrichment H₂O.",
+          "Même unicité / retirement que CFU-E. UI : /eau/chargeflow · verify /chargeflow/{id}.",
+        ],
+        code: `curl -X POST ${BASE}/api/v1/chargeflow/w \\
+  -H "Authorization: Bearer auros_pk_live_xxx" \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "flow": {
+      "external_flow_id": "flow_001",
+      "started_at": "2026-07-01T00:00:00Z",
+      "ended_at": "2026-07-31T23:59:59Z",
+      "volume_m3": 125000,
+      "location": { "country": "FR", "basin_id": "seine" },
+      "operator_id": "utility_demo",
+      "source_format": "json_custom"
+    },
+    "attributes": { "asset_class_hint": "concession" }
+  }'`,
+        language: "bash",
+      },
+      {
+        heading: "Vérifier",
+        paragraphs: [
+          "GET /api/v1/chargeflow/w/verify?id=cfu_w_…",
+          "Demo sandbox : POST /api/v1/chargeflow/w/demo",
         ],
       },
     ],

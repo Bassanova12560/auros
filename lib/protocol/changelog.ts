@@ -25,6 +25,25 @@ export type ProtocolChangelogEntry = {
 /** Single source for `/developers/changelog` and GET `/api/v1/changelog`. Newest first. */
 export const PROTOCOL_CHANGELOG: ProtocolChangelogEntry[] = [
   {
+    id: "chargeflow-v01-cfu-w",
+    date: "2026-07-19",
+    title: "ChargeFlow v0.1 — unicité, retirement & CFU-W",
+    summary:
+      "Anti double-count serveur, POST retire, OpenAPI ChargeFlow, et mint CFU-W (m³ + H₂O) sur la même table.",
+    details: [
+      "409 si unité active déjà présente pour (kind, clé, operator, external_ref).",
+      "POST /api/v1/chargeflow/{id}/retire — status=retired sans re-signer le hash.",
+      "POST /api/v1/chargeflow/w · UI /eau/chargeflow · HMAC auros-cfu-w:v1:.",
+    ],
+    links: [
+      { href: "/developers/docs/endpoint-chargeflow", label: "Docs CFU-E" },
+      { href: "/developers/docs/endpoint-chargeflow-w", label: "Docs CFU-W" },
+      { href: "/auros-openapi.yaml", label: "OpenAPI" },
+    ],
+    tags: ["chargeflow", "green", "premium", "eau"],
+    status: "released",
+  },
+  {
     id: "chargeflow-cfu-e-v0",
     date: "2026-07-19",
     title: "AUROS ChargeFlow CFU-E v0",

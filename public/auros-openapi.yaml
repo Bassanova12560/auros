@@ -856,6 +856,185 @@ paths:
                 $ref: "#/components/schemas/AttestResponse"
         "404":
           description: Not found
+  /api/v1/chargeflow:
+    post:
+      tags: [Premium]
+      summary: Register CFU-E charge session unit
+      operationId: createChargeflowCfuE
+      description: |
+        Premium. Off-chain ChargeFlow Unit Energy — SHA-256 + HMAC (`auros-cfu-e:v1:`).
+        Rejects duplicate active mint for same key + operator + external_session_id (409).
+        Public verify via GET /api/v1/chargeflow/verify and UI /chargeflow/{id}.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ChargeflowCreateRequest"
+      responses:
+        "200":
+          description: CFU-E registered
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ChargeflowResponse"
+        "409":
+          description: Active unit already exists for this session
+        "403":
+          $ref: "#/components/responses/PremiumRequired"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "503":
+          description: Signing key not configured
+  /api/v1/chargeflow/verify:
+    get:
+      tags: [Public]
+      summary: Verify ChargeFlow unit (E or W)
+      operationId: verifyChargeflow
+      security: []
+      parameters:
+        - name: id
+          in: query
+          schema: { type: string }
+        - name: hash
+          in: query
+          schema: { type: string, pattern: "^[a-f0-9]{64}$" }
+        - name: sig
+          in: query
+          schema: { type: string, pattern: "^[a-f0-9]{64}$" }
+      responses:
+        "200":
+          description: Verification result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ChargeflowResponse"
+        "404":
+          description: Not found
+  /api/v1/chargeflow/{id}:
+    get:
+      tags: [Public]
+      summary: Get ChargeFlow unit by id
+      operationId: getChargeflow
+      security: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: Unit
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ChargeflowResponse"
+        "404":
+          description: Not found
+  /api/v1/chargeflow/{id}/retire:
+    post:
+      tags: [Premium]
+      summary: Retire an active ChargeFlow unit
+      operationId: retireChargeflow
+      description: |
+        Premium. Marks unit retired without re-signing the mint hash.
+        Same API key that minted the unit required.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                reason: { type: string, maxLength: 500 }
+      responses:
+        "200":
+          description: Retired unit
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ChargeflowResponse"
+        "403":
+          $ref: "#/components/responses/PremiumRequired"
+        "404":
+          description: Not found
+  /api/v1/chargeflow/demo:
+    post:
+      tags: [Public]
+      summary: Sandbox CFU-E mint
+      operationId: demoChargeflowCfuE
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ChargeflowCreateRequest"
+      responses:
+        "200":
+          description: Demo unit
+  /api/v1/chargeflow/w:
+    post:
+      tags: [Premium]
+      summary: Register CFU-W hydrological flow unit
+      operationId: createChargeflowCfuW
+      description: |
+        Premium. Off-chain ChargeFlow Unit Water — SHA-256 + HMAC (`auros-cfu-w:v1:`) + H₂O companion.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ChargeflowWCreateRequest"
+      responses:
+        "200":
+          description: CFU-W registered
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ChargeflowResponse"
+        "409":
+          description: Active unit already exists for this flow
+        "403":
+          $ref: "#/components/responses/PremiumRequired"
+  /api/v1/chargeflow/w/verify:
+    get:
+      tags: [Public]
+      summary: Verify CFU-W unit
+      operationId: verifyChargeflowW
+      security: []
+      parameters:
+        - name: id
+          in: query
+          schema: { type: string }
+        - name: hash
+          in: query
+          schema: { type: string }
+        - name: sig
+          in: query
+          schema: { type: string }
+      responses:
+        "200":
+          description: Verification result
+  /api/v1/chargeflow/w/demo:
+    post:
+      tags: [Public]
+      summary: Sandbox CFU-W mint
+      operationId: demoChargeflowCfuW
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ChargeflowWCreateRequest"
+      responses:
+        "200":
+          description: Demo unit
   /api/v1/webhooks:
     post:
       tags: [Premium]
@@ -1920,6 +2099,77 @@ components:
         reason: { type: string }
         disclaimer: { type: string }
         public: { type: object }
+    ChargeflowCreateRequest:
+      type: object
+      required: [session]
+      properties:
+        session:
+          type: object
+          required: [external_session_id, started_at, ended_at, energy_kwh]
+          properties:
+            external_session_id: { type: string }
+            started_at: { type: string }
+            ended_at: { type: string }
+            energy_kwh: { type: number }
+            operator_id: { type: string }
+            source_format:
+              type: string
+              enum: [ocpi, ocpp_summary, csv, json_custom]
+            location:
+              type: object
+              properties:
+                country: { type: string }
+                site_id: { type: string }
+                connector_id: { type: string }
+        attributes:
+          type: object
+          properties:
+            renewable_claim:
+              type: string
+              enum: [none, go, rec, ppa_matched, unknown]
+    ChargeflowWCreateRequest:
+      type: object
+      required: [flow]
+      properties:
+        flow:
+          type: object
+          required: [external_flow_id, started_at, ended_at, volume_m3]
+          properties:
+            external_flow_id: { type: string }
+            started_at: { type: string }
+            ended_at: { type: string }
+            volume_m3: { type: number }
+            operator_id: { type: string }
+            source_format:
+              type: string
+              enum: [csv, scada_summary, json_custom]
+            location:
+              type: object
+              properties:
+                country: { type: string }
+                site_id: { type: string }
+                basin_id: { type: string }
+        attributes:
+          type: object
+          properties:
+            asset_class_hint: { type: string }
+            compare_ref_id: { type: string }
+            notes: { type: string }
+    ChargeflowResponse:
+      type: object
+      properties:
+        id: { type: string }
+        unit_kind: { type: string, enum: [e, w] }
+        content_hash: { type: string }
+        signature: { type: string }
+        verify_url: { type: string, format: uri }
+        status: { type: string, enum: [active, retired] }
+        retired_at: { type: string, format: date-time, nullable: true }
+        retire_reason: { type: string, nullable: true }
+        public: { type: object }
+        created_at: { type: string, format: date-time }
+        disclaimer: { type: string }
+        valid: { type: boolean }
     WebhookRegisterRequest:
       type: object
       required: [url]

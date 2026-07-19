@@ -9,9 +9,9 @@ import {
   protocolRoute,
 } from "@/lib/protocol";
 import {
-  chargeflowCreateRequestSchema,
   chargeflowPublicResponse,
-  createChargeflowUnit,
+  chargeflowWCreateRequestSchema,
+  createChargeflowWUnit,
 } from "@/lib/chargeflow";
 
 export const POST = protocolRoute(async (req: Request) => {
@@ -30,7 +30,7 @@ export const POST = protocolRoute(async (req: Request) => {
     return protocolError("invalid_json", "Request body must be valid JSON", 400);
   }
 
-  const parsed = chargeflowCreateRequestSchema.safeParse(body);
+  const parsed = chargeflowWCreateRequestSchema.safeParse(body);
   if (!parsed.success) {
     return protocolError(
       "validation_error",
@@ -39,7 +39,7 @@ export const POST = protocolRoute(async (req: Request) => {
     );
   }
 
-  const result = await createChargeflowUnit(auth.ctx.keyHash, parsed.data);
+  const result = await createChargeflowWUnit(auth.ctx.keyHash, parsed.data);
   if ("error" in result) {
     const code =
       result.status === 409
@@ -50,7 +50,7 @@ export const POST = protocolRoute(async (req: Request) => {
     return protocolError(code, result.error, result.status);
   }
 
-  await logProtocolUsage(auth.ctx.keyHash, "/api/v1/chargeflow", "POST", 200);
+  await logProtocolUsage(auth.ctx.keyHash, "/api/v1/chargeflow/w", "POST", 200);
 
   return protocolJson({
     ...chargeflowPublicResponse(result.record),

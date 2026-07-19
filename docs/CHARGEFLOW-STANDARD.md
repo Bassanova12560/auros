@@ -1,20 +1,16 @@
-# AUROS ChargeFlow Standard (CFU-E v0)
+# AUROS ChargeFlow Standard (CFU-E / CFU-W v0.1)
 
 **Status:** public draft · institutional RWA prep  
-**Scope:** ChargeFlow Unit — Energy (CFU-E)  
-**Not in scope (v0):** on-chain mint (ERC-1155), Tesla API, live OCPI/OCPP ingestion, CFU-F / CFU-W mint
+**Live units:** CFU-E (energy kWh), CFU-W (hydrological m³)  
+**Not in scope:** on-chain mint (ERC-1155), Tesla API, live OCPI/OCPP/SCADA ingestion, CFU-F mint
 
 ## One-liner
 
-AUROS ChargeFlow registers a **verifiable off-chain unit** for a charge session (kWh delivered + context). Platforms, fleets and financiers get a machine-readable proof before any chain deployment.
+AUROS ChargeFlow registers a **verifiable off-chain unit** for a charge session or water flow — machine-readable proof before any chain deployment.
 
-AUROS does **not** claim meter custody, Tesla partnership, or that a CFU-E is a security token.
+AUROS does **not** claim meter custody, Tesla partnership, water-right title, or that a CFU is a security token.
 
-## Why
-
-Operators already have session logs. Finance and ESG need **granular, hashed, non-repudiable** flow units — not PDFs. ChargeFlow is the upstream standard that turns session JSON into a **Proof-of-Flow brick 0**.
-
-## CFU-E (Energy Unit)
+## CFU-E (Energy)
 
 | Field | Description |
 |-------|-------------|
@@ -22,58 +18,54 @@ Operators already have session logs. Finance and ESG need **granular, hashed, no
 | `unit_id` | `cfu_e_<hex>` |
 | `session.external_session_id` | Operator / CPO / fleet session id |
 | `session.energy_kwh` | Delivered energy |
-| `session.started_at` / `ended_at` | ISO timestamps |
-| `session.location` | Optional country, site_id, connector_id |
-| `session.vehicle_ref` | Opaque id (no PII / no VIN plaintext) |
-| `session.operator_id` | CPO / fleet code |
-| `session.source_format` | `ocpi` \| `ocpp_summary` \| `csv` \| `json_custom` |
-| `attributes.renewable_claim` | `none` \| `go` \| `rec` \| `ppa_matched` \| `unknown` |
-| `auros.watt_*` | Indicative Watt Score companion (not meter truth) |
+| HMAC prefix | `auros-cfu-e:v1:` |
+| Companion | Watt Score (indicative) |
 
-### Hashing
+## CFU-W (Water)
 
-1. Build canonical payload (sorted keys, no key_hash / branding).
+| Field | Description |
+|-------|-------------|
+| `standard` | `AUROS-ChargeFlow-CFU-W` |
+| `unit_id` | `cfu_w_<hex>` |
+| `flow.external_flow_id` | Utility / concession flow id |
+| `flow.volume_m3` | Volume |
+| HMAC prefix | `auros-cfu-w:v1:` |
+| Companion | H₂O Score (indicative) |
+
+## Hashing
+
+1. Canonical payload (sorted keys).
 2. `content_hash = SHA-256(stableStringify(canonical))`.
-3. `signature = HMAC-SHA256(secret, "auros-cfu-e:v1:" + content_hash)`.
+3. `signature = HMAC-SHA256(secret, prefix + content_hash)`.
 
-Verify: `GET /api/v1/chargeflow/verify?id=cfu_e_…` or `?hash=&sig=`.
+## Mint, uniqueness & retirement
 
-### Mint & retirement (off-chain)
+- **Mint** : `POST /api/v1/chargeflow` (E) or `POST /api/v1/chargeflow/w` (W) — Protocol Premium.
+- **Unicité active** : 409 si une unité `active` existe déjà pour `(unit_kind, key_hash, operator_key, external_ref)` — `operator_key = operator_id` ou, à défaut, `key_hash`.
+- **Retirement** : `POST /api/v1/chargeflow/{id}/retire` — marque `status=retired` **sans** re-signer le hash de mint. Remint possible après retirement.
+- Verify UI : `/chargeflow/{id}` (Active / Retired).
 
-- **Mint** = `POST /api/v1/chargeflow` (Protocol Premium) → register unit.
-- **Retirement** (v0 semantic): once a CFU-E is cited in a financed product or ESG claim, mark `status=retired` in future API; do not re-use the same `external_session_id` + operator for a second active mint (v0: client responsibility; v1: server uniqueness).
+## Anti double-counting
 
-### Anti double-counting
+- CFU units do **not** replace GO / REC / water titles.
+- Watt / H₂O enrichment is **indicative AUROS scoring**, not certificate of origin.
 
-- CFU-E does **not** replace GO / REC / T-EAC certificates.
-- If `renewable_claim` is set, disclose which instrument backs it; do not mint a second green claim for the same kWh without retirement rules.
-- Watt enrichment is **indicative AUROS scoring**, not a certificate of origin.
+## Roadmap
 
-## Roadmap units
+| Unit | Status |
+|------|--------|
+| **CFU-E** | live |
+| **CFU-W** | live |
+| **CFU-F** | documented only |
 
-| Unit | Meaning | Status |
-|------|---------|--------|
-| **CFU-E** | kWh charge session | **v0 live** |
-| **CFU-F** | Flexibility (kW window) | Documented only |
-| **CFU-W** | Hydrological m³ flow | Documented only (reuse H₂O Score) |
+Proof-of-Flow Engine (ZK, twin anomalies, OPC UA/MQTT) — hooks only.
 
-## Proof-of-Flow Engine (moat roadmap)
+## API surfaces
 
-Not implemented in v0 — hooks for later:
-
-1. **ZK selective disclosure** — prove energy/CO₂ thresholds without raw session dump.
-2. **Digital twin + anomaly detection** — flag impossible kWh / duration before mint.
-3. **Industrial connectors** — OPC UA / MQTT / OCPI feeders.
-
-v0 mint + HMAC is brick 0 of that engine.
-
-## API
-
-- `POST /api/v1/chargeflow` — Premium
-- `GET /api/v1/chargeflow/verify`
-- `GET /api/v1/chargeflow/{id}`
-- Public UI: `/green/chargeflow` · verify `/chargeflow/{id}`
+- CFU-E: `/green/chargeflow` · `POST /api/v1/chargeflow`
+- CFU-W: `/eau/chargeflow` · `POST /api/v1/chargeflow/w`
+- OpenAPI: `/auros-openapi.yaml`
 
 ## Disclaimer
 
-Indicative AUROS ChargeFlow registration. Not a legal opinion, regulatory approval, investment product, or partnership endorsement of any CPO (including Tesla Supercharger-class networks).
+Indicative AUROS ChargeFlow registration. Not a legal opinion, regulatory approval, investment product, or partnership endorsement.

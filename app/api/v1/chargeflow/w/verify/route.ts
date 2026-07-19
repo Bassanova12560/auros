@@ -10,7 +10,11 @@ import { checkRateLimitAsync, getRequestIp } from "@/lib/rate-limit";
 
 export const GET = protocolRoute(async (req: Request) => {
   const ip = getRequestIp(req);
-  const rate = await checkRateLimitAsync(`chargeflow-verify:${ip}`, 60, 3_600_000);
+  const rate = await checkRateLimitAsync(
+    `chargeflow-w-verify:${ip}`,
+    60,
+    3_600_000
+  );
   if (!rate.allowed) {
     return protocolError(
       "rate_limited",
@@ -26,8 +30,8 @@ export const GET = protocolRoute(async (req: Request) => {
 
   if (id) {
     const record = await getChargeflowById(id);
-    if (!record) {
-      return protocolError("not_found", "ChargeFlow unit not found", 404);
+    if (!record || record.unit_kind !== "w") {
+      return protocolError("not_found", "CFU-W unit not found", 404);
     }
     const valid = verifyChargeflowSignatureForId(
       record.id,
@@ -52,14 +56,14 @@ export const GET = protocolRoute(async (req: Request) => {
         400
       );
     }
-    const valid = verifyChargeflowSignature(hash, sig);
+    const valid = verifyChargeflowSignature(hash, sig, "w");
     return protocolJson({
       valid,
       content_hash: hash,
       signature: sig,
       reason: valid ? undefined : "signature_mismatch",
       disclaimer:
-        "AUROS ChargeFlow — cryptographic verify only. Not a legal certificate.",
+        "AUROS ChargeFlow CFU-W — cryptographic verify only. Not a legal water title.",
     });
   }
 

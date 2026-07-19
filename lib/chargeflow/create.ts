@@ -1,18 +1,27 @@
 import {
   buildChargeflowCanonical,
+  buildChargeflowWCanonical,
   chargeflowContentSha256,
 } from "./canonical";
-import { enrichChargeflowWithWatt } from "./enrich";
-import type { ChargeflowCreateRequest } from "./schema";
 import {
-  buildPublicSnapshot,
+  enrichChargeflowWithH2o,
+  enrichChargeflowWithWatt,
+} from "./enrich";
+import type {
+  ChargeflowCreateRequest,
+  ChargeflowWCreateRequest,
+} from "./schema";
+import { newChargeflowUnitId, requireChargeflowSignature } from "./signing";
+import {
+  buildPublicSnapshotE,
+  buildPublicSnapshotW,
   chargeflowRecordFromParts,
   chargeflowVerifyUrl,
   createChargeflowRecord,
-  requireChargeflowSignature,
+  findActiveChargeflowConflict,
+  retireChargeflowRecord,
   type ChargeflowRecord,
 } from "./store";
-import { newChargeflowUnitId } from "./signing";
 
 export type CreateChargeflowResult = {
   record: ChargeflowRecord;
@@ -23,7 +32,21 @@ export async function createChargeflowUnit(
   keyHash: string,
   input: ChargeflowCreateRequest
 ): Promise<CreateChargeflowResult | { error: string; status: number }> {
-  const unitId = newChargeflowUnitId();
+  const externalRef = input.session.external_session_id;
+  const conflict = await findActiveChargeflowConflict(
+    "e",
+    keyHash,
+    input.session.operator_id,
+    externalRef
+  );
+  if (conflict) {
+    return {
+      error: `Active CFU-E already exists for this session (${conflict.id}). Retire it before re-minting.`,
+      status: 409,
+    };
+  }
+
+  const unitId = newChargeflowUnitId("e");
   const issuedAt = new Date().toISOString();
   const auros = enrichChargeflowWithWatt(input);
   const canonical = buildChargeflowCanonical(unitId, input, auros, issuedAt);
@@ -31,7 +54,7 @@ export async function createChargeflowUnit(
 
   let signature: string;
   try {
-    signature = requireChargeflowSignature(contentHash);
+    signature = requireChargeflowSignature(contentHash, "e");
   } catch {
     return {
       error:
@@ -40,7 +63,7 @@ export async function createChargeflowUnit(
     };
   }
 
-  const publicSnapshot = buildPublicSnapshot(
+  const publicSnapshot = buildPublicSnapshotE(
     issuedAt,
     input.session.energy_kwh,
     input.session.external_session_id,
@@ -54,13 +77,82 @@ export async function createChargeflowUnit(
     }
   );
 
-  const draft = chargeflowRecordFromParts(
+  const draft = chargeflowRecordFromParts({
     keyHash,
     contentHash,
     signature,
     publicSnapshot,
-    unitId
+    unitKind: "e",
+    externalRef,
+    operatorId: input.session.operator_id,
+    unitId,
+  });
+  const record = await createChargeflowRecord(draft);
+
+  return {
+    record,
+    verify_url: chargeflowVerifyUrl(record.id),
+  };
+}
+
+export async function createChargeflowWUnit(
+  keyHash: string,
+  input: ChargeflowWCreateRequest
+): Promise<CreateChargeflowResult | { error: string; status: number }> {
+  const externalRef = input.flow.external_flow_id;
+  const conflict = await findActiveChargeflowConflict(
+    "w",
+    keyHash,
+    input.flow.operator_id,
+    externalRef
   );
+  if (conflict) {
+    return {
+      error: `Active CFU-W already exists for this flow (${conflict.id}). Retire it before re-minting.`,
+      status: 409,
+    };
+  }
+
+  const unitId = newChargeflowUnitId("w");
+  const issuedAt = new Date().toISOString();
+  const auros = enrichChargeflowWithH2o(input);
+  const canonical = buildChargeflowWCanonical(unitId, input, auros, issuedAt);
+  const contentHash = chargeflowContentSha256(canonical);
+
+  let signature: string;
+  try {
+    signature = requireChargeflowSignature(contentHash, "w");
+  } catch {
+    return {
+      error:
+        "ChargeFlow signing is not configured (set ATTEST_SIGNING_KEY or CRON_SECRET)",
+      status: 503,
+    };
+  }
+
+  const publicSnapshot = buildPublicSnapshotW(
+    issuedAt,
+    input.flow.volume_m3,
+    input.flow.external_flow_id,
+    input.flow.started_at,
+    input.flow.ended_at,
+    auros,
+    {
+      operator_id: input.flow.operator_id,
+      country: input.flow.location?.country,
+    }
+  );
+
+  const draft = chargeflowRecordFromParts({
+    keyHash,
+    contentHash,
+    signature,
+    publicSnapshot,
+    unitKind: "w",
+    externalRef,
+    operatorId: input.flow.operator_id,
+    unitId,
+  });
   const record = await createChargeflowRecord(draft);
 
   return {
@@ -72,12 +164,18 @@ export async function createChargeflowUnit(
 export function chargeflowPublicResponse(record: ChargeflowRecord) {
   return {
     id: record.id,
+    unit_kind: record.unit_kind,
     content_hash: record.content_hash,
     signature: record.signature,
     verify_url: chargeflowVerifyUrl(record.id),
+    status: record.status,
+    retired_at: record.retired_at,
+    retire_reason: record.retire_reason,
     public: record.public,
     created_at: record.created_at,
     disclaimer: record.disclaimer,
     valid: true,
   };
 }
+
+export { retireChargeflowRecord };

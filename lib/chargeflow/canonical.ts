@@ -1,16 +1,28 @@
-import { CHARGEFLOW_STANDARD } from "./constants";
-import type { ChargeflowCreateRequest } from "./schema";
+import {
+  CHARGEFLOW_STANDARD_E,
+  CHARGEFLOW_STANDARD_W,
+  standardForKind,
+  type ChargeflowUnitKind,
+} from "./constants";
+import type {
+  ChargeflowCreateRequest,
+  ChargeflowWCreateRequest,
+} from "./schema";
 import { sha256Hex } from "./signing";
 
 export type ChargeflowAurosEnrichment = {
-  watt_rating: number | null;
-  watt_tier: "high" | "mid" | "early" | null;
-  energy_value_eur_indicative: number | null;
+  watt_rating?: number | null;
+  watt_tier?: "high" | "mid" | "early" | null;
+  energy_value_eur_indicative?: number | null;
+  h2o_rating?: number | null;
+  h2o_tier?: "high" | "mid" | "low" | null;
+  h2o_asset_class?: string | null;
+  flow_m3_indicative?: number | null;
 };
 
-export type ChargeflowCanonical = {
+export type ChargeflowCanonicalE = {
   v: 1;
-  standard: typeof CHARGEFLOW_STANDARD;
+  standard: typeof CHARGEFLOW_STANDARD_E;
   unit_id: string;
   issued_at: string;
   session: {
@@ -36,8 +48,40 @@ export type ChargeflowCanonical = {
   disclaimer: string;
 };
 
-const DISCLAIMER =
+export type ChargeflowCanonicalW = {
+  v: 1;
+  standard: typeof CHARGEFLOW_STANDARD_W;
+  unit_id: string;
+  issued_at: string;
+  flow: {
+    external_flow_id: string;
+    started_at: string;
+    ended_at: string;
+    volume_m3: number;
+    location?: {
+      country?: string;
+      site_id?: string;
+      basin_id?: string;
+    };
+    operator_id?: string;
+    source_format: string;
+  };
+  attributes?: {
+    asset_class_hint?: string;
+    compare_ref_id?: string;
+    notes?: string;
+  };
+  auros: ChargeflowAurosEnrichment;
+  disclaimer: string;
+};
+
+export type ChargeflowCanonical = ChargeflowCanonicalE | ChargeflowCanonicalW;
+
+const DISCLAIMER_E =
   "AUROS ChargeFlow CFU-E — indicative off-chain flow registration. Not a security token, legal certificate of origin, or CPO partnership endorsement.";
+
+const DISCLAIMER_W =
+  "AUROS ChargeFlow CFU-W — indicative off-chain hydrological flow registration. Not a security token, water right title, or concession endorsement.";
 
 /** Deterministic JSON stringify (sorted object keys). */
 export function stableStringify(value: unknown): string {
@@ -57,11 +101,11 @@ export function buildChargeflowCanonical(
   input: ChargeflowCreateRequest,
   auros: ChargeflowAurosEnrichment,
   issuedAt: string
-): ChargeflowCanonical {
+): ChargeflowCanonicalE {
   const session = input.session;
   return {
     v: 1,
-    standard: CHARGEFLOW_STANDARD,
+    standard: CHARGEFLOW_STANDARD_E,
     unit_id: unitId,
     issued_at: issuedAt,
     session: {
@@ -88,12 +132,57 @@ export function buildChargeflowCanonical(
         }
       : {}),
     auros,
-    disclaimer: DISCLAIMER,
+    disclaimer: DISCLAIMER_E,
   };
 }
 
-export function chargeflowContentSha256(canonical: ChargeflowCanonical): string {
+export function buildChargeflowWCanonical(
+  unitId: string,
+  input: ChargeflowWCreateRequest,
+  auros: ChargeflowAurosEnrichment,
+  issuedAt: string
+): ChargeflowCanonicalW {
+  const flow = input.flow;
+  return {
+    v: 1,
+    standard: CHARGEFLOW_STANDARD_W,
+    unit_id: unitId,
+    issued_at: issuedAt,
+    flow: {
+      external_flow_id: flow.external_flow_id,
+      started_at: flow.started_at,
+      ended_at: flow.ended_at,
+      volume_m3: flow.volume_m3,
+      ...(flow.location ? { location: flow.location } : {}),
+      ...(flow.operator_id ? { operator_id: flow.operator_id } : {}),
+      source_format: flow.source_format,
+    },
+    ...(input.attributes
+      ? {
+          attributes: {
+            ...(input.attributes.asset_class_hint
+              ? { asset_class_hint: input.attributes.asset_class_hint }
+              : {}),
+            ...(input.attributes.compare_ref_id
+              ? { compare_ref_id: input.attributes.compare_ref_id }
+              : {}),
+            ...(input.attributes.notes ? { notes: input.attributes.notes } : {}),
+          },
+        }
+      : {}),
+    auros,
+    disclaimer: DISCLAIMER_W,
+  };
+}
+
+export function chargeflowContentSha256(
+  canonical: ChargeflowCanonical
+): string {
   return sha256Hex(stableStringify(canonical));
 }
 
-export { DISCLAIMER as CHARGEFLOW_DISCLAIMER };
+export function disclaimerForKind(kind: ChargeflowUnitKind): string {
+  return kind === "w" ? DISCLAIMER_W : DISCLAIMER_E;
+}
+
+export { DISCLAIMER_E as CHARGEFLOW_DISCLAIMER, DISCLAIMER_W as CHARGEFLOW_W_DISCLAIMER, standardForKind };

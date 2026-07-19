@@ -20,6 +20,7 @@ export function EauHubView() {
 
   const monetizationLinks = [
     { href: "/comment-tokeniser/eau", label: copy.links.guide },
+    { href: "/eau/chargeflow", label: "ChargeFlow CFU-W" },
     { href: GREEN_REGISTRY_ROUTE, label: copy.links.registry },
     { href: GREEN_LABEL_ROUTE, label: copy.links.label },
     { href: "/developers/docs/endpoint-green-h2o", label: copy.links.api },

@@ -5,7 +5,7 @@ import { notFound } from "next/navigation";
 import { BezelCard } from "@/app/_components/ui/BezelCard";
 import {
   getChargeflowById,
-  verifyChargeflowSignature,
+  verifyChargeflowSignatureForId,
 } from "@/lib/chargeflow";
 
 export const dynamic = "force-dynamic";
@@ -25,9 +25,14 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       robots: { index: false, follow: false },
     };
   }
+  const kind = record.unit_kind === "w" ? "CFU-W" : "CFU-E";
+  const detail =
+    record.unit_kind === "w"
+      ? `${record.public.volume_m3 ?? "—"} m³`
+      : `${record.public.energy_kwh ?? "—"} kWh`;
   return {
     title: `ChargeFlow ${record.id} | AUROS`,
-    description: `AUROS CFU-E — ${record.public.energy_kwh} kWh, Watt ${record.public.watt_rating ?? "n/a"}.`,
+    description: `AUROS ${kind} — ${detail}, status ${record.status}.`,
     robots: { index: false, follow: false },
   };
 }
@@ -38,7 +43,12 @@ export default async function ChargeflowVerifyPage({ params }: PageProps) {
   const record = await getChargeflowById(id);
   if (!record) notFound();
 
-  const valid = verifyChargeflowSignature(record.content_hash, record.signature);
+  const valid = verifyChargeflowSignatureForId(
+    record.id,
+    record.content_hash,
+    record.signature
+  );
+  const isW = record.unit_kind === "w";
   const issued = (() => {
     try {
       return new Date(record.created_at).toLocaleDateString("fr-FR", {
@@ -58,14 +68,19 @@ export default async function ChargeflowVerifyPage({ params }: PageProps) {
           AUROS ChargeFlow
         </p>
         <h1 className="mt-4 font-display text-3xl font-semibold text-white">
-          CFU-E Unit
+          {isW ? "CFU-W Unit" : "CFU-E Unit"}
         </h1>
-        <p
-          className={`mt-2 font-mono text-xs uppercase tracking-wider ${
-            valid ? "text-white/70" : "text-white/45"
-          }`}
-        >
-          {valid ? "Signature valid" : "Signature invalid"}
+        <p className="mt-2 flex flex-wrap gap-3 font-mono text-xs uppercase tracking-wider">
+          <span className={valid ? "text-white/70" : "text-white/45"}>
+            {valid ? "Signature valid" : "Signature invalid"}
+          </span>
+          <span
+            className={
+              record.status === "retired" ? "text-amber-400/80" : "text-emerald-400/80"
+            }
+          >
+            {record.status === "retired" ? "Retired" : "Active"}
+          </span>
         </p>
 
         <dl className="mt-10 space-y-5">
@@ -75,33 +90,68 @@ export default async function ChargeflowVerifyPage({ params }: PageProps) {
             </dt>
             <dd className="mt-1 font-mono text-sm text-white/85">{record.id}</dd>
           </div>
-          <div>
-            <dt className="font-mono text-[10px] uppercase tracking-wider text-white/35">
-              Energy
-            </dt>
-            <dd className="mt-1 text-lg text-white">
-              {record.public.energy_kwh} kWh
-            </dd>
-          </div>
-          <div>
-            <dt className="font-mono text-[10px] uppercase tracking-wider text-white/35">
-              Watt companion
-            </dt>
-            <dd className="mt-1 text-white/75">
-              {record.public.watt_rating ?? "—"}
-              {record.public.watt_tier
-                ? ` · ${record.public.watt_tier}`
-                : ""}
-            </dd>
-          </div>
-          <div>
-            <dt className="font-mono text-[10px] uppercase tracking-wider text-white/35">
-              Session
-            </dt>
-            <dd className="mt-1 font-mono text-sm text-white/75">
-              {record.public.external_session_id}
-            </dd>
-          </div>
+          {isW ? (
+            <>
+              <div>
+                <dt className="font-mono text-[10px] uppercase tracking-wider text-white/35">
+                  Volume
+                </dt>
+                <dd className="mt-1 text-lg text-white">
+                  {record.public.volume_m3} m³
+                </dd>
+              </div>
+              <div>
+                <dt className="font-mono text-[10px] uppercase tracking-wider text-white/35">
+                  H₂O companion
+                </dt>
+                <dd className="mt-1 text-white/75">
+                  {record.public.h2o_rating ?? "—"}
+                  {record.public.h2o_tier ? ` · ${record.public.h2o_tier}` : ""}
+                  {record.public.h2o_asset_class
+                    ? ` · ${record.public.h2o_asset_class}`
+                    : ""}
+                </dd>
+              </div>
+              <div>
+                <dt className="font-mono text-[10px] uppercase tracking-wider text-white/35">
+                  Flow
+                </dt>
+                <dd className="mt-1 font-mono text-sm text-white/75">
+                  {record.public.external_flow_id}
+                </dd>
+              </div>
+            </>
+          ) : (
+            <>
+              <div>
+                <dt className="font-mono text-[10px] uppercase tracking-wider text-white/35">
+                  Energy
+                </dt>
+                <dd className="mt-1 text-lg text-white">
+                  {record.public.energy_kwh} kWh
+                </dd>
+              </div>
+              <div>
+                <dt className="font-mono text-[10px] uppercase tracking-wider text-white/35">
+                  Watt companion
+                </dt>
+                <dd className="mt-1 text-white/75">
+                  {record.public.watt_rating ?? "—"}
+                  {record.public.watt_tier
+                    ? ` · ${record.public.watt_tier}`
+                    : ""}
+                </dd>
+              </div>
+              <div>
+                <dt className="font-mono text-[10px] uppercase tracking-wider text-white/35">
+                  Session
+                </dt>
+                <dd className="mt-1 font-mono text-sm text-white/75">
+                  {record.public.external_session_id}
+                </dd>
+              </div>
+            </>
+          )}
           {record.public.operator_id ? (
             <div>
               <dt className="font-mono text-[10px] uppercase tracking-wider text-white/35">
@@ -116,6 +166,17 @@ export default async function ChargeflowVerifyPage({ params }: PageProps) {
             </dt>
             <dd className="mt-1 text-white/75">{issued}</dd>
           </div>
+          {record.status === "retired" && record.retired_at ? (
+            <div>
+              <dt className="font-mono text-[10px] uppercase tracking-wider text-white/35">
+                Retired
+              </dt>
+              <dd className="mt-1 text-white/75">
+                {record.retired_at}
+                {record.retire_reason ? ` — ${record.retire_reason}` : ""}
+              </dd>
+            </div>
+          ) : null}
           <div>
             <dt className="font-mono text-[10px] uppercase tracking-wider text-white/35">
               Content hash (SHA-256)
@@ -140,19 +201,27 @@ export default async function ChargeflowVerifyPage({ params }: PageProps) {
 
         <div className="mt-8 flex flex-wrap gap-4">
           <Link
-            href={`/api/v1/chargeflow/verify?id=${encodeURIComponent(record.id)}`}
+            href={
+              isW
+                ? `/api/v1/chargeflow/w/verify?id=${encodeURIComponent(record.id)}`
+                : `/api/v1/chargeflow/verify?id=${encodeURIComponent(record.id)}`
+            }
             className="font-mono text-xs uppercase tracking-wider text-white/55 underline-offset-4 hover:text-white hover:underline"
           >
             JSON verify API
           </Link>
           <Link
-            href="/developers/docs/endpoint-chargeflow"
+            href={
+              isW
+                ? "/developers/docs/endpoint-chargeflow-w"
+                : "/developers/docs/endpoint-chargeflow"
+            }
             className="font-mono text-xs uppercase tracking-wider text-white/55 underline-offset-4 hover:text-white hover:underline"
           >
             Documentation
           </Link>
           <Link
-            href="/green/chargeflow"
+            href={isW ? "/eau/chargeflow" : "/green/chargeflow"}
             className="font-mono text-xs uppercase tracking-wider text-white/55 underline-offset-4 hover:text-white hover:underline"
           >
             ChargeFlow
