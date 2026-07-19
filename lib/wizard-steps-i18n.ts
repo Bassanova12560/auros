@@ -75,8 +75,7 @@ export type WizardStepsMessages = {
 };
 
 const FR: WizardStepsMessages = {
-  stepLabel: (step, tag) =>
-    `Étape ${String(step).padStart(2, "0")} · ${tag}`,
+  stepLabel: (_step, tag) => tag,
   common: {
     country: "Pays",
     city: "Ville",
@@ -224,7 +223,7 @@ const FR: WizardStepsMessages = {
 };
 
 const EN: WizardStepsMessages = {
-  stepLabel: (step, tag) => `Step ${String(step).padStart(2, "0")} · ${tag}`,
+  stepLabel: (_step, tag) => tag,
   common: {
     country: "Country",
     city: "City",
@@ -369,7 +368,7 @@ const EN: WizardStepsMessages = {
 
 const ES: WizardStepsMessages = {
   ...EN,
-  stepLabel: (step, tag) => `Paso ${String(step).padStart(2, "0")} · ${tag}`,
+  stepLabel: (_step, tag) => tag,
   common: {
     ...EN.common,
     country: "País",

@@ -417,6 +417,7 @@ export const en: Messages = {
   footer: {
     tagline: "Tokenization intelligence for real-world assets.",
     product: "Product",
+    greenColumn: "Green",
     legal: "Legal",
     terms: "Terms",
     privacy: "Privacy",

@@ -11,9 +11,9 @@ import {
 } from "@/lib/protocol";
 import { findKeyRecord } from "@/lib/protocol/auth/keys";
 import { logProtocolUsage } from "@/lib/protocol/usage/log";
-import { KEY_PREFIX_LIVE } from "@/lib/protocol/constants";
+import { monitorAssetLimitForRecord } from "@/lib/protocol/auth/premium";
 
-const MONITOR_ASSET_LIMIT_LIVE = 25;
+const MONITOR_ASSET_LIMIT_PAID = 25;
 
 export const POST = protocolRoute(async (req: Request) => {
   const auth = await authenticateProtocolRequest(req);
@@ -41,7 +41,7 @@ export const POST = protocolRoute(async (req: Request) => {
   }
 
   const activeCount = await countActiveMonitors(auth.ctx.keyHash);
-  const limit = rawKey.startsWith(KEY_PREFIX_LIVE) ? MONITOR_ASSET_LIMIT_LIVE : 5;
+  const limit = monitorAssetLimitForRecord(record, MONITOR_ASSET_LIMIT_PAID, 5);
   if (activeCount >= limit) {
     return protocolError(
       "quota_exceeded",

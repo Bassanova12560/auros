@@ -26,9 +26,9 @@ import {
 import { registerWebhook, deleteWebhook } from "../lib/protocol/webhooks/store";
 
 describe("protocol/premium", () => {
-  it("allows live keys", () => {
+  it("blocks live-prefixed keys without a paid tier record", () => {
     const result = checkPremiumAccess(`${KEY_PREFIX_LIVE}abc123`);
-    assert.equal(result.allowed, true);
+    assert.equal(result.allowed, false);
   });
 
   it("blocks free test keys", () => {
@@ -36,9 +36,25 @@ describe("protocol/premium", () => {
     assert.equal(result.allowed, false);
   });
 
-  it("allows premium tier records", () => {
+  it("allows premium tier records even on test prefix", () => {
     const result = checkPremiumAccess(`${KEY_PREFIX_TEST}x`, { tier: "premium", prefix: "test" });
     assert.equal(result.allowed, true);
+  });
+
+  it("allows monitor tier on live prefix", () => {
+    const result = checkPremiumAccess(`${KEY_PREFIX_LIVE}x`, {
+      tier: "monitor",
+      prefix: "live",
+    });
+    assert.equal(result.allowed, true);
+  });
+
+  it("blocks free tier on live prefix (production free keys)", () => {
+    const result = checkPremiumAccess(`${KEY_PREFIX_LIVE}free`, {
+      tier: "free",
+      prefix: "live",
+    });
+    assert.equal(result.allowed, false);
   });
 });
 

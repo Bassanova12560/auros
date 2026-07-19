@@ -18,7 +18,7 @@ export {
   getKeyUsage,
   isSupabaseConfigured,
 } from "./auth/keys";
-export { checkPremiumAccess, premiumPricingMeta, PREMIUM_PRICING } from "./auth/premium";
+export { checkPremiumAccess, premiumPricingMeta, PREMIUM_PRICING, monitorAssetLimitForRecord, isPremiumTier } from "./auth/premium";
 export { computeProtocolScore, attachRecommendedPlatforms } from "./scoring/compute-score";
 export { listProtocolProducts, topPlatformsForAsset, hubToProductItem } from "./products/adapter";
 export { buildProtocolBenchmarks } from "./benchmarks/compute";

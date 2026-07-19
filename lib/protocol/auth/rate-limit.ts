@@ -1,4 +1,4 @@
-import { checkRateLimit as checkMemoryRateLimit } from "@/lib/rate-limit";
+import { checkRateLimitAsync } from "@/lib/rate-limit";
 
 import {
   ENTERPRISE_TIER_MONTHLY_LIMIT,
@@ -96,8 +96,8 @@ export async function checkProtocolRateLimit(
   return { allowed: true, remaining: limit - next, limit, reset };
 }
 
-export function checkIpBurstLimit(ip: string): ProtocolRateLimitResult {
-  const { allowed, remaining, reset } = checkMemoryRateLimit(
+export async function checkIpBurstLimit(ip: string): Promise<ProtocolRateLimitResult> {
+  const { allowed, remaining, reset } = await checkRateLimitAsync(
     `protocol-ip:${ip}`,
     IP_BURST_LIMIT,
     IP_BURST_WINDOW_MS

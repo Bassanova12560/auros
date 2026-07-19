@@ -25,7 +25,7 @@ export async function authenticateProtocolRequest(
   req: Request
 ): Promise<{ ok: true; ctx: AuthContext } | { ok: false; response: ReturnType<typeof protocolError> }> {
   const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
-  const burst = checkIpBurstLimit(ip);
+  const burst = await checkIpBurstLimit(ip);
   if (!burst.allowed) {
     applyRateLimitHeaders(burst);
     return {

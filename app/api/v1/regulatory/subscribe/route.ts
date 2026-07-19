@@ -11,10 +11,10 @@ import {
 } from "@/lib/protocol";
 import { findKeyRecord } from "@/lib/protocol/auth/keys";
 import { logProtocolUsage } from "@/lib/protocol/usage/log";
-import { KEY_PREFIX_LIVE } from "@/lib/protocol/constants";
+import { monitorAssetLimitForRecord } from "@/lib/protocol/auth/premium";
 
-const SUBSCRIPTION_LIMIT_LIVE = 10;
-const SUBSCRIPTION_LIMIT_TEST = 3;
+const SUBSCRIPTION_LIMIT_PAID = 10;
+const SUBSCRIPTION_LIMIT_DEFAULT = 3;
 
 export const POST = protocolRoute(async (req: Request) => {
   const auth = await authenticateProtocolRequest(req);
@@ -42,9 +42,11 @@ export const POST = protocolRoute(async (req: Request) => {
   }
 
   const activeCount = await countActiveRegulatorySubscriptions(auth.ctx.keyHash);
-  const limit = rawKey.startsWith(KEY_PREFIX_LIVE)
-    ? SUBSCRIPTION_LIMIT_LIVE
-    : SUBSCRIPTION_LIMIT_TEST;
+  const limit = monitorAssetLimitForRecord(
+    record,
+    SUBSCRIPTION_LIMIT_PAID,
+    SUBSCRIPTION_LIMIT_DEFAULT
+  );
   if (activeCount >= limit) {
     return protocolError(
       "quota_exceeded",

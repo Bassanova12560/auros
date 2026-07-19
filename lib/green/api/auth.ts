@@ -1,4 +1,4 @@
-import { checkRateLimit, getRequestIp } from "@/lib/rate-limit";
+import { checkRateLimitAsync, getRequestIp } from "@/lib/rate-limit";
 import { checkIpBurstLimit, checkProtocolRateLimit } from "@/lib/protocol/auth/rate-limit";
 import { findKeyRecord, validateApiKey } from "@/lib/protocol/auth/keys";
 
@@ -73,7 +73,7 @@ export async function authenticateGreenPublicRequest(
   }
 
   const ip = getRequestIp(req);
-  const burst = checkIpBurstLimit(ip);
+  const burst = await checkIpBurstLimit(ip);
   if (!burst.allowed) {
     return {
       ok: false,
@@ -81,7 +81,11 @@ export async function authenticateGreenPublicRequest(
     };
   }
 
-  const daily = checkRateLimit(`green-api:${ip}`, GREEN_ANON_DAILY_LIMIT, ANON_WINDOW_MS);
+  const daily = await checkRateLimitAsync(
+    `green-api:${ip}`,
+    GREEN_ANON_DAILY_LIMIT,
+    ANON_WINDOW_MS
+  );
   if (!daily.allowed) {
     return {
       ok: false,

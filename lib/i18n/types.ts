@@ -253,6 +253,7 @@ export type Messages = {
   footer: {
     tagline: string;
     product: string;
+    greenColumn: string;
     legal: string;
     terms: string;
     privacy: string;

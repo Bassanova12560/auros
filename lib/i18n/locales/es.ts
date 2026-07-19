@@ -418,6 +418,7 @@ export const es: Messages = {
   footer: {
     tagline: "Inteligencia de tokenización para activos reales.",
     product: "Producto",
+    greenColumn: "Green",
     legal: "Legal",
     terms: "Términos",
     privacy: "Privacidad",

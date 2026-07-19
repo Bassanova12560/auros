@@ -43,8 +43,8 @@ describe("green batch premium gate", () => {
     assert.equal(body.succeeded, 1);
   });
 
-  it("allows live key prefix on watt batch", async () => {
+  it("rejects unknown live key on watt batch (no free-prefix bypass)", async () => {
     const res = await wattBatchPost(wattBatchRequest("auros_pk_live_smoke_test_key"));
-    assert.notEqual(res.status, 403);
+    assert.ok(res.status === 401 || res.status === 403);
   });
 });
