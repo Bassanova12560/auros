@@ -21,6 +21,36 @@ type ListItem = {
 
 const STORAGE_KEY = "auros_chargeflow_console_key";
 
+function sampleImportPayload(): string {
+  const stamp = Date.now();
+  return JSON.stringify(
+    {
+      default_operator_id: "cpo_demo",
+      cdrs: [
+        {
+          id: `CDR-console-${stamp}`,
+          start_date_time: "2026-07-19T10:00:00Z",
+          end_date_time: "2026-07-19T10:42:00Z",
+          total_energy: 48.2,
+          country: "FR",
+          location_id: "LOC-1",
+        },
+      ],
+      csv_rows: [
+        {
+          external_session_id: `csv-console-${stamp}`,
+          started_at: "2026-07-19T11:00:00Z",
+          ended_at: "2026-07-19T11:30:00Z",
+          energy_kwh: 22.5,
+          country: "FR",
+        },
+      ],
+    },
+    null,
+    2
+  );
+}
+
 function quantityLabel(item: ListItem): string {
   if (item.energy_kwh != null) return `${item.energy_kwh} kWh`;
   if (item.volume_m3 != null) return `${item.volume_m3} m³`;
@@ -37,51 +67,63 @@ export function ChargeflowConsoleView() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [retiringId, setRetiringId] = useState<string | null>(null);
+  const [importJson, setImportJson] = useState("");
+  const [importing, setImporting] = useState(false);
+  const [importResult, setImportResult] = useState<string | null>(null);
 
   useEffect(() => {
     const stored = sessionStorage.getItem(STORAGE_KEY);
     if (stored) setApiKey(stored);
+    setImportJson(sampleImportPayload());
   }, []);
 
-  const load = useCallback(async () => {
-    const key = apiKey.trim();
-    if (!key) {
-      setError("Collez une clé Protocol Premium (Bearer).");
-      return;
-    }
-    sessionStorage.setItem(STORAGE_KEY, key);
-    setLoading(true);
-    setError(null);
-    try {
-      const params = new URLSearchParams();
-      if (kind) params.set("kind", kind);
-      if (status) params.set("status", status);
-      params.set("limit", "50");
-      const res = await fetch(`/api/v1/chargeflow?${params}`, {
-        headers: {
-          Authorization: `Bearer ${key}`,
-          Accept: "application/json",
-        },
-      });
-      const json = (await res.json()) as {
-        items?: ListItem[];
-        total?: number;
-        error?: { message?: string };
-      };
-      if (!res.ok) {
-        setError(json.error?.message ?? `Erreur ${res.status}`);
-        setItems([]);
-        setTotal(0);
+  const load = useCallback(
+    async (overrides?: {
+      kind?: "" | "e" | "w" | "f";
+      status?: "" | "active" | "retired";
+    }) => {
+      const key = apiKey.trim();
+      if (!key) {
+        setError("Collez une clé Protocol Premium (Bearer).");
         return;
       }
-      setItems(json.items ?? []);
-      setTotal(json.total ?? 0);
-    } catch (e) {
-      setError(e instanceof Error ? e.message : "Network error");
-    } finally {
-      setLoading(false);
-    }
-  }, [apiKey, kind, status]);
+      sessionStorage.setItem(STORAGE_KEY, key);
+      setLoading(true);
+      setError(null);
+      const kindFilter = overrides?.kind ?? kind;
+      const statusFilter = overrides?.status ?? status;
+      try {
+        const params = new URLSearchParams();
+        if (kindFilter) params.set("kind", kindFilter);
+        if (statusFilter) params.set("status", statusFilter);
+        params.set("limit", "50");
+        const res = await fetch(`/api/v1/chargeflow?${params}`, {
+          headers: {
+            Authorization: `Bearer ${key}`,
+            Accept: "application/json",
+          },
+        });
+        const json = (await res.json()) as {
+          items?: ListItem[];
+          total?: number;
+          error?: { message?: string };
+        };
+        if (!res.ok) {
+          setError(json.error?.message ?? `Erreur ${res.status}`);
+          setItems([]);
+          setTotal(0);
+          return;
+        }
+        setItems(json.items ?? []);
+        setTotal(json.total ?? 0);
+      } catch (e) {
+        setError(e instanceof Error ? e.message : "Network error");
+      } finally {
+        setLoading(false);
+      }
+    },
+    [apiKey, kind, status]
+  );
 
   async function retire(id: string) {
     const key = apiKey.trim();
@@ -165,6 +207,57 @@ export function ChargeflowConsoleView() {
     );
   }
 
+  async function runImport() {
+    const key = apiKey.trim();
+    if (!key) {
+      setError("Collez une clé Protocol Premium (Bearer).");
+      return;
+    }
+    sessionStorage.setItem(STORAGE_KEY, key);
+    let body: unknown;
+    try {
+      body = JSON.parse(importJson);
+    } catch {
+      setError("JSON d'import invalide.");
+      return;
+    }
+    setImporting(true);
+    setError(null);
+    setImportResult(null);
+    try {
+      const res = await fetch("/api/v1/chargeflow/from-ocpi", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${key}`,
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify(body),
+      });
+      const json = (await res.json()) as {
+        total?: number;
+        succeeded?: number;
+        failed?: number;
+        error?: { message?: string };
+      };
+      if (!res.ok) {
+        setError(json.error?.message ?? `Import failed (${res.status})`);
+        return;
+      }
+      setImportResult(
+        `Import OK — ${json.succeeded ?? 0}/${json.total ?? 0} réussis` +
+          (json.failed ? `, ${json.failed} échecs` : "")
+      );
+      setKind("e");
+      setStatus("active");
+      await load({ kind: "e", status: "active" });
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Network error");
+    } finally {
+      setImporting(false);
+    }
+  }
+
   return (
     <div className="space-y-10">
       <header className="space-y-3">
@@ -175,8 +268,8 @@ export function ChargeflowConsoleView() {
           Vos unités ChargeFlow
         </h1>
         <p className="max-w-2xl text-sm leading-relaxed text-white/55">
-          Listez et retirez les CFU-E / W / F liées à votre clé Premium. La clé
-          reste dans cette session navigateur uniquement.
+          Listez, importez (OCPI/CSV stub) et retirez les CFU liées à votre clé
+          Premium. La clé reste dans cette session navigateur uniquement.
         </p>
       </header>
 
@@ -265,12 +358,54 @@ export function ChargeflowConsoleView() {
           </Link>
           {" · "}
           <Link
-            href="/developers/docs/endpoint-chargeflow"
+            href="/developers/docs/endpoint-chargeflow-ocpi"
             className="text-white/55 underline-offset-2 hover:underline"
           >
-            Docs API
+            Docs import OCPI
           </Link>
         </p>
+      </section>
+
+      <section className="space-y-4 border border-white/[0.08] bg-black/40 p-5 md:p-6">
+        <div className="flex flex-wrap items-end justify-between gap-3">
+          <div>
+            <h2 className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/40">
+              Import OCPI / CSV
+            </h2>
+            <p className="mt-2 max-w-xl text-sm text-white/50">
+              Collez un corps JSON pour{" "}
+              <code className="text-white/70">POST /api/v1/chargeflow/from-ocpi</code>
+              {" "}
+              (stub offline, max 50). Pas de connexion OCPI live.
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={() => setImportJson(sampleImportPayload())}
+            className="font-mono text-[11px] uppercase tracking-wider text-white/45 underline-offset-2 hover:text-white hover:underline"
+          >
+            Exemple
+          </button>
+        </div>
+        <textarea
+          value={importJson}
+          onChange={(e) => setImportJson(e.target.value)}
+          rows={12}
+          spellCheck={false}
+          className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-3 font-mono text-xs leading-relaxed text-white/80 placeholder:text-white/25"
+        />
+        <div className="flex flex-wrap items-center gap-3">
+          <PrimaryButton
+            type="button"
+            onClick={runImport}
+            disabled={importing || !importJson.trim()}
+          >
+            {importing ? "Import…" : "Importer → CFU-E"}
+          </PrimaryButton>
+          {importResult ? (
+            <p className="text-sm text-emerald-400/90">{importResult}</p>
+          ) : null}
+        </div>
       </section>
 
       <div className="overflow-x-auto border border-white/[0.08]">
@@ -292,7 +427,8 @@ export function ChargeflowConsoleView() {
                   colSpan={6}
                   className="px-4 py-8 text-center text-white/40"
                 >
-                  Aucune unité — chargez avec une clé Premium.
+                  Aucune unité — chargez avec une clé Premium ou importez un
+                  export.
                 </td>
               </tr>
             ) : (
