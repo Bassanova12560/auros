@@ -5,6 +5,7 @@ import {
   sendPartnerConfirmation,
   sendPartnerInternal,
 } from "@/lib/emails/send";
+import { createPendingPartner } from "@/lib/partners/registry";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 
 export type SavePartnerInput = {
@@ -17,7 +18,7 @@ export type SavePartnerInput = {
 };
 
 export type SavePartnerResult =
-  | { ok: true; id: string }
+  | { ok: true; id: string; partnerId?: string }
   | { ok: false; error: "invalid" }
   | { ok: false; error: "database"; message: string };
 
@@ -58,6 +59,17 @@ export async function savePartnerAction(
     };
   }
 
+  const requestId = data.id as string;
+  const pending = await createPendingPartner({
+    company: input.company.trim(),
+    email,
+    contactName: input.contactName.trim(),
+    requestId,
+  });
+  if (!pending.ok) {
+    console.error("[savePartnerAction/registry]", pending.message);
+  }
+
   void sendPartnerConfirmation(email, {
     company: input.company.trim(),
     contactName: input.contactName.trim(),
@@ -74,5 +86,9 @@ export async function savePartnerAction(
     message: input.message,
   });
 
-  return { ok: true, id: data.id as string };
+  return {
+    ok: true,
+    id: requestId,
+    partnerId: pending.ok ? pending.partner.id : undefined,
+  };
 }

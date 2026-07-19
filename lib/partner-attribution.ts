@@ -54,9 +54,22 @@ export function buildPartnerWizardUrl(
     origin ??
     (typeof window !== "undefined"
       ? window.location.origin
-      : "https://auros-delta.vercel.app");
+      : "https://getauros.com");
   const url = new URL("/wizard", base);
   const code = normalizePartnerCode(partnerCode);
   if (code) url.searchParams.set("partner", code);
   return url.toString();
+}
+
+/** Suggest a referral code from company name (normalized). */
+export function suggestPartnerCode(company: string): string {
+  const base =
+    normalizePartnerCode(
+      company
+        .trim()
+        .replace(/\s+/g, "-")
+        .replace(/[^A-Za-z0-9_-]/g, "")
+    ) ?? "PARTNER";
+  const clipped = base.slice(0, 32);
+  return clipped.length >= 2 ? clipped : "PARTNER";
 }

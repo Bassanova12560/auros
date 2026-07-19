@@ -5,6 +5,7 @@ export type PartnersMessages = {
   title: string;
   subtitle: string;
   cta: string;
+  portalLink: string;
   howTitle: string;
   steps: Array<{ number: string; title: string; description: string }>;
   receiveTitle: string;
@@ -35,6 +36,24 @@ export type PartnersMessages = {
     platformTypes: Record<string, string>;
     volumes: Record<string, string>;
   };
+  dashboard: {
+    eyebrow: string;
+    title: string;
+    pendingTitle: string;
+    pendingBody: string;
+    notPartnerTitle: string;
+    notPartnerBody: string;
+    codeLabel: string;
+    linkLabel: string;
+    copyLink: string;
+    copied: string;
+    leads: string;
+    dossiers: string;
+    total: string;
+    commission: string;
+    commissionEstimated: string;
+    back: string;
+  };
 };
 
 const FR: PartnersMessages = {
@@ -43,6 +62,7 @@ const FR: PartnersMessages = {
   subtitle:
     "Recevez des dossiers pré-formatés de propriétaires qualifiés. Zéro développement côté plateforme.",
   cta: "Demander l'intégration",
+  portalLink: "Espace partenaire",
   howTitle: "Comment ça fonctionne",
   steps: [
     {
@@ -152,6 +172,26 @@ const FR: PartnersMessages = {
       "200+ dossiers": "200+ dossiers",
     },
   },
+  dashboard: {
+    eyebrow: "Partenaires",
+    title: "Espace partenaire",
+    pendingTitle: "Demande en cours d’examen",
+    pendingBody:
+      "Votre compte partenaire est enregistré. Dès activation par AUROS, votre lien d’attribution et vos statistiques apparaîtront ici.",
+    notPartnerTitle: "Aucun compte partenaire",
+    notPartnerBody:
+      "Cet email n’est pas lié à un partenariat actif. Envoyez une demande depuis /partners, puis reconnectez-vous après activation.",
+    codeLabel: "Code d’attribution",
+    linkLabel: "Lien wizard",
+    copyLink: "Copier le lien",
+    copied: "Copié",
+    leads: "Leads",
+    dossiers: "Dossiers",
+    total: "Total",
+    commission: "Commission",
+    commissionEstimated: "Estimée (hors payout)",
+    back: "Retour partenaires",
+  },
 };
 
 const EN: PartnersMessages = {
@@ -160,6 +200,7 @@ const EN: PartnersMessages = {
   subtitle:
     "Receive pre-formatted dossiers from qualified asset owners. Zero platform-side development.",
   cta: "Request integration",
+  portalLink: "Partner space",
   howTitle: "How it works for platforms",
   steps: [
     {
@@ -269,6 +310,26 @@ const EN: PartnersMessages = {
       "200+ dossiers": "200+ dossiers",
     },
   },
+  dashboard: {
+    eyebrow: "Partners",
+    title: "Partner space",
+    pendingTitle: "Application under review",
+    pendingBody:
+      "Your partner account is registered. Once AUROS activates it, your attribution link and stats will appear here.",
+    notPartnerTitle: "No partner account",
+    notPartnerBody:
+      "This email is not linked to an active partnership. Submit a request on /partners, then sign in again after activation.",
+    codeLabel: "Attribution code",
+    linkLabel: "Wizard link",
+    copyLink: "Copy link",
+    copied: "Copied",
+    leads: "Leads",
+    dossiers: "Dossiers",
+    total: "Total",
+    commission: "Commission",
+    commissionEstimated: "Estimated (no payout yet)",
+    back: "Back to partners",
+  },
 };
 
 const ES: PartnersMessages = {
@@ -278,6 +339,7 @@ const ES: PartnersMessages = {
   subtitle:
     "Reciba expedientes preformateados de propietarios cualificados. Sin desarrollo en su plataforma.",
   cta: "Solicitar integración",
+  portalLink: "Espacio partner",
   howTitle: "Cómo funciona para plataformas",
   receiveTitle: "Lo que recibe",
   integrationsTitle: "Alianzas",
@@ -311,6 +373,27 @@ const ES: PartnersMessages = {
       "50-200": "50–200",
       "200+ dossiers": "200+ expedientes",
     },
+  },
+  dashboard: {
+    ...EN.dashboard,
+    eyebrow: "Partners",
+    title: "Espacio partner",
+    pendingTitle: "Solicitud en revisión",
+    pendingBody:
+      "Su cuenta partner está registrada. Tras la activación por AUROS, verá aquí su enlace y estadísticas.",
+    notPartnerTitle: "Sin cuenta partner",
+    notPartnerBody:
+      "Este correo no está vinculado a un partnership activo. Envíe una solicitud en /partners y vuelva a iniciar sesión tras la activación.",
+    codeLabel: "Código de atribución",
+    linkLabel: "Enlace wizard",
+    copyLink: "Copiar enlace",
+    copied: "Copiado",
+    leads: "Leads",
+    dossiers: "Expedientes",
+    total: "Total",
+    commission: "Comisión",
+    commissionEstimated: "Estimada (sin pago aún)",
+    back: "Volver a partners",
   },
 };
 

@@ -64,14 +64,16 @@ Exemples de grilles (à valider juridiquement) :
 
 ### Implémentation produit (phases)
 
-| Phase | Fonction | Effort |
-|-------|----------|--------|
-| **A — Manuel** | Formulaire `/partners` + tableau Supabase + suivi Excel des dossiers tagués | Déjà partiel (`partner_requests`) |
-| **B — Attribution** | `?partner=CODE` ou ref persistée → champ `referred_by` sur `dossiers` / `leads` | Dev moyen |
-| **C — Portail partenaire** | Dashboard : dossiers amenés, statut, commission estimée | Dev fort |
-| **D — Paiement** | Export compta / Stripe / virement trimestriel | Ops + juridique |
+| Phase | Fonction | Effort | Statut |
+|-------|----------|--------|--------|
+| **A — Manuel** | Formulaire `/partners` + tableau Supabase + suivi Excel | Déjà partiel (`partner_requests`) | Live |
+| **B — Attribution** | `?partner=CODE` → `referred_by` sur `dossiers` / `leads` + export admin CSV | Dev moyen | **Live** |
+| **C — Portail partenaire (MVP)** | Registre `partners`, activation ops, `/partners/dashboard` (lien + stats, commission `estimated`) | Dev moyen | **Live (MVP)** |
+| **D — Paiement** | Export compta / Stripe / virement trimestriel | Ops + juridique | À venir |
 
-**Recommandation** : signer 2–3 partenaires pilotes en **phase A**, mesurer le volume, puis coder **B** quand le flux est prouvé.
+**Ops** : `POST /api/admin/partners/activate` (Bearer `CRON_SECRET`) — `{ id|email, code, clerk_user_id? }`.
+
+**Recommandation** : activer 2–3 partenaires pilotes via le dashboard, mesurer le volume avant payouts (phase D).
 
 ---
 
@@ -116,7 +118,7 @@ Exemples de grilles (à valider juridiquement) :
 1. **Prod** — Supabase, Storage, Vercel, Resend, Clerk live (`docs/PROD-LAUNCH.md`)
 2. **Trafic qualifié** — 1–2 landing actif + contenu
 3. **Pilote partenaires** — 3 contrats cadre + attribution manuelle
-4. **Produit B** — `referred_by` + reporting simple
-5. Plus tard : contenu auto, portail partenaire, payouts
+4. **Produit B+C** — attribution `referred_by` + portail `/partners/dashboard` (MVP)
+5. Plus tard : contenu auto, payouts Stripe
 
 Voir aussi : `docs/PRODUIT-AUROS.md`, `docs/VISION-RETENU.md`.
