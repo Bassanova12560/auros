@@ -25,6 +25,22 @@ export type ProtocolChangelogEntry = {
 /** Single source for `/developers/changelog` and GET `/api/v1/changelog`. Newest first. */
 export const PROTOCOL_CHANGELOG: ProtocolChangelogEntry[] = [
   {
+    id: "chargeflow-console-import",
+    date: "2026-07-19",
+    title: "Console ChargeFlow — import OCPI/CSV",
+    summary:
+      "Panneau d'import JSON sur /green/chargeflow/console vers POST /from-ocpi.",
+    details: [
+      "Exemple CDR + CSV, mint CFU-E, rafraîchissement de la liste.",
+    ],
+    links: [
+      { href: "/green/chargeflow/console", label: "Console" },
+      { href: "/developers/docs/endpoint-chargeflow-ocpi", label: "Docs OCPI stub" },
+    ],
+    tags: ["chargeflow", "console", "premium"],
+    status: "released",
+  },
+  {
     id: "chargeflow-ocpi-stub",
     date: "2026-07-19",
     title: "ChargeFlow OCPI/CSV stub → CFU-E",
