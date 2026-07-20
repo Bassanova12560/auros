@@ -3,22 +3,21 @@
 import Link from "next/link";
 import { useAuth, UserButton } from "@clerk/nextjs";
 import { AnimatePresence, motion } from "framer-motion";
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import {
+  useCallback,
+  useEffect,
+  useId,
+  useRef,
+  useState,
+  type ReactNode,
+} from "react";
+
+import { getNavHub, type NavHubGroup } from "@/lib/nav-hub";
+import { EASE_OUT_EXPO } from "@/lib/motion";
 
 import { AurosButton } from "./AurosButton";
 import { LanguageSwitcher } from "./i18n/LanguageSwitcher";
-import { useTranslations } from "./i18n/LocaleProvider";
-import { EASE_OUT_EXPO } from "@/lib/motion";
-
-const NAV_LINKS = [
-  { href: "/estimate", key: "score" as const },
-  { href: "/wizard", key: "tokenize" as const },
-  { href: "/dashboard", key: "dossiers" as const },
-  { href: "/jurisdictions?from=nav", key: "jurisdictions" as const },
-  { href: "/green", key: "green" as const },
-  { href: "/partners", key: "partners" as const },
-  { href: "/copilot", key: "copilot" as const },
-] as const;
+import { useLocale, useTranslations } from "./i18n/LocaleProvider";
 
 export type AurosHeaderVariant = "pill" | "bar";
 
@@ -30,6 +29,32 @@ type AurosHeaderProps = {
   fixed?: boolean;
 };
 
+function MegaPanel({
+  group,
+  onNavigate,
+}: {
+  group: NavHubGroup;
+  onNavigate: () => void;
+}) {
+  return (
+    <div className="grid gap-1 sm:grid-cols-2 lg:grid-cols-3">
+      {group.items.map((item) => (
+        <Link
+          key={item.href}
+          href={item.href}
+          onClick={onNavigate}
+          className="rounded-lg px-3 py-2.5 transition hover:bg-white/[0.06]"
+        >
+          <p className="text-sm font-medium text-white">{item.title}</p>
+          <p className="mt-0.5 text-xs leading-snug text-white/45">
+            {item.description}
+          </p>
+        </Link>
+      ))}
+    </div>
+  );
+}
+
 export function AurosHeader({
   variant = "bar",
   breadcrumb,
@@ -37,30 +62,46 @@ export function AurosHeader({
   fixed = variant === "bar",
 }: AurosHeaderProps) {
   const t = useTranslations();
+  const { locale } = useLocale();
+  const hub = getNavHub(locale);
   const { isSignedIn, isLoaded } = useAuth();
-  const [open, setOpen] = useState(false);
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [activeGroup, setActiveGroup] = useState<NavHubGroup["id"] | null>(
+    null
+  );
+  const [mobileSection, setMobileSection] = useState<NavHubGroup["id"] | null>(
+    "dossier"
+  );
   const [scrolled, setScrolled] = useState(false);
   const stackRef = useRef<HTMLDivElement>(null);
   const [stackHeight, setStackHeight] = useState(0);
+  const panelId = useId();
+  const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const links = NAV_LINKS.map((link) => ({
-    href: link.href,
-    label: t.nav[link.key],
-  }));
+  const closeMega = useCallback(() => setActiveGroup(null), []);
+  const openMega = useCallback((id: NavHubGroup["id"]) => {
+    if (closeTimer.current) clearTimeout(closeTimer.current);
+    setActiveGroup(id);
+  }, []);
+  const softCloseMega = useCallback(() => {
+    if (closeTimer.current) clearTimeout(closeTimer.current);
+    closeTimer.current = setTimeout(() => setActiveGroup(null), 160);
+  }, []);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > (variant === "pill" ? 24 : 8));
+    const onScroll = () =>
+      setScrolled(window.scrollY > (variant === "pill" ? 24 : 8));
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, [variant]);
 
   useEffect(() => {
-    document.body.style.overflow = open ? "hidden" : "";
+    document.body.style.overflow = drawerOpen ? "hidden" : "";
     return () => {
       document.body.style.overflow = "";
     };
-  }, [open]);
+  }, [drawerOpen]);
 
   useEffect(() => {
     if (!fixed || !stackRef.current) return;
@@ -70,7 +111,20 @@ export function AurosHeader({
     const ro = new ResizeObserver(measure);
     ro.observe(el);
     return () => ro.disconnect();
-  }, [fixed, breadcrumb, subNav]);
+  }, [fixed, breadcrumb, subNav, activeGroup]);
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        closeMega();
+        setDrawerOpen(false);
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [closeMega]);
+
+  const active = hub.groups.find((g) => g.id === activeGroup) ?? null;
 
   const authControls = (
     <>
@@ -86,7 +140,7 @@ export function AurosHeader({
           href="/sign-in"
           variant="ghost"
           showArrow={false}
-          className="hidden !px-4 !py-2 !text-xs md:inline-flex"
+          className="hidden !px-3 !py-2 !text-xs lg:inline-flex"
         >
           {t.nav.login}
         </AurosButton>
@@ -94,132 +148,216 @@ export function AurosHeader({
       <AurosButton
         href="/wizard"
         variant="primary"
-        className="hidden !px-4 !py-2.5 !text-xs md:inline-flex"
+        className="hidden !px-4 !py-2.5 !text-xs sm:inline-flex"
       >
-        {t.nav.start}
+        {hub.primaryCta}
       </AurosButton>
     </>
   );
 
-  const navLinks = links.map((link) => (
-    <Link
-      key={link.href}
-      href={link.href}
-      className="text-sm text-muted transition hover:text-white"
+  const desktopTriggers = (
+    <div
+      className="hidden items-center gap-1 lg:flex"
+      onMouseLeave={softCloseMega}
     >
-      {link.label}
-    </Link>
-  ));
+      {hub.groups.map((group) => {
+        const isOn = activeGroup === group.id;
+        return (
+          <button
+            key={group.id}
+            type="button"
+            className={`rounded-full px-3 py-1.5 text-sm transition ${
+              isOn
+                ? "bg-white/10 text-white"
+                : "text-white/55 hover:bg-white/[0.06] hover:text-white"
+            }`}
+            aria-expanded={isOn}
+            aria-controls={panelId}
+            onMouseEnter={() => openMega(group.id)}
+            onFocus={() => openMega(group.id)}
+            onClick={() =>
+              setActiveGroup((cur) => (cur === group.id ? null : group.id))
+            }
+          >
+            {group.label}
+          </button>
+        );
+      })}
+    </div>
+  );
+
+  const megaDropdown =
+    active && variant === "bar" ? (
+      <div
+        id={panelId}
+        className="hidden border-b border-white/[0.08] bg-void/98 backdrop-blur-xl lg:block"
+        onMouseEnter={() => activeGroup && openMega(activeGroup)}
+        onMouseLeave={softCloseMega}
+      >
+        <div className="mx-auto max-w-6xl px-4 py-5 md:px-6">
+          <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
+            <div>
+              <p className="font-display text-base text-white">{active.label}</p>
+              <p className="mt-0.5 text-xs text-white/45">{active.blurb}</p>
+            </div>
+            <Link
+              href="/discover"
+              onClick={closeMega}
+              className="font-mono text-[10px] uppercase tracking-wider text-white/40 hover:text-white/70"
+            >
+              {hub.exploreAll} →
+            </Link>
+          </div>
+          <MegaPanel group={active} onNavigate={closeMega} />
+        </div>
+      </div>
+    ) : null;
+
+  /** Pill landing: floating panel under header */
+  const pillMega =
+    active && variant === "pill" ? (
+      <div
+        id={panelId}
+        className="absolute left-1/2 top-full z-50 mt-3 hidden w-[min(92vw,880px)] -translate-x-1/2 rounded-2xl border border-white/10 bg-void/95 p-5 shadow-none backdrop-blur-xl lg:block"
+        onMouseEnter={() => activeGroup && openMega(activeGroup)}
+        onMouseLeave={softCloseMega}
+      >
+        <div className="mb-3">
+          <p className="font-display text-sm text-white">{active.label}</p>
+          <p className="text-xs text-white/45">{active.blurb}</p>
+        </div>
+        <MegaPanel group={active} onNavigate={closeMega} />
+      </div>
+    ) : null;
+
+  const menuButton = (
+    <button
+      type="button"
+      className="relative flex h-10 w-10 shrink-0 items-center justify-center lg:hidden"
+      onClick={() => {
+        closeMega();
+        setDrawerOpen((v) => !v);
+      }}
+      aria-expanded={drawerOpen}
+      aria-label={hub.openMenu}
+    >
+      <span
+        className={`absolute h-px w-5 bg-white transition-all duration-500 ${
+          drawerOpen ? "rotate-45" : "-translate-y-1.5"
+        }`}
+      />
+      <span
+        className={`absolute h-px w-5 bg-white transition-all ${
+          drawerOpen ? "opacity-0" : ""
+        }`}
+      />
+      <span
+        className={`absolute h-px w-5 bg-white transition-all duration-500 ${
+          drawerOpen ? "-rotate-45" : "translate-y-1.5"
+        }`}
+      />
+    </button>
+  );
 
   const headerInner =
     variant === "pill" ? (
-      <nav
-        className={`flex w-full max-w-4xl items-center justify-between gap-3 rounded-full border px-4 py-2.5 transition-all duration-500 md:gap-4 md:px-5 ${
-          scrolled
-            ? "border-white/10 bg-void/80 backdrop-blur-xl"
-            : "border-white/[0.06] bg-white/[0.02] backdrop-blur-md"
-        }`}
-      >
-        <Link
-          href="/"
-          className="font-display text-xs font-semibold tracking-[0.35em] text-white"
+      <div className="relative w-full max-w-5xl">
+        <nav
+          className={`flex w-full items-center justify-between gap-3 rounded-full border px-4 py-2.5 transition-all duration-500 md:gap-4 md:px-5 ${
+            scrolled
+              ? "border-white/10 bg-void/80 backdrop-blur-xl"
+              : "border-white/[0.06] bg-white/[0.02] backdrop-blur-md"
+          }`}
         >
-          AUROS
-        </Link>
-
-        <div className="hidden items-center gap-5 lg:gap-6 md:flex">
-          {navLinks}
-          {authControls}
-        </div>
-
-        <button
-          type="button"
-          className="relative flex h-10 w-10 items-center justify-center md:hidden"
-          onClick={() => setOpen((v) => !v)}
-          aria-expanded={open}
-          aria-label={t.nav.menu}
-        >
-          <span
-            className={`absolute h-px w-5 bg-white transition-all duration-500 ${
-              open ? "rotate-45" : "-translate-y-1.5"
-            }`}
-          />
-          <span
-            className={`absolute h-px w-5 bg-white transition-all ${
-              open ? "opacity-0" : ""
-            }`}
-          />
-          <span
-            className={`absolute h-px w-5 bg-white transition-all duration-500 ${
-              open ? "-rotate-45" : "translate-y-1.5"
-            }`}
-          />
-        </button>
-      </nav>
+          <Link
+            href="/"
+            className="font-display text-xs font-semibold tracking-[0.35em] text-white"
+            onClick={closeMega}
+          >
+            AUROS
+          </Link>
+          {desktopTriggers}
+          <div className="flex items-center gap-2 md:gap-3">
+            {authControls}
+            {menuButton}
+          </div>
+        </nav>
+        {pillMega}
+      </div>
     ) : (
       <div
         className={`border-b transition-colors duration-300 ${
           scrolled || !fixed
             ? "border-white/[0.08] bg-void/95 backdrop-blur-xl"
-            : "border-white/[0.06] bg-void/90 backdrop-blur-md md:border-white/[0.06]"
+            : "border-white/[0.06] bg-void/90 backdrop-blur-md"
         }`}
       >
-        <div className="mx-auto flex max-w-6xl items-center gap-2 px-4 py-3 pt-[max(0.75rem,env(safe-area-inset-top))] md:gap-4 md:px-6 md:py-4 md:pt-4">
+        <div className="mx-auto flex max-w-6xl items-center gap-2 px-4 py-3 pt-[max(0.75rem,env(safe-area-inset-top))] md:gap-4 md:px-6 md:py-3.5 md:pt-3.5">
           <Link
             href="/"
             className="font-display text-xs font-semibold tracking-[0.35em] text-white"
+            onClick={closeMega}
           >
             AUROS
           </Link>
-
-          <div className="hidden min-w-0 flex-1 items-center justify-center gap-4 lg:gap-5 xl:flex">
-            {navLinks}
+          <div className="min-w-0 flex-1 justify-center lg:flex">
+            {desktopTriggers}
           </div>
-
           <div className="ml-auto flex shrink-0 items-center gap-2 md:gap-3">
             {authControls}
+            {menuButton}
           </div>
-
-          <button
-            type="button"
-            className="relative flex h-10 w-10 shrink-0 items-center justify-center xl:hidden"
-            onClick={() => setOpen((v) => !v)}
-            aria-expanded={open}
-            aria-label={t.nav.menu}
-          >
-            <span
-              className={`absolute h-px w-5 bg-white transition-all duration-500 ${
-                open ? "rotate-45" : "-translate-y-1.5"
-              }`}
-            />
-            <span
-              className={`absolute h-px w-5 bg-white transition-all ${
-                open ? "opacity-0" : ""
-              }`}
-            />
-            <span
-              className={`absolute h-px w-5 bg-white transition-all duration-500 ${
-                open ? "-rotate-45" : "translate-y-1.5"
-              }`}
-            />
-          </button>
         </div>
+        {megaDropdown}
       </div>
     );
 
-  const mobileMenu = (
+  const mobileDrawer = (
     <AnimatePresence>
-      {open ? (
+      {drawerOpen ? (
         <motion.div
-          className="fixed inset-0 z-40 flex flex-col bg-void/95 backdrop-blur-xl xl:hidden"
+          className="fixed inset-0 z-40 flex flex-col bg-void lg:hidden"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
+          role="dialog"
+          aria-modal="true"
+          aria-label={hub.openMenu}
         >
-          <div className="flex flex-1 flex-col justify-center gap-3 px-10 pt-24">
-            <LanguageSwitcher className="mb-4 self-start" />
+          <div className="flex items-center justify-between border-b border-white/[0.08] px-4 py-3 pt-[max(0.75rem,env(safe-area-inset-top))]">
+            <p className="font-display text-xs tracking-[0.35em] text-white">
+              AUROS
+            </p>
+            <button
+              type="button"
+              className="font-mono text-[10px] uppercase tracking-wider text-white/50"
+              onClick={() => setDrawerOpen(false)}
+            >
+              {hub.close}
+            </button>
+          </div>
+
+          <div className="flex gap-1 overflow-x-auto border-b border-white/[0.06] px-3 py-2 scrollbar-none">
+            {hub.groups.map((g) => (
+              <button
+                key={g.id}
+                type="button"
+                onClick={() => setMobileSection(g.id)}
+                className={`shrink-0 rounded-full px-3 py-1.5 font-mono text-[10px] uppercase tracking-wider transition ${
+                  mobileSection === g.id
+                    ? "bg-white text-void"
+                    : "bg-white/[0.06] text-white/55"
+                }`}
+              >
+                {g.label}
+              </button>
+            ))}
+          </div>
+
+          <div className="flex-1 overflow-y-auto px-4 py-4 pb-[max(1.5rem,env(safe-area-inset-bottom))]">
+            <LanguageSwitcher className="mb-4" />
             {isLoaded && isSignedIn ? (
-              <div className="mb-4 self-start">
+              <div className="mb-4">
                 <UserButton />
               </div>
             ) : (
@@ -227,35 +365,65 @@ export function AurosHeader({
                 href="/sign-in"
                 variant="ghost"
                 showArrow={false}
-                className="mb-2 self-start !px-0"
-                onClick={() => setOpen(false)}
+                className="mb-4 !px-0"
+                onClick={() => setDrawerOpen(false)}
               >
                 {t.nav.login}
               </AurosButton>
             )}
-            {links.map((link, i) => (
-              <motion.div
-                key={link.href}
-                initial={{ opacity: 0, y: 16 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.05 + i * 0.05, ease: EASE_OUT_EXPO }}
+
+            {hub.groups
+              .filter((g) => g.id === mobileSection)
+              .map((group) => (
+                <div key={group.id}>
+                  <p className="mb-3 text-xs text-white/45">{group.blurb}</p>
+                  <ul className="space-y-1">
+                    {group.items.map((item, i) => (
+                      <motion.li
+                        key={item.href}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{
+                          delay: 0.03 + i * 0.03,
+                          ease: EASE_OUT_EXPO,
+                        }}
+                      >
+                        <Link
+                          href={item.href}
+                          onClick={() => setDrawerOpen(false)}
+                          className="block rounded-xl border border-transparent px-3 py-3 hover:border-white/10 hover:bg-white/[0.04]"
+                        >
+                          <p className="font-display text-lg text-white">
+                            {item.title}
+                          </p>
+                          <p className="mt-0.5 text-xs text-white/45">
+                            {item.description}
+                          </p>
+                        </Link>
+                      </motion.li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+
+            <div className="mt-8 flex flex-col gap-3 border-t border-white/[0.08] pt-6 sm:flex-row">
+              <AurosButton
+                href="/wizard"
+                className="w-full sm:w-auto"
+                onClick={() => setDrawerOpen(false)}
               >
-                <Link
-                  href={link.href}
-                  onClick={() => setOpen(false)}
-                  className="font-display text-2xl text-white"
-                >
-                  {link.label}
-                </Link>
-              </motion.div>
-            ))}
-            <AurosButton
-              href="/wizard"
-              className="mt-6 self-start"
-              onClick={() => setOpen(false)}
-            >
-              {t.nav.start}
-            </AurosButton>
+                {hub.primaryCta}
+              </AurosButton>
+              <AurosButton
+                href="/developers/shield"
+                variant="ghost"
+                showArrow={false}
+                className="w-full sm:w-auto"
+                onClick={() => setDrawerOpen(false)}
+              >
+                {hub.secondaryCta}
+              </AurosButton>
+            </div>
           </div>
         </motion.div>
       ) : null}
@@ -273,10 +441,10 @@ export function AurosHeader({
   if (variant === "pill") {
     return (
       <>
-        <header className="fixed top-0 left-0 right-0 z-50 flex justify-center px-4 pt-[max(1.25rem,env(safe-area-inset-top))] md:pt-6">
+        <header className="fixed top-0 left-0 right-0 z-50 flex justify-center px-3 pt-[max(1rem,env(safe-area-inset-top))] md:px-4 md:pt-5">
           {headerInner}
         </header>
-        {mobileMenu}
+        {mobileDrawer}
       </>
     );
   }
@@ -285,23 +453,20 @@ export function AurosHeader({
     return (
       <header className="z-40">
         {stack}
-        {mobileMenu}
+        {mobileDrawer}
       </header>
     );
   }
 
   return (
     <>
-      <header
-        ref={stackRef}
-        className="fixed top-0 left-0 right-0 z-50"
-      >
+      <header ref={stackRef} className="fixed top-0 left-0 right-0 z-50">
         {stack}
       </header>
       {stackHeight > 0 ? (
         <div aria-hidden className="shrink-0" style={{ height: stackHeight }} />
       ) : null}
-      {mobileMenu}
+      {mobileDrawer}
     </>
   );
 }

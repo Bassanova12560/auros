@@ -2,26 +2,16 @@
 
 import Link from "next/link";
 
-import { useTranslations } from "./i18n/LocaleProvider";
+import { getNavHub } from "@/lib/nav-hub";
+
+import { useLocale, useTranslations } from "./i18n/LocaleProvider";
 
 export function Footer() {
   const t = useTranslations();
+  const { locale } = useLocale();
+  const hub = getNavHub(locale);
   const f = t.footer;
   const year = new Date().getFullYear();
-
-  const product = [
-    { href: "/estimate", label: t.nav.score },
-    { href: "/wizard", label: t.nav.tokenize },
-    { href: "/dashboard", label: t.nav.dossiers },
-    { href: "/pricing", label: f.pricing },
-  ] as const;
-
-  const green = [
-    { href: "/green", label: f.green },
-    { href: "/eau", label: f.greenH2o },
-    { href: "/green/api", label: f.greenApi },
-    { href: "/green/dpp", label: f.greenDpp },
-  ] as const;
 
   const legal = [
     { href: "/trust", label: f.trust },
@@ -31,65 +21,71 @@ export function Footer() {
   ] as const;
 
   const linkClass =
-    "interactive-subtle text-sm text-white/55 hover:text-white/90";
+    "interactive-subtle block py-1 text-sm text-white/55 hover:text-white/90";
 
   return (
-    <footer className="auros-divider px-6 py-12 md:py-14">
-      <div className="mx-auto flex max-w-6xl flex-col gap-10 md:flex-row md:justify-between">
-        <div>
-          <p className="font-display text-sm font-semibold tracking-[0.35em] text-white">
-            AUROS
-          </p>
-          <p className="mt-2 max-w-xs text-sm leading-relaxed text-muted">{f.tagline}</p>
+    <footer className="auros-divider px-4 py-12 md:px-6 md:py-16">
+      <div className="mx-auto max-w-6xl">
+        <div className="flex flex-col gap-10 lg:flex-row lg:justify-between lg:gap-16">
+          <div className="max-w-xs shrink-0">
+            <p className="font-display text-sm font-semibold tracking-[0.35em] text-white">
+              AUROS
+            </p>
+            <p className="mt-3 text-sm leading-relaxed text-muted">{f.tagline}</p>
+            <div className="mt-5 flex flex-wrap gap-3">
+              <Link
+                href="/start"
+                className="rounded-full border border-white/20 px-3 py-1.5 font-mono text-[10px] uppercase tracking-wider text-white/70 hover:border-white/40"
+              >
+                {hub.primaryCta}
+              </Link>
+              <Link
+                href="/developers/shield"
+                className="rounded-full border border-white/10 px-3 py-1.5 font-mono text-[10px] uppercase tracking-wider text-white/45 hover:text-white/70"
+              >
+                {hub.secondaryCta}
+              </Link>
+            </div>
+          </div>
+
+          <div className="grid flex-1 grid-cols-2 gap-8 sm:grid-cols-2 md:grid-cols-4">
+            {hub.groups.map((group) => (
+              <div key={group.id}>
+                <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/35">
+                  {group.label}
+                </p>
+                <ul className="mt-3 space-y-0.5">
+                  {group.items.slice(0, 5).map((item) => (
+                    <li key={item.href}>
+                      <Link href={item.href} className={linkClass}>
+                        {item.title}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
         </div>
-        <div className="flex flex-wrap gap-12 sm:gap-16">
-          <div>
-            <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/35">
-              {f.product}
-            </p>
-            <ul className="mt-3 space-y-1.5">
-              {product.map((l) => (
-                <li key={l.href}>
-                  <Link href={l.href} className={linkClass}>
-                    {l.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div>
-            <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/35">
-              {f.greenColumn}
-            </p>
-            <ul className="mt-3 space-y-1.5">
-              {green.map((l) => (
-                <li key={l.href}>
-                  <Link href={l.href} className={linkClass}>
-                    {l.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div>
-            <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/35">
-              {f.legal}
-            </p>
-            <ul className="mt-3 space-y-1.5">
-              {legal.map((l) => (
-                <li key={l.href}>
-                  <Link href={l.href} className={linkClass}>
-                    {l.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
+
+        <div className="mt-12 flex flex-col gap-4 border-t border-white/[0.06] pt-8 sm:flex-row sm:items-center sm:justify-between">
+          <ul className="flex flex-wrap gap-x-5 gap-y-2">
+            {legal.map((l) => (
+              <li key={l.href}>
+                <Link
+                  href={l.href}
+                  className="font-mono text-[10px] uppercase tracking-wider text-white/35 hover:text-white/60"
+                >
+                  {l.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+          <p className="font-mono text-[10px] text-white/28">
+            © {year} {f.rights}
+          </p>
         </div>
       </div>
-      <p className="mx-auto mt-10 max-w-6xl font-mono text-[10px] text-white/28">
-        © {year} {f.rights}
-      </p>
     </footer>
   );
 }

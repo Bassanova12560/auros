@@ -1,4 +1,5 @@
 import { AssetUniverse } from "./AssetUniverse";
+import { DiscoverHubMap } from "./DiscoverHubMap";
 import { DossierDeliverables } from "./DossierDeliverables";
 import { LandingGreenPromo } from "./LandingGreenPromo";
 import { LandingStory } from "./LandingStory";
@@ -11,6 +12,7 @@ import { Ticker } from "./Ticker";
 export function DiscoverContent() {
   return (
     <div className="space-y-0">
+      <DiscoverHubMap />
       <Ticker />
       <LandingStory act={1} />
       <AssetUniverse />
