@@ -14,6 +14,8 @@ import {
   WATTS_RESERVE_ROUTE,
 } from "@/lib/watts";
 
+import { WattsFlowNav } from "../_components/WattsFlowNav";
+
 type Listing = {
   listing_id: string;
   status: string;
@@ -28,19 +30,27 @@ type Listing = {
   firmness: string;
   interest_count: number;
   cfu_verify_url: string | null;
+  reservation_id?: string | null;
   rwa_hint?: string;
 };
 
 const fieldClass =
   "w-full border border-white/[0.1] bg-white/[0.03] px-3.5 py-2.5 text-sm text-white outline-none transition placeholder:text-white/25 focus:border-emerald-500/35 focus:bg-white/[0.05]";
 
-export function WattsSecondaryView() {
+export function WattsSecondaryView({
+  initialReservationId = null,
+}: {
+  initialReservationId?: string | null;
+}) {
   const [price, setPrice] = useState("1200");
   const [energyKwh, setEnergyKwh] = useState("100");
   const [country, setCountry] = useState("FR");
   const [label, setLabel] = useState("");
   const [compareRef, setCompareRef] = useState("");
   const [note, setNote] = useState("");
+  const [reservationId, setReservationId] = useState(
+    initialReservationId?.trim() || ""
+  );
   const [listings, setListings] = useState<Listing[]>([]);
   const [loading, setLoading] = useState(false);
   const [publishing, setPublishing] = useState(false);
@@ -78,11 +88,15 @@ export function WattsSecondaryView() {
     setOkMsg(null);
     const body: Record<string, unknown> = {
       indicative_price_eur: Number(price),
-      energy_kwh: Number(energyKwh),
-      zone: { country: country.trim() },
-      firmness: "firm",
       label: label.trim() || "Position watts demo",
     };
+    if (reservationId.trim()) {
+      body.reservation_id = reservationId.trim();
+    } else {
+      body.energy_kwh = Number(energyKwh);
+      body.zone = { country: country.trim() };
+      body.firmness = "firm";
+    }
     if (compareRef.trim()) body.compare_ref_id = compareRef.trim();
     if (note.trim()) body.note = note.trim();
 
@@ -135,6 +149,7 @@ export function WattsSecondaryView() {
   }
 
   const busy = loading || publishing;
+  const fromReservation = Boolean(reservationId.trim());
 
   return (
     <div className="relative">
@@ -155,12 +170,32 @@ export function WattsSecondaryView() {
             Listez une position watts à prix indicatif, liez un produit Protocol
             pour le comparateur — pas un marché réglementé, pas d’ordre exécuté.
           </p>
+          <WattsFlowNav />
         </header>
 
         <section className="space-y-6 border border-white/[0.08] bg-black/50 p-6 backdrop-blur-sm md:p-8">
           <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/40">
             Publier un listing
           </p>
+
+          {fromReservation ? (
+            <p className="text-xs leading-relaxed text-emerald-400/70">
+              Réservation liée — le snapshot CFU / zone sera repris à la
+              publication.
+            </p>
+          ) : null}
+
+          <label className="block space-y-1.5">
+            <span className="font-mono text-[10px] uppercase tracking-wider text-white/40">
+              reservation_id (optionnel)
+            </span>
+            <input
+              value={reservationId}
+              onChange={(e) => setReservationId(e.target.value)}
+              placeholder="uuid settled / confirmed"
+              className={fieldClass}
+            />
+          </label>
 
           <div className="grid gap-4 sm:grid-cols-2">
             <label className="block space-y-1.5">
@@ -175,31 +210,59 @@ export function WattsSecondaryView() {
                 className={fieldClass}
               />
             </label>
-            <label className="block space-y-1.5">
-              <span className="font-mono text-[10px] uppercase tracking-wider text-white/40">
-                Énergie (kWh)
-              </span>
-              <input
-                type="number"
-                min={0.1}
-                value={energyKwh}
-                onChange={(e) => setEnergyKwh(e.target.value)}
-                className={fieldClass}
-              />
-            </label>
+            {!fromReservation ? (
+              <label className="block space-y-1.5">
+                <span className="font-mono text-[10px] uppercase tracking-wider text-white/40">
+                  Énergie (kWh)
+                </span>
+                <input
+                  type="number"
+                  min={0.1}
+                  value={energyKwh}
+                  onChange={(e) => setEnergyKwh(e.target.value)}
+                  className={fieldClass}
+                />
+              </label>
+            ) : (
+              <label className="block space-y-1.5">
+                <span className="font-mono text-[10px] uppercase tracking-wider text-white/40">
+                  Pays (ignoré si réservation)
+                </span>
+                <input
+                  value={country}
+                  onChange={(e) => setCountry(e.target.value)}
+                  className={fieldClass}
+                  disabled
+                />
+              </label>
+            )}
           </div>
 
-          <div className="grid gap-4 sm:grid-cols-2">
-            <label className="block space-y-1.5">
-              <span className="font-mono text-[10px] uppercase tracking-wider text-white/40">
-                Pays
-              </span>
-              <input
-                value={country}
-                onChange={(e) => setCountry(e.target.value)}
-                className={fieldClass}
-              />
-            </label>
+          {!fromReservation ? (
+            <div className="grid gap-4 sm:grid-cols-2">
+              <label className="block space-y-1.5">
+                <span className="font-mono text-[10px] uppercase tracking-wider text-white/40">
+                  Pays
+                </span>
+                <input
+                  value={country}
+                  onChange={(e) => setCountry(e.target.value)}
+                  className={fieldClass}
+                />
+              </label>
+              <label className="block space-y-1.5">
+                <span className="font-mono text-[10px] uppercase tracking-wider text-white/40">
+                  compare_ref_id (RWA)
+                </span>
+                <input
+                  value={compareRef}
+                  onChange={(e) => setCompareRef(e.target.value)}
+                  placeholder="id produit Protocol"
+                  className={fieldClass}
+                />
+              </label>
+            </div>
+          ) : (
             <label className="block space-y-1.5">
               <span className="font-mono text-[10px] uppercase tracking-wider text-white/40">
                 compare_ref_id (RWA)
@@ -211,7 +274,7 @@ export function WattsSecondaryView() {
                 className={fieldClass}
               />
             </label>
-          </div>
+          )}
 
           <label className="block space-y-1.5">
             <span className="font-mono text-[10px] uppercase tracking-wider text-white/40">

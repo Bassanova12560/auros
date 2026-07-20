@@ -13,12 +13,19 @@ export const metadata: Metadata = {
     "Listings secondaires indicatifs de positions watts, lien compare_ref_id vers le comparateur RWA. Pas un marché réglementé.",
 };
 
-export default function WattsSecondaryPage() {
+type PageProps = {
+  searchParams?: Promise<{ reservation_id?: string }>;
+};
+
+export default async function WattsSecondaryPage({ searchParams }: PageProps) {
+  const params = searchParams ? await searchParams : {};
+  const reservationId = params.reservation_id?.trim() || null;
+
   return (
     <>
       <AiFirstPageJsonLd path={WATTS_SECONDARY_ROUTE} />
       <div className="page-inner page-inner--3xl mx-auto px-4 pb-20 pt-12 md:px-6 md:pt-14">
-        <WattsSecondaryView />
+        <WattsSecondaryView initialReservationId={reservationId} />
       </div>
     </>
   );

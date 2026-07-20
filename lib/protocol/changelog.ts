@@ -25,6 +25,25 @@ export type ProtocolChangelogEntry = {
 /** Single source for `/developers/changelog` and GET `/api/v1/changelog`. Newest first. */
 export const PROTOCOL_CHANGELOG: ProtocolChangelogEntry[] = [
   {
+    id: "watts-reserve-productize",
+    date: "2026-07-20",
+    title: "Watts Reserve — nav, docs Protocol, SDK 1.0.7",
+    summary:
+      "WattsFlowNav, settle→secondaire, docs endpoint-watts-reserve, méthodes SDK watts* (1.0.7).",
+    details: [
+      "UI flow Réserver · Inventaire · Secondaire + lien API.",
+      "/developers/docs/endpoint-watts-reserve.",
+      "@adrien1212balitrand/auros-protocol@1.0.7 — wattsReserve/confirm/settle/offers/secondary.",
+    ],
+    links: [
+      { href: "/green/chargeflow/reserve", label: "Watts Reserve" },
+      { href: "/developers/docs/endpoint-watts-reserve", label: "Docs API" },
+      { href: "/green/chargeflow/secondary", label: "Secondaire" },
+    ],
+    tags: ["watts", "sdk", "docs"],
+    status: "released",
+  },
+  {
     id: "watts-reserve-step5",
     date: "2026-07-20",
     title: "Watts Reserve étape 5 — secondaire + RWA prep",

@@ -1324,6 +1324,7 @@ curl "${BASE}/api/v1/attest/verify?hash=<64hex>&sig=<64hex>"`,
       "endpoint-chargeflow-w",
       "endpoint-chargeflow-ocpi",
       "endpoint-chargeflow-partners",
+      "endpoint-watts-reserve",
       "endpoint-dossier",
     ],
     sections: [
@@ -1334,6 +1335,7 @@ curl "${BASE}/api/v1/attest/verify?hash=<64hex>&sig=<64hex>"`,
           "HMAC prefix : `auros-cfu-e:v1:` — même clé que les attestations (ATTEST_SIGNING_KEY).",
           "Unicité serveur : 409 si une unité `active` existe déjà pour (clé, operator, external_session_id).",
           "Standard public : docs/CHARGEFLOW-STANDARD.md · UI : /green/chargeflow · console : /green/chargeflow/console.",
+          "Watts Reserve (booking → CFU → secondaire) : endpoint-watts-reserve · docs/WATTS-RESERVE.md.",
           "Liste : GET /api/v1/chargeflow · batch : POST /api/v1/chargeflow/batch (max 50).",
         ],
         code: `curl -X POST ${BASE}/api/v1/chargeflow \\
@@ -1379,6 +1381,98 @@ curl -X POST ${BASE}/api/v1/chargeflow/cfu_e_…/retire \\
         paragraphs: [
           "Enregistrement off-chain indicatif — pas un token on-chain, pas un certificat d'origine.",
           "CFU-W (eau) : POST /api/v1/chargeflow/w — voir endpoint-chargeflow-w.",
+        ],
+      },
+    ],
+  },
+  {
+    slug: "endpoint-watts-reserve",
+    title: "POST /api/v1/watts/* (Premium)",
+    description:
+      "AUROS Watts Reserve — booking engine des watts : profil → match → confirm (mint CFU) → settle (retire) → inventaire producteur → secondaire + RWA prep.",
+    category: "endpoints",
+    categoryLabel: "Endpoints",
+    relatedSlugs: [
+      "endpoint-chargeflow",
+      "endpoint-chargeflow-f",
+      "endpoint-compare",
+      "endpoint-green-watt",
+    ],
+    sections: [
+      {
+        heading: "Boucle réservation",
+        paragraphs: [
+          "Premium (sauf /demo* rate-limité).",
+          "POST /api/v1/watts/reserve — intent `pending_confirm` + match_score déterministe (pas de mint).",
+          "GET /api/v1/watts/reserve/{id} — lire l'intent (owner key).",
+          "POST /api/v1/watts/reserve/{id}/confirm — mint CFU-E (firm) ou CFU-F (flex) avec attributes.reservation_id.",
+          "POST /api/v1/watts/reserve/{id}/settle — retire la CFU liée (livraison).",
+          "UI : /green/chargeflow/reserve · Docs : docs/WATTS-RESERVE.md.",
+        ],
+        code: `curl -X POST ${BASE}/api/v1/watts/reserve \\
+  -H "Authorization: Bearer auros_pk_live_xxx" \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "window": { "start": "2026-07-20T18:00:00Z", "end": "2026-07-20T22:00:00Z" },
+    "energy_kwh": 20,
+    "zone": { "country": "FR", "zone_id": "FR-IDF" },
+    "carbon_intensity_max_gco2_kwh": 50,
+    "firmness": "firm"
+  }'
+curl -X POST ${BASE}/api/v1/watts/reserve/{id}/confirm \\
+  -H "Authorization: Bearer auros_pk_live_xxx"
+curl -X POST ${BASE}/api/v1/watts/reserve/{id}/settle \\
+  -H "Authorization: Bearer auros_pk_live_xxx" \\
+  -H "Content-Type: application/json" \\
+  -d '{"delivery_ref":"sess_42","energy_kwh_delivered":19.4}'`,
+        language: "bash",
+      },
+      {
+        heading: "Inventaire producteur",
+        paragraphs: [
+          "POST /api/v1/watts/offers — publier une fenêtre de capacité.",
+          "GET /api/v1/watts/offers — parcourir (status=open par défaut ; ?mine=1).",
+          "POST /api/v1/watts/offers/match — classer les offres vs un profil acheteur.",
+          "POST /api/v1/watts/offers/{id}/withdraw — retirer une offre.",
+          "UI : /green/chargeflow/inventory.",
+        ],
+        code: `curl -X POST ${BASE}/api/v1/watts/offers \\
+  -H "Authorization: Bearer auros_pk_live_xxx" \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "window": { "start": "2026-07-20T18:00:00Z", "end": "2026-07-20T22:00:00Z" },
+    "capacity_kw": 50,
+    "zone": { "country": "FR" },
+    "firmness": "flex",
+    "label": "Flex soir"
+  }'`,
+        language: "bash",
+      },
+      {
+        heading: "Secondaire + RWA prep",
+        paragraphs: [
+          "POST /api/v1/watts/secondary — listing à prix indicatif (reservation_id confirmé/settled ou snapshot).",
+          "compare_ref_id → compare_url /compare?ids=… (prep RWA, pas une offre réglementée).",
+          "POST /api/v1/watts/secondary/{id}/interest — intérêt non liant.",
+          "POST /api/v1/watts/secondary/{id}/withdraw.",
+          "UI : /green/chargeflow/secondary.",
+        ],
+        code: `curl -X POST ${BASE}/api/v1/watts/secondary \\
+  -H "Authorization: Bearer auros_pk_live_xxx" \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "reservation_id": "…uuid…",
+    "indicative_price_eur": 1200,
+    "compare_ref_id": "product_id",
+    "label": "Bundle watts"
+  }'`,
+        language: "bash",
+      },
+      {
+        heading: "Garde-fous",
+        paragraphs: [
+          "Pas d'auto-mint / auto-retire / auto-reserve / auto-transfer.",
+          "Indicatif — pas GO/REC légal, pas PPA, pas marché réglementé, pas conseil d'investissement.",
         ],
       },
     ],

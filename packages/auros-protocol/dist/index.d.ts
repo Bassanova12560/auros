@@ -657,6 +657,120 @@ type GreenCqsBatchResponse = {
     items: Array<GreenCqsBatchSuccessItem | GreenBatchErrorItem>;
     meta: ProtocolMeta;
 };
+/** Watts Reserve — buyer profile for reserve / offers match */
+type WattsReserveRequest = {
+    window: {
+        start: string;
+        end: string;
+    };
+    energy_kwh?: number;
+    capacity_kw?: number;
+    zone: {
+        country: string;
+        zone_id?: string;
+    };
+    carbon_intensity_max_gco2_kwh?: number;
+    firmness?: "firm" | "flex";
+    buyer_ref?: string;
+};
+type WattsReserveResponse = {
+    reservation_id: string;
+    status: string;
+    match_score: number;
+    match_reasons: Array<{
+        code: string;
+        detail: string;
+        delta: number;
+    }>;
+    suggested_unit_kind: "e" | "f";
+    disclaimer: string;
+    next_step: string;
+    cfu_unit_id?: string | null;
+    cfu_verify_url?: string | null;
+    unit?: ChargeflowResponse;
+    meta?: ProtocolMeta;
+};
+type WattsSettleRequest = {
+    delivery_ref?: string;
+    delivered_at?: string;
+    energy_kwh_delivered?: number;
+    capacity_kw_delivered?: number;
+    reason?: string;
+};
+type WattsCapacityOfferRequest = {
+    window: {
+        start: string;
+        end: string;
+    };
+    capacity_kw?: number;
+    energy_kwh?: number;
+    zone: {
+        country: string;
+        zone_id?: string;
+    };
+    carbon_intensity_gco2_kwh?: number;
+    firmness?: "firm" | "flex";
+    producer_ref?: string;
+    label?: string;
+};
+type WattsCapacityOfferResponse = {
+    offer_id: string;
+    status: string;
+    firmness: string;
+    disclaimer: string;
+    meta?: ProtocolMeta;
+};
+type WattsOffersListResponse = {
+    offers: WattsCapacityOfferResponse[];
+    count: number;
+    meta?: ProtocolMeta;
+};
+type WattsOffersMatchResponse = {
+    matches: Array<{
+        offer_id: string;
+        match_score: number;
+        match_reasons: Array<{
+            code: string;
+            detail: string;
+            delta: number;
+        }>;
+        offer: WattsCapacityOfferResponse;
+    }>;
+    count: number;
+    meta?: ProtocolMeta;
+};
+type WattsSecondaryListingRequest = {
+    reservation_id?: string;
+    indicative_price_eur: number;
+    compare_ref_id?: string;
+    label?: string;
+    note?: string;
+    energy_kwh?: number;
+    capacity_kw?: number;
+    zone?: {
+        country: string;
+        zone_id?: string;
+    };
+    firmness?: "firm" | "flex";
+    cfu_unit_id?: string;
+    cfu_verify_url?: string;
+};
+type WattsSecondaryListingResponse = {
+    listing_id: string;
+    status: string;
+    indicative_price_eur: number;
+    compare_ref_id?: string | null;
+    compare_url?: string | null;
+    interest_count: number;
+    disclaimer: string;
+    rwa_hint?: string;
+    meta?: ProtocolMeta;
+};
+type WattsSecondaryListResponse = {
+    listings: WattsSecondaryListingResponse[];
+    count: number;
+    meta?: ProtocolMeta;
+};
 
 declare class AurosProtocol {
     private readonly apiKey;
@@ -704,6 +818,28 @@ declare class AurosProtocol {
     retireChargeflow(id: string, body?: {
         reason?: string;
     }): Promise<ChargeflowResponse>;
+    /** Watts Reserve — create reservation intent (Premium). */
+    wattsReserve(body: WattsReserveRequest): Promise<WattsReserveResponse>;
+    wattsReservation(id: string): Promise<WattsReserveResponse>;
+    wattsConfirm(id: string): Promise<WattsReserveResponse>;
+    wattsSettle(id: string, body?: WattsSettleRequest): Promise<WattsReserveResponse>;
+    wattsCreateOffer(body: WattsCapacityOfferRequest): Promise<WattsCapacityOfferResponse>;
+    wattsOffers(query?: {
+        mine?: boolean;
+        country?: string;
+        status?: "open" | "withdrawn";
+    }): Promise<WattsOffersListResponse>;
+    wattsMatchOffers(body: WattsReserveRequest): Promise<WattsOffersMatchResponse>;
+    wattsWithdrawOffer(id: string): Promise<WattsCapacityOfferResponse>;
+    wattsSecondaryList(body: WattsSecondaryListingRequest): Promise<WattsSecondaryListingResponse>;
+    wattsSecondary(query?: {
+        mine?: boolean;
+    }): Promise<WattsSecondaryListResponse>;
+    wattsSecondaryInterest(id: string, body?: {
+        buyer_ref?: string;
+        note?: string;
+    }): Promise<WattsSecondaryListingResponse>;
+    wattsWithdrawSecondary(id: string): Promise<WattsSecondaryListingResponse>;
     registerWebhook(body: WebhookRegisterRequest): Promise<WebhookRegisterResponse>;
     webhooks(): Promise<WebhooksListResponse>;
     deleteWebhook(id: string): Promise<{
@@ -734,4 +870,4 @@ declare class AurosProtocolError extends Error {
     static fromResponse(status: number, body: ProtocolErrorBody): AurosProtocolError;
 }
 
-export { type AlertType, type AssetClass, type AssetType, type AttestCreateRequest, type AttestPublicSnapshot, type AttestResponse, type AttestVerifyResponse, AurosProtocol, AurosProtocolError, type AurosProtocolOptions, type CarbonQualityScore, type CarbonQualityTier, type ChargeflowBatchErrorItem, type ChargeflowBatchRequestE, type ChargeflowBatchRequestF, type ChargeflowBatchRequestW, type ChargeflowBatchResponse, type ChargeflowBatchSuccessItem, type ChargeflowCreateRequest, type ChargeflowFCreateRequest, type ChargeflowFromOcpiRequest, type ChargeflowFromOcpiResponse, type ChargeflowListItem, type ChargeflowListQuery, type ChargeflowListResponse, type ChargeflowPartnerCatalogEntry, type ChargeflowPartnerId, type ChargeflowPartnerSyncRequest, type ChargeflowPartnerSyncResponse, type ChargeflowPartnersListResponse, type ChargeflowResponse, type ChargeflowVerifyResponse, type ChargeflowWCreateRequest, type ChecklistItem, type ChecklistRequest, type ChecklistResponse, type CompareCellHighlight, type CompareProduct, type CompareRequest, type CompareResponse, type CreateKeyRequest, type CreateKeyResponse, type DossierRequest, type DossierResponse, type DossierSection, type EuNexus, type GreenBatchErrorItem, type GreenBatchItemInput, type GreenCqsBatchRequest, type GreenCqsBatchResponse, type GreenCqsBatchSuccessItem, type GreenCqsPublicResponse, type GreenWattBatchRequest, type GreenWattBatchResponse, type GreenWattBatchSuccessItem, type GreenWattPublicResponse, type InvestorType, type IssuerType, type JurisdictionItem, type JurisdictionsAssetType, type JurisdictionsQuery, type JurisdictionsResponse, type MicaClassification, type MonitorRequest, type MonitorResponse, type ProductCategory, type ProductItem, type ProductsQuery, type ProductsResponse, type ProtocolErrorBody, type ProtocolMeta, type RecommendedJurisdiction, type RecommendedPlatform, type RiskTier, type ScoreBatchErrorItem, type ScoreBatchRequest, type ScoreBatchResponse, type ScoreBatchResultItem, type ScoreBatchSuccessItem, type ScoreBreakdown, type ScoreHistoryEntry, type ScoreHistoryResponse, type ScoreRequest, type ScoreResponse, type ScoreStatus, type WattScore, type WattScoreTier, type WebhookEventType, type WebhookItem, type WebhookRegisterRequest, type WebhookRegisterResponse, type WebhooksListResponse, type WhitepaperStatus };
+export { type AlertType, type AssetClass, type AssetType, type AttestCreateRequest, type AttestPublicSnapshot, type AttestResponse, type AttestVerifyResponse, AurosProtocol, AurosProtocolError, type AurosProtocolOptions, type CarbonQualityScore, type CarbonQualityTier, type ChargeflowBatchErrorItem, type ChargeflowBatchRequestE, type ChargeflowBatchRequestF, type ChargeflowBatchRequestW, type ChargeflowBatchResponse, type ChargeflowBatchSuccessItem, type ChargeflowCreateRequest, type ChargeflowFCreateRequest, type ChargeflowFromOcpiRequest, type ChargeflowFromOcpiResponse, type ChargeflowListItem, type ChargeflowListQuery, type ChargeflowListResponse, type ChargeflowPartnerCatalogEntry, type ChargeflowPartnerId, type ChargeflowPartnerSyncRequest, type ChargeflowPartnerSyncResponse, type ChargeflowPartnersListResponse, type ChargeflowResponse, type ChargeflowVerifyResponse, type ChargeflowWCreateRequest, type ChecklistItem, type ChecklistRequest, type ChecklistResponse, type CompareCellHighlight, type CompareProduct, type CompareRequest, type CompareResponse, type CreateKeyRequest, type CreateKeyResponse, type DossierRequest, type DossierResponse, type DossierSection, type EuNexus, type GreenBatchErrorItem, type GreenBatchItemInput, type GreenCqsBatchRequest, type GreenCqsBatchResponse, type GreenCqsBatchSuccessItem, type GreenCqsPublicResponse, type GreenWattBatchRequest, type GreenWattBatchResponse, type GreenWattBatchSuccessItem, type GreenWattPublicResponse, type InvestorType, type IssuerType, type JurisdictionItem, type JurisdictionsAssetType, type JurisdictionsQuery, type JurisdictionsResponse, type MicaClassification, type MonitorRequest, type MonitorResponse, type ProductCategory, type ProductItem, type ProductsQuery, type ProductsResponse, type ProtocolErrorBody, type ProtocolMeta, type RecommendedJurisdiction, type RecommendedPlatform, type RiskTier, type ScoreBatchErrorItem, type ScoreBatchRequest, type ScoreBatchResponse, type ScoreBatchResultItem, type ScoreBatchSuccessItem, type ScoreBreakdown, type ScoreHistoryEntry, type ScoreHistoryResponse, type ScoreRequest, type ScoreResponse, type ScoreStatus, type WattScore, type WattScoreTier, type WattsCapacityOfferRequest, type WattsCapacityOfferResponse, type WattsOffersListResponse, type WattsOffersMatchResponse, type WattsReserveRequest, type WattsReserveResponse, type WattsSecondaryListResponse, type WattsSecondaryListingRequest, type WattsSecondaryListingResponse, type WattsSettleRequest, type WebhookEventType, type WebhookItem, type WebhookRegisterRequest, type WebhookRegisterResponse, type WebhooksListResponse, type WhitepaperStatus };

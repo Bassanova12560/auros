@@ -762,3 +762,104 @@ export type GreenCqsBatchResponse = {
   items: Array<GreenCqsBatchSuccessItem | GreenBatchErrorItem>;
   meta: ProtocolMeta;
 };
+
+/** Watts Reserve — buyer profile for reserve / offers match */
+export type WattsReserveRequest = {
+  window: { start: string; end: string };
+  energy_kwh?: number;
+  capacity_kw?: number;
+  zone: { country: string; zone_id?: string };
+  carbon_intensity_max_gco2_kwh?: number;
+  firmness?: "firm" | "flex";
+  buyer_ref?: string;
+};
+
+export type WattsReserveResponse = {
+  reservation_id: string;
+  status: string;
+  match_score: number;
+  match_reasons: Array<{ code: string; detail: string; delta: number }>;
+  suggested_unit_kind: "e" | "f";
+  disclaimer: string;
+  next_step: string;
+  cfu_unit_id?: string | null;
+  cfu_verify_url?: string | null;
+  unit?: ChargeflowResponse;
+  meta?: ProtocolMeta;
+};
+
+export type WattsSettleRequest = {
+  delivery_ref?: string;
+  delivered_at?: string;
+  energy_kwh_delivered?: number;
+  capacity_kw_delivered?: number;
+  reason?: string;
+};
+
+export type WattsCapacityOfferRequest = {
+  window: { start: string; end: string };
+  capacity_kw?: number;
+  energy_kwh?: number;
+  zone: { country: string; zone_id?: string };
+  carbon_intensity_gco2_kwh?: number;
+  firmness?: "firm" | "flex";
+  producer_ref?: string;
+  label?: string;
+};
+
+export type WattsCapacityOfferResponse = {
+  offer_id: string;
+  status: string;
+  firmness: string;
+  disclaimer: string;
+  meta?: ProtocolMeta;
+};
+
+export type WattsOffersListResponse = {
+  offers: WattsCapacityOfferResponse[];
+  count: number;
+  meta?: ProtocolMeta;
+};
+
+export type WattsOffersMatchResponse = {
+  matches: Array<{
+    offer_id: string;
+    match_score: number;
+    match_reasons: Array<{ code: string; detail: string; delta: number }>;
+    offer: WattsCapacityOfferResponse;
+  }>;
+  count: number;
+  meta?: ProtocolMeta;
+};
+
+export type WattsSecondaryListingRequest = {
+  reservation_id?: string;
+  indicative_price_eur: number;
+  compare_ref_id?: string;
+  label?: string;
+  note?: string;
+  energy_kwh?: number;
+  capacity_kw?: number;
+  zone?: { country: string; zone_id?: string };
+  firmness?: "firm" | "flex";
+  cfu_unit_id?: string;
+  cfu_verify_url?: string;
+};
+
+export type WattsSecondaryListingResponse = {
+  listing_id: string;
+  status: string;
+  indicative_price_eur: number;
+  compare_ref_id?: string | null;
+  compare_url?: string | null;
+  interest_count: number;
+  disclaimer: string;
+  rwa_hint?: string;
+  meta?: ProtocolMeta;
+};
+
+export type WattsSecondaryListResponse = {
+  listings: WattsSecondaryListingResponse[];
+  count: number;
+  meta?: ProtocolMeta;
+};

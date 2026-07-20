@@ -49,6 +49,16 @@ import type {
   WebhookRegisterRequest,
   WebhookRegisterResponse,
   WebhooksListResponse,
+  WattsCapacityOfferRequest,
+  WattsCapacityOfferResponse,
+  WattsOffersListResponse,
+  WattsOffersMatchResponse,
+  WattsReserveRequest,
+  WattsReserveResponse,
+  WattsSecondaryListingRequest,
+  WattsSecondaryListingResponse,
+  WattsSecondaryListResponse,
+  WattsSettleRequest,
 } from "./types";
 
 const DEFAULT_BASE_URL = "https://getauros.com";
@@ -261,6 +271,108 @@ export class AurosProtocol {
     return this.post<ChargeflowResponse>(
       `/api/v1/chargeflow/${encodeURIComponent(id)}/retire`,
       body
+    );
+  }
+
+  /** Watts Reserve — create reservation intent (Premium). */
+  async wattsReserve(body: WattsReserveRequest): Promise<WattsReserveResponse> {
+    return this.post<WattsReserveResponse>("/api/v1/watts/reserve", body);
+  }
+
+  async wattsReservation(id: string): Promise<WattsReserveResponse> {
+    return this.get<WattsReserveResponse>(
+      `/api/v1/watts/reserve/${encodeURIComponent(id)}`
+    );
+  }
+
+  async wattsConfirm(id: string): Promise<WattsReserveResponse> {
+    return this.post<WattsReserveResponse>(
+      `/api/v1/watts/reserve/${encodeURIComponent(id)}/confirm`,
+      {}
+    );
+  }
+
+  async wattsSettle(
+    id: string,
+    body: WattsSettleRequest = {}
+  ): Promise<WattsReserveResponse> {
+    return this.post<WattsReserveResponse>(
+      `/api/v1/watts/reserve/${encodeURIComponent(id)}/settle`,
+      body
+    );
+  }
+
+  async wattsCreateOffer(
+    body: WattsCapacityOfferRequest
+  ): Promise<WattsCapacityOfferResponse> {
+    return this.post<WattsCapacityOfferResponse>("/api/v1/watts/offers", body);
+  }
+
+  async wattsOffers(query: {
+    mine?: boolean;
+    country?: string;
+    status?: "open" | "withdrawn";
+  } = {}): Promise<WattsOffersListResponse> {
+    const params = new URLSearchParams();
+    if (query.mine) params.set("mine", "1");
+    if (query.country) params.set("country", query.country);
+    if (query.status) params.set("status", query.status);
+    const qs = params.toString();
+    return this.get<WattsOffersListResponse>(
+      `/api/v1/watts/offers${qs ? `?${qs}` : ""}`
+    );
+  }
+
+  async wattsMatchOffers(
+    body: WattsReserveRequest
+  ): Promise<WattsOffersMatchResponse> {
+    return this.post<WattsOffersMatchResponse>(
+      "/api/v1/watts/offers/match",
+      body
+    );
+  }
+
+  async wattsWithdrawOffer(id: string): Promise<WattsCapacityOfferResponse> {
+    return this.post<WattsCapacityOfferResponse>(
+      `/api/v1/watts/offers/${encodeURIComponent(id)}/withdraw`,
+      {}
+    );
+  }
+
+  async wattsSecondaryList(
+    body: WattsSecondaryListingRequest
+  ): Promise<WattsSecondaryListingResponse> {
+    return this.post<WattsSecondaryListingResponse>(
+      "/api/v1/watts/secondary",
+      body
+    );
+  }
+
+  async wattsSecondary(query: { mine?: boolean } = {}): Promise<WattsSecondaryListResponse> {
+    const params = new URLSearchParams();
+    if (query.mine) params.set("mine", "1");
+    const qs = params.toString();
+    return this.get<WattsSecondaryListResponse>(
+      `/api/v1/watts/secondary${qs ? `?${qs}` : ""}`
+    );
+  }
+
+  async wattsSecondaryInterest(
+    id: string,
+    body: { buyer_ref?: string; note?: string } = {}
+  ): Promise<WattsSecondaryListingResponse> {
+    return this.post<WattsSecondaryListingResponse>(
+      `/api/v1/watts/secondary/${encodeURIComponent(id)}/interest`,
+      body
+    );
+  }
+
+  async wattsWithdrawSecondary(
+    id: string
+  ): Promise<WattsSecondaryListingResponse> {
+    return this.post<WattsSecondaryListingResponse>(
+      `/api/v1/watts/secondary/${encodeURIComponent(id)}/withdraw`,
+      {}
     );
   }
 

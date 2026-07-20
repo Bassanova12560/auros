@@ -14,6 +14,8 @@ import {
   WATTS_SECONDARY_ROUTE,
 } from "@/lib/watts";
 
+import { WattsFlowNav } from "../_components/WattsFlowNav";
+
 type MatchReason = { code: string; detail: string; delta: number };
 
 type ReserveResult = {
@@ -192,6 +194,7 @@ export function WattsReserveView() {
             Matching indicatif, confirm pour mint CFU, settle pour retire à la
             livraison — trois actions explicites.
           </p>
+          <WattsFlowNav />
         </header>
 
         <section className="space-y-6 border border-white/[0.08] bg-black/50 p-6 backdrop-blur-sm md:p-8">
@@ -447,14 +450,23 @@ export function WattsReserveView() {
                     delivery · {result.delivery_ref}
                   </p>
                 ) : null}
-                {(result.cfu_verify_url ?? result.unit?.verify_url) ? (
-                  <PrimaryButton
-                    href={result.cfu_verify_url ?? result.unit?.verify_url}
-                    variant="ghost"
-                  >
-                    Voir la CFU retired
-                  </PrimaryButton>
-                ) : null}
+                <div className="flex flex-wrap gap-2">
+                  {(result.cfu_verify_url ?? result.unit?.verify_url) ? (
+                    <PrimaryButton
+                      href={result.cfu_verify_url ?? result.unit?.verify_url}
+                      variant="ghost"
+                    >
+                      Voir la CFU retired
+                    </PrimaryButton>
+                  ) : null}
+                  {result.reservation_id ? (
+                    <PrimaryButton
+                      href={`${WATTS_SECONDARY_ROUTE}?reservation_id=${encodeURIComponent(result.reservation_id)}`}
+                    >
+                      Lister au secondaire
+                    </PrimaryButton>
+                  ) : null}
+                </div>
               </div>
             ) : null}
           </section>

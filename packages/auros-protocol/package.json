@@ -1,6 +1,6 @@
 {
   "name": "@adrien1212balitrand/auros-protocol",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "Official TypeScript SDK for the AUROS Protocol — RWA intelligence API",
   "license": "MIT",
   "type": "module",

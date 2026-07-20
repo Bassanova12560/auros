@@ -1,11 +1,12 @@
 # AUROS Watts Reserve
 
-**Status:** étape 5 · secondaire + RWA prep  
+**Status:** étapes 1–5 + productisation (nav · docs · SDK)  
 **Positioning:** AUROS réserve, prouve et tokenize les watts critiques.  
 **Routes:**
 - `/green/chargeflow/reserve` — buyer flow
 - `/green/chargeflow/inventory` — producer inventory
 - `/green/chargeflow/secondary` — secondary listings + RWA hook
+- Docs Protocol : `/developers/docs/endpoint-watts-reserve`
 
 **API:**
 - Reserve · confirm · settle (+ `/demo*`)

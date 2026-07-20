@@ -284,6 +284,11 @@ await client.createChargeflowEBatch({ items: [/* … */] });`}
               </Link>
             </li>
             <li>
+              <Link href="/developers/docs/endpoint-watts-reserve" className="hover:text-white">
+                Docs Watts Reserve →
+              </Link>
+            </li>
+            <li>
               <Link href="/developers/dashboard" className="hover:text-white">
                 Dashboard usage API →
               </Link>

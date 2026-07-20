@@ -10,6 +10,8 @@ import {
 } from "@/lib/chargeflow/constants";
 import { WATTS_RESERVE_DISCLAIMER, WATTS_RESERVE_ROUTE, WATTS_SECONDARY_ROUTE } from "@/lib/watts";
 
+import { WattsFlowNav } from "../_components/WattsFlowNav";
+
 type Offer = {
   offer_id: string;
   status: string;
@@ -208,6 +210,7 @@ export function WattsInventoryView() {
             Publiez une fenêtre de capacité, parcourez l’inventaire ouvert, et
             matchtez un profil acheteur — indicatif, sans engagement.
           </p>
+          <WattsFlowNav />
         </header>
 
         <section className="space-y-6 border border-white/[0.08] bg-black/50 p-6 backdrop-blur-sm md:p-8">

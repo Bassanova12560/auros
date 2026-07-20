@@ -146,6 +146,62 @@ describe("@adrien1212balitrand/auros-protocol SDK", () => {
     assert.equal(result.status, "retired");
   });
 
+  it("wattsReserve() posts profile intent", async () => {
+    const client = new AurosProtocol({
+      apiKey: "auros_pk_live_xxx",
+      fetch: mockFetch((url, init) => {
+        assert.ok(url.endsWith("/api/v1/watts/reserve"));
+        assert.equal(init?.method, "POST");
+        return Response.json({
+          reservation_id: "11111111-1111-1111-1111-111111111111",
+          status: "pending_confirm",
+          match_score: 85,
+          match_reasons: [],
+          suggested_unit_kind: "e",
+          disclaimer: "test",
+          next_step: "confirm",
+        });
+      }),
+    });
+    const result = await client.wattsReserve({
+      window: {
+        start: "2026-07-20T18:00:00.000Z",
+        end: "2026-07-20T22:00:00.000Z",
+      },
+      energy_kwh: 20,
+      zone: { country: "FR" },
+      firmness: "firm",
+    });
+    assert.equal(result.status, "pending_confirm");
+    assert.equal(result.match_score, 85);
+  });
+
+  it("wattsSecondaryList() posts listing", async () => {
+    const client = new AurosProtocol({
+      apiKey: "auros_pk_live_xxx",
+      fetch: mockFetch((url, init) => {
+        assert.ok(url.endsWith("/api/v1/watts/secondary"));
+        assert.equal(init?.method, "POST");
+        return Response.json({
+          listing_id: "22222222-2222-2222-2222-222222222222",
+          status: "open",
+          indicative_price_eur: 1200,
+          interest_count: 0,
+          disclaimer: "test",
+          compare_url: "/compare?ids=prod",
+        });
+      }),
+    });
+    const result = await client.wattsSecondaryList({
+      indicative_price_eur: 1200,
+      energy_kwh: 50,
+      zone: { country: "FR" },
+      compare_ref_id: "prod",
+    });
+    assert.equal(result.status, "open");
+    assert.equal(result.indicative_price_eur, 1200);
+  });
+
   it("listChargeflow() gets with query", async () => {
     const client = new AurosProtocol({
       apiKey: "auros_pk_live_xxx",

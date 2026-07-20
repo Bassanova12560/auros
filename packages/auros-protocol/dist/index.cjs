@@ -198,6 +198,78 @@ var AurosProtocol = class {
       body
     );
   }
+  /** Watts Reserve — create reservation intent (Premium). */
+  async wattsReserve(body) {
+    return this.post("/api/v1/watts/reserve", body);
+  }
+  async wattsReservation(id) {
+    return this.get(
+      `/api/v1/watts/reserve/${encodeURIComponent(id)}`
+    );
+  }
+  async wattsConfirm(id) {
+    return this.post(
+      `/api/v1/watts/reserve/${encodeURIComponent(id)}/confirm`,
+      {}
+    );
+  }
+  async wattsSettle(id, body = {}) {
+    return this.post(
+      `/api/v1/watts/reserve/${encodeURIComponent(id)}/settle`,
+      body
+    );
+  }
+  async wattsCreateOffer(body) {
+    return this.post("/api/v1/watts/offers", body);
+  }
+  async wattsOffers(query = {}) {
+    const params = new URLSearchParams();
+    if (query.mine) params.set("mine", "1");
+    if (query.country) params.set("country", query.country);
+    if (query.status) params.set("status", query.status);
+    const qs = params.toString();
+    return this.get(
+      `/api/v1/watts/offers${qs ? `?${qs}` : ""}`
+    );
+  }
+  async wattsMatchOffers(body) {
+    return this.post(
+      "/api/v1/watts/offers/match",
+      body
+    );
+  }
+  async wattsWithdrawOffer(id) {
+    return this.post(
+      `/api/v1/watts/offers/${encodeURIComponent(id)}/withdraw`,
+      {}
+    );
+  }
+  async wattsSecondaryList(body) {
+    return this.post(
+      "/api/v1/watts/secondary",
+      body
+    );
+  }
+  async wattsSecondary(query = {}) {
+    const params = new URLSearchParams();
+    if (query.mine) params.set("mine", "1");
+    const qs = params.toString();
+    return this.get(
+      `/api/v1/watts/secondary${qs ? `?${qs}` : ""}`
+    );
+  }
+  async wattsSecondaryInterest(id, body = {}) {
+    return this.post(
+      `/api/v1/watts/secondary/${encodeURIComponent(id)}/interest`,
+      body
+    );
+  }
+  async wattsWithdrawSecondary(id) {
+    return this.post(
+      `/api/v1/watts/secondary/${encodeURIComponent(id)}/withdraw`,
+      {}
+    );
+  }
   async registerWebhook(body) {
     return this.post("/api/v1/webhooks", body);
   }
