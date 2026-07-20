@@ -120,17 +120,15 @@ export async function publishWetsReportAction(projectId: string) {
     : { ok: true as const, slug: pub.slug!, grade: report.grade, score: report.final_score };
 }
 
-export async function createWetsRiskEventAction(formData: FormData) {
+export async function createWetsRiskEventAction(formData: FormData): Promise<void> {
   const { userId } = await auth();
-  if (!userId) return { ok: false as const, error: "auth_required" };
+  if (!userId) return;
 
   const region = String(formData.get("region") ?? "").trim();
   const event_type = String(formData.get("event_type") ?? "").trim();
-  if (!region || !event_type) {
-    return { ok: false as const, error: "invalid_input" };
-  }
+  if (!region || !event_type) return;
 
-  const { error } = await createWetsRiskEvent({
+  await createWetsRiskEvent({
     region,
     event_type,
     description: String(formData.get("description") ?? "").trim() || undefined,
@@ -145,7 +143,4 @@ export async function createWetsRiskEventAction(formData: FormData) {
       String(formData.get("related_project_id") ?? "").trim() || undefined,
   });
   revalidatePath(`${WETS_CONSOLE_ROUTE}/risk-events`);
-  return error
-    ? { ok: false as const, error }
-    : { ok: true as const };
 }
