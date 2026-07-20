@@ -8,7 +8,9 @@ import { PrimaryButton } from "@/app/_components/ui/PrimaryButton";
 import { metadataFromPath } from "@/lib/seo/metadata";
 import { SHIELD_SLA } from "@/lib/shield";
 
+import { ShieldAuditTrailPanel } from "../_components/ShieldAuditTrailPanel";
 import { ShieldEvidencePackPanel } from "../_components/ShieldEvidencePackPanel";
+import { ShieldVerifyResealPanel } from "../_components/ShieldVerifyResealPanel";
 
 export const SHIELD_BANKS_ROUTE = "/developers/shield/banks";
 
@@ -16,7 +18,7 @@ export const metadata: Metadata = {
   ...metadataFromPath(SHIELD_BANKS_ROUTE),
   title: "Evidence Pack banque | AUROS Shield",
   description:
-    "Joindre un Evidence Pack hash-only au dossier crédit / ESG — sans data room. Pack exemple + bank actions.",
+    "Joindre un Evidence Pack hash-only au dossier crédit / ESG — verify, reseal PQC, trail continu. Sans data room.",
 };
 
 export default function ShieldBanksPage() {
@@ -27,7 +29,7 @@ export default function ShieldBanksPage() {
         <ContentPageLayout
           eyebrow="AUROS Shield · Banques"
           title="Joindre la preuve au dossier — pas la data room"
-          intro="Quand chaque contrepartie a des RWA, risk/credit veulent un livrable scellé, vérifiable, sans ouvrir les fichiers bruts. C’est l’Evidence Pack."
+          intro="Risk/credit veulent un livrable scellé, vérifiable, sans ouvrir les fichiers bruts. Evidence Pack + verify + trail d’éditions."
           cta={{
             href: "#evidence-pack",
             label: "Générer un pack",
@@ -39,24 +41,27 @@ export default function ShieldBanksPage() {
               <ol className="list-decimal space-y-2 pl-5 text-sm text-white/65">
                 <li>Mint / importez des CFU (console ChargeFlow ou API).</li>
                 <li>
-                  Premium : générez le pack ci-dessous (HTML imprimable → PDF).
+                  Premium : Evidence Pack HTML ci-dessous (print → PDF).
                 </li>
                 <li>
-                  La banque re-vérifie via{" "}
-                  <code>POST /api/v1/shield/verify</code> — sans payload.
+                  Banque :{" "}
+                  <code>POST /api/v1/shield/verify</code> — sans payload. Diff
+                  pack_hash entre éditions.
                 </li>
               </ol>
             </section>
 
-            <div id="evidence-pack">
+            <div id="evidence-pack" className="space-y-6">
               <ShieldEvidencePackPanel />
+              <ShieldVerifyResealPanel />
+              <ShieldAuditTrailPanel />
             </div>
 
             <section className="space-y-3">
               <h2 className="font-display text-lg text-white">Bank actions</h2>
               <ul className="space-y-2 text-sm text-white/65">
                 <li>Attacher le pack au dossier crédit / ESG</li>
-                <li>Diff pack_hash entre éditions (monitoring continu)</li>
+                <li>Diff pack_hash entre éditions (trail ci-dessus)</li>
                 <li>
                   Lire <code>generation_source</code> (nucléaire →{" "}
                   <Link href="/power" className="text-white/85 underline">
@@ -64,7 +69,10 @@ export default function ShieldBanksPage() {
                   </Link>
                   , hors Green Verified)
                 </li>
-                <li>Planifier reseal hybrid_pqc_ready (rétention 7–30 ans)</li>
+                <li>
+                  Planifier reseal <code>hybrid_pqc_ready</code> (rétention{" "}
+                  {SHIELD_SLA.receipt_retention_years_min}–30 ans)
+                </li>
               </ul>
             </section>
 
@@ -75,17 +83,24 @@ export default function ShieldBanksPage() {
                 latence p99 cible {SHIELD_SLA.verify_latency_p99_ms_target} ms ·{" "}
                 {SHIELD_SLA.note}
               </p>
+              <p className="text-sm text-white/45">
+                Uptime mesuré :{" "}
+                <Link href="/status" className="underline underline-offset-2">
+                  /status
+                </Link>
+                .
+              </p>
             </section>
 
             <div className="flex flex-wrap gap-3">
-              <PrimaryButton href="/examples/shield-evidence-pack.example.json">
-                Pack exemple JSON
+              <PrimaryButton href="/developers/institutions">
+                Console institutions
               </PrimaryButton>
               <PrimaryButton
-                href="/developers/shield/banks/sample"
+                href="/examples/shield-evidence-pack.example.json"
                 variant="ghost"
               >
-                Modèle imprimable
+                Pack exemple JSON
               </PrimaryButton>
               <PrimaryButton href="/green/chargeflow/console" variant="ghost">
                 Console CFU

@@ -5,39 +5,34 @@ import { useEffect, useState } from "react";
 
 import { PrimaryButton } from "@/app/_components/ui/PrimaryButton";
 
-const STORAGE_KEY = "auros_protocol_premium_key";
+import { useProtocolPremiumKey } from "./useProtocolPremiumKey";
 
 type Props = {
-  /** Compact embed for console / power */
   compact?: boolean;
   className?: string;
+  /** Prefill pack label (e.g. dossier id) */
+  initialLabel?: string;
 };
 
 /**
  * Self-serve Evidence Pack — Premium Bearer → HTML annex (print → PDF).
- * Pack is built from CFU taps scoped to the API key (not a free-text CFU list).
  */
 export function ShieldEvidencePackPanel({
   compact = false,
   className = "",
+  initialLabel,
 }: Props) {
-  const [apiKey, setApiKey] = useState("");
-  const [label, setLabel] = useState("bank-credit-file");
+  const { apiKey, setApiKey } = useProtocolPremiumKey();
+  const [label, setLabel] = useState(initialLabel?.trim() || "bank-credit-file");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [packId, setPackId] = useState<string | null>(null);
+  const [packHash, setPackHash] = useState<string | null>(null);
   const [hint, setHint] = useState<string | null>(null);
 
   useEffect(() => {
-    try {
-      const stored =
-        sessionStorage.getItem(STORAGE_KEY) ??
-        sessionStorage.getItem("auros_chargeflow_console_key");
-      if (stored) setApiKey(stored);
-    } catch {
-      /* ignore */
-    }
-  }, []);
+    if (initialLabel?.trim()) setLabel(initialLabel.trim());
+  }, [initialLabel]);
 
   async function generate(format: "json" | "html") {
     const key = apiKey.trim();
@@ -48,9 +43,9 @@ export function ShieldEvidencePackPanel({
     setBusy(true);
     setError(null);
     setPackId(null);
+    setPackHash(null);
     setHint(null);
     try {
-      sessionStorage.setItem(STORAGE_KEY, key);
       const res = await fetch(`/api/v1/shield/pack?format=${format}`, {
         method: "POST",
         headers: {
@@ -68,6 +63,8 @@ export function ShieldEvidencePackPanel({
         if (!res.ok) {
           const json = (await res.json().catch(() => null)) as {
             error?: { message?: string };
+            pack_id?: string;
+            pack_hash?: string;
           } | null;
           setError(
             json?.error?.message ??
@@ -81,13 +78,16 @@ export function ShieldEvidencePackPanel({
         const blob = new Blob([html], { type: "text/html;charset=utf-8" });
         const url = URL.createObjectURL(blob);
         window.open(url, "_blank", "noopener,noreferrer");
-        setHint("Annex HTML ouverte — Ctrl/Cmd+P pour PDF.");
+        setHint(
+          "Annex HTML ouverte — Ctrl/Cmd+P pour PDF. Rechargez le trail pour voir l’édition."
+        );
         setPackId("html");
         return;
       }
 
       const json = (await res.json()) as {
         pack_id?: string;
+        pack_hash?: string;
         print_hint?: string;
         error?: { message?: string };
       };
@@ -101,6 +101,7 @@ export function ShieldEvidencePackPanel({
         return;
       }
       setPackId(json.pack_id ?? "ok");
+      setPackHash(json.pack_hash ?? null);
       setHint(json.print_hint ?? null);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Erreur réseau");
@@ -119,8 +120,8 @@ export function ShieldEvidencePackPanel({
             Evidence Pack · self-serve
           </p>
           <p className="text-sm leading-relaxed text-white/55">
-            Générez un annex hash-only à partir des CFU / taps liés à votre clé
-            Premium. Indicatif — pas un conseil crédit.
+            Annex hash-only (CFU + taps) pour dossier crédit / ESG — sans data
+            room. Indicatif — pas un conseil crédit.
           </p>
         </div>
       ) : (
@@ -185,10 +186,17 @@ export function ShieldEvidencePackPanel({
         </p>
       ) : null}
       {packId && !error ? (
-        <p className="text-sm text-emerald-400/85">
-          Pack prêt{packId !== "html" ? ` · ${packId}` : ""}.
-          {hint ? ` ${hint}` : ""}
-        </p>
+        <div className="space-y-1 text-sm text-emerald-400/85">
+          <p>
+            Pack prêt{packId !== "html" ? ` · ${packId}` : ""}.
+            {hint ? ` ${hint}` : ""}
+          </p>
+          {packHash ? (
+            <p className="break-all font-mono text-[10px] text-white/40">
+              pack_hash {packHash}
+            </p>
+          ) : null}
+        </div>
       ) : null}
     </div>
   );
