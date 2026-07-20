@@ -48,9 +48,10 @@ export function PowerHubView() {
           Power
         </h1>
         <p className="page-intro">
-          Nucléaire, hydro bas-carbone et mix — réserver, prouver, joindre au
-          dossier. Indicatif, explicite, counsel requis. Ce hub n&apos;ouvre
-          pas le label RTMS renouvelable.
+          Preuves &amp; scores bas-carbone pour plateformes et risk desks — pas
+          un marketplace. Nucléaire, hydro et mix : réserver, prouver via CFU,
+          joindre Evidence Pack (<code className="text-white/70">generation_source</code>
+          ). Indicatif, hors Green Verified, counsel requis.
         </p>
         <div className="flex flex-wrap items-center gap-3 pt-2">
           <PrimaryButton href={RESERVE_NUCLEAR}>

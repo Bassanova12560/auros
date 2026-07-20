@@ -8,6 +8,8 @@ import {
   verifyAttestSignature,
 } from "@/lib/protocol/attest";
 
+import { AttestCopyLink } from "./_components/AttestCopyLink";
+
 export const dynamic = "force-dynamic";
 
 type PageProps = { params: Promise<{ id: string }> };
@@ -62,7 +64,7 @@ export default async function AttestVerifyPage({ params }: PageProps) {
         </h1>
         <p
           className={`mt-2 font-mono text-xs uppercase tracking-wider ${
-            valid ? "text-white/70" : "text-white/45"
+            valid ? "text-emerald-400/90" : "text-red-400/90"
           }`}
         >
           {valid ? "Signature valid" : "Signature invalid"}
@@ -122,6 +124,7 @@ export default async function AttestVerifyPage({ params }: PageProps) {
         <p className="mt-10 text-sm leading-relaxed text-white/45">{record.disclaimer}</p>
 
         <div className="mt-8 flex flex-wrap gap-4">
+          <AttestCopyLink attestId={record.id} />
           <Link
             href={`/verify?id=${encodeURIComponent(record.id)}`}
             className="font-mono text-xs uppercase tracking-wider text-white/55 underline-offset-4 hover:text-white hover:underline"

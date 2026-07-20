@@ -16,6 +16,7 @@ export function ShieldVerifyResealPanel({ className = "" }: { className?: string
   const [busy, setBusy] = useState<"verify" | "reseal" | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [verifyOut, setVerifyOut] = useState<string | null>(null);
+  const [publicVerifyUrl, setPublicVerifyUrl] = useState<string | null>(null);
   const [resealOut, setResealOut] = useState<string | null>(null);
 
   async function verify() {
@@ -27,6 +28,7 @@ export function ShieldVerifyResealPanel({ className = "" }: { className?: string
     setBusy("verify");
     setError(null);
     setVerifyOut(null);
+    setPublicVerifyUrl(null);
     try {
       const res = await fetch("/api/v1/shield/verify", {
         method: "POST",
@@ -45,6 +47,8 @@ export function ShieldVerifyResealPanel({ className = "" }: { className?: string
         setError(json.error?.message ?? `HTTP ${res.status}`);
         return;
       }
+      const rid = json.id ?? id;
+      setPublicVerifyUrl(`/verify?id=${encodeURIComponent(rid)}`);
       setVerifyOut(
         `valid=${String(json.valid)} · ${json.content_hash?.slice(0, 16) ?? "—"}… · payload_retained=${String(json.payload_retained)} · ${json.freemium ?? "verify"}`
       );
@@ -174,9 +178,36 @@ export function ShieldVerifyResealPanel({ className = "" }: { className?: string
         </p>
       ) : null}
       {verifyOut ? (
-        <p className="break-all font-mono text-[11px] text-emerald-400/85">
-          {verifyOut}
-        </p>
+        <div className="space-y-2">
+          <p className="break-all font-mono text-[11px] text-emerald-400/85">
+            {verifyOut}
+          </p>
+          {publicVerifyUrl ? (
+            <p className="text-xs text-white/50">
+              Lien risk desk :{" "}
+              <Link
+                href={publicVerifyUrl}
+                className="font-mono text-emerald-300/90 underline-offset-2 hover:underline"
+              >
+                {publicVerifyUrl}
+              </Link>
+              {" · "}
+              <button
+                type="button"
+                className="font-mono text-[11px] text-white/45 underline-offset-2 hover:underline"
+                onClick={() => {
+                  const absolute =
+                    typeof window !== "undefined"
+                      ? `${window.location.origin}${publicVerifyUrl}`
+                      : publicVerifyUrl;
+                  void navigator.clipboard?.writeText(absolute);
+                }}
+              >
+                Copier
+              </button>
+            </p>
+          ) : null}
+        </div>
       ) : null}
       {resealOut ? (
         <p className="break-all font-mono text-[11px] text-amber-200/80">

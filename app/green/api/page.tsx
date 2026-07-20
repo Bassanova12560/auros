@@ -106,6 +106,12 @@ const ENDPOINTS = [
   },
   {
     method: "POST",
+    path: "/api/green/eau/legal-risk",
+    desc: "WELHR — risque hydrique & legal local (data center / eau / énergie)",
+    free: true,
+  },
+  {
+    method: "POST",
     path: "/api/v1/green/h2o/batch",
     desc: "Batch H₂O — tier premium requis (pas une clé free auros_pk_live_*)",
     free: false,
@@ -137,12 +143,13 @@ export default async function GreenApiPage({
             AUROS Green API
           </p>
           <h1 className="font-display text-3xl font-medium text-white md:text-4xl">
-            Le standard ouvert pour scorer le Green RWA
+            Preuves & scores pour plateformes — pas un marketplace
           </h1>
           <p className="mx-auto max-w-2xl text-sm leading-relaxed text-white/55">
-            CQS, Watt Score, Green Index — gratuit en lecture pour devenir la référence.
-            Clé API free : {FREE_TIER_MONTHLY_LIMIT} req/mois. Sans clé : {GREEN_ANON_DAILY_LIMIT}{" "}
-            req/jour/IP.
+            CQS, Watt, H₂O, WELHR — signaux machine pour due diligence. Score ≠
+            GO/REC ; CFU = preuve de flux. Gratuit en lecture pour devenir la
+            référence. Clé free : {FREE_TIER_MONTHLY_LIMIT} req/mois. Sans clé :{" "}
+            {GREEN_ANON_DAILY_LIMIT} req/jour/IP.
           </p>
         </header>
 

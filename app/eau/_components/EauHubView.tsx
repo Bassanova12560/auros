@@ -48,6 +48,7 @@ export function EauHubView() {
   ] as const;
 
   const moreLinks = [
+    { href: "/eau/risk", label: locale === "en" ? "WELHR risk score" : "Score WELHR" },
     { href: "/comment-tokeniser/eau", label: copy.links.guide },
     { href: "/eau/embed/docs", label: copy.links.embed },
     { href: GREEN_REGISTRY_ROUTE, label: copy.links.registry },
@@ -69,6 +70,13 @@ export function EauHubView() {
 
       <div className="mt-8 flex flex-wrap gap-3">
         <PrimaryButton href="#passport">{copy.checkerCta}</PrimaryButton>
+        <PrimaryButton href="/eau/risk" variant="ghost">
+          {locale === "en"
+            ? "Legal & hydro risk"
+            : locale === "es"
+              ? "Riesgo legal e hídrico"
+              : "Risque legal & hydrique"}
+        </PrimaryButton>
         <PrimaryButton href="/eau/chargeflow" variant="ghost">
           CFU-W
         </PrimaryButton>

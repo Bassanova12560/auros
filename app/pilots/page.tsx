@@ -33,9 +33,9 @@ const PILOTS = [
     id: "platform",
     title: "Plateforme → issuer pipeline",
     who: "Petite place RWA",
-    success: "3 dossiers dossier-ready soumis",
-    href: "/partners",
-    cta: "Partenaires",
+    success: "Verify embarqué + 3 dossiers soumis",
+    href: "/platforms",
+    cta: "Hub plateformes",
   },
 ] as const;
 

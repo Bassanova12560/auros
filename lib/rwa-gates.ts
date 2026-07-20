@@ -69,16 +69,16 @@ export const RWA_GATES: readonly RwaGate[] = [
   {
     id: "impact_proof",
     step: 4,
-    title: "Preuve impact / énergie",
+    title: "Preuve impact / risque hydrique",
     counterpartyGets:
-      "Signaux Green / Eau / CFU Power — export machine, pas un claim marketing.",
+      "WELHR (stress + litige local + social license) et signaux Green / CFU — export machine, pas un claim marketing.",
     whyCompetitorsMiss:
-      "ESG déclaratif. Les indices et CFU AUROS sont consommables en API / licence data.",
-    primaryHref: "/data/licence",
-    primaryLabel: "Licence data",
-    secondaryHref: "/power",
-    secondaryLabel: "Low-carbon Power",
-    apiHint: "Green API Premium · CFU export · Power hors Green Verified",
+      "ESG déclaratif. Aucune marketplace ne score le risque de blocage par l’autorité locale de l’eau.",
+    primaryHref: "/eau/risk",
+    primaryLabel: "Score WELHR",
+    secondaryHref: "/data/licence",
+    secondaryLabel: "Licence data",
+    apiHint: "POST /api/green/eau/legal-risk · Green API · CFU / Power hors Green Verified",
   },
   {
     id: "embedded_verify",

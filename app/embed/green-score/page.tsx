@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 
 type ScorePayload = {
   ok: boolean;
@@ -20,17 +20,13 @@ type ScorePayload = {
 export default function EmbedGreenScorePage({
   searchParams,
 }: {
-  searchParams: Promise<{ id?: string }>;
+  searchParams: Promise<{ id?: string; theme?: string }>;
 }) {
-  const [id, setId] = useState("toucan");
+  const sp = use(searchParams);
+  const id = (sp.id?.trim() || "toucan").toLowerCase();
+  const theme = sp.theme === "light" ? "light" : "dark";
   const [data, setData] = useState<ScorePayload | null>(null);
   const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    void searchParams.then((sp) => {
-      if (sp.id) setId(sp.id);
-    });
-  }, [searchParams]);
 
   useEffect(() => {
     setLoading(true);
@@ -43,9 +39,19 @@ export default function EmbedGreenScorePage({
       .catch(() => setLoading(false));
   }, [id]);
 
+  const dark = theme === "dark";
+  const shell = dark
+    ? "rounded-xl border border-emerald-500/30 bg-[#0a0f0d] p-4 font-sans text-white shadow-lg"
+    : "rounded-xl border border-emerald-600/30 bg-[#f8faf9] p-4 font-sans text-slate-900 shadow-md";
+  const muted = dark ? "text-white/40" : "text-slate-500";
+  const accent = dark ? "text-emerald-400" : "text-emerald-600";
+  const eyebrow = dark ? "text-emerald-500/80" : "text-emerald-700";
+
   if (loading) {
     return (
-      <div className="min-h-[120px] animate-pulse rounded-xl bg-emerald-950/40 p-4 font-sans text-sm text-emerald-200/60">
+      <div
+        className={`min-h-[120px] animate-pulse ${shell} text-sm ${dark ? "text-emerald-200/60" : "text-emerald-800/50"}`}
+      >
         AUROS Green…
       </div>
     );
@@ -62,45 +68,53 @@ export default function EmbedGreenScorePage({
   const s = data.score;
 
   return (
-    <div className="rounded-xl border border-emerald-500/30 bg-[#0a0f0d] p-4 font-sans text-white shadow-lg">
-      <p className="font-mono text-[10px] uppercase tracking-widest text-emerald-500/80">
+    <div className={shell}>
+      <p
+        className={`font-mono text-[10px] uppercase tracking-widest ${eyebrow}`}
+      >
         AUROS Green Score
       </p>
-      <p className="mt-1 text-sm font-medium text-white/90">{s.name}</p>
+      <p className={`mt-1 text-sm font-medium ${dark ? "text-white/90" : "text-slate-900"}`}>
+        {s.name}
+      </p>
       <div className="mt-3 flex flex-wrap gap-4">
         <div>
-          <p className="text-[10px] uppercase text-white/40">Composite</p>
-          <p className="font-mono text-2xl text-emerald-400">{s.composite_score}</p>
+          <p className={`text-[10px] uppercase ${muted}`}>Composite</p>
+          <p className={`font-mono text-2xl ${accent}`}>{s.composite_score}</p>
         </div>
         {s.carbon_quality ? (
           <div>
-            <p className="text-[10px] uppercase text-white/40">CQS</p>
-            <p className="font-mono text-2xl text-emerald-400">{s.carbon_quality.score}</p>
+            <p className={`text-[10px] uppercase ${muted}`}>CQS</p>
+            <p className={`font-mono text-2xl ${accent}`}>
+              {s.carbon_quality.score}
+            </p>
           </div>
         ) : null}
         {s.watt ? (
           <div>
-            <p className="text-[10px] uppercase text-white/40">Watt</p>
-            <p className="font-mono text-2xl text-emerald-400">{s.watt.rating}</p>
+            <p className={`text-[10px] uppercase ${muted}`}>Watt</p>
+            <p className={`font-mono text-2xl ${accent}`}>{s.watt.rating}</p>
           </div>
         ) : null}
         {s.nature_score ? (
           <div>
-            <p className="text-[10px] uppercase text-white/40">Nature</p>
-            <p className="font-mono text-2xl text-emerald-400">{s.nature_score.score}</p>
+            <p className={`text-[10px] uppercase ${muted}`}>Nature</p>
+            <p className={`font-mono text-2xl ${accent}`}>
+              {s.nature_score.score}
+            </p>
           </div>
         ) : null}
       </div>
       {s.benchmark ? (
-        <p className="mt-2 text-[10px] text-white/45">{s.benchmark.label}</p>
+        <p className={`mt-2 text-[10px] ${muted}`}>{s.benchmark.label}</p>
       ) : null}
       <a
-        href={`https://getauros.com/green/api?utm_source=embed&id=${s.id}`}
+        href={`/green/compare?rwa=${encodeURIComponent(s.id)}&utm_source=embed`}
         target="_blank"
         rel="noopener noreferrer"
-        className="mt-3 inline-block text-[10px] text-emerald-500/70 hover:text-emerald-400"
+        className={`mt-3 inline-block font-mono text-[10px] ${accent} underline-offset-2 hover:underline`}
       >
-        Powered by AUROS →
+        Compare →
       </a>
     </div>
   );
