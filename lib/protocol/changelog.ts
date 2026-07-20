@@ -25,6 +25,24 @@ export type ProtocolChangelogEntry = {
 /** Single source for `/developers/changelog` and GET `/api/v1/changelog`. Newest first. */
 export const PROTOCOL_CHANGELOG: ProtocolChangelogEntry[] = [
   {
+    id: "watts-reserve-step4",
+    date: "2026-07-20",
+    title: "Watts Reserve étape 4 — inventaire capacité",
+    summary:
+      "Producteurs publient des fenêtres de capacité ; matching déterministe profil × offres. UI /green/chargeflow/inventory.",
+    details: [
+      "POST/GET /api/v1/watts/offers (+ demo) · POST …/match · POST …/:id/withdraw.",
+      "Table watt_capacity_offers.",
+      "Pas d’auto-reserve — inventaire indicatif.",
+    ],
+    links: [
+      { href: "/green/chargeflow/inventory", label: "Inventaire" },
+      { href: "/green/chargeflow/reserve", label: "Watts Reserve" },
+    ],
+    tags: ["watts", "inventory", "matching"],
+    status: "released",
+  },
+  {
     id: "watts-reserve-step3",
     date: "2026-07-20",
     title: "Watts Reserve étape 3 — settle / retire",

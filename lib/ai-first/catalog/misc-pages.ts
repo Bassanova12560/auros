@@ -148,9 +148,9 @@ export const wattsReservePage = enrichPage({
   path: "/green/chargeflow/reserve",
   title: "AUROS Watts Reserve | Réserver des watts",
   description:
-    "Réservation d’un profil énergétique, matching déterministe, confirm explicite → mint CFU-E ou CFU-F. Pas de livraison réseau garantie.",
+    "Réservation d’un profil énergétique : matching, confirm → mint CFU, settle → retire. Pas de livraison réseau garantie.",
   summary:
-    "Booking engine des watts : match → confirm (mint CFU) → settle (retire). Wedge flottes/CPO/flex.",
+    "Booking engine des watts : match → confirm → settle. Inventaire producteur en parallèle.",
   contentType: "guide",
   language: "multi",
   indexable: true,
@@ -175,8 +175,45 @@ export const wattsReservePage = enrichPage({
   ],
   relatedPaths: [
     "/green/chargeflow",
+    "/green/chargeflow/inventory",
     "/green/chargeflow/fleets",
-    "/green/chargeflow/flex",
+    "/copilot",
+  ],
+});
+
+export const wattsInventoryPage = enrichPage({
+  id: "watts-inventory",
+  path: "/green/chargeflow/inventory",
+  title: "AUROS Watts Inventory | Capacité producteur",
+  description:
+    "Inventaire de fenêtres de capacité producteur — publier, parcourir, matcher un profil acheteur. Indicatif, pas un PPA.",
+  summary:
+    "Étape 4 Watts Reserve : offres open/withdrawn + matching déterministe profil × inventaire.",
+  contentType: "guide",
+  language: "multi",
+  indexable: true,
+  lastUpdated: "2026-07-20",
+  keywords: [
+    "capacity inventory",
+    "watts offers",
+    "flex kW",
+    "ChargeFlow",
+  ],
+  intents: [
+    "Publier capacité",
+    "Parcourir inventaire watts",
+    "Matcher offres producteur",
+  ],
+  audience: ["producteurs", "CPO", "acheteurs corporate", "développeurs"],
+  facts: [
+    { key: "API", value: "POST /api/v1/watts/offers" },
+    { key: "Match", value: "POST /api/v1/watts/offers/match" },
+    { key: "Garde-fou", value: "Pas d’auto-reserve" },
+  ],
+  relatedPaths: [
+    "/green/chargeflow/reserve",
+    "/green/chargeflow",
+    "/green/chargeflow/fleets",
     "/copilot",
   ],
 });
@@ -189,4 +226,5 @@ export const miscPages = [
   termsPage,
   copilotPage,
   wattsReservePage,
+  wattsInventoryPage,
 ];

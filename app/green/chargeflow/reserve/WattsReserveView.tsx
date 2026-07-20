@@ -8,7 +8,10 @@ import {
   CHARGEFLOW_FLEETS_ROUTE,
   CHARGEFLOW_ROUTE,
 } from "@/lib/chargeflow/constants";
-import { WATTS_RESERVE_DISCLAIMER } from "@/lib/watts";
+import {
+  WATTS_INVENTORY_ROUTE,
+  WATTS_RESERVE_DISCLAIMER,
+} from "@/lib/watts";
 
 type MatchReason = { code: string; detail: string; delta: number };
 
@@ -461,6 +464,13 @@ export function WattsReserveView() {
             {WATTS_RESERVE_DISCLAIMER}
           </p>
           <p className="text-xs text-white/35">
+            <Link
+              href={WATTS_INVENTORY_ROUTE}
+              className="text-white/55 underline-offset-2 hover:underline"
+            >
+              Inventaire
+            </Link>
+            {" · "}
             <Link
               href={CHARGEFLOW_ROUTE}
               className="text-white/55 underline-offset-2 hover:underline"

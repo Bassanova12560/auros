@@ -1,82 +1,76 @@
 # AUROS Watts Reserve
 
-**Status:** étape 3 · intent → confirm → settle/retire  
+**Status:** étape 4 · inventaire capacité producteur  
 **Positioning:** AUROS réserve, prouve et tokenize les watts critiques.  
-**Routes:** `/green/chargeflow/reserve` (demo UI)  
+**Routes:**
+- `/green/chargeflow/reserve` — buyer flow
+- `/green/chargeflow/inventory` — producer inventory
+
 **API:**
-- `POST /api/v1/watts/reserve` (Premium) · `POST …/demo`
-- `GET /api/v1/watts/reserve/:id`
-- `POST /api/v1/watts/reserve/:id/confirm` (Premium) · `POST …/demo/confirm`
-- `POST /api/v1/watts/reserve/:id/settle` (Premium) · `POST …/demo/settle`
+- `POST/GET /api/v1/watts/reserve` · confirm · settle (+ `/demo*`)
+- `POST/GET /api/v1/watts/offers` (Premium) · `GET/POST …/demo`
+- `POST /api/v1/watts/offers/match` · `…/demo/match`
+- `POST /api/v1/watts/offers/:id/withdraw`
 
 ## Flow
 
-1. Buyer submits an energy **profile** → `pending_confirm` + `match_score`
-2. Explicit **confirm** → mint CFU-E (firm) or CFU-F (flex) with `attributes.reservation_id`
-3. Explicit **settle** on delivery → retire linked CFU · status `settled`
+1. Buyer **profile** → `pending_confirm` + `match_score`
+2. Explicit **confirm** → mint CFU-E/F with `attributes.reservation_id`
+3. Explicit **settle** on delivery → retire CFU · `settled`
+4. Producer **lists capacity windows** → open inventory; buyers can rank matches
 
-## Profile
+## Capacity offer
 
-- hourly window (`start` / `end`)
-- `energy_kwh` (firm) **or** `capacity_kw` (flex)
+- window (`start` / `end`, ≤ 7 days)
+- `capacity_kw` (flex) **or** `energy_kwh` (firm)
 - zone (`country`, optional `zone_id`)
-- optional `carbon_intensity_max_gco2_kwh`
-- `firmness`: `firm` | `flex`
+- optional `carbon_intensity_gco2_kwh`, `label`, `producer_ref`
+- status: `open` | `withdrawn`
 
-## Settle body (optional fields)
+## Offer matching (deterministic)
 
-- `delivery_ref` — session / meter / ops reference
-- `delivered_at` — ISO timestamp (defaults to now)
-- `energy_kwh_delivered` / `capacity_kw_delivered`
-- `reason` — free-text note (included in CFU retire reason)
-
-## Matching (deterministic)
-
-Base 50 + valid window (+20) + country (+10) + zone_id (+5) + carbon cap (+10) + targets (+5 each). Cap 100. Invalid windows are rejected.
+Buyer profile × open offers: base 40 + window overlap + country/zone + firmness + carbon + volume cover. No auto-reserve.
 
 ## Guardrails
 
-- No auto-mint / auto-retire — confirm and settle are explicit POSTs
-- Not a GO/REC legal certificate or grid delivery guarantee
+- No auto-mint / auto-retire / auto-reserve from inventory
+- Offers are indicative inventory — not binding PPAs / GO/REC
 - No Tesla/Total partnership claims
-- Premium auth on production; demo is rate-limited
+- Premium auth on production; demo rate-limited
 
 ## Roadmap
 
 | Step | Deliverable |
 |------|-------------|
 | 1 | Intent + match score |
-| 2 | Confirm → mint CFU linked to `reservation_id` |
-| 3 | Settle / retire on delivery (this doc) |
-| 4 | Producer capacity inventory |
+| 2 | Confirm → mint CFU |
+| 3 | Settle / retire on delivery |
+| 4 | Producer capacity inventory (this doc) |
 | 5 | Secondary + RWA |
 
 ## Example (demo)
 
 ```bash
-# 1) Intent
-curl -X POST https://getauros.com/api/v1/watts/reserve/demo \
+# Publish capacity
+curl -X POST https://getauros.com/api/v1/watts/offers/demo \
   -H "Content-Type: application/json" \
   -d '{
     "window": { "start": "2026-07-20T18:00:00.000Z", "end": "2026-07-20T22:00:00.000Z" },
-    "energy_kwh": 20,
+    "capacity_kw": 50,
     "zone": { "country": "FR", "zone_id": "FR-IDF" },
-    "carbon_intensity_max_gco2_kwh": 50,
-    "firmness": "firm"
+    "carbon_intensity_gco2_kwh": 35,
+    "firmness": "flex",
+    "label": "Flex soir IDF"
   }'
 
-# 2) Confirm → mint CFU
-curl -X POST https://getauros.com/api/v1/watts/reserve/demo/confirm \
-  -H "Content-Type: application/json" \
-  -d '{ "reservation_id": "<uuid from step 1>" }'
-
-# 3) Settle → retire CFU
-curl -X POST https://getauros.com/api/v1/watts/reserve/demo/settle \
+# Match buyer profile against open inventory
+curl -X POST https://getauros.com/api/v1/watts/offers/demo/match \
   -H "Content-Type: application/json" \
   -d '{
-    "reservation_id": "<uuid from step 1>",
-    "delivery_ref": "sess_fleet_42",
-    "energy_kwh_delivered": 19.4,
-    "reason": "Session completed"
+    "window": { "start": "2026-07-20T18:00:00.000Z", "end": "2026-07-20T21:00:00.000Z" },
+    "capacity_kw": 20,
+    "zone": { "country": "FR" },
+    "carbon_intensity_max_gco2_kwh": 50,
+    "firmness": "flex"
   }'
 ```

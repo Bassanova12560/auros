@@ -1,8 +1,9 @@
 import { z } from "zod";
 
 export const WATTS_RESERVE_ROUTE = "/green/chargeflow/reserve";
+export const WATTS_INVENTORY_ROUTE = "/green/chargeflow/inventory";
 export const WATTS_RESERVE_DISCLAIMER =
-  "AUROS Watts Reserve is indicative only — not a grid delivery guarantee, GO/REC legal certificate, or investment advice. Confirm/settle operate off-chain CFU proofs — not legal certificates or delivery guarantees.";
+  "AUROS Watts Reserve is indicative only — not a grid delivery guarantee, GO/REC legal certificate, or investment advice. Confirm/settle operate off-chain CFU proofs — not legal certificates or delivery guarantees. Capacity offers are indicative inventory, not binding PPAs.";
 
 export type WattFirmness = "firm" | "flex";
 export type WattSuggestedUnitKind = "e" | "f";
@@ -113,4 +114,83 @@ export type WattReservePublicResponse = {
   energy_kwh_delivered?: number | null;
   capacity_kw_delivered?: number | null;
   settle_reason?: string | null;
+};
+
+/** Étape 4 — producer capacity inventory */
+export type WattOfferStatus = "open" | "withdrawn";
+
+export const wattCapacityOfferRequestSchema = z
+  .object({
+    window: z.object({
+      start: z.string().min(10).max(40),
+      end: z.string().min(10).max(40),
+    }),
+    capacity_kw: z.number().positive().max(1_000_000).optional(),
+    energy_kwh: z.number().positive().max(1_000_000).optional(),
+    zone: z.object({
+      country: z.string().trim().min(2).max(64),
+      zone_id: z.string().trim().max(128).optional(),
+    }),
+    carbon_intensity_gco2_kwh: z.number().min(0).max(2000).optional(),
+    firmness: z.enum(["firm", "flex"]).default("flex"),
+    producer_ref: z.string().trim().max(128).optional(),
+    label: z.string().trim().max(120).optional(),
+  })
+  .superRefine((val, ctx) => {
+    if (val.firmness === "flex" && val.capacity_kw == null) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "capacity_kw is required when firmness is flex",
+        path: ["capacity_kw"],
+      });
+    }
+    if (val.firmness === "firm" && val.energy_kwh == null) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "energy_kwh is required when firmness is firm",
+        path: ["energy_kwh"],
+      });
+    }
+  });
+
+export type WattCapacityOfferRequest = z.infer<
+  typeof wattCapacityOfferRequestSchema
+>;
+
+export type WattCapacityOffer = {
+  id: string;
+  key_hash: string;
+  status: WattOfferStatus;
+  window: { start: string; end: string };
+  capacity_kw: number | null;
+  energy_kwh: number | null;
+  zone: { country: string; zone_id?: string };
+  carbon_intensity_gco2_kwh: number | null;
+  firmness: WattFirmness;
+  producer_ref: string | null;
+  label: string | null;
+  created_at: string;
+  withdrawn_at: string | null;
+};
+
+export type WattCapacityOfferPublic = {
+  offer_id: string;
+  status: WattOfferStatus;
+  window: { start: string; end: string };
+  capacity_kw: number | null;
+  energy_kwh: number | null;
+  zone: { country: string; zone_id?: string };
+  carbon_intensity_gco2_kwh: number | null;
+  firmness: WattFirmness;
+  producer_ref: string | null;
+  label: string | null;
+  created_at: string;
+  disclaimer: string;
+};
+
+export type WattOfferMatch = {
+  offer_id: string;
+  match_score: number;
+  match_reasons: WattMatchReason[];
+  offer: WattCapacityOfferPublic;
 };

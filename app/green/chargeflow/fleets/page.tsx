@@ -42,6 +42,9 @@ export default function ChargeflowFleetsPage() {
               <PrimaryButton href="/green/chargeflow/reserve" variant="ghost">
                 Watts Reserve
               </PrimaryButton>
+              <PrimaryButton href="/green/chargeflow/inventory" variant="ghost">
+                Inventaire
+              </PrimaryButton>
               <PrimaryButton href="/green/api#premium" variant="ghost">
                 Protocol Premium
               </PrimaryButton>

@@ -11,7 +11,7 @@ function nextStepFor(row: WattReservation): string {
     case "confirmed":
       return `POST /api/v1/watts/reserve/${row.id}/settle when delivered — retires the linked CFU (explicit settle only).`;
     case "settled":
-      return "Settled — CFU retired. Producer inventory (étape 4) is next on the roadmap.";
+      return "Settled — CFU retired. Browse producer inventory at /green/chargeflow/inventory.";
     case "cancelled":
       return "Reservation cancelled.";
     default:
@@ -46,11 +46,17 @@ export function wattReservePublicResponse(
 
 export {
   WATTS_RESERVE_ROUTE,
+  WATTS_INVENTORY_ROUTE,
   WATTS_RESERVE_DISCLAIMER,
   wattReserveRequestSchema,
   wattSettleRequestSchema,
+  wattCapacityOfferRequestSchema,
   type WattReserveRequest,
   type WattSettleRequest,
+  type WattCapacityOfferRequest,
+  type WattCapacityOffer,
+  type WattCapacityOfferPublic,
+  type WattOfferMatch,
   type WattReservation,
   type WattReservePublicResponse,
   type WattMatchResult,
@@ -58,10 +64,21 @@ export {
 } from "./types";
 export { matchWattProfile } from "./match";
 export {
+  matchProfileToOffer,
+  rankOffersForProfile,
+  wattOfferPublic,
+} from "./match-offer";
+export {
   insertWattReservation,
   getWattReservation,
   markWattReservationConfirmed,
   markWattReservationSettled,
 } from "./store";
+export {
+  insertWattCapacityOffer,
+  getWattCapacityOffer,
+  listWattCapacityOffers,
+  withdrawWattCapacityOffer,
+} from "./offers-store";
 export { confirmWattReservation } from "./confirm";
 export { settleWattReservation } from "./settle";
