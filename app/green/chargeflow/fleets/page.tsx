@@ -39,6 +39,9 @@ export default function ChargeflowFleetsPage() {
               <PrimaryButton href={CHARGEFLOW_ROUTE}>
                 Essayer la demo CFU-E
               </PrimaryButton>
+              <PrimaryButton href="/green/chargeflow/reserve" variant="ghost">
+                Watts Reserve
+              </PrimaryButton>
               <PrimaryButton href="/green/api#premium" variant="ghost">
                 Protocol Premium
               </PrimaryButton>

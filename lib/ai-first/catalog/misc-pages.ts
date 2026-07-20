@@ -143,6 +143,44 @@ export const copilotPage = enrichPage({
   relatedPaths: ["/compare", "/jurisdictions", "/green/chargeflow", "/developers"],
 });
 
+export const wattsReservePage = enrichPage({
+  id: "watts-reserve",
+  path: "/green/chargeflow/reserve",
+  title: "AUROS Watts Reserve | Profil de watts",
+  description:
+    "Réservation indicative d’un profil énergétique (fenêtre, zone, carbone) — matching déterministe avant mint CFU. Pas de livraison réseau garantie.",
+  summary:
+    "Étape 1 du booking engine des watts : intent pending_confirm + match_score. Confirm→CFU prévu en étape 2. Wedge flottes/CPO/flex.",
+  contentType: "guide",
+  language: "multi",
+  indexable: true,
+  lastUpdated: "2026-07-20",
+  keywords: [
+    "watts reserve",
+    "hourly matching",
+    "CFU",
+    "ChargeFlow",
+    "profil énergétique",
+  ],
+  intents: [
+    "Réserver des watts",
+    "Matching horaire carbone",
+    "Profil énergie flex",
+  ],
+  audience: ["flottes", "CPO", "acheteurs corporate", "développeurs"],
+  facts: [
+    { key: "API", value: "POST /api/v1/watts/reserve" },
+    { key: "Demo", value: "POST /api/v1/watts/reserve/demo" },
+    { key: "Garde-fou", value: "Pas de mint CFU en étape 1" },
+  ],
+  relatedPaths: [
+    "/green/chargeflow",
+    "/green/chargeflow/fleets",
+    "/green/chargeflow/flex",
+    "/copilot",
+  ],
+});
+
 export const miscPages = [
   partnersPage,
   aboutPage,
@@ -150,4 +188,5 @@ export const miscPages = [
   privacyPage,
   termsPage,
   copilotPage,
+  wattsReservePage,
 ];

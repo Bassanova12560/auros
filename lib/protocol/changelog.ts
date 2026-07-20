@@ -25,6 +25,24 @@ export type ProtocolChangelogEntry = {
 /** Single source for `/developers/changelog` and GET `/api/v1/changelog`. Newest first. */
 export const PROTOCOL_CHANGELOG: ProtocolChangelogEntry[] = [
   {
+    id: "watts-reserve-step1",
+    date: "2026-07-20",
+    title: "Watts Reserve étape 1 — reservation intents",
+    summary:
+      "Booking engine des watts : profil horaire × zone × carbone → match_score déterministe. Pas de mint CFU (confirm = étape 2).",
+    details: [
+      "POST /api/v1/watts/reserve (Premium) + /demo + GET /:id.",
+      "UI /green/chargeflow/reserve · table watt_reservations.",
+      "Docs docs/WATTS-RESERVE.md.",
+    ],
+    links: [
+      { href: "/green/chargeflow/reserve", label: "Watts Reserve" },
+      { href: "/green/chargeflow", label: "ChargeFlow" },
+    ],
+    tags: ["watts", "chargeflow", "matching"],
+    status: "released",
+  },
+  {
     id: "auros-copilot-v1",
     date: "2026-07-20",
     title: "AUROS Copilot v1",

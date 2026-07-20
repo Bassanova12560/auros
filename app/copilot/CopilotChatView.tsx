@@ -16,6 +16,7 @@ type ChatTurn = { role: "user" | "assistant"; content: string };
 type Citation = { title: string; url: string };
 
 function contextBannerLabel(ctx: CopilotPageContext): string | null {
+  if (ctx.surface === "watts") return "Contexte : Watts Reserve";
   if (ctx.surface === "chargeflow") return "Contexte : ChargeFlow";
   if (ctx.surface === "green") return "Contexte : AUROS Green";
   if (ctx.surface === "rtms") return "Contexte : RTMS";

@@ -227,6 +227,13 @@ export function ChargeflowPitchView() {
           >
             Copilot
           </Link>
+          {" · "}
+          <Link
+            href="/green/chargeflow/reserve"
+            className="text-white/55 underline-offset-2 hover:underline"
+          >
+            Watts Reserve
+          </Link>
           . Voir{" "}
           <Link
             href="/developers/docs/endpoint-chargeflow"

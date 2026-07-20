@@ -23,6 +23,7 @@ export type CopilotSurface =
   | "chargeflow"
   | "green"
   | "rtms"
+  | "watts"
   | "generic";
 
 export type CopilotPageContext = {
@@ -92,7 +93,8 @@ export function parseCopilotSearchParams(params: {
     raw === "jurisdiction" ||
     raw === "chargeflow" ||
     raw === "green" ||
-    raw === "rtms"
+    raw === "rtms" ||
+    raw === "watts"
       ? raw
       : params.ids
         ? "compare"
@@ -113,6 +115,13 @@ export function parseCopilotSearchParams(params: {
 }
 
 export function suggestionsForContext(ctx: CopilotPageContext): string[] {
+  if (ctx.surface === "watts") {
+    return [
+      "Qu’est-ce qu’une réservation de watts AUROS ?",
+      "Différence firm vs flex (CFU-E / CFU-F) ?",
+      "Que signifie le match_score ?",
+    ];
+  }
   if (ctx.surface === "chargeflow") {
     return [
       "Qu’est-ce que ChargeFlow CFU-E ?",

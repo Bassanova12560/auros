@@ -5,6 +5,7 @@ import { JURISDICTIONS } from "@/lib/jurisdictions/data";
 import {
   CHARGEFLOW_CONSOLE_ROUTE,
   CHARGEFLOW_FLEETS_ROUTE,
+  CHARGEFLOW_RESERVE_ROUTE,
   CHARGEFLOW_ROUTE,
 } from "@/lib/chargeflow/constants";
 import {
@@ -15,6 +16,7 @@ import {
   GREEN_RTMS_ASSISTANT_ROUTE,
   GREEN_STANDARDS_ROUTE,
 } from "@/lib/green/constants";
+import { WATTS_RESERVE_DISCLAIMER, WATTS_RESERVE_ROUTE } from "@/lib/watts";
 
 import type { CopilotCitation, CopilotPageContext } from "./types";
 
@@ -145,6 +147,28 @@ export async function toolCompareProducts(
   };
 }
 
+export function toolExplainWattsReserve(): CopilotToolResult {
+  return {
+    name: "explain_watts_reserve",
+    summary: [
+      "AUROS Watts Reserve (step 1): book an energy profile intent — time window × zone × carbon cap × firmness.",
+      "Returns match_score + reasons. suggested_unit_kind e → CFU-E, f → CFU-F on a later confirm step.",
+      "No CFU mint in step 1. Not a legal GO/REC or grid delivery guarantee.",
+      `UI: ${WATTS_RESERVE_ROUTE}. API: POST /api/v1/watts/reserve (Premium) · /demo for sandbox.`,
+      WATTS_RESERVE_DISCLAIMER,
+    ].join("\n"),
+    citations: [
+      { title: "Watts Reserve", url: `${siteBase()}${WATTS_RESERVE_ROUTE}` },
+      { title: "ChargeFlow", url: `${siteBase()}${CHARGEFLOW_ROUTE}` },
+      { title: "Fleets", url: `${siteBase()}${CHARGEFLOW_FLEETS_ROUTE}` },
+      {
+        title: "Docs",
+        url: `${siteBase()}/developers`,
+      },
+    ],
+  };
+}
+
 export function toolExplainChargeflow(): CopilotToolResult {
   return {
     name: "explain_chargeflow",
@@ -154,13 +178,17 @@ export function toolExplainChargeflow(): CopilotToolResult {
       "- CFU-W: water m³",
       "- CFU-F: capacity kW windows",
       "Premium mint + public verify. Partner connectors (Tesla Fleet / TotalEnergies / OCPI) are format-compatible adapters — not official manufacturer partnerships.",
-      `UI: ${CHARGEFLOW_ROUTE}, fleets ${CHARGEFLOW_FLEETS_ROUTE}, console ${CHARGEFLOW_CONSOLE_ROUTE}.`,
+      `UI: ${CHARGEFLOW_ROUTE}, fleets ${CHARGEFLOW_FLEETS_ROUTE}, reserve ${CHARGEFLOW_RESERVE_ROUTE}, console ${CHARGEFLOW_CONSOLE_ROUTE}.`,
     ].join("\n"),
     citations: [
       { title: "ChargeFlow pitch", url: `${siteBase()}${CHARGEFLOW_ROUTE}` },
       {
         title: "Fleets / CPO",
         url: `${siteBase()}${CHARGEFLOW_FLEETS_ROUTE}`,
+      },
+      {
+        title: "Watts Reserve",
+        url: `${siteBase()}${CHARGEFLOW_RESERVE_ROUTE}`,
       },
       {
         title: "Docs CFU-E",
@@ -325,6 +353,15 @@ export async function runCopilotTools(
     );
   if (wantGreen) {
     results.push(toolExplainGreen(context?.rtms_brief));
+  }
+
+  const wantWatts =
+    context?.surface === "watts" ||
+    /watts.?reserve|r[eé]serv(e|ation).*(watt|kwh|profil)|booking.?engine|match_score|hourly matching/i.test(
+      q
+    );
+  if (wantWatts) {
+    results.push(toolExplainWattsReserve());
   }
 
   const wantChargeflow =

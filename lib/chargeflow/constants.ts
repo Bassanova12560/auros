@@ -2,6 +2,7 @@ export const CHARGEFLOW_ROUTE = "/green/chargeflow";
 export const CHARGEFLOW_W_ROUTE = "/eau/chargeflow";
 export const CHARGEFLOW_F_ROUTE = "/green/chargeflow/flex";
 export const CHARGEFLOW_FLEETS_ROUTE = "/green/chargeflow/fleets";
+export const CHARGEFLOW_RESERVE_ROUTE = "/green/chargeflow/reserve";
 export const CHARGEFLOW_CONSOLE_ROUTE = "/green/chargeflow/console";
 export const CHARGEFLOW_VERIFY_BASE = "/chargeflow";
 export const CHARGEFLOW_BATCH_MAX_ITEMS = 50;
