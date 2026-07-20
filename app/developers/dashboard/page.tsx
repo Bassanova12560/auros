@@ -14,6 +14,7 @@ import {
 import { listMonitorsForKey } from "@/lib/protocol/monitor/store";
 import { computeMonitorRegulatoryDelta } from "@/lib/protocol/monitor/delta";
 import { monitorAssetLimitForRecord } from "@/lib/protocol/auth/premium";
+import { MonitorDeltaList } from "@/app/developers/shield/_components/MonitorDeltaPanel";
 
 export const DEVELOPERS_DASHBOARD_ROUTE = "/developers/dashboard";
 
@@ -169,6 +170,11 @@ export default async function DevelopersDashboardPage({
                       delta {delta.item_count} · impact {delta.impact_sum}
                       {delta.rules_version_changed ? " · ruleset changed" : ""}
                     </p>
+                    {delta.items.length > 0 ? (
+                      <div className="mt-2 border-t border-white/5 pt-2">
+                        <MonitorDeltaList delta={delta} compact />
+                      </div>
+                    ) : null}
                   </li>
                 );
               })}

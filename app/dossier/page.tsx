@@ -30,6 +30,7 @@ import { DossierShareSection } from "./_components/DossierShareSection";
 import { AdmissionReadinessPanel } from "./_components/AdmissionReadinessPanel";
 import { TokenizationStudio } from "./_components/TokenizationStudio";
 import { DossierBankProof } from "./_components/DossierBankProof";
+import { DossierMonitorCta } from "./_components/DossierMonitorCta";
 import { DataRoomChecklist } from "./_components/DataRoomChecklist";
 import { ExportLegalPackButton } from "./_components/ExportLegalPackButton";
 import { GreenDossierExtras } from "./_components/GreenDossierExtras";
@@ -606,6 +607,13 @@ function DossierMain() {
         <DossierBankProof
           dossierId={dossier.id}
           assetLabel={data.assetType ?? data.description ?? null}
+        />
+
+        <DossierMonitorCta
+          assetType={data.assetType}
+          country={data.country}
+          score={typeof dossier.score === "number" ? dossier.score : score}
+          email={data.email}
         />
 
         {aiState === "loading" && (

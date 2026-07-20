@@ -15,6 +15,7 @@ import { AdmissionReadinessPanel } from "./AdmissionReadinessPanel";
 import { TokenizationStudio } from "./TokenizationStudio";
 import { DataRoomChecklist } from "./DataRoomChecklist";
 import { DossierQualityScore } from "./DossierQualityScore";
+import { readShareSeal } from "@/lib/dossier-seal";
 
 const DOC_NONE = "None yet";
 
@@ -92,6 +93,7 @@ export function DossierSharedView({ dossier: raw }: Props) {
   const goals = data.goals ?? [];
   const location = [data.city, data.country].filter(Boolean).join(", ") || "—";
   const valuation = formatCurrencyDisplay(data.estimatedValue ?? 0, currency);
+  const seal = readShareSeal(raw);
 
   const qualityInput = {
     description: data.description,
@@ -117,6 +119,64 @@ export function DossierSharedView({ dossier: raw }: Props) {
               {dm.shared.bannerCta}
             </Link>
           </div>
+
+          {seal ? (
+            <div className="mb-8 rounded-2xl border border-emerald-500/30 bg-emerald-500/[0.06] px-5 py-4">
+              <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-emerald-400/80">
+                {locale === "en"
+                  ? "Sealed attestation"
+                  : locale === "es"
+                    ? "Attestation sellada"
+                    : "Attestation scellée"}
+              </p>
+              <p className="mt-2 text-sm text-white/70">
+                {locale === "en"
+                  ? "HMAC seal for bank counterparties — verify without opening the data room."
+                  : locale === "es"
+                    ? "Sello HMAC para contrapartes bancarias — verificar sin abrir la data room."
+                    : "Sceau HMAC pour contreparties bancaires — vérifier sans ouvrir la data room."}
+              </p>
+              <div className="mt-3 flex flex-wrap gap-3">
+                <Link
+                  href={seal.verify_url}
+                  className="inline-flex min-h-[40px] items-center rounded-full border border-emerald-500/40 bg-emerald-500/10 px-4 font-mono text-[11px] uppercase tracking-wider text-emerald-300"
+                >
+                  {locale === "en"
+                    ? "Verify seal"
+                    : locale === "es"
+                      ? "Verificar sello"
+                      : "Vérifier le sceau"}
+                </Link>
+                <Link
+                  href="/developers/shield/banks"
+                  className="inline-flex min-h-[40px] items-center font-mono text-[11px] uppercase tracking-wider text-white/45 hover:text-white/70"
+                >
+                  Evidence Pack →
+                </Link>
+              </div>
+              {seal.content_hash ? (
+                <p className="mt-2 break-all font-mono text-[10px] text-white/30">
+                  {seal.content_hash}
+                </p>
+              ) : null}
+            </div>
+          ) : (
+            <div className="mb-8 rounded-2xl border border-white/10 bg-white/[0.02] px-5 py-4">
+              <p className="text-sm text-white/50">
+                {locale === "en"
+                  ? "No cryptographic seal on this share. Ask the issuer for a sealed link, or verify a Shield receipt."
+                  : locale === "es"
+                    ? "Sin sello criptográfico. Pida un enlace sellado al emisor, o verifique un receipt Shield."
+                    : "Pas de sceau cryptographique sur ce partage. Demandez un lien scellé, ou vérifiez un receipt Shield."}
+              </p>
+              <Link
+                href="/developers/institutions"
+                className="mt-2 inline-block font-mono text-[11px] uppercase tracking-wider text-white/45 hover:text-white/70"
+              >
+                Console institutions →
+              </Link>
+            </div>
+          )}
 
           <div className="mb-10 border-b border-white/[0.06] pb-6">
             <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted">

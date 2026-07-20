@@ -9,6 +9,7 @@ import { metadataFromPath } from "@/lib/seo/metadata";
 import { SHIELD_SLA } from "@/lib/shield";
 
 import { InstitutionChecklistPanel } from "../shield/_components/InstitutionChecklistPanel";
+import { MonitorDeltaPanel } from "../shield/_components/MonitorDeltaPanel";
 import { ShieldAuditTrailPanel } from "../shield/_components/ShieldAuditTrailPanel";
 import { ShieldEvidencePackPanel } from "../shield/_components/ShieldEvidencePackPanel";
 import { ShieldVerifyResealPanel } from "../shield/_components/ShieldVerifyResealPanel";
@@ -89,6 +90,9 @@ export default function InstitutionsPage() {
               <ShieldVerifyResealPanel />
               <ShieldAuditTrailPanel />
               <InstitutionChecklistPanel />
+              <div id="monitor-delta">
+                <MonitorDeltaPanel />
+              </div>
             </div>
 
             <section className="space-y-4">
