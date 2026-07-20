@@ -412,6 +412,11 @@ await client.createChargeflowEBatch({ items: [/* … */] });`}
               </Link>
             </li>
             <li>
+              <Link href="/copilot" className="text-sm text-white/70 hover:text-white">
+                AUROS Copilot — questions API / compare / ChargeFlow →
+              </Link>
+            </li>
+            <li>
               <Link href="/green/csrd-check" className="text-sm text-white/70 hover:text-white">
                 CSRD Checker — scope & préparation ESG →
               </Link>

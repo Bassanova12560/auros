@@ -13,9 +13,11 @@
 ## Guardrails
 
 - Never mint/retire ChargeFlow or change scores via Copilot tools.
-- No claim of official Tesla / TotalEnergies partnership.
-- Rate limit on chat · shared `AI_DAILY_GENERATION_CAP` · provider chain Gemini → Groq → Mistral (same as dossier).
+- No claim of official Tesla / TotalEnergies partnership (prompt + soft post-filter).
+- Rate limit on chat · shared `AI_DAILY_GENERATION_CAP` · provider chain Gemini → Groq → Mistral → OpenRouter (same as dossier).
 - Ops endpoints require `Authorization: Bearer CRON_SECRET`.
+- Content agent uses AI when keys are present; catalog scan stays deterministic (gap detection).
+- Page context via query (`?context=compare&ids=…`, `?context=jurisdiction&jid=…`, `?context=chargeflow`) seeds read-only tools — no auto-publish.
 
 ## Ops quickstart
 

@@ -8,7 +8,7 @@ import {
   CHARGEFLOW_ROUTE,
 } from "@/lib/chargeflow/constants";
 
-import type { CopilotCitation } from "./types";
+import type { CopilotCitation, CopilotPageContext } from "./types";
 
 export type CopilotToolResult = {
   name: string;
@@ -43,6 +43,7 @@ export async function toolSearchKnowledge(
 export async function toolListProducts(query?: {
   category?: string;
   limit?: number;
+  product_ids?: string[];
 }): Promise<CopilotToolResult> {
   const category =
     (query?.category as
@@ -59,7 +60,22 @@ export async function toolListProducts(query?: {
     limit: Math.min(query?.limit ?? 8, 20),
     sort: "apy",
   });
-  const lines = listed.products.map(
+  let products = listed.products;
+  if (query?.product_ids?.length) {
+    const want = new Set(query.product_ids.map((id) => id.toLowerCase()));
+    products = listed.products.filter((p) => want.has(p.id.toLowerCase()));
+    if (products.length === 0) {
+      // Hub page may not include all; try wider fetch
+      const wide = await listProtocolProducts({
+        category: "all",
+        page: 1,
+        limit: 100,
+        sort: "tvl",
+      });
+      products = wide.products.filter((p) => want.has(p.id.toLowerCase()));
+    }
+  }
+  const lines = products.map(
     (p) =>
       `- ${p.id}: ${p.name} (${p.platform}) · APY ${p.apy}% · TVL $${Math.round(p.tvl_usd).toLocaleString("en-US")} · ${p.jurisdiction ?? "n/a"}`
   );
@@ -67,7 +83,7 @@ export async function toolListProducts(query?: {
     name: "list_products",
     summary:
       lines.length > 0
-        ? `Top products (${listed.pagination.total} total):\n${lines.join("\n")}`
+        ? `Products (${products.length}):\n${lines.join("\n")}`
         : "No products matched.",
     citations: [
       { title: "Comparateur RWA", url: `${siteBase()}/compare` },
@@ -76,7 +92,7 @@ export async function toolListProducts(query?: {
         url: `${siteBase()}/developers/docs/endpoint-products`,
       },
     ],
-    data: { total: listed.pagination.total, sample: listed.products.slice(0, 5) },
+    data: { total: products.length, sample: products.slice(0, 5) },
   };
 }
 
@@ -91,7 +107,11 @@ export async function toolCompareProducts(
       citations: [{ title: "Comparateur", url: `${siteBase()}/compare` }],
     };
   }
-  const built = await buildProtocolCompare({ product_ids: ids });
+  const built = await buildProtocolCompare({
+    product_ids: ids,
+    category: "all",
+    limit: 4,
+  });
   if (!built.ok) {
     return {
       name: "compare_products",
@@ -142,90 +162,135 @@ export function toolExplainChargeflow(): CopilotToolResult {
   };
 }
 
-export function toolListJurisdictions(): CopilotToolResult {
+export function toolListJurisdictions(focusId?: string): CopilotToolResult {
   const top = [...JURISDICTIONS]
     .sort((a, b) => b.score - a.score)
     .slice(0, 8)
     .map((j) => `- ${j.id}: score ${j.score}/5`)
     .join("\n");
+  const focus = focusId
+    ? JURISDICTIONS.find((j) => j.id === focusId)
+    : undefined;
+  const focusBlock = focus
+    ? `\nFocus ${focus.id}: score ${focus.score}/5 · fee mid ~€${focus.totalCostMid.toLocaleString("en-US")} · delay ${focus.delayMinMonths}–${focus.delayMaxMonths} months.`
+    : "";
   return {
     name: "list_jurisdictions",
-    summary: `Top jurisdictions by AUROS score:\n${top}`,
+    summary: `Top jurisdictions by AUROS score:\n${top}${focusBlock}`,
     citations: [
       { title: "Jurisdictions", url: `${siteBase()}/jurisdictions` },
+      ...(focus
+        ? [
+            {
+              title: `Juridiction ${focus.id}`,
+              url: `${siteBase()}/jurisdictions?jid=${encodeURIComponent(focus.id)}`,
+            },
+          ]
+        : []),
     ],
   };
 }
 
 /** Heuristic tool selection — no model tool-calling required. */
 export async function runCopilotTools(
-  message: string
+  message: string,
+  context?: CopilotPageContext
 ): Promise<CopilotToolResult[]> {
   const q = message.toLowerCase();
   const results: CopilotToolResult[] = [];
+  const productIds = context?.product_ids?.slice(0, 4) ?? [];
 
   results.push(await toolSearchKnowledge(message));
 
-  if (
+  const wantChargeflow =
+    context?.surface === "chargeflow" ||
     /chargeflow|cfu-|cfu_e|cfu_w|cfu_f|ocpi|tesla|total.?energ|flotte|cpo/.test(
       q
-    )
-  ) {
+    );
+  if (wantChargeflow) {
     results.push(toolExplainChargeflow());
   }
 
-  if (
+  const wantJurisdictions =
+    Boolean(context?.jurisdiction_id) ||
+    context?.surface === "jurisdiction" ||
     /juridiction|jurisdiction|luxembourg|liechtenstein|swiss|suisse|dubai/.test(
       q
-    )
-  ) {
-    results.push(toolListJurisdictions());
+    );
+  if (wantJurisdictions) {
+    results.push(toolListJurisdictions(context?.jurisdiction_id));
   }
 
-  const compareMatch = q.match(
-    /compare[r]?\s+([a-z0-9_-]+)\s+(?:et|and|,|vs|versus)\s+([a-z0-9_-]+)/i
-  );
-  if (compareMatch) {
+  if (productIds.length >= 2) {
     try {
-      results.push(
-        await toolCompareProducts([compareMatch[1]!, compareMatch[2]!])
-      );
+      results.push(await toolCompareProducts(productIds));
     } catch (err) {
-      console.warn("[copilot] compare_products", err);
+      console.warn("[copilot] compare_products context", err);
       results.push({
         name: "compare_products",
         summary: "Compare hub unavailable in this runtime.",
         citations: [{ title: "Comparateur", url: `${siteBase()}/compare` }],
       });
     }
-  } else if (/produit|product|apy|tvl|comparat|yield|stablecoin|rwa/.test(q)) {
-    let category:
-      | "all"
-      | "stablecoins"
-      | "real_estate"
-      | "bonds"
-      | "commodities"
-      | "private_credit" = "all";
-    if (/stablecoin/.test(q)) category = "stablecoins";
-    else if (/immobilier|real.?estate|estate/.test(q)) category = "real_estate";
-    else if (/bond|obligation/.test(q)) category = "bonds";
-    else if (/commodit|mati[eè]re/.test(q)) category = "commodities";
-    else if (/private.?credit|cr[eé]dit/.test(q)) category = "private_credit";
+  } else if (productIds.length === 1) {
     try {
-      results.push(await toolListProducts({ category, limit: 8 }));
+      results.push(
+        await toolListProducts({ product_ids: productIds, limit: 8 })
+      );
     } catch (err) {
-      console.warn("[copilot] list_products", err);
-      results.push({
-        name: "list_products",
-        summary:
-          "Product hub temporarily unavailable in this runtime. Use /compare on the site.",
-        citations: [
-          {
-            title: "Comparateur RWA",
-            url: `${siteBase()}/compare`,
-          },
-        ],
-      });
+      console.warn("[copilot] list_products context", err);
+    }
+  } else {
+    const compareMatch = q.match(
+      /compare[r]?\s+([a-z0-9_-]+)\s+(?:et|and|,|vs|versus)\s+([a-z0-9_-]+)/i
+    );
+    if (compareMatch) {
+      try {
+        results.push(
+          await toolCompareProducts([compareMatch[1]!, compareMatch[2]!])
+        );
+      } catch (err) {
+        console.warn("[copilot] compare_products", err);
+        results.push({
+          name: "compare_products",
+          summary: "Compare hub unavailable in this runtime.",
+          citations: [{ title: "Comparateur", url: `${siteBase()}/compare` }],
+        });
+      }
+    } else if (
+      context?.surface === "compare" ||
+      /produit|product|apy|tvl|comparat|yield|stablecoin|rwa/.test(q)
+    ) {
+      let category:
+        | "all"
+        | "stablecoins"
+        | "real_estate"
+        | "bonds"
+        | "commodities"
+        | "private_credit" = "all";
+      if (/stablecoin/.test(q)) category = "stablecoins";
+      else if (/immobilier|real.?estate|estate/.test(q))
+        category = "real_estate";
+      else if (/bond|obligation/.test(q)) category = "bonds";
+      else if (/commodit|mati[eè]re/.test(q)) category = "commodities";
+      else if (/private.?credit|cr[eé]dit/.test(q))
+        category = "private_credit";
+      try {
+        results.push(await toolListProducts({ category, limit: 8 }));
+      } catch (err) {
+        console.warn("[copilot] list_products", err);
+        results.push({
+          name: "list_products",
+          summary:
+            "Product hub temporarily unavailable in this runtime. Use /compare on the site.",
+          citations: [
+            {
+              title: "Comparateur RWA",
+              url: `${siteBase()}/compare`,
+            },
+          ],
+        });
+      }
     }
   }
 

@@ -1,5 +1,6 @@
 /**
- * Multi-provider AI router — quality-first (Gemini Flash → Groq 70B → Mistral).
+ * Multi-provider AI router — quality-first
+ * (Gemini Flash → Groq → Mistral → OpenRouter free).
  * Template fallback only when every provider fails or output fails quality checks.
  */
 
@@ -191,6 +192,41 @@ async function callMistral(prompt: string): Promise<string> {
   return "";
 }
 
+async function callOpenRouter(prompt: string): Promise<string> {
+  const key = process.env.OPENROUTER_API_KEY?.trim();
+  if (!key) throw new Error("OPENROUTER_API_KEY missing");
+  const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${key}`,
+      "Content-Type": "application/json",
+      "HTTP-Referer":
+        process.env.NEXT_PUBLIC_SITE_URL?.trim() || "https://getauros.com",
+      "X-Title": "AUROS",
+    },
+    body: JSON.stringify({
+      model: AI_CONFIG.openrouterModel,
+      temperature: 0.4,
+      max_tokens: AI_CONFIG.maxOutputTokens,
+      messages: [
+        {
+          role: "system",
+          content:
+            "You output only valid JSON. No markdown fences. Professional RWA tokenization tone.",
+        },
+        { role: "user", content: prompt },
+      ],
+    }),
+  });
+  if (!res.ok) {
+    throw new Error(`OpenRouter HTTP ${res.status}`);
+  }
+  const json = (await res.json()) as {
+    choices?: Array<{ message?: { content?: string } }>;
+  };
+  return json.choices?.[0]?.message?.content ?? "";
+}
+
 const CALLERS: Record<
   BillableAiProvider,
   (prompt: string) => Promise<string>
@@ -198,7 +234,149 @@ const CALLERS: Record<
   groq: callGroq,
   gemini: callGemini,
   mistral: callMistral,
+  openrouter: callOpenRouter,
 };
+
+/**
+ * Free-form completion for Copilot agents / light prompts.
+ * Returns null when no provider is configured or all fail.
+ */
+export async function completeAiText(options: {
+  system: string;
+  user: string;
+  maxTokens?: number;
+}): Promise<{ text: string; provider: BillableAiProvider } | null> {
+  const chain = resolveProviderChain();
+  const timeout = AI_CONFIG.providerTimeoutMs;
+  const maxTokens = options.maxTokens ?? 900;
+
+  for (const id of chain) {
+    try {
+      let raw: string;
+      if (id === "openrouter") {
+        raw = await withTimeout(
+          callOpenRouterChat(options.system, options.user, maxTokens),
+          timeout
+        );
+      } else if (id === "gemini") {
+        raw = await withTimeout(
+          callGeminiChat(options.system, options.user, maxTokens),
+          timeout
+        );
+      } else if (id === "groq") {
+        raw = await withTimeout(
+          callGroqChat(options.system, options.user, maxTokens),
+          timeout
+        );
+      } else {
+        raw = await withTimeout(
+          callMistralChat(options.system, options.user, maxTokens),
+          timeout
+        );
+      }
+      const text = raw.trim();
+      if (text.length > 20) return { text, provider: id };
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err);
+      console.warn("[ai-complete] Provider failed:", id, msg);
+    }
+  }
+  return null;
+}
+
+async function callGeminiChat(
+  system: string,
+  user: string,
+  maxTokens: number
+): Promise<string> {
+  const key = process.env.GEMINI_API_KEY;
+  if (!key) throw new Error("GEMINI_API_KEY missing");
+  const genAI = new GoogleGenerativeAI(key);
+  const model = genAI.getGenerativeModel({
+    model: AI_CONFIG.geminiModel,
+    generationConfig: { maxOutputTokens: maxTokens, temperature: 0.35 },
+  });
+  const result = await model.generateContent(`${system}\n\n${user}`);
+  return result.response.text();
+}
+
+async function callGroqChat(
+  system: string,
+  user: string,
+  maxTokens: number
+): Promise<string> {
+  const client = new Groq({ apiKey: process.env.GROQ_API_KEY });
+  const completion = await client.chat.completions.create({
+    model: AI_CONFIG.groqDossierModel,
+    temperature: 0.35,
+    max_tokens: maxTokens,
+    messages: [
+      { role: "system", content: system },
+      { role: "user", content: user },
+    ],
+  });
+  return completion.choices[0]?.message?.content ?? "";
+}
+
+async function callMistralChat(
+  system: string,
+  user: string,
+  maxTokens: number
+): Promise<string> {
+  const client = new Mistral({ apiKey: process.env.MISTRAL_API_KEY });
+  const completion = await client.chat.complete({
+    model: AI_CONFIG.mistralModel,
+    temperature: 0.35,
+    maxTokens,
+    messages: [
+      { role: "system", content: system },
+      { role: "user", content: user },
+    ],
+  });
+  const content = completion.choices?.[0]?.message?.content;
+  if (typeof content === "string") return content;
+  if (Array.isArray(content)) {
+    return content
+      .map((c) =>
+        typeof c === "string" ? c : (c as { text?: string }).text ?? ""
+      )
+      .join("");
+  }
+  return "";
+}
+
+async function callOpenRouterChat(
+  system: string,
+  user: string,
+  maxTokens: number
+): Promise<string> {
+  const key = process.env.OPENROUTER_API_KEY?.trim();
+  if (!key) throw new Error("OPENROUTER_API_KEY missing");
+  const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${key}`,
+      "Content-Type": "application/json",
+      "HTTP-Referer":
+        process.env.NEXT_PUBLIC_SITE_URL?.trim() || "https://getauros.com",
+      "X-Title": "AUROS",
+    },
+    body: JSON.stringify({
+      model: AI_CONFIG.openrouterModel,
+      temperature: 0.35,
+      max_tokens: maxTokens,
+      messages: [
+        { role: "system", content: system },
+        { role: "user", content: user },
+      ],
+    }),
+  });
+  if (!res.ok) throw new Error(`OpenRouter HTTP ${res.status}`);
+  const json = (await res.json()) as {
+    choices?: Array<{ message?: { content?: string } }>;
+  };
+  return json.choices?.[0]?.message?.content ?? "";
+}
 
 export async function generateDossierContent(
   data: WizardData,

@@ -56,6 +56,7 @@ const SECTIONS = [
     title: "Formation & machine-readable",
     links: [
       { href: "/academy", label: "AUROS Academy", desc: "Fondamentaux RWA gratuits — FR/EN/ES." },
+      { href: "/copilot", label: "AUROS Copilot", desc: "Assistant sourcé — comparateur, juridictions, ChargeFlow." },
       { href: "/llms.txt", label: "llms.txt", desc: "Catalogue texte pour agents IA." },
       { href: "/ai-first/index.json", label: "Catalogue AI-first", desc: "JSON indexable pour crawlers." },
     ],

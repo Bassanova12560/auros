@@ -4,6 +4,7 @@ import { useCallback, useState } from "react";
 
 import { PrimaryButton } from "@/app/_components/ui/PrimaryButton";
 import { buildCompareShareUrl } from "@/lib/comparators";
+import { buildCopilotHref } from "@/lib/copilot/types";
 import { useComparatorPage } from "./useComparatorPage";
 
 type CompareSelectionBarProps = {
@@ -80,6 +81,17 @@ export function CompareSelectionBar({
             >
               {copy.copyLink}
             </button>
+          ) : null}
+          {selectedIds.length > 0 ? (
+            <a
+              href={buildCopilotHref({
+                surface: "compare",
+                product_ids: selectedIds.slice(0, 4),
+              })}
+              className="rounded-full border border-emerald-500/25 px-3 py-2 font-mono text-[10px] uppercase tracking-wider text-emerald-300/80 transition hover:border-emerald-400/40 hover:text-emerald-200"
+            >
+              Copilot
+            </a>
           ) : null}
           <button
             type="button"

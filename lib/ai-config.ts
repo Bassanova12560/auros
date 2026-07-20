@@ -5,9 +5,9 @@ const economyMode = process.env.AI_ECONOMY_MODE === "true";
 /** Central AI controls — quality by default; set AI_ECONOMY_MODE=true to cut cost. */
 export const AI_CONFIG = {
   economyMode,
-  /** Try free/cheap providers first. Comma-separated: gemini,groq,mistral */
+  /** Try free/cheap providers first. Comma-separated: gemini,groq,mistral,openrouter */
   providerOrder: parseProviderOrder(
-    process.env.AI_PROVIDER_ORDER ?? "gemini,groq,mistral"
+    process.env.AI_PROVIDER_ORDER ?? "gemini,groq,mistral,openrouter"
   ),
   /** If true, only Gemini (free tier) + template fallback — no Groq/Mistral spend */
   freeOnly: process.env.AI_FREE_ONLY === "true",
@@ -42,16 +42,25 @@ export const AI_CONFIG = {
   mistralModel:
     process.env.MISTRAL_MODEL?.trim() ||
     (economyMode ? "open-mistral-nemo" : "mistral-small-latest"),
+  /** OpenRouter free-tier model id (e.g. google/gemma-2-9b-it:free) */
+  openrouterModel:
+    process.env.OPENROUTER_MODEL?.trim() ||
+    "google/gemma-2-9b-it:free",
   cacheTtlMs: clampInt(process.env.AI_CACHE_TTL_MS, 60_000, 86_400_000, 86_400_000),
 } as const;
 
 function parseProviderOrder(raw: string): AiProvider[] {
-  const allowed = new Set<AiProvider>(["gemini", "groq", "mistral"]);
+  const allowed = new Set<AiProvider>([
+    "gemini",
+    "groq",
+    "mistral",
+    "openrouter",
+  ]);
   const order = raw
     .split(",")
     .map((s) => s.trim().toLowerCase())
     .filter((s): s is AiProvider => allowed.has(s as AiProvider));
-  return order.length ? order : ["gemini", "groq", "mistral"];
+  return order.length ? order : ["gemini", "groq", "mistral", "openrouter"];
 }
 
 function clampInt(
@@ -72,7 +81,9 @@ export function resolveProviderChain(
 ): BillableAiProvider[] {
   const order = (
     AI_CONFIG.freeOnly
-      ? AI_CONFIG.providerOrder.filter((p) => p === "gemini")
+      ? AI_CONFIG.providerOrder.filter(
+          (p) => p === "gemini" || p === "openrouter"
+        )
       : AI_CONFIG.providerOrder
   ) as BillableAiProvider[];
 
@@ -80,6 +91,8 @@ export function resolveProviderChain(
     if (id === "gemini") return Boolean(process.env.GEMINI_API_KEY?.trim());
     if (id === "groq") return Boolean(process.env.GROQ_API_KEY?.trim());
     if (id === "mistral") return Boolean(process.env.MISTRAL_API_KEY?.trim());
+    if (id === "openrouter")
+      return Boolean(process.env.OPENROUTER_API_KEY?.trim());
     return false;
   });
 

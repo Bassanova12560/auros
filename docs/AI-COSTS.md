@@ -5,7 +5,7 @@
 Le mode **qualité** est actif sans variable d’environnement :
 
 - **Gemini 2.0 Flash** en premier (bon rapport qualité / coût, quota gratuit)
-- Secours **Groq 70B** puis **Mistral Small**
+- Secours **Groq** puis **Mistral**, puis **OpenRouter** (`:free`)
 - Sections **140–200 mots**, 2 paragraphes, avec structure juridique, KYC, revenus, notes
 - **Contrôle qualité** : réponse trop courte ou trop générique → provider suivant
 - **Template** uniquement si tous les providers échouent (badge visible dans le dossier)
@@ -23,7 +23,7 @@ Pour couper les coûts au maximum (tests de charge) : `AI_ECONOMY_MODE=true` (8B
 
 ## Génération dossier (`/api/generate`)
 
-1. **Ordre des providers** : Gemini Flash (quota gratuit Google) → Groq `llama-3.1-8b-instant` → Mistral.
+1. **Ordre des providers** : Gemini Flash → Groq → Mistral → OpenRouter free.
 2. **Prompt structuré** : 140–200 mots / section (mode qualité).
 3. **`max_tokens`** : 2800 par défaut en mode qualité (`AI_MAX_OUTPUT_TOKENS`).
 4. **Cache mémoire** : même wizard + locale = réponse instantanée 24h (`AI_CACHE_TTL_MS`).
@@ -34,18 +34,28 @@ Pour couper les coûts au maximum (tests de charge) : `AI_ECONOMY_MODE=true` (8B
 ## Variables recommandées (Vercel)
 
 ```env
-GEMINI_API_KEY=...          # Prioritaire — tier gratuit
-GROQ_API_KEY=...            # Secours pas cher
-AI_PROVIDER_ORDER=gemini,groq,mistral
+GEMINI_API_KEY=...          # Prioritaire — tier gratuit Google AI Studio
+GROQ_API_KEY=...            # Secours (souvent gratuit / très bas coût)
+MISTRAL_API_KEY=...         # Secours
+OPENROUTER_API_KEY=...      # Quota free supplémentaire (modèles :free)
+# OPENROUTER_MODEL=google/gemma-2-9b-it:free
+AI_PROVIDER_ORDER=gemini,groq,mistral,openrouter
 AI_DAILY_GENERATION_CAP=200
 AI_MAX_OUTPUT_TOKENS=1600
-# Pour les tests massifs sans facture Groq/Mistral :
+# Zéro spend payant (Gemini + OpenRouter free seulement) :
 # AI_FREE_ONLY=true
 ```
 
-## API IA gratuite supplémentaire
+## Empiler le gratuit (recommandé)
 
-Si vous ajoutez une clé **OpenRouter** ou **Together** avec modèles gratuits, on peut ajouter un provider `openrouter` dans `lib/ai-router.ts` (même pattern que Groq). Indiquez la clé et le modèle souhaité.
+| Clé | Où | Rôle |
+|-----|-----|------|
+| `GEMINI_API_KEY` | [Google AI Studio](https://aistudio.google.com/apikey) | Prioritaire, bon rapport qualité |
+| `GROQ_API_KEY` | [console.groq.com](https://console.groq.com) | Secours rapide |
+| `MISTRAL_API_KEY` | [console.mistral.ai](https://console.mistral.ai) | Secours |
+| `OPENROUTER_API_KEY` | [openrouter.ai/keys](https://openrouter.ai/keys) | Filet `:free` (Gemma, etc.) |
+
+Optionnel plus tard : 2e projet Gemini (autre quota), Together free models. Copilot (`/copilot`) + agent contenu ops utilisent la même chaîne.
 
 ## Estimation ordre de grandeur
 

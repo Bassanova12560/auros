@@ -296,6 +296,12 @@ function RowActions({ jurisdictionId }: { jurisdictionId: string }) {
       >
         {messages.table.actionQuote}
       </button>
+      <a
+        href={`/copilot?context=jurisdiction&jid=${encodeURIComponent(jurisdictionId)}`}
+        className="rounded-full border border-emerald-500/25 px-3.5 py-1.5 text-center font-mono text-[10px] text-emerald-300/80 transition hover:border-emerald-400/40 hover:text-emerald-200"
+      >
+        Copilot
+      </a>
     </div>
   );
 }

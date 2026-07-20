@@ -5,6 +5,7 @@ import { useComparatorPage } from "./useComparatorPage";
 import { DOSSIER_CTA } from "@/lib/comparators";
 import { pageCopyForId } from "@/lib/comparators/page-copy";
 import { track } from "@/lib/analytics";
+import { buildCopilotHref } from "@/lib/copilot/types";
 
 export function DossierCtaStrip() {
   const { messages, comparatorId, entry } = useComparatorPage();
@@ -21,18 +22,31 @@ export function DossierCtaStrip() {
           <p className="mt-2 text-base text-white/80">{cta.title}</p>
           <p className="mt-1 text-sm text-muted">{cta.subtitle}</p>
         </div>
-        <PrimaryButton
-          href={DOSSIER_CTA.href}
-          className="shrink-0"
-          onClick={() =>
-            track("comparator_dossier_cta", {
-              source: "strip",
-              comparator: comparatorId,
-            })
-          }
-        >
-          {cta.button}
-        </PrimaryButton>
+        <div className="flex shrink-0 flex-col items-stretch gap-2 sm:items-end">
+          <PrimaryButton
+            href={DOSSIER_CTA.href}
+            onClick={() =>
+              track("comparator_dossier_cta", {
+                source: "strip",
+                comparator: comparatorId,
+              })
+            }
+          >
+            {cta.button}
+          </PrimaryButton>
+          <a
+            href={buildCopilotHref({ surface: "compare" })}
+            className="text-center font-mono text-[10px] uppercase tracking-[0.16em] text-white/40 transition hover:text-white/70"
+            onClick={() =>
+              track("comparator_copilot_cta", {
+                source: "strip",
+                comparator: comparatorId,
+              })
+            }
+          >
+            Poser une question au Copilot →
+          </a>
+        </div>
       </div>
     </section>
   );

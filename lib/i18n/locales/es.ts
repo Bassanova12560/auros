@@ -8,6 +8,7 @@ export const es: Messages = {
     jurisdictions: "Jurisdicciones",
     green: "Green",
     partners: "Plataformas",
+    copilot: "Copilot",
     login: "Acceder",
     start: "Empezar",
     menu: "Menú",

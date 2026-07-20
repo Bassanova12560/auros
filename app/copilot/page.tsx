@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 
 import { AiFirstPageJsonLd } from "@/app/_components/ai-first/AiFirstPageJsonLd";
 import { COPILOT_ROUTE } from "@/lib/copilot/types";
@@ -18,7 +19,13 @@ export default function CopilotPage() {
     <>
       <AiFirstPageJsonLd path={COPILOT_ROUTE} />
       <div className="page-inner page-inner--3xl mx-auto px-4 pb-20 pt-12 md:px-6 md:pt-14">
-        <CopilotChatView />
+        <Suspense
+          fallback={
+            <p className="font-mono text-sm text-white/40">Chargement Copilot…</p>
+          }
+        >
+          <CopilotChatView />
+        </Suspense>
       </div>
     </>
   );

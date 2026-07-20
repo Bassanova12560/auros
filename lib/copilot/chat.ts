@@ -6,7 +6,11 @@ import { AI_CONFIG, resolveProviderChain } from "@/lib/ai-config";
 import { checkAiDailyBudget, consumeAiDailyBudget } from "@/lib/ai-budget";
 
 import { COPILOT_DISCLAIMER } from "./types";
-import type { CopilotChatMessage, CopilotCitation } from "./types";
+import type {
+  CopilotChatMessage,
+  CopilotCitation,
+  CopilotPageContext,
+} from "./types";
 import { runCopilotTools, type CopilotToolResult } from "./tools";
 
 function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
@@ -39,10 +43,25 @@ Rules:
 ${COPILOT_DISCLAIMER}`;
 }
 
+function formatPageContext(context?: CopilotPageContext): string {
+  if (!context || context.surface === "generic") {
+    if (!context?.product_ids?.length && !context?.jurisdiction_id) return "";
+  }
+  const parts = [`surface=${context?.surface ?? "generic"}`];
+  if (context?.product_ids?.length) {
+    parts.push(`product_ids=${context.product_ids.join(",")}`);
+  }
+  if (context?.jurisdiction_id) {
+    parts.push(`jurisdiction_id=${context.jurisdiction_id}`);
+  }
+  return `PAGE CONTEXT: ${parts.join(" · ")}\nUse this page context when answering; prefer tool data for these IDs.\n\n`;
+}
+
 function buildUserPrompt(
   message: string,
   tools: CopilotToolResult[],
-  history: CopilotChatMessage[]
+  history: CopilotChatMessage[],
+  context?: CopilotPageContext
 ): string {
   const hist = history
     .slice(-6)
@@ -54,7 +73,7 @@ function buildUserPrompt(
         `### Tool ${t.name}\n${t.summary}\nCitations: ${t.citations.map((c) => `${c.title} (${c.url})`).join("; ")}`
     )
     .join("\n\n");
-  return `${hist ? `Conversation:\n${hist}\n\n` : ""}Tool context:\n${toolBlock}\n\nUser question:\n${message}`;
+  return `${formatPageContext(context)}${hist ? `Conversation:\n${hist}\n\n` : ""}Tool context:\n${toolBlock}\n\nUser question:\n${message}`;
 }
 
 function templateReply(
@@ -75,6 +94,50 @@ function templateReply(
     return `Según el conocimiento AUROS (modo plantilla):\n\n${snippet}\n\nEnlaces:\n${cites || "- https://getauros.com/compare"}`;
   }
   return `D’après la base AUROS (mode template — configurez GEMINI_API_KEY pour l’IA complète) :\n\n${snippet}\n\nLiens utiles :\n${cites || "- https://getauros.com/compare"}\n\nQuestion : ${message.slice(0, 120)}`;
+}
+
+/** Soft guardrail: neutralize official partnership claims for Tesla / Total. */
+export function sanitizePartnershipClaims(reply: string): string {
+  const neutral =
+    "format-compatible adapters (not an official manufacturer partnership)";
+  return reply
+    .replace(
+      /\b(official|officielle?)\s+(tesla|totalenergies?|total\s+energies?)\s+(partner(?:ship)?|partenariat|partenaire)/gi,
+      neutral
+    )
+    .replace(
+      /\b(tesla|totalenergies?|total\s+energies?)\s+(official|officielle?)\s+(partner(?:ship)?|partenariat|partenaire)/gi,
+      neutral
+    )
+    .replace(
+      /\bpartenaire\s+officiel\s+(de\s+)?(tesla|totalenergies?|total)/gi,
+      neutral
+    )
+    .replace(
+      /\b(partenariat|partnership)\s+officiel\s+(avec\s+)?(tesla|totalenergies?|total)/gi,
+      neutral
+    );
+}
+
+/** If tools provided URLs and the reply has none, append 1–2 sources. */
+export function ensureCitationsInReply(
+  reply: string,
+  citations: CopilotCitation[]
+): string {
+  if (citations.length === 0) return reply;
+  if (/https?:\/\//i.test(reply)) return reply;
+  const links = citations
+    .slice(0, 2)
+    .map((c) => `- ${c.title}: ${c.url}`)
+    .join("\n");
+  return `${reply.trim()}\n\nSources:\n${links}`;
+}
+
+function polishReply(
+  reply: string,
+  citations: CopilotCitation[]
+): string {
+  return ensureCitationsInReply(sanitizePartnershipClaims(reply), citations);
 }
 
 async function callGemini(system: string, user: string): Promise<string> {
@@ -130,6 +193,35 @@ async function callMistral(system: string, user: string): Promise<string> {
   return "";
 }
 
+async function callOpenRouter(system: string, user: string): Promise<string> {
+  const key = process.env.OPENROUTER_API_KEY?.trim();
+  if (!key) throw new Error("OPENROUTER_API_KEY missing");
+  const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${key}`,
+      "Content-Type": "application/json",
+      "HTTP-Referer":
+        process.env.NEXT_PUBLIC_SITE_URL?.trim() || "https://getauros.com",
+      "X-Title": "AUROS Copilot",
+    },
+    body: JSON.stringify({
+      model: AI_CONFIG.openrouterModel,
+      temperature: 0.3,
+      max_tokens: 1000,
+      messages: [
+        { role: "system", content: system },
+        { role: "user", content: user },
+      ],
+    }),
+  });
+  if (!res.ok) throw new Error(`OpenRouter HTTP ${res.status}`);
+  const json = (await res.json()) as {
+    choices?: Array<{ message?: { content?: string } }>;
+  };
+  return json.choices?.[0]?.message?.content?.trim() ?? "";
+}
+
 function mergeCitations(tools: CopilotToolResult[]): CopilotCitation[] {
   const seen = new Set<string>();
   const out: CopilotCitation[] = [];
@@ -148,6 +240,7 @@ export async function runCopilotChat(input: {
   message: string;
   locale?: "fr" | "en" | "es";
   history?: CopilotChatMessage[];
+  context?: CopilotPageContext;
 }): Promise<{
   reply: string;
   provider: string;
@@ -158,9 +251,10 @@ export async function runCopilotChat(input: {
   const locale = input.locale ?? "fr";
   const message = input.message.trim().slice(0, 2000);
   const history = (input.history ?? []).slice(-6);
-  const tools = await runCopilotTools(message);
+  const context = input.context;
+  const tools = await runCopilotTools(message, context);
   const system = buildSystemPrompt(locale);
-  const user = buildUserPrompt(message, tools, history);
+  const user = buildUserPrompt(message, tools, history, context);
   const citations = mergeCitations(tools);
   const tools_used = tools.map((t) => t.name);
 
@@ -176,6 +270,7 @@ export async function runCopilotChat(input: {
       gemini: callGemini,
       groq: callGroq,
       mistral: callMistral,
+      openrouter: callOpenRouter,
     };
     for (const id of chain) {
       try {
@@ -185,7 +280,7 @@ export async function runCopilotChat(input: {
         );
         if (reply.length > 40) {
           return {
-            reply,
+            reply: polishReply(reply, citations),
             provider: id,
             citations,
             disclaimer: COPILOT_DISCLAIMER,
@@ -199,7 +294,7 @@ export async function runCopilotChat(input: {
   }
 
   return {
-    reply: templateReply(message, tools, locale),
+    reply: polishReply(templateReply(message, tools, locale), citations),
     provider: "template",
     citations,
     disclaimer: COPILOT_DISCLAIMER,

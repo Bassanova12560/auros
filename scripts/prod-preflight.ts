@@ -77,7 +77,10 @@ function runEnvChecks(): Check[] {
   }
 
   const ai =
-    has("GEMINI_API_KEY") || has("GROQ_API_KEY") || has("MISTRAL_API_KEY");
+    has("GEMINI_API_KEY") ||
+    has("GROQ_API_KEY") ||
+    has("MISTRAL_API_KEY") ||
+    has("OPENROUTER_API_KEY");
   if (ai) {
     push(checks, "ai", "ok", "At least one AI provider key is set");
   } else {
@@ -85,7 +88,7 @@ function runEnvChecks(): Check[] {
       checks,
       "ai",
       "fail",
-      "Set GEMINI_API_KEY and/or GROQ_API_KEY (generation will fail)"
+      "Set GEMINI_API_KEY and/or GROQ_API_KEY / OPENROUTER_API_KEY (generation will fail)"
     );
   }
 

@@ -208,10 +208,44 @@ async function callMistral(prompt: string): Promise<string> {
   return "";
 }
 
+async function callOpenRouter(prompt: string): Promise<string> {
+  const key = process.env.OPENROUTER_API_KEY?.trim();
+  if (!key) throw new Error("OPENROUTER_API_KEY missing");
+  const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${key}`,
+      "Content-Type": "application/json",
+      "HTTP-Referer":
+        process.env.NEXT_PUBLIC_SITE_URL?.trim() || "https://getauros.com",
+      "X-Title": "AUROS RTMS",
+    },
+    body: JSON.stringify({
+      model: AI_CONFIG.openrouterModel,
+      temperature: 0.2,
+      max_tokens: 1200,
+      messages: [
+        {
+          role: "system",
+          content:
+            "You output only valid JSON. No markdown fences. Conservative RTMS grading.",
+        },
+        { role: "user", content: prompt },
+      ],
+    }),
+  });
+  if (!res.ok) throw new Error(`OpenRouter HTTP ${res.status}`);
+  const json = (await res.json()) as {
+    choices?: Array<{ message?: { content?: string } }>;
+  };
+  return json.choices?.[0]?.message?.content ?? "";
+}
+
 const CALLERS: Record<BillableAiProvider, (prompt: string) => Promise<string>> = {
   groq: callGroq,
   gemini: callGemini,
   mistral: callMistral,
+  openrouter: callOpenRouter,
 };
 
 export function hasRtmsAiProvider(): boolean {

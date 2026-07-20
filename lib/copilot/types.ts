@@ -16,10 +16,23 @@ export type CopilotChatMessage = {
   content: string;
 };
 
+export type CopilotSurface =
+  | "compare"
+  | "jurisdiction"
+  | "chargeflow"
+  | "generic";
+
+export type CopilotPageContext = {
+  surface: CopilotSurface;
+  product_ids?: string[];
+  jurisdiction_id?: string;
+};
+
 export type CopilotChatRequest = {
   message: string;
   locale?: "fr" | "en" | "es";
   history?: CopilotChatMessage[];
+  context?: CopilotPageContext;
 };
 
 export type CopilotChatResponse = {
@@ -44,3 +57,84 @@ export type CopilotDraft = {
   reviewed_at: string | null;
   review_note: string | null;
 };
+
+/** Build /copilot?context=…&ids=…&jid=… for page deep-links. */
+export function buildCopilotHref(ctx?: Partial<CopilotPageContext>): string {
+  if (!ctx?.surface || ctx.surface === "generic") {
+    if (!ctx?.product_ids?.length && !ctx?.jurisdiction_id) return COPILOT_ROUTE;
+  }
+  const params = new URLSearchParams();
+  const surface = ctx.surface ?? "generic";
+  if (surface !== "generic") params.set("context", surface);
+  if (ctx.product_ids?.length) {
+    params.set("ids", ctx.product_ids.slice(0, 4).join(","));
+  }
+  if (ctx.jurisdiction_id) params.set("jid", ctx.jurisdiction_id);
+  const q = params.toString();
+  return q ? `${COPILOT_ROUTE}?${q}` : COPILOT_ROUTE;
+}
+
+export function parseCopilotSearchParams(params: {
+  context?: string | null;
+  ids?: string | null;
+  jid?: string | null;
+}): CopilotPageContext {
+  const raw = (params.context ?? "").toLowerCase();
+  const surface: CopilotSurface =
+    raw === "compare" ||
+    raw === "jurisdiction" ||
+    raw === "chargeflow"
+      ? raw
+      : params.ids
+        ? "compare"
+        : params.jid
+          ? "jurisdiction"
+          : "generic";
+  const product_ids = (params.ids ?? "")
+    .split(",")
+    .map((s) => s.trim())
+    .filter(Boolean)
+    .slice(0, 4);
+  const jurisdiction_id = params.jid?.trim() || undefined;
+  return {
+    surface,
+    product_ids: product_ids.length ? product_ids : undefined,
+    jurisdiction_id,
+  };
+}
+
+export function suggestionsForContext(ctx: CopilotPageContext): string[] {
+  if (ctx.surface === "chargeflow") {
+    return [
+      "Qu’est-ce que ChargeFlow CFU-E ?",
+      "Différence CFU-E / CFU-W / CFU-F ?",
+      "Comment fonctionne la console opérateurs ?",
+    ];
+  }
+  if (ctx.surface === "jurisdiction" && ctx.jurisdiction_id) {
+    return [
+      `Pourquoi considérer ${ctx.jurisdiction_id} pour un RWA ?`,
+      `Coûts et délais indicatifs pour ${ctx.jurisdiction_id}`,
+      "Comparer les top juridictions AUROS",
+    ];
+  }
+  if (ctx.surface === "compare" && ctx.product_ids && ctx.product_ids.length >= 2) {
+    return [
+      `Compare ${ctx.product_ids.slice(0, 2).join(" et ")}`,
+      "Quels risques / liquidité pour cette sélection ?",
+      "Lien vers le comparateur et API Protocol",
+    ];
+  }
+  if (ctx.surface === "compare") {
+    return [
+      "Top stablecoins APY sur le comparateur",
+      "Comment lire TVL et liquidité ?",
+      "Différence risk tiers conservative / core / advanced",
+    ];
+  }
+  return [
+    "Compare maple-usdc et realt-portfolio",
+    "Explique ChargeFlow CFU-E",
+    "Top juridictions pour un émetteur EU",
+  ];
+}

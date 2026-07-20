@@ -6,6 +6,14 @@ import { COPILOT_DISCLAIMER } from "@/lib/copilot/types";
 
 export const runtime = "nodejs";
 
+const contextSchema = z
+  .object({
+    surface: z.enum(["compare", "jurisdiction", "chargeflow", "generic"]),
+    product_ids: z.array(z.string().trim().min(1)).max(4).optional(),
+    jurisdiction_id: z.string().trim().min(1).max(64).optional(),
+  })
+  .optional();
+
 const bodySchema = z.object({
   message: z.string().min(1).max(2000),
   locale: z.enum(["fr", "en", "es"]).optional(),
@@ -18,11 +26,12 @@ const bodySchema = z.object({
     )
     .max(8)
     .optional(),
+  context: contextSchema,
 });
 
 /**
  * Public AUROS Copilot chat — read-only tools (RAG, products, compare, ChargeFlow explain).
- * Never mutates scores / attest / CFU.
+ * Never mutates scores / attest / CFU. Optional page context seeds tools.
  */
 export async function POST(req: Request) {
   const ip = getRequestIp(req);

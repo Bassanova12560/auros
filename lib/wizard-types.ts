@@ -45,7 +45,7 @@ export type DossierContent = {
   smartContract: string;
 };
 
-export type AiProvider = "groq" | "gemini" | "mistral" | "template";
+export type AiProvider = "groq" | "gemini" | "mistral" | "openrouter" | "template";
 
 export type AiGenerationMeta = {
   provider: AiProvider;

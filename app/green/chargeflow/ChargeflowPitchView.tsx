@@ -220,6 +220,13 @@ export function ChargeflowPitchView() {
           >
             CFU-F
           </Link>
+          {" · "}
+          <Link
+            href="/copilot?context=chargeflow"
+            className="text-white/55 underline-offset-2 hover:underline"
+          >
+            Copilot
+          </Link>
           . Voir{" "}
           <Link
             href="/developers/docs/endpoint-chargeflow"

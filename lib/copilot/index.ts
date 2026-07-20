@@ -2,6 +2,9 @@ export {
   COPILOT_ROUTE,
   COPILOT_OPS_ROUTE,
   COPILOT_DISCLAIMER,
+  buildCopilotHref,
+  parseCopilotSearchParams,
+  suggestionsForContext,
   type CopilotDraft,
   type CopilotDraftKind,
   type CopilotDraftStatus,
@@ -9,6 +12,8 @@ export {
   type CopilotChatMessage,
   type CopilotChatRequest,
   type CopilotChatResponse,
+  type CopilotPageContext,
+  type CopilotSurface,
 } from "./types";
 export { runCopilotChat } from "./chat";
 export { runCopilotTools } from "./tools";

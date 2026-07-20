@@ -14,7 +14,12 @@ import type { GreenRtmsScore } from "@/lib/green/rtms-scoring";
 import type { Locale } from "@/lib/i18n";
 import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
 
-export type RtmsAnalysisProvider = "gemini" | "groq" | "mistral" | "rules";
+export type RtmsAnalysisProvider =
+  | "gemini"
+  | "groq"
+  | "mistral"
+  | "openrouter"
+  | "rules";
 
 export type AnalyzeRtmsPreliminaryResult =
   | {

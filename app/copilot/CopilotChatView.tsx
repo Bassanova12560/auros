@@ -1,13 +1,48 @@
 "use client";
 
-import { useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { useMemo, useState } from "react";
 
 import { PrimaryButton } from "@/app/_components/ui/PrimaryButton";
+import {
+  parseCopilotSearchParams,
+  suggestionsForContext,
+  type CopilotPageContext,
+} from "@/lib/copilot/types";
 
 type ChatTurn = { role: "user" | "assistant"; content: string };
 type Citation = { title: string; url: string };
 
+function contextBannerLabel(ctx: CopilotPageContext): string | null {
+  if (ctx.surface === "chargeflow") return "Contexte : ChargeFlow";
+  if (ctx.surface === "jurisdiction" && ctx.jurisdiction_id) {
+    return `Contexte : juridiction · ${ctx.jurisdiction_id}`;
+  }
+  if (ctx.surface === "jurisdiction") return "Contexte : juridictions";
+  if (ctx.surface === "compare" && ctx.product_ids?.length) {
+    return `Contexte : compare · ${ctx.product_ids.join(", ")}`;
+  }
+  if (ctx.surface === "compare") return "Contexte : comparateur RWA";
+  return null;
+}
+
 export function CopilotChatView() {
+  const searchParams = useSearchParams();
+  const pageContext = useMemo(
+    () =>
+      parseCopilotSearchParams({
+        context: searchParams.get("context"),
+        ids: searchParams.get("ids"),
+        jid: searchParams.get("jid"),
+      }),
+    [searchParams]
+  );
+  const suggestions = useMemo(
+    () => suggestionsForContext(pageContext),
+    [pageContext]
+  );
+  const banner = contextBannerLabel(pageContext);
+
   const [input, setInput] = useState("");
   const [history, setHistory] = useState<ChatTurn[]>([]);
   const [citations, setCitations] = useState<Citation[]>([]);
@@ -15,8 +50,8 @@ export function CopilotChatView() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  async function send() {
-    const message = input.trim();
+  async function sendMessage(raw: string) {
+    const message = raw.trim();
     if (!message || loading) return;
     setLoading(true);
     setError(null);
@@ -31,6 +66,7 @@ export function CopilotChatView() {
           message,
           locale: "fr",
           history: history.slice(-6),
+          context: pageContext,
         }),
       });
       const json = (await res.json()) as {
@@ -56,6 +92,10 @@ export function CopilotChatView() {
     }
   }
 
+  function send() {
+    void sendMessage(input);
+  }
+
   return (
     <div className="space-y-8">
       <header className="space-y-3">
@@ -70,14 +110,34 @@ export function CopilotChatView() {
           Protocol ou ChargeFlow. Réponses sourcées — indicatif uniquement, pas
           de conseil juridique.
         </p>
+        {banner ? (
+          <p className="font-mono text-[11px] tracking-wide text-emerald-300/70">
+            {banner}
+          </p>
+        ) : null}
       </header>
 
       <div className="space-y-4 border border-white/[0.08] bg-black/40 p-5 md:p-6">
+        {history.length === 0 ? (
+          <div className="flex flex-wrap gap-2">
+            {suggestions.map((s) => (
+              <button
+                key={s}
+                type="button"
+                disabled={loading}
+                onClick={() => void sendMessage(s)}
+                className="rounded-full border border-white/10 px-3 py-1.5 text-left font-mono text-[10px] uppercase tracking-wider text-white/45 transition hover:border-white/25 hover:text-white/75 disabled:opacity-50"
+              >
+                {s}
+              </button>
+            ))}
+          </div>
+        ) : null}
+
         <div className="max-h-[420px] space-y-4 overflow-y-auto">
           {history.length === 0 ? (
             <p className="text-sm text-white/40">
-              Exemples : « Compare maple-usdc et realt-portfolio », « Explique
-              ChargeFlow CFU-E », « Top stablecoins APY ».
+              Choisissez une suggestion ou tapez votre question.
             </p>
           ) : (
             history.map((turn, i) => (
@@ -109,7 +169,7 @@ export function CopilotChatView() {
               onKeyDown={(e) => {
                 if (e.key === "Enter" && !e.shiftKey) {
                   e.preventDefault();
-                  void send();
+                  send();
                 }
               }}
             />

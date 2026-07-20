@@ -12,6 +12,7 @@ export type Messages = {
     jurisdictions: string;
     green: string;
     partners: string;
+    copilot: string;
     login: string;
     start: string;
     menu: string;

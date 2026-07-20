@@ -17,6 +17,7 @@ const NAV_LINKS = [
   { href: "/jurisdictions?from=nav", key: "jurisdictions" as const },
   { href: "/green", key: "green" as const },
   { href: "/partners", key: "partners" as const },
+  { href: "/copilot", key: "copilot" as const },
 ] as const;
 
 export type AurosHeaderVariant = "pill" | "bar";

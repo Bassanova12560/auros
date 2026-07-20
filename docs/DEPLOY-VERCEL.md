@@ -53,6 +53,7 @@ Copier **toutes** les valeurs de `.env.local` :
 | `GROQ_API_KEY` | ✓ |
 | `GEMINI_API_KEY` | ✓ |
 | `MISTRAL_API_KEY` | ✓ |
+| `OPENROUTER_API_KEY` | optionnel — modèles `:free` (filet quota) |
 | `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` | ✓ **`pk_live_…`** (pas `pk_test_`) |
 | `CLERK_SECRET_KEY` | ✓ **`sk_live_…`** (pas `sk_test_`) |
 | `NEXT_PUBLIC_CLERK_SIGN_IN_URL` | `/sign-in` |
