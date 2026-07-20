@@ -2,13 +2,14 @@ import { z } from "zod";
 
 export const WATTS_RESERVE_ROUTE = "/green/chargeflow/reserve";
 export const WATTS_RESERVE_DISCLAIMER =
-  "AUROS Watts Reserve is indicative only — not a grid delivery guarantee, GO/REC legal certificate, or investment advice. Confirm mints an off-chain CFU proof — not a legal certificate or delivery guarantee.";
+  "AUROS Watts Reserve is indicative only — not a grid delivery guarantee, GO/REC legal certificate, or investment advice. Confirm/settle operate off-chain CFU proofs — not legal certificates or delivery guarantees.";
 
 export type WattFirmness = "firm" | "flex";
 export type WattSuggestedUnitKind = "e" | "f";
 export type WattReservationStatus =
   | "pending_confirm"
   | "confirmed"
+  | "settled"
   | "cancelled";
 
 export const wattReserveRequestSchema = z
@@ -46,6 +47,16 @@ export const wattReserveRequestSchema = z
 
 export type WattReserveRequest = z.infer<typeof wattReserveRequestSchema>;
 
+export const wattSettleRequestSchema = z.object({
+  delivery_ref: z.string().trim().max(128).optional(),
+  delivered_at: z.string().min(10).max(40).optional(),
+  energy_kwh_delivered: z.number().positive().max(1_000_000).optional(),
+  capacity_kw_delivered: z.number().positive().max(1_000_000).optional(),
+  reason: z.string().trim().max(500).optional(),
+});
+
+export type WattSettleRequest = z.infer<typeof wattSettleRequestSchema>;
+
 export type WattMatchReason = {
   code: string;
   detail: string;
@@ -75,6 +86,12 @@ export type WattReservation = {
   cfu_unit_id?: string | null;
   cfu_verify_url?: string | null;
   confirmed_at?: string | null;
+  settled_at?: string | null;
+  delivery_ref?: string | null;
+  delivered_at?: string | null;
+  energy_kwh_delivered?: number | null;
+  capacity_kw_delivered?: number | null;
+  settle_reason?: string | null;
 };
 
 export type WattReservePublicResponse = {
@@ -90,4 +107,10 @@ export type WattReservePublicResponse = {
   cfu_unit_id?: string | null;
   cfu_verify_url?: string | null;
   confirmed_at?: string | null;
+  settled_at?: string | null;
+  delivery_ref?: string | null;
+  delivered_at?: string | null;
+  energy_kwh_delivered?: number | null;
+  capacity_kw_delivered?: number | null;
+  settle_reason?: string | null;
 };

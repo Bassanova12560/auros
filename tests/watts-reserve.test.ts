@@ -196,4 +196,66 @@ describe("watts-reserve", () => {
     assert.equal(result.unit.unit_kind, "f");
     assert.equal(result.reservation.status, "confirmed");
   });
+
+  it("settle retires linked CFU and marks settled", async () => {
+    if (!process.env.ATTEST_SIGNING_KEY && !process.env.CRON_SECRET) {
+      process.env.ATTEST_SIGNING_KEY = "test-watts-reserve-signing-key-v1";
+    }
+    const { matchWattProfile } = await import("../lib/watts/match");
+    const { insertWattReservation } = await import("../lib/watts/store");
+    const { confirmWattReservation } = await import("../lib/watts/confirm");
+    const { settleWattReservation } = await import("../lib/watts/settle");
+
+    const profile = {
+      window: {
+        start: "2026-07-23T09:00:00.000Z",
+        end: "2026-07-23T11:00:00.000Z",
+      },
+      energy_kwh: 11,
+      zone: { country: "FR" },
+      firmness: "firm" as const,
+    };
+    const matched = matchWattProfile(profile);
+    assert.ok(matched.ok);
+    if (!matched.ok) return;
+
+    const row = await insertWattReservation({
+      key_hash: "test-watts-settle",
+      profile,
+      match_score: matched.match_score,
+      match_reasons: matched.reasons,
+      suggested_unit_kind: matched.suggested_unit_kind,
+    });
+    const confirmed = await confirmWattReservation({
+      reservation: row,
+      keyHash: "test-watts-settle",
+    });
+    assert.equal(confirmed.ok, true);
+    if (!confirmed.ok) return;
+
+    const settled = await settleWattReservation({
+      reservation: confirmed.reservation,
+      keyHash: "test-watts-settle",
+      settle: {
+        delivery_ref: "sess_test_42",
+        energy_kwh_delivered: 10.5,
+        reason: "Session complete",
+      },
+    });
+    assert.equal(settled.ok, true);
+    if (!settled.ok) return;
+    assert.equal(settled.reservation.status, "settled");
+    assert.equal(settled.reservation.delivery_ref, "sess_test_42");
+    assert.equal(settled.unit.status, "retired");
+    assert.equal(settled.newly_retired, true);
+
+    const again = await settleWattReservation({
+      reservation: settled.reservation,
+      keyHash: "test-watts-settle",
+      settle: {},
+    });
+    assert.equal(again.ok, false);
+    if (again.ok) return;
+    assert.equal(again.status, 409);
+  });
 });

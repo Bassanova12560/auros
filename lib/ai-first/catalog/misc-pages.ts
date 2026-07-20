@@ -150,7 +150,7 @@ export const wattsReservePage = enrichPage({
   description:
     "Réservation d’un profil énergétique, matching déterministe, confirm explicite → mint CFU-E ou CFU-F. Pas de livraison réseau garantie.",
   summary:
-    "Booking engine des watts : intent + match_score, puis confirm → CFU liée à reservation_id. Wedge flottes/CPO/flex.",
+    "Booking engine des watts : match → confirm (mint CFU) → settle (retire). Wedge flottes/CPO/flex.",
   contentType: "guide",
   language: "multi",
   indexable: true,
@@ -164,14 +164,14 @@ export const wattsReservePage = enrichPage({
   ],
   intents: [
     "Réserver des watts",
-    "Matching horaire carbone",
     "Confirmer mint CFU",
+    "Settle retire livraison",
   ],
   audience: ["flottes", "CPO", "acheteurs corporate", "développeurs"],
   facts: [
     { key: "API", value: "POST /api/v1/watts/reserve" },
     { key: "Confirm", value: "POST /api/v1/watts/reserve/:id/confirm" },
-    { key: "Garde-fou", value: "Pas d’auto-mint — confirm explicite" },
+    { key: "Settle", value: "POST /api/v1/watts/reserve/:id/settle" },
   ],
   relatedPaths: [
     "/green/chargeflow",

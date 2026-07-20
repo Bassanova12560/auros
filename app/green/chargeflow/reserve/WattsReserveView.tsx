@@ -23,7 +23,14 @@ type ReserveResult = {
   cfu_unit_id?: string | null;
   cfu_verify_url?: string | null;
   confirmed_at?: string | null;
-  unit?: { id?: string; verify_url?: string; unit_kind?: string };
+  settled_at?: string | null;
+  delivery_ref?: string | null;
+  unit?: {
+    id?: string;
+    verify_url?: string;
+    unit_kind?: string;
+    status?: string;
+  };
   error?: { message?: string };
 };
 
@@ -49,6 +56,8 @@ export function WattsReserveView() {
   const [carbonMax, setCarbonMax] = useState("50");
   const [loading, setLoading] = useState(false);
   const [confirming, setConfirming] = useState(false);
+  const [settling, setSettling] = useState(false);
+  const [deliveryRef, setDeliveryRef] = useState("");
   const [result, setResult] = useState<ReserveResult | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -118,8 +127,43 @@ export function WattsReserveView() {
     }
   }
 
+  async function settle() {
+    if (!result?.reservation_id) return;
+    setSettling(true);
+    setError(null);
+    try {
+      const body: Record<string, unknown> = {
+        reservation_id: result.reservation_id,
+        reason: "Demo delivery settle",
+      };
+      if (deliveryRef.trim()) body.delivery_ref = deliveryRef.trim();
+      if (firmness === "firm") {
+        body.energy_kwh_delivered = Number(energyKwh);
+      } else {
+        body.capacity_kw_delivered = Number(capacityKw);
+      }
+      const res = await fetch("/api/v1/watts/reserve/demo/settle", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+      const json = (await res.json()) as ReserveResult;
+      if (!res.ok) {
+        setError(json.error?.message ?? `Erreur ${res.status}`);
+        return;
+      }
+      setResult(json);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Network error");
+    } finally {
+      setSettling(false);
+    }
+  }
+
   const confirmed = result?.status === "confirmed";
   const pending = result?.status === "pending_confirm";
+  const settled = result?.status === "settled";
+  const busy = loading || confirming || settling;
 
   return (
     <div className="relative">
@@ -141,8 +185,8 @@ export function WattsReserveView() {
             Réserver des watts
           </h1>
           <p className="mx-auto max-w-md text-sm leading-relaxed text-white/55">
-            Une fenêtre, une zone, une cible. Matching indicatif, puis
-            confirmation explicite pour mint CFU-E ou CFU-F.
+            Matching indicatif, confirm pour mint CFU, settle pour retire à la
+            livraison — trois actions explicites.
           </p>
         </header>
 
@@ -263,7 +307,7 @@ export function WattsReserveView() {
           <PrimaryButton
             type="button"
             onClick={() => void submit()}
-            disabled={loading || confirming}
+            disabled={busy}
           >
             {loading ? "Matching…" : "Calculer le matching"}
           </PrimaryButton>
@@ -278,15 +322,21 @@ export function WattsReserveView() {
         {result?.reservation_id ? (
           <section
             className={`space-y-5 border p-6 md:p-8 ${
-              confirmed
-                ? "border-emerald-500/25 bg-emerald-500/[0.06]"
-                : "border-white/[0.08] bg-black/40"
+              settled
+                ? "border-white/15 bg-white/[0.04]"
+                : confirmed
+                  ? "border-emerald-500/25 bg-emerald-500/[0.06]"
+                  : "border-white/[0.08] bg-black/40"
             }`}
           >
             <div className="flex flex-wrap items-end justify-between gap-4">
               <div>
                 <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/40">
-                  {confirmed ? "Confirmé" : "Matching"}
+                  {settled
+                    ? "Settled"
+                    : confirmed
+                      ? "Confirmé"
+                      : "Matching"}
                 </p>
                 <p className="mt-1 font-display text-4xl tabular-nums text-white">
                   {result.match_score}
@@ -325,7 +375,7 @@ export function WattsReserveView() {
                 <PrimaryButton
                   type="button"
                   onClick={() => void confirm()}
-                  disabled={confirming || loading}
+                  disabled={busy}
                 >
                   {confirming
                     ? "Mint CFU…"
@@ -335,7 +385,7 @@ export function WattsReserveView() {
             ) : null}
 
             {confirmed ? (
-              <div className="space-y-3 border-t border-emerald-500/15 pt-5">
+              <div className="space-y-4 border-t border-emerald-500/15 pt-5">
                 <p className="text-sm text-white/70">
                   CFU{" "}
                   <span className="font-mono text-emerald-300/90">
@@ -349,6 +399,56 @@ export function WattsReserveView() {
                     variant="ghost"
                   >
                     Vérifier la CFU
+                  </PrimaryButton>
+                ) : null}
+                <div className="space-y-3 pt-2">
+                  <p className="text-xs leading-relaxed text-white/45">
+                    À la livraison, settle retire la CFU — preuve clôturée,
+                    pas d’auto-retire.
+                  </p>
+                  <label className="block max-w-xs space-y-1.5">
+                    <span className="font-mono text-[10px] uppercase tracking-wider text-white/40">
+                      Réf. livraison (optionnel)
+                    </span>
+                    <input
+                      value={deliveryRef}
+                      onChange={(e) => setDeliveryRef(e.target.value)}
+                      placeholder="session / meter id"
+                      className={fieldClass}
+                    />
+                  </label>
+                  <PrimaryButton
+                    type="button"
+                    onClick={() => void settle()}
+                    disabled={busy}
+                  >
+                    {settling ? "Settlement…" : "Livré · settle & retire CFU"}
+                  </PrimaryButton>
+                </div>
+              </div>
+            ) : null}
+
+            {settled ? (
+              <div className="space-y-3 border-t border-white/10 pt-5">
+                <p className="text-sm text-white/70">
+                  Réservation settled — CFU{" "}
+                  <span className="font-mono text-white/50">
+                    {result.cfu_unit_id ?? result.unit?.id}
+                  </span>{" "}
+                  retired
+                  {result.unit?.status ? ` (${result.unit.status})` : ""}.
+                </p>
+                {result.delivery_ref ? (
+                  <p className="font-mono text-[10px] text-white/35">
+                    delivery · {result.delivery_ref}
+                  </p>
+                ) : null}
+                {(result.cfu_verify_url ?? result.unit?.verify_url) ? (
+                  <PrimaryButton
+                    href={result.cfu_verify_url ?? result.unit?.verify_url}
+                    variant="ghost"
+                  >
+                    Voir la CFU retired
                   </PrimaryButton>
                 ) : null}
               </div>

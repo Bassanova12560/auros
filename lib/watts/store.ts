@@ -47,6 +47,19 @@ function rowToReservation(row: Record<string, unknown>): WattReservation {
     cfu_verify_url:
       row.cfu_verify_url != null ? String(row.cfu_verify_url) : null,
     confirmed_at: row.confirmed_at != null ? String(row.confirmed_at) : null,
+    settled_at: row.settled_at != null ? String(row.settled_at) : null,
+    delivery_ref: row.delivery_ref != null ? String(row.delivery_ref) : null,
+    delivered_at: row.delivered_at != null ? String(row.delivered_at) : null,
+    energy_kwh_delivered:
+      row.energy_kwh_delivered != null
+        ? Number(row.energy_kwh_delivered)
+        : null,
+    capacity_kw_delivered:
+      row.capacity_kw_delivered != null
+        ? Number(row.capacity_kw_delivered)
+        : null,
+    settle_reason:
+      row.settle_reason != null ? String(row.settle_reason) : null,
   };
 }
 
@@ -69,6 +82,12 @@ export async function insertWattReservation(input: {
     cfu_unit_id: null,
     cfu_verify_url: null,
     confirmed_at: null,
+    settled_at: null,
+    delivery_ref: null,
+    delivered_at: null,
+    energy_kwh_delivered: null,
+    capacity_kw_delivered: null,
+    settle_reason: null,
   };
 
   if (isSupabaseConfigured()) {
@@ -158,6 +177,65 @@ export async function markWattReservationConfirmed(input: {
           cfu_unit_id: input.cfu_unit_id,
           cfu_verify_url: input.cfu_verify_url,
           confirmed_at: confirmedAt,
+        })
+        .eq("id", input.id)
+        .select("*")
+        .maybeSingle();
+      if (!error && data) {
+        const mapped = rowToReservation(data as Record<string, unknown>);
+        memory.set(mapped.id, mapped);
+        persistFile();
+        return mapped;
+      }
+    } catch {
+      /* fallback file */
+    }
+  }
+
+  memory.set(updated.id, updated);
+  persistFile();
+  return updated;
+}
+
+export async function markWattReservationSettled(input: {
+  id: string;
+  delivery_ref: string | null;
+  delivered_at: string;
+  energy_kwh_delivered: number | null;
+  capacity_kw_delivered: number | null;
+  settle_reason: string | null;
+}): Promise<WattReservation> {
+  const settledAt = new Date().toISOString();
+  const existing = await getWattReservation(input.id);
+  if (!existing) {
+    throw new Error(`Watt reservation ${input.id} not found`);
+  }
+
+  const updated: WattReservation = {
+    ...existing,
+    status: "settled",
+    settled_at: settledAt,
+    delivery_ref: input.delivery_ref,
+    delivered_at: input.delivered_at,
+    energy_kwh_delivered: input.energy_kwh_delivered,
+    capacity_kw_delivered: input.capacity_kw_delivered,
+    settle_reason: input.settle_reason,
+  };
+
+  if (isSupabaseConfigured()) {
+    try {
+      const { getSupabaseServerClient } = await import("@/lib/supabase/server");
+      const supabase = getSupabaseServerClient();
+      const { data, error } = await supabase
+        .from("watt_reservations")
+        .update({
+          status: "settled",
+          settled_at: settledAt,
+          delivery_ref: input.delivery_ref,
+          delivered_at: input.delivered_at,
+          energy_kwh_delivered: input.energy_kwh_delivered,
+          capacity_kw_delivered: input.capacity_kw_delivered,
+          settle_reason: input.settle_reason,
         })
         .eq("id", input.id)
         .select("*")

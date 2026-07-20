@@ -25,6 +25,24 @@ export type ProtocolChangelogEntry = {
 /** Single source for `/developers/changelog` and GET `/api/v1/changelog`. Newest first. */
 export const PROTOCOL_CHANGELOG: ProtocolChangelogEntry[] = [
   {
+    id: "watts-reserve-step3",
+    date: "2026-07-20",
+    title: "Watts Reserve étape 3 — settle / retire",
+    summary:
+      "POST settle à la livraison : retire la CFU liée, status settled. Pas d’auto-retire.",
+    details: [
+      "POST /api/v1/watts/reserve/:id/settle (Premium) + /demo/settle.",
+      "Champs delivery_ref / delivered volumes optionnels.",
+      "UI demo : match → confirm → settle.",
+    ],
+    links: [
+      { href: "/green/chargeflow/reserve", label: "Watts Reserve" },
+      { href: "/green/chargeflow", label: "ChargeFlow" },
+    ],
+    tags: ["watts", "chargeflow", "settle"],
+    status: "released",
+  },
+  {
     id: "watts-reserve-step2",
     date: "2026-07-20",
     title: "Watts Reserve étape 2 — confirm → mint CFU",

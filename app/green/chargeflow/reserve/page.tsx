@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   ...metadataFromPath(WATTS_RESERVE_ROUTE),
   title: "AUROS Watts Reserve | Réserver des watts",
   description:
-    "Réservez un profil énergétique, matching déterministe, confirm explicite → mint CFU-E ou CFU-F. Pas de livraison réseau garantie.",
+    "Réservez un profil énergétique : matching, confirm → mint CFU, settle → retire à la livraison. Pas de livraison réseau garantie.",
 };
 
 export default function WattsReservePage() {
