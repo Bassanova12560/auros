@@ -1261,6 +1261,33 @@ paths:
       responses:
         "200":
           description: Demo unit
+  /api/v1/shield/quota:
+    get:
+      operationId: shieldQuota
+      summary: Shield tap quota and recent receipts
+      tags: [Shield]
+      security: [{ BearerAuth: [] }]
+      responses:
+        '200':
+          description: Quota + receipts
+  /api/v1/shield/audit:
+    get:
+      operationId: shieldAudit
+      summary: Premium Shield audit log
+      tags: [Shield]
+      security: [{ BearerAuth: [] }]
+      responses:
+        '200':
+          description: Audit events
+  /api/v1/shield/reseal:
+    post:
+      operationId: shieldReseal
+      summary: Premium schedule hybrid_pqc_ready reseal
+      tags: [Shield]
+      security: [{ BearerAuth: [] }]
+      responses:
+        '200':
+          description: Reseal envelope
   /api/v1/shield/demo:
     post:
       operationId: shieldDemo
@@ -1398,6 +1425,8 @@ paths:
                 type: object
                 additionalProperties: true
   /api/v1/chargeflow/export:
+    # Query shield=1 for opt-in Shield proof tap of the export body
+
     get:
       tags: [Premium]
       summary: Export ChargeFlow CFU portfolio (audit pack)
@@ -3054,7 +3083,7 @@ components:
               - deadline_approaching
               - regulatory.update
               - green.index.changelog
-              - chargeflow.unit.minted
+              - chargeflow.unit.minted\n        - shield.tap.created
               - chargeflow.unit.retired
     WebhookDelivery:
       type: object

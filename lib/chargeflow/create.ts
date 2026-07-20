@@ -92,6 +92,7 @@ export async function createChargeflowUnit(
       operator_id: input.session.operator_id,
       country: input.session.location?.country,
       renewable_claim: input.attributes?.renewable_claim,
+      generation_source: input.attributes?.generation_source,
     }
   );
 
@@ -227,6 +228,7 @@ export async function createChargeflowFUnit(
       operator_id: input.window.operator_id,
       country: input.window.location?.country,
       direction: input.window.direction,
+      generation_source: input.attributes?.generation_source,
     }
   );
 

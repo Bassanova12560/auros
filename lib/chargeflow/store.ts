@@ -33,6 +33,7 @@ export type ChargeflowPublicSnapshot = {
   operator_id?: string;
   country?: string;
   renewable_claim?: string;
+  generation_source?: string;
   watt_rating?: number | null;
   watt_tier?: "high" | "mid" | "early" | null;
   energy_value_eur_indicative?: number | null;
@@ -336,6 +337,8 @@ export type ChargeflowListItem = {
   energy_kwh?: number;
   volume_m3?: number;
   capacity_kw?: number;
+  generation_source?: string | null;
+  verify_url: string;
 };
 
 export function toChargeflowListItem(
@@ -350,6 +353,8 @@ export function toChargeflowListItem(
     operator_id: record.operator_id,
     external_ref: record.external_ref,
     content_hash: record.content_hash,
+    generation_source: record.public.generation_source ?? null,
+    verify_url: chargeflowVerifyUrl(record.id),
   };
   if (record.public.energy_kwh != null) item.energy_kwh = record.public.energy_kwh;
   if (record.public.volume_m3 != null) item.volume_m3 = record.public.volume_m3;
@@ -483,6 +488,7 @@ export function buildPublicSnapshotE(
     operator_id?: string;
     country?: string;
     renewable_claim?: string;
+    generation_source?: string;
   }
 ): ChargeflowPublicSnapshot {
   return {
@@ -496,6 +502,9 @@ export function buildPublicSnapshotE(
     ...(extras.country ? { country: extras.country } : {}),
     ...(extras.renewable_claim
       ? { renewable_claim: extras.renewable_claim }
+      : {}),
+    ...(extras.generation_source
+      ? { generation_source: extras.generation_source }
       : {}),
     watt_rating: auros.watt_rating ?? null,
     watt_tier: auros.watt_tier ?? null,
@@ -544,6 +553,7 @@ export function buildPublicSnapshotF(
     operator_id?: string;
     country?: string;
     direction?: string;
+    generation_source?: string;
   }
 ): ChargeflowPublicSnapshot {
   return {
@@ -556,6 +566,9 @@ export function buildPublicSnapshotF(
     ...(extras.direction ? { direction: extras.direction } : {}),
     ...(extras.operator_id ? { operator_id: extras.operator_id } : {}),
     ...(extras.country ? { country: extras.country } : {}),
+    ...(extras.generation_source
+      ? { generation_source: extras.generation_source }
+      : {}),
     watt_rating: auros.watt_rating ?? null,
     watt_tier: auros.watt_tier ?? null,
     capacity_kw_indicative: auros.capacity_kw_indicative ?? capacityKw,

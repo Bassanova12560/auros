@@ -24,6 +24,11 @@ export const SHIELD_PREMIUM_FEATURES = [
   "evidence_pack",
   "raw_ingest",
   "instrument_fetch",
+  "middleware_next_express",
+  "shield_tap_webhook",
+  "audit_log",
+  "reseal_pqc",
+  "export_autotap",
   "priority_support",
 ] as const;
 

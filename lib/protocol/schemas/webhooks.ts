@@ -8,6 +8,7 @@ export const WEBHOOK_EVENT_TYPES = [
   "green.index.changelog",
   "chargeflow.unit.minted",
   "chargeflow.unit.retired",
+  "shield.tap.created",
 ] as const;
 
 export const webhookRegisterSchema = z.object({

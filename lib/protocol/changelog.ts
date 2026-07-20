@@ -25,6 +25,26 @@ export type ProtocolChangelogEntry = {
 /** Single source for `/developers/changelog` and GET `/api/v1/changelog`. Newest first. */
 export const PROTOCOL_CHANGELOG: ProtocolChangelogEntry[] = [
   {
+    id: "shield-full-stack-adoption",
+    date: "2026-07-20",
+    title: "Shield — middleware, webhooks, banques, CFU auto-tap, Python",
+    summary:
+      "Adoption complète : withShieldTap/expressShieldTap, webhook shield.tap.created, landing banques + pack exemple, dashboard quota, export CFU ?shield=1, generation_source dans Evidence Pack, reseal/audit Premium, snippets agents, case study, welcome email, SDK Python.",
+    details: [
+      "Middleware Next + Express + instrumentFetch",
+      "GET /api/v1/shield/quota · audit · reseal",
+      "Export CFU ?shield=1 + verify dans JSON/CSV",
+      "Pages /developers/shield/{banks,dashboard,agents,case-study}",
+    ],
+    links: [
+      { href: "/developers/shield", label: "Shield" },
+      { href: "/developers/shield/banks", label: "Banques" },
+      { href: "/developers/shield/case-study", label: "Case study" },
+    ],
+    tags: ["shield", "chargeflow", "institutions", "sdk"],
+    status: "released",
+  },
+  {
     id: "shield-try-one-click",
     date: "2026-07-20",
     title: "Shield — essai 1 clic + bouton console CFU",

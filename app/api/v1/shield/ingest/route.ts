@@ -11,9 +11,11 @@ import {
 } from "@/lib/protocol";
 import {
   SHIELD_DISCLAIMER,
+  appendShieldAudit,
   createCloudTapReceipt,
   getTapUsage,
   incrementTapUsage,
+  notifyShieldTapWebhooks,
   shieldPlanFromPremium,
   shieldTapLimit,
 } from "@/lib/shield";
@@ -66,7 +68,6 @@ export const POST = protocolRoute(async (req: Request) => {
     );
   }
 
-  // Cap free ingest body size soft — avoid abuse (1 MB)
   if (plan === "free" && raw.length > 1_000_000) {
     return protocolError(
       "payload_too_large",
@@ -81,6 +82,7 @@ export const POST = protocolRoute(async (req: Request) => {
       kind: "tap",
       label,
       plan,
+      tenant_ref: auth.ctx.keyHash,
     },
     SITE_URL
   );
@@ -96,6 +98,20 @@ export const POST = protocolRoute(async (req: Request) => {
   const used = incrementTapUsage(auth.ctx.keyHash);
   await logProtocolUsage(auth.ctx.keyHash, "/api/v1/shield/ingest", "POST", 200);
 
+  void notifyShieldTapWebhooks(auth.ctx.keyHash, result.receipt).catch(
+    () => undefined
+  );
+
+  if (plan === "premium") {
+    appendShieldAudit({
+      key_hash: auth.ctx.keyHash,
+      action: "ingest",
+      receipt_id: result.receipt.id,
+      content_hash: result.receipt.content_hash,
+      meta: { label: label ?? null },
+    });
+  }
+
   return protocolJson({
     ok: true,
     integration: "ingest_raw",
@@ -104,8 +120,9 @@ export const POST = protocolRoute(async (req: Request) => {
     next: {
       verify: "POST /api/v1/shield/verify",
       pack_premium: "POST /api/v1/shield/pack",
+      webhook: "Register event shield.tap.created on POST /api/v1/webhooks",
       one_liner:
-        "instrumentFetch({ apiKey }) — wrap fetch without changing business code",
+        "withShieldTap / expressShieldTap / instrumentFetch — zero rewrite",
     },
     disclaimer: SHIELD_DISCLAIMER,
     ...(plan === "free" ? premiumPricingMeta() : {}),

@@ -2,15 +2,18 @@
 
 ## Réponse courte
 
-**Oui, maintenant c’est facile** : curl d’un fichier, ou une ligne `instrumentFetch`.  
-**Premium = Evidence Pack** : le livrable banque/auditeur quand chaque entreprise a des RWA — pas juste « plus de quota ».
+**Oui, maintenant c’est facile** : curl, `instrumentFetch`, `withShieldTap` (Next), `expressShieldTap`, ou bouton console CFU.  
+**Premium = Evidence Pack** + audit + reseal PQC — livrable banque/auditeur.
 
 ## Free — devenir le standard
 
 | Intégration | Effort |
 |-------------|--------|
+| Essai UI `/developers/shield` | 0 |
+| `POST /api/v1/shield/demo` | 0 clé |
 | `POST /api/v1/shield/ingest` + body brut | 0 schéma |
-| `instrumentFetch({ apiKey })` | 1 ligne |
+| `instrumentFetch` / `withShieldTap` / `expressShieldTap` | 1 ligne |
+| Webhook `shield.tap.created` | config |
 | `npx auros-shield serve` | on-prem |
 | Verify public | illimité |
 
@@ -18,16 +21,14 @@ Quota free : 100 ingest/mois. Payload **jamais** stocké.
 
 ## Premium — du lourd utile
 
-`POST /api/v1/shield/pack` assemble :
+`POST /api/v1/shield/pack` assemble CFU + taps + `generation_source` + SLA indicatif + `bank_actions`.
 
-- CFU (hash + statut) de la clé
-- Taps Shield récents
-- `pack_hash` + signature
-- `bank_actions` (joindre au dossier crédit/ESG, re-verify, reseal PQC)
-- Horizon rétention 7–30 ans
+Aussi : `GET /api/v1/shield/audit`, `POST /api/v1/shield/reseal`, export CFU `?shield=1`.
 
-Sans ouvrir la data room. C’est ce que risk/credit demandent quand le RWA est la norme.
+## Surfaces
 
-## Page
-
-`/developers/shield`
+- `/developers/shield` — essai
+- `/developers/shield/banks` — Evidence Pack banque
+- `/developers/shield/dashboard` — quota
+- `/developers/shield/agents` — snippets Cursor/Claude
+- `/developers/shield/case-study` — flotte → banque

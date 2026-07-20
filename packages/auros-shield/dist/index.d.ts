@@ -100,5 +100,30 @@ declare function instrumentFetch(config: {
     label?: string;
     softFail?: boolean;
 }, fetchImpl?: typeof fetch): typeof fetch;
+type EasyTapConfig = {
+    apiKey: string;
+    baseUrl?: string;
+    label?: string;
+    softFail?: boolean;
+};
+type ShieldMiddlewareConfig = EasyTapConfig & {
+    ignorePaths?: string[];
+    tapRequest?: boolean;
+    tapResponse?: boolean;
+};
+/** Next.js App Router — wrap a route handler. */
+declare function withShieldTap(config: ShieldMiddlewareConfig, handler: (req: Request) => Promise<Response> | Response): (req: Request) => Promise<Response>;
+/** Express middleware — after body-parser. */
+declare function expressShieldTap(config: ShieldMiddlewareConfig): (req: {
+    method?: string;
+    path?: string;
+    url?: string;
+    body?: unknown;
+    rawBody?: string | Buffer;
+}, _res: unknown, next: (err?: unknown) => void) => void;
+declare const MIDDLEWARE_SNIPPETS: {
+    readonly next: "export const POST = withShieldTap({ apiKey: process.env.AUROS_API_KEY! }, handler);";
+    readonly express: "app.use(expressShieldTap({ apiKey: process.env.AUROS_API_KEY! }));";
+};
 
-export { CRYPTO_PROFILES, type CryptoProfile, SHIELD_DISCLAIMER, SHIELD_VERSION, type ShieldSeal, type ShieldSealKind, buildCbom, instrumentFetch, isContentHash, resolveShieldSigningKey, sealLocal, sha256Hex, tapLocal, verifyLocal };
+export { CRYPTO_PROFILES, type CryptoProfile, type EasyTapConfig, MIDDLEWARE_SNIPPETS, SHIELD_DISCLAIMER, SHIELD_VERSION, type ShieldMiddlewareConfig, type ShieldSeal, type ShieldSealKind, buildCbom, expressShieldTap, instrumentFetch, isContentHash, resolveShieldSigningKey, sealLocal, sha256Hex, tapLocal, verifyLocal, withShieldTap };

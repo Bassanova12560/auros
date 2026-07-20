@@ -1,0 +1,62 @@
+{
+  "pack_id": "shp_EXAMPLE_DO_NOT_USE_IN_PROD",
+  "shield_version": "0.3.0",
+  "generated_at": "2026-07-20T12:00:00.000Z",
+  "purpose": "Institutional evidence pack — CFU + Shield taps, hash-only, counterparty-verifiable",
+  "retention": {
+    "horizon_years_min": 7,
+    "horizon_years_max": 30,
+    "harvest_now_note": "RWA/ESG evidence often outlives classical crypto assumptions — reseal on hybrid_pqc_ready before quantum cryptanalysis is practical."
+  },
+  "summary": {
+    "cfu_total": 12,
+    "cfu_active": 10,
+    "cfu_retired": 2,
+    "tap_receipts_included": 8,
+    "tenant_refs": ["example_key_hash"],
+    "generation_sources": ["grid_mix", "nuclear"]
+  },
+  "units": [
+    {
+      "id": "cfu_e_EXAMPLE",
+      "kind": "e",
+      "status": "active",
+      "content_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "created_at": "2026-07-01T10:00:00.000Z",
+      "generation_source": "nuclear",
+      "verify_url": "https://getauros.com/chargeflow/cfu_e_EXAMPLE"
+    }
+  ],
+  "taps": [
+    {
+      "id": "shr_EXAMPLE",
+      "content_hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "cloud_signature": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "created_at": "2026-07-20T11:00:00.000Z",
+      "kind": "tap",
+      "verify_url": "https://getauros.com/api/v1/shield/receipts/shr_EXAMPLE"
+    }
+  ],
+  "pack_hash": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+  "pack_signature": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+  "verify_hint": "https://getauros.com/api/v1/shield/verify",
+  "bank_actions": [
+    "Attach pack to credit / ESG file without requesting raw data room",
+    "Re-verify any tap via public POST /api/v1/shield/verify",
+    "Schedule reseal when hybrid_pqc_ready keys are issued",
+    "Diff next pack against pack_hash for continuous monitoring",
+    "Review generation_source (nuclear lives under /power — not Green Verified)"
+  ],
+  "sla": {
+    "verify_availability_target": "99.9%",
+    "verify_latency_p99_ms_target": 800,
+    "receipt_retention_years_min": 7,
+    "note": "Indicative operational targets — not a regulated SLA contract."
+  },
+  "reseal": {
+    "recommended_profile": "hybrid_pqc_ready_v1",
+    "reason": "Long retention + harvest-now risk — Premium keeps pack envelopes crypto-agile."
+  },
+  "payload_retained": false,
+  "disclaimer": "AUROS Shield issues hash-only proofs. Not a regulated audit opinion, certificate of origin, or investment advice."
+}

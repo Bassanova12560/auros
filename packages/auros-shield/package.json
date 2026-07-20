@@ -1,7 +1,7 @@
 {
   "name": "@adrien1212balitrand/auros-shield",
-  "version": "0.3.0",
-  "description": "AUROS Shield — on-prem cryptographic underlayer for RWA CFU/attest seals, CBOM and crypto-agility (PQC-ready envelopes)",
+  "version": "0.4.0",
+  "description": "AUROS Shield — easy Proof Tap (instrumentFetch, withShieldTap, expressShieldTap), on-prem seals, CBOM, PQC-ready",
   "license": "MIT",
   "type": "module",
   "main": "./dist/index.js",

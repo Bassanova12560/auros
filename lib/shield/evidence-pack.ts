@@ -4,6 +4,7 @@ import { listChargeflowForKey } from "@/lib/chargeflow/store";
 import { resolveAttestSigningKey } from "@/lib/protocol/attest/signing";
 import { SITE_URL } from "@/lib/comparators/site";
 
+import { SHIELD_SLA } from "./audit";
 import { ANCHOR_PREFIX, listReceiptsForExport } from "./tap";
 import { SHIELD_DISCLAIMER, SHIELD_VERSION } from "./types";
 
@@ -26,6 +27,7 @@ export type EvidencePack = {
     cfu_retired: number;
     tap_receipts_included: number;
     tenant_refs: string[];
+    generation_sources: string[];
   };
   /** Hash-only CFU snapshot — no session PII. */
   units: {
@@ -34,6 +36,8 @@ export type EvidencePack = {
     status: string;
     content_hash: string;
     created_at: string;
+    generation_source: string | null;
+    verify_url: string;
   }[];
   taps: {
     id: string;
@@ -41,11 +45,13 @@ export type EvidencePack = {
     cloud_signature: string;
     created_at: string;
     kind: string;
+    verify_url: string;
   }[];
   pack_hash: string;
   pack_signature: string;
   verify_hint: string;
   bank_actions: string[];
+  sla: typeof SHIELD_SLA;
   reseal: {
     recommended_profile: "hybrid_pqc_ready_v1";
     reason: string;
@@ -82,7 +88,7 @@ export async function buildEvidencePack(input: {
     offset: 0,
   });
 
-  const taps = listReceiptsForExport(tapLimit);
+  const taps = listReceiptsForExport(tapLimit, input.keyHash);
   const tenant_refs = [
     ...new Set(taps.map((t) => t.tenant_ref).filter(Boolean) as string[]),
   ];
@@ -92,14 +98,29 @@ export async function buildEvidencePack(input: {
     status: u.status,
     content_hash: u.content_hash,
     created_at: u.created_at,
+    generation_source: u.generation_source ?? null,
+    verify_url: u.verify_url,
   }));
+
+  const generation_sources = [
+    ...new Set(
+      units
+        .map((u) => u.generation_source)
+        .filter((s): s is string => Boolean(s))
+    ),
+  ];
 
   const active = units.filter((u) => u.status === "active").length;
   const retired = units.filter((u) => u.status === "retired").length;
 
   const canonical = JSON.stringify({
     v: SHIELD_VERSION,
-    units: units.map((u) => [u.id, u.content_hash, u.status]),
+    units: units.map((u) => [
+      u.id,
+      u.content_hash,
+      u.status,
+      u.generation_source,
+    ]),
     taps: taps.map((t) => [t.id, t.content_hash, t.cloud_signature]),
     label: input.label ?? null,
   });
@@ -133,6 +154,7 @@ export async function buildEvidencePack(input: {
       cfu_retired: retired,
       tap_receipts_included: taps.length,
       tenant_refs,
+      generation_sources,
     },
     units,
     taps: taps.map((t) => ({
@@ -141,6 +163,7 @@ export async function buildEvidencePack(input: {
       cloud_signature: t.cloud_signature,
       created_at: t.created_at,
       kind: t.kind,
+      verify_url: t.verify_url,
     })),
     pack_hash,
     pack_signature,
@@ -150,7 +173,9 @@ export async function buildEvidencePack(input: {
       "Re-verify any tap via public POST /api/v1/shield/verify",
       "Schedule reseal when hybrid_pqc_ready keys are issued",
       "Diff next pack against pack_hash for continuous monitoring",
+      "Review generation_source (nuclear lives under /power — not Green Verified)",
     ],
+    sla: SHIELD_SLA,
     reseal: {
       recommended_profile: "hybrid_pqc_ready_v1",
       reason:

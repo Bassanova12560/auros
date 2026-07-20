@@ -79,5 +79,25 @@ describe("AUROS Shield freemium tap", () => {
     assert.equal(result.pack.payload_retained, false);
     assert.ok(result.pack.bank_actions.length >= 3);
     assert.equal(result.pack.pack_hash.length, 64);
+    assert.ok(Array.isArray(result.pack.summary.generation_sources));
+    assert.ok(result.pack.sla.verify_availability_target);
+  });
+
+  it("reseal schedules hybrid profile", async () => {
+    process.env.ATTEST_SIGNING_KEY = "test-cloud-anchor-key";
+    const tap = createCloudTapReceipt({ body: "reseal-me", plan: "premium" });
+    assert.equal(tap.ok, true);
+    if (!tap.ok) return;
+    const { resealReceipt } = await import("../lib/shield/reseal");
+    const reseal = resealReceipt({ receipt_id: tap.receipt.id });
+    assert.equal(reseal.ok, true);
+    if (!reseal.ok) return;
+    assert.equal(reseal.reseal.recommended_profile, "hybrid_pqc_ready_v1");
+  });
+
+  it("middleware helpers are exported", async () => {
+    const mod = await import("../lib/shield/middleware");
+    assert.equal(typeof mod.withShieldTap, "function");
+    assert.equal(typeof mod.expressShieldTap, "function");
   });
 });

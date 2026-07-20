@@ -1278,13 +1278,17 @@ export type GreenApiKeyWelcomeEmailData = {
 export function greenApiKeyWelcomeEmail(data: GreenApiKeyWelcomeEmailData) {
   const origin = siteOrigin();
   const premiumUrl = `${origin}/green/api`;
+  const shieldUrl = `${origin}/developers/shield`;
   const html = layout(
     `<p style="margin:0 0 16px;">Votre clé API AUROS Green est active — <strong>${data.monthlyLimit} requêtes/mois</strong> (CQS, Watt, Registry Connect, Nature Score).</p>` +
-      `<p style="margin:0 0 16px;color:${BRAND_MUTED};">Conservez la clé affichée une seule fois. Industrialisez avec Premium : 25&nbsp;000 req/mois, batch 50, historique et DPP Bridge.</p>` +
+      `<p style="margin:0 0 16px;color:${BRAND_MUTED};">Essayez <strong>AUROS Shield</strong> sans friction : collez un export sur <a href="${shieldUrl}" style="color:${CTA_RED};">${shieldUrl}</a> (demo) ou <code>POST /api/v1/shield/ingest</code> avec votre clé — preuve hash-only, payload jamais stocké.</p>` +
+      `<p style="margin:0 0 16px;color:${BRAND_MUTED};">Conservez la clé affichée une seule fois. Industrialisez avec Premium : 25&nbsp;000 req/mois, batch 50, historique, Evidence Pack banque.</p>` +
+      cta(shieldUrl, "Essayer Shield maintenant") +
+      `<p style="margin:24px 0 0;"></p>` +
       cta(premiumUrl, "Passer en Premium — 299 €/mois")
   );
   return {
-    subject: "Votre clé AUROS Green API est prête",
+    subject: "Votre clé AUROS est prête — essayez Shield",
     html,
   };
 }

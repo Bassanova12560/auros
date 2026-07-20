@@ -13,6 +13,16 @@ import {
   type ChargeflowStatus,
   type ChargeflowUnitKind,
 } from "@/lib/chargeflow";
+import { SITE_URL } from "@/lib/comparators/site";
+import {
+  appendShieldAudit,
+  createCloudTapReceipt,
+  getTapUsage,
+  incrementTapUsage,
+  notifyShieldTapWebhooks,
+  shieldPlanFromPremium,
+  shieldTapLimit,
+} from "@/lib/shield";
 
 const EXPORT_MAX = 5000;
 const EXPORT_DISCLAIMER =
@@ -20,7 +30,7 @@ const EXPORT_DISCLAIMER =
 
 function toCsv(rows: Record<string, unknown>[]): string {
   if (rows.length === 0) {
-    return "id,unit_kind,status,created_at,verify_url,content_hash\n";
+    return "id,unit_kind,status,created_at,verify_url,content_hash,generation_source\n";
   }
   const keys = [
     "id",
@@ -30,6 +40,7 @@ function toCsv(rows: Record<string, unknown>[]): string {
     "retired_at",
     "verify_url",
     "content_hash",
+    "generation_source",
     "operator_id",
   ];
   const escape = (v: unknown) => {
@@ -58,6 +69,10 @@ export const GET = protocolRoute(async (req: Request) => {
   if (format !== "json" && format !== "csv") {
     return protocolError("validation_error", "format must be json or csv", 400);
   }
+
+  const shieldTap =
+    url.searchParams.get("shield") === "1" ||
+    url.searchParams.get("shield_tap") === "1";
 
   const kindRaw = url.searchParams.get("kind");
   let unit_kind: ChargeflowUnitKind | undefined;
@@ -115,6 +130,7 @@ export const GET = protocolRoute(async (req: Request) => {
         retired_at: item.retired_at ?? null,
         verify_url: item.verify_url,
         content_hash: item.content_hash,
+        generation_source: item.generation_source ?? null,
         operator_id: item.operator_id ?? null,
       });
       if (units.length >= limit) break;
@@ -130,16 +146,64 @@ export const GET = protocolRoute(async (req: Request) => {
   });
 
   const exported_at = new Date().toISOString();
+  let shield:
+    | {
+        receipt_id: string;
+        content_hash: string;
+        verify_url: string;
+        cloud_signature: string;
+      }
+    | undefined;
+
+  if (shieldTap) {
+    const plan = shieldPlanFromPremium(true);
+    const tapLimit = shieldTapLimit(plan);
+    const usage = getTapUsage(auth.ctx.keyHash);
+    if (usage.count < tapLimit) {
+      const exportBody = JSON.stringify({ exported_at, total, count: units.length, units });
+      const tap = createCloudTapReceipt(
+        {
+          body: exportBody,
+          kind: "tap",
+          label: "chargeflow-export",
+          plan,
+          tenant_ref: auth.ctx.keyHash,
+        },
+        SITE_URL
+      );
+      if (tap.ok) {
+        incrementTapUsage(auth.ctx.keyHash);
+        void notifyShieldTapWebhooks(auth.ctx.keyHash, tap.receipt).catch(
+          () => undefined
+        );
+        appendShieldAudit({
+          key_hash: auth.ctx.keyHash,
+          action: "export",
+          receipt_id: tap.receipt.id,
+          content_hash: tap.receipt.content_hash,
+        });
+        shield = {
+          receipt_id: tap.receipt.id,
+          content_hash: tap.receipt.content_hash,
+          verify_url: tap.receipt.verify_url,
+          cloud_signature: tap.receipt.cloud_signature,
+        };
+      }
+    }
+  }
+
   if (format === "csv") {
-    return new Response(toCsv(units), {
-      status: 200,
-      headers: {
-        "Content-Type": "text/csv; charset=utf-8",
-        "Content-Disposition": `attachment; filename="auros-chargeflow-export.csv"`,
-        "X-AUROS-Export-Total": String(total),
-        "X-AUROS-Export-Count": String(units.length),
-      },
-    });
+    const headers: Record<string, string> = {
+      "Content-Type": "text/csv; charset=utf-8",
+      "Content-Disposition": `attachment; filename="auros-chargeflow-export.csv"`,
+      "X-AUROS-Export-Total": String(total),
+      "X-AUROS-Export-Count": String(units.length),
+    };
+    if (shield) {
+      headers["X-AUROS-Shield-Receipt"] = shield.receipt_id;
+      headers["X-AUROS-Shield-Verify"] = shield.verify_url;
+    }
+    return new Response(toCsv(units), { status: 200, headers });
   }
 
   return protocolJson({
@@ -147,6 +211,14 @@ export const GET = protocolRoute(async (req: Request) => {
     total,
     count: units.length,
     units,
+    ...(shield
+      ? {
+          shield: {
+            ...shield,
+            note: "Opt-in via ?shield=1 — export hashed, payload discarded",
+          },
+        }
+      : { shield_hint: "Add ?shield=1 to auto-tap this export" }),
     disclaimer: EXPORT_DISCLAIMER,
     pricing: premiumPricingMeta(),
   });

@@ -96,11 +96,17 @@ curl -X POST https://getauros.com/api/v1/shield/ingest \\
               <PrimaryButton href="/green/chargeflow/console">
                 Console CFU → Shield
               </PrimaryButton>
+              <PrimaryButton href="/developers/shield/banks" variant="ghost">
+                Banques
+              </PrimaryButton>
+              <PrimaryButton href="/developers/shield/agents" variant="ghost">
+                Agents
+              </PrimaryButton>
+              <PrimaryButton href="/developers/shield/dashboard" variant="ghost">
+                Quota
+              </PrimaryButton>
               <PrimaryButton href="/developers/institutions" variant="ghost">
                 Institutions
-              </PrimaryButton>
-              <PrimaryButton href="/api/v1/shield/cbom" variant="ghost">
-                CBOM
               </PrimaryButton>
             </div>
 

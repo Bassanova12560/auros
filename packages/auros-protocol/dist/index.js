@@ -219,6 +219,19 @@ var AurosProtocol = class {
   async shieldPack(body = {}) {
     return this.post("/api/v1/shield/pack", body);
   }
+  /** Shield quota + recent receipts. */
+  async shieldQuota() {
+    return this.get("/api/v1/shield/quota");
+  }
+  /** Premium reseal schedule. */
+  async shieldReseal(body) {
+    return this.post("/api/v1/shield/reseal", body);
+  }
+  /** Premium audit log. */
+  async shieldAudit(query = {}) {
+    const q = query.limit != null ? `?limit=${encodeURIComponent(String(query.limit))}` : "";
+    return this.get(`/api/v1/shield/audit${q}`);
+  }
   async wattsReservation(id) {
     return this.get(
       `/api/v1/watts/reserve/${encodeURIComponent(id)}`

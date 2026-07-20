@@ -11,9 +11,11 @@ import {
 } from "@/lib/protocol";
 import {
   SHIELD_DISCLAIMER,
+  appendShieldAudit,
   createCloudTapReceipt,
   getTapUsage,
   incrementTapUsage,
+  notifyShieldTapWebhooks,
   shieldPlanFromPremium,
   shieldTapLimit,
 } from "@/lib/shield";
@@ -87,8 +89,11 @@ export const POST = protocolRoute(async (req: Request) => {
       content_hash: b.content_hash,
       kind: (b.kind as "tap") ?? "tap",
       local_signature: b.local_signature,
-      profile: b.profile as "classical_hmac_sha256_v1" | "hybrid_pqc_ready_v1" | undefined,
-      tenant_ref: b.tenant_ref,
+      profile: b.profile as
+        | "classical_hmac_sha256_v1"
+        | "hybrid_pqc_ready_v1"
+        | undefined,
+      tenant_ref: b.tenant_ref ?? auth.ctx.keyHash,
       label: b.label,
       plan,
     },
@@ -106,12 +111,32 @@ export const POST = protocolRoute(async (req: Request) => {
   const used = incrementTapUsage(auth.ctx.keyHash);
   await logProtocolUsage(auth.ctx.keyHash, "/api/v1/shield/tap", "POST", 200);
 
+  void notifyShieldTapWebhooks(auth.ctx.keyHash, result.receipt).catch(
+    () => undefined
+  );
+
+  if (plan === "premium") {
+    appendShieldAudit({
+      key_hash: auth.ctx.keyHash,
+      action: "tap",
+      receipt_id: result.receipt.id,
+      content_hash: result.receipt.content_hash,
+    });
+  }
+
   return protocolJson({
     ...result.receipt,
     quota: { plan, used, limit, remaining: Math.max(0, limit - used) },
     freemium: {
       free: ["proof_tap", "public_verify", "cbom"],
-      premium: ["unlimited_taps", "batch", "hybrid_pqc_ready", "receipt_export"],
+      premium: [
+        "unlimited_taps",
+        "batch",
+        "hybrid_pqc_ready",
+        "receipt_export",
+        "audit_log",
+        "reseal",
+      ],
     },
     disclaimer: SHIELD_DISCLAIMER,
     ...(plan === "free" ? premiumPricingMeta() : {}),

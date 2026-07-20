@@ -47,7 +47,12 @@ const LINKS = [
   {
     href: "/developers/shield",
     title: "AUROS Shield",
-    detail: "Collez → preuve (demo) · Evidence Pack Premium pour banques",
+    detail: "Collez → preuve · Evidence Pack banque · ?shield=1 sur export CFU",
+  },
+  {
+    href: "/developers/shield/banks",
+    title: "Evidence Pack banques",
+    detail: "Joindre la preuve au dossier crédit/ESG — sans data room",
   },
 ] as const;
 

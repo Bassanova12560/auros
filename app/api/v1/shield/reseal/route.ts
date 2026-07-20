@@ -8,14 +8,12 @@ import {
   protocolJson,
   protocolRoute,
 } from "@/lib/protocol";
-import { appendShieldAudit } from "@/lib/shield";
-import { buildEvidencePack } from "@/lib/shield/evidence-pack";
+import { appendShieldAudit, resealReceipt } from "@/lib/shield";
 
 export const runtime = "nodejs";
 
 /**
- * Premium Evidence Pack — heavy bank deliverable when every company has RWAs.
- * Aggregates CFU + Shield taps into one sealed, hash-only pack with bank actions.
+ * Premium reseal — schedule hybrid_pqc_ready envelope on an existing receipt.
  */
 export const POST = protocolRoute(async (req: Request) => {
   const auth = await authenticateProtocolRequest(req);
@@ -29,8 +27,7 @@ export const POST = protocolRoute(async (req: Request) => {
       {
         error: {
           code: "premium_required",
-          message:
-            "Evidence Pack is Premium — continuous RWA proof for credit/ESG/auditors. Upgrade Monitor.",
+          message: "Reseal / PQC agility is Premium.",
         },
         ...premiumPricingMeta(),
       },
@@ -38,20 +35,20 @@ export const POST = protocolRoute(async (req: Request) => {
     );
   }
 
-  let body: { label?: string; cfu_limit?: number; tap_limit?: number } = {};
+  let body: { receipt_id?: string; content_hash?: string } = {};
   try {
-    if (req.headers.get("content-type")?.includes("json")) {
-      body = (await req.json()) as typeof body;
-    }
+    body = (await req.json()) as typeof body;
   } catch {
-    body = {};
+    return protocolError("invalid_json", "JSON body required", 400);
   }
 
-  const result = await buildEvidencePack({
-    keyHash: auth.ctx.keyHash,
-    label: body.label,
-    cfu_limit: body.cfu_limit,
-    tap_limit: body.tap_limit,
+  if (!body.receipt_id?.trim()) {
+    return protocolError("validation_error", "receipt_id required", 400);
+  }
+
+  const result = resealReceipt({
+    receipt_id: body.receipt_id.trim(),
+    content_hash: body.content_hash,
   });
 
   if (!result.ok) {
@@ -64,19 +61,16 @@ export const POST = protocolRoute(async (req: Request) => {
 
   appendShieldAudit({
     key_hash: auth.ctx.keyHash,
-    action: "pack",
-    pack_id: result.pack.pack_id,
-    content_hash: result.pack.pack_hash,
-    meta: {
-      generation_sources: result.pack.summary.generation_sources,
-      cfu_total: result.pack.summary.cfu_total,
-    },
+    action: "reseal",
+    receipt_id: result.reseal.source_receipt_id,
+    content_hash: result.reseal.content_hash,
+    meta: { reseal_id: result.reseal.reseal_id, status: result.reseal.status },
   });
 
-  await logProtocolUsage(auth.ctx.keyHash, "/api/v1/shield/pack", "POST", 200);
+  await logProtocolUsage(auth.ctx.keyHash, "/api/v1/shield/reseal", "POST", 200);
 
   return protocolJson({
-    ...result.pack,
+    ...result.reseal,
     ...premiumPricingMeta(),
   });
 });

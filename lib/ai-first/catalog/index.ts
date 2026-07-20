@@ -17,7 +17,7 @@ import { miscPages } from "./misc-pages";
 import { chargeflowPages } from "./chargeflow-pages";
 import { categoryGuidePages } from "./guides-pages";
 import { institutionalPages } from "./institutional-pages";
-import { shieldPage } from "./shield-page";
+import { shieldPages } from "./shield-page";
 import { buildSeoLandingPages } from "./seo-landing-pages";
 import { buildCommentTokeniserHubPage, buildCommentTokeniserLandingPages } from "./comment-tokeniser-pages";
 import { buildEauHubPage } from "./eau-pages";
@@ -49,7 +49,7 @@ export function getAllAiFirstPages(): AiFirstPage[] {
     ...chargeflowPages,
     ...categoryGuidePages,
     ...institutionalPages,
-    shieldPage,
+    ...shieldPages,
     ...contentPages,
     ...glossaryPages,
     ...protocolDocsPages,

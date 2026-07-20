@@ -89,6 +89,44 @@ class AurosProtocol:
     def delete_webhook(self, webhook_id: str) -> dict[str, Any]:
         return self._request("DELETE", f"/api/v1/webhooks/{webhook_id}")
 
+    def shield_ingest(self, body: str, *, label: str | None = None) -> dict[str, Any]:
+        """Raw Proof Tap — any text/bytes as string. Payload discarded server-side."""
+        headers: dict[str, str] = {
+            "Accept": "application/json",
+            "Authorization": f"Bearer {self._api_key}",
+            "Content-Type": "text/plain; charset=utf-8",
+            "X-AUROS-Protocol-Version": "1.0",
+        }
+        if label:
+            headers["X-AUROS-Shield-Label"] = label
+        response = self._client.request(
+            "POST",
+            f"{self._base_url}/api/v1/shield/ingest",
+            headers=headers,
+            content=body.encode("utf-8"),
+        )
+        data = response.json()
+        if not response.is_success:
+            err = data.get("error", {}) if isinstance(data, dict) else {}
+            raise AurosProtocolError(
+                err.get("code", "unknown_error"),
+                err.get("message", "Request failed"),
+                response.status_code,
+            )
+        return data
+
+    def shield_tap(self, **body: Any) -> dict[str, Any]:
+        return self._post("/api/v1/shield/tap", body)
+
+    def shield_verify(self, **body: Any) -> dict[str, Any]:
+        return self._request("POST", "/api/v1/shield/verify", json=body, auth=False)
+
+    def shield_pack(self, **body: Any) -> dict[str, Any]:
+        return self._post("/api/v1/shield/pack", body)
+
+    def shield_quota(self) -> dict[str, Any]:
+        return self._request("GET", "/api/v1/shield/quota")
+
     def create_key(self, email: str) -> dict[str, Any]:
         return self._request("POST", "/api/v1/keys", json={"email": email}, auth=False)
 

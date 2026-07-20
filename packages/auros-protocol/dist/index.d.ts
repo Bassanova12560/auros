@@ -857,6 +857,17 @@ declare class AurosProtocol {
         cfu_limit?: number;
         tap_limit?: number;
     }): Promise<Record<string, unknown>>;
+    /** Shield quota + recent receipts. */
+    shieldQuota(): Promise<Record<string, unknown>>;
+    /** Premium reseal schedule. */
+    shieldReseal(body: {
+        receipt_id: string;
+        content_hash?: string;
+    }): Promise<Record<string, unknown>>;
+    /** Premium audit log. */
+    shieldAudit(query?: {
+        limit?: number;
+    }): Promise<Record<string, unknown>>;
     wattsReservation(id: string): Promise<WattsReserveResponse>;
     wattsConfirm(id: string): Promise<WattsReserveResponse>;
     wattsSettle(id: string, body?: WattsSettleRequest): Promise<WattsReserveResponse>;

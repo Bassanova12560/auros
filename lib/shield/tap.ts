@@ -207,7 +207,8 @@ export function getReceipt(id: string): ShieldReceipt | null {
 }
 
 export function listReceiptsForExport(
-  limit = 100
+  limit = 100,
+  tenantRef?: string
 ): Pick<
   ShieldReceipt,
   | "id"
@@ -217,9 +218,15 @@ export function listReceiptsForExport(
   | "kind"
   | "plan"
   | "tenant_ref"
+  | "label"
+  | "verify_url"
 >[] {
   syncMemory();
-  return [...memory.values()]
+  let rows = [...memory.values()];
+  if (tenantRef) {
+    rows = rows.filter((r) => r.tenant_ref === tenantRef);
+  }
+  return rows
     .sort((a, b) => b.created_at.localeCompare(a.created_at))
     .slice(0, limit)
     .map((r) => ({
@@ -230,6 +237,8 @@ export function listReceiptsForExport(
       kind: r.kind,
       plan: r.plan,
       tenant_ref: r.tenant_ref,
+      label: r.label,
+      verify_url: r.verify_url,
     }));
 }
 

@@ -359,6 +359,26 @@ export class AurosProtocol {
     return this.post("/api/v1/shield/pack", body);
   }
 
+  /** Shield quota + recent receipts. */
+  async shieldQuota(): Promise<Record<string, unknown>> {
+    return this.get("/api/v1/shield/quota");
+  }
+
+  /** Premium reseal schedule. */
+  async shieldReseal(body: {
+    receipt_id: string;
+    content_hash?: string;
+  }): Promise<Record<string, unknown>> {
+    return this.post("/api/v1/shield/reseal", body);
+  }
+
+  /** Premium audit log. */
+  async shieldAudit(query: { limit?: number } = {}): Promise<Record<string, unknown>> {
+    const q =
+      query.limit != null ? `?limit=${encodeURIComponent(String(query.limit))}` : "";
+    return this.get(`/api/v1/shield/audit${q}`);
+  }
+
   async wattsReservation(id: string): Promise<WattsReserveResponse> {
     return this.get<WattsReserveResponse>(
       `/api/v1/watts/reserve/${encodeURIComponent(id)}`
