@@ -43,6 +43,10 @@ function rowToReservation(row: Record<string, unknown>): WattReservation {
     match_reasons: (row.match_reasons as WattMatchReason[]) ?? [],
     suggested_unit_kind: row.suggested_unit_kind as WattSuggestedUnitKind,
     created_at: String(row.created_at),
+    cfu_unit_id: row.cfu_unit_id != null ? String(row.cfu_unit_id) : null,
+    cfu_verify_url:
+      row.cfu_verify_url != null ? String(row.cfu_verify_url) : null,
+    confirmed_at: row.confirmed_at != null ? String(row.confirmed_at) : null,
   };
 }
 
@@ -62,6 +66,9 @@ export async function insertWattReservation(input: {
     match_reasons: input.match_reasons,
     suggested_unit_kind: input.suggested_unit_kind,
     created_at: new Date().toISOString(),
+    cfu_unit_id: null,
+    cfu_verify_url: null,
+    confirmed_at: null,
   };
 
   if (isSupabaseConfigured()) {
@@ -119,4 +126,54 @@ export async function getWattReservation(
     }
   }
   return memory.get(id) ?? null;
+}
+
+export async function markWattReservationConfirmed(input: {
+  id: string;
+  cfu_unit_id: string;
+  cfu_verify_url: string;
+}): Promise<WattReservation> {
+  const confirmedAt = new Date().toISOString();
+  const existing = await getWattReservation(input.id);
+  if (!existing) {
+    throw new Error(`Watt reservation ${input.id} not found`);
+  }
+
+  const updated: WattReservation = {
+    ...existing,
+    status: "confirmed",
+    cfu_unit_id: input.cfu_unit_id,
+    cfu_verify_url: input.cfu_verify_url,
+    confirmed_at: confirmedAt,
+  };
+
+  if (isSupabaseConfigured()) {
+    try {
+      const { getSupabaseServerClient } = await import("@/lib/supabase/server");
+      const supabase = getSupabaseServerClient();
+      const { data, error } = await supabase
+        .from("watt_reservations")
+        .update({
+          status: "confirmed",
+          cfu_unit_id: input.cfu_unit_id,
+          cfu_verify_url: input.cfu_verify_url,
+          confirmed_at: confirmedAt,
+        })
+        .eq("id", input.id)
+        .select("*")
+        .maybeSingle();
+      if (!error && data) {
+        const mapped = rowToReservation(data as Record<string, unknown>);
+        memory.set(mapped.id, mapped);
+        persistFile();
+        return mapped;
+      }
+    } catch {
+      /* fallback file */
+    }
+  }
+
+  memory.set(updated.id, updated);
+  persistFile();
+  return updated;
 }

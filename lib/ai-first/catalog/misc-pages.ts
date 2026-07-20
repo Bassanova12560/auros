@@ -146,11 +146,11 @@ export const copilotPage = enrichPage({
 export const wattsReservePage = enrichPage({
   id: "watts-reserve",
   path: "/green/chargeflow/reserve",
-  title: "AUROS Watts Reserve | Profil de watts",
+  title: "AUROS Watts Reserve | Réserver des watts",
   description:
-    "Réservation indicative d’un profil énergétique (fenêtre, zone, carbone) — matching déterministe avant mint CFU. Pas de livraison réseau garantie.",
+    "Réservation d’un profil énergétique, matching déterministe, confirm explicite → mint CFU-E ou CFU-F. Pas de livraison réseau garantie.",
   summary:
-    "Étape 1 du booking engine des watts : intent pending_confirm + match_score. Confirm→CFU prévu en étape 2. Wedge flottes/CPO/flex.",
+    "Booking engine des watts : intent + match_score, puis confirm → CFU liée à reservation_id. Wedge flottes/CPO/flex.",
   contentType: "guide",
   language: "multi",
   indexable: true,
@@ -165,13 +165,13 @@ export const wattsReservePage = enrichPage({
   intents: [
     "Réserver des watts",
     "Matching horaire carbone",
-    "Profil énergie flex",
+    "Confirmer mint CFU",
   ],
   audience: ["flottes", "CPO", "acheteurs corporate", "développeurs"],
   facts: [
     { key: "API", value: "POST /api/v1/watts/reserve" },
-    { key: "Demo", value: "POST /api/v1/watts/reserve/demo" },
-    { key: "Garde-fou", value: "Pas de mint CFU en étape 1" },
+    { key: "Confirm", value: "POST /api/v1/watts/reserve/:id/confirm" },
+    { key: "Garde-fou", value: "Pas d’auto-mint — confirm explicite" },
   ],
   relatedPaths: [
     "/green/chargeflow",

@@ -25,11 +25,29 @@ export type ProtocolChangelogEntry = {
 /** Single source for `/developers/changelog` and GET `/api/v1/changelog`. Newest first. */
 export const PROTOCOL_CHANGELOG: ProtocolChangelogEntry[] = [
   {
+    id: "watts-reserve-step2",
+    date: "2026-07-20",
+    title: "Watts Reserve étape 2 — confirm → mint CFU",
+    summary:
+      "POST confirm mint CFU-E/F liée à reservation_id (attributs + colonnes watt_reservations). UI demo match → confirm.",
+    details: [
+      "POST /api/v1/watts/reserve/:id/confirm (Premium) + /demo/confirm.",
+      "attributes.reservation_id sur CFU-E et CFU-F.",
+      "Pas d’auto-mint — confirm explicite uniquement.",
+    ],
+    links: [
+      { href: "/green/chargeflow/reserve", label: "Watts Reserve" },
+      { href: "/green/chargeflow", label: "ChargeFlow" },
+    ],
+    tags: ["watts", "chargeflow", "cfu"],
+    status: "released",
+  },
+  {
     id: "watts-reserve-step1",
     date: "2026-07-20",
     title: "Watts Reserve étape 1 — reservation intents",
     summary:
-      "Booking engine des watts : profil horaire × zone × carbone → match_score déterministe. Pas de mint CFU (confirm = étape 2).",
+      "Booking engine des watts : profil horaire × zone × carbone → match_score déterministe. Confirm = étape 2.",
     details: [
       "POST /api/v1/watts/reserve (Premium) + /demo + GET /:id.",
       "UI /green/chargeflow/reserve · table watt_reservations.",

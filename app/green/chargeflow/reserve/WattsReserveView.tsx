@@ -20,8 +20,15 @@ type ReserveResult = {
   status?: string;
   disclaimer?: string;
   next_step?: string;
+  cfu_unit_id?: string | null;
+  cfu_verify_url?: string | null;
+  confirmed_at?: string | null;
+  unit?: { id?: string; verify_url?: string; unit_kind?: string };
   error?: { message?: string };
 };
+
+const fieldClass =
+  "w-full border border-white/[0.1] bg-white/[0.03] px-3.5 py-2.5 text-sm text-white outline-none transition placeholder:text-white/25 focus:border-emerald-500/35 focus:bg-white/[0.05]";
 
 export function WattsReserveView() {
   const [firmness, setFirmness] = useState<"firm" | "flex">("firm");
@@ -41,6 +48,7 @@ export function WattsReserveView() {
   const [zoneId, setZoneId] = useState("");
   const [carbonMax, setCarbonMax] = useState("50");
   const [loading, setLoading] = useState(false);
+  const [confirming, setConfirming] = useState(false);
   const [result, setResult] = useState<ReserveResult | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -87,189 +95,295 @@ export function WattsReserveView() {
     }
   }
 
+  async function confirm() {
+    if (!result?.reservation_id) return;
+    setConfirming(true);
+    setError(null);
+    try {
+      const res = await fetch("/api/v1/watts/reserve/demo/confirm", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ reservation_id: result.reservation_id }),
+      });
+      const json = (await res.json()) as ReserveResult;
+      if (!res.ok) {
+        setError(json.error?.message ?? `Erreur ${res.status}`);
+        return;
+      }
+      setResult(json);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Network error");
+    } finally {
+      setConfirming(false);
+    }
+  }
+
+  const confirmed = result?.status === "confirmed";
+  const pending = result?.status === "pending_confirm";
+
   return (
-    <div className="space-y-10">
-      <header className="space-y-3">
-        <p className="font-mono text-[11px] uppercase tracking-[0.25em] text-emerald-400/80">
-          Watts Reserve · étape 1
-        </p>
-        <h1 className="font-display text-3xl font-medium text-white md:text-4xl">
-          Réserver un profil de watts
-        </h1>
-        <p className="max-w-2xl text-sm leading-relaxed text-white/55">
-          Décrivez une fenêtre, une zone et une cible énergie ou flex. AUROS
-          calcule un score de matching indicatif — aucune CFU n’est mintée à
-          cette étape.
-        </p>
-        <p className="max-w-2xl text-xs leading-relaxed text-white/35">
-          {WATTS_RESERVE_DISCLAIMER}
-        </p>
-      </header>
+    <div className="relative">
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 -top-24 h-[28rem] bg-[radial-gradient(ellipse_at_50%_0%,rgba(16,185,129,0.14),transparent_60%)]"
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 top-40 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent"
+      />
 
-      <div className="space-y-5 border border-white/[0.08] bg-black/40 p-5 md:p-6">
-        <div className="flex flex-wrap gap-2">
-          {(["firm", "flex"] as const).map((f) => (
-            <button
-              key={f}
-              type="button"
-              onClick={() => setFirmness(f)}
-              className={`rounded-full border px-3 py-1.5 font-mono text-[10px] uppercase tracking-wider transition ${
-                firmness === f
-                  ? "border-emerald-500/40 bg-emerald-500/10 text-emerald-300"
-                  : "border-white/10 text-white/40 hover:text-white/70"
-              }`}
-            >
-              {f === "firm" ? "Firm · kWh → CFU-E" : "Flex · kW → CFU-F"}
-            </button>
-          ))}
-        </div>
-
-        <div className="grid gap-4 sm:grid-cols-2">
-          <label className="block space-y-1.5">
-            <span className="font-mono text-[10px] uppercase tracking-wider text-white/40">
-              Début
-            </span>
-            <input
-              type="datetime-local"
-              value={start}
-              onChange={(e) => setStart(e.target.value)}
-              className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white"
-            />
-          </label>
-          <label className="block space-y-1.5">
-            <span className="font-mono text-[10px] uppercase tracking-wider text-white/40">
-              Fin
-            </span>
-            <input
-              type="datetime-local"
-              value={end}
-              onChange={(e) => setEnd(e.target.value)}
-              className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white"
-            />
-          </label>
-        </div>
-
-        {firmness === "firm" ? (
-          <label className="block max-w-xs space-y-1.5">
-            <span className="font-mono text-[10px] uppercase tracking-wider text-white/40">
-              Énergie cible (kWh)
-            </span>
-            <input
-              type="number"
-              min={0.1}
-              step="any"
-              value={energyKwh}
-              onChange={(e) => setEnergyKwh(e.target.value)}
-              className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white"
-            />
-          </label>
-        ) : (
-          <label className="block max-w-xs space-y-1.5">
-            <span className="font-mono text-[10px] uppercase tracking-wider text-white/40">
-              Capacité (kW)
-            </span>
-            <input
-              type="number"
-              min={0.1}
-              step="any"
-              value={capacityKw}
-              onChange={(e) => setCapacityKw(e.target.value)}
-              className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white"
-            />
-          </label>
-        )}
-
-        <div className="grid gap-4 sm:grid-cols-3">
-          <label className="block space-y-1.5">
-            <span className="font-mono text-[10px] uppercase tracking-wider text-white/40">
-              Pays
-            </span>
-            <input
-              value={country}
-              onChange={(e) => setCountry(e.target.value)}
-              className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white"
-            />
-          </label>
-          <label className="block space-y-1.5">
-            <span className="font-mono text-[10px] uppercase tracking-wider text-white/40">
-              Zone (optionnel)
-            </span>
-            <input
-              value={zoneId}
-              onChange={(e) => setZoneId(e.target.value)}
-              placeholder="ex. FR-IDF"
-              className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white placeholder:text-white/25"
-            />
-          </label>
-          <label className="block space-y-1.5">
-            <span className="font-mono text-[10px] uppercase tracking-wider text-white/40">
-              Carbone max gCO₂/kWh
-            </span>
-            <input
-              type="number"
-              min={0}
-              value={carbonMax}
-              onChange={(e) => setCarbonMax(e.target.value)}
-              className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white"
-            />
-          </label>
-        </div>
-
-        <PrimaryButton type="button" onClick={() => void submit()} disabled={loading}>
-          {loading ? "Matching…" : "Calculer le matching"}
-        </PrimaryButton>
-
-        {error ? (
-          <p className="text-sm text-red-400/90" role="alert">
-            {error}
+      <div className="relative mx-auto max-w-xl space-y-12">
+        <header className="space-y-5 text-center">
+          <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-emerald-400/85">
+            AUROS · Watts Reserve
           </p>
-        ) : null}
+          <h1 className="font-display text-4xl font-medium tracking-tight text-white md:text-5xl">
+            Réserver des watts
+          </h1>
+          <p className="mx-auto max-w-md text-sm leading-relaxed text-white/55">
+            Une fenêtre, une zone, une cible. Matching indicatif, puis
+            confirmation explicite pour mint CFU-E ou CFU-F.
+          </p>
+        </header>
+
+        <section className="space-y-6 border border-white/[0.08] bg-black/50 p-6 backdrop-blur-sm md:p-8">
+          <div className="flex items-center justify-between gap-3">
+            <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/40">
+              Profil
+            </p>
+            <div className="flex gap-1.5">
+              {(["firm", "flex"] as const).map((f) => (
+                <button
+                  key={f}
+                  type="button"
+                  onClick={() => setFirmness(f)}
+                  className={`px-3 py-1.5 font-mono text-[10px] uppercase tracking-wider transition ${
+                    firmness === f
+                      ? "bg-emerald-500/15 text-emerald-300 ring-1 ring-emerald-500/35"
+                      : "text-white/40 hover:text-white/70"
+                  }`}
+                >
+                  {f === "firm" ? "Firm · kWh" : "Flex · kW"}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="grid gap-4 sm:grid-cols-2">
+            <label className="block space-y-1.5">
+              <span className="font-mono text-[10px] uppercase tracking-wider text-white/40">
+                Début
+              </span>
+              <input
+                type="datetime-local"
+                value={start}
+                onChange={(e) => setStart(e.target.value)}
+                className={fieldClass}
+              />
+            </label>
+            <label className="block space-y-1.5">
+              <span className="font-mono text-[10px] uppercase tracking-wider text-white/40">
+                Fin
+              </span>
+              <input
+                type="datetime-local"
+                value={end}
+                onChange={(e) => setEnd(e.target.value)}
+                className={fieldClass}
+              />
+            </label>
+          </div>
+
+          {firmness === "firm" ? (
+            <label className="block max-w-[12rem] space-y-1.5">
+              <span className="font-mono text-[10px] uppercase tracking-wider text-white/40">
+                Énergie (kWh)
+              </span>
+              <input
+                type="number"
+                min={0.1}
+                step="any"
+                value={energyKwh}
+                onChange={(e) => setEnergyKwh(e.target.value)}
+                className={fieldClass}
+              />
+            </label>
+          ) : (
+            <label className="block max-w-[12rem] space-y-1.5">
+              <span className="font-mono text-[10px] uppercase tracking-wider text-white/40">
+                Capacité (kW)
+              </span>
+              <input
+                type="number"
+                min={0.1}
+                step="any"
+                value={capacityKw}
+                onChange={(e) => setCapacityKw(e.target.value)}
+                className={fieldClass}
+              />
+            </label>
+          )}
+
+          <div className="grid gap-4 sm:grid-cols-3">
+            <label className="block space-y-1.5">
+              <span className="font-mono text-[10px] uppercase tracking-wider text-white/40">
+                Pays
+              </span>
+              <input
+                value={country}
+                onChange={(e) => setCountry(e.target.value)}
+                className={fieldClass}
+              />
+            </label>
+            <label className="block space-y-1.5">
+              <span className="font-mono text-[10px] uppercase tracking-wider text-white/40">
+                Zone
+              </span>
+              <input
+                value={zoneId}
+                onChange={(e) => setZoneId(e.target.value)}
+                placeholder="FR-IDF"
+                className={fieldClass}
+              />
+            </label>
+            <label className="block space-y-1.5">
+              <span className="font-mono text-[10px] uppercase tracking-wider text-white/40">
+                Carbone max
+              </span>
+              <input
+                type="number"
+                min={0}
+                value={carbonMax}
+                onChange={(e) => setCarbonMax(e.target.value)}
+                className={fieldClass}
+              />
+            </label>
+          </div>
+
+          <PrimaryButton
+            type="button"
+            onClick={() => void submit()}
+            disabled={loading || confirming}
+          >
+            {loading ? "Matching…" : "Calculer le matching"}
+          </PrimaryButton>
+
+          {error ? (
+            <p className="text-sm text-red-400/90" role="alert">
+              {error}
+            </p>
+          ) : null}
+        </section>
 
         {result?.reservation_id ? (
-          <div className="space-y-3 border-t border-white/[0.06] pt-4 text-sm text-white/70">
-            <p className="font-mono text-[11px] text-emerald-400/80">
-              Score {result.match_score}/100 · CFU-
-              {result.suggested_unit_kind?.toUpperCase()} suggéré ·{" "}
-              {result.status}
-            </p>
-            <p className="font-mono text-[10px] text-white/35">
-              id · {result.reservation_id}
-            </p>
-            <ul className="space-y-1 text-xs text-white/45">
-              {(result.match_reasons ?? []).map((r) => (
-                <li key={`${r.code}-${r.detail}`}>
-                  {r.detail}
-                  {r.delta ? ` (+${r.delta})` : ""}
-                </li>
-              ))}
-            </ul>
-            <p className="text-xs text-white/35">{result.next_step}</p>
-          </div>
-        ) : null}
-      </div>
+          <section
+            className={`space-y-5 border p-6 md:p-8 ${
+              confirmed
+                ? "border-emerald-500/25 bg-emerald-500/[0.06]"
+                : "border-white/[0.08] bg-black/40"
+            }`}
+          >
+            <div className="flex flex-wrap items-end justify-between gap-4">
+              <div>
+                <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/40">
+                  {confirmed ? "Confirmé" : "Matching"}
+                </p>
+                <p className="mt-1 font-display text-4xl tabular-nums text-white">
+                  {result.match_score}
+                  <span className="text-lg text-white/35">/100</span>
+                </p>
+              </div>
+              <p className="font-mono text-[11px] text-emerald-400/85">
+                CFU-{result.suggested_unit_kind?.toUpperCase()} · {result.status}
+              </p>
+            </div>
 
-      <p className="text-xs text-white/35">
-        <Link
-          href={CHARGEFLOW_ROUTE}
-          className="text-white/55 underline-offset-2 hover:underline"
-        >
-          ChargeFlow
-        </Link>
-        {" · "}
-        <Link
-          href={CHARGEFLOW_FLEETS_ROUTE}
-          className="text-white/55 underline-offset-2 hover:underline"
-        >
-          Flottes
-        </Link>
-        {" · "}
-        <Link
-          href="/copilot?context=watts"
-          className="text-white/55 underline-offset-2 hover:underline"
-        >
-          Copilot
-        </Link>
-      </p>
+            <ul className="space-y-1.5 text-xs leading-relaxed text-white/45">
+              {(result.match_reasons ?? [])
+                .filter((r) => r.code !== "base")
+                .slice(0, 5)
+                .map((r) => (
+                  <li key={`${r.code}-${r.detail}`}>
+                    {r.detail}
+                    {r.delta ? (
+                      <span className="text-white/25"> · +{r.delta}</span>
+                    ) : null}
+                  </li>
+                ))}
+            </ul>
+
+            <p className="font-mono text-[10px] text-white/30">
+              {result.reservation_id}
+            </p>
+
+            {pending ? (
+              <div className="space-y-3 border-t border-white/[0.06] pt-5">
+                <p className="text-xs leading-relaxed text-white/45">
+                  Le matching est prêt. Confirmez pour mint une CFU liée à cette
+                  réservation — action explicite, pas d’auto-mint.
+                </p>
+                <PrimaryButton
+                  type="button"
+                  onClick={() => void confirm()}
+                  disabled={confirming || loading}
+                >
+                  {confirming
+                    ? "Mint CFU…"
+                    : `Confirmer · mint CFU-${result.suggested_unit_kind?.toUpperCase()}`}
+                </PrimaryButton>
+              </div>
+            ) : null}
+
+            {confirmed ? (
+              <div className="space-y-3 border-t border-emerald-500/15 pt-5">
+                <p className="text-sm text-white/70">
+                  CFU{" "}
+                  <span className="font-mono text-emerald-300/90">
+                    {result.cfu_unit_id ?? result.unit?.id}
+                  </span>{" "}
+                  mintée.
+                </p>
+                {(result.cfu_verify_url ?? result.unit?.verify_url) ? (
+                  <PrimaryButton
+                    href={result.cfu_verify_url ?? result.unit?.verify_url}
+                    variant="ghost"
+                  >
+                    Vérifier la CFU
+                  </PrimaryButton>
+                ) : null}
+              </div>
+            ) : null}
+          </section>
+        ) : null}
+
+        <footer className="space-y-4 text-center">
+          <p className="mx-auto max-w-md text-[11px] leading-relaxed text-white/30">
+            {WATTS_RESERVE_DISCLAIMER}
+          </p>
+          <p className="text-xs text-white/35">
+            <Link
+              href={CHARGEFLOW_ROUTE}
+              className="text-white/55 underline-offset-2 hover:underline"
+            >
+              ChargeFlow
+            </Link>
+            {" · "}
+            <Link
+              href={CHARGEFLOW_FLEETS_ROUTE}
+              className="text-white/55 underline-offset-2 hover:underline"
+            >
+              Flottes
+            </Link>
+            {" · "}
+            <Link
+              href="/copilot?context=watts"
+              className="text-white/55 underline-offset-2 hover:underline"
+            >
+              Copilot
+            </Link>
+          </p>
+        </footer>
+      </div>
     </div>
   );
 }

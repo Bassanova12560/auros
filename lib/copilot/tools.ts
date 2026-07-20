@@ -151,10 +151,10 @@ export function toolExplainWattsReserve(): CopilotToolResult {
   return {
     name: "explain_watts_reserve",
     summary: [
-      "AUROS Watts Reserve (step 1): book an energy profile intent — time window × zone × carbon cap × firmness.",
-      "Returns match_score + reasons. suggested_unit_kind e → CFU-E, f → CFU-F on a later confirm step.",
-      "No CFU mint in step 1. Not a legal GO/REC or grid delivery guarantee.",
-      `UI: ${WATTS_RESERVE_ROUTE}. API: POST /api/v1/watts/reserve (Premium) · /demo for sandbox.`,
+      "AUROS Watts Reserve: book an energy profile (window × zone × carbon × firmness) → match_score.",
+      "Explicit confirm mints CFU-E (firm) or CFU-F (flex) with attributes.reservation_id. No auto-mint.",
+      "Not a legal GO/REC or grid delivery guarantee. Settlement/retire is a later step.",
+      `UI: ${WATTS_RESERVE_ROUTE}. API: POST /api/v1/watts/reserve · POST …/:id/confirm (Premium) · /demo + /demo/confirm.`,
       WATTS_RESERVE_DISCLAIMER,
     ].join("\n"),
     citations: [

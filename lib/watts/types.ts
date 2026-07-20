@@ -2,11 +2,14 @@ import { z } from "zod";
 
 export const WATTS_RESERVE_ROUTE = "/green/chargeflow/reserve";
 export const WATTS_RESERVE_DISCLAIMER =
-  "AUROS Watts Reserve is indicative only — not a grid delivery guarantee, GO/REC legal certificate, or investment advice. No CFU is minted until a later confirm step.";
+  "AUROS Watts Reserve is indicative only — not a grid delivery guarantee, GO/REC legal certificate, or investment advice. Confirm mints an off-chain CFU proof — not a legal certificate or delivery guarantee.";
 
 export type WattFirmness = "firm" | "flex";
 export type WattSuggestedUnitKind = "e" | "f";
-export type WattReservationStatus = "pending_confirm" | "cancelled";
+export type WattReservationStatus =
+  | "pending_confirm"
+  | "confirmed"
+  | "cancelled";
 
 export const wattReserveRequestSchema = z
   .object({
@@ -69,6 +72,9 @@ export type WattReservation = {
   match_reasons: WattMatchReason[];
   suggested_unit_kind: WattSuggestedUnitKind;
   created_at: string;
+  cfu_unit_id?: string | null;
+  cfu_verify_url?: string | null;
+  confirmed_at?: string | null;
 };
 
 export type WattReservePublicResponse = {
@@ -81,4 +87,7 @@ export type WattReservePublicResponse = {
   created_at: string;
   disclaimer: string;
   next_step: string;
+  cfu_unit_id?: string | null;
+  cfu_verify_url?: string | null;
+  confirmed_at?: string | null;
 };

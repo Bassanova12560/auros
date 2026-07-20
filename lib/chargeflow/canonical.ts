@@ -47,6 +47,7 @@ export type ChargeflowCanonicalE = {
     renewable_claim: string;
     grid_mix_note?: string;
     compare_ref_id?: string;
+    reservation_id?: string;
   };
   auros: ChargeflowAurosEnrichment;
   disclaimer: string;
@@ -102,6 +103,7 @@ export type ChargeflowCanonicalF = {
     program_hint?: string;
     compare_ref_id?: string;
     notes?: string;
+    reservation_id?: string;
   };
   auros: ChargeflowAurosEnrichment;
   disclaimer: string;
@@ -165,6 +167,9 @@ export function buildChargeflowCanonical(
               : {}),
             ...(input.attributes.compare_ref_id
               ? { compare_ref_id: input.attributes.compare_ref_id }
+              : {}),
+            ...(input.attributes.reservation_id
+              ? { reservation_id: input.attributes.reservation_id }
               : {}),
           },
         }
@@ -243,6 +248,9 @@ export function buildChargeflowFCanonical(
               ? { compare_ref_id: input.attributes.compare_ref_id }
               : {}),
             ...(input.attributes.notes ? { notes: input.attributes.notes } : {}),
+            ...(input.attributes.reservation_id
+              ? { reservation_id: input.attributes.reservation_id }
+              : {}),
           },
         }
       : {}),

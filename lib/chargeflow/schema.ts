@@ -26,6 +26,7 @@ export const chargeflowAttributesSchema = z
       .default("unknown"),
     grid_mix_note: z.string().max(500).optional(),
     compare_ref_id: z.string().max(64).optional(),
+    reservation_id: z.string().uuid().optional(),
   })
   .optional();
 
@@ -100,6 +101,7 @@ export const chargeflowFAttributesSchema = z
       .default("unknown"),
     compare_ref_id: z.string().max(64).optional(),
     notes: z.string().max(500).optional(),
+    reservation_id: z.string().uuid().optional(),
   })
   .optional();
 

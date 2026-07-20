@@ -63,6 +63,6 @@ export const POST = protocolRoute(async (req: Request) => {
   return protocolJson({
     ...wattReservePublicResponse(row),
     demo: true,
-    note: "Sandbox intent — production use POST /api/v1/watts/reserve with Protocol Premium. No CFU minted.",
+    note: "Sandbox intent — production use POST /api/v1/watts/reserve with Protocol Premium. Confirm via POST /api/v1/watts/reserve/demo/confirm.",
   });
 });

@@ -106,4 +106,94 @@ describe("watts-reserve", () => {
     });
     assert.equal(ok.success, true);
   });
+
+  it("confirm mints CFU-E linked to reservation_id", async () => {
+    if (!process.env.ATTEST_SIGNING_KEY && !process.env.CRON_SECRET) {
+      process.env.ATTEST_SIGNING_KEY = "test-watts-reserve-signing-key-v1";
+    }
+    const { matchWattProfile } = await import("../lib/watts/match");
+    const { insertWattReservation } = await import("../lib/watts/store");
+    const { confirmWattReservation } = await import("../lib/watts/confirm");
+
+    const profile = {
+      window: {
+        start: "2026-07-22T08:00:00.000Z",
+        end: "2026-07-22T12:00:00.000Z",
+      },
+      energy_kwh: 15,
+      zone: { country: "FR", zone_id: "FR-IDF" },
+      carbon_intensity_max_gco2_kwh: 45,
+      firmness: "firm" as const,
+    };
+    const matched = matchWattProfile(profile);
+    assert.ok(matched.ok);
+    if (!matched.ok) return;
+
+    const row = await insertWattReservation({
+      key_hash: "test-watts-confirm",
+      profile,
+      match_score: matched.match_score,
+      match_reasons: matched.reasons,
+      suggested_unit_kind: matched.suggested_unit_kind,
+    });
+
+    const result = await confirmWattReservation({
+      reservation: row,
+      keyHash: "test-watts-confirm",
+    });
+    assert.equal(result.ok, true);
+    if (!result.ok) return;
+    assert.equal(result.reservation.status, "confirmed");
+    assert.ok(result.reservation.cfu_unit_id);
+    assert.equal(result.unit.unit_kind, "e");
+    assert.ok(result.unit.verify_url);
+
+    const again = await confirmWattReservation({
+      reservation: result.reservation,
+      keyHash: "test-watts-confirm",
+    });
+    assert.equal(again.ok, false);
+    if (again.ok) return;
+    assert.equal(again.status, 409);
+  });
+
+  it("confirm mints CFU-F for flex profile", async () => {
+    if (!process.env.ATTEST_SIGNING_KEY && !process.env.CRON_SECRET) {
+      process.env.ATTEST_SIGNING_KEY = "test-watts-reserve-signing-key-v1";
+    }
+    const { matchWattProfile } = await import("../lib/watts/match");
+    const { insertWattReservation } = await import("../lib/watts/store");
+    const { confirmWattReservation } = await import("../lib/watts/confirm");
+
+    const profile = {
+      window: {
+        start: "2026-07-22T14:00:00.000Z",
+        end: "2026-07-22T18:00:00.000Z",
+      },
+      capacity_kw: 8,
+      zone: { country: "DE" },
+      firmness: "flex" as const,
+    };
+    const matched = matchWattProfile(profile);
+    assert.ok(matched.ok);
+    if (!matched.ok) return;
+    assert.equal(matched.suggested_unit_kind, "f");
+
+    const row = await insertWattReservation({
+      key_hash: "test-watts-confirm-f",
+      profile,
+      match_score: matched.match_score,
+      match_reasons: matched.reasons,
+      suggested_unit_kind: matched.suggested_unit_kind,
+    });
+
+    const result = await confirmWattReservation({
+      reservation: row,
+      keyHash: "test-watts-confirm-f",
+    });
+    assert.equal(result.ok, true);
+    if (!result.ok) return;
+    assert.equal(result.unit.unit_kind, "f");
+    assert.equal(result.reservation.status, "confirmed");
+  });
 });
