@@ -50,6 +50,9 @@ export function WetsNav() {
       <Link href="/eau/trust/risk-events" className="hover:text-white/80">
         Risk events
       </Link>
+      <Link href="/trust/quantum" className="hover:text-white/80">
+        Quantum index
+      </Link>
       <Link href="/eau/risk" className="hover:text-white/80">
         WELHR rapide
       </Link>

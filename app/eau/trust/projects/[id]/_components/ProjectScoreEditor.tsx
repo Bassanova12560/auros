@@ -9,6 +9,7 @@ import {
   saveWetsCriteriaAction,
 } from "@/lib/wets/actions";
 import {
+  WETS_CRITERION_HINTS,
   WETS_CRITERION_LABELS,
   computeFinalScore,
   gradeFromFinalScore,
@@ -55,6 +56,9 @@ export function ProjectScoreEditor({
           >
             <p className="font-mono text-[10px] uppercase tracking-wider text-white/40">
               {WETS_CRITERION_LABELS[c.category]} · poids {c.weight}
+            </p>
+            <p className="mt-1 text-xs text-white/40">
+              {WETS_CRITERION_HINTS[c.category]}
             </p>
             <label className="mt-2 block max-w-[8rem] space-y-1">
               <span className="text-xs text-white/40">Score /10</span>

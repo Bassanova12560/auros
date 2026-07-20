@@ -80,12 +80,13 @@ export function NewWetsProjectForm() {
       <PrimaryButton type="submit" disabled={pending}>
         {pending
           ? "Scoring assisté…"
-          : "Créer + pré-score (Claude / Groq / WELHR)"}
+          : "Créer + pré-score (7 critères · Claude / Groq / WELHR)"}
       </PrimaryButton>
       <p className="text-xs text-white/40">
-        Les 5 critères restent éditables avant publication. Priorité Anthropic
-        si <code className="text-white/60">ANTHROPIC_API_KEY</code>, sinon Groq,
-        sinon heuristique WELHR.
+        Inclut raccordement réseau + recours post-quantique. Éditables avant
+        publication. Anthropic si{" "}
+        <code className="text-white/60">ANTHROPIC_API_KEY</code>, sinon Groq,
+        sinon heuristique.
       </p>
     </form>
   );

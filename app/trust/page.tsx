@@ -62,8 +62,9 @@ export default function TrustPage() {
               ["1 · Sceau", "/verify"],
               ["2 · Pack banque", "/developers/institutions#evidence-pack"],
               ["3 · Twin", "/developers/institutions#monitor-delta"],
-              ["4 · Impact data", "/data/licence"],
-              ["5 · Embed", "/platforms"],
+              ["4 · WETS eau/énergie", "/eau/trust"],
+              ["5 · Quantum index", "/trust/quantum"],
+              ["6 · Embed", "/platforms"],
             ] as const
           ).map(([label, href]) => (
             <li key={href}>

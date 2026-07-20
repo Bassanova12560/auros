@@ -14,6 +14,8 @@ import {
   listWetsCriteria,
   listWetsRiskEvents,
 } from "@/lib/wets/store";
+import { mergeCriteriaWithDefaults } from "@/lib/wets/merge-criteria";
+import { WETS_PQC_QUESTIONS } from "@/lib/wets/constants";
 
 import { WetsNav } from "@/app/eau/trust/_components/WetsUi";
 import { ProjectScoreEditor } from "./_components/ProjectScoreEditor";
@@ -39,7 +41,8 @@ export default async function WetsProjectDetailPage({ params }: Props) {
   const { project } = await getWetsProject(id);
   if (!project || project.owner_user_id !== userId) notFound();
 
-  const { criteria } = await listWetsCriteria(id);
+  const { criteria: raw } = await listWetsCriteria(id);
+  const criteria = mergeCriteriaWithDefaults(project.category, raw);
   const { events } = await listWetsRiskEvents({
     region: project.jurisdiction ?? undefined,
     projectId: id,
@@ -77,6 +80,23 @@ export default async function WetsProjectDetailPage({ params }: Props) {
         </p>
 
         <ProjectScoreEditor projectId={id} initial={criteria} />
+
+        <section className="mt-10 rounded-xl border border-white/10 bg-white/[0.02] px-5 py-4">
+          <p className="font-mono text-[10px] uppercase tracking-wider text-white/40">
+            Checklist PQC (critère recours)
+          </p>
+          <ol className="mt-3 list-decimal space-y-2 pl-5 text-sm text-white/55">
+            {WETS_PQC_QUESTIONS.map((q) => (
+              <li key={q.id}>{q.q}</li>
+            ))}
+          </ol>
+          <Link
+            href="/trust/quantum"
+            className="mt-3 inline-block font-mono text-[11px] text-sky-300/70 hover:underline"
+          >
+            Quantum Exposure Index →
+          </Link>
+        </section>
 
         <section className="mt-12 border-t border-white/[0.08] pt-8">
           <h2 className="font-display text-lg text-white">Risk events liés</h2>

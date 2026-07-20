@@ -57,6 +57,12 @@ export function PowerHubView() {
           <PrimaryButton href={RESERVE_NUCLEAR}>
             Réserver (nucléaire)
           </PrimaryButton>
+          <PrimaryButton href="/eau/trust/projects/new" variant="ghost">
+            Trust Score énergie
+          </PrimaryButton>
+          <PrimaryButton href="/trust/quantum" variant="ghost">
+            Quantum index
+          </PrimaryButton>
           <PrimaryButton href="/guides/low-carbon-power" variant="ghost">
             Définition
           </PrimaryButton>

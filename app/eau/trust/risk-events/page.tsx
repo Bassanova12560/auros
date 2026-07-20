@@ -63,6 +63,8 @@ export default async function WetsRiskEventsPage() {
               <option value="rezoning_dispute">rezoning_dispute</option>
               <option value="settlement">settlement</option>
               <option value="protest">protest</option>
+              <option value="interconnection_delay">interconnection_delay</option>
+              <option value="queue_update">queue_update</option>
             </select>
           </label>
           <label className="block space-y-1.5">

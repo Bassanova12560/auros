@@ -7,6 +7,7 @@ import { assistWetsScore } from "@/lib/wets/assist";
 import {
   WETS_CATEGORIES,
   WETS_CONSOLE_ROUTE,
+  WETS_CRITERIA,
   type WetsCategory,
   type WetsCriterionScore,
 } from "@/lib/wets/constants";
@@ -104,7 +105,7 @@ export async function publishWetsReportAction(projectId: string) {
     return { ok: false as const, error: "forbidden" };
   }
   const { criteria } = await listWetsCriteria(projectId);
-  if (criteria.length < 5) {
+  if (criteria.length < WETS_CRITERIA.length) {
     return { ok: false as const, error: "incomplete_scores" };
   }
   const report = buildPublicReportMarkdown({ project, criteria });

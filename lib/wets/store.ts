@@ -3,7 +3,6 @@ import "server-only";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 
 import {
-  WETS_WEIGHTS,
   type WetsCategory,
   type WetsCriterion,
   type WetsCriterionScore,
@@ -194,7 +193,7 @@ export async function upsertWetsCriteria(
       project_id: projectId,
       category: c.category,
       score: Math.max(0, Math.min(10, c.score)),
-      weight: WETS_WEIGHTS[c.category],
+      weight: c.weight,
       justification: c.justification,
       sources: c.sources,
       scored_at: new Date().toISOString(),
