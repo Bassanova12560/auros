@@ -1,14 +1,14 @@
 #!/usr/bin/env node
 import {
   startShieldServer
-} from "./chunk-J4BFFLQZ.js";
+} from "./chunk-2SFBZWGV.js";
 import {
   SHIELD_VERSION,
   buildCbom,
   sealLocal,
   tapLocal,
   verifyLocal
-} from "./chunk-6FGC22L2.js";
+} from "./chunk-N2VJYS7S.js";
 
 // src/cli.ts
 import { readFileSync } from "fs";

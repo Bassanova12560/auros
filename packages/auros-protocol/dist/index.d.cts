@@ -834,6 +834,29 @@ declare class AurosProtocol {
     }>;
     /** Watts Reserve — create reservation intent (Premium). */
     wattsReserve(body: WattsReserveRequest): Promise<WattsReserveResponse>;
+    /** Shield — raw ingest (easiest tap). Free quota / Premium unlimited. */
+    shieldIngest(body: string, opts?: {
+        label?: string;
+    }): Promise<Record<string, unknown>>;
+    /** Shield — JSON tap. */
+    shieldTap(body: {
+        body?: string;
+        content_hash?: string;
+        label?: string;
+        local_signature?: string;
+    }): Promise<Record<string, unknown>>;
+    /** Shield — public counterparty verify (works without premium). */
+    shieldVerify(body: {
+        id?: string;
+        content_hash?: string;
+        cloud_signature?: string;
+    }): Promise<Record<string, unknown>>;
+    /** Shield Evidence Pack — Premium heavy bank deliverable. */
+    shieldPack(body?: {
+        label?: string;
+        cfu_limit?: number;
+        tap_limit?: number;
+    }): Promise<Record<string, unknown>>;
     wattsReservation(id: string): Promise<WattsReserveResponse>;
     wattsConfirm(id: string): Promise<WattsReserveResponse>;
     wattsSettle(id: string, body?: WattsSettleRequest): Promise<WattsReserveResponse>;

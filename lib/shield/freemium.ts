@@ -21,6 +21,9 @@ export const SHIELD_PREMIUM_FEATURES = [
   "batch_tap",
   "hybrid_pqc_ready_profile",
   "receipt_export",
+  "evidence_pack",
+  "raw_ingest",
+  "instrument_fetch",
   "priority_support",
 ] as const;
 

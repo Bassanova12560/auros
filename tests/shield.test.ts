@@ -66,4 +66,18 @@ describe("AUROS Shield freemium tap", () => {
       true
     );
   });
+
+  it("evidence pack builds with empty portfolio", async () => {
+    process.env.ATTEST_SIGNING_KEY = "test-cloud-anchor-key";
+    const { buildEvidencePack } = await import("../lib/shield/evidence-pack");
+    const result = await buildEvidencePack({
+      keyHash: "test_key_hash_no_units",
+      label: "demo pack",
+    });
+    assert.equal(result.ok, true);
+    if (!result.ok) return;
+    assert.equal(result.pack.payload_retained, false);
+    assert.ok(result.pack.bank_actions.length >= 3);
+    assert.equal(result.pack.pack_hash.length, 64);
+  });
 });

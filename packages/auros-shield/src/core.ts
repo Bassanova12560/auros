@@ -5,7 +5,7 @@
 
 import { createHash, createHmac, timingSafeEqual } from "node:crypto";
 
-export const SHIELD_VERSION = "0.2.0";
+export const SHIELD_VERSION = "0.3.0";
 
 export const SHIELD_DISCLAIMER =
   "AUROS Shield is an indicative on-prem proof runtime — not a regulated HSM certification, not legal advice, not a quantum-safe warranty until a NIST PQC suite is configured.";

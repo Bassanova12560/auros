@@ -25,6 +25,25 @@ export type ProtocolChangelogEntry = {
 /** Single source for `/developers/changelog` and GET `/api/v1/changelog`. Newest first. */
 export const PROTOCOL_CHANGELOG: ProtocolChangelogEntry[] = [
   {
+    id: "shield-easy-evidence-pack",
+    date: "2026-07-20",
+    title: "Shield v0.3 — ingest 1 ligne + Evidence Pack Premium",
+    summary:
+      "Intégration quasi invisible (curl brut + instrumentFetch) et Premium lourd : Evidence Pack CFU+taps pour banques/auditeurs dans un monde où le RWA est partout.",
+    details: [
+      "POST /api/v1/shield/ingest — body brut, aucun schéma JSON",
+      "instrumentFetch({ apiKey }) — wrap fetch sans rewrite métier",
+      "POST /api/v1/shield/pack — Premium Evidence Pack (hash-only + bank_actions)",
+      "SDK shieldIngest / shieldTap / shieldVerify / shieldPack (1.0.9)",
+    ],
+    links: [
+      { href: "/developers/shield", label: "AUROS Shield" },
+      { href: "/developers#monitor", label: "Upgrade Premium" },
+    ],
+    tags: ["shield", "freemium", "premium", "institutions"],
+    status: "released",
+  },
+  {
     id: "shield-proof-tap-freemium",
     date: "2026-07-20",
     title: "AUROS Shield Proof Tap — freemium indispensable",

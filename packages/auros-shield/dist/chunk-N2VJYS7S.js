@@ -1,6 +1,6 @@
 // src/core.ts
 import { createHash, createHmac, timingSafeEqual } from "crypto";
-var SHIELD_VERSION = "0.2.0";
+var SHIELD_VERSION = "0.3.0";
 var SHIELD_DISCLAIMER = "AUROS Shield is an indicative on-prem proof runtime \u2014 not a regulated HSM certification, not legal advice, not a quantum-safe warranty until a NIST PQC suite is configured.";
 var CRYPTO_PROFILES = [
   "classical_hmac_sha256_v1",

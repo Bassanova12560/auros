@@ -3,44 +3,44 @@ import { enrichPage } from "../enrich";
 export const shieldPage = enrichPage({
   id: "developers-shield",
   path: "/developers/shield",
-  title: "AUROS Shield | Proof Tap RWA freemium",
+  title: "AUROS Shield | Ingest 1 ligne + Evidence Pack Premium",
   description:
-    "Proof Tap non invasif : hash only, verify contrepartie gratuit, ancrage cloud freemium. Sous-couche indispensable RWA — clés on-prem + co-sceau AUROS.",
+    "Quand le RWA est partout : ingest brut sans schéma, instrumentFetch, Evidence Pack Premium pour banques. Payload jamais stocké.",
   summary:
-    "AUROS Shield est la couche de preuve RWA freemium : tap sidecar (payload jamais stocké), verify public illimité, Premium pour taps illimités et hybrid PQC-ready.",
+    "Shield v0.3 — intégration quasi invisible (curl / instrumentFetch) et Premium lourd (Evidence Pack CFU+taps pour crédit/ESG/auditeurs).",
   contentType: "guide",
   language: "multi",
   indexable: true,
   lastUpdated: "2026-07-20",
   keywords: [
     "AUROS Shield",
-    "proof tap RWA",
-    "vérification contrepartie",
-    "CBOM crypto",
-    "freemium attestation",
+    "evidence pack RWA",
+    "instrumentFetch",
+    "proof tap",
+    "banque audit CFU",
   ],
   intents: [
-    "Comment sceller un export RWA sans exposer les données ?",
-    "Verify contrepartie gratuit AUROS Shield",
-    "Freemium vs Premium Shield",
+    "Comment intégrer Shield en une ligne ?",
+    "Evidence Pack Premium AUROS",
+    "Preuve RWA sans data room",
   ],
   audience: ["banques", "CISO", "risk", "énergie", "développeurs"],
   facts: [
+    { key: "Easy", value: "POST /api/v1/shield/ingest · instrumentFetch" },
     { key: "Free", value: "100 taps/mo + verify public + CBOM" },
-    { key: "Tap API", value: "POST /api/v1/shield/tap" },
-    { key: "Verify", value: "POST /api/v1/shield/verify" },
-    { key: "Package", value: "@adrien1212balitrand/auros-shield@0.2.0" },
+    { key: "Premium", value: "POST /api/v1/shield/pack Evidence Pack" },
+    { key: "Package", value: "@adrien1212balitrand/auros-shield@0.3.0" },
   ],
   faq: [
     {
-      question: "Le payload est-il stocké ?",
+      question: "Est-ce facile à intégrer ?",
       answer:
-        "Non. Shield hashe puis jette. Seuls content_hash + signatures sont retenus (payload_retained: false).",
+        "Oui : curl d'un fichier vers /api/v1/shield/ingest, ou instrumentFetch({ apiKey }) en une ligne — sans rewrite métier.",
     },
     {
-      question: "Quoi de gratuit vs Premium ?",
+      question: "Que paie-t-on en Premium ?",
       answer:
-        "Gratuit : 100 ancrages/mois, verify public illimité, CBOM, runtime on-prem. Premium : taps illimités, hybrid_pqc_ready, export registre.",
+        "L'Evidence Pack : CFU + taps scellés, bank_actions, horizon 7–30 ans, reseal PQC — le livrable crédit/ESG, pas seulement du quota.",
     },
   ],
   breadcrumbs: [{ name: "Developers", path: "/developers" }],
@@ -48,7 +48,7 @@ export const shieldPage = enrichPage({
     "/developers/institutions",
     "/developers",
     "/api/v1/shield/cbom",
-    "/api/v1/shield/tap",
+    "/api/v1/shield/ingest",
     "/auros-openapi.yaml",
   ],
 });

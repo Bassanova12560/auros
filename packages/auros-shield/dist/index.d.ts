@@ -2,7 +2,7 @@
  * Standalone copy of AUROS Shield core for the npm package
  * (no Next.js path aliases — banks install this in their DMZ).
  */
-declare const SHIELD_VERSION = "0.2.0";
+declare const SHIELD_VERSION = "0.3.0";
 declare const SHIELD_DISCLAIMER = "AUROS Shield is an indicative on-prem proof runtime \u2014 not a regulated HSM certification, not legal advice, not a quantum-safe warranty until a NIST PQC suite is configured.";
 declare const CRYPTO_PROFILES: readonly ["classical_hmac_sha256_v1", "hybrid_pqc_ready_v1"];
 type CryptoProfile = (typeof CRYPTO_PROFILES)[number];
@@ -93,4 +93,12 @@ declare function tapLocal(input: {
     disclaimer: string;
 };
 
-export { CRYPTO_PROFILES, type CryptoProfile, SHIELD_DISCLAIMER, SHIELD_VERSION, type ShieldSeal, type ShieldSealKind, buildCbom, isContentHash, resolveShieldSigningKey, sealLocal, sha256Hex, tapLocal, verifyLocal };
+/** One-liner fetch wrapper — non-invasive cloud tap. */
+declare function instrumentFetch(config: {
+    apiKey: string;
+    baseUrl?: string;
+    label?: string;
+    softFail?: boolean;
+}, fetchImpl?: typeof fetch): typeof fetch;
+
+export { CRYPTO_PROFILES, type CryptoProfile, SHIELD_DISCLAIMER, SHIELD_VERSION, type ShieldSeal, type ShieldSealKind, buildCbom, instrumentFetch, isContentHash, resolveShieldSigningKey, sealLocal, sha256Hex, tapLocal, verifyLocal };

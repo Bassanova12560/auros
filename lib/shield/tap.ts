@@ -210,7 +210,13 @@ export function listReceiptsForExport(
   limit = 100
 ): Pick<
   ShieldReceipt,
-  "id" | "content_hash" | "cloud_signature" | "created_at" | "kind" | "plan"
+  | "id"
+  | "content_hash"
+  | "cloud_signature"
+  | "created_at"
+  | "kind"
+  | "plan"
+  | "tenant_ref"
 >[] {
   syncMemory();
   return [...memory.values()]
@@ -223,6 +229,7 @@ export function listReceiptsForExport(
       created_at: r.created_at,
       kind: r.kind,
       plan: r.plan,
+      tenant_ref: r.tenant_ref,
     }));
 }
 

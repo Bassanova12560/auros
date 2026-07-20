@@ -214,6 +214,38 @@ var AurosProtocol = class {
   async wattsReserve(body) {
     return this.post("/api/v1/watts/reserve", body);
   }
+  /** Shield — raw ingest (easiest tap). Free quota / Premium unlimited. */
+  async shieldIngest(body, opts = {}) {
+    const headers = {
+      Accept: "application/json",
+      Authorization: `Bearer ${this.apiKey}`,
+      "Content-Type": "text/plain; charset=utf-8",
+      "X-AUROS-Protocol-Version": "1.0"
+    };
+    if (opts.label) headers["X-AUROS-Shield-Label"] = opts.label;
+    const res = await this.fetchFn(`${this.baseUrl}/api/v1/shield/ingest`, {
+      method: "POST",
+      headers,
+      body
+    });
+    const json = await res.json();
+    if (!res.ok) {
+      throw AurosProtocolError.fromResponse(res.status, json);
+    }
+    return json;
+  }
+  /** Shield — JSON tap. */
+  async shieldTap(body) {
+    return this.post("/api/v1/shield/tap", body);
+  }
+  /** Shield — public counterparty verify (works without premium). */
+  async shieldVerify(body) {
+    return this.request("POST", "/api/v1/shield/verify", body, false);
+  }
+  /** Shield Evidence Pack — Premium heavy bank deliverable. */
+  async shieldPack(body = {}) {
+    return this.post("/api/v1/shield/pack", body);
+  }
   async wattsReservation(id) {
     return this.get(
       `/api/v1/watts/reserve/${encodeURIComponent(id)}`

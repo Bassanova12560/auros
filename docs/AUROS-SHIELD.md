@@ -1,40 +1,33 @@
-# AUROS Shield — Proof Tap freemium
+# AUROS Shield — facile à intégrer, Premium qui aide
 
-## Position
+## Réponse courte
 
-Devenir **la** sous-couche de preuve RWA : non invasive, freemium addictive, Premium pour scaler.
+**Oui, maintenant c’est facile** : curl d’un fichier, ou une ligne `instrumentFetch`.  
+**Premium = Evidence Pack** : le livrable banque/auditeur quand chaque entreprise a des RWA — pas juste « plus de quota ».
 
-## Gratuit (entrer partout)
+## Free — devenir le standard
 
-| Capacité | Détail |
-|----------|--------|
-| Proof Tap | `POST /api/v1/shield/tap` — 100 ancrages / mois / clé |
-| Verify contrepartie | `POST /api/v1/shield/verify` — **illimité**, public |
-| Receipt | `GET /api/v1/shield/receipts/:id` |
-| CBOM | `GET /api/v1/shield/cbom` |
-| On-prem | `npx auros-shield` · `POST /v1/tap` local |
+| Intégration | Effort |
+|-------------|--------|
+| `POST /api/v1/shield/ingest` + body brut | 0 schéma |
+| `instrumentFetch({ apiKey })` | 1 ligne |
+| `npx auros-shield serve` | on-prem |
+| Verify public | illimité |
 
-**Règle d’or :** le payload est hashé puis **jeté**. Jamais stocké (`payload_retained: false`).
+Quota free : 100 ingest/mois. Payload **jamais** stocké.
 
-## Premium (être indispensable)
+## Premium — du lourd utile
 
-- Taps / ancrages cloud **illimités** (cap 50k/mo)
-- Profil `hybrid_pqc_ready_v1`
-- `GET /api/v1/shield/export` — registre des reçus
-- Même upgrade que Protocol Monitor / Premium
+`POST /api/v1/shield/pack` assemble :
 
-## Flux non invasif
+- CFU (hash + statut) de la clé
+- Taps Shield récents
+- `pack_hash` + signature
+- `bank_actions` (joindre au dossier crédit/ESG, re-verify, reseal PQC)
+- Horizon rétention 7–30 ans
 
-```
-SI métier ──POST body──► Shield Tap
-                           │ hash + discard payload
-                           ├─ local seal (clé HSM client)
-                           └─ cloud co-seal (AUROS) → receipt_id
-Contrepartie ──POST verify──► valide le hash sans voir les données
-```
+Sans ouvrir la data room. C’est ce que risk/credit demandent quand le RWA est la norme.
 
-## Package
+## Page
 
-`@adrien1212balitrand/auros-shield@0.2.0`
-
-Page : `/developers/shield`
+`/developers/shield`

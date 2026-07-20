@@ -43,3 +43,7 @@ export {
 export type { ShieldReceipt, ShieldTapInput, TapReceiptPublic } from "./tap";
 export { tapLocal, verifyLocalTap } from "./local-tap";
 export type { LocalTapResult } from "./local-tap";
+export { instrumentFetch, EASY_INGEST_CURL } from "./easy";
+export type { EasyTapConfig } from "./easy";
+export { buildEvidencePack, verifyPackSignature } from "./evidence-pack";
+export type { EvidencePack } from "./evidence-pack";

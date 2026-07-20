@@ -1,21 +1,20 @@
-# AUROS Shield
+# AUROS Shield 0.3
 
-On-prem + cloud Proof Tap for RWA — freemium underlayer.
+Easy Proof Tap + Premium Evidence Pack.
 
-## Free
-- Local `POST /v1/tap` (hash only, payload discarded)
-- Cloud `POST /api/v1/shield/tap` — 100 anchors / month
-- Public `POST /api/v1/shield/verify` — forever free
-- CBOM
-
-## Premium
-- Unlimited taps, hybrid_pqc_ready, receipt export
-
+## Free — 1-line integrate
 ```bash
-npm install @adrien1212balitrand/auros-shield
-export AUROS_SHIELD_SIGNING_KEY="…HSM…"
-npx auros-shield tap --file ./export.json
-npx auros-shield serve --port 8787
+curl -X POST https://getauros.com/api/v1/shield/ingest \
+  -H "Authorization: Bearer auros_pk_live_…" \
+  -H "Content-Type: text/plain" \
+  --data-binary @./export.json
 ```
+```js
+import { instrumentFetch } from "@adrien1212balitrand/auros-shield";
+globalThis.fetch = instrumentFetch({ apiKey: process.env.AUROS_KEY });
+```
+
+## Premium — Evidence Pack
+`POST /api/v1/shield/pack` → CFU + taps, bank_actions, 7–30y retention, reseal PQC.
 
 https://getauros.com/developers/shield

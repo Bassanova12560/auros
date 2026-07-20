@@ -1261,6 +1261,46 @@ paths:
       responses:
         "200":
           description: Demo unit
+  /api/v1/shield/ingest:
+    post:
+      operationId: shieldIngest
+      summary: Raw ingest — easiest Proof Tap (no JSON schema)
+      description: |
+        POST any text/binary body. Hashed then discarded. Free 100/mo · Premium unlimited.
+      tags: [Shield]
+      security: [{ BearerAuth: [] }]
+      parameters:
+        - in: header
+          name: X-AUROS-Shield-Label
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          text/plain:
+            schema: { type: string }
+      responses:
+        '200':
+          description: Receipt
+  /api/v1/shield/pack:
+    post:
+      operationId: shieldPack
+      summary: Evidence Pack (Premium) — bank-ready CFU+taps
+      tags: [Shield]
+      security: [{ BearerAuth: [] }]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                label: { type: string }
+                cfu_limit: { type: integer }
+                tap_limit: { type: integer }
+      responses:
+        '200':
+          description: Sealed evidence pack
+        '403':
+          description: Premium required
   /api/v1/shield/tap:
     post:
       operationId: shieldTap

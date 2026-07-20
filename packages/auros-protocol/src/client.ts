@@ -307,6 +307,58 @@ export class AurosProtocol {
     return this.post<WattsReserveResponse>("/api/v1/watts/reserve", body);
   }
 
+  /** Shield — raw ingest (easiest tap). Free quota / Premium unlimited. */
+  async shieldIngest(
+    body: string,
+    opts: { label?: string } = {}
+  ): Promise<Record<string, unknown>> {
+    const headers: Record<string, string> = {
+      Accept: "application/json",
+      Authorization: `Bearer ${this.apiKey}`,
+      "Content-Type": "text/plain; charset=utf-8",
+      "X-AUROS-Protocol-Version": "1.0",
+    };
+    if (opts.label) headers["X-AUROS-Shield-Label"] = opts.label;
+    const res = await this.fetchFn(`${this.baseUrl}/api/v1/shield/ingest`, {
+      method: "POST",
+      headers,
+      body,
+    });
+    const json = (await res.json()) as Record<string, unknown> | ProtocolErrorBody;
+    if (!res.ok) {
+      throw AurosProtocolError.fromResponse(res.status, json as ProtocolErrorBody);
+    }
+    return json as Record<string, unknown>;
+  }
+
+  /** Shield — JSON tap. */
+  async shieldTap(body: {
+    body?: string;
+    content_hash?: string;
+    label?: string;
+    local_signature?: string;
+  }): Promise<Record<string, unknown>> {
+    return this.post("/api/v1/shield/tap", body);
+  }
+
+  /** Shield — public counterparty verify (works without premium). */
+  async shieldVerify(body: {
+    id?: string;
+    content_hash?: string;
+    cloud_signature?: string;
+  }): Promise<Record<string, unknown>> {
+    return this.request("POST", "/api/v1/shield/verify", body, false);
+  }
+
+  /** Shield Evidence Pack — Premium heavy bank deliverable. */
+  async shieldPack(body: {
+    label?: string;
+    cfu_limit?: number;
+    tap_limit?: number;
+  } = {}): Promise<Record<string, unknown>> {
+    return this.post("/api/v1/shield/pack", body);
+  }
+
   async wattsReservation(id: string): Promise<WattsReserveResponse> {
     return this.get<WattsReserveResponse>(
       `/api/v1/watts/reserve/${encodeURIComponent(id)}`
