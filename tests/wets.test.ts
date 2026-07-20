@@ -7,6 +7,11 @@ import {
   gradeFromFinalScore,
   weightsForCategory,
 } from "@/lib/wets/constants";
+import {
+  applyEnergyAndPqcToCriteria,
+  pqcScoreFromChecklist,
+  quantumBadgeFromCriteria,
+} from "@/lib/wets/energy-fields";
 import { heuristicWetsCriteria } from "@/lib/wets/heuristic";
 import { mergeCriteriaWithDefaults } from "@/lib/wets/merge-criteria";
 import { QUANTUM_EXPOSURE_VERTICALS } from "@/lib/wets/quantum-exposure";
@@ -71,5 +76,39 @@ describe("wets v2", () => {
 
   it("quantum exposure index has verticals", () => {
     assert.ok(QUANTUM_EXPOSURE_VERTICALS.length >= 5);
+  });
+
+  it("BTM and PQC checklist lift grid and quantum scores", () => {
+    const base = heuristicWetsCriteria({
+      name: "Campus BTM",
+      description: "Solar battery campus",
+      jurisdiction: "Texas",
+      legal_structure: "PPA",
+      website_url: "https://example.com",
+      category: "energy_microgrid",
+    });
+    const scored = applyEnergyAndPqcToCriteria("energy_microgrid", base, {
+      behind_the_meter: true,
+      permits_status: "obtained",
+      pqc_checklist: {
+        offchain_register: true,
+        key_compromise_remedy: true,
+        token_vs_title: true,
+        crypto_agility: false,
+      },
+    });
+    assert.ok(
+      scored.find((c) => c.category === "grid_interconnection_realism")!
+        .score >= 7.5
+    );
+    assert.equal(pqcScoreFromChecklist({
+      offchain_register: true,
+      key_compromise_remedy: true,
+      token_vs_title: true,
+      crypto_agility: false,
+    }).affirmed, 3);
+    const badge = quantumBadgeFromCriteria(scored);
+    assert.ok(badge.show);
+    assert.ok(badge.score >= 6.5);
   });
 });

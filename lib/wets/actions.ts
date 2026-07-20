@@ -3,6 +3,10 @@
 import { auth } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
 
+import {
+  applyEnergyAndPqcToCriteria,
+  enrichDescriptionWithEnergyFields,
+} from "@/lib/wets/energy-fields";
 import { assistWetsScore } from "@/lib/wets/assist";
 import {
   WETS_CATEGORIES,
@@ -32,15 +36,45 @@ export async function createWetsProjectAction(formData: FormData) {
     return { ok: false as const, error: "invalid_input" };
   }
 
+  const permitsRaw = String(formData.get("permits_status") ?? "unknown");
+  const permits_status =
+    permitsRaw === "none" ||
+    permitsRaw === "filed" ||
+    permitsRaw === "obtained" ||
+    permitsRaw === "unknown"
+      ? permitsRaw
+      : "unknown";
+  const behind_the_meter = formData.get("behind_the_meter") === "on";
+  const interconnection_queue_position =
+    String(formData.get("interconnection_queue_position") ?? "").trim() || null;
+  const pqc_checklist = {
+    offchain_register: formData.get("pqc_offchain_register") === "on",
+    key_compromise_remedy: formData.get("pqc_key_compromise_remedy") === "on",
+    token_vs_title: formData.get("pqc_token_vs_title") === "on",
+    crypto_agility: formData.get("pqc_crypto_agility") === "on",
+  };
+
+  const description = enrichDescriptionWithEnergyFields({
+    description: String(formData.get("description") ?? "").trim() || null,
+    interconnection_queue_position,
+    permits_status,
+    behind_the_meter,
+    pqc_checklist,
+  });
+
   const created = await createWetsProject({
     ownerUserId: userId,
     name,
     ticker: String(formData.get("ticker") ?? "").trim() || null,
     category,
     website_url: String(formData.get("website_url") ?? "").trim() || null,
-    description: String(formData.get("description") ?? "").trim() || null,
+    description,
     legal_structure: String(formData.get("legal_structure") ?? "").trim() || null,
     jurisdiction: String(formData.get("jurisdiction") ?? "").trim() || null,
+    interconnection_queue_position,
+    permits_status,
+    behind_the_meter,
+    pqc_checklist,
   });
   if (!created.project) {
     return { ok: false as const, error: created.error ?? "create_failed" };
@@ -68,7 +102,18 @@ export async function createWetsProjectAction(formData: FormData) {
     risk_events_context: riskCtx || undefined,
   });
 
-  await upsertWetsCriteria(created.project.id, assisted.criteria);
+  const criteria = applyEnergyAndPqcToCriteria(
+    created.project.category,
+    assisted.criteria,
+    {
+      behind_the_meter,
+      permits_status,
+      interconnection_queue_position,
+      pqc_checklist,
+    }
+  );
+
+  await upsertWetsCriteria(created.project.id, criteria);
   revalidatePath(WETS_CONSOLE_ROUTE);
   return {
     ok: true as const,
@@ -116,6 +161,7 @@ export async function publishWetsReportAction(projectId: string) {
   );
   revalidatePath(WETS_CONSOLE_ROUTE);
   revalidatePath(`/report/${pub.slug}`);
+  revalidatePath(`${WETS_CONSOLE_ROUTE}/reports`);
   return pub.error
     ? { ok: false as const, error: pub.error }
     : { ok: true as const, slug: pub.slug!, grade: report.grade, score: report.final_score };

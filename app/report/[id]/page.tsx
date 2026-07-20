@@ -11,6 +11,7 @@ import {
   computeFinalScore,
   gradeFromFinalScore,
 } from "@/lib/wets/constants";
+import { quantumBadgeFromCriteria } from "@/lib/wets/energy-fields";
 import {
   getWetsProject,
   getWetsProjectBySlug,
@@ -55,10 +56,18 @@ export default async function PublicWetsReportPage({ params }: Props) {
   const { criteria } = await listWetsCriteria(project.id);
   const score = computeFinalScore(criteria);
   const grade = gradeFromFinalScore(score);
+  const quantum = quantumBadgeFromCriteria(criteria);
 
   return (
     <FocusPageShell path={`/report/${id}`} width="2xl">
       <article className="space-y-8">
+        {project.is_demo ? (
+          <p className="rounded-xl border border-amber-500/30 bg-amber-500/[0.08] px-4 py-3 text-center text-sm text-amber-100/90">
+            Démo méthodologique AUROS — pas un endorsement d’émetteur ni une
+            note de crédit.
+          </p>
+        ) : null}
+
         <header className="space-y-4 text-center">
           <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-white/40">
             AUROS Water/Energy Trust Score
@@ -74,9 +83,21 @@ export default async function PublicWetsReportPage({ params }: Props) {
           <div className="flex justify-center">
             <WetsGradeBadge grade={grade} score={score} size="lg" />
           </div>
+          <p
+            className={`mx-auto max-w-md rounded-full border px-4 py-1.5 font-mono text-[10px] uppercase tracking-wider ${
+              quantum.score >= 6.5
+                ? "border-violet-400/40 text-violet-200/90"
+                : quantum.score >= 4
+                  ? "border-amber-400/40 text-amber-200/90"
+                  : "border-white/15 text-white/45"
+            }`}
+          >
+            {quantum.label} · {quantum.score}/10
+          </p>
           <p className="font-mono text-[11px] uppercase tracking-wider text-white/35">
             {WETS_CATEGORY_LABELS[project.category]}
             {project.jurisdiction ? ` · ${project.jurisdiction}` : ""}
+            {project.behind_the_meter ? " · BTM" : ""}
           </p>
         </header>
 
@@ -125,15 +146,15 @@ export default async function PublicWetsReportPage({ params }: Props) {
           <PrimaryButton href="/partners?intent=wets#contact">
             Equity-for-scoring
           </PrimaryButton>
-          <PrimaryButton href="/eau/trust" variant="ghost">
-            Console WETS
+          <PrimaryButton href="/eau/trust/reports" variant="ghost">
+            Tous les rapports
           </PrimaryButton>
-          <Link
-            href="/eau/risk"
-            className="inline-flex min-h-[44px] items-center font-mono text-[11px] uppercase tracking-wider text-white/45 hover:text-white/70"
-          >
-            WELHR rapide →
-          </Link>
+          <PrimaryButton href="/trust/quantum" variant="ghost">
+            Quantum index
+          </PrimaryButton>
+          <PrimaryButton href="/developers/shield" variant="ghost">
+            Shield reseal
+          </PrimaryButton>
         </div>
       </article>
     </FocusPageShell>

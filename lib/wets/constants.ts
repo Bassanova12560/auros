@@ -171,6 +171,11 @@ export type WetsProject = {
   public_slug: string | null;
   report_markdown: string | null;
   report_html: string | null;
+  interconnection_queue_position: string | null;
+  permits_status: "unknown" | "none" | "filed" | "obtained" | null;
+  behind_the_meter: boolean;
+  pqc_checklist: Record<string, boolean>;
+  is_demo: boolean;
   created_at: string;
   updated_at: string;
 };
@@ -184,6 +189,7 @@ export type WetsTrustRow = {
   jurisdiction: string | null;
   public_slug: string | null;
   owner_user_id: string | null;
+  is_demo: boolean;
   created_at: string;
   final_score: number;
   grade: WetsGrade;

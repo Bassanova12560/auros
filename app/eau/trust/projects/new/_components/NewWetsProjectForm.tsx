@@ -9,6 +9,7 @@ import {
   WETS_CATEGORIES,
   WETS_CATEGORY_LABELS,
   WETS_CONSOLE_ROUTE,
+  WETS_PQC_QUESTIONS,
 } from "@/lib/wets/constants";
 
 export function NewWetsProjectForm() {
@@ -59,6 +60,64 @@ export function NewWetsProjectForm() {
         label="Structure légale"
         placeholder="SPV Delaware / concession…"
       />
+
+      <fieldset className="space-y-3 rounded-xl border border-white/10 p-4">
+        <legend className="px-1 font-mono text-[10px] uppercase tracking-wider text-sky-400/80">
+          Énergie / raccordement
+        </legend>
+        <label className="flex items-center gap-2 text-sm text-white/70">
+          <input type="checkbox" name="behind_the_meter" className="rounded" />
+          Behind-the-meter / microgrid on-site
+        </label>
+        <label className="block space-y-1.5">
+          <span className="font-mono text-[10px] uppercase text-white/40">
+            Statut permis
+          </span>
+          <select
+            name="permits_status"
+            defaultValue="unknown"
+            className="w-full rounded-lg border border-white/10 bg-black px-3 py-2.5 text-sm text-white"
+          >
+            <option value="unknown">unknown</option>
+            <option value="none">none</option>
+            <option value="filed">filed (demandés)</option>
+            <option value="obtained">obtained (obtenus)</option>
+          </select>
+        </label>
+        <Field
+          name="interconnection_queue_position"
+          label="Position file d’interconnexion"
+          placeholder="ex. PJM queue #412 · ~4 ans · ou N/A si BTM"
+        />
+      </fieldset>
+
+      <fieldset className="space-y-3 rounded-xl border border-white/10 p-4">
+        <legend className="px-1 font-mono text-[10px] uppercase tracking-wider text-violet-300/80">
+          Checklist PQC (cocher si documenté)
+        </legend>
+        {WETS_PQC_QUESTIONS.map((q) => (
+          <label
+            key={q.id}
+            className="flex items-start gap-2 text-sm text-white/65"
+          >
+            <input
+              type="checkbox"
+              name={
+                q.id === "offchain_register"
+                  ? "pqc_offchain_register"
+                  : q.id === "key_compromise_remedy"
+                    ? "pqc_key_compromise_remedy"
+                    : q.id === "token_vs_title"
+                      ? "pqc_token_vs_title"
+                      : "pqc_crypto_agility"
+              }
+              className="mt-1 rounded"
+            />
+            <span>{q.q}</span>
+          </label>
+        ))}
+      </fieldset>
+
       <label className="block space-y-1.5">
         <span className="font-mono text-[10px] uppercase tracking-wider text-white/40">
           Description
@@ -82,12 +141,6 @@ export function NewWetsProjectForm() {
           ? "Scoring assisté…"
           : "Créer + pré-score (7 critères · Claude / Groq / WELHR)"}
       </PrimaryButton>
-      <p className="text-xs text-white/40">
-        Inclut raccordement réseau + recours post-quantique. Éditables avant
-        publication. Anthropic si{" "}
-        <code className="text-white/60">ANTHROPIC_API_KEY</code>, sinon Groq,
-        sinon heuristique.
-      </p>
     </form>
   );
 }

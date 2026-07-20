@@ -47,6 +47,9 @@ export function WetsNav() {
       <Link href="/eau/trust/projects/new" className="hover:text-white/80">
         Nouveau
       </Link>
+      <Link href="/eau/trust/reports" className="hover:text-white/80">
+        Rapports publics
+      </Link>
       <Link href="/eau/trust/risk-events" className="hover:text-white/80">
         Risk events
       </Link>

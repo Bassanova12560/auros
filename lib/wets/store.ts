@@ -22,9 +22,21 @@ export type CreateWetsProjectInput = {
   description?: string | null;
   legal_structure?: string | null;
   jurisdiction?: string | null;
+  interconnection_queue_position?: string | null;
+  permits_status?: "unknown" | "none" | "filed" | "obtained" | null;
+  behind_the_meter?: boolean;
+  pqc_checklist?: Record<string, boolean>;
+  is_demo?: boolean;
 };
 
 function mapProject(row: Record<string, unknown>): WetsProject {
+  const checklist =
+    row.pqc_checklist && typeof row.pqc_checklist === "object"
+      ? (row.pqc_checklist as Record<string, boolean>)
+      : {};
+  const permits = row.permits_status
+    ? String(row.permits_status)
+    : null;
   return {
     id: String(row.id),
     owner_user_id: row.owner_user_id ? String(row.owner_user_id) : null,
@@ -39,6 +51,19 @@ function mapProject(row: Record<string, unknown>): WetsProject {
     public_slug: row.public_slug ? String(row.public_slug) : null,
     report_markdown: row.report_markdown ? String(row.report_markdown) : null,
     report_html: row.report_html ? String(row.report_html) : null,
+    interconnection_queue_position: row.interconnection_queue_position
+      ? String(row.interconnection_queue_position)
+      : null,
+    permits_status:
+      permits === "none" ||
+      permits === "filed" ||
+      permits === "obtained" ||
+      permits === "unknown"
+        ? permits
+        : null,
+    behind_the_meter: Boolean(row.behind_the_meter),
+    pqc_checklist: checklist,
+    is_demo: Boolean(row.is_demo),
     created_at: String(row.created_at),
     updated_at: String(row.updated_at),
   };
@@ -67,6 +92,7 @@ export async function listWetsTrustScores(opts?: {
       jurisdiction: r.jurisdiction ? String(r.jurisdiction) : null,
       public_slug: r.public_slug ? String(r.public_slug) : null,
       owner_user_id: r.owner_user_id ? String(r.owner_user_id) : null,
+      is_demo: Boolean(r.is_demo),
       created_at: String(r.created_at),
       final_score: Number(r.final_score),
       grade: r.grade as WetsGrade,
@@ -167,6 +193,12 @@ export async function createWetsProject(
         description: input.description?.trim() || null,
         legal_structure: input.legal_structure?.trim() || null,
         jurisdiction: input.jurisdiction?.trim() || null,
+        interconnection_queue_position:
+          input.interconnection_queue_position?.trim() || null,
+        permits_status: input.permits_status ?? "unknown",
+        behind_the_meter: Boolean(input.behind_the_meter),
+        pqc_checklist: input.pqc_checklist ?? {},
+        is_demo: Boolean(input.is_demo),
         status: "draft",
       })
       .select("*")
