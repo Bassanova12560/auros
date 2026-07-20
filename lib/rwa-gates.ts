@@ -74,11 +74,11 @@ export const RWA_GATES: readonly RwaGate[] = [
       "WELHR (stress + litige local + social license) et signaux Green / CFU — export machine, pas un claim marketing.",
     whyCompetitorsMiss:
       "ESG déclaratif. Aucune marketplace ne score le risque de blocage par l’autorité locale de l’eau.",
-    primaryHref: "/eau/risk",
-    primaryLabel: "Score WELHR",
-    secondaryHref: "/data/licence",
-    secondaryLabel: "Licence data",
-    apiHint: "POST /api/green/eau/legal-risk · Green API · CFU / Power hors Green Verified",
+    primaryHref: "/eau/trust",
+    primaryLabel: "Console Trust Score",
+    secondaryHref: "/eau/risk",
+    secondaryLabel: "WELHR rapide",
+    apiHint: "POST /api/score-project · POST /api/green/eau/legal-risk",
   },
   {
     id: "embedded_verify",
