@@ -41,14 +41,14 @@ const COPY: CatalogMap< EauHubCopy> = {
     kicker: "AUROS · Infrastructure hydrique",
     h1: "Le passeport hydrique avant la blockchain",
     intro:
-      "Les investisseurs et plateformes RWA exigent demain un dossier mesurable (m³, concession, DNSH eau) et une URL vérifiable. AUROS structure cette couche amont — scoring H₂O, data room, Label Green — sans promettre de liquidité ni de déploiement on-chain.",
-    futureTitle: "Pourquoi passer par AUROS",
+      "Calculez un H₂O Score, ouvrez un dossier passeport, puis prouvez le flux (CFU-W). Indicatif — pas de liquidité ni de déploiement on-chain promis.",
+    futureTitle: "Trois actions",
     futureBody:
-      "Blue bonds, droits d'eau et concessions tokenisées échouent sans traçabilité hydrologique et revue documentaire. AUROS devient le rail de préparation que les arrangeurs, family offices et marketplaces citent dans leurs data rooms — comme un registre REC pour l'énergie, mais pour l'eau.",
+      "Un parcours client clair : scorier → dossier vérifiable → preuve de flux. Complétez ce qui manque plus tard.",
     pillars: [
-      "H₂O Score indicatif — m³/an, durée concession, gaps documentaires (max 3).",
-      "Passeport vérifiable après dossier wizard — URL publique /green/verify.",
-      "API batch premium pour due diligence portefeuilles hydriques (fonds, utilities).",
+      "H₂O Score indicatif — m³/an, concession, max 3 priorités.",
+      "Passeport dossier wizard — URL / PDF quand le dossier est prêt.",
+      "CFU-W + embed verify — preuve de session hydrique hashée.",
     ],
     checkerTitle: "Testez votre readiness hydrique",
     checkerPlaceholder:
@@ -56,10 +56,10 @@ const COPY: CatalogMap< EauHubCopy> = {
     checkerCta: "Calculer le H₂O Score",
     checkerPassportCta: "Obtenir le Passeport Hydrique AUROS",
     checkerApiNote: "Intégrateurs : POST /api/eau/check ou batch premium /api/v1/green/h2o/batch",
-    passportTitle: "Passeport Hydrique AUROS",
+    passportTitle: "Livrables disponibles",
     passportBody:
-      "Le preview ci-dessus est indicatif. Le passeport vérifiable (registre public, revue documentaire, PDF dossier) s'obtient en complétant le wizard dossier — ~12 min guidé, réversible.",
-    revenueTitle: "Suite monétisation infra",
+      "Après le score : dossier passeport (~12 min), mint CFU-W démo, ou widget embed pour partenaires. Indicatif jusqu'à revue documentaire.",
+    revenueTitle: "Aller plus loin",
     links: {
       guide: "Guide tokeniser l'eau",
       registry: "Registre Green public",
@@ -93,14 +93,14 @@ const COPY: CatalogMap< EauHubCopy> = {
     kicker: "AUROS · Water infrastructure",
     h1: "The hydrological passport before blockchain",
     intro:
-      "RWA investors and platforms will require measurable dossiers (m³, concession, water DNSH) and a verifiable URL. AUROS structures this upstream layer — H₂O scoring, data room, Green Label — without promising liquidity or on-chain deployment.",
-    futureTitle: "Why go through AUROS",
+      "Compute an H₂O Score, open a passport dossier, then prove flow (CFU-W). Indicative — no liquidity or on-chain deployment promised.",
+    futureTitle: "Three actions",
     futureBody:
-      "Blue bonds, water rights and tokenized concessions fail without hydrological traceability and documentary review. AUROS becomes the preparation rail that arrangers, family offices and marketplaces cite in data rooms — like a REC registry for energy, but for water.",
+      "A clear client path: score → verifiable dossier → flow proof. Complete gaps later.",
     pillars: [
-      "Indicative H₂O Score — m³/year, concession tenor, doc gaps (max 3).",
-      "Verifiable passport after wizard dossier — public URL /green/verify.",
-      "Premium batch API for hydrological portfolio due diligence.",
+      "Indicative H₂O Score — m³/year, concession, max 3 priorities.",
+      "Passport via wizard dossier — URL / PDF when ready.",
+      "CFU-W + embed verify — hashed hydrological session proof.",
     ],
     checkerTitle: "Test your hydrological readiness",
     checkerPlaceholder:
@@ -108,10 +108,10 @@ const COPY: CatalogMap< EauHubCopy> = {
     checkerCta: "Compute H₂O Score",
     checkerPassportCta: "Get AUROS Hydrological Passport",
     checkerApiNote: "Integrators: POST /api/eau/check or premium batch /api/v1/green/h2o/batch",
-    passportTitle: "AUROS Hydrological Passport",
+    passportTitle: "Available deliverables",
     passportBody:
-      "The preview above is indicative. A verifiable passport (public registry, documentary review, PDF dossier) is unlocked by completing the AUROS wizard dossier — ~12 min guided, reversible.",
-    revenueTitle: "Infra monetization suite",
+      "After the score: passport dossier (~12 min), CFU-W demo mint, or partner embed widget. Indicative until documentary review.",
+    revenueTitle: "Go further",
     links: {
       guide: "Water tokenization guide",
       registry: "Public Green registry",
@@ -145,14 +145,14 @@ const COPY: CatalogMap< EauHubCopy> = {
     kicker: "AUROS · Infraestructura hídrica",
     h1: "El pasaporte hídrico antes de la blockchain",
     intro:
-      "Inversores y plataformas RWA exigirán dossiers medibles (m³, concesión, DNSH agua) y URL verificable. AUROS estructura esta capa previa — scoring H₂O, data room, Label Green — sin prometer liquidez ni despliegue on-chain.",
-    futureTitle: "Por qué pasar por AUROS",
+      "Calcule un H₂O Score, abra un dossier pasaporte, luego pruebe el flujo (CFU-W). Indicativo — sin liquidez ni despliegue on-chain prometido.",
+    futureTitle: "Tres acciones",
     futureBody:
-      "Blue bonds, derechos de agua y concesiones tokenizadas fallan sin trazabilidad hidrológica y revisión documental. AUROS es el raíl de preparación que arrangers, family offices y marketplaces citan en data rooms.",
+      "Un recorrido claro: score → dossier verificable → prueba de flujo. Complete lo que falte después.",
     pillars: [
-      "H₂O Score indicativo — m³/año, plazo concesión, gaps documentales (máx. 3).",
-      "Pasaporte verificable tras dossier wizard — URL pública /green/verify.",
-      "API batch premium para due diligence de carteras hídricas.",
+      "H₂O Score indicativo — m³/año, concesión, máx. 3 prioridades.",
+      "Pasaporte vía wizard — URL / PDF cuando esté listo.",
+      "CFU-W + embed verify — prueba de sesión hidrológica hasheada.",
     ],
     checkerTitle: "Pruebe su readiness hídrico",
     checkerPlaceholder:
@@ -160,10 +160,10 @@ const COPY: CatalogMap< EauHubCopy> = {
     checkerCta: "Calcular H₂O Score",
     checkerPassportCta: "Obtener Pasaporte Hídrico AUROS",
     checkerApiNote: "Integradores: POST /api/eau/check o batch premium /api/v1/green/h2o/batch",
-    passportTitle: "Pasaporte Hídrico AUROS",
+    passportTitle: "Entregables disponibles",
     passportBody:
-      "La vista previa es indicativa. El pasaporte verificable (registro público, revisión documental, PDF dossier) se obtiene completando el wizard AUROS — ~12 min guiado, reversible.",
-    revenueTitle: "Suite monetización infra",
+      "Tras el score: dossier pasaporte (~12 min), mint CFU-W demo, o widget embed partner. Indicativo hasta revisión documental.",
+    revenueTitle: "Ir más lejos",
     links: {
       guide: "Guía tokenizar agua",
       registry: "Registro Green público",

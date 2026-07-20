@@ -6,6 +6,10 @@ import { useCallback, useEffect, useState } from "react";
 import { ContentFaqList } from "@/app/_components/ContentPageLayout";
 import { PrimaryButton } from "@/app/_components/ui/PrimaryButton";
 import {
+  useWattsApiMode,
+  WattsApiModeBar,
+} from "@/app/green/chargeflow/_components/WattsApiModeBar";
+import {
   WATTS_HUB_ROUTE,
   WATTS_INVENTORY_ROUTE,
   WATTS_RESERVE_DISCLAIMER,
@@ -60,6 +64,14 @@ function fmtOffer(o: OfferSnap) {
 }
 
 export function WattsHubView() {
+  const {
+    mode,
+    setMode,
+    apiKey,
+    setApiKey,
+    authHeaders,
+    endpoint,
+  } = useWattsApiMode();
   const [offers, setOffers] = useState<OfferSnap[]>([]);
   const [listings, setListings] = useState<ListingSnap[]>([]);
   const [loadingLive, setLoadingLive] = useState(true);
@@ -68,8 +80,12 @@ export function WattsHubView() {
     setLoadingLive(true);
     try {
       const [offersRes, listingsRes] = await Promise.all([
-        fetch("/api/v1/watts/offers/demo"),
-        fetch("/api/v1/watts/secondary/demo"),
+        fetch(endpoint("/api/v1/watts/offers/demo"), {
+          headers: authHeaders(),
+        }),
+        fetch(endpoint("/api/v1/watts/secondary/demo"), {
+          headers: authHeaders(),
+        }),
       ]);
       if (offersRes.ok) {
         const j = (await offersRes.json()) as { offers?: OfferSnap[] };
@@ -84,7 +100,7 @@ export function WattsHubView() {
     } finally {
       setLoadingLive(false);
     }
-  }, []);
+  }, [endpoint, authHeaders]);
 
   useEffect(() => {
     void refreshLive();
@@ -131,6 +147,13 @@ export function WattsHubView() {
           </div>
         </header>
 
+        <WattsApiModeBar
+          mode={mode}
+          apiKey={apiKey}
+          onModeChange={setMode}
+          onKeyChange={setApiKey}
+        />
+
         <section className="grid gap-8 text-left sm:grid-cols-3">
           {PATHS.map((p) => (
             <Link
@@ -153,6 +176,7 @@ export function WattsHubView() {
             <div>
               <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/40">
                 Marché indicatif
+                {mode === "premium" ? " · Premium" : " · Demo"}
               </p>
               <p className="mt-2 font-display text-2xl tabular-nums text-white">
                 {loadingLive ? "…" : offers.length}

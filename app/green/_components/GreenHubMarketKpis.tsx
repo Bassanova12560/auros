@@ -71,7 +71,23 @@ export function GreenHubMarketKpis({ marketSnapshot, impact }: Props) {
           ))}
         </div>
         <p className="border-t border-white/[0.06] px-5 py-3 text-[11px] leading-relaxed text-white/35 md:px-6">
-          {m.marketKpis.demoNote}
+          {marketSnapshot.mode === "live"
+            ? locale === "en"
+              ? "Live marketplace — referenced / verified actors. Demo listings hidden."
+              : locale === "es"
+                ? "Mercado live — actores referenced / verified. Listados demo ocultos."
+                : "Place de marché live — acteurs referenced / verified. Annonces démo masquées."
+            : m.marketKpis.demoNote}{" "}
+          <a
+            href="/green/register"
+            className="text-white/50 underline-offset-2 hover:underline"
+          >
+            {locale === "en"
+              ? "List your asset"
+              : locale === "es"
+                ? "Publicar activo"
+                : "Publier mon actif"}
+          </a>
         </p>
       </div>
 

@@ -42,7 +42,7 @@ export function GreenHubView({ marketSnapshot, impact, registrySnapshot }: Props
 
   return (
     <div className="page-inner page-inner--6xl mx-auto px-4 pb-20 pt-2 md:px-6 md:pt-4">
-      <GreenHubHeroSection />
+      <GreenHubHeroSection marketMode={marketSnapshot.mode} />
 
       <GreenHubMoreSections>
         <GreenHubOnboarding />

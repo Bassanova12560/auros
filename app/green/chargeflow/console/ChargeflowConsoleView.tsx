@@ -5,6 +5,8 @@ import { useCallback, useEffect, useState } from "react";
 
 import { PrimaryButton } from "@/app/_components/ui/PrimaryButton";
 
+import { ShieldEvidencePackPanel } from "@/app/developers/shield/_components/ShieldEvidencePackPanel";
+
 type ListItem = {
   id: string;
   unit_kind: "e" | "w" | "f";
@@ -408,6 +410,8 @@ export function ChargeflowConsoleView() {
         </p>
       </header>
 
+      <ShieldEvidencePackPanel compact />
+
       <section className="space-y-4 border border-white/[0.08] bg-black/40 p-5 md:p-6">
         <label className="block space-y-2">
           <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/40">
@@ -507,6 +511,13 @@ export function ChargeflowConsoleView() {
               className="underline-offset-2 hover:underline"
             >
               docs
+            </Link>
+            {" · "}
+            <Link
+              href="/developers/shield/banks#evidence-pack"
+              className="underline-offset-2 hover:underline"
+            >
+              Evidence Pack
             </Link>
           </p>
         ) : null}

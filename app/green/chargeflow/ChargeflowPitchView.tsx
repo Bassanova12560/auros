@@ -99,6 +99,14 @@ export function ChargeflowPitchView() {
           compagnon — prêt pour dossier RWA et ESG granulaire, sans smart
           contract.
         </p>
+        <div className="flex flex-wrap justify-center gap-3 pt-2">
+          <PrimaryButton href="/green/chargeflow/console">
+            Ouvrir la console
+          </PrimaryButton>
+          <PrimaryButton href="/developers/shield/banks" variant="ghost">
+            Evidence Pack
+          </PrimaryButton>
+        </div>
       </header>
 
       <section className="grid gap-8 md:grid-cols-3">

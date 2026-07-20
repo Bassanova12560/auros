@@ -8,6 +8,8 @@ import { PrimaryButton } from "@/app/_components/ui/PrimaryButton";
 import { metadataFromPath } from "@/lib/seo/metadata";
 import { SHIELD_SLA } from "@/lib/shield";
 
+import { ShieldEvidencePackPanel } from "../_components/ShieldEvidencePackPanel";
+
 export const SHIELD_BANKS_ROUTE = "/developers/shield/banks";
 
 export const metadata: Metadata = {
@@ -27,17 +29,17 @@ export default function ShieldBanksPage() {
           title="Joindre la preuve au dossier — pas la data room"
           intro="Quand chaque contrepartie a des RWA, risk/credit veulent un livrable scellé, vérifiable, sans ouvrir les fichiers bruts. C’est l’Evidence Pack."
           cta={{
-            href: "/examples/shield-evidence-pack.example.json",
-            label: "Télécharger le pack exemple",
+            href: "#evidence-pack",
+            label: "Générer un pack",
           }}
         >
           <div className="space-y-10">
             <section className="space-y-3">
               <h2 className="font-display text-lg text-white">En 3 gestes</h2>
               <ol className="list-decimal space-y-2 pl-5 text-sm text-white/65">
-                <li>L’émetteur exporte CFU (+ option <code>?shield=1</code>).</li>
+                <li>Mint / importez des CFU (console ChargeFlow ou API).</li>
                 <li>
-                  Premium : <code>POST /api/v1/shield/pack</code> → dossier hash-only.
+                  Premium : générez le pack ci-dessous (HTML imprimable → PDF).
                 </li>
                 <li>
                   La banque re-vérifie via{" "}
@@ -45,6 +47,10 @@ export default function ShieldBanksPage() {
                 </li>
               </ol>
             </section>
+
+            <div id="evidence-pack">
+              <ShieldEvidencePackPanel />
+            </div>
 
             <section className="space-y-3">
               <h2 className="font-display text-lg text-white">Bank actions</h2>
@@ -72,14 +78,17 @@ export default function ShieldBanksPage() {
             </section>
 
             <div className="flex flex-wrap gap-3">
-              <PrimaryButton href="/developers/shield/banks/sample">
-                Voir le modèle imprimable
+              <PrimaryButton href="/examples/shield-evidence-pack.example.json">
+                Pack exemple JSON
               </PrimaryButton>
-              <PrimaryButton href="/developers/shield">
-                Essayer Shield
+              <PrimaryButton
+                href="/developers/shield/banks/sample"
+                variant="ghost"
+              >
+                Modèle imprimable
               </PrimaryButton>
-              <PrimaryButton href="/developers/shield/case-study">
-                Case study flotte → banque
+              <PrimaryButton href="/green/chargeflow/console" variant="ghost">
+                Console CFU
               </PrimaryButton>
             </div>
           </div>

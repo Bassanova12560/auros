@@ -1,19 +1,25 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 
 import { PrimaryButton } from "@/app/_components/ui/PrimaryButton";
 import {
   CHARGEFLOW_FLEETS_ROUTE,
   CHARGEFLOW_ROUTE,
 } from "@/lib/chargeflow/constants";
+import { GENERATION_SOURCES } from "@/lib/power/generation-source";
 import {
   WATTS_INVENTORY_ROUTE,
   WATTS_RESERVE_DISCLAIMER,
   WATTS_SECONDARY_ROUTE,
 } from "@/lib/watts";
 
+import {
+  useWattsApiMode,
+  WattsApiModeBar,
+} from "../_components/WattsApiModeBar";
 import { WattsFlowNav } from "../_components/WattsFlowNav";
 
 type MatchReason = { code: string; detail: string; delta: number };
@@ -44,6 +50,20 @@ const fieldClass =
   "w-full border border-white/[0.1] bg-white/[0.03] px-3.5 py-2.5 text-sm text-white outline-none transition placeholder:text-white/25 focus:border-emerald-500/35 focus:bg-white/[0.05]";
 
 export function WattsReserveView() {
+  const searchParams = useSearchParams();
+  const {
+    mode,
+    setMode,
+    apiKey,
+    setApiKey,
+    authHeaders,
+    endpoint,
+    isPremiumReady,
+  } = useWattsApiMode();
+  const fromPower =
+    searchParams.get("from") === "power" ||
+    searchParams.get("source") === "nuclear";
+
   const [firmness, setFirmness] = useState<"firm" | "flex">("firm");
   const [start, setStart] = useState(() => {
     const d = new Date();
@@ -82,6 +102,20 @@ export function WattsReserveView() {
     }[]
   >([]);
 
+  useEffect(() => {
+    const src = searchParams.get("source");
+    if (src && (GENERATION_SOURCES as readonly string[]).includes(src)) {
+      setGenerationSource(src);
+    }
+  }, [searchParams]);
+
+  function jsonHeaders(): HeadersInit {
+    return {
+      "Content-Type": "application/json",
+      ...authHeaders(),
+    };
+  }
+
   function profileBody() {
     const body: Record<string, unknown> = {
       window: {
@@ -109,13 +143,17 @@ export function WattsReserveView() {
   }
 
   async function submit() {
+    if (mode === "premium" && !isPremiumReady) {
+      setError("Mode Premium : collez une clé Protocol Premium.");
+      return;
+    }
     setLoading(true);
     setError(null);
     setResult(null);
     try {
-      const res = await fetch("/api/v1/watts/reserve/demo", {
+      const res = await fetch(endpoint("/api/v1/watts/reserve/demo"), {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: jsonHeaders(),
         body: JSON.stringify(profileBody()),
       });
       const json = (await res.json()) as ReserveResult;
@@ -132,12 +170,16 @@ export function WattsReserveView() {
   }
 
   async function matchInventory() {
+    if (mode === "premium" && !isPremiumReady) {
+      setError("Mode Premium : collez une clé Protocol Premium.");
+      return;
+    }
     setMatchingOffers(true);
     setError(null);
     try {
-      const res = await fetch("/api/v1/watts/offers/demo/match", {
+      const res = await fetch(endpoint("/api/v1/watts/offers/demo/match"), {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: jsonHeaders(),
         body: JSON.stringify(profileBody()),
       });
       const json = (await res.json()) as {
@@ -158,13 +200,25 @@ export function WattsReserveView() {
 
   async function confirm() {
     if (!result?.reservation_id) return;
+    if (mode === "premium" && !isPremiumReady) {
+      setError("Mode Premium : collez une clé Protocol Premium.");
+      return;
+    }
     setConfirming(true);
     setError(null);
     try {
-      const res = await fetch("/api/v1/watts/reserve/demo/confirm", {
+      const id = result.reservation_id;
+      const url =
+        mode === "premium" && isPremiumReady
+          ? `/api/v1/watts/reserve/${id}/confirm`
+          : "/api/v1/watts/reserve/demo/confirm";
+      const res = await fetch(url, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ reservation_id: result.reservation_id }),
+        headers: jsonHeaders(),
+        body:
+          mode === "premium" && isPremiumReady
+            ? undefined
+            : JSON.stringify({ reservation_id: id }),
       });
       const json = (await res.json()) as ReserveResult;
       if (!res.ok) {
@@ -181,22 +235,33 @@ export function WattsReserveView() {
 
   async function settle() {
     if (!result?.reservation_id) return;
+    if (mode === "premium" && !isPremiumReady) {
+      setError("Mode Premium : collez une clé Protocol Premium.");
+      return;
+    }
     setSettling(true);
     setError(null);
     try {
+      const id = result.reservation_id;
       const body: Record<string, unknown> = {
-        reservation_id: result.reservation_id,
-        reason: "Demo delivery settle",
+        reason: "Delivery settle",
       };
+      if (mode !== "premium" || !isPremiumReady) {
+        body.reservation_id = id;
+      }
       if (deliveryRef.trim()) body.delivery_ref = deliveryRef.trim();
       if (firmness === "firm") {
         body.energy_kwh_delivered = Number(energyKwh);
       } else {
         body.capacity_kw_delivered = Number(capacityKw);
       }
-      const res = await fetch("/api/v1/watts/reserve/demo/settle", {
+      const url =
+        mode === "premium" && isPremiumReady
+          ? `/api/v1/watts/reserve/${id}/settle`
+          : "/api/v1/watts/reserve/demo/settle";
+      const res = await fetch(url, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: jsonHeaders(),
         body: JSON.stringify(body),
       });
       const json = (await res.json()) as ReserveResult;
@@ -242,6 +307,14 @@ export function WattsReserveView() {
           </p>
           <WattsFlowNav />
         </header>
+
+        <WattsApiModeBar
+          mode={mode}
+          apiKey={apiKey}
+          onModeChange={setMode}
+          onKeyChange={setApiKey}
+          powerHint={fromPower}
+        />
 
         <section className="space-y-6 border border-white/[0.08] bg-black/50 p-6 backdrop-blur-sm md:p-8">
           <div className="flex items-center justify-between gap-3">
@@ -364,13 +437,11 @@ export function WattsReserveView() {
                 onChange={(e) => setGenerationSource(e.target.value)}
                 className={fieldClass}
               >
-                <option value="unknown">unknown</option>
-                <option value="solar">solar</option>
-                <option value="wind">wind</option>
-                <option value="hydro">hydro</option>
-                <option value="nuclear">nuclear</option>
-                <option value="battery">battery</option>
-                <option value="mixed">mixed</option>
+                {GENERATION_SOURCES.map((s) => (
+                  <option key={s} value={s}>
+                    {s}
+                  </option>
+                ))}
               </select>
               <span className="block text-[11px] text-white/30">
                 Pas un GO/REC ni un label Green Verified — claim technologique

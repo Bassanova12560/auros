@@ -36,41 +36,37 @@ export default function ChargeflowFleetsPage() {
               Supercharger-class. Aucune claim de partnership Tesla.
             </p>
             <div className="flex flex-wrap justify-center gap-3 pt-2">
-              <PrimaryButton href={CHARGEFLOW_ROUTE}>
-                Essayer la demo CFU-E
+              <PrimaryButton href="/green/chargeflow/console">
+                Ouvrir la console
               </PrimaryButton>
-              <PrimaryButton href="/green/watts">
-                AUROS Watts
+              <PrimaryButton href="/developers/shield/banks" variant="ghost">
+                Evidence Pack banque
               </PrimaryButton>
-              <PrimaryButton href="/green/chargeflow/reserve" variant="ghost">
-                Réserver
-              </PrimaryButton>
-              <PrimaryButton href="/green/chargeflow/inventory" variant="ghost">
-                Inventaire
-              </PrimaryButton>
-              <PrimaryButton href="/green/chargeflow/secondary" variant="ghost">
-                Secondaire
-              </PrimaryButton>
-              <PrimaryButton href="/green/api#premium" variant="ghost">
-                Protocol Premium
-              </PrimaryButton>
-              <PrimaryButton
-                href="/developers/docs/endpoint-chargeflow"
-                variant="ghost"
-              >
-                Docs API
-              </PrimaryButton>
-              <PrimaryButton href="/green/chargeflow/console" variant="ghost">
-                Console + sync partenaires
-              </PrimaryButton>
-              <PrimaryButton
-                href="/developers/docs/endpoint-chargeflow-ocpi"
-                variant="ghost"
-              >
-                Import OCPI / CSV
+              <PrimaryButton href={CHARGEFLOW_ROUTE} variant="ghost">
+                Demo CFU-E
               </PrimaryButton>
             </div>
           </header>
+
+          <section className="mx-auto max-w-2xl space-y-3 text-center">
+            <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/40">
+              Parcours flotte
+            </p>
+            <ol className="space-y-3 text-left text-sm leading-relaxed text-white/60">
+              <li>
+                <span className="font-mono text-white/35">01</span> — Console :
+                import OCPI / CSV, list &amp; retire CFU.
+              </li>
+              <li>
+                <span className="font-mono text-white/35">02</span> — Shield :
+                hashe l&apos;export → preuve sans data room.
+              </li>
+              <li>
+                <span className="font-mono text-white/35">03</span> — Evidence
+                Pack Premium pour le dossier crédit / ESG.
+              </li>
+            </ol>
+          </section>
 
           <section className="mx-auto max-w-2xl space-y-3 text-center">
             <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/40">
@@ -78,8 +74,8 @@ export default function ChargeflowFleetsPage() {
             </p>
             <p className="text-sm leading-relaxed text-white/55">
               Tesla Fleet, TotalEnergies OCPI et OCPI générique : sync sandbox
-              100 % fonctionnelle depuis la console ; live dès credentials.
-              Compatible format API — aucune claim de partnership officiel.
+              depuis la console ; live dès credentials. Aucune claim de
+              partnership officiel.
             </p>
           </section>
 
@@ -95,7 +91,7 @@ export default function ChargeflowFleetsPage() {
               },
               {
                 t: "Suite",
-                d: "CFU-F pour la flex kW, CFU-W pour l’eau — même standard Proof-of-Flow.",
+                d: "CFU-F pour la flex kW, CFU-W pour l'eau — même standard Proof-of-Flow.",
               },
             ].map((item) => (
               <div key={item.t} className="space-y-2">
@@ -110,24 +106,31 @@ export default function ChargeflowFleetsPage() {
           <p className="text-center text-xs text-white/35">
             Aussi :{" "}
             <Link
+              href="/green/watts"
+              className="text-white/55 underline-offset-2 hover:underline"
+            >
+              Watts
+            </Link>{" "}
+            ·{" "}
+            <Link
               href="/green/chargeflow/flex"
               className="text-white/55 underline-offset-2 hover:underline"
             >
-              CFU-F flex
+              CFU-F
             </Link>{" "}
             ·{" "}
             <Link
               href="/eau/chargeflow"
               className="text-white/55 underline-offset-2 hover:underline"
             >
-              CFU-W eau
+              CFU-W
             </Link>{" "}
             ·{" "}
             <Link
-              href="/green/chargeflow/console"
+              href="/developers/docs/endpoint-chargeflow"
               className="text-white/55 underline-offset-2 hover:underline"
             >
-              Console
+              Docs API
             </Link>
           </p>
         </div>

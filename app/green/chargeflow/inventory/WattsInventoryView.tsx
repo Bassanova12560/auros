@@ -10,6 +10,10 @@ import {
 } from "@/lib/chargeflow/constants";
 import { WATTS_RESERVE_DISCLAIMER, WATTS_RESERVE_ROUTE, WATTS_SECONDARY_ROUTE } from "@/lib/watts";
 
+import {
+  useWattsApiMode,
+  WattsApiModeBar,
+} from "../_components/WattsApiModeBar";
 import { WattsFlowNav } from "../_components/WattsFlowNav";
 
 type Offer = {
@@ -55,6 +59,15 @@ function fmtWindow(w: { start: string; end: string }) {
 }
 
 export function WattsInventoryView() {
+  const {
+    mode,
+    setMode,
+    apiKey,
+    setApiKey,
+    authHeaders,
+    endpoint,
+    isPremiumReady,
+  } = useWattsApiMode();
   const [firmness, setFirmness] = useState<"firm" | "flex">("flex");
   const [start, setStart] = useState(() => {
     const d = new Date();
@@ -85,7 +98,9 @@ export function WattsInventoryView() {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch("/api/v1/watts/offers/demo");
+      const res = await fetch(endpoint("/api/v1/watts/offers/demo"), {
+        headers: authHeaders(),
+      });
       const json = (await res.json()) as {
         offers?: Offer[];
         error?: { message?: string };
@@ -100,13 +115,17 @@ export function WattsInventoryView() {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [endpoint, authHeaders]);
 
   useEffect(() => {
     void refresh();
   }, [refresh]);
 
   async function publish() {
+    if (mode === "premium" && !isPremiumReady) {
+      setError("Mode Premium : collez une clé Protocol Premium.");
+      return;
+    }
     setPublishing(true);
     setError(null);
     setOkMsg(null);
@@ -128,12 +147,15 @@ export function WattsInventoryView() {
     if (generationSource && generationSource !== "unknown") {
       body.generation_source = generationSource;
     }
-    body.producer_ref = "demo-producer";
+    body.producer_ref = mode === "premium" ? "producer" : "demo-producer";
 
     try {
-      const res = await fetch("/api/v1/watts/offers/demo", {
+      const res = await fetch(endpoint("/api/v1/watts/offers/demo"), {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          ...authHeaders(),
+        },
         body: JSON.stringify(body),
       });
       const json = (await res.json()) as {
@@ -154,6 +176,10 @@ export function WattsInventoryView() {
   }
 
   async function runMatch() {
+    if (mode === "premium" && !isPremiumReady) {
+      setError("Mode Premium : collez une clé Protocol Premium.");
+      return;
+    }
     setMatching(true);
     setError(null);
     setMatches(null);
@@ -173,9 +199,12 @@ export function WattsInventoryView() {
     if (carbon.trim()) body.carbon_intensity_max_gco2_kwh = Number(carbon);
 
     try {
-      const res = await fetch("/api/v1/watts/offers/demo/match", {
+      const res = await fetch(endpoint("/api/v1/watts/offers/demo/match"), {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          ...authHeaders(),
+        },
         body: JSON.stringify(body),
       });
       const json = (await res.json()) as {
@@ -217,6 +246,13 @@ export function WattsInventoryView() {
           </p>
           <WattsFlowNav />
         </header>
+
+        <WattsApiModeBar
+          mode={mode}
+          apiKey={apiKey}
+          onModeChange={setMode}
+          onKeyChange={setApiKey}
+        />
 
         <section className="space-y-6 border border-white/[0.08] bg-black/50 p-6 backdrop-blur-sm md:p-8">
           <div className="flex items-center justify-between gap-3">

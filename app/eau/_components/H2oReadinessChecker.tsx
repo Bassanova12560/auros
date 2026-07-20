@@ -141,12 +141,26 @@ export function H2oReadinessChecker({ mode = "hub", partnerCode }: Props) {
               {copy.checkerPassportCta}
             </PrimaryButton>
             {!isEmbed ? (
-              <Link
-                href={eauPassportUnlockPath()}
-                className="inline-flex items-center rounded-full border border-white/15 px-5 py-2.5 text-sm text-white/60 hover:border-white/30 hover:text-white"
-              >
-                {copy.links.guide}
-              </Link>
+              <>
+                <Link
+                  href={`/eau/verify/${encodeURIComponent(result.preview_id)}`}
+                  className="inline-flex items-center rounded-full border border-cyan-500/25 px-5 py-2.5 text-sm text-cyan-200/80 hover:border-cyan-400/40 hover:text-cyan-100"
+                >
+                  Preview verify
+                </Link>
+                <Link
+                  href="/eau/chargeflow"
+                  className="inline-flex items-center rounded-full border border-white/15 px-5 py-2.5 text-sm text-white/60 hover:border-white/30 hover:text-white"
+                >
+                  CFU-W
+                </Link>
+                <Link
+                  href={eauPassportUnlockPath()}
+                  className="inline-flex items-center rounded-full border border-white/15 px-5 py-2.5 text-sm text-white/60 hover:border-white/30 hover:text-white"
+                >
+                  {copy.links.guide}
+                </Link>
+              </>
             ) : null}
           </div>
         </div>

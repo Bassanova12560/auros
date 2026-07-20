@@ -14,6 +14,10 @@ import {
   WATTS_RESERVE_ROUTE,
 } from "@/lib/watts";
 
+import {
+  useWattsApiMode,
+  WattsApiModeBar,
+} from "../_components/WattsApiModeBar";
 import { WattsFlowNav } from "../_components/WattsFlowNav";
 
 type Listing = {
@@ -42,6 +46,15 @@ export function WattsSecondaryView({
 }: {
   initialReservationId?: string | null;
 }) {
+  const {
+    mode,
+    setMode,
+    apiKey,
+    setApiKey,
+    authHeaders,
+    endpoint,
+    isPremiumReady,
+  } = useWattsApiMode();
   const [price, setPrice] = useState("1200");
   const [energyKwh, setEnergyKwh] = useState("100");
   const [country, setCountry] = useState("FR");
@@ -61,7 +74,9 @@ export function WattsSecondaryView({
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch("/api/v1/watts/secondary/demo");
+      const res = await fetch(endpoint("/api/v1/watts/secondary/demo"), {
+        headers: authHeaders(),
+      });
       const json = (await res.json()) as {
         listings?: Listing[];
         error?: { message?: string };
@@ -76,19 +91,23 @@ export function WattsSecondaryView({
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [endpoint, authHeaders]);
 
   useEffect(() => {
     void refresh();
   }, [refresh]);
 
   async function publish() {
+    if (mode === "premium" && !isPremiumReady) {
+      setError("Mode Premium : collez une clé Protocol Premium.");
+      return;
+    }
     setPublishing(true);
     setError(null);
     setOkMsg(null);
     const body: Record<string, unknown> = {
       indicative_price_eur: Number(price),
-      label: label.trim() || "Position watts demo",
+      label: label.trim() || "Position watts",
     };
     if (reservationId.trim()) {
       body.reservation_id = reservationId.trim();
@@ -101,9 +120,12 @@ export function WattsSecondaryView({
     if (note.trim()) body.note = note.trim();
 
     try {
-      const res = await fetch("/api/v1/watts/secondary/demo", {
+      const res = await fetch(endpoint("/api/v1/watts/secondary/demo"), {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          ...authHeaders(),
+        },
         body: JSON.stringify(body),
       });
       const json = (await res.json()) as {
@@ -172,6 +194,13 @@ export function WattsSecondaryView({
           </p>
           <WattsFlowNav />
         </header>
+
+        <WattsApiModeBar
+          mode={mode}
+          apiKey={apiKey}
+          onModeChange={setMode}
+          onKeyChange={setApiKey}
+        />
 
         <section className="space-y-6 border border-white/[0.08] bg-black/50 p-6 backdrop-blur-sm md:p-8">
           <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/40">

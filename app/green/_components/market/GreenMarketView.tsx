@@ -300,12 +300,47 @@ export function GreenMarketView({ snapshot }: Props) {
 
       {snapshot.mode === "demo" ? (
         <p className="mt-4 max-w-2xl border border-amber-500/20 bg-amber-500/5 px-4 py-3 text-sm leading-relaxed text-amber-200/80">
-          {mm.demoBanner}
+          {mm.demoBanner}{" "}
+          <Link
+            href={GREEN_REGISTER_ROUTE}
+            className="font-medium text-amber-100 underline-offset-2 hover:underline"
+          >
+            {locale === "en"
+              ? "List your asset"
+              : locale === "es"
+                ? "Publicar activo"
+                : "Publier mon actif"}{" "}
+            →
+          </Link>
         </p>
       ) : (
-        <p className="mt-4 font-mono text-[10px] tracking-wide text-green-royal-bright">
-          {mm.liveBadge}
-        </p>
+        <div className="mt-4 flex flex-wrap items-center gap-4">
+          <p className="font-mono text-[10px] tracking-wide text-green-royal-bright">
+            {mm.liveBadge}
+          </p>
+          <Link
+            href={GREEN_REGISTER_ROUTE}
+            className="font-mono text-[11px] uppercase tracking-wider text-white/50 hover:text-white/80"
+          >
+            {locale === "en"
+              ? "List"
+              : locale === "es"
+                ? "Publicar"
+                : "Publier"}{" "}
+            →
+          </Link>
+          <Link
+            href="/green/my"
+            className="font-mono text-[11px] uppercase tracking-wider text-white/50 hover:text-white/80"
+          >
+            {locale === "en"
+              ? "My listings"
+              : locale === "es"
+                ? "Mis fichas"
+                : "Mes fiches"}{" "}
+            →
+          </Link>
+        </div>
       )}
 
       <p className="mt-4">

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useLocale } from "@/app/_components/i18n/LocaleProvider";
 import { BezelCard } from "@/app/_components/ui/BezelCard";
 import { MobilePageShell } from "@/app/_components/ui/MobilePageShell";
+import { PrimaryButton } from "@/app/_components/ui/PrimaryButton";
 import { getEauHubCopy } from "@/lib/eau/i18n";
 import {
   GREEN_IMPACT_REPORT_ROUTE,
@@ -18,14 +19,41 @@ export function EauHubView() {
   const { locale } = useLocale();
   const copy = getEauHubCopy(locale);
 
-  const monetizationLinks = [
+  const deliverables = [
+    {
+      href: "#passport",
+      label:
+        locale === "en"
+          ? "1 · H₂O Score"
+          : locale === "es"
+            ? "1 · H₂O Score"
+            : "1 · H₂O Score",
+      primary: true,
+    },
+    {
+      href: "/wizard?type=green&asset=renewable&from=eau",
+      label:
+        locale === "en"
+          ? "2 · Passport dossier"
+          : locale === "es"
+            ? "2 · Dossier pasaporte"
+            : "2 · Dossier passeport",
+      primary: false,
+    },
+    {
+      href: "/eau/chargeflow",
+      label: "3 · CFU-W",
+      primary: false,
+    },
+  ] as const;
+
+  const moreLinks = [
     { href: "/comment-tokeniser/eau", label: copy.links.guide },
-    { href: "/eau/chargeflow", label: "ChargeFlow CFU-W" },
+    { href: "/eau/embed/docs", label: copy.links.embed },
     { href: GREEN_REGISTRY_ROUTE, label: copy.links.registry },
     { href: GREEN_LABEL_ROUTE, label: copy.links.label },
     { href: "/developers/docs/endpoint-green-h2o", label: copy.links.api },
     { href: "/data/terminal", label: copy.links.terminal },
-    { href: "/eau/embed/docs", label: copy.links.embed },
     { href: GREEN_IMPACT_REPORT_ROUTE, label: copy.links.impact },
   ];
 
@@ -39,16 +67,30 @@ export function EauHubView() {
       </h1>
       <p className="mt-5 text-lg leading-relaxed text-white/55">{copy.intro}</p>
 
+      <div className="mt-8 flex flex-wrap gap-3">
+        <PrimaryButton href="#passport">{copy.checkerCta}</PrimaryButton>
+        <PrimaryButton href="/eau/chargeflow" variant="ghost">
+          CFU-W
+        </PrimaryButton>
+      </div>
+
       <BezelCard className="mt-10" innerClassName="p-6 md:p-8" animate>
         <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/40">
           {copy.futureTitle}
         </p>
         <p className="mt-4 text-sm leading-relaxed text-white/60">{copy.futureBody}</p>
         <ul className="mt-5 space-y-3">
-          {copy.pillars.map((item) => (
-            <li key={item} className="flex items-start gap-3 text-sm text-white/65">
-              <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-cyan-400/40" />
-              {item}
+          {deliverables.map((item) => (
+            <li key={item.href}>
+              <Link
+                href={item.href}
+                className={`flex items-center gap-3 text-sm transition hover:text-white ${
+                  item.primary ? "font-medium text-cyan-200/90" : "text-white/65"
+                }`}
+              >
+                <span className="mt-0.5 h-1 w-1 shrink-0 rounded-full bg-cyan-400/40" />
+                {item.label} →
+              </Link>
             </li>
           ))}
         </ul>
@@ -63,6 +105,17 @@ export function EauHubView() {
           {copy.passportTitle}
         </p>
         <p className="mt-3 text-sm leading-relaxed text-white/55">{copy.passportBody}</p>
+        <div className="mt-5 flex flex-wrap gap-2">
+          <PrimaryButton href="/wizard?type=green&asset=renewable&from=eau">
+            {copy.checkerPassportCta}
+          </PrimaryButton>
+          <Link
+            href="/eau/embed/docs"
+            className="inline-flex items-center rounded-full border border-white/15 px-5 py-2.5 text-sm text-white/60 hover:border-white/30 hover:text-white"
+          >
+            {copy.links.embed}
+          </Link>
+        </div>
       </BezelCard>
 
       <BezelCard className="mt-4 border-white/[0.06]" innerClassName="p-6 md:p-8" animate>
@@ -70,7 +123,7 @@ export function EauHubView() {
           {copy.revenueTitle}
         </p>
         <ul className="mt-4 grid gap-2 sm:grid-cols-2">
-          {monetizationLinks.map((link) => (
+          {moreLinks.map((link) => (
             <li key={link.href}>
               <Link
                 href={link.href}

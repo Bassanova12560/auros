@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 
 import { AiFirstPageJsonLd } from "@/app/_components/ai-first/AiFirstPageJsonLd";
 import { WATTS_RESERVE_ROUTE } from "@/lib/watts";
@@ -18,7 +19,11 @@ export default function WattsReservePage() {
     <>
       <AiFirstPageJsonLd path={WATTS_RESERVE_ROUTE} />
       <div className="page-inner page-inner--3xl mx-auto px-4 pb-20 pt-12 md:px-6 md:pt-14">
-        <WattsReserveView />
+        <Suspense
+          fallback={<p className="text-sm text-white/40">Chargement…</p>}
+        >
+          <WattsReserveView />
+        </Suspense>
       </div>
     </>
   );
