@@ -26,6 +26,11 @@ export type CreateWetsProjectInput = {
   permits_status?: "unknown" | "none" | "filed" | "obtained" | null;
   behind_the_meter?: boolean;
   pqc_checklist?: Record<string, boolean>;
+  pqc_evidence?: Record<
+    string,
+    { url?: string; excerpt?: string; receipt_id?: string }
+  >;
+  shield_receipt_id?: string | null;
   is_demo?: boolean;
 };
 
@@ -37,6 +42,10 @@ function mapProject(row: Record<string, unknown>): WetsProject {
   const permits = row.permits_status
     ? String(row.permits_status)
     : null;
+  const evidence =
+    row.pqc_evidence && typeof row.pqc_evidence === "object"
+      ? (row.pqc_evidence as WetsProject["pqc_evidence"])
+      : {};
   return {
     id: String(row.id),
     owner_user_id: row.owner_user_id ? String(row.owner_user_id) : null,
@@ -63,6 +72,10 @@ function mapProject(row: Record<string, unknown>): WetsProject {
         : null,
     behind_the_meter: Boolean(row.behind_the_meter),
     pqc_checklist: checklist,
+    pqc_evidence: evidence,
+    shield_receipt_id: row.shield_receipt_id
+      ? String(row.shield_receipt_id)
+      : null,
     is_demo: Boolean(row.is_demo),
     created_at: String(row.created_at),
     updated_at: String(row.updated_at),
@@ -198,6 +211,8 @@ export async function createWetsProject(
         permits_status: input.permits_status ?? "unknown",
         behind_the_meter: Boolean(input.behind_the_meter),
         pqc_checklist: input.pqc_checklist ?? {},
+        pqc_evidence: input.pqc_evidence ?? {},
+        shield_receipt_id: input.shield_receipt_id?.trim() || null,
         is_demo: Boolean(input.is_demo),
         status: "draft",
       })

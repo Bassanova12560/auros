@@ -175,6 +175,12 @@ export type WetsProject = {
   permits_status: "unknown" | "none" | "filed" | "obtained" | null;
   behind_the_meter: boolean;
   pqc_checklist: Record<string, boolean>;
+  /** Sourced proofs per PQC question — required to raise post_quantum score. */
+  pqc_evidence: Record<
+    string,
+    { url?: string; excerpt?: string; receipt_id?: string }
+  >;
+  shield_receipt_id: string | null;
   is_demo: boolean;
   created_at: string;
   updated_at: string;

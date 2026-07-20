@@ -86,15 +86,38 @@ export default async function WetsProjectDetailPage({ params }: Props) {
             Checklist PQC (critère recours)
           </p>
           <ol className="mt-3 list-decimal space-y-2 pl-5 text-sm text-white/55">
-            {WETS_PQC_QUESTIONS.map((q) => (
-              <li key={q.id}>{q.q}</li>
-            ))}
+            {WETS_PQC_QUESTIONS.map((q) => {
+              const on = Boolean(project.pqc_checklist?.[q.id]);
+              const ev = project.pqc_evidence?.[q.id];
+              const sourced = Boolean(
+                ev && (ev.url || ev.excerpt || ev.receipt_id)
+              );
+              return (
+                <li key={q.id}>
+                  {q.q}
+                  <span className="ml-2 font-mono text-[10px] uppercase text-white/35">
+                    {on ? (sourced ? "sourced" : "unsourced") : "—"}
+                  </span>
+                </li>
+              );
+            })}
           </ol>
+          {project.shield_receipt_id ? (
+            <p className="mt-3 font-mono text-[11px] text-violet-300/70">
+              Shield: {project.shield_receipt_id}
+            </p>
+          ) : null}
           <Link
             href="/trust/quantum"
             className="mt-3 inline-block font-mono text-[11px] text-sky-300/70 hover:underline"
           >
             Quantum Exposure Index →
+          </Link>
+          <Link
+            href="/trust/quantum/playbook"
+            className="ml-4 mt-3 inline-block font-mono text-[11px] text-sky-300/70 hover:underline"
+          >
+            Playbook →
           </Link>
         </section>
 

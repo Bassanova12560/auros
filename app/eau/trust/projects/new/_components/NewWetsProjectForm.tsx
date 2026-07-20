@@ -91,31 +91,52 @@ export function NewWetsProjectForm() {
         />
       </fieldset>
 
-      <fieldset className="space-y-3 rounded-xl border border-white/10 p-4">
+      <fieldset className="space-y-4 rounded-xl border border-white/10 p-4">
         <legend className="px-1 font-mono text-[10px] uppercase tracking-wider text-violet-300/80">
-          Checklist PQC (cocher si documenté)
+          Checklist PQC — preuve obligatoire
         </legend>
+        <p className="text-xs text-white/40">
+          Cocher sans URL / extrait / receipt Shield = score plafonné. Voir{" "}
+          <a href="/trust/quantum/playbook" className="text-sky-300/70 hover:underline">
+            playbook clauses
+          </a>
+          .
+        </p>
         {WETS_PQC_QUESTIONS.map((q) => (
-          <label
-            key={q.id}
-            className="flex items-start gap-2 text-sm text-white/65"
-          >
+          <div key={q.id} className="space-y-2 border-t border-white/[0.06] pt-3">
+            <label className="flex items-start gap-2 text-sm text-white/65">
+              <input
+                type="checkbox"
+                name={
+                  q.id === "offchain_register"
+                    ? "pqc_offchain_register"
+                    : q.id === "key_compromise_remedy"
+                      ? "pqc_key_compromise_remedy"
+                      : q.id === "token_vs_title"
+                        ? "pqc_token_vs_title"
+                        : "pqc_crypto_agility"
+                }
+                className="mt-1 rounded"
+              />
+              <span>{q.q}</span>
+            </label>
             <input
-              type="checkbox"
-              name={
-                q.id === "offchain_register"
-                  ? "pqc_offchain_register"
-                  : q.id === "key_compromise_remedy"
-                    ? "pqc_key_compromise_remedy"
-                    : q.id === "token_vs_title"
-                      ? "pqc_token_vs_title"
-                      : "pqc_crypto_agility"
-              }
-              className="mt-1 rounded"
+              name={`pqc_evidence_url_${q.id}`}
+              placeholder="URL preuve (doc / clause / filing)"
+              className="w-full rounded-lg border border-white/10 bg-black px-3 py-2 font-mono text-[11px] text-white/70 placeholder:text-white/25"
             />
-            <span>{q.q}</span>
-          </label>
+            <input
+              name={`pqc_evidence_excerpt_${q.id}`}
+              placeholder="Extrait de clause (optionnel, ≤500 car.)"
+              className="w-full rounded-lg border border-white/10 bg-black px-3 py-2 text-[11px] text-white/70 placeholder:text-white/25"
+            />
+          </div>
         ))}
+        <Field
+          name="shield_receipt_id"
+          label="Shield receipt id (crypto_agility)"
+          placeholder="srt_… ou id receipt public"
+        />
       </fieldset>
 
       <label className="block space-y-1.5">

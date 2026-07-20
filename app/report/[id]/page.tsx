@@ -8,10 +8,14 @@ import {
   WETS_CATEGORY_LABELS,
   WETS_CRITERION_LABELS,
   WETS_DISCLAIMER,
+  WETS_PQC_QUESTIONS,
   computeFinalScore,
   gradeFromFinalScore,
 } from "@/lib/wets/constants";
 import { quantumBadgeFromCriteria } from "@/lib/wets/energy-fields";
+import { hasPqcEvidence, parsePqcEvidence } from "@/lib/wets/pqc-evidence";
+import { computeProjectQuantumExposure } from "@/lib/wets/quantum-composite";
+import { resolveWetsShieldBridge } from "@/lib/wets/shield-bridge";
 import {
   getWetsProject,
   getWetsProjectBySlug,
@@ -57,6 +61,18 @@ export default async function PublicWetsReportPage({ params }: Props) {
   const score = computeFinalScore(criteria);
   const grade = gradeFromFinalScore(score);
   const quantum = quantumBadgeFromCriteria(criteria);
+  const pqcScore =
+    criteria.find((c) => c.category === "post_quantum_legal_recourse")?.score ??
+    0;
+  const exposure = computeProjectQuantumExposure({
+    category: project.category,
+    pqcScore,
+  });
+  const shield = await resolveWetsShieldBridge(project.shield_receipt_id);
+  const evidence = parsePqcEvidence(project.pqc_evidence);
+  const quantumHref = project.public_slug
+    ? `/trust/quantum/report/${project.public_slug}`
+    : `/trust/quantum/report/${project.id}`;
 
   return (
     <FocusPageShell path={`/report/${id}`} width="2xl">
@@ -99,7 +115,33 @@ export default async function PublicWetsReportPage({ params }: Props) {
             {project.jurisdiction ? ` · ${project.jurisdiction}` : ""}
             {project.behind_the_meter ? " · BTM" : ""}
           </p>
+          <p className="mx-auto max-w-lg text-sm text-white/55">
+            QEI classe {exposure.vertical_base}/10 → effective{" "}
+            <span className="text-white/80">{exposure.effective_exposure}/10</span>{" "}
+            (−{exposure.recourse_delta} recours) · {exposure.band}
+          </p>
         </header>
+
+        {shield ? (
+          <section className="rounded-xl border border-violet-400/25 bg-violet-500/[0.06] px-5 py-4 text-center text-sm text-violet-100/85">
+            <p className="font-mono text-[10px] uppercase tracking-wider text-violet-200/70">
+              Shield bridge
+            </p>
+            <p className="mt-2">{shield.label}</p>
+            <p className="mt-1 font-mono text-[11px] text-white/40">
+              retention ≥{shield.retention_years_min}y
+              {shield.profile ? ` · ${shield.profile}` : ""}
+            </p>
+            {shield.verify_url ? (
+              <Link
+                href={shield.verify_url}
+                className="mt-2 inline-block font-mono text-[11px] text-sky-300/80 hover:underline"
+              >
+                Verify receipt →
+              </Link>
+            ) : null}
+          </section>
+        ) : null}
 
         {project.description ? (
           <p className="text-center text-sm leading-relaxed text-white/60">
@@ -138,19 +180,48 @@ export default async function PublicWetsReportPage({ params }: Props) {
           ))}
         </section>
 
+        <section className="space-y-3 border-t border-white/[0.08] pt-6">
+          <h2 className="font-display text-lg text-white">PQC evidence</h2>
+          <ul className="space-y-2 text-sm text-white/55">
+            {WETS_PQC_QUESTIONS.map((q) => {
+              const on = Boolean(project.pqc_checklist?.[q.id]);
+              const ev = evidence[q.id];
+              const sourced = hasPqcEvidence(ev);
+              return (
+                <li key={q.id}>
+                  <span className="font-mono text-[10px] uppercase text-white/35">
+                    {on ? (sourced ? "sourced" : "unsourced") : "no"} · {q.id}
+                  </span>
+                  {ev?.url ? (
+                    <a
+                      href={ev.url}
+                      className="ml-2 text-sky-300/70 hover:underline"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {ev.url}
+                    </a>
+                  ) : null}
+                </li>
+              );
+            })}
+          </ul>
+        </section>
+
         <p className="text-center text-xs leading-relaxed text-white/35">
           {WETS_DISCLAIMER}
         </p>
 
         <div className="flex flex-wrap justify-center gap-3">
-          <PrimaryButton href="/partners?intent=wets#contact">
+          <PrimaryButton href={quantumHref}>Dossier quantum</PrimaryButton>
+          <PrimaryButton href="/partners?intent=wets#contact" variant="ghost">
             Equity-for-scoring
           </PrimaryButton>
           <PrimaryButton href="/eau/trust/reports" variant="ghost">
             Tous les rapports
           </PrimaryButton>
-          <PrimaryButton href="/trust/quantum" variant="ghost">
-            Quantum index
+          <PrimaryButton href="/trust/quantum/playbook" variant="ghost">
+            Playbook clauses
           </PrimaryButton>
           <PrimaryButton href="/developers/shield" variant="ghost">
             Shield reseal

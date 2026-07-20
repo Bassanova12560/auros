@@ -94,14 +94,17 @@ export default function QuantumExposureIndexPage() {
             ))}
           </ol>
           <p className="text-xs text-white/40">
-            Sans réponses sourcées → score WETS{" "}
+            Sans réponses <em>sourcées</em> → score WETS{" "}
             <code className="text-white/60">post_quantum_legal_recourse</code>{" "}
-            ≤ 3/10.
+            plafonné (cases sans preuve ignorées).
           </p>
         </section>
 
         <div className="mt-10 flex flex-wrap gap-3">
           <PrimaryButton href={WETS_CONSOLE_ROUTE}>Console WETS</PrimaryButton>
+          <PrimaryButton href="/trust/quantum/playbook" variant="ghost">
+            Playbook clauses
+          </PrimaryButton>
           <PrimaryButton href="/developers/shield" variant="ghost">
             Shield reseal / PQC
           </PrimaryButton>
@@ -109,6 +112,11 @@ export default function QuantumExposureIndexPage() {
             Certification / equity-for-scoring
           </PrimaryButton>
         </div>
+        <p className="mt-6 text-xs text-white/40">
+          Score projet = exposition verticale − delta recours (checklist{" "}
+          <em>sourcée</em> + Shield). Dossier public :{" "}
+          <code className="text-white/55">/trust/quantum/report/[slug]</code>.
+        </p>
       </ContentPageLayout>
     </FocusPageShell>
   );

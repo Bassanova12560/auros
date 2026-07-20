@@ -12,9 +12,14 @@ import {
   WETS_CATEGORIES,
   WETS_CONSOLE_ROUTE,
   WETS_CRITERIA,
+  WETS_PQC_QUESTIONS,
   type WetsCategory,
   type WetsCriterionScore,
 } from "@/lib/wets/constants";
+import {
+  type PqcEvidence,
+} from "@/lib/wets/pqc-evidence";
+import { resolveWetsShieldBridge } from "@/lib/wets/shield-bridge";
 import {
   buildPublicReportMarkdown,
   createWetsProject,
@@ -25,6 +30,45 @@ import {
   upsertWetsCriteria,
   getWetsProject,
 } from "@/lib/wets/store";
+
+function parsePqcFromForm(formData: FormData): {
+  pqc_checklist: {
+    offchain_register: boolean;
+    key_compromise_remedy: boolean;
+    token_vs_title: boolean;
+    crypto_agility: boolean;
+  };
+  pqc_evidence: PqcEvidence;
+  shield_receipt_id: string | null;
+} {
+  const shield_receipt_id =
+    String(formData.get("shield_receipt_id") ?? "").trim() || null;
+  const pqc_checklist = {
+    offchain_register: formData.get("pqc_offchain_register") === "on",
+    key_compromise_remedy: formData.get("pqc_key_compromise_remedy") === "on",
+    token_vs_title: formData.get("pqc_token_vs_title") === "on",
+    crypto_agility: formData.get("pqc_crypto_agility") === "on",
+  };
+  const pqc_evidence: PqcEvidence = {};
+  for (const q of WETS_PQC_QUESTIONS) {
+    const url = String(formData.get(`pqc_evidence_url_${q.id}`) ?? "").trim();
+    const excerpt = String(
+      formData.get(`pqc_evidence_excerpt_${q.id}`) ?? ""
+    ).trim();
+    if (!url && !excerpt) continue;
+    pqc_evidence[q.id] = {
+      ...(url ? { url } : {}),
+      ...(excerpt ? { excerpt } : {}),
+    };
+  }
+  if (shield_receipt_id) {
+    pqc_evidence.crypto_agility = {
+      ...pqc_evidence.crypto_agility,
+      receipt_id: shield_receipt_id,
+    };
+  }
+  return { pqc_checklist, pqc_evidence, shield_receipt_id };
+}
 
 export async function createWetsProjectAction(formData: FormData) {
   const { userId } = await auth();
@@ -47,12 +91,8 @@ export async function createWetsProjectAction(formData: FormData) {
   const behind_the_meter = formData.get("behind_the_meter") === "on";
   const interconnection_queue_position =
     String(formData.get("interconnection_queue_position") ?? "").trim() || null;
-  const pqc_checklist = {
-    offchain_register: formData.get("pqc_offchain_register") === "on",
-    key_compromise_remedy: formData.get("pqc_key_compromise_remedy") === "on",
-    token_vs_title: formData.get("pqc_token_vs_title") === "on",
-    crypto_agility: formData.get("pqc_crypto_agility") === "on",
-  };
+  const { pqc_checklist, pqc_evidence, shield_receipt_id } =
+    parsePqcFromForm(formData);
 
   const description = enrichDescriptionWithEnergyFields({
     description: String(formData.get("description") ?? "").trim() || null,
@@ -60,6 +100,8 @@ export async function createWetsProjectAction(formData: FormData) {
     permits_status,
     behind_the_meter,
     pqc_checklist,
+    pqc_evidence,
+    shield_receipt_id,
   });
 
   const created = await createWetsProject({
@@ -75,6 +117,8 @@ export async function createWetsProjectAction(formData: FormData) {
     permits_status,
     behind_the_meter,
     pqc_checklist,
+    pqc_evidence,
+    shield_receipt_id,
   });
   if (!created.project) {
     return { ok: false as const, error: created.error ?? "create_failed" };
@@ -102,6 +146,7 @@ export async function createWetsProjectAction(formData: FormData) {
     risk_events_context: riskCtx || undefined,
   });
 
+  const shield = await resolveWetsShieldBridge(shield_receipt_id);
   const criteria = applyEnergyAndPqcToCriteria(
     created.project.category,
     assisted.criteria,
@@ -110,11 +155,15 @@ export async function createWetsProjectAction(formData: FormData) {
       permits_status,
       interconnection_queue_position,
       pqc_checklist,
+      pqc_evidence,
+      shield_hybrid_ready: Boolean(shield?.hybrid_ready),
+      shield_receipt_id,
     }
   );
 
   await upsertWetsCriteria(created.project.id, criteria);
   revalidatePath(WETS_CONSOLE_ROUTE);
+  revalidatePath("/trust/quantum");
   return {
     ok: true as const,
     id: created.project.id,
@@ -162,6 +211,7 @@ export async function publishWetsReportAction(projectId: string) {
   revalidatePath(WETS_CONSOLE_ROUTE);
   revalidatePath(`/report/${pub.slug}`);
   revalidatePath(`${WETS_CONSOLE_ROUTE}/reports`);
+  revalidatePath(`/trust/quantum/report/${pub.slug}`);
   return pub.error
     ? { ok: false as const, error: pub.error }
     : { ok: true as const, slug: pub.slug!, grade: report.grade, score: report.final_score };

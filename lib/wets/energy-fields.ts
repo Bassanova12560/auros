@@ -5,12 +5,20 @@ import {
   type WetsCriterionScore,
 } from "./constants";
 import { heuristicWetsCriteria } from "./heuristic";
+import {
+  evidenceSourceUrls,
+  parsePqcChecklist,
+  pqcScoreFromChecklist,
+  type PqcEvidence,
+} from "./pqc-evidence";
 
 export type WetsEnergyFields = {
   interconnection_queue_position: string | null;
   permits_status: "unknown" | "none" | "filed" | "obtained" | null;
   behind_the_meter: boolean;
   pqc_checklist: Record<string, boolean>;
+  pqc_evidence: PqcEvidence;
+  shield_receipt_id: string | null;
   is_demo: boolean;
 };
 
@@ -20,6 +28,8 @@ export function enrichDescriptionWithEnergyFields(input: {
   permits_status?: string | null;
   behind_the_meter?: boolean;
   pqc_checklist?: Record<string, boolean>;
+  pqc_evidence?: PqcEvidence;
+  shield_receipt_id?: string | null;
 }): string {
   const parts = [input.description?.trim() ?? ""];
   if (input.behind_the_meter) {
@@ -40,23 +50,17 @@ export function enrichDescriptionWithEnergyFields(input: {
   if (yes.length) {
     parts.push(`PQC checklist affirmed: ${yes.join(", ")}.`);
   }
+  const sources = evidenceSourceUrls(input.pqc_evidence ?? {});
+  if (sources.length) {
+    parts.push(`PQC evidence: ${sources.join(", ")}.`);
+  }
+  if (input.shield_receipt_id?.trim()) {
+    parts.push(`Shield receipt: ${input.shield_receipt_id.trim()}.`);
+  }
   return parts.filter(Boolean).join(" ");
 }
 
-export function pqcScoreFromChecklist(
-  checklist: Record<string, boolean>
-): { score: number; affirmed: number } {
-  const keys = [
-    "offchain_register",
-    "key_compromise_remedy",
-    "token_vs_title",
-    "crypto_agility",
-  ];
-  const affirmed = keys.filter((k) => checklist[k]).length;
-  // 0 affirmed → 2.5; 4 → 8.5
-  const score = Math.round((2.5 + affirmed * 1.5) * 10) / 10;
-  return { score: Math.min(10, score), affirmed };
-}
+export { pqcScoreFromChecklist };
 
 export function applyEnergyAndPqcToCriteria(
   category: WetsCategory,
@@ -66,10 +70,15 @@ export function applyEnergyAndPqcToCriteria(
     permits_status?: string | null;
     interconnection_queue_position?: string | null;
     pqc_checklist?: Record<string, boolean>;
+    pqc_evidence?: PqcEvidence;
+    shield_hybrid_ready?: boolean;
+    shield_receipt_id?: string | null;
   }
 ): WetsCriterionScore[] {
   const weights = weightsForCategory(category);
-  const byKey = new Map(base.map((c) => [c.category, { ...c, weight: weights[c.category] }]));
+  const byKey = new Map(
+    base.map((c) => [c.category, { ...c, weight: weights[c.category] }])
+  );
 
   for (const key of WETS_CRITERIA) {
     if (!byKey.has(key)) {
@@ -91,8 +100,7 @@ export function applyEnergyAndPqcToCriteria(
   } else if (fields.permits_status === "obtained") {
     grid.score = Math.max(grid.score, 6.5);
     grid.justification =
-      (grid.justification || "") +
-      " Permits obtained (not merely filed).";
+      (grid.justification || "") + " Permits obtained (not merely filed).";
   } else if (fields.permits_status === "filed") {
     grid.score = Math.min(grid.score, 4.5);
     grid.justification =
@@ -105,11 +113,34 @@ export function applyEnergyAndPqcToCriteria(
     grid.score = Math.min(grid.score, 3.5);
   }
 
+  const checklist = parsePqcChecklist(fields.pqc_checklist ?? {});
+  const evidence: PqcEvidence = { ...(fields.pqc_evidence ?? {}) };
+
+  // Shield hybrid receipt auto-lifts crypto_agility with receipt as evidence
+  if (fields.shield_hybrid_ready && fields.shield_receipt_id) {
+    checklist.crypto_agility = true;
+    evidence.crypto_agility = {
+      ...evidence.crypto_agility,
+      receipt_id: fields.shield_receipt_id,
+    };
+  } else if (fields.shield_receipt_id?.trim()) {
+    evidence.crypto_agility = {
+      ...evidence.crypto_agility,
+      receipt_id: fields.shield_receipt_id.trim(),
+    };
+  }
+
   const pqc = byKey.get("post_quantum_legal_recourse")!;
-  if (fields.pqc_checklist && Object.keys(fields.pqc_checklist).length) {
-    const { score, affirmed } = pqcScoreFromChecklist(fields.pqc_checklist);
-    pqc.score = score;
-    pqc.justification = `PQC checklist: ${affirmed}/4 items affirmed. Without off-chain register + remedy, keep sceptical.`;
+  if (
+    Object.values(checklist).some(Boolean) ||
+    Object.keys(evidence).length ||
+    fields.shield_receipt_id
+  ) {
+    const scored = pqcScoreFromChecklist(checklist, evidence);
+    pqc.score = scored.score;
+    pqc.justification = scored.note;
+    const extra = evidenceSourceUrls(evidence);
+    pqc.sources = [...new Set([...pqc.sources, ...extra])];
   }
 
   return WETS_CRITERIA.map((k) => byKey.get(k)!);
@@ -125,6 +156,9 @@ export function scoreDemoProject(input: {
   permits_status?: WetsEnergyFields["permits_status"];
   interconnection_queue_position?: string;
   pqc_checklist?: Record<string, boolean>;
+  pqc_evidence?: PqcEvidence;
+  shield_hybrid_ready?: boolean;
+  shield_receipt_id?: string | null;
 }): WetsCriterionScore[] {
   const description = enrichDescriptionWithEnergyFields({
     description: input.description,
@@ -132,6 +166,8 @@ export function scoreDemoProject(input: {
     permits_status: input.permits_status,
     interconnection_queue_position: input.interconnection_queue_position,
     pqc_checklist: input.pqc_checklist,
+    pqc_evidence: input.pqc_evidence,
+    shield_receipt_id: input.shield_receipt_id,
   });
   const base = heuristicWetsCriteria({
     name: input.name,
@@ -146,6 +182,9 @@ export function scoreDemoProject(input: {
     permits_status: input.permits_status,
     interconnection_queue_position: input.interconnection_queue_position,
     pqc_checklist: input.pqc_checklist,
+    pqc_evidence: input.pqc_evidence,
+    shield_hybrid_ready: input.shield_hybrid_ready,
+    shield_receipt_id: input.shield_receipt_id,
   });
 }
 

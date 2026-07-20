@@ -9,12 +9,14 @@ import {
 } from "@/lib/wets/constants";
 import {
   applyEnergyAndPqcToCriteria,
-  pqcScoreFromChecklist,
   quantumBadgeFromCriteria,
 } from "@/lib/wets/energy-fields";
 import { heuristicWetsCriteria } from "@/lib/wets/heuristic";
 import { mergeCriteriaWithDefaults } from "@/lib/wets/merge-criteria";
+import { pqcScoreFromChecklist } from "@/lib/wets/pqc-evidence";
+import { computeProjectQuantumExposure } from "@/lib/wets/quantum-composite";
 import { QUANTUM_EXPOSURE_VERTICALS } from "@/lib/wets/quantum-exposure";
+import { QUANTUM_PLAYBOOK_CLAUSES } from "@/lib/wets/quantum-playbook";
 
 describe("wets v2", () => {
   it("has seven criteria with weights summing to 1", () => {
@@ -49,7 +51,9 @@ describe("wets v2", () => {
     });
     assert.equal(c.length, 7);
     assert.ok(computeFinalScore(c) > 0);
-    assert.ok(c.find((x) => x.category === "grid_interconnection_realism")!.score >= 6);
+    assert.ok(
+      c.find((x) => x.category === "grid_interconnection_realism")!.score >= 6
+    );
   });
 
   it("merge fills missing v1 criteria", () => {
@@ -78,7 +82,34 @@ describe("wets v2", () => {
     assert.ok(QUANTUM_EXPOSURE_VERTICALS.length >= 5);
   });
 
-  it("BTM and PQC checklist lift grid and quantum scores", () => {
+  it("unsourced PQC checkboxes do not inflate score", () => {
+    const unsourced = pqcScoreFromChecklist({
+      offchain_register: true,
+      key_compromise_remedy: true,
+      token_vs_title: true,
+      crypto_agility: true,
+    });
+    assert.equal(unsourced.sourced, 0);
+    assert.ok(unsourced.score <= 3);
+
+    const sourced = pqcScoreFromChecklist(
+      {
+        offchain_register: true,
+        key_compromise_remedy: true,
+        token_vs_title: true,
+        crypto_agility: false,
+      },
+      {
+        offchain_register: { url: "https://example.com/spa.pdf" },
+        key_compromise_remedy: { excerpt: "Issuer may freeze and re-issue" },
+        token_vs_title: { url: "https://example.com/om.md" },
+      }
+    );
+    assert.equal(sourced.sourced, 3);
+    assert.ok(sourced.score >= 6.5);
+  });
+
+  it("BTM and sourced PQC lift grid and quantum scores", () => {
     const base = heuristicWetsCriteria({
       name: "Campus BTM",
       description: "Solar battery campus",
@@ -96,19 +127,35 @@ describe("wets v2", () => {
         token_vs_title: true,
         crypto_agility: false,
       },
+      pqc_evidence: {
+        offchain_register: { url: "https://example.com/register" },
+        key_compromise_remedy: { excerpt: "re-issue to Register owner" },
+        token_vs_title: { url: "https://example.com/claim" },
+      },
     });
     assert.ok(
       scored.find((c) => c.category === "grid_interconnection_realism")!
         .score >= 7.5
     );
-    assert.equal(pqcScoreFromChecklist({
-      offchain_register: true,
-      key_compromise_remedy: true,
-      token_vs_title: true,
-      crypto_agility: false,
-    }).affirmed, 3);
     const badge = quantumBadgeFromCriteria(scored);
     assert.ok(badge.show);
     assert.ok(badge.score >= 6.5);
+  });
+
+  it("project QEI composite reduces exposure with strong recourse", () => {
+    const weak = computeProjectQuantumExposure({
+      category: "water_rights",
+      pqcScore: 2.5,
+    });
+    const strong = computeProjectQuantumExposure({
+      category: "water_rights",
+      pqcScore: 8.5,
+    });
+    assert.ok(strong.effective_exposure < weak.effective_exposure);
+    assert.ok(strong.recourse_delta > weak.recourse_delta);
+  });
+
+  it("playbook has four clauses", () => {
+    assert.equal(QUANTUM_PLAYBOOK_CLAUSES.length, 4);
   });
 });
