@@ -45,6 +45,9 @@ export default function ChargeflowFleetsPage() {
               <PrimaryButton href="/green/chargeflow/inventory" variant="ghost">
                 Inventaire
               </PrimaryButton>
+              <PrimaryButton href="/green/chargeflow/secondary" variant="ghost">
+                Secondaire
+              </PrimaryButton>
               <PrimaryButton href="/green/api#premium" variant="ghost">
                 Protocol Premium
               </PrimaryButton>

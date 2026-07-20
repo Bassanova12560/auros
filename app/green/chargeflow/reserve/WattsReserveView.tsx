@@ -11,6 +11,7 @@ import {
 import {
   WATTS_INVENTORY_ROUTE,
   WATTS_RESERVE_DISCLAIMER,
+  WATTS_SECONDARY_ROUTE,
 } from "@/lib/watts";
 
 type MatchReason = { code: string; detail: string; delta: number };
@@ -469,6 +470,13 @@ export function WattsReserveView() {
               className="text-white/55 underline-offset-2 hover:underline"
             >
               Inventaire
+            </Link>
+            {" · "}
+            <Link
+              href={WATTS_SECONDARY_ROUTE}
+              className="text-white/55 underline-offset-2 hover:underline"
+            >
+              Secondaire
             </Link>
             {" · "}
             <Link

@@ -2,8 +2,9 @@ import { z } from "zod";
 
 export const WATTS_RESERVE_ROUTE = "/green/chargeflow/reserve";
 export const WATTS_INVENTORY_ROUTE = "/green/chargeflow/inventory";
+export const WATTS_SECONDARY_ROUTE = "/green/chargeflow/secondary";
 export const WATTS_RESERVE_DISCLAIMER =
-  "AUROS Watts Reserve is indicative only — not a grid delivery guarantee, GO/REC legal certificate, or investment advice. Confirm/settle operate off-chain CFU proofs — not legal certificates or delivery guarantees. Capacity offers are indicative inventory, not binding PPAs.";
+  "AUROS Watts Reserve is indicative only — not a grid delivery guarantee, GO/REC legal certificate, or investment advice. Confirm/settle operate off-chain CFU proofs — not legal certificates or delivery guarantees. Capacity offers and secondary listings are indicative — not binding PPAs, securities, or a regulated exchange.";
 
 export type WattFirmness = "firm" | "flex";
 export type WattSuggestedUnitKind = "e" | "f";
@@ -194,3 +195,98 @@ export type WattOfferMatch = {
   match_reasons: WattMatchReason[];
   offer: WattCapacityOfferPublic;
 };
+
+/** Étape 5 — secondary listing + RWA prep hook */
+export type WattSecondaryStatus = "open" | "withdrawn" | "closed";
+
+export const wattSecondaryListingRequestSchema = z
+  .object({
+    reservation_id: z.string().uuid().optional(),
+    indicative_price_eur: z.number().positive().max(100_000_000),
+    compare_ref_id: z.string().trim().max(64).optional(),
+    label: z.string().trim().max(120).optional(),
+    note: z.string().trim().max(500).optional(),
+    energy_kwh: z.number().positive().max(1_000_000).optional(),
+    capacity_kw: z.number().positive().max(1_000_000).optional(),
+    zone: z
+      .object({
+        country: z.string().trim().min(2).max(64),
+        zone_id: z.string().trim().max(128).optional(),
+      })
+      .optional(),
+    firmness: z.enum(["firm", "flex"]).optional(),
+    cfu_unit_id: z.string().trim().max(128).optional(),
+    cfu_verify_url: z.string().url().max(500).optional(),
+  })
+  .superRefine((val, ctx) => {
+    if (!val.reservation_id) {
+      if (!val.zone) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "zone is required when reservation_id is omitted",
+          path: ["zone"],
+        });
+      }
+      if (val.energy_kwh == null && val.capacity_kw == null) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "energy_kwh or capacity_kw required without reservation_id",
+          path: ["energy_kwh"],
+        });
+      }
+    }
+  });
+
+export type WattSecondaryListingRequest = z.infer<
+  typeof wattSecondaryListingRequestSchema
+>;
+
+export type WattSecondaryListing = {
+  id: string;
+  key_hash: string;
+  status: WattSecondaryStatus;
+  reservation_id: string | null;
+  cfu_unit_id: string | null;
+  cfu_verify_url: string | null;
+  indicative_price_eur: number;
+  compare_ref_id: string | null;
+  label: string | null;
+  note: string | null;
+  energy_kwh: number | null;
+  capacity_kw: number | null;
+  zone: { country: string; zone_id?: string };
+  firmness: WattFirmness;
+  interest_count: number;
+  created_at: string;
+  withdrawn_at: string | null;
+};
+
+export type WattSecondaryListingPublic = {
+  listing_id: string;
+  status: WattSecondaryStatus;
+  reservation_id: string | null;
+  cfu_unit_id: string | null;
+  cfu_verify_url: string | null;
+  indicative_price_eur: number;
+  compare_ref_id: string | null;
+  compare_url: string | null;
+  label: string | null;
+  note: string | null;
+  energy_kwh: number | null;
+  capacity_kw: number | null;
+  zone: { country: string; zone_id?: string };
+  firmness: WattFirmness;
+  interest_count: number;
+  created_at: string;
+  rwa_hint: string;
+  disclaimer: string;
+};
+
+export const wattSecondaryInterestRequestSchema = z.object({
+  buyer_ref: z.string().trim().max(128).optional(),
+  note: z.string().trim().max(500).optional(),
+});
+
+export type WattSecondaryInterestRequest = z.infer<
+  typeof wattSecondaryInterestRequestSchema
+>;

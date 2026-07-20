@@ -8,7 +8,7 @@ import {
   CHARGEFLOW_FLEETS_ROUTE,
   CHARGEFLOW_ROUTE,
 } from "@/lib/chargeflow/constants";
-import { WATTS_RESERVE_DISCLAIMER, WATTS_RESERVE_ROUTE } from "@/lib/watts";
+import { WATTS_RESERVE_DISCLAIMER, WATTS_RESERVE_ROUTE, WATTS_SECONDARY_ROUTE } from "@/lib/watts";
 
 type Offer = {
   offer_id: string;
@@ -456,6 +456,13 @@ export function WattsInventoryView() {
               className="text-white/55 underline-offset-2 hover:underline"
             >
               Réserver
+            </Link>
+            {" · "}
+            <Link
+              href={WATTS_SECONDARY_ROUTE}
+              className="text-white/55 underline-offset-2 hover:underline"
+            >
+              Secondaire
             </Link>
             {" · "}
             <Link

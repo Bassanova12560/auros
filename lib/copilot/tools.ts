@@ -7,6 +7,7 @@ import {
   CHARGEFLOW_FLEETS_ROUTE,
   CHARGEFLOW_INVENTORY_ROUTE,
   CHARGEFLOW_RESERVE_ROUTE,
+  CHARGEFLOW_SECONDARY_ROUTE,
   CHARGEFLOW_ROUTE,
 } from "@/lib/chargeflow/constants";
 import {
@@ -17,7 +18,7 @@ import {
   GREEN_RTMS_ASSISTANT_ROUTE,
   GREEN_STANDARDS_ROUTE,
 } from "@/lib/green/constants";
-import { WATTS_RESERVE_DISCLAIMER, WATTS_INVENTORY_ROUTE, WATTS_RESERVE_ROUTE } from "@/lib/watts";
+import { WATTS_RESERVE_DISCLAIMER, WATTS_INVENTORY_ROUTE, WATTS_RESERVE_ROUTE, WATTS_SECONDARY_ROUTE } from "@/lib/watts";
 
 import type { CopilotCitation, CopilotPageContext } from "./types";
 
@@ -152,20 +153,22 @@ export function toolExplainWattsReserve(): CopilotToolResult {
   return {
     name: "explain_watts_reserve",
     summary: [
-      "AUROS Watts Reserve: profile → match_score → confirm (mint CFU) → settle (retire CFU).",
-      "Étape 4: producers list capacity windows (POST /api/v1/watts/offers); buyers rank matches via …/offers/match.",
-      "No auto-mint / auto-retire / auto-reserve. Indicative inventory — not a PPA or GO/REC.",
-      `UI: ${WATTS_RESERVE_ROUTE} · inventory ${WATTS_INVENTORY_ROUTE}.`,
+      "AUROS Watts Reserve full loop: profile → match → confirm (mint CFU) → settle (retire) → inventory → secondary listing.",
+      "Secondary: indicative price + optional compare_ref_id → /compare (RWA prep). Interest is non-binding. No auto-transfer.",
+      `UI: ${WATTS_RESERVE_ROUTE} · ${WATTS_INVENTORY_ROUTE} · ${WATTS_SECONDARY_ROUTE}.`,
       WATTS_RESERVE_DISCLAIMER,
     ].join("\n"),
     citations: [
       { title: "Watts Reserve", url: `${siteBase()}${WATTS_RESERVE_ROUTE}` },
       {
-        title: "Inventaire capacité",
+        title: "Inventaire",
         url: `${siteBase()}${WATTS_INVENTORY_ROUTE}`,
       },
-      { title: "ChargeFlow", url: `${siteBase()}${CHARGEFLOW_ROUTE}` },
-      { title: "Fleets", url: `${siteBase()}${CHARGEFLOW_FLEETS_ROUTE}` },
+      {
+        title: "Secondaire",
+        url: `${siteBase()}${WATTS_SECONDARY_ROUTE}`,
+      },
+      { title: "Comparateur RWA", url: `${siteBase()}/compare` },
     ],
   };
 }
@@ -179,7 +182,7 @@ export function toolExplainChargeflow(): CopilotToolResult {
       "- CFU-W: water m³",
       "- CFU-F: capacity kW windows",
       "Premium mint + public verify. Partner connectors (Tesla Fleet / TotalEnergies / OCPI) are format-compatible adapters — not official manufacturer partnerships.",
-      `UI: ${CHARGEFLOW_ROUTE}, fleets ${CHARGEFLOW_FLEETS_ROUTE}, reserve ${CHARGEFLOW_RESERVE_ROUTE}, inventory ${CHARGEFLOW_INVENTORY_ROUTE}, console ${CHARGEFLOW_CONSOLE_ROUTE}.`,
+      `UI: ${CHARGEFLOW_ROUTE}, fleets ${CHARGEFLOW_FLEETS_ROUTE}, reserve ${CHARGEFLOW_RESERVE_ROUTE}, inventory ${CHARGEFLOW_INVENTORY_ROUTE}, secondary ${CHARGEFLOW_SECONDARY_ROUTE}, console ${CHARGEFLOW_CONSOLE_ROUTE}.`,
     ].join("\n"),
     citations: [
       { title: "ChargeFlow pitch", url: `${siteBase()}${CHARGEFLOW_ROUTE}` },

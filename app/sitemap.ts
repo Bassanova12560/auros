@@ -36,6 +36,7 @@ const PRIORITY: Record<string, number> = {
   "/green/chargeflow": 0.9,
   "/green/chargeflow/reserve": 0.89,
   "/green/chargeflow/inventory": 0.88,
+  "/green/chargeflow/secondary": 0.87,
   "/green/chargeflow/fleets": 0.88,
   "/copilot": 0.88,
   "/stablecoins": 0.95,

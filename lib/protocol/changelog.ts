@@ -25,6 +25,25 @@ export type ProtocolChangelogEntry = {
 /** Single source for `/developers/changelog` and GET `/api/v1/changelog`. Newest first. */
 export const PROTOCOL_CHANGELOG: ProtocolChangelogEntry[] = [
   {
+    id: "watts-reserve-step5",
+    date: "2026-07-20",
+    title: "Watts Reserve étape 5 — secondaire + RWA prep",
+    summary:
+      "Listings secondaires à prix indicatif, intérêt non liant, lien compare_ref_id → /compare. Pas un marché réglementé.",
+    details: [
+      "POST/GET /api/v1/watts/secondary (+ demo) · withdraw · interest.",
+      "UI /green/chargeflow/secondary · table watt_secondary_listings.",
+      "Pas d’auto-transfer CFU.",
+    ],
+    links: [
+      { href: "/green/chargeflow/secondary", label: "Secondaire" },
+      { href: "/compare", label: "Comparateur RWA" },
+      { href: "/green/chargeflow/reserve", label: "Watts Reserve" },
+    ],
+    tags: ["watts", "secondary", "rwa"],
+    status: "released",
+  },
+  {
     id: "watts-reserve-step4",
     date: "2026-07-20",
     title: "Watts Reserve étape 4 — inventaire capacité",

@@ -241,6 +241,13 @@ export function ChargeflowPitchView() {
           >
             inventaire
           </Link>
+          {" · "}
+          <Link
+            href="/green/chargeflow/secondary"
+            className="text-white/55 underline-offset-2 hover:underline"
+          >
+            secondaire
+          </Link>
           . Voir{" "}
           <Link
             href="/developers/docs/endpoint-chargeflow"

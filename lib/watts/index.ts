@@ -11,7 +11,7 @@ function nextStepFor(row: WattReservation): string {
     case "confirmed":
       return `POST /api/v1/watts/reserve/${row.id}/settle when delivered — retires the linked CFU (explicit settle only).`;
     case "settled":
-      return "Settled — CFU retired. Browse producer inventory at /green/chargeflow/inventory.";
+      return "Settled — list on secondary via POST /api/v1/watts/secondary or browse /green/chargeflow/secondary.";
     case "cancelled":
       return "Reservation cancelled.";
     default:
@@ -47,16 +47,23 @@ export function wattReservePublicResponse(
 export {
   WATTS_RESERVE_ROUTE,
   WATTS_INVENTORY_ROUTE,
+  WATTS_SECONDARY_ROUTE,
   WATTS_RESERVE_DISCLAIMER,
   wattReserveRequestSchema,
   wattSettleRequestSchema,
   wattCapacityOfferRequestSchema,
+  wattSecondaryListingRequestSchema,
+  wattSecondaryInterestRequestSchema,
   type WattReserveRequest,
   type WattSettleRequest,
   type WattCapacityOfferRequest,
   type WattCapacityOffer,
   type WattCapacityOfferPublic,
   type WattOfferMatch,
+  type WattSecondaryListingRequest,
+  type WattSecondaryListing,
+  type WattSecondaryListingPublic,
+  type WattSecondaryInterestRequest,
   type WattReservation,
   type WattReservePublicResponse,
   type WattMatchResult,
@@ -80,5 +87,17 @@ export {
   listWattCapacityOffers,
   withdrawWattCapacityOffer,
 } from "./offers-store";
+export {
+  insertWattSecondaryListing,
+  getWattSecondaryListing,
+  listWattSecondaryListings,
+  withdrawWattSecondaryListing,
+  expressWattSecondaryInterest,
+} from "./secondary-store";
+export {
+  wattSecondaryPublic,
+  wattSecondaryCompareUrl,
+  WATTS_SECONDARY_RWA_HINT,
+} from "./secondary";
 export { confirmWattReservation } from "./confirm";
 export { settleWattReservation } from "./settle";

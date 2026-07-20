@@ -212,8 +212,46 @@ export const wattsInventoryPage = enrichPage({
   ],
   relatedPaths: [
     "/green/chargeflow/reserve",
+    "/green/chargeflow/secondary",
     "/green/chargeflow",
     "/green/chargeflow/fleets",
+    "/copilot",
+  ],
+});
+
+export const wattsSecondaryPage = enrichPage({
+  id: "watts-secondary",
+  path: "/green/chargeflow/secondary",
+  title: "AUROS Watts Secondary | Positions & RWA prep",
+  description:
+    "Listings secondaires indicatifs de positions watts, lien compare_ref_id vers le comparateur RWA. Pas un marché réglementé.",
+  summary:
+    "Étape 5 Watts Reserve : livre secondaire indicatif + intérêt non liant + hook /compare.",
+  contentType: "guide",
+  language: "multi",
+  indexable: true,
+  lastUpdated: "2026-07-20",
+  keywords: [
+    "watts secondary",
+    "RWA prep",
+    "CFU listing",
+    "compare",
+  ],
+  intents: [
+    "Lister position watts",
+    "Lier RWA compare",
+    "Exprimer intérêt secondaire",
+  ],
+  audience: ["acheteurs corporate", "producteurs", "équipes RWA", "développeurs"],
+  facts: [
+    { key: "API", value: "POST /api/v1/watts/secondary" },
+    { key: "Interest", value: "POST /api/v1/watts/secondary/:id/interest" },
+    { key: "Garde-fou", value: "Pas d’auto-transfer ni marché réglementé" },
+  ],
+  relatedPaths: [
+    "/green/chargeflow/reserve",
+    "/green/chargeflow/inventory",
+    "/compare",
     "/copilot",
   ],
 });
@@ -227,4 +265,5 @@ export const miscPages = [
   copilotPage,
   wattsReservePage,
   wattsInventoryPage,
+  wattsSecondaryPage,
 ];
