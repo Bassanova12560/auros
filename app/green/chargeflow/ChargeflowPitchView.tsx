@@ -234,6 +234,13 @@ export function ChargeflowPitchView() {
           >
             Watts Reserve
           </Link>
+          {" · "}
+          <Link
+            href="/green/chargeflow/inventory"
+            className="text-white/55 underline-offset-2 hover:underline"
+          >
+            inventaire
+          </Link>
           . Voir{" "}
           <Link
             href="/developers/docs/endpoint-chargeflow"
