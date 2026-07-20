@@ -9,7 +9,7 @@ import { createHash, createHmac, randomBytes } from "node:crypto";
 import { resolveAttestSigningKey } from "@/lib/protocol/attest/signing";
 
 import { SHIELD_DISCLAIMER, SHIELD_VERSION } from "./types";
-import { getReceipt, verifyCloudAnchor } from "./tap";
+import { getReceiptAsync, verifyCloudAnchor } from "./tap";
 
 const RESEAL_PREFIX = "auros-shield-reseal:v1:";
 
@@ -34,13 +34,14 @@ function signReseal(contentHash: string, receiptId: string): string | null {
     .digest("hex");
 }
 
-export function resealReceipt(input: {
+export async function resealReceipt(input: {
   receipt_id: string;
   content_hash?: string;
-}):
+}): Promise<
   | { ok: true; reseal: ResealResult }
-  | { ok: false; error: string; status: number } {
-  const receipt = getReceipt(input.receipt_id);
+  | { ok: false; error: string; status: number }
+> {
+  const receipt = await getReceiptAsync(input.receipt_id);
   if (!receipt) {
     return { ok: false, error: "Receipt not found", status: 404 };
   }

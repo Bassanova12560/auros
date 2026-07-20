@@ -31,6 +31,12 @@ export type Messages = {
     subtitle: string;
     ctaPrimary: string;
     ctaEstimate: string;
+    ctaProof: string;
+    doorDossierLabel: string;
+    doorDossierHint: string;
+    doorProofLabel: string;
+    doorProofHint: string;
+    firstWinLabel: string;
     metricAssets: string;
     metricJurisdictions: string;
     metricDossier: string;

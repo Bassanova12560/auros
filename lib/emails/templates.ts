@@ -1415,26 +1415,39 @@ export type WizardResumeReminderEmailData = {
 
 export function wizardResumeReminderEmail(data: WizardResumeReminderEmailData) {
   const locale = data.locale ?? "fr";
+  const isDossier = data.tier === "dossier";
   const subject =
     locale === "en"
-      ? "Your AUROS analysis is waiting"
+      ? isDossier
+        ? "Your AUROS dossier is waiting"
+        : "Your AUROS analysis is waiting"
       : locale === "es"
-        ? "Su análisis AUROS le espera"
-        : "Votre analyse AUROS vous attend";
+        ? isDossier
+          ? "Su expediente AUROS le espera"
+          : "Su análisis AUROS le espera"
+        : isDossier
+          ? "Votre dossier AUROS vous attend"
+          : "Votre analyse AUROS vous attend";
 
   const body =
     locale === "en"
-      ? "You unlocked the Pro wizard — pick up where you left off and complete your institutional dossier."
+      ? isDossier
+        ? "Pick up your RWA dossier where you left off. Incomplete is fine — add the 3 priorities, or attach a bank Evidence Pack when ready."
+        : "Pick up where you left off and complete your institutional dossier — your draft is saved."
       : locale === "es"
-        ? "Desbloqueó el wizard Pro — retome donde lo dejó y complete su dossier institucional."
-        : "Vous avez débloqué le wizard Pro — reprenez là où vous vous étiez arrêté et complétez votre dossier institutionnel.";
+        ? isDossier
+          ? "Retome su expediente RWA. Lo incompleto está bien — complete 3 prioridades, o adjunte un Evidence Pack bancario."
+          : "Retome donde lo dejó y complete su dossier institucional — el borrador está guardado."
+        : isDossier
+          ? "Reprenez votre dossier RWA. L’incomplet est normal — 3 priorités max, ou joignez un Evidence Pack banque quand vous êtes prêts."
+          : "Reprenez là où vous vous étiez arrêté — votre brouillon est sauvegardé.";
 
   const ctaLabel =
     locale === "en"
-      ? "Resume wizard"
+      ? "Resume"
       : locale === "es"
-        ? "Reanudar wizard"
-        : "Reprendre le wizard";
+        ? "Reanudar"
+        : "Reprendre";
 
   const html = layout(
     `<p style="margin:0 0 12px;font-size:18px;font-weight:600;">${escapeHtml(subject)}</p>

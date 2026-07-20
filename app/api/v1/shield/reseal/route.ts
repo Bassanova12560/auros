@@ -46,7 +46,7 @@ export const POST = protocolRoute(async (req: Request) => {
     return protocolError("validation_error", "receipt_id required", 400);
   }
 
-  const result = resealReceipt({
+  const result = await resealReceipt({
     receipt_id: body.receipt_id.trim(),
     content_hash: body.content_hash,
   });

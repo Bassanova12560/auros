@@ -24,6 +24,8 @@ import {
   type WizardMode,
 } from "@/lib/wizard-modes";
 
+import { WizardEmailResume } from "./WizardEmailResume";
+
 type Props = {
   step: number;
   totalSteps: number;
@@ -228,7 +230,7 @@ export function WizardShell({
           {shell.back}
         </button>
 
-        <span className="hidden flex-1 text-center font-mono text-[10px] uppercase tracking-wider text-white/35 sm:block">
+        <span className="flex-1 text-center font-mono text-[10px] uppercase tracking-wider text-white/35">
           {hydrated && savedAt ? (
             <>
               {shell.saved} · {new Date(savedAt).toLocaleTimeString(locale)}
@@ -263,6 +265,8 @@ export function WizardShell({
           navExtra ?? <span className="min-w-[90px]" aria-hidden />
         )}
       </div>
+
+      {hydrated ? <WizardEmailResume /> : null}
     </main>
   );
 }

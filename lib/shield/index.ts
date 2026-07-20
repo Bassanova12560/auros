@@ -39,6 +39,8 @@ export {
   getTapUsage,
   incrementTapUsage,
   ANCHOR_PREFIX,
+  getReceiptAsync,
+  listReceiptsForExportAsync,
 } from "./tap";
 export type { ShieldReceipt, ShieldTapInput, TapReceiptPublic } from "./tap";
 export { tapLocal, verifyLocalTap } from "./local-tap";

@@ -56,6 +56,9 @@ export function appendShieldAudit(
   const all = load();
   all.push(event);
   save(all);
+  void import("./persist")
+    .then((m) => m.mirrorAuditToSupabase(event))
+    .catch(() => undefined);
   return event;
 }
 
@@ -63,6 +66,18 @@ export function listShieldAudit(
   keyHash: string,
   limit = 50
 ): ShieldAuditEvent[] {
+  void import("./persist")
+    .then(async (m) => {
+      const remote = await m.fetchAuditFromSupabase(keyHash, limit);
+      if (remote.length) {
+        const all = load();
+        const byId = new Map(all.map((e) => [e.id, e]));
+        for (const e of remote) byId.set(e.id, e);
+        save([...byId.values()]);
+      }
+    })
+    .catch(() => undefined);
+
   return load()
     .filter((e) => e.key_hash === keyHash)
     .sort((a, b) => b.created_at.localeCompare(a.created_at))

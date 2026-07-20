@@ -25,6 +25,26 @@ export type ProtocolChangelogEntry = {
 /** Single source for `/developers/changelog` and GET `/api/v1/changelog`. Newest first. */
 export const PROTOCOL_CHANGELOG: ProtocolChangelogEntry[] = [
   {
+    id: "audit-p0-p1-exit-stack",
+    date: "2026-07-20",
+    title: "Anti-exit stack — home 2 portes, /start, Shield DB, nurture, pilotes",
+    summary:
+      "Home clarifiée (dossier | preuves), première victoire /start, reprise e-mail wizard, pont dossier→banque, persistance Shield Supabase, nurture dossiers, export partenaires CSV, pack HTML imprimable, waitlist Liquidity.",
+    details: [
+      "Migrations 0046 shield_* + 0047 nurture_sent_at",
+      "POST /api/wizard/resume-link · cron /api/cron/dossier-nurture",
+      "GET /api/partners/payouts-export · pack?format=html",
+      "Pages /start /pilots /liquidity",
+    ],
+    links: [
+      { href: "/start", label: "Commencer en 4 min" },
+      { href: "/pilots", label: "Pilotes" },
+      { href: "/developers/shield/banks", label: "Banques" },
+    ],
+    tags: ["ux", "shield", "partners", "growth"],
+    status: "released",
+  },
+  {
     id: "shield-full-stack-adoption",
     date: "2026-07-20",
     title: "Shield — middleware, webhooks, banques, CFU auto-tap, Python",

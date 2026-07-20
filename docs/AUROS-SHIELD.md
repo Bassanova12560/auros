@@ -17,18 +17,20 @@
 | `npx auros-shield serve` | on-prem |
 | Verify public | illimité |
 
-Quota free : 100 ingest/mois. Payload **jamais** stocké.
+Quota free : 100 ingest/mois. Payload **jamais** stocké.  
+Persistance prod : tables Supabase `shield_receipts` / `shield_tap_usage` / `shield_audit` (migration 0046).
 
 ## Premium — du lourd utile
 
-`POST /api/v1/shield/pack` assemble CFU + taps + `generation_source` + SLA indicatif + `bank_actions`.
+`POST /api/v1/shield/pack` (+ `?format=html` imprimable PDF) assemble CFU + taps + `generation_source` + SLA indicatif + `bank_actions`.
 
 Aussi : `GET /api/v1/shield/audit`, `POST /api/v1/shield/reseal`, export CFU `?shield=1`.
 
 ## Surfaces
 
+- `/start` — première victoire 4 min
 - `/developers/shield` — essai
 - `/developers/shield/banks` — Evidence Pack banque
 - `/developers/shield/dashboard` — quota
-- `/developers/shield/agents` — snippets Cursor/Claude
-- `/developers/shield/case-study` — flotte → banque
+- `/pilots` — flotte · banque · plateforme
+- `/liquidity` — waitlist (après issuer)

@@ -28,6 +28,7 @@ import { DossierQualityScore } from "./_components/DossierQualityScore";
 import { DossierShareSection } from "./_components/DossierShareSection";
 import { AdmissionReadinessPanel } from "./_components/AdmissionReadinessPanel";
 import { TokenizationStudio } from "./_components/TokenizationStudio";
+import { DossierBankProof } from "./_components/DossierBankProof";
 import { DataRoomChecklist } from "./_components/DataRoomChecklist";
 import { ExportLegalPackButton } from "./_components/ExportLegalPackButton";
 import { GreenDossierExtras } from "./_components/GreenDossierExtras";
@@ -596,6 +597,11 @@ function DossierMain() {
         >
           <ExportLegalPackButton data={data} />
         </DossierActions>
+
+        <DossierBankProof
+          dossierId={dossier.id}
+          assetLabel={data.assetType ?? data.description ?? null}
+        />
 
         {aiState === "loading" && (
           <div

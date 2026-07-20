@@ -110,6 +110,9 @@ export function incrementTapUsage(keyHash: string): number {
   const count = !prev || prev.month !== month ? 1 : prev.count + 1;
   map[keyHash] = { month, count };
   saveUsage(map);
+  void import("./persist")
+    .then((m) => m.mirrorUsageToSupabase(keyHash, month, count))
+    .catch(() => undefined);
   return count;
 }
 
@@ -197,13 +200,50 @@ export function createCloudTapReceipt(
   const all = loadReceipts();
   all.push(receipt);
   saveReceipts(all);
+  void import("./persist")
+    .then((m) => m.mirrorReceiptToSupabase(receipt))
+    .catch(() => undefined);
   return { ok: true, receipt };
 }
 
 export function getReceipt(id: string): ShieldReceipt | null {
   if (memory.has(id)) return memory.get(id)!;
   syncMemory();
-  return memory.get(id) ?? null;
+  const local = memory.get(id);
+  if (local) return local;
+  // Warm from Supabase async — sync path returns null; callers that need DB
+  // should use getReceiptAsync.
+  void import("./persist")
+    .then(async (m) => {
+      const remote = await m.fetchReceiptFromSupabase(id);
+      if (remote) {
+        memory.set(remote.id, remote);
+        const all = loadReceipts();
+        if (!all.some((r) => r.id === remote.id)) {
+          all.push(remote);
+          saveReceipts(all);
+        }
+      }
+    })
+    .catch(() => undefined);
+  return null;
+}
+
+/** Prefer this in API routes — checks memory then Supabase. */
+export async function getReceiptAsync(id: string): Promise<ShieldReceipt | null> {
+  const local = getReceipt(id);
+  if (local) return local;
+  try {
+    const { fetchReceiptFromSupabase } = await import("./persist");
+    const remote = await fetchReceiptFromSupabase(id);
+    if (remote) {
+      memory.set(remote.id, remote);
+      return remote;
+    }
+  } catch {
+    // ignore
+  }
+  return null;
 }
 
 export function listReceiptsForExport(
@@ -226,6 +266,14 @@ export function listReceiptsForExport(
   if (tenantRef) {
     rows = rows.filter((r) => r.tenant_ref === tenantRef);
   }
+  // Kick async hydrate for next request
+  void import("./persist")
+    .then(async (m) => {
+      const remote = await m.fetchReceiptsFromSupabase(tenantRef, limit);
+      for (const r of remote) memory.set(r.id, r);
+    })
+    .catch(() => undefined);
+
   return rows
     .sort((a, b) => b.created_at.localeCompare(a.created_at))
     .slice(0, limit)
@@ -240,6 +288,22 @@ export function listReceiptsForExport(
       label: r.label,
       verify_url: r.verify_url,
     }));
+}
+
+export async function listReceiptsForExportAsync(
+  limit = 100,
+  tenantRef?: string
+): Promise<
+  ReturnType<typeof listReceiptsForExport>
+> {
+  try {
+    const { fetchReceiptsFromSupabase } = await import("./persist");
+    const remote = await fetchReceiptsFromSupabase(tenantRef, limit);
+    for (const r of remote) memory.set(r.id, r);
+  } catch {
+    // ignore
+  }
+  return listReceiptsForExport(limit, tenantRef);
 }
 
 export type TapReceiptPublic = {

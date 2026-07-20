@@ -10,7 +10,7 @@ import { Eyebrow } from "./ui/Eyebrow";
 import { PrimaryButton } from "./ui/PrimaryButton";
 import { EASE_OUT_EXPO } from "@/lib/motion";
 
-/** SSR-safe hero — main copy visible on first paint; decorative scroll cue only uses motion. */
+/** SSR-safe hero — two doors only (dossier | proofs). Depth elsewhere. */
 export function Hero() {
   const t = useTranslations();
   const { locale } = useLocale();
@@ -39,8 +39,33 @@ export function Hero() {
             {ease.landing.scorePath}
           </p>
 
-          <div className="green-hub-fade-in-delay mt-10 flex flex-col items-start gap-4 sm:flex-row sm:flex-wrap sm:items-center">
-            <PrimaryButton href="/wizard">{t.hero.ctaPrimary}</PrimaryButton>
+          <div className="mt-10 grid max-w-xl gap-3 sm:grid-cols-2">
+            <Link
+              href="/wizard"
+              className="group rounded-xl border border-white/15 bg-white/[0.04] px-5 py-4 transition hover:border-white/35 hover:bg-white/[0.07]"
+            >
+              <p className="font-display text-base text-white group-hover:text-white">
+                {t.hero.doorDossierLabel}
+              </p>
+              <p className="mt-1 text-xs leading-relaxed text-white/45">
+                {t.hero.doorDossierHint}
+              </p>
+            </Link>
+            <Link
+              href="/developers/shield"
+              className="group rounded-xl border border-white/10 px-5 py-4 transition hover:border-white/30 hover:bg-white/[0.04]"
+            >
+              <p className="font-display text-base text-white/90">
+                {t.hero.doorProofLabel}
+              </p>
+              <p className="mt-1 text-xs leading-relaxed text-white/45">
+                {t.hero.doorProofHint}
+              </p>
+            </Link>
+          </div>
+
+          <div className="green-hub-fade-in-delay mt-6 flex flex-col items-start gap-3 sm:flex-row sm:flex-wrap sm:items-center">
+            <PrimaryButton href="/start">{t.hero.firstWinLabel}</PrimaryButton>
             <Link href="/estimate" className="auros-btn auros-btn--link">
               {t.hero.ctaEstimate} →
             </Link>
@@ -59,37 +84,25 @@ export function Hero() {
             ))}
           </div>
 
-          <div className="mt-8 flex items-start gap-4 rounded-lg border border-white/[0.08] p-5">
-            <div className="flex-1">
-              <p className="mb-1 text-sm text-muted">
-                {locale === "fr"
-                  ? "Actif énergétique ?"
-                  : locale === "es"
-                    ? "¿Activo energético?"
-                    : "Energy asset?"}
-              </p>
-              <p className="font-medium text-white">
-                {locale === "fr"
-                  ? "AUROS Green — énergie locale & RWA tokenisé"
-                  : locale === "es"
-                    ? "AUROS Green — energía local y RWA tokenizado"
-                    : "AUROS Green — local energy & tokenized RWA"}
-              </p>
-              <p className="mt-1 text-sm text-muted">
-                {locale === "fr"
-                  ? "Producteurs, stockeurs, rechargeurs — place de marché, standard RTMS, label Verified."
-                  : locale === "es"
-                    ? "Productores, almacenadores, recargadores — marketplace, estándar RTMS, label Verified."
-                    : "Producers, storers, chargers — marketplace, RTMS standard, Verified label."}
-              </p>
-            </div>
-            <Link
-              href="/green"
-              className="mt-1 shrink-0 text-sm font-medium text-white transition hover:text-white/80"
-            >
-              {locale === "fr" ? "Explorer →" : locale === "es" ? "Explorar →" : "Explore →"}
+          <p className="mt-8 text-xs text-white/35">
+            {locale === "fr"
+              ? "Énergie / Green Verified → "
+              : locale === "es"
+                ? "Energía / Green Verified → "
+                : "Energy / Green Verified → "}
+            <Link href="/green" className="underline-offset-2 hover:underline">
+              /green
             </Link>
-          </div>
+            {" · "}
+            {locale === "fr"
+              ? "bas-carbone / nucléaire → "
+              : locale === "es"
+                ? "bajo carbono / nuclear → "
+                : "low-carbon / nuclear → "}
+            <Link href="/power" className="underline-offset-2 hover:underline">
+              /power
+            </Link>
+          </p>
         </div>
 
         <ProductPreview />

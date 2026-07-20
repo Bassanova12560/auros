@@ -104,6 +104,12 @@ export function PartnerDashboardView(props: Props) {
                 {d.commission}
               </p>
               <p className="mt-1 text-sm text-white/60">{d.commissionEstimated}</p>
+              <a
+                href="/api/partners/payouts-export"
+                className="mt-3 inline-block font-mono text-[11px] uppercase tracking-wider text-white/70 underline-offset-4 hover:text-white hover:underline"
+              >
+                Export compta CSV (estimé)
+              </a>
             </div>
           </div>
         ) : null}

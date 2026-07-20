@@ -89,7 +89,7 @@ describe("AUROS Shield freemium tap", () => {
     assert.equal(tap.ok, true);
     if (!tap.ok) return;
     const { resealReceipt } = await import("../lib/shield/reseal");
-    const reseal = resealReceipt({ receipt_id: tap.receipt.id });
+    const reseal = await resealReceipt({ receipt_id: tap.receipt.id });
     assert.equal(reseal.ok, true);
     if (!reseal.ok) return;
     assert.equal(reseal.reseal.recommended_profile, "hybrid_pqc_ready_v1");
