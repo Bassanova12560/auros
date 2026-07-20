@@ -32,7 +32,6 @@ export function GreenHubHeroSection() {
       className="relative flex min-h-[calc(100dvh-4.5rem)] flex-col justify-center overflow-hidden pb-16 pt-6 md:pb-24 md:pt-10"
       aria-labelledby="green-hub-title"
     >
-      <div className="green-hero-mesh" aria-hidden />
       <div className="green-hub-fade-in relative z-10 max-w-3xl">
         <h1
           id="green-hub-title"
