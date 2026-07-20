@@ -13,9 +13,9 @@ export const guidesHubPage = enrichPage({
   path: GUIDES_ROUTE,
   title: "Guides AUROS | Définitions de catégories RWA",
   description:
-    "Trois catégories que AUROS définit : booking engine des watts, CFU ChargeFlow, RWA Intelligence Layer et RTMS Green — plus 30 intents citables.",
+    "Catégories que AUROS définit : booking engine des watts, CFU ChargeFlow, RWA Intelligence Layer, RTMS Green et low-carbon power — plus intents citables.",
   summary:
-    "Hub ownership de catégorie AUROS — définitions canoniques pour Google et recherche IA, liées aux hubs produit Watts, Protocol et Green.",
+    "Hub ownership de catégorie AUROS — définitions canoniques pour Google et recherche IA, liées aux hubs produit Watts, Protocol, Green et Power.",
   contentType: "guide",
   language: "multi",
   indexable: true,
@@ -53,11 +53,10 @@ export const guidesHubPage = enrichPage({
 export const guidesIntentsPage = enrichPage({
   id: "guides-intents",
   path: GUIDES_INTENTS_ROUTE,
-  title: "30 intents AUROS | Questions auxquelles nous devons être la réponse",
-  description:
-    "30 questions métier Watts, Protocol et Green — réponses courtes citables + lien outil. Pour Search Console, Copilot et agents IA.",
+  title: `${CATEGORY_INTENTS.length} intents AUROS | Questions auxquelles nous devons être la réponse`,
+  description: `${CATEGORY_INTENTS.length} questions métier Watts, Protocol, Green et institutions — réponses courtes citables + lien outil. Pour Search Console, Copilot et agents IA.`,
   summary:
-    "Cartographie d'intents catégorie AUROS — 10 Watts/ChargeFlow, 10 RWA Intelligence, 10 Green RTMS. Chaque réponse pointe vers une page canonique et un outil.",
+    "Cartographie d'intents catégorie AUROS — Watts/ChargeFlow, RWA Intelligence, Green RTMS, banques et Power. Chaque réponse pointe vers une page canonique et un outil.",
   contentType: "guide",
   language: "multi",
   indexable: true,

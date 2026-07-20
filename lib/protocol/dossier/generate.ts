@@ -105,10 +105,15 @@ export async function generateDossierPayload(
   let checklist: ReturnType<typeof generateChecklist> | null = null;
   if (
     sections.includes("checklist") &&
-    ["real_estate", "private_fund", "bonds", "private_credit"].includes(assetType)
+    ["real_estate", "private_fund", "bonds", "private_credit", "low_carbon_power"].includes(assetType)
   ) {
     checklist = generateChecklist({
-      asset_type: assetType as "real_estate" | "private_fund" | "bonds" | "private_credit",
+      asset_type: assetType as
+        | "real_estate"
+        | "private_fund"
+        | "bonds"
+        | "private_credit"
+        | "low_carbon_power",
       jurisdiction,
       structure: "spv",
     });

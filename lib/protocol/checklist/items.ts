@@ -372,6 +372,44 @@ export function getChecklistTemplates(
       dependencies: ["asset-title"],
       auros_tip: "Vintage and default history must match marketing APY claims.",
     });
+  } else if (input.asset_type === "low_carbon_power") {
+    items.push(
+      {
+        id: "generation-source-claim",
+        category: "asset_custody",
+        title: "Document generation_source technology claim (indicative)",
+        regulatory_reference: "AUROS Power / Watts — not GO/REC",
+        required: true,
+        estimated_time_days: 5,
+        estimated_cost_eur: 1_500,
+        dependencies: ["asset-title"],
+        auros_tip:
+          "Use solar|wind|hydro|nuclear|… on Watts/CFU. Outside Green Verified renewables.",
+      },
+      {
+        id: "low-carbon-disclaimer",
+        category: "mica_compliance",
+        title: "Low-carbon vs renewable marketing disclaimer",
+        regulatory_reference: "Anti-greenwashing / EU Taxonomy narrative",
+        required: true,
+        estimated_time_days: 3,
+        estimated_cost_eur: 2_000,
+        dependencies: ["mica-classification"],
+        auros_tip:
+          "Do not apply AUROS Green Verified to nuclear. Hub: /power.",
+      },
+      {
+        id: "cfu-portfolio-pack",
+        category: "data_room",
+        title: "CFU portfolio export pack for institutional review",
+        regulatory_reference: "GET /api/v1/chargeflow/export",
+        required: false,
+        estimated_time_days: 2,
+        estimated_cost_eur: 500,
+        dependencies: ["generation-source-claim"],
+        auros_tip: "Premium export JSON/CSV — indicative, not a regulated audit opinion.",
+      }
+    );
   }
 
   return items.map((item) => ({

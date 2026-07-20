@@ -37,6 +37,7 @@ export function wattOfferPublic(
     firmness: offer.firmness,
     producer_ref: offer.producer_ref,
     label: offer.label,
+    generation_source: offer.generation_source ?? null,
     created_at: offer.created_at,
     disclaimer: WATTS_RESERVE_DISCLAIMER,
   };

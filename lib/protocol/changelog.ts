@@ -25,19 +25,40 @@ export type ProtocolChangelogEntry = {
 /** Single source for `/developers/changelog` and GET `/api/v1/changelog`. Newest first. */
 export const PROTOCOL_CHANGELOG: ProtocolChangelogEntry[] = [
   {
+    id: "institutional-apis-power",
+    date: "2026-07-20",
+    title: "APIs institutionnelles + AUROS Power (low-carbon)",
+    summary:
+      "OpenAPI Watts, export CFU portfolio, generation_source (nucléaire inclus), page /developers/institutions et verticale /power — hors Green Verified.",
+    details: [
+      "OpenAPI : /api/v1/watts/* + GET /api/v1/chargeflow/export.",
+      "SDK chargeflowExport + generation_source sur Watts/ChargeFlow.",
+      "Hub /power · guide /guides/low-carbon-power · glossaire energie-nucleaire-rwa · /comment-tokeniser/nucleaire.",
+      "Score/checklist : asset_type low_carbon_power (indicatif).",
+    ],
+    links: [
+      { href: "/developers/institutions", label: "Institutions" },
+      { href: "/power", label: "AUROS Power" },
+      { href: "/auros-openapi.yaml", label: "OpenAPI" },
+      { href: "/developers/docs/endpoint-watts-reserve", label: "Docs Watts" },
+    ],
+    tags: ["protocol", "watts", "chargeflow", "institutions", "power"],
+    status: "released",
+  },
+  {
     id: "category-ownership-guides",
     date: "2026-07-20",
-    title: "Ownership de catégorie — /guides + 30 intents",
+    title: "Ownership de catégorie — /guides + intents",
     summary:
-      "Hub /guides avec 4 définitions canoniques (booking engine watts, CFU, RWA Intelligence, RTMS) et /guides/intents (30 Q&A citables) pour Google et recherche IA.",
+      "Hub /guides avec définitions canoniques (booking engine watts, CFU, RWA Intelligence, RTMS, low-carbon) et /guides/intents (Q&A citables) pour Google et recherche IA.",
     details: [
-      "3 piliers × 10 intents liés hub + outil.",
-      "Glossaire : booking-engine-watts, chargeflow-cfu, rwa-intelligence-layer.",
+      "3 piliers × intents liés hub + outil + intents banques / Power.",
+      "Glossaire : booking-engine-watts, chargeflow-cfu, rwa-intelligence-layer, energie-nucleaire-rwa.",
       "llms.txt + sitemap priorités guides.",
     ],
     links: [
       { href: "/guides", label: "Guides" },
-      { href: "/guides/intents", label: "30 intents" },
+      { href: "/guides/intents", label: "Intents" },
       { href: "/guides/booking-engine-watts", label: "Booking engine watts" },
     ],
     tags: ["seo", "geo", "guides", "watts"],

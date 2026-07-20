@@ -23,4 +23,17 @@ describe("protocol/checklist", () => {
     });
     assert.ok(result.total_items >= 20);
   });
+
+  it("generates low_carbon_power extras", () => {
+    const result = generateChecklist({
+      asset_type: "low_carbon_power",
+      jurisdiction: "france",
+      structure: "spv",
+    });
+    assert.ok(result.total_items >= 18);
+    assert.ok(
+      result.items.some((i) => i.id === "generation-source-claim")
+    );
+    assert.ok(result.items.some((i) => i.id === "low-carbon-disclaimer"));
+  });
 });

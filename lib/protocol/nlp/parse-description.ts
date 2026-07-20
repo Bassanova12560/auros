@@ -7,6 +7,7 @@ export type ParsedAssetType =
   | "private_credit"
   | "commodities"
   | "stablecoins"
+  | "low_carbon_power"
   | "other";
 
 export type ParsedDescription = {
@@ -62,6 +63,13 @@ function detectAssetType(lower: string): ParsedAssetType {
   }
   if (/stablecoin|usdc|usdt|eurc/.test(lower)) {
     return "stablecoins";
+  }
+  if (
+    /nucl[eé]aire|nuclear|low[\s-]?carbon|bas[\s-]?carbone|generation_source/.test(
+      lower
+    )
+  ) {
+    return "low_carbon_power";
   }
   return "other";
 }

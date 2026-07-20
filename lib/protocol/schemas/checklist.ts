@@ -1,7 +1,13 @@
 import { z } from "zod";
 
 export const checklistRequestSchema = z.object({
-  asset_type: z.enum(["real_estate", "private_fund", "bonds", "private_credit"]),
+  asset_type: z.enum([
+    "real_estate",
+    "private_fund",
+    "bonds",
+    "private_credit",
+    "low_carbon_power",
+  ]),
   jurisdiction: z.string().min(2).max(64),
   structure: z.enum(["spv", "fund", "trust", "other"]).optional().default("spv"),
 });

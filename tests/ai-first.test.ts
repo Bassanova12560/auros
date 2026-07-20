@@ -47,8 +47,14 @@ describe("ai-first/catalog", () => {
     assert.ok(getAiFirstPageByPath("/guides"));
     assert.ok(getAiFirstPageByPath("/guides/intents"));
     assert.ok(getAiFirstPageByPath("/guides/booking-engine-watts"));
+    assert.ok(getAiFirstPageByPath("/guides/low-carbon-power"));
     const intents = getAiFirstPageByPath("/guides/intents");
     assert.ok(intents?.faq && intents.faq.length >= 30);
+  });
+
+  it("includes institutional and Power hubs", () => {
+    assert.ok(getAiFirstPageByPath("/developers/institutions"));
+    assert.ok(getAiFirstPageByPath("/power"));
   });
 
   it("includes Watts and ChargeFlow product hubs", () => {
@@ -71,7 +77,9 @@ describe("ai-first/catalog", () => {
     assert.match(txt, /Primary products/);
     assert.match(txt, /AUROS Green/);
     assert.match(txt, /AUROS Watts/);
+    assert.match(txt, /AUROS Power/);
     assert.match(txt, /ChargeFlow/);
+    assert.match(txt, /Institutions/);
     assert.match(txt, /AUROS Protocol API/);
     assert.match(txt, /Citation policy/);
     assert.match(txt, /api\.getauros\.com/);

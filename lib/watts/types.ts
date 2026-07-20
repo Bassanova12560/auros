@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import { generationSourceSchema } from "@/lib/power/generation-source";
+
 export const WATTS_RESERVE_ROUTE = "/green/chargeflow/reserve";
 export const WATTS_INVENTORY_ROUTE = "/green/chargeflow/inventory";
 export const WATTS_SECONDARY_ROUTE = "/green/chargeflow/secondary";
@@ -30,6 +32,7 @@ export const wattReserveRequestSchema = z
     carbon_intensity_max_gco2_kwh: z.number().min(0).max(2000).optional(),
     firmness: z.enum(["firm", "flex"]).default("firm"),
     buyer_ref: z.string().trim().max(128).optional(),
+    generation_source: generationSourceSchema.optional(),
   })
   .superRefine((val, ctx) => {
     if (val.firmness === "flex" && val.capacity_kw == null) {
@@ -137,6 +140,7 @@ export const wattCapacityOfferRequestSchema = z
     firmness: z.enum(["firm", "flex"]).default("flex"),
     producer_ref: z.string().trim().max(128).optional(),
     label: z.string().trim().max(120).optional(),
+    generation_source: generationSourceSchema.optional(),
   })
   .superRefine((val, ctx) => {
     if (val.firmness === "flex" && val.capacity_kw == null) {
@@ -171,6 +175,7 @@ export type WattCapacityOffer = {
   firmness: WattFirmness;
   producer_ref: string | null;
   label: string | null;
+  generation_source?: string | null;
   created_at: string;
   withdrawn_at: string | null;
 };
@@ -186,6 +191,7 @@ export type WattCapacityOfferPublic = {
   firmness: WattFirmness;
   producer_ref: string | null;
   label: string | null;
+  generation_source?: string | null;
   created_at: string;
   disclaimer: string;
 };
@@ -217,6 +223,7 @@ export const wattSecondaryListingRequestSchema = z
       .optional(),
     firmness: z.enum(["firm", "flex"]).optional(),
     cfu_unit_id: z.string().trim().max(128).optional(),
+    generation_source: generationSourceSchema.optional(),
     cfu_verify_url: z.string().url().max(500).optional(),
   })
   .superRefine((val, ctx) => {

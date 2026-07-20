@@ -81,7 +81,7 @@ export default async function CategoryGuidePage({ params }: PageProps) {
                 href={GUIDES_INTENTS_ROUTE}
                 className="underline-offset-2 hover:underline"
               >
-                30 intents
+                intents
               </Link>
             </p>
           </div>

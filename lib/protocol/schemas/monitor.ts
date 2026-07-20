@@ -15,6 +15,7 @@ export const monitorRequestSchema = z.object({
     "private_credit",
     "commodities",
     "stablecoins",
+    "low_carbon_power",
     "other",
   ]),
   jurisdiction: z.string().min(2).max(64),

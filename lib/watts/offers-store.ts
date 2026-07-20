@@ -53,6 +53,8 @@ function rowToOffer(row: Record<string, unknown>): WattCapacityOffer {
     firmness: row.firmness as WattFirmness,
     producer_ref: row.producer_ref != null ? String(row.producer_ref) : null,
     label: row.label != null ? String(row.label) : null,
+    generation_source:
+      row.generation_source != null ? String(row.generation_source) : null,
     created_at: String(row.created_at),
     withdrawn_at: row.withdrawn_at != null ? String(row.withdrawn_at) : null,
   };
@@ -99,6 +101,7 @@ export async function insertWattCapacityOffer(input: {
     firmness: input.request.firmness,
     producer_ref: input.request.producer_ref ?? null,
     label: input.request.label ?? null,
+    generation_source: input.request.generation_source ?? null,
     created_at: new Date().toISOString(),
     withdrawn_at: null,
   };
@@ -121,6 +124,7 @@ export async function insertWattCapacityOffer(input: {
           firmness: offer.firmness,
           producer_ref: offer.producer_ref,
           label: offer.label,
+          generation_source: offer.generation_source,
           created_at: offer.created_at,
         })
         .select("*")

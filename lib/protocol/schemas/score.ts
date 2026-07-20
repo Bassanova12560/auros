@@ -10,6 +10,7 @@ const assetTypeSchema = z.enum([
   "private_credit",
   "commodities",
   "stablecoins",
+  "low_carbon_power",
   "other",
 ]);
 

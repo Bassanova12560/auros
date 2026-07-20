@@ -23,6 +23,7 @@ type Offer = {
   firmness: string;
   producer_ref: string | null;
   label: string | null;
+  generation_source?: string | null;
 };
 
 type MatchRow = {
@@ -71,6 +72,7 @@ export function WattsInventoryView() {
   const [zoneId, setZoneId] = useState("");
   const [carbon, setCarbon] = useState("40");
   const [label, setLabel] = useState("");
+  const [generationSource, setGenerationSource] = useState("unknown");
   const [offers, setOffers] = useState<Offer[]>([]);
   const [matches, setMatches] = useState<MatchRow[] | null>(null);
   const [loading, setLoading] = useState(false);
@@ -123,6 +125,9 @@ export function WattsInventoryView() {
     else body.energy_kwh = Number(energyKwh);
     if (carbon.trim()) body.carbon_intensity_gco2_kwh = Number(carbon);
     if (label.trim()) body.label = label.trim();
+    if (generationSource && generationSource !== "unknown") {
+      body.generation_source = generationSource;
+    }
     body.producer_ref = "demo-producer";
 
     try {
@@ -337,6 +342,28 @@ export function WattsInventoryView() {
             />
           </label>
 
+          <label className="block space-y-1.5">
+            <span className="font-mono text-[10px] uppercase tracking-wider text-white/40">
+              Source (indicatif)
+            </span>
+            <select
+              value={generationSource}
+              onChange={(e) => setGenerationSource(e.target.value)}
+              className={fieldClass}
+            >
+              <option value="unknown">unknown</option>
+              <option value="solar">solar</option>
+              <option value="wind">wind</option>
+              <option value="hydro">hydro</option>
+              <option value="nuclear">nuclear</option>
+              <option value="battery">battery</option>
+              <option value="mixed">mixed</option>
+            </select>
+            <span className="block text-[11px] text-white/30">
+              Pas un GO/REC ni Green Verified — claim technologique low-carbon.
+            </span>
+          </label>
+
           <div className="flex flex-wrap gap-3">
             <PrimaryButton
               type="button"
@@ -398,6 +425,9 @@ export function WattsInventoryView() {
                       {m.offer.energy_kwh != null
                         ? ` · ${m.offer.energy_kwh} kWh`
                         : ""}
+                      {m.offer.generation_source
+                        ? ` · ${m.offer.generation_source}`
+                        : ""}
                     </p>
                   </li>
                 ))}
@@ -442,6 +472,7 @@ export function WattsInventoryView() {
                     {o.carbon_intensity_gco2_kwh != null
                       ? ` · ${o.carbon_intensity_gco2_kwh} gCO₂`
                       : ""}
+                    {o.generation_source ? ` · ${o.generation_source}` : ""}
                   </p>
                 </li>
               ))}

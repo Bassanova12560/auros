@@ -215,6 +215,57 @@ export const CATEGORY_GUIDES: CategoryGuide[] = [
       },
     ],
   },
+  {
+    slug: "low-carbon-power",
+    path: "/guides/low-carbon-power",
+    title: "Low-carbon Power | Nucléaire & bas-carbone — définition AUROS",
+    description:
+      "Définition AUROS Power : verticale low-carbon (nucléaire, hydro, mix) via Watts + ChargeFlow — séparée de Green Verified renouvelable.",
+    intro:
+      "AUROS Power est la verticale bas-carbone : réserver et prouver de l'énergie nucléaire ou low-carbon sans confondre avec le label Green Verified.",
+    keywords: [
+      "low-carbon power",
+      "tokenisation nucléaire",
+      "énergie nucléaire RWA",
+      "AUROS Power",
+      "bas carbone tokenisation",
+    ],
+    cta: { href: "/power", label: "Ouvrir AUROS Power" },
+    sections: [
+      {
+        heading: "Définition courte",
+        paragraphs: [
+          "Low-carbon Power désigne la préparation RWA / preuve unitaire d'énergie bas-carbone (nucléaire, hydro, mix) via Watts Reserve et ChargeFlow CFU, avec generation_source explicite.",
+          "Ce n'est pas AUROS Green Verified, pas un GO/REC, pas un marché réglementé.",
+        ],
+      },
+      {
+        heading: "Pourquoi séparer de Green",
+        paragraphs: [
+          "Green RTMS et le label Verified sont cadrés renouvelable / anti-greenwashing. Le nucléaire doit rester une verticale adjacente pour éviter toute confusion Taxonomy / marketing.",
+          "Les banques utilisent plutôt Protocol (OpenAPI, export CFU, Monitor) que le label Green.",
+        ],
+      },
+      {
+        heading: "Comment démarrer",
+        paragraphs: [
+          "Hub /power · guide comment-tokeniser/nucleaire · Watts avec generation_source=nuclear · export GET /api/v1/chargeflow/export · /developers/institutions.",
+        ],
+      },
+    ],
+    faq: [
+      {
+        question: "Le nucléaire peut-il être Green Verified ?",
+        answer:
+          "Non sur AUROS. Green Verified reste renouvelable / RTMS. Utilisez AUROS Power + disclaimers low-carbon.",
+      },
+      {
+        question: "generation_source=nuclear est-il un certificat ?",
+        answer:
+          "Non. C'est un claim technologique indicatif pour matching et audit packs — pas un GO/REC ni une opinion d'audit réglementée.",
+      },
+    ],
+  },
 ];
 
 export function getCategoryGuide(slug: string): CategoryGuide | undefined {

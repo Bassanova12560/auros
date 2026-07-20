@@ -203,6 +203,16 @@ export function computeProtocolScore(input: StructuredScoreInput): ProtocolScore
     // satisfy type narrowing
   }
 
+  let recommendations = buildRecommendations(breakdown);
+  if (assetType === "low_carbon_power") {
+    recommendations = [
+      "Keep nuclear / low-carbon outside AUROS Green Verified — use /power and generation_source (indicative, not GO/REC).",
+      ...recommendations.filter(
+        (r) => !r.toLowerCase().includes("green verified")
+      ),
+    ].slice(0, 3);
+  }
+
   return {
     score,
     grade: gradeFromScore(score),
@@ -210,7 +220,7 @@ export function computeProtocolScore(input: StructuredScoreInput): ProtocolScore
     breakdown,
     mica_classification: micaClass,
     critical_gaps: buildCriticalGaps(breakdown),
-    recommendations: buildRecommendations(breakdown),
+    recommendations,
     recommended_jurisdictions: jurisdictionRank.recommendations.map((r) => ({
       id: r.id,
       score: r.score,

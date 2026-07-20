@@ -146,6 +146,27 @@ describe("@adrien1212balitrand/auros-protocol SDK", () => {
     assert.equal(result.status, "retired");
   });
 
+  it("chargeflowExport() gets portfolio", async () => {
+    const client = new AurosProtocol({
+      apiKey: "auros_pk_live_xxx",
+      fetch: mockFetch((url, init) => {
+        assert.ok(url.includes("/api/v1/chargeflow/export?"));
+        assert.ok(url.includes("format=json"));
+        assert.equal(init?.method ?? "GET", "GET");
+        return Response.json({
+          exported_at: "2026-07-20T00:00:00.000Z",
+          total: 1,
+          count: 1,
+          units: [],
+          disclaimer: "test",
+        });
+      }),
+    });
+    const result = await client.chargeflowExport({ status: "active" });
+    assert.equal(result.count, 1);
+    assert.equal(result.total, 1);
+  });
+
   it("wattsReserve() posts profile intent", async () => {
     const client = new AurosProtocol({
       apiKey: "auros_pk_live_xxx",

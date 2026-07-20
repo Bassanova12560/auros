@@ -171,6 +171,9 @@ export function buildChargeflowCanonical(
             ...(input.attributes.reservation_id
               ? { reservation_id: input.attributes.reservation_id }
               : {}),
+            ...(input.attributes.generation_source
+              ? { generation_source: input.attributes.generation_source }
+              : {}),
           },
         }
       : {}),
@@ -250,6 +253,9 @@ export function buildChargeflowFCanonical(
             ...(input.attributes.notes ? { notes: input.attributes.notes } : {}),
             ...(input.attributes.reservation_id
               ? { reservation_id: input.attributes.reservation_id }
+              : {}),
+            ...(input.attributes.generation_source
+              ? { generation_source: input.attributes.generation_source }
               : {}),
           },
         }

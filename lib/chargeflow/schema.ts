@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import { generationSourceSchema } from "@/lib/power/generation-source";
+
 export const chargeflowSessionSchema = z.object({
   external_session_id: z.string().min(1).max(128),
   started_at: z.string().min(10).max(40),
@@ -24,6 +26,7 @@ export const chargeflowAttributesSchema = z
     renewable_claim: z
       .enum(["none", "go", "rec", "ppa_matched", "unknown"])
       .default("unknown"),
+    generation_source: generationSourceSchema.optional(),
     grid_mix_note: z.string().max(500).optional(),
     compare_ref_id: z.string().max(64).optional(),
     reservation_id: z.string().uuid().optional(),
@@ -102,6 +105,7 @@ export const chargeflowFAttributesSchema = z
     compare_ref_id: z.string().max(64).optional(),
     notes: z.string().max(500).optional(),
     reservation_id: z.string().uuid().optional(),
+    generation_source: generationSourceSchema.optional(),
   })
   .optional();
 

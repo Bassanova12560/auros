@@ -1261,6 +1261,235 @@ paths:
       responses:
         "200":
           description: Demo unit
+  /api/v1/chargeflow/export:
+    get:
+      tags: [Premium]
+      summary: Export ChargeFlow CFU portfolio (audit pack)
+      operationId: exportChargeflow
+      description: |
+        Institutional CSV/JSON export of CFU units owned by the API key.
+        Filters: kind, status, operator_id. Max 5000 rows per call.
+        Not a regulated audit opinion — indicative off-chain proofs only.
+      parameters:
+        - name: format
+          in: query
+          schema: { type: string, enum: [json, csv], default: json }
+        - name: kind
+          in: query
+          schema: { type: string, enum: [e, w, f] }
+        - name: status
+          in: query
+          schema: { type: string, enum: [active, retired] }
+        - name: operator_id
+          in: query
+          schema: { type: string }
+        - name: limit
+          in: query
+          schema: { type: integer, minimum: 1, maximum: 5000, default: 1000 }
+      responses:
+        "200":
+          description: Portfolio export
+        "403":
+          $ref: "#/components/responses/PremiumRequired"
+  /api/v1/watts/reserve:
+    post:
+      tags: [Premium]
+      summary: Create Watts Reserve intent
+      operationId: wattsReserve
+      description: |
+        Deterministic match_score for an energy/capacity profile. Does not mint CFU.
+        Confirm separately. UI: /green/watts · /green/chargeflow/reserve.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/WattsReserveRequest"
+      responses:
+        "200":
+          description: Reservation intent
+        "403":
+          $ref: "#/components/responses/PremiumRequired"
+  /api/v1/watts/reserve/{id}:
+    get:
+      tags: [Premium]
+      summary: Get Watts reservation
+      operationId: wattsReservation
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        "200":
+          description: Reservation
+        "403":
+          $ref: "#/components/responses/PremiumRequired"
+  /api/v1/watts/reserve/{id}/confirm:
+    post:
+      tags: [Premium]
+      summary: Confirm Watts reservation (mint CFU)
+      operationId: wattsConfirm
+      description: Explicit mint CFU-E or CFU-F linked to reservation_id — no auto-mint.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        "200":
+          description: Confirmed reservation with CFU
+        "403":
+          $ref: "#/components/responses/PremiumRequired"
+  /api/v1/watts/reserve/{id}/settle:
+    post:
+      tags: [Premium]
+      summary: Settle Watts reservation (retire CFU)
+      operationId: wattsSettle
+      description: Explicit retire of linked CFU on delivery — no auto-retire.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/WattsSettleRequest"
+      responses:
+        "200":
+          description: Settled reservation
+        "403":
+          $ref: "#/components/responses/PremiumRequired"
+  /api/v1/watts/offers:
+    post:
+      tags: [Premium]
+      summary: Publish capacity offer
+      operationId: wattsCreateOffer
+      description: Indicative producer window — not a PPA.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/WattsOfferRequest"
+      responses:
+        "200":
+          description: Offer created
+        "403":
+          $ref: "#/components/responses/PremiumRequired"
+    get:
+      tags: [Premium]
+      summary: List capacity offers
+      operationId: wattsOffers
+      parameters:
+        - name: country
+          in: query
+          schema: { type: string }
+        - name: firmness
+          in: query
+          schema: { type: string, enum: [firm, flex] }
+        - name: mine
+          in: query
+          schema: { type: boolean }
+      responses:
+        "200":
+          description: Offers list
+        "403":
+          $ref: "#/components/responses/PremiumRequired"
+  /api/v1/watts/offers/match:
+    post:
+      tags: [Premium]
+      summary: Match buyer profile to open offers
+      operationId: wattsMatchOffers
+      description: Deterministic ranking — no auto-reserve.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/WattsReserveRequest"
+      responses:
+        "200":
+          description: Ranked matches
+        "403":
+          $ref: "#/components/responses/PremiumRequired"
+  /api/v1/watts/offers/{id}/withdraw:
+    post:
+      tags: [Premium]
+      summary: Withdraw capacity offer
+      operationId: wattsWithdrawOffer
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        "200":
+          description: Withdrawn offer
+        "403":
+          $ref: "#/components/responses/PremiumRequired"
+  /api/v1/watts/secondary:
+    post:
+      tags: [Premium]
+      summary: Create secondary listing
+      operationId: wattsSecondaryList
+      description: Indicative listing + optional compare_ref_id — not a securities exchange.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/WattsSecondaryRequest"
+      responses:
+        "200":
+          description: Listing created
+        "403":
+          $ref: "#/components/responses/PremiumRequired"
+    get:
+      tags: [Premium]
+      summary: List secondary listings
+      operationId: wattsSecondary
+      parameters:
+        - name: mine
+          in: query
+          schema: { type: boolean }
+      responses:
+        "200":
+          description: Listings
+        "403":
+          $ref: "#/components/responses/PremiumRequired"
+  /api/v1/watts/secondary/{id}/interest:
+    post:
+      tags: [Premium]
+      summary: Express non-binding interest
+      operationId: wattsSecondaryInterest
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        "200":
+          description: Interest recorded
+        "403":
+          $ref: "#/components/responses/PremiumRequired"
+  /api/v1/watts/secondary/{id}/withdraw:
+    post:
+      tags: [Premium]
+      summary: Withdraw secondary listing
+      operationId: wattsWithdrawSecondary
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        "200":
+          description: Withdrawn
+        "403":
+          $ref: "#/components/responses/PremiumRequired"
   /api/v1/webhooks:
     post:
       tags: [Premium]
@@ -1708,7 +1937,7 @@ components:
           maxLength: 4000
         asset_type:
           type: string
-          enum: [real_estate, private_fund, bonds, private_credit, commodities, stablecoins, other]
+          enum: [real_estate, private_fund, bonds, private_credit, commodities, stablecoins, low_carbon_power, other]
         issuer_type:
           type: string
           enum: [company_spv, existing_fund, individual, unsure]
@@ -2155,7 +2384,7 @@ components:
       properties:
         asset_type:
           type: string
-          enum: [real_estate, private_fund, bonds, private_credit]
+          enum: [real_estate, private_fund, bonds, private_credit, low_carbon_power]
         jurisdiction:
           type: string
           minLength: 2
@@ -2219,7 +2448,7 @@ components:
       properties:
         asset_type:
           type: string
-          enum: [real_estate, private_fund, bonds, private_credit, commodities, stablecoins, other]
+          enum: [real_estate, private_fund, bonds, private_credit, commodities, stablecoins, low_carbon_power, other]
         jurisdiction: { type: string }
         structure:
           type: string
@@ -2353,6 +2582,82 @@ components:
             renewable_claim:
               type: string
               enum: [none, go, rec, ppa_matched, unknown]
+            generation_source:
+              type: string
+              enum: [solar, wind, hydro, nuclear, battery, mixed, unknown]
+    WattsReserveRequest:
+      type: object
+      required: [window, zone]
+      properties:
+        window:
+          type: object
+          required: [start, end]
+          properties:
+            start: { type: string }
+            end: { type: string }
+        energy_kwh: { type: number }
+        capacity_kw: { type: number }
+        zone:
+          type: object
+          required: [country]
+          properties:
+            country: { type: string }
+            zone_id: { type: string }
+        carbon_intensity_max_gco2_kwh: { type: number }
+        firmness: { type: string, enum: [firm, flex] }
+        buyer_ref: { type: string }
+        generation_source:
+          type: string
+          enum: [solar, wind, hydro, nuclear, battery, mixed, unknown]
+    WattsSettleRequest:
+      type: object
+      properties:
+        delivery_ref: { type: string }
+        delivered_at: { type: string }
+        energy_kwh_delivered: { type: number }
+        capacity_kw_delivered: { type: number }
+        reason: { type: string }
+    WattsOfferRequest:
+      type: object
+      required: [window, zone]
+      properties:
+        window:
+          type: object
+          required: [start, end]
+          properties:
+            start: { type: string }
+            end: { type: string }
+        capacity_kw: { type: number }
+        energy_kwh: { type: number }
+        zone:
+          type: object
+          required: [country]
+          properties:
+            country: { type: string }
+            zone_id: { type: string }
+        carbon_intensity_gco2_kwh: { type: number }
+        firmness: { type: string, enum: [firm, flex] }
+        producer_ref: { type: string }
+        label: { type: string }
+        generation_source:
+          type: string
+          enum: [solar, wind, hydro, nuclear, battery, mixed, unknown]
+    WattsSecondaryRequest:
+      type: object
+      required: [indicative_price_eur]
+      properties:
+        reservation_id: { type: string, format: uuid }
+        indicative_price_eur: { type: number }
+        compare_ref_id: { type: string }
+        label: { type: string }
+        note: { type: string }
+        energy_kwh: { type: number }
+        capacity_kw: { type: number }
+        firmness: { type: string, enum: [firm, flex] }
+        generation_source:
+          type: string
+          enum: [solar, wind, hydro, nuclear, battery, mixed, unknown]
+
     ChargeflowWCreateRequest:
       type: object
       required: [flow]

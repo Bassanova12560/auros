@@ -5,6 +5,7 @@ export type AssetType =
   | "private_credit"
   | "commodities"
   | "stablecoins"
+  | "low_carbon_power"
   | "other";
 
 export type IssuerType = "company_spv" | "existing_fund" | "individual" | "unsure";
@@ -259,7 +260,12 @@ export type JurisdictionsResponse = {
 };
 
 export type ChecklistRequest = {
-  asset_type: "real_estate" | "private_fund" | "bonds" | "private_credit";
+  asset_type:
+    | "real_estate"
+    | "private_fund"
+    | "bonds"
+    | "private_credit"
+    | "low_carbon_power";
   jurisdiction: string;
   structure?: "spv" | "fund" | "trust" | "other";
 };
@@ -439,8 +445,17 @@ export type ChargeflowCreateRequest = {
   };
   attributes?: {
     renewable_claim?: "none" | "go" | "rec" | "ppa_matched" | "unknown";
+    generation_source?:
+      | "solar"
+      | "wind"
+      | "hydro"
+      | "nuclear"
+      | "battery"
+      | "mixed"
+      | "unknown";
     grid_mix_note?: string;
     compare_ref_id?: string;
+    reservation_id?: string;
   };
 };
 
@@ -772,6 +787,14 @@ export type WattsReserveRequest = {
   carbon_intensity_max_gco2_kwh?: number;
   firmness?: "firm" | "flex";
   buyer_ref?: string;
+  generation_source?:
+    | "solar"
+    | "wind"
+    | "hydro"
+    | "nuclear"
+    | "battery"
+    | "mixed"
+    | "unknown";
 };
 
 export type WattsReserveResponse = {
@@ -805,6 +828,14 @@ export type WattsCapacityOfferRequest = {
   firmness?: "firm" | "flex";
   producer_ref?: string;
   label?: string;
+  generation_source?:
+    | "solar"
+    | "wind"
+    | "hydro"
+    | "nuclear"
+    | "battery"
+    | "mixed"
+    | "unknown";
 };
 
 export type WattsCapacityOfferResponse = {

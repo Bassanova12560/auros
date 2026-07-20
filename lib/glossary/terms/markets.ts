@@ -218,7 +218,30 @@ export const MARKETS_TERMS: GlossaryTerm[] = [
     internalLinks: [
       { href: "/guides/rwa-intelligence-layer", label: "Définition" },
       { href: "/developers", label: "AUROS Protocol" },
+      { href: "/developers/institutions", label: "Institutions" },
       { href: "/copilot", label: "Copilot" },
+    ],
+  },
+  {
+    slug: "energie-nucleaire-rwa",
+    title: "Énergie nucléaire (RWA / low-carbon)",
+    category: "markets",
+    shortDefinition:
+      "Production nucléaire préparée comme actif bas-carbone via AUROS Power — hors label Green Verified renouvelable.",
+    extended:
+      "AUROS traite le nucléaire dans la verticale /power avec Watts (generation_source=nuclear) et CFU ChargeFlow. Ce n'est ni un GO/REC ni Green Verified. Guide : /guides/low-carbon-power et /comment-tokeniser/nucleaire.",
+    relatedTerms: ["rwa-real-world-asset", "tokenisation", "booking-engine-watts"],
+    internalLinks: [
+      { href: "/power", label: "AUROS Power" },
+      { href: "/guides/low-carbon-power", label: "Définition low-carbon" },
+      { href: "/comment-tokeniser/nucleaire", label: "Guide nucléaire" },
+    ],
+    faq: [
+      {
+        question: "Nucléaire = Green Verified ?",
+        answer:
+          "Non. Green Verified reste renouvelable / RTMS. Utilisez AUROS Power et disclaimers low-carbon.",
+      },
     ],
   },
 ];

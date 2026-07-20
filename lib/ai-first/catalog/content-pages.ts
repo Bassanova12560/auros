@@ -87,7 +87,7 @@ export const resourcesPage = enrichPage({
     { key: "UHI Index", value: "/data/uhi-index — actifs productifs tokenisés" },
     { key: "Rapport trimestriel", value: "/data/state-of-rwa-issuers — State of RWA Issuers PDF" },
     { key: "Machine-readable", value: "/llms.txt · /ai-first/index.json" },
-    { key: "Guides catégories", value: "/guides · /guides/intents (30 Q)" },
+    { key: "Guides catégories", value: "/guides · /guides/intents · /power" },
   ],
   relatedPaths: [
     AUROS_FAQ_ROUTE,

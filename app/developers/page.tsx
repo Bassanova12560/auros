@@ -172,6 +172,11 @@ const ENDPOINTS = [
     path: "/api/v1/chargeflow",
     desc: "ChargeFlow CFU-E — session kWh → unité hashée + HMAC + Watt (Premium).",
   },
+  {
+    method: "GET",
+    path: "/api/v1/chargeflow/export",
+    desc: "Export portfolio CFU JSON/CSV — pack audit institutions (Premium).",
+  },
 ] as const;
 
 export default function DevelopersPage() {
@@ -276,6 +281,16 @@ await client.createChargeflowEBatch({ items: [/* … */] });`}
             <li>
               <Link href="/developers/docs/endpoint-attest" className="hover:text-white">
                 Docs Attestation →
+              </Link>
+            </li>
+            <li>
+              <Link href="/developers/institutions" className="hover:text-white">
+                Pack institutions (banques) →
+              </Link>
+            </li>
+            <li>
+              <Link href="/power" className="hover:text-white">
+                AUROS Power (low-carbon) →
               </Link>
             </li>
             <li>

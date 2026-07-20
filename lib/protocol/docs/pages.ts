@@ -1340,6 +1340,7 @@ curl "${BASE}/api/v1/attest/verify?hash=<64hex>&sig=<64hex>"`,
           "Standard public : docs/CHARGEFLOW-STANDARD.md · UI : /green/chargeflow · console : /green/chargeflow/console.",
           "Watts Reserve (booking → CFU → secondaire) : endpoint-watts-reserve · docs/WATTS-RESERVE.md.",
           "Liste : GET /api/v1/chargeflow · batch : POST /api/v1/chargeflow/batch (max 50).",
+          "Export audit banque : GET /api/v1/chargeflow/export?format=json|csv (Premium) — voir section Export.",
         ],
         code: `curl -X POST ${BASE}/api/v1/chargeflow \\
   -H "Authorization: Bearer auros_pk_live_xxx" \\
@@ -1354,7 +1355,7 @@ curl "${BASE}/api/v1/attest/verify?hash=<64hex>&sig=<64hex>"`,
       "operator_id": "cpo_demo",
       "source_format": "json_custom"
     },
-    "attributes": { "renewable_claim": "go" }
+    "attributes": { "renewable_claim": "go", "generation_source": "solar" }
   }'`,
         language: "bash",
       },
@@ -1380,9 +1381,23 @@ curl -X POST ${BASE}/api/v1/chargeflow/cfu_e_…/retire \\
         language: "bash",
       },
       {
+        heading: "Export portfolio (institutions)",
+        paragraphs: [
+          "GET /api/v1/chargeflow/export?format=json|csv — Premium, max 5000 unités de la clé (filtres kind/status/operator_id).",
+          "SDK : `client.chargeflowExport({ kind: \"e\", status: \"active\" })`.",
+          "Surface banques : /developers/institutions. Indicatif — pas une opinion d'audit réglementée.",
+        ],
+        code: `curl "${BASE}/api/v1/chargeflow/export?format=json&status=active" \\
+  -H "Authorization: Bearer auros_pk_live_xxx"
+curl "${BASE}/api/v1/chargeflow/export?format=csv" \\
+  -H "Authorization: Bearer auros_pk_live_xxx" -o cfu-portfolio.csv`,
+        language: "bash",
+      },
+      {
         heading: "Disclaimer",
         paragraphs: [
           "Enregistrement off-chain indicatif — pas un token on-chain, pas un certificat d'origine.",
+          "attributes.generation_source (solar|wind|hydro|nuclear|…) = claim technologique indicatif, pas GO/REC ni Green Verified.",
           "CFU-W (eau) : POST /api/v1/chargeflow/w — voir endpoint-chargeflow-w.",
         ],
       },
@@ -1410,7 +1425,9 @@ curl -X POST ${BASE}/api/v1/chargeflow/cfu_e_…/retire \\
           "GET /api/v1/watts/reserve/{id} — lire l'intent (owner key).",
           "POST /api/v1/watts/reserve/{id}/confirm — mint CFU-E (firm) ou CFU-F (flex) avec attributes.reservation_id.",
           "POST /api/v1/watts/reserve/{id}/settle — retire la CFU liée (livraison).",
-          "UI : /green/chargeflow/reserve · Docs : docs/WATTS-RESERVE.md.",
+          "Champ optionnel `generation_source` : solar|wind|hydro|nuclear|battery|mixed|unknown (indicatif — pas Green Verified).",
+          "UI : /green/chargeflow/reserve · Low-carbon : /power · Docs : docs/WATTS-RESERVE.md.",
+          "OpenAPI : /auros-openapi.yaml.",
         ],
         code: `curl -X POST ${BASE}/api/v1/watts/reserve \\
   -H "Authorization: Bearer auros_pk_live_xxx" \\
@@ -1420,7 +1437,8 @@ curl -X POST ${BASE}/api/v1/chargeflow/cfu_e_…/retire \\
     "energy_kwh": 20,
     "zone": { "country": "FR", "zone_id": "FR-IDF" },
     "carbon_intensity_max_gco2_kwh": 50,
-    "firmness": "firm"
+    "firmness": "firm",
+    "generation_source": "nuclear"
   }'
 curl -X POST ${BASE}/api/v1/watts/reserve/{id}/confirm \\
   -H "Authorization: Bearer auros_pk_live_xxx"
@@ -1447,6 +1465,7 @@ curl -X POST ${BASE}/api/v1/watts/reserve/{id}/settle \\
     "capacity_kw": 50,
     "zone": { "country": "FR" },
     "firmness": "flex",
+    "generation_source": "nuclear",
     "label": "Flex soir"
   }'`,
         language: "bash",
@@ -1476,6 +1495,7 @@ curl -X POST ${BASE}/api/v1/watts/reserve/{id}/settle \\
         paragraphs: [
           "Pas d'auto-mint / auto-retire / auto-reserve / auto-transfer.",
           "Indicatif — pas GO/REC légal, pas PPA, pas marché réglementé, pas conseil d'investissement.",
+          "Nucléaire / low-carbon : verticale /power — ne pas confondre avec Green Verified.",
         ],
       },
     ],

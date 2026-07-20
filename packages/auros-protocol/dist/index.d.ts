@@ -1,4 +1,4 @@
-type AssetType = "real_estate" | "private_fund" | "bonds" | "private_credit" | "commodities" | "stablecoins" | "other";
+type AssetType = "real_estate" | "private_fund" | "bonds" | "private_credit" | "commodities" | "stablecoins" | "low_carbon_power" | "other";
 type IssuerType = "company_spv" | "existing_fund" | "individual" | "unsure";
 type AssetClass = "financial_instrument" | "art_utility" | "e_money" | "unsure";
 type EuNexus = "issuer_eu" | "asset_eu" | "investors_eu" | "no_eu" | "unsure";
@@ -208,7 +208,7 @@ type JurisdictionsResponse = {
     query: JurisdictionsQuery;
 };
 type ChecklistRequest = {
-    asset_type: "real_estate" | "private_fund" | "bonds" | "private_credit";
+    asset_type: "real_estate" | "private_fund" | "bonds" | "private_credit" | "low_carbon_power";
     jurisdiction: string;
     structure?: "spv" | "fund" | "trust" | "other";
 };
@@ -361,8 +361,10 @@ type ChargeflowCreateRequest = {
     };
     attributes?: {
         renewable_claim?: "none" | "go" | "rec" | "ppa_matched" | "unknown";
+        generation_source?: "solar" | "wind" | "hydro" | "nuclear" | "battery" | "mixed" | "unknown";
         grid_mix_note?: string;
         compare_ref_id?: string;
+        reservation_id?: string;
     };
 };
 type ChargeflowWCreateRequest = {
@@ -672,6 +674,7 @@ type WattsReserveRequest = {
     carbon_intensity_max_gco2_kwh?: number;
     firmness?: "firm" | "flex";
     buyer_ref?: string;
+    generation_source?: "solar" | "wind" | "hydro" | "nuclear" | "battery" | "mixed" | "unknown";
 };
 type WattsReserveResponse = {
     reservation_id: string;
@@ -712,6 +715,7 @@ type WattsCapacityOfferRequest = {
     firmness?: "firm" | "flex";
     producer_ref?: string;
     label?: string;
+    generation_source?: "solar" | "wind" | "hydro" | "nuclear" | "battery" | "mixed" | "unknown";
 };
 type WattsCapacityOfferResponse = {
     offer_id: string;
@@ -818,6 +822,16 @@ declare class AurosProtocol {
     retireChargeflow(id: string, body?: {
         reason?: string;
     }): Promise<ChargeflowResponse>;
+    /** Premium institutional CFU portfolio export (JSON). Use format=csv via fetch for CSV. */
+    chargeflowExport(query?: ChargeflowListQuery & {
+        format?: "json";
+    }): Promise<{
+        exported_at: string;
+        total: number;
+        count: number;
+        units: ChargeflowListItem[];
+        disclaimer: string;
+    }>;
     /** Watts Reserve — create reservation intent (Premium). */
     wattsReserve(body: WattsReserveRequest): Promise<WattsReserveResponse>;
     wattsReservation(id: string): Promise<WattsReserveResponse>;

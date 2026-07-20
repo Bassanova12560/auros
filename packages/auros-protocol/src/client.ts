@@ -13,6 +13,7 @@ import type {
   ChargeflowFromOcpiRequest,
   ChargeflowFromOcpiResponse,
   ChargeflowListQuery,
+  ChargeflowListItem,
   ChargeflowListResponse,
   ChargeflowPartnerSyncRequest,
   ChargeflowPartnerSyncResponse,
@@ -272,6 +273,33 @@ export class AurosProtocol {
       `/api/v1/chargeflow/${encodeURIComponent(id)}/retire`,
       body
     );
+  }
+
+  /** Premium institutional CFU portfolio export (JSON). Use format=csv via fetch for CSV. */
+  async chargeflowExport(
+    query: ChargeflowListQuery & { format?: "json" } = {}
+  ): Promise<{
+    exported_at: string;
+    total: number;
+    count: number;
+    units: ChargeflowListItem[];
+    disclaimer: string;
+  }> {
+    const params = new URLSearchParams();
+    params.set("format", "json");
+    if (query.kind) params.set("kind", query.kind);
+    if (query.status) params.set("status", query.status);
+    if (query.operator_id) params.set("operator_id", query.operator_id);
+    if (query.limit != null) params.set("limit", String(query.limit));
+    return this.get(
+      `/api/v1/chargeflow/export?${params.toString()}`
+    ) as Promise<{
+      exported_at: string;
+      total: number;
+      count: number;
+      units: ChargeflowListItem[];
+      disclaimer: string;
+    }>;
   }
 
   /** Watts Reserve — create reservation intent (Premium). */

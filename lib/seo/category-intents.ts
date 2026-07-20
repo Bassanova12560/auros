@@ -346,6 +346,38 @@ export const CATEGORY_INTENTS: CategoryIntent[] = [
     toolHref: "/llms.txt",
     toolLabel: "llms.txt",
   },
+
+  // —— Institutions / Power (extra) ——
+  {
+    id: "i1",
+    pillar: "protocol",
+    question: "Comment une banque intègre-t-elle AUROS Protocol ?",
+    answer:
+      "Via OpenAPI (/auros-openapi.yaml), Monitor/webhooks, export CFU et Watts Reserve. Surface dédiée : /developers/institutions. Pas un agrément bancaire.",
+    canonicalPath: "/developers/institutions",
+    toolHref: "/developers/institutions",
+    toolLabel: "Institutions",
+  },
+  {
+    id: "i2",
+    pillar: "protocol",
+    question: "Comment exporter un portefeuille CFU pour audit ?",
+    answer:
+      "GET /api/v1/chargeflow/export?format=json|csv (Premium) renvoie les unités de la clé. Indicatif — pas une opinion d'audit réglementée.",
+    canonicalPath: "/developers/institutions",
+    toolHref: "/auros-openapi.yaml",
+    toolLabel: "OpenAPI",
+  },
+  {
+    id: "i3",
+    pillar: "watts",
+    question: "Comment traiter le nucléaire sans Green Verified ?",
+    answer:
+      "Utilisez AUROS Power (/power) et generation_source=nuclear sur Watts/CFU. Hors label Green Verified. Guide : /guides/low-carbon-power.",
+    canonicalPath: "/guides/low-carbon-power",
+    toolHref: "/power",
+    toolLabel: "AUROS Power",
+  },
 ];
 
 export const GUIDES_ROUTE = "/guides";

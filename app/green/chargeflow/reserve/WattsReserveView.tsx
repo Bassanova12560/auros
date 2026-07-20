@@ -60,6 +60,7 @@ export function WattsReserveView() {
   const [country, setCountry] = useState("FR");
   const [zoneId, setZoneId] = useState("");
   const [carbonMax, setCarbonMax] = useState("50");
+  const [generationSource, setGenerationSource] = useState("unknown");
   const [loading, setLoading] = useState(false);
   const [confirming, setConfirming] = useState(false);
   const [settling, setSettling] = useState(false);
@@ -100,6 +101,9 @@ export function WattsReserveView() {
     }
     if (carbonMax.trim()) {
       body.carbon_intensity_max_gco2_kwh = Number(carbonMax);
+    }
+    if (generationSource && generationSource !== "unknown") {
+      body.generation_source = generationSource;
     }
     return body;
   }
@@ -350,6 +354,28 @@ export function WattsReserveView() {
                 onChange={(e) => setCarbonMax(e.target.value)}
                 className={fieldClass}
               />
+            </label>
+            <label className="block space-y-1.5 sm:col-span-3">
+              <span className="font-mono text-[10px] uppercase tracking-wider text-white/40">
+                Source (indicatif)
+              </span>
+              <select
+                value={generationSource}
+                onChange={(e) => setGenerationSource(e.target.value)}
+                className={fieldClass}
+              >
+                <option value="unknown">unknown</option>
+                <option value="solar">solar</option>
+                <option value="wind">wind</option>
+                <option value="hydro">hydro</option>
+                <option value="nuclear">nuclear</option>
+                <option value="battery">battery</option>
+                <option value="mixed">mixed</option>
+              </select>
+              <span className="block text-[11px] text-white/30">
+                Pas un GO/REC ni un label Green Verified — claim technologique
+                low-carbon uniquement.
+              </span>
             </label>
           </div>
 

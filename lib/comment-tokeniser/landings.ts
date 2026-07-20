@@ -7,6 +7,7 @@ export type CommentTokeniserSlug =
   | "obligations"
   | "credit-prive"
   | "energie"
+  | "nucleaire"
   | "eau";
 
 export type CommentTokeniserLanding = {
@@ -82,6 +83,12 @@ const LANDINGS: CommentTokeniserLanding[] = [
     defaultValueEur: 4_000_000,
     defaultCountry: "France",
     greenWizard: true,
+  },
+  {
+    slug: "nucleaire",
+    wizardAssetType: "Other",
+    defaultValueEur: 50_000_000,
+    defaultCountry: "France",
   },
   {
     slug: "eau",
@@ -535,6 +542,140 @@ const COPY: Record<CommentTokeniserSlug, Record<Locale, CommentTokeniserCopy>> =
       ctaJurisdictions: "Comparar jurisdicciones",
       defaultDescription:
         "Parque solar 25 MW en Francia, PPA firmado, SPV dedicado, reporting carbono en curso, inversores profesionales UE.",
+    },
+  },
+  nucleaire: {
+    fr: {
+      title: "Comment tokeniser un actif nucléaire / bas-carbone | AUROS",
+      description:
+        "Guide indicatif RWA low-carbon : nucléaire, hydro, mix — Watts + CFU, hors label Green Verified. Wizard AUROS dossier admission.",
+      h1: "Comment préparer un dossier nucléaire / low-carbon",
+      intro:
+        "Le nucléaire n'entre pas dans AUROS Green Verified (renouvelable). AUROS Power + Watts + ChargeFlow permettent de réserver, prouver et documenter — analyses indicatives, counsel requis.",
+      priorities: [
+        "Séparer clairement low-carbon / nucléaire de Green Verified renouvelable.",
+        "Utiliser generation_source=nuclear sur Watts / CFU — claim technologique, pas GO/REC.",
+        "Structurer le dossier via wizard (actif Other) + API Protocol pour banques.",
+      ],
+      parts: [
+        { label: "Actif", detail: "Technologie, MW, pays — ~2 min" },
+        { label: "Stratégie", detail: "Investisseurs, SPV, calendrier" },
+        { label: "Conformité", detail: "MiCA, data room, disclaimers low-carbon" },
+        { label: "Récap", detail: "Score admission, PDF dossier" },
+      ],
+      ctaWizard: "Créer mon dossier",
+      ctaEstimate: "Score rapide gratuit",
+      ctaJurisdictions: "Comparer les juridictions",
+      defaultDescription:
+        "Actif de production nucléaire / bas-carbone en France, SPV dédié, investisseurs professionnels, data room réglementaire en cours — hors label Green Verified.",
+      revenueLinks: [
+        {
+          href: "/power",
+          label: "Hub AUROS Power",
+          detail: "Low-carbon & nucléaire",
+          trackId: "ct-nucleaire-power",
+        },
+        {
+          href: "/green/watts",
+          label: "Watts Reserve",
+          detail: "Booking + CFU",
+          trackId: "ct-nucleaire-watts",
+        },
+        {
+          href: "/developers/institutions",
+          label: "API institutions",
+          detail: "Export CFU + OpenAPI",
+          trackId: "ct-nucleaire-api",
+        },
+      ],
+    },
+    en: {
+      title: "How to tokenize nuclear / low-carbon power | AUROS",
+      description:
+        "Indicative low-carbon RWA guide: nuclear, hydro, mix — Watts + CFU, outside Green Verified. AUROS wizard admission dossier.",
+      h1: "How to prepare a nuclear / low-carbon dossier",
+      intro:
+        "Nuclear is not AUROS Green Verified (renewables). AUROS Power + Watts + ChargeFlow help reserve, prove and document — indicative only, counsel required.",
+      priorities: [
+        "Keep low-carbon / nuclear clearly separate from Green Verified renewables.",
+        "Use generation_source=nuclear on Watts / CFU — technology claim, not GO/REC.",
+        "Structure the dossier via wizard (Other asset) + Protocol API for banks.",
+      ],
+      parts: [
+        { label: "Asset", detail: "Technology, MW, country — ~2 min" },
+        { label: "Strategy", detail: "Investors, SPV, timeline" },
+        { label: "Compliance", detail: "MiCA, data room, low-carbon disclaimers" },
+        { label: "Summary", detail: "Admission score, PDF dossier" },
+      ],
+      ctaWizard: "Start my dossier",
+      ctaEstimate: "Free quick score",
+      ctaJurisdictions: "Compare jurisdictions",
+      defaultDescription:
+        "Nuclear / low-carbon generation asset in France, dedicated SPV, professional investors, regulatory data room in progress — outside Green Verified.",
+      revenueLinks: [
+        {
+          href: "/power",
+          label: "AUROS Power hub",
+          detail: "Low-carbon & nuclear",
+          trackId: "ct-nucleaire-power",
+        },
+        {
+          href: "/green/watts",
+          label: "Watts Reserve",
+          detail: "Booking + CFU",
+          trackId: "ct-nucleaire-watts",
+        },
+        {
+          href: "/developers/institutions",
+          label: "Institutions API",
+          detail: "CFU export + OpenAPI",
+          trackId: "ct-nucleaire-api",
+        },
+      ],
+    },
+    es: {
+      title: "Cómo tokenizar energía nuclear / low-carbon | AUROS",
+      description:
+        "Guía indicativa RWA low-carbon: nuclear, hidro, mix — Watts + CFU, fuera de Green Verified. Wizard AUROS.",
+      h1: "Cómo preparar un dossier nuclear / low-carbon",
+      intro:
+        "Lo nuclear no entra en AUROS Green Verified (renovable). AUROS Power + Watts + ChargeFlow permiten reservar, probar y documentar — indicativo, counsel requerido.",
+      priorities: [
+        "Separar claramente low-carbon / nuclear de Green Verified renovable.",
+        "Usar generation_source=nuclear en Watts / CFU — claim tecnológico, no GO/REC.",
+        "Estructurar el dossier vía wizard (activo Other) + API Protocol para bancos.",
+      ],
+      parts: [
+        { label: "Activo", detail: "Tecnología, MW, país — ~2 min" },
+        { label: "Estrategia", detail: "Inversores, SPV, calendario" },
+        { label: "Cumplimiento", detail: "MiCA, data room, disclaimers" },
+        { label: "Resumen", detail: "Score admisión, PDF dossier" },
+      ],
+      ctaWizard: "Crear mi dossier",
+      ctaEstimate: "Puntuación rápida gratis",
+      ctaJurisdictions: "Comparar jurisdicciones",
+      defaultDescription:
+        "Activo de generación nuclear / low-carbon en Francia, SPV dedicado, inversores profesionales — fuera de Green Verified.",
+      revenueLinks: [
+        {
+          href: "/power",
+          label: "Hub AUROS Power",
+          detail: "Low-carbon y nuclear",
+          trackId: "ct-nucleaire-power",
+        },
+        {
+          href: "/green/watts",
+          label: "Watts Reserve",
+          detail: "Booking + CFU",
+          trackId: "ct-nucleaire-watts",
+        },
+        {
+          href: "/developers/institutions",
+          label: "API instituciones",
+          detail: "Export CFU + OpenAPI",
+          trackId: "ct-nucleaire-api",
+        },
+      ],
     },
   },
   eau: {

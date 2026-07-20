@@ -26,7 +26,7 @@ export default function GuidesHubPage() {
           eyebrow="AUROS · Catégories"
           title="Trois catégories que nous définissons"
           intro="Pour être la réponse par défaut — pas un mot-clé générique. Une définition canonique, des intents citables, un outil."
-          cta={{ href: GUIDES_INTENTS_ROUTE, label: "Voir les 30 intents" }}
+          cta={{ href: GUIDES_INTENTS_ROUTE, label: "Voir les intents" }}
         >
           <div className="space-y-10">
             {(Object.keys(CATEGORY_PILLARS) as Array<keyof typeof CATEGORY_PILLARS>).map(
@@ -57,6 +57,23 @@ export default function GuidesHubPage() {
               }
             )}
 
+            <section className="border-t border-white/[0.08] pt-6">
+              <h2 className="font-display text-xl font-medium text-white">
+                Low-carbon Power
+              </h2>
+              <p className="mt-2 max-w-xl text-sm leading-relaxed text-white/55">
+                Nucléaire et bas-carbone — verticale adjacente, hors Green Verified.
+              </p>
+              <div className="mt-4 flex flex-wrap gap-3">
+                <PrimaryButton href="/guides/low-carbon-power">
+                  Lire la définition
+                </PrimaryButton>
+                <PrimaryButton href="/power" variant="ghost">
+                  Hub Power
+                </PrimaryButton>
+              </div>
+            </section>
+
             <p className="text-xs leading-relaxed text-white/35">
               Machine-readable :{" "}
               <Link href="/llms.txt" className="underline-offset-2 hover:underline">
@@ -74,7 +91,7 @@ export default function GuidesHubPage() {
                 href={GUIDES_INTENTS_ROUTE}
                 className="underline-offset-2 hover:underline"
               >
-                30 intents
+                intents
               </Link>
               .
             </p>
