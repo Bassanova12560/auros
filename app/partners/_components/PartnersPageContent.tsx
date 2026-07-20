@@ -40,6 +40,18 @@ export function PartnersPageContent() {
               >
                 Platform inbox →
               </Link>
+              <Link
+                href="/platforms"
+                className="font-mono text-xs uppercase tracking-wider text-white/50 underline-offset-4 hover:text-white/80 hover:underline"
+              >
+                Hub plateformes →
+              </Link>
+              <Link
+                href="/rwa-gates"
+                className="font-mono text-xs uppercase tracking-wider text-white/50 underline-offset-4 hover:text-white/80 hover:underline"
+              >
+                5 portes RWA →
+              </Link>
             </div>
           </div>
         </section>

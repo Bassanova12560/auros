@@ -118,6 +118,15 @@ export default function InstitutionsPage() {
               <PrimaryButton href="/auros-openapi.yaml">
                 OpenAPI YAML
               </PrimaryButton>
+              <PrimaryButton href="/verify" variant="ghost">
+                Verify public
+              </PrimaryButton>
+              <PrimaryButton href="/rwa-gates" variant="ghost">
+                5 portes RWA
+              </PrimaryButton>
+              <PrimaryButton href="/platforms" variant="ghost">
+                Plateformes
+              </PrimaryButton>
               <PrimaryButton href="/developers/shield/banks" variant="ghost">
                 Pack banques
               </PrimaryButton>

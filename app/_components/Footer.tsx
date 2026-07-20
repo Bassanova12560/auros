@@ -14,6 +14,7 @@ export function Footer() {
   const year = new Date().getFullYear();
 
   const legal = [
+    { href: "/verify", label: "Verify" },
     { href: "/trust", label: f.trust },
     { href: "/about", label: f.about },
     { href: "/privacy", label: f.privacy },

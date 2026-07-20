@@ -34,11 +34,14 @@ export default function TrustPage() {
           et checklist MiCA — sans ouvrir une data room.
         </p>
         <div className="mt-6 flex flex-wrap gap-3">
-          <PrimaryButton href="/developers/institutions">
+          <PrimaryButton href="/verify">
+            Verify public
+          </PrimaryButton>
+          <PrimaryButton href="/developers/institutions" variant="ghost">
             Console institutions
           </PrimaryButton>
-          <PrimaryButton href="/developers/shield/banks" variant="ghost">
-            Pack banques
+          <PrimaryButton href="/rwa-gates" variant="ghost">
+            5 portes RWA
           </PrimaryButton>
           <Link
             href="/status"
@@ -47,6 +50,38 @@ export default function TrustPage() {
             Status →
           </Link>
         </div>
+      </section>
+
+      <section className="mx-auto max-w-3xl px-4 pb-4 md:px-6">
+        <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-white/40">
+          Différenciation · 5 portes
+        </p>
+        <ul className="mt-4 grid gap-3 sm:grid-cols-2">
+          {(
+            [
+              ["1 · Sceau", "/verify"],
+              ["2 · Pack banque", "/developers/institutions#evidence-pack"],
+              ["3 · Twin", "/developers/institutions#monitor-delta"],
+              ["4 · Impact data", "/data/licence"],
+              ["5 · Embed", "/platforms"],
+            ] as const
+          ).map(([label, href]) => (
+            <li key={href}>
+              <Link
+                href={href}
+                className="block border-t border-white/[0.08] pt-3 text-sm text-white/70 hover:text-white"
+              >
+                {label}
+              </Link>
+            </li>
+          ))}
+        </ul>
+        <Link
+          href="/rwa-gates"
+          className="mt-4 inline-block font-mono text-[11px] uppercase tracking-wider text-white/45 hover:text-white/70"
+        >
+          Voir le framework →
+        </Link>
       </section>
 
       <TrustHowWeWork />

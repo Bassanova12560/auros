@@ -123,6 +123,12 @@ export default async function AttestVerifyPage({ params }: PageProps) {
 
         <div className="mt-8 flex flex-wrap gap-4">
           <Link
+            href={`/verify?id=${encodeURIComponent(record.id)}`}
+            className="font-mono text-xs uppercase tracking-wider text-white/55 underline-offset-4 hover:text-white hover:underline"
+          >
+            Verify public
+          </Link>
+          <Link
             href={`/api/v1/attest/verify?id=${encodeURIComponent(record.id)}`}
             className="font-mono text-xs uppercase tracking-wider text-white/55 underline-offset-4 hover:text-white hover:underline"
           >

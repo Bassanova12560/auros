@@ -191,7 +191,7 @@ export function createCloudTapReceipt(
     label: input.label?.trim() || null,
     created_at: new Date().toISOString(),
     plan: input.plan ?? "free",
-    verify_url: `${siteUrl.replace(/\/$/, "")}/api/v1/shield/receipts/${id}`,
+    verify_url: `${siteUrl.replace(/\/$/, "")}/verify?id=${id}`,
     payload_retained: false,
     disclaimer: SHIELD_DISCLAIMER,
   };
