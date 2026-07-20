@@ -1,4 +1,4 @@
-import type { Locale } from "@/lib/i18n";
+import { resolveCatalogLocale, type CatalogMap, type Locale } from "@/lib/i18n";
 
 import type {
   GreenMarketActorType,
@@ -843,10 +843,10 @@ const ES: GreenMarketMessages = {
   },
 };
 
-const MAP: Record<Locale, GreenMarketMessages> = { fr: FR, en: EN, es: ES };
+const MAP: CatalogMap< GreenMarketMessages> = { fr: FR, en: EN, es: ES };
 
 export function getGreenMarketMessages(locale: Locale): GreenMarketMessages {
-  return MAP[locale] ?? FR;
+  return MAP[resolveCatalogLocale(locale)] ?? FR;
 }
 
 export function formatMarketNumber(value: number, locale: Locale): string {

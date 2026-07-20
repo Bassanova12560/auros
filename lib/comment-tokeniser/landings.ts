@@ -1,4 +1,4 @@
-import type { Locale } from "@/lib/i18n";
+import { resolveCatalogLocale, type CatalogMap, type Locale } from "@/lib/i18n";
 
 export type CommentTokeniserSlug =
   | "immobilier"
@@ -99,7 +99,7 @@ const LANDINGS: CommentTokeniserLanding[] = [
   },
 ];
 
-const COPY: Record<CommentTokeniserSlug, Record<Locale, CommentTokeniserCopy>> = {
+const COPY: Record<CommentTokeniserSlug, CatalogMap< CommentTokeniserCopy>> = {
   immobilier: {
     fr: {
       title: "Comment tokeniser un immeuble ou actif immobilier | AUROS",
@@ -828,7 +828,7 @@ export function getCommentTokeniserCopy(
   slug: CommentTokeniserSlug,
   locale: Locale
 ): CommentTokeniserCopy {
-  return COPY[slug][locale] ?? COPY[slug].fr;
+  return COPY[slug][resolveCatalogLocale(locale)] ?? COPY[slug].fr;
 }
 
 export function commentTokeniserPath(slug: CommentTokeniserSlug): string {
@@ -841,5 +841,5 @@ export function getCommentTokeniserDisclaimer(locale: Locale): string {
     en: "Indicative only — not legal, tax or investment advice.",
     es: "Solo indicativo — no es asesoramiento legal, fiscal ni de inversión.",
   } as const;
-  return copy[locale] ?? copy.fr;
+  return copy[resolveCatalogLocale(locale)] ?? copy.fr;
 }

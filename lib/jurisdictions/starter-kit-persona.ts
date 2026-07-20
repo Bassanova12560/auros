@@ -1,4 +1,4 @@
-import type { Locale } from "@/lib/i18n";
+import { resolveCatalogLocale, type CatalogMap, type Locale } from "@/lib/i18n";
 
 import { getJurisdictionMessages, jurisdictionLabel } from "./i18n";
 
@@ -9,7 +9,7 @@ export type StarterLeadContext = {
   locale: Locale;
 };
 
-const VALUE_LABELS: Record<Locale, Record<string, string>> = {
+const VALUE_LABELS: CatalogMap< Record<string, string>> = {
   fr: {
     under1m: "< 1 M€",
     "1to5m": "1–5 M€",
@@ -59,7 +59,7 @@ export function projectValueLabel(
   locale: Locale
 ): string | null {
   if (!value) return null;
-  return VALUE_LABELS[locale]?.[value] ?? null;
+  return VALUE_LABELS[resolveCatalogLocale(locale)]?.[value] ?? null;
 }
 
 function projectTypeLabel(projectType: string, locale: Locale): string {

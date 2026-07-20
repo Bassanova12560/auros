@@ -451,8 +451,296 @@ const ES: HubCopy = {
   ],
 };
 
+const AR: HubCopy = {
+  exploreAll: "عرض كامل المركز",
+  close: "إغلاق",
+  openMenu: "قائمة AUROS",
+  primaryCta: "إنشاء ملفي",
+  secondaryCta: "تجربة Shield",
+  groups: [
+    {
+      id: "dossier",
+      label: "ملف RWA",
+      blurb: "جهّز أصلاً دون أن تكون خبيراً",
+      items: [
+        {
+          href: "/start",
+          title: "ابدأ في 4 دقائق",
+          description: "Express أو نتيجة أو Shield — باب واحد",
+        },
+        {
+          href: "/wizard",
+          title: "معالج التوكنة",
+          description: "غرفة بيانات، قبول، استوديو",
+        },
+        {
+          href: "/estimate",
+          title: "نتيجة سريعة",
+          description: "جملة واحدة · نتيجة فورية",
+        },
+        {
+          href: "/dashboard",
+          title: "ملفاتي",
+          description: "استئناف، PDF، متابعة",
+        },
+        {
+          href: "/jurisdictions?from=nav",
+          title: "الاختصاصات",
+          description: "إطار إرشادي MiCA / UK / US",
+        },
+      ],
+    },
+    {
+      id: "energy",
+      label: "الطاقة",
+      blurb: "Green Verified · Power · ماء · أساطيل",
+      items: [
+        {
+          href: "/green",
+          title: "AUROS Green",
+          description: "طاقة محلية وتسمية Verified",
+        },
+        {
+          href: "/power",
+          title: "Power (منخفض الكربون)",
+          description: "نووي ومنخفض الكربون — خارج Green Verified",
+        },
+        {
+          href: "/eau",
+          title: "ماء / H₂O",
+          description: "بنية مائية وجواز سفر",
+        },
+        {
+          href: "/green/chargeflow/console",
+          title: "ChargeFlow CFU",
+          description: "وحدات E/W/F + Shield",
+        },
+        {
+          href: "/green/api",
+          title: "Green API",
+          description: "Watt، CQS، بيانات Premium",
+        },
+      ],
+    },
+    {
+      id: "protocol",
+      label: "البروتوكول والإثباتات",
+      blurb: "بنوك، واجهات API، أطراف مقابلة",
+      items: [
+        {
+          href: "/developers/shield",
+          title: "AUROS Shield",
+          description: "الصق → إثبات · Evidence Pack",
+        },
+        {
+          href: "/developers/institutions",
+          title: "المؤسسات",
+          description: "تصدير CFU، Monitor، Watts",
+        },
+        {
+          href: "/developers",
+          title: "مركز المطوّرين",
+          description: "OpenAPI، مفاتيح، Monitor",
+        },
+        {
+          href: "/copilot",
+          title: "Copilot",
+          description: "مساعد ملف / امتثال",
+        },
+        {
+          href: "/auros-openapi.yaml",
+          title: "OpenAPI",
+          description: "مواصفة البروتوكول",
+        },
+      ],
+    },
+    {
+      id: "ecosystem",
+      label: "النظام البيئي",
+      blurb: "منصات، تدريب، موارد",
+      items: [
+        {
+          href: "/partners",
+          title: "المنصات والشركاء",
+          description: "مسار المصدر · لوحة التحكم",
+        },
+        {
+          href: "/pilots",
+          title: "تجارب 30 يوماً",
+          description: "أسطول · بنك · منصة",
+        },
+        {
+          href: "/academy",
+          title: "الأكاديمية",
+          description: "تدريب على التوكنة",
+        },
+        {
+          href: "/pricing",
+          title: "الأسعار",
+          description: "Green API · Monitor · حزم",
+        },
+        {
+          href: "/discover",
+          title: "اكتشف",
+          description: "خريطة المنتج",
+        },
+        {
+          href: "/liquidity",
+          title: "Liquidity Bridge",
+          description: "قائمة انتظار (بعد المصدر)",
+        },
+      ],
+    },
+  ],
+};
+
+const ZH: HubCopy = {
+  exploreAll: "浏览完整中心",
+  close: "关闭",
+  openMenu: "AUROS 菜单",
+  primaryCta: "创建我的档案",
+  secondaryCta: "试用 Shield",
+  groups: [
+    {
+      id: "dossier",
+      label: "RWA 档案",
+      blurb: "无需成为专家即可准备资产",
+      items: [
+        {
+          href: "/start",
+          title: "4 分钟开始",
+          description: "Express、评分或 Shield — 一扇门",
+        },
+        {
+          href: "/wizard",
+          title: "通证化向导",
+          description: "资料室、准入、工作室",
+        },
+        {
+          href: "/estimate",
+          title: "快速评分",
+          description: "一句话 · 即时结果",
+        },
+        {
+          href: "/dashboard",
+          title: "我的档案",
+          description: "恢复、PDF、跟踪",
+        },
+        {
+          href: "/jurisdictions?from=nav",
+          title: "司法辖区",
+          description: "参考 MiCA / UK / US 框架",
+        },
+      ],
+    },
+    {
+      id: "energy",
+      label: "能源",
+      blurb: "Green Verified · Power · 水 · 车队",
+      items: [
+        {
+          href: "/green",
+          title: "AUROS Green",
+          description: "本地能源与 Verified 标签",
+        },
+        {
+          href: "/power",
+          title: "Power（低碳）",
+          description: "核电与低碳 — 不属于 Green Verified",
+        },
+        {
+          href: "/eau",
+          title: "水 / H₂O",
+          description: "水基础设施与护照",
+        },
+        {
+          href: "/green/chargeflow/console",
+          title: "ChargeFlow CFU",
+          description: "E/W/F 单位 + Shield",
+        },
+        {
+          href: "/green/api",
+          title: "Green API",
+          description: "Watt、CQS、Premium 数据",
+        },
+      ],
+    },
+    {
+      id: "protocol",
+      label: "协议与证明",
+      blurb: "银行、API、对手方",
+      items: [
+        {
+          href: "/developers/shield",
+          title: "AUROS Shield",
+          description: "粘贴 → 证明 · Evidence Pack",
+        },
+        {
+          href: "/developers/institutions",
+          title: "机构",
+          description: "CFU 导出、Monitor、Watts",
+        },
+        {
+          href: "/developers",
+          title: "开发者中心",
+          description: "OpenAPI、密钥、Monitor",
+        },
+        {
+          href: "/copilot",
+          title: "Copilot",
+          description: "档案 / 合规助手",
+        },
+        {
+          href: "/auros-openapi.yaml",
+          title: "OpenAPI",
+          description: "协议规范",
+        },
+      ],
+    },
+    {
+      id: "ecosystem",
+      label: "生态",
+      blurb: "平台、培训、资源",
+      items: [
+        {
+          href: "/partners",
+          title: "平台与合作伙伴",
+          description: "发行人管道 · 仪表盘",
+        },
+        {
+          href: "/pilots",
+          title: "30 天试点",
+          description: "车队 · 银行 · 平台",
+        },
+        {
+          href: "/academy",
+          title: "学院",
+          description: "通证化培训",
+        },
+        {
+          href: "/pricing",
+          title: "价格",
+          description: "Green API · Monitor · 套餐",
+        },
+        {
+          href: "/discover",
+          title: "发现",
+          description: "产品地图",
+        },
+        {
+          href: "/liquidity",
+          title: "Liquidity Bridge",
+          description: "候补名单（发行人之后）",
+        },
+      ],
+    },
+  ],
+};
+
 export function getNavHub(locale: Locale): HubCopy {
   if (locale === "en") return EN;
   if (locale === "es") return ES;
+  if (locale === "ar") return AR;
+  if (locale === "zh") return ZH;
   return FR;
 }

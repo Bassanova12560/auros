@@ -1,6 +1,8 @@
+import { ar } from "./locales/ar";
 import { en } from "./locales/en";
 import { es } from "./locales/es";
 import { fr } from "./locales/fr";
+import { zh } from "./locales/zh";
 import {
   DEFAULT_LOCALE,
   LOCALE_STORAGE_KEY,
@@ -9,15 +11,27 @@ import {
 } from "./types";
 
 export * from "./types";
+export {
+  fromCatalog,
+  isRtlLocale,
+  localeCatalog,
+  resolveCatalogLocale,
+} from "./locale-catalog";
 
-const CATALOG: Record<Locale, Messages> = { fr, en, es };
+const CATALOG: Record<Locale, Messages> = { fr, en, es, ar, zh };
 
 export function getMessages(locale: Locale): Messages {
   return CATALOG[locale] ?? CATALOG[DEFAULT_LOCALE];
 }
 
 export function isLocale(value: string): value is Locale {
-  return value === "fr" || value === "en" || value === "es";
+  return (
+    value === "fr" ||
+    value === "en" ||
+    value === "es" ||
+    value === "ar" ||
+    value === "zh"
+  );
 }
 
 export function readStoredLocale(): Locale | null {

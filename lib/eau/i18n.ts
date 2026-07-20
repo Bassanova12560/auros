@@ -1,4 +1,4 @@
-import type { Locale } from "@/lib/i18n";
+import { resolveCatalogLocale, type CatalogMap, type Locale } from "@/lib/i18n";
 import type { H2oPriorityKey } from "@/lib/green/scoring/h2o-score";
 
 export type EauHubCopy = {
@@ -33,7 +33,7 @@ export type EauHubCopy = {
   passportRequired: string;
 };
 
-const COPY: Record<Locale, EauHubCopy> = {
+const COPY: CatalogMap< EauHubCopy> = {
   fr: {
     title: "Passeport Hydrique AUROS — infrastructure tokenisation eau",
     description:
@@ -193,5 +193,5 @@ const COPY: Record<Locale, EauHubCopy> = {
 };
 
 export function getEauHubCopy(locale: Locale): EauHubCopy {
-  return COPY[locale] ?? COPY.fr;
+  return COPY[resolveCatalogLocale(locale)] ?? COPY.fr;
 }

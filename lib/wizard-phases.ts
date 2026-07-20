@@ -1,9 +1,9 @@
-import type { Locale } from "@/lib/i18n";
+import type { CatalogMap, Locale } from "@/lib/i18n";
 
 export type WizardPhase = {
   id: string;
   steps: number[];
-  labels: Record<Locale, string>;
+  labels: CatalogMap< string>;
 };
 
 export const WIZARD_PHASES: WizardPhase[] = [

@@ -5,6 +5,7 @@ import {
 import { siteOrigin } from "@/lib/emails/constants";
 import type { Locale } from "@/lib/i18n";
 import { parseWizardCheckoutMetadata } from "@/lib/stripe/wizard-checkout";
+import { resolveCatalogLocale } from "@/lib/i18n";
 import { WIZARD_TIER_LABELS, type WizardTier } from "@/lib/wizard-modes";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 
@@ -58,7 +59,7 @@ export async function fulfillWizardPayment(session: {
   }
 
   const tierLabel =
-    WIZARD_TIER_LABELS[meta.tier][meta.locale] ??
+    WIZARD_TIER_LABELS[meta.tier][resolveCatalogLocale(meta.locale)] ??
     WIZARD_TIER_LABELS[meta.tier].fr;
   const wizardUrl = `${siteOrigin()}/wizard?mode=pro&session_id=${encodeURIComponent(session.id)}`;
 

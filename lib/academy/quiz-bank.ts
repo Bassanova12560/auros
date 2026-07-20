@@ -1,4 +1,5 @@
 import type { AcademyLocale } from "./i18n";
+import type { CatalogMap } from "@/lib/i18n";
 import { FUNDAMENTALS_BANK_EN, FUNDAMENTALS_BANK_ES } from "./quiz-bank-locale";
 import type { QuizQuestion } from "./types";
 
@@ -171,14 +172,15 @@ export const FUNDAMENTALS_BANK: QuizQuestion[] = [
   },
 ];
 
-const banksByLocale: Record<AcademyLocale, QuizQuestion[]> = {
+const banksByLocale: CatalogMap<QuizQuestion[]> = {
   fr: FUNDAMENTALS_BANK,
   en: FUNDAMENTALS_BANK_EN,
   es: FUNDAMENTALS_BANK_ES,
 };
 
 function bankForLocale(locale: AcademyLocale = "fr"): QuizQuestion[] {
-  return banksByLocale[locale] ?? FUNDAMENTALS_BANK;
+  const key = locale === "fr" || locale === "es" ? locale : "en";
+  return banksByLocale[key] ?? FUNDAMENTALS_BANK;
 }
 
 const bankByIdFr = new Map(FUNDAMENTALS_BANK.map((q) => [q.id, q]));

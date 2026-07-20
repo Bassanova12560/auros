@@ -1,4 +1,4 @@
-import type { Locale } from "@/lib/i18n";
+import { resolveCatalogLocale, type CatalogMap, type Locale } from "@/lib/i18n";
 
 export type GreenDppCopy = {
   eyebrow: string;
@@ -133,8 +133,8 @@ const ES: GreenDppCopy = {
   ],
 };
 
-const COPY: Record<Locale, GreenDppCopy> = { fr: FR, en: EN, es: ES };
+const COPY: CatalogMap< GreenDppCopy> = { fr: FR, en: EN, es: ES };
 
 export function getGreenDppCopy(locale: Locale): GreenDppCopy {
-  return COPY[locale] ?? FR;
+  return COPY[resolveCatalogLocale(locale)] ?? FR;
 }

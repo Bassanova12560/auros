@@ -164,7 +164,7 @@ export function formatCarbonQualityDisplay(score: number | null): string {
 
 export function formatCarbonQualityTierLabel(
   tier: CarbonQualityScore["tier"],
-  locale: "fr" | "en" | "es" = "fr"
+  locale: "fr" | "en" | "es" | "ar" | "zh" = "fr"
 ): string {
   const labels = {
     fr: {
@@ -186,5 +186,6 @@ export function formatCarbonQualityTierLabel(
       avoid: "Evitar",
     },
   } as const;
-  return labels[locale][tier];
+  const loc = locale === "fr" || locale === "es" ? locale : "en";
+  return labels[loc][tier];
 }

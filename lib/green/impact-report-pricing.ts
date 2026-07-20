@@ -1,3 +1,5 @@
+import type { CatalogMap } from "@/lib/i18n";
+
 export type GreenImpactReportTier = "standard" | "institutional";
 
 export const GREEN_IMPACT_REPORT_AMOUNTS: Record<GreenImpactReportTier, number> = {
@@ -7,7 +9,7 @@ export const GREEN_IMPACT_REPORT_AMOUNTS: Record<GreenImpactReportTier, number> 
 
 export const GREEN_IMPACT_REPORT_LABELS: Record<
   GreenImpactReportTier,
-  { fr: string; en: string; es: string }
+  CatalogMap<string>
 > = {
   standard: {
     fr: "Rapport d'impact Green — Standard (49 €)",

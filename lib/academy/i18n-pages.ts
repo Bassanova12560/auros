@@ -1,3 +1,4 @@
+import { resolveCatalogLocale, type CatalogMap } from "@/lib/i18n";
 import type { CertificateStatus } from "./types";
 import type { AcademyLocale } from "./i18n";
 
@@ -426,8 +427,8 @@ const es: AcademyPageMessages = {
   },
 };
 
-const PAGE_CATALOG: Record<AcademyLocale, AcademyPageMessages> = { fr, en, es };
+const PAGE_CATALOG: CatalogMap<AcademyPageMessages> = { fr, en, es };
 
 export function getAcademyPageMessages(locale: AcademyLocale): AcademyPageMessages {
-  return PAGE_CATALOG[locale] ?? PAGE_CATALOG.fr;
+  return PAGE_CATALOG[resolveCatalogLocale(locale)] ?? PAGE_CATALOG.fr;
 }

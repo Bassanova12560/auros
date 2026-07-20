@@ -6,6 +6,7 @@ import {
 } from "@/lib/emails/send";
 import { siteOrigin } from "@/lib/emails/constants";
 import type { Locale } from "@/lib/i18n";
+import { resolveCatalogLocale } from "@/lib/i18n";
 import { jurisdictionProduct } from "@/lib/jurisdictions/pricing";
 import type { JurisdictionProductTier } from "@/lib/jurisdictions/pricing";
 import { notifyJurisdictionWebhook } from "@/lib/jurisdictions/webhook-notify";
@@ -64,7 +65,7 @@ export async function fulfillJurisdictionPaymentForLead(
     if (sendEmails) {
       void sendJurisdictionPaymentConfirmation(lead.email as string, {
         firstName: lead.first_name as string,
-        tier: product.name[input.locale] ?? product.name.fr,
+        tier: product.name[resolveCatalogLocale(input.locale)] ?? product.name.fr,
         locale: input.locale,
         pendingDelivery: true,
       });
@@ -75,7 +76,7 @@ export async function fulfillJurisdictionPaymentForLead(
     void sendJurisdictionPaymentInternal({
       firstName: lead.first_name as string,
       email: lead.email as string,
-      tier: product.name[input.locale] ?? product.name.fr,
+      tier: product.name[resolveCatalogLocale(input.locale)] ?? product.name.fr,
       sessionId: input.sessionId,
       amountCents: input.amountCents,
       portalUrl,

@@ -1,4 +1,5 @@
 import type { MicaQuestionId } from "@/lib/mica-checker/types";
+import type { CatalogMap } from "@/lib/i18n";
 import { WIZARD_PHASES } from "@/lib/wizard-phases";
 
 export type WizardMode = "explore" | "pro";
@@ -126,10 +127,7 @@ export const WIZARD_TIER_AMOUNTS: Record<WizardTier, number> = {
   institutional: 499_000,
 };
 
-export const WIZARD_TIER_LABELS: Record<
-  WizardTier,
-  { fr: string; en: string; es: string }
-> = {
+export const WIZARD_TIER_LABELS: Record<WizardTier, CatalogMap<string>> = {
   starter: {
     fr: "Starter — 490 €",
     en: "Starter — €490",

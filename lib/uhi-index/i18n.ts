@@ -1,4 +1,4 @@
-import type { Locale } from "@/lib/i18n";
+import { resolveCatalogLocale, type CatalogMap, type Locale } from "@/lib/i18n";
 
 export function formatUhiEditionLabel(editionIso: string, locale: Locale): string {
   const d = new Date(`${editionIso}T00:00:00.000Z`);
@@ -163,8 +163,8 @@ const ES: UhiIndexCopy = {
   },
 };
 
-const COPY: Record<Locale, UhiIndexCopy> = { fr: FR, en: EN, es: ES };
+const COPY: CatalogMap< UhiIndexCopy> = { fr: FR, en: EN, es: ES };
 
 export function getUhiIndexCopy(locale: Locale): UhiIndexCopy {
-  return COPY[locale] ?? FR;
+  return COPY[resolveCatalogLocale(locale)] ?? FR;
 }

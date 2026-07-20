@@ -1,4 +1,4 @@
-import type { Locale } from "@/lib/i18n";
+import { resolveCatalogLocale, type CatalogMap, type Locale } from "@/lib/i18n";
 
 import type { CsrdPriorityKey, CsrdQuestionId, CsrdScopeKey } from "./types";
 
@@ -260,8 +260,8 @@ const ES: CsrdCheckerCopy = {
   ],
 };
 
-const COPY: Record<Locale, CsrdCheckerCopy> = { fr: FR, en: EN, es: ES };
+const COPY: CatalogMap< CsrdCheckerCopy> = { fr: FR, en: EN, es: ES };
 
 export function getCsrdCheckerCopy(locale: Locale): CsrdCheckerCopy {
-  return COPY[locale] ?? FR;
+  return COPY[resolveCatalogLocale(locale)] ?? FR;
 }

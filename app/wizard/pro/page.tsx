@@ -4,6 +4,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useCallback, useEffect, useMemo, useState } from "react";
 
 import { useLocale } from "@/app/_components/i18n/LocaleProvider";
+import { resolveCatalogLocale } from "@/lib/i18n";
 import { track } from "@/lib/analytics";
 import { getWizardProTierMessages } from "@/lib/wizard-pro-i18n";
 import {
@@ -172,7 +173,9 @@ function WizardProContent() {
       <div className="mt-10 grid gap-3 md:grid-cols-3">
         {TIERS.map((tier) => {
           const active = selected === tier;
-          const label = WIZARD_TIER_LABELS[tier][locale] ?? WIZARD_TIER_LABELS[tier].fr;
+          const label =
+            WIZARD_TIER_LABELS[tier][resolveCatalogLocale(locale)] ??
+            WIZARD_TIER_LABELS[tier].fr;
           return (
             <button
               key={tier}

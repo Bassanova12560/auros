@@ -1,4 +1,4 @@
-import type { Locale } from "@/lib/i18n";
+import { resolveCatalogLocale, type CatalogMap, type Locale } from "@/lib/i18n";
 
 import type { CostAssetType, DealSizeRange } from "./types";
 
@@ -219,8 +219,8 @@ const ES: CostEstimatorCopy = {
   faqTitle: "Preguntas frecuentes",
 };
 
-const COPY: Record<Locale, CostEstimatorCopy> = { fr: FR, en: EN, es: ES };
+const COPY: CatalogMap< CostEstimatorCopy> = { fr: FR, en: EN, es: ES };
 
 export function getCostEstimatorCopy(locale: Locale): CostEstimatorCopy {
-  return COPY[locale] ?? FR;
+  return COPY[resolveCatalogLocale(locale)] ?? FR;
 }

@@ -24,7 +24,7 @@ const contextSchema = z
 
 const bodySchema = z.object({
   message: z.string().min(1).max(2000),
-  locale: z.enum(["fr", "en", "es"]).optional(),
+  locale: z.enum(["fr", "en", "es", "ar", "zh"]).optional(),
   history: z
     .array(
       z.object({

@@ -1,4 +1,4 @@
-import type { Locale } from "@/lib/i18n";
+import type { CatalogMap, Locale } from "@/lib/i18n";
 import { siteOrigin } from "./constants";
 import type { SubmitDossierEmailData } from "./templates";
 
@@ -76,7 +76,7 @@ export function localizedStatusEmail(
 ): { subject: string; body: string } {
   const n = firstName || "—";
   const a = assetType;
-  const table: Record<Locale, Record<StatusEmailKind, { subject: string; body: string }>> = {
+  const table: CatalogMap< Record<StatusEmailKind, { subject: string; body: string }>> = {
     fr: {
       in_review: {
         subject: "AUROS — dossier en revue",

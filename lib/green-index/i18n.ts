@@ -1,4 +1,4 @@
-import type { Locale } from "@/lib/i18n";
+import { resolveCatalogLocale, type CatalogMap, type Locale } from "@/lib/i18n";
 
 export function formatGreenEditionLabel(editionIso: string, locale: Locale): string {
   const d = new Date(`${editionIso}T00:00:00.000Z`);
@@ -158,8 +158,8 @@ const ES: GreenIndexCopy = {
   },
 };
 
-const COPY: Record<Locale, GreenIndexCopy> = { fr: FR, en: EN, es: ES };
+const COPY: CatalogMap< GreenIndexCopy> = { fr: FR, en: EN, es: ES };
 
 export function getGreenIndexCopy(locale: Locale): GreenIndexCopy {
-  return COPY[locale] ?? FR;
+  return COPY[resolveCatalogLocale(locale)] ?? FR;
 }

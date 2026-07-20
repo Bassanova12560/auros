@@ -36,7 +36,7 @@ export type CopilotPageContext = {
 
 export type CopilotChatRequest = {
   message: string;
-  locale?: "fr" | "en" | "es";
+  locale?: "fr" | "en" | "es" | "ar" | "zh";
   history?: CopilotChatMessage[];
   context?: CopilotPageContext;
 };

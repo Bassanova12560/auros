@@ -10,6 +10,7 @@ import Stripe from "stripe";
 
 import { siteOrigin } from "@/lib/emails/constants";
 import type { Locale } from "@/lib/i18n";
+import { resolveCatalogLocale } from "@/lib/i18n";
 import {
   greenImpactReportProduct,
   isGreenImpactReportTier,
@@ -51,7 +52,8 @@ export async function createGreenImpactCheckoutSession(
 
   const product = greenImpactReportProduct(input.tier);
   const origin = siteOrigin();
-  const label = product.name[input.locale] ?? product.name.fr;
+  const label =
+    product.name[resolveCatalogLocale(input.locale)] ?? product.name.fr;
 
   const description =
     input.locale === "en"

@@ -1,4 +1,4 @@
-import type { Locale } from "@/lib/i18n";
+import { resolveCatalogLocale, type CatalogMap, type Locale } from "@/lib/i18n";
 import type { KycLevel } from "./types";
 
 export type JurisdictionMessages = {
@@ -1086,10 +1086,10 @@ const ES: JurisdictionMessages = {
   },
 };
 
-const CATALOG: Record<Locale, JurisdictionMessages> = { fr: FR, en: EN, es: ES };
+const CATALOG: CatalogMap< JurisdictionMessages> = { fr: FR, en: EN, es: ES };
 
 export function getJurisdictionMessages(locale: Locale): JurisdictionMessages {
-  return CATALOG[locale] ?? FR;
+  return CATALOG[resolveCatalogLocale(locale)] ?? FR;
 }
 
 export function jurisdictionLabel(

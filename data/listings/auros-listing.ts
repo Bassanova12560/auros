@@ -73,7 +73,7 @@ export const AUROS_LISTING = {
   ],
   defillamaCategory: "Services",
   coingeckoRequestType: "Others — RWA analytics / comparator platform (no native token)",
-  languages: ["fr", "en", "es"],
+  languages: ["fr", "en", "es", "ar", "zh"],
   jurisdictionsCompared: 8,
   productCountClaim: "120+",
   dataSources: ["DeFiLlama Yields API", "AUROS manual catalog JSON"],

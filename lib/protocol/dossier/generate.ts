@@ -26,7 +26,7 @@ export type DossierPayload = {
     primary_color?: string;
     hide_auros_branding?: boolean;
   };
-  locale: "fr" | "en" | "es";
+  locale: "fr" | "en" | "es" | "ar" | "zh";
   created_at: string;
   full_report_url: string;
   regulatory_delta?: {

@@ -50,7 +50,7 @@ const PROVIDERS: TechProvider[] = [
 export function matchTechProviders(input: {
   projectType: string;
   jurisdictionIds: string[];
-  locale: "fr" | "en" | "es";
+  locale: "fr" | "en" | "es" | "ar" | "zh";
 }): { name: string; fit: string; note: string }[] {
   const fitKey = input.locale === "en" ? "fitEn" : input.locale === "es" ? "fitEs" : "fitFr";
   const primary = input.jurisdictionIds[0] ?? "luxembourg";

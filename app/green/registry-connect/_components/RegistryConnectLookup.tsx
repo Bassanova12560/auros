@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 
 import { useLocale } from "@/app/_components/i18n/LocaleProvider";
+import { resolveCatalogLocale, type Locale } from "@/lib/i18n";
 import { PrimaryButton } from "@/app/_components/ui/PrimaryButton";
 import { GreenApiPremiumCheckout } from "@/app/green/api/_components/GreenApiPremiumCheckout";
 import { track } from "@/lib/analytics";
@@ -41,8 +42,9 @@ const MATCH_LABELS: Record<string, { fr: string; en: string; es: string }> = {
   partial: { fr: "Partiel", en: "Partial", es: "Parcial" },
 };
 
-function copy(locale: "fr" | "en" | "es") {
-  if (locale === "en") {
+function copy(locale: Locale) {
+  const loc = resolveCatalogLocale(locale);
+  if (loc === "en") {
     return {
       title: "Look up a serial",
       hint: "VCS-674, GS-5678, PURO-1001 or paste a registry URL",
@@ -63,7 +65,7 @@ function copy(locale: "fr" | "en" | "es") {
       errorGeneric: "Lookup unavailable — check the serial format.",
     };
   }
-  if (locale === "es") {
+  if (loc === "es") {
     return {
       title: "Consultar un serial",
       hint: "VCS-674, GS-5678, PURO-1001 o pegue una URL del registro",
@@ -144,7 +146,7 @@ export function RegistryConnectLookup({ demoSerials }: Props) {
 
   const data = result?.registry_connect;
   const matchLabel = data
-    ? (MATCH_LABELS[data.match]?.[locale] ?? data.match)
+    ? (MATCH_LABELS[data.match]?.[resolveCatalogLocale(locale)] ?? data.match)
     : null;
 
   return (

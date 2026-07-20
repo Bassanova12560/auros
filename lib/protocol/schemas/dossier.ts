@@ -33,7 +33,7 @@ export const dossierRequestSchema = z
         hide_auros_branding: z.boolean().optional(),
       })
       .optional(),
-    locale: z.enum(["fr", "en", "es"]).default("fr"),
+    locale: z.enum(["fr", "en", "es", "ar", "zh"]).default("fr"),
     /** Optional monitor id — attaches Regulatory Twin delta to the dossier payload. */
     monitor_id: z.string().max(128).optional(),
   })

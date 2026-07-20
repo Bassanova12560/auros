@@ -1,4 +1,4 @@
-import type { Locale } from "@/lib/i18n";
+import { resolveCatalogLocale, type CatalogMap, type Locale } from "@/lib/i18n";
 import type { RwaIndexCategoryId } from "@/lib/rwa-index/types";
 
 export type StateOfRwaIssuersCopy = {
@@ -283,10 +283,10 @@ const ES: StateOfRwaIssuersCopy = {
   relatedTitle: "Explorar AUROS",
 };
 
-const COPY: Record<Locale, StateOfRwaIssuersCopy> = { fr: FR, en: EN, es: ES };
+const COPY: CatalogMap< StateOfRwaIssuersCopy> = { fr: FR, en: EN, es: ES };
 
 export function getStateOfRwaIssuersCopy(locale: Locale): StateOfRwaIssuersCopy {
-  return COPY[locale] ?? FR;
+  return COPY[resolveCatalogLocale(locale)] ?? FR;
 }
 
 export function formatEditionQuarter(edition: string, locale: Locale): string {

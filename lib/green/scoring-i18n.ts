@@ -1,4 +1,4 @@
-import type { Locale } from "@/lib/i18n";
+import { resolveCatalogLocale, type CatalogMap, type Locale } from "@/lib/i18n";
 
 import type { WizardGreenScorePriorityKey } from "./scoring/wizard-green-scores";
 import { formatCarbonQualityTierLabel } from "./scoring/carbon-quality";
@@ -95,10 +95,10 @@ const ES: GreenScoringCopy = {
   },
 };
 
-const COPY: Record<Locale, GreenScoringCopy> = { fr: FR, en: EN, es: ES };
+const COPY: CatalogMap< GreenScoringCopy> = { fr: FR, en: EN, es: ES };
 
 export function getGreenScoringCopy(locale: Locale): GreenScoringCopy {
-  return COPY[locale] ?? FR;
+  return COPY[resolveCatalogLocale(locale)] ?? FR;
 }
 
 export function formatWattTierLabel(
@@ -110,7 +110,7 @@ export function formatWattTierLabel(
     en: { high: "High", mid: "Mid", early: "Early" },
     es: { high: "Alto", mid: "Medio", early: "Early" },
   } as const;
-  return labels[locale]?.[tier] ?? labels.fr[tier];
+  return labels[resolveCatalogLocale(locale)]?.[tier] ?? labels.fr[tier];
 }
 
 export function formatCqsTierLabel(

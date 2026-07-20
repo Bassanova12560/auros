@@ -1,6 +1,6 @@
 import { createClient, type PostgrestError, type SupabaseClient } from "@supabase/supabase-js";
 
-import type { Locale } from "@/lib/i18n";
+import { resolveCatalogLocale, type CatalogMap, type Locale } from "@/lib/i18n";
 
 import type { GreenProjectType } from "./constants";
 
@@ -14,7 +14,7 @@ export type GreenRegistryProjectRow = {
   labelTier: GreenLabelTier;
   certifiedAt: string;
   verifyToken: string;
-  summaries: Record<Locale, string>;
+  summaries: CatalogMap< string>;
   website?: string;
 };
 
@@ -22,7 +22,7 @@ export function greenProjectSummary(
   row: GreenRegistryProjectRow,
   locale: Locale
 ): string {
-  return row.summaries[locale] ?? row.summaries.fr;
+  return row.summaries[resolveCatalogLocale(locale)] ?? row.summaries.fr;
 }
 
 export type GreenRegistryExpertRow = {
@@ -71,7 +71,7 @@ const FALLBACK_PROJECTS: Omit<GreenRegistryProjectRow, "summaries">[] = [
 
 const FALLBACK_SUMMARIES: Record<
   string,
-  Record<Locale, string>
+  CatalogMap< string>
 > = {
   "pilot-solar-surplus-eu": {
     fr: "Dossier RTMS anonymisé — autoconsommation + injection, traçabilité kWh on-chain simulée. Démonstration méthodologique AUROS Green, pas un projet investissable listé.",
@@ -113,7 +113,7 @@ function isMissingTable(error: PostgrestError): boolean {
 function rowSummaries(
   id: string,
   row?: { summary_fr: string; summary_en: string; summary_es: string }
-): Record<Locale, string> {
+): CatalogMap<string> {
   if (row) {
     return { fr: row.summary_fr, en: row.summary_en, es: row.summary_es };
   }

@@ -7,6 +7,16 @@ const LABELS: Record<Locale, string> = {
   fr: "FR",
   en: "EN",
   es: "ES",
+  ar: "ع",
+  zh: "中",
+};
+
+const NATIVE: Record<Locale, string> = {
+  fr: "Français",
+  en: "English",
+  es: "Español",
+  ar: "العربية",
+  zh: "中文",
 };
 
 export function LanguageSwitcher({
@@ -20,7 +30,7 @@ export function LanguageSwitcher({
 
   return (
     <div
-      className={`inline-flex items-center gap-0.5 rounded-full border border-white/10 bg-white/[0.03] p-0.5 ${className}`}
+      className={`inline-flex flex-wrap items-center justify-end gap-0.5 rounded-full border border-white/10 bg-white/[0.03] p-0.5 ${className}`}
       role="group"
       aria-label={ariaLabel}
     >
@@ -31,12 +41,14 @@ export function LanguageSwitcher({
             key={code}
             type="button"
             onClick={() => setLocale(code)}
-            className={`rounded-full px-2.5 py-1 font-mono text-[10px] uppercase tracking-wider transition ${
+            title={NATIVE[code]}
+            className={`rounded-full px-1.5 py-1 font-mono text-[10px] tracking-wider transition sm:px-2 ${
               active
                 ? "bg-white text-void"
                 : "text-white/45 hover:text-white"
             }`}
             aria-pressed={active}
+            aria-label={NATIVE[code]}
           >
             {LABELS[code]}
           </button>

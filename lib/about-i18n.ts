@@ -1,4 +1,4 @@
-import type { Locale } from "@/lib/i18n";
+import { resolveCatalogLocale, type CatalogMap, type Locale } from "@/lib/i18n";
 import { AUROS_ORG } from "@/lib/ai-first/org";
 
 export type AboutMessages = {
@@ -121,8 +121,8 @@ const ES: AboutMessages = {
   home: "← Inicio",
 };
 
-const CATALOG: Record<Locale, AboutMessages> = { fr: FR, en: EN, es: ES };
+const CATALOG: CatalogMap< AboutMessages> = { fr: FR, en: EN, es: ES };
 
 export function getAboutMessages(locale: Locale): AboutMessages {
-  return CATALOG[locale] ?? FR;
+  return CATALOG[resolveCatalogLocale(locale)] ?? FR;
 }

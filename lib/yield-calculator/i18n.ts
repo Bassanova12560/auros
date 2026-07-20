@@ -1,4 +1,4 @@
-import type { Locale } from "@/lib/i18n";
+import { resolveCatalogLocale, type CatalogMap, type Locale } from "@/lib/i18n";
 
 import type { YieldAssetClass } from "./types";
 
@@ -169,10 +169,10 @@ const ES: YieldCalculatorCopy = {
   },
 };
 
-const COPY: Record<Locale, YieldCalculatorCopy> = { fr: FR, en: EN, es: ES };
+const COPY: CatalogMap< YieldCalculatorCopy> = { fr: FR, en: EN, es: ES };
 
 export function getYieldCalculatorCopy(locale: Locale): YieldCalculatorCopy {
-  return COPY[locale] ?? FR;
+  return COPY[resolveCatalogLocale(locale)] ?? FR;
 }
 
 export const YIELD_ASSET_CLASS_ORDER: YieldAssetClass[] = [

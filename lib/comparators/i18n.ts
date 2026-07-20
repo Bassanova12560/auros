@@ -1,4 +1,4 @@
-import type { Locale } from "@/lib/i18n";
+import { resolveCatalogLocale, type CatalogMap, type Locale } from "@/lib/i18n";
 
 export type ComparatorPageCopy = {
   tool: string;
@@ -1399,10 +1399,10 @@ const ES: ComparatorMessages = {
   loading: "Cargando datos…",
 };
 
-const CATALOG: Record<Locale, ComparatorMessages> = { fr: FR, en: EN, es: ES };
+const CATALOG: CatalogMap< ComparatorMessages> = { fr: FR, en: EN, es: ES };
 
 export function getComparatorMessages(locale: Locale): ComparatorMessages {
-  return CATALOG[locale] ?? FR;
+  return CATALOG[resolveCatalogLocale(locale)] ?? FR;
 }
 
 export function formatComparatorDate(iso: string, locale: Locale): string {

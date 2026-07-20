@@ -1,4 +1,4 @@
-import type { Locale } from "@/lib/i18n";
+import { resolveCatalogLocale, type CatalogMap, type Locale } from "@/lib/i18n";
 
 /** Maps stored wizard values (English keys) → localized labels. */
 export type WizardOptionMaps = {
@@ -208,7 +208,7 @@ const ES: WizardOptionMaps = {
   },
 };
 
-const GOAL_SUBTITLES: Record<Locale, Record<string, string>> = {
+const GOAL_SUBTITLES: CatalogMap< Record<string, string>> = {
   fr: {
     income: "Percevoir des rendements réguliers sur votre actif tokenisé",
     liquidity: "Convertir une partie de l'actif en liquidités immédiates",
@@ -229,7 +229,7 @@ const GOAL_SUBTITLES: Record<Locale, Record<string, string>> = {
   },
 };
 
-const TIMELINE_SUBTITLES: Record<Locale, Record<string, string>> = {
+const TIMELINE_SUBTITLES: CatalogMap< Record<string, string>> = {
   fr: {
     "As soon as possible": "Je souhaite démarrer immédiatement",
     "Within 3 months": "J'ai un peu de temps pour préparer le dossier",
@@ -250,7 +250,7 @@ const TIMELINE_SUBTITLES: Record<Locale, Record<string, string>> = {
   },
 };
 
-const CATALOG: Record<Locale, WizardOptionMaps> = { fr: FR, en: EN, es: ES };
+const CATALOG: CatalogMap< WizardOptionMaps> = { fr: FR, en: EN, es: ES };
 
 export function wizardOptionLabel(
   locale: Locale,
@@ -258,14 +258,14 @@ export function wizardOptionLabel(
   value: string
 ): string {
   if (!value) return "—";
-  const map = CATALOG[locale]?.[group] ?? CATALOG.fr[group];
+  const map = CATALOG[resolveCatalogLocale(locale)]?.[group] ?? CATALOG.fr[group];
   if (group === "goals" || group === "incomeTypes") {
     return map[value] ?? value;
   }
   return map[value] ?? value;
 }
 
-const PLATFORM_SUBTITLES: Record<Locale, Record<string, string>> = {
+const PLATFORM_SUBTITLES: CatalogMap< Record<string, string>> = {
   fr: {
     "AUROS dossier": "Préparer et envoyer votre dossier avec notre équipe",
     "Concierge support": "Un expert AUROS vous guide étape par étape",
@@ -288,19 +288,19 @@ export function wizardPlatformSubtitle(
   platform: string
 ): string {
   return (
-    PLATFORM_SUBTITLES[locale][platform] ??
+    PLATFORM_SUBTITLES[resolveCatalogLocale(locale)][platform] ??
     PLATFORM_SUBTITLES.fr[platform] ??
     ""
   );
 }
 
 export function wizardGoalSubtitle(locale: Locale, goalId: string): string {
-  return GOAL_SUBTITLES[locale][goalId] ?? GOAL_SUBTITLES.fr[goalId] ?? "";
+  return GOAL_SUBTITLES[resolveCatalogLocale(locale)][goalId] ?? GOAL_SUBTITLES.fr[goalId] ?? "";
 }
 
 export function wizardTimelineSubtitle(locale: Locale, timelineLabel: string): string {
   return (
-    TIMELINE_SUBTITLES[locale][timelineLabel] ??
+    TIMELINE_SUBTITLES[resolveCatalogLocale(locale)][timelineLabel] ??
     TIMELINE_SUBTITLES.fr[timelineLabel] ??
     ""
   );

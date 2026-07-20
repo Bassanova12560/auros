@@ -1,4 +1,4 @@
-import type { Locale } from "@/lib/i18n";
+import { resolveCatalogLocale, type CatalogMap, type Locale } from "@/lib/i18n";
 
 export type WizardStepsMessages = {
   stepLabel: (step: number, tag: string) => string;
@@ -448,8 +448,8 @@ const ES: WizardStepsMessages = {
   },
 };
 
-const CATALOG: Record<Locale, WizardStepsMessages> = { fr: FR, en: EN, es: ES };
+const CATALOG: CatalogMap< WizardStepsMessages> = { fr: FR, en: EN, es: ES };
 
 export function getWizardStepsMessages(locale: Locale): WizardStepsMessages {
-  return CATALOG[locale] ?? FR;
+  return CATALOG[resolveCatalogLocale(locale)] ?? FR;
 }

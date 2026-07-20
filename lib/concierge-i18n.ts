@@ -1,4 +1,4 @@
-import type { Locale } from "@/lib/i18n";
+import { resolveCatalogLocale, type CatalogMap, type Locale } from "@/lib/i18n";
 
 export type ConciergeMessages = {
   eyebrow: string;
@@ -78,8 +78,8 @@ const ES: ConciergeMessages = {
   footer: "Sin compromiso. Servicio gratuito.",
 };
 
-const CATALOG: Record<Locale, ConciergeMessages> = { fr: FR, en: EN, es: ES };
+const CATALOG: CatalogMap< ConciergeMessages> = { fr: FR, en: EN, es: ES };
 
 export function getConciergeMessages(locale: Locale): ConciergeMessages {
-  return CATALOG[locale] ?? FR;
+  return CATALOG[resolveCatalogLocale(locale)] ?? FR;
 }

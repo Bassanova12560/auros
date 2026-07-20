@@ -1,4 +1,4 @@
-import type { Locale } from "@/lib/i18n";
+import { resolveCatalogLocale, type Locale } from "@/lib/i18n";
 
 export type CookieBannerMessages = {
   aria: string;
@@ -30,5 +30,5 @@ const ES: CookieBannerMessages = {
 
 export function getCookieBannerMessages(locale: Locale): CookieBannerMessages {
   const map = { fr: FR, en: EN, es: ES };
-  return map[locale] ?? FR;
+  return map[resolveCatalogLocale(locale)] ?? FR;
 }

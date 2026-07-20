@@ -1,4 +1,4 @@
-import type { Locale } from "@/lib/i18n";
+import { resolveCatalogLocale, type Locale } from "@/lib/i18n";
 
 export type TermsMessages = {
   tag: string;
@@ -33,5 +33,5 @@ const ES: TermsMessages = {
 
 export function getTermsMessages(locale: Locale): TermsMessages {
   const map = { fr: FR, en: EN, es: ES };
-  return map[locale] ?? FR;
+  return map[resolveCatalogLocale(locale)] ?? FR;
 }

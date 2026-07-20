@@ -1,4 +1,4 @@
-import type { Locale } from "@/lib/i18n";
+import { resolveCatalogLocale, type CatalogMap, type Locale } from "@/lib/i18n";
 
 export type DashboardMessages = {
   guest: {
@@ -240,8 +240,8 @@ const ES: DashboardMessages = {
   },
 };
 
-const CATALOG: Record<Locale, DashboardMessages> = { fr: FR, en: EN, es: ES };
+const CATALOG: CatalogMap< DashboardMessages> = { fr: FR, en: EN, es: ES };
 
 export function getDashboardMessages(locale: Locale): DashboardMessages {
-  return CATALOG[locale] ?? FR;
+  return CATALOG[resolveCatalogLocale(locale)] ?? FR;
 }

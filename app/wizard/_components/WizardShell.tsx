@@ -3,6 +3,7 @@
 import type { ReactNode } from "react";
 
 import { useLocale } from "@/app/_components/i18n/LocaleProvider";
+import { resolveCatalogLocale } from "@/lib/i18n";
 import {
   WIZARD_PHASES,
   wizardPhaseForStep,
@@ -155,7 +156,7 @@ export function WizardShell({
                     onClick={() => onPhaseClick(i)}
                     className={`${pillClass} auros-focus interactive-subtle hover:border-white/25 hover:text-white/70`}
                   >
-                    {p.labels[locale]}
+                    {p.labels[resolveCatalogLocale(locale)]}
                   </button>
                 );
               }
@@ -165,7 +166,7 @@ export function WizardShell({
                   aria-current={active ? "step" : undefined}
                   className={pillClass}
                 >
-                  {p.labels[locale]}
+                  {p.labels[resolveCatalogLocale(locale)]}
                 </span>
               );
             })}
@@ -193,7 +194,7 @@ export function WizardShell({
           ) : (
             <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-white/45">
               {shell.phaseOf} {phaseIdx + 1}/{WIZARD_PHASES.length} ·{" "}
-              {phase!.labels[locale]} ·{" "}
+              {phase!.labels[resolveCatalogLocale(locale)]} ·{" "}
               {journey.inThisPart(inPhase.indexInPhase, inPhase.totalInPhase)}
             </p>
           )}

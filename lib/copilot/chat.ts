@@ -32,9 +32,17 @@ function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
   });
 }
 
-function buildSystemPrompt(locale: "fr" | "en" | "es"): string {
+function buildSystemPrompt(locale: "fr" | "en" | "es" | "ar" | "zh"): string {
   const lang =
-    locale === "en" ? "English" : locale === "es" ? "Spanish" : "French";
+    locale === "en"
+      ? "English"
+      : locale === "es"
+        ? "Spanish"
+        : locale === "ar"
+          ? "Arabic"
+          : locale === "zh"
+            ? "Chinese (Simplified)"
+            : "French";
   return `You are AUROS Copilot, an assistant for the AUROS RWA prep platform (comparator, jurisdictions, Protocol API, ChargeFlow, Green).
 Language: ${lang}.
 Rules:
@@ -95,7 +103,7 @@ function buildUserPrompt(
 function templateReply(
   message: string,
   tools: CopilotToolResult[],
-  locale: "fr" | "en" | "es"
+  locale: "fr" | "en" | "es" | "ar" | "zh"
 ): string {
   const cites = tools
     .flatMap((t) => t.citations)
@@ -264,7 +272,7 @@ function mergeCitations(tools: CopilotToolResult[]): CopilotCitation[] {
 
 export async function runCopilotChat(input: {
   message: string;
-  locale?: "fr" | "en" | "es";
+  locale?: "fr" | "en" | "es" | "ar" | "zh";
   history?: CopilotChatMessage[];
   context?: CopilotPageContext;
 }): Promise<{

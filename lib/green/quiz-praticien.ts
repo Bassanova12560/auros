@@ -1,5 +1,5 @@
 import type { QuizQuestion } from "@/lib/academy/types";
-import type { Locale } from "@/lib/i18n";
+import { resolveCatalogLocale, type CatalogMap, type Locale } from "@/lib/i18n";
 
 import { GREEN_PRATICIEN_QUIZ_LENGTH } from "./constants";
 
@@ -296,20 +296,20 @@ const BANK_ES: QuizQuestion[] = BANK_FR.map((q) => ({
   correctOptionId: q.correctOptionId,
 }));
 
-const banks: Record<Locale, QuizQuestion[]> = {
+const banks: CatalogMap< QuizQuestion[]> = {
   fr: BANK_FR,
   en: BANK_EN,
   es: BANK_ES,
 };
 
 export function pickGreenPraticienQuestions(locale: Locale = "fr"): QuizQuestion[] {
-  const bank = banks[locale] ?? BANK_FR;
+  const bank = banks[resolveCatalogLocale(locale)] ?? BANK_FR;
   const shuffled = [...bank].sort(() => Math.random() - 0.5);
   return shuffled.slice(0, GREEN_PRATICIEN_QUIZ_LENGTH);
 }
 
 export function getGreenPraticienQuestion(id: string, locale: Locale = "fr"): QuizQuestion | undefined {
-  const bank = banks[locale] ?? BANK_FR;
+  const bank = banks[resolveCatalogLocale(locale)] ?? BANK_FR;
   return bank.find((q) => q.id === id) ?? BANK_FR.find((q) => q.id === id);
 }
 

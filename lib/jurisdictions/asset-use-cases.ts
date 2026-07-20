@@ -1,4 +1,4 @@
-import type { Locale } from "@/lib/i18n";
+import { resolveCatalogLocale, type CatalogMap, type Locale } from "@/lib/i18n";
 
 import type { JurisdictionAssetType } from "./types";
 
@@ -128,10 +128,10 @@ const ES: AssetUseCaseCopy = {
   funds: { ...EN.funds, title: "Fondos tokenizados" },
 };
 
-const CATALOG: Record<Locale, AssetUseCaseCopy> = { fr: FR, en: EN, es: ES };
+const CATALOG: CatalogMap< AssetUseCaseCopy> = { fr: FR, en: EN, es: ES };
 
 export function getAssetUseCases(locale: Locale): AssetUseCase[] {
-  const copy = CATALOG[locale] ?? FR;
+  const copy = CATALOG[resolveCatalogLocale(locale)] ?? FR;
   return [
     copy.real_estate,
     copy.bonds,
@@ -144,5 +144,5 @@ export function getAssetUseCase(
   locale: Locale,
   assetType: JurisdictionAssetType
 ): AssetUseCase {
-  return (CATALOG[locale] ?? FR)[assetType];
+  return (CATALOG[resolveCatalogLocale(locale)] ?? FR)[assetType];
 }

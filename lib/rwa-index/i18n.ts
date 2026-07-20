@@ -1,4 +1,4 @@
-import type { Locale } from "@/lib/i18n";
+import { resolveCatalogLocale, type CatalogMap, type Locale } from "@/lib/i18n";
 
 import type { RwaIndexCategoryId } from "./types";
 
@@ -204,10 +204,10 @@ const ES: RwaIndexCopy = {
   },
 };
 
-const COPY: Record<Locale, RwaIndexCopy> = { fr: FR, en: EN, es: ES };
+const COPY: CatalogMap< RwaIndexCopy> = { fr: FR, en: EN, es: ES };
 
 export function getRwaIndexCopy(locale: Locale): RwaIndexCopy {
-  return COPY[locale] ?? FR;
+  return COPY[resolveCatalogLocale(locale)] ?? FR;
 }
 
 export function formatApyDisplay(value: number | null, locale: Locale): string {

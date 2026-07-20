@@ -1,4 +1,4 @@
-import type { Locale } from "@/lib/i18n";
+import { resolveCatalogLocale, type CatalogMap, type Locale } from "@/lib/i18n";
 import type { JurisdictionAssetType } from "@/lib/jurisdictions/types";
 
 import type { RationaleId } from "./types";
@@ -199,10 +199,10 @@ const ES: JurisdictionPickerCopy = {
   },
 };
 
-const CATALOG: Record<Locale, JurisdictionPickerCopy> = { fr: FR, en: EN, es: ES };
+const CATALOG: CatalogMap< JurisdictionPickerCopy> = { fr: FR, en: EN, es: ES };
 
 export function getJurisdictionPickerCopy(locale: Locale): JurisdictionPickerCopy {
-  return CATALOG[locale] ?? FR;
+  return CATALOG[resolveCatalogLocale(locale)] ?? FR;
 }
 
 export function assetFilterLabel(

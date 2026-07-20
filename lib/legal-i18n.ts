@@ -1,4 +1,4 @@
-import type { Locale } from "@/lib/i18n";
+import { resolveCatalogLocale, type Locale } from "@/lib/i18n";
 
 export type LegalMessages = {
   tag: string;
@@ -37,5 +37,5 @@ const ES: LegalMessages = {
 
 export function getLegalMessages(locale: Locale): LegalMessages {
   const map = { fr: FR, en: EN, es: ES };
-  return map[locale] ?? FR;
+  return map[resolveCatalogLocale(locale)] ?? FR;
 }

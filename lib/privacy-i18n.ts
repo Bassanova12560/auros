@@ -1,4 +1,4 @@
-import type { Locale } from "@/lib/i18n";
+import { resolveCatalogLocale, type Locale } from "@/lib/i18n";
 
 export type PrivacyMessages = {
   tag: string;
@@ -108,5 +108,5 @@ const ES: PrivacyMessages = {
 
 export function getPrivacyMessages(locale: Locale): PrivacyMessages {
   const map = { fr: FR, en: EN, es: ES };
-  return map[locale] ?? FR;
+  return map[resolveCatalogLocale(locale)] ?? FR;
 }

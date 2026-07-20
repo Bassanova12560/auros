@@ -1,4 +1,4 @@
-import type { Locale } from "@/lib/i18n";
+import { resolveCatalogLocale, type Locale } from "@/lib/i18n";
 
 export type ProfessionalTrustMessages = {
   eyebrow: string;
@@ -29,5 +29,5 @@ const ES: ProfessionalTrustMessages = {
 
 export function getProfessionalTrustMessages(locale: Locale): ProfessionalTrustMessages {
   const map = { fr: FR, en: EN, es: ES };
-  return map[locale] ?? FR;
+  return map[resolveCatalogLocale(locale)] ?? FR;
 }

@@ -2,6 +2,7 @@ import Stripe from "stripe";
 
 import { siteOrigin } from "@/lib/emails/constants";
 import type { Locale } from "@/lib/i18n";
+import { resolveCatalogLocale } from "@/lib/i18n";
 import {
   isWizardTier,
   WIZARD_TIER_AMOUNTS,
@@ -91,7 +92,7 @@ export async function createWizardCheckoutSession(
   const product = wizardProduct(input.tier);
   const chargeCents = computeWizardChargeCents(input.tier, input.upgradeFrom);
   const origin = siteOrigin();
-  const label = product.name[input.locale] ?? product.name.fr;
+  const label = product.name[resolveCatalogLocale(input.locale)] ?? product.name.fr;
 
   const description =
     input.upgradeFrom && chargeCents < product.amountCents

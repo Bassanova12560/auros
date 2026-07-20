@@ -69,7 +69,7 @@ function buildReportJsonLd(
       encodingFormat: "application/pdf",
       contentUrl: absoluteUrl(STATE_OF_RWA_ISSUERS_ROUTE),
     },
-    inLanguage: ["fr", "en", "es"],
+    inLanguage: ["fr", "en", "es", "ar", "zh"],
     license: "https://creativecommons.org/licenses/by/4.0/",
   };
 }

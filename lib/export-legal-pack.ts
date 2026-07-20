@@ -1,9 +1,9 @@
 import { buildTokenizationStudioPlan } from "@/lib/studio";
 import { RWA_DOCUMENT_PHASES } from "@/lib/rwa-document-phases";
-import type { Locale } from "@/lib/i18n";
+import { resolveCatalogLocale, type CatalogMap, type Locale } from "@/lib/i18n";
 import type { WizardData } from "@/lib/wizard-types";
 
-const TITLES: Record<Locale, { pack: string; regulatory: string; roadmap: string; docs: string }> = {
+const TITLES: CatalogMap< { pack: string; regulatory: string; roadmap: string; docs: string }> = {
   fr: {
     pack: "Pack juridique indicatif — AUROS",
     regulatory: "Cadre réglementaire (indicatif)",
@@ -25,7 +25,7 @@ const TITLES: Record<Locale, { pack: string; regulatory: string; roadmap: string
 };
 
 export function buildLegalPackMarkdown(data: WizardData, locale: Locale): string {
-  const t = TITLES[locale] ?? TITLES.fr;
+  const t = TITLES[resolveCatalogLocale(locale)] ?? TITLES.fr;
   const plan = buildTokenizationStudioPlan(data);
   const lines: string[] = [
     `# ${t.pack}`,

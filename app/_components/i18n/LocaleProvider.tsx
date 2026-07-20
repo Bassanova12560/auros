@@ -13,6 +13,7 @@ import {
 import {
   DEFAULT_LOCALE,
   getMessages,
+  isRtlLocale,
   readStoredLocale,
   storeLocale,
   type Locale,
@@ -37,6 +38,7 @@ export function LocaleProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     document.documentElement.lang = locale;
+    document.documentElement.dir = isRtlLocale(locale) ? "rtl" : "ltr";
     storeLocale(locale);
   }, [locale]);
 

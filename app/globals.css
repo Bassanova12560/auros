@@ -36,6 +36,16 @@ html {
   -webkit-text-size-adjust: 100%;
 }
 
+html[lang="ar"] body {
+  font-family: var(--font-arabic), var(--font-body), ui-sans-serif, system-ui,
+    sans-serif;
+}
+
+html[lang="zh"] body {
+  font-family: var(--font-cjk), var(--font-body), ui-sans-serif, system-ui,
+    sans-serif;
+}
+
 body {
   @apply bg-void font-sans font-light text-white antialiased;
   overflow-x: clip;

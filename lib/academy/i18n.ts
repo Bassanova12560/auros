@@ -1,4 +1,4 @@
-import type { Locale } from "@/lib/i18n";
+import { resolveCatalogLocale, type CatalogMap, type Locale } from "@/lib/i18n";
 
 import { ACADEMY_PASS_SCORE, ACADEMY_QUIZ_LENGTH, CERT_VALIDITY_DAYS } from "./constants";
 import { getAcademyPageMessages, type AcademyPageMessages } from "./i18n-pages";
@@ -777,10 +777,10 @@ const es: AcademyCoreMessages = {
   },
 };
 
-const CATALOG: Record<AcademyLocale, AcademyCoreMessages> = { fr, en, es };
+const CATALOG: CatalogMap<AcademyCoreMessages> = { fr, en, es };
 
 export function getAcademyMessages(locale: AcademyLocale): AcademyMessages {
-  return { ...CATALOG[locale], ...getAcademyPageMessages(locale) };
+  return { ...CATALOG[resolveCatalogLocale(locale)], ...getAcademyPageMessages(locale) };
 }
 
 export function academyQuizIntro(locale: AcademyLocale): string {

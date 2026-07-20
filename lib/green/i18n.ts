@@ -1,4 +1,4 @@
-import type { Locale } from "@/lib/i18n";
+import { resolveCatalogLocale, type CatalogMap, type Locale } from "@/lib/i18n";
 
 import type { GreenLabelStatus, GreenProjectType } from "./constants";
 
@@ -3378,10 +3378,10 @@ const ES: GreenMessages = {
   },
 };
 
-const MESSAGES: Record<Locale, GreenMessages> = { fr: FR, en: EN, es: ES };
+const MESSAGES: CatalogMap< GreenMessages> = { fr: FR, en: EN, es: ES };
 
 export function getGreenMessages(locale: Locale): GreenMessages {
-  return MESSAGES[locale] ?? MESSAGES.fr;
+  return MESSAGES[resolveCatalogLocale(locale)] ?? MESSAGES.fr;
 }
 
 export const GREEN_DISCLAIMER = FR.disclaimer;

@@ -5,6 +5,7 @@ import { useMemo, useState } from "react";
 
 import { FocusPageShell } from "@/app/_components/FocusPageShell";
 import { useLocale } from "@/app/_components/i18n/LocaleProvider";
+import { resolveCatalogLocale } from "@/lib/i18n";
 import { BezelCard } from "@/app/_components/ui/BezelCard";
 import { PrimaryButton } from "@/app/_components/ui/PrimaryButton";
 import { EAU_EMBED_DOCS_ROUTE } from "@/lib/eau/constants";
@@ -58,7 +59,7 @@ const DOCS_COPY = {
 export default function EauEmbedDocsPage() {
   const { locale } = useLocale();
   const hub = getEauHubCopy(locale);
-  const copy = DOCS_COPY[locale] ?? DOCS_COPY.fr;
+  const copy = DOCS_COPY[resolveCatalogLocale(locale)] ?? DOCS_COPY.fr;
   const [partner, setPartner] = useState("");
   const [copied, setCopied] = useState<string | null>(null);
   const origin = siteOrigin();

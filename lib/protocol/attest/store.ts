@@ -11,7 +11,7 @@ export type AttestationRecord = {
   signature: string;
   key_hash: string;
   dossier_id: string;
-  locale: "fr" | "en" | "es";
+  locale: "fr" | "en" | "es" | "ar" | "zh";
   /** Public snapshot — no PII */
   public: {
     score: number;
@@ -97,7 +97,7 @@ async function trySupabaseFindById(id: string): Promise<AttestationRecord | null
       signature: string;
       key_hash: string;
       dossier_id: string;
-      locale: "fr" | "en" | "es";
+      locale: "fr" | "en" | "es" | "ar" | "zh";
       public_snapshot: AttestationRecord["public"];
       created_at: string;
       disclaimer: string;
@@ -123,7 +123,7 @@ export function attestationFromCanonical(
   contentHash: string,
   signature: string,
   canonical: AttestCanonicalPayload,
-  locale: "fr" | "en" | "es"
+  locale: "fr" | "en" | "es" | "ar" | "zh"
 ): AttestationRecord {
   return {
     id: newAttestationId(),

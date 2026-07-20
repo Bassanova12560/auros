@@ -1,4 +1,4 @@
-import type { Locale } from "@/lib/i18n";
+import { resolveCatalogLocale, type CatalogMap, type Locale } from "@/lib/i18n";
 
 import { starterKitMarketTotal } from "./starter-kit-value";
 
@@ -743,10 +743,10 @@ const ES: EnterpriseMessages = {
   },
 };
 
-const CATALOG: Record<Locale, EnterpriseMessages> = { fr: FR, en: EN, es: ES };
+const CATALOG: CatalogMap< EnterpriseMessages> = { fr: FR, en: EN, es: ES };
 
 export function getEnterpriseMessages(locale: Locale): EnterpriseMessages {
-  return CATALOG[locale] ?? FR;
+  return CATALOG[resolveCatalogLocale(locale)] ?? FR;
 }
 
 export function buildFaqJsonLd(

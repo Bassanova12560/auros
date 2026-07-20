@@ -373,7 +373,7 @@ export type DossierRequest = {
   format?: "pdf" | "json" | "zip";
   sections?: DossierSection[];
   branding?: { company_name?: string; logo_url?: string };
-  locale?: "fr" | "en" | "es";
+  locale?: "fr" | "en" | "es" | "ar" | "zh";
 };
 
 export type DossierResponse = {
@@ -393,7 +393,7 @@ export type AttestCreateRequest = {
   score_id?: string;
   score?: ScoreRequest;
   sections?: DossierSection[];
-  locale?: "fr" | "en" | "es";
+  locale?: "fr" | "en" | "es" | "ar" | "zh";
 };
 
 export type AttestPublicSnapshot = {

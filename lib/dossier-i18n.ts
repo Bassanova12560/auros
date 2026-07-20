@@ -1,4 +1,4 @@
-import type { Locale } from "@/lib/i18n";
+import { resolveCatalogLocale, type CatalogMap, type Locale } from "@/lib/i18n";
 
 export type DossierMessages = {
   eyebrow: string;
@@ -655,8 +655,8 @@ const ES: DossierMessages = {
   },
 };
 
-const CATALOG: Record<Locale, DossierMessages> = { fr: FR, en: EN, es: ES };
+const CATALOG: CatalogMap< DossierMessages> = { fr: FR, en: EN, es: ES };
 
 export function getDossierMessages(locale: Locale): DossierMessages {
-  return CATALOG[locale] ?? FR;
+  return CATALOG[resolveCatalogLocale(locale)] ?? FR;
 }

@@ -1,4 +1,4 @@
-import type { Locale } from "@/lib/i18n";
+import { resolveCatalogLocale, type Locale } from "@/lib/i18n";
 import type { DocumentPhaseId } from "@/lib/rwa-document-phases";
 
 type PhaseCopy = { title: string; subtitle: string };
@@ -78,5 +78,5 @@ export function rwaPhaseCopy(
   locale: Locale,
   phaseId: DocumentPhaseId
 ): PhaseCopy {
-  return MAP[locale][phaseId];
+  return MAP[resolveCatalogLocale(locale)][phaseId];
 }

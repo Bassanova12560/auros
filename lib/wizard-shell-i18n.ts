@@ -1,4 +1,4 @@
-import type { Locale } from "@/lib/i18n";
+import { resolveCatalogLocale, type CatalogMap, type Locale } from "@/lib/i18n";
 
 export type WizardShellMessages = {
   title: string;
@@ -40,8 +40,8 @@ const ES: WizardShellMessages = {
   phaseOf: "Fase",
 };
 
-const CATALOG: Record<Locale, WizardShellMessages> = { fr: FR, en: EN, es: ES };
+const CATALOG: CatalogMap< WizardShellMessages> = { fr: FR, en: EN, es: ES };
 
 export function getWizardShellMessages(locale: Locale): WizardShellMessages {
-  return CATALOG[locale] ?? FR;
+  return CATALOG[resolveCatalogLocale(locale)] ?? FR;
 }

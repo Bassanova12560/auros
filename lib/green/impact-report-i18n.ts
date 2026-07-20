@@ -1,4 +1,4 @@
-import type { Locale } from "@/lib/i18n";
+import { resolveCatalogLocale, type CatalogMap, type Locale } from "@/lib/i18n";
 
 export type GreenImpactReportCopy = {
   page: {
@@ -199,8 +199,8 @@ const ES: GreenImpactReportCopy = {
   },
 };
 
-const COPY: Record<Locale, GreenImpactReportCopy> = { fr: FR, en: EN, es: ES };
+const COPY: CatalogMap< GreenImpactReportCopy> = { fr: FR, en: EN, es: ES };
 
 export function getGreenImpactReportCopy(locale: Locale): GreenImpactReportCopy {
-  return COPY[locale] ?? FR;
+  return COPY[resolveCatalogLocale(locale)] ?? FR;
 }

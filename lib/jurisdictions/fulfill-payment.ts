@@ -4,6 +4,7 @@ import {
 } from "@/lib/emails/send";
 import { siteOrigin } from "@/lib/emails/constants";
 import type { Locale } from "@/lib/i18n";
+import { resolveCatalogLocale } from "@/lib/i18n";
 import { parseCheckoutMetadata } from "@/lib/jurisdictions/checkout-metadata";
 import { fulfillJurisdictionPaymentForLead } from "@/lib/jurisdictions/fulfill-payment-core";
 import { jurisdictionProduct } from "@/lib/jurisdictions/pricing";
@@ -85,7 +86,7 @@ export async function fulfillWalkInPayment(input: {
   if (!delivery.ok) {
     void sendJurisdictionPaymentConfirmation(email, {
       firstName: name,
-      tier: product.name[input.locale] ?? product.name.fr,
+      tier: product.name[resolveCatalogLocale(input.locale)] ?? product.name.fr,
       locale: input.locale,
       pendingDelivery: true,
     });
@@ -94,7 +95,7 @@ export async function fulfillWalkInPayment(input: {
   void sendJurisdictionPaymentInternal({
     firstName: name,
     email,
-    tier: product.name[input.locale] ?? product.name.fr,
+    tier: product.name[resolveCatalogLocale(input.locale)] ?? product.name.fr,
     sessionId: input.session.id,
     amountCents: input.session.amount_total ?? undefined,
     portalUrl,

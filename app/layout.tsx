@@ -1,5 +1,11 @@
 import type { Metadata } from "next";
-import { DM_Sans, JetBrains_Mono, Syne } from "next/font/google";
+import {
+  DM_Sans,
+  JetBrains_Mono,
+  Noto_Sans_Arabic,
+  Noto_Sans_SC,
+  Syne,
+} from "next/font/google";
 
 import { AiFirstDiscoveryHead } from "./_components/ai-first/AiFirstDiscoveryHead";
 import { ConditionalAnalytics } from "./_components/ConditionalAnalytics";
@@ -44,6 +50,20 @@ const jetbrains = JetBrains_Mono({
   display: "swap",
 });
 
+const notoArabic = Noto_Sans_Arabic({
+  subsets: ["arabic"],
+  weight: ["400", "500", "700"],
+  variable: "--font-arabic",
+  display: "swap",
+});
+
+const notoSc = Noto_Sans_SC({
+  subsets: ["latin"],
+  weight: ["400", "500", "700"],
+  variable: "--font-cjk",
+  display: "swap",
+});
+
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: "AUROS | RWA tokenization readiness",
@@ -68,7 +88,7 @@ export default function RootLayout({
   return (
     <html
       lang="fr"
-      className={`${syne.variable} ${dmSans.variable} ${jetbrains.variable}`}
+      className={`${syne.variable} ${dmSans.variable} ${jetbrains.variable} ${notoArabic.variable} ${notoSc.variable}`}
     >
       <head>
         <AiFirstDiscoveryHead />

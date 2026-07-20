@@ -1,5 +1,10 @@
-export const LOCALES = ["fr", "en", "es"] as const;
+export const LOCALES = ["fr", "en", "es", "ar", "zh"] as const;
 export type Locale = (typeof LOCALES)[number];
+
+/** Fully translated secondary catalogs (hub chrome uses all LOCALES). */
+export const CATALOG_LOCALES = ["fr", "en", "es"] as const;
+export type CatalogLocale = (typeof CATALOG_LOCALES)[number];
+export type CatalogMap<T> = Record<CatalogLocale, T>;
 
 export const DEFAULT_LOCALE: Locale = "fr";
 export const LOCALE_STORAGE_KEY = "auros_locale";

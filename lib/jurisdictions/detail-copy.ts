@@ -1,4 +1,4 @@
-import type { Locale } from "@/lib/i18n";
+import { resolveCatalogLocale, type CatalogMap, type Locale } from "@/lib/i18n";
 
 export type JurisdictionDetailCopy = {
   stateFees: string;
@@ -248,7 +248,7 @@ const ES: Record<string, JurisdictionDetailCopy> = {
   },
 };
 
-const CATALOG: Record<Locale, Record<string, JurisdictionDetailCopy>> = {
+const CATALOG: CatalogMap< Record<string, JurisdictionDetailCopy>> = {
   fr: FR,
   en: EN,
   es: ES,
@@ -258,6 +258,6 @@ export function getJurisdictionDetail(
   locale: Locale,
   id: string
 ): JurisdictionDetailCopy {
-  const bucket = CATALOG[locale] ?? FR;
+  const bucket = CATALOG[resolveCatalogLocale(locale)] ?? FR;
   return bucket[id] ?? FR[id] ?? bucket["dubai-difc"];
 }

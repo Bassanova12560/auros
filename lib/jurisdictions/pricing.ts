@@ -1,4 +1,4 @@
-import type { Locale } from "@/lib/i18n";
+import type { CatalogMap, Locale } from "@/lib/i18n";
 
 export type JurisdictionProductTier = "starter" | "launch";
 
@@ -6,8 +6,8 @@ export type JurisdictionProduct = {
   id: JurisdictionProductTier;
   amountCents: number;
   currency: "eur";
-  name: Record<Locale, string>;
-  description: Record<Locale, string>;
+  name: CatalogMap< string>;
+  description: CatalogMap< string>;
 };
 
 export const JURISDICTION_PRODUCTS: Record<

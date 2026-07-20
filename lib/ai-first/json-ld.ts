@@ -81,7 +81,7 @@ export function webPageJsonLd(page: AiFirstPage): Record<string, unknown> {
     url: page.canonicalUrl,
     name: page.title,
     description: page.description,
-    inLanguage: page.language === "multi" ? ["fr", "en", "es"] : page.language,
+    inLanguage: page.language === "multi" ? ["fr", "en", "es", "ar", "zh"] : page.language,
     isPartOf: { "@type": "WebSite", url: AUROS_ORG.url, name: AUROS_ORG.name },
     about: page.keywords.slice(0, 8).map((k) => ({ "@type": "Thing", name: k })),
     dateModified: page.lastUpdated,
@@ -115,7 +115,7 @@ export function courseJsonLd(page: AiFirstPage): Record<string, unknown> | null 
       url: AUROS_ORG.url,
     },
     isAccessibleForFree: isFree,
-    inLanguage: ["fr", "en", "es"],
+    inLanguage: ["fr", "en", "es", "ar", "zh"],
     url: page.canonicalUrl,
   };
 }

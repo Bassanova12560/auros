@@ -2,6 +2,7 @@ import Stripe from "stripe";
 
 import { siteOrigin } from "@/lib/emails/constants";
 import type { Locale } from "@/lib/i18n";
+import { resolveCatalogLocale } from "@/lib/i18n";
 import {
   jurisdictionProduct,
   type JurisdictionProductTier,
@@ -51,8 +52,10 @@ export async function createJurisdictionCheckoutSession(
           currency: product.currency,
           unit_amount: product.amountCents,
           product_data: {
-            name: product.name[input.locale] ?? product.name.fr,
-            description: product.description[input.locale] ?? product.description.fr,
+            name: product.name[resolveCatalogLocale(input.locale)] ?? product.name.fr,
+            description:
+              product.description[resolveCatalogLocale(input.locale)] ??
+              product.description.fr,
           },
         },
       },

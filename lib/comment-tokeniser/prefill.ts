@@ -1,3 +1,4 @@
+import type { Locale } from "@/lib/i18n";
 import type { WizardPrefill } from "@/lib/wizard-prefill";
 
 import {
@@ -8,7 +9,7 @@ import {
 
 export function prefillFromCommentTokeniser(
   slug: CommentTokeniserSlug,
-  locale: "fr" | "en" | "es" = "fr"
+  locale: Locale = "fr"
 ): WizardPrefill {
   const landing = getCommentTokeniserLanding(slug)!;
   const copy = getCommentTokeniserCopy(slug, locale);

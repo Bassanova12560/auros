@@ -18,6 +18,8 @@ const OUTPUT_LANGUAGE: Record<Locale, string> = {
   fr: "French",
   en: "English",
   es: "Spanish",
+  ar: "Arabic",
+  zh: "Chinese",
 };
 
 function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {

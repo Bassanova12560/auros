@@ -1,4 +1,4 @@
-import type { Locale } from "@/lib/i18n";
+import { resolveCatalogLocale, type CatalogMap, type Locale } from "@/lib/i18n";
 import type { RwaPlatformId } from "@/lib/rwa-platforms";
 import type { PlatformMatchResult } from "@/lib/platform-match";
 
@@ -179,8 +179,7 @@ const ES: Record<RwaPlatformId, PlatformCopy> = {
 
 const MAP = { fr: FR, en: EN, es: ES } as const;
 
-const MATCH_LABELS: Record<
-  Locale,
+const MATCH_LABELS: CatalogMap<
   Record<PlatformMatchResult["label"], string>
 > = {
   fr: {
@@ -213,13 +212,13 @@ export function localizePlatformMatch(
   locale: Locale,
   platform: PlatformMatchResult
 ): PlatformMatchResult {
-  const copy = MAP[locale][platform.id];
+  const copy = MAP[resolveCatalogLocale(locale)][platform.id];
   return {
     ...platform,
     description: copy.description,
     processTimeline: copy.processTimeline,
     keyRequirements: copy.keyRequirements,
-    label: MATCH_LABELS[locale][platform.label] as PlatformMatchResult["label"],
+    label: MATCH_LABELS[resolveCatalogLocale(locale)][platform.label] as PlatformMatchResult["label"],
   };
 }
 
@@ -227,7 +226,7 @@ export function admissionOverallLabel(
   locale: Locale,
   label: string
 ): string {
-  const table: Record<Locale, Record<string, string>> = {
+  const table: CatalogMap< Record<string, string>> = {
     fr: {
       "READY TO SUBMIT": "PRÊT À SOUMETTRE",
       "STRONG CANDIDATE": "CANDIDAT SOLIDE",
@@ -247,5 +246,5 @@ export function admissionOverallLabel(
       "EARLY STAGE": "FASE INICIAL",
     },
   };
-  return table[locale][label] ?? label;
+  return table[resolveCatalogLocale(locale)][label] ?? label;
 }

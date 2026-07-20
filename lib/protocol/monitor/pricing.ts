@@ -1,3 +1,5 @@
+import type { Locale } from "@/lib/i18n";
+
 /** AUROS Protocol Monitor — self-serve Starter / Pro pricing. */
 
 export const MONITOR_STARTER_MONTHLY_EUR = 49;
@@ -16,7 +18,7 @@ export function monitorPlanAmountCents(plan: MonitorPlan): number {
 
 export function monitorPlanLabel(
   plan: MonitorPlan,
-  locale: "fr" | "en" | "es" = "fr"
+  locale: Locale = "fr"
 ): string {
   if (plan === "pro") {
     if (locale === "en") return "AUROS Protocol Monitor Pro";
@@ -30,7 +32,7 @@ export function monitorPlanLabel(
 
 export function monitorPlanDescription(
   plan: MonitorPlan,
-  locale: "fr" | "en" | "es" = "fr"
+  locale: Locale = "fr"
 ): string {
   if (plan === "pro") {
     if (locale === "en") {

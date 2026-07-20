@@ -1,4 +1,4 @@
-import type { Locale } from "@/lib/i18n";
+import { resolveCatalogLocale, type CatalogMap, type Locale } from "@/lib/i18n";
 
 export type PricingTier = {
   id: string;
@@ -312,8 +312,8 @@ const ES: PricingMessages = {
   jurisdictionsLink: "Comparar jurisdicciones →",
 };
 
-const CATALOG: Record<Locale, PricingMessages> = { fr: FR, en: EN, es: ES };
+const CATALOG: CatalogMap< PricingMessages> = { fr: FR, en: EN, es: ES };
 
 export function getPricingMessages(locale: Locale): PricingMessages {
-  return CATALOG[locale] ?? FR;
+  return CATALOG[resolveCatalogLocale(locale)] ?? FR;
 }

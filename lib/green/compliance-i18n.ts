@@ -1,4 +1,4 @@
-import type { Locale } from "@/lib/i18n";
+import { resolveCatalogLocale, type CatalogMap, type Locale } from "@/lib/i18n";
 
 import type {
   EuGbsEligibility,
@@ -144,8 +144,8 @@ const ES: GreenComplianceCopy = {
   },
 };
 
-const COPY: Record<Locale, GreenComplianceCopy> = { fr: FR, en: EN, es: ES };
+const COPY: CatalogMap< GreenComplianceCopy> = { fr: FR, en: EN, es: ES };
 
 export function getGreenComplianceCopy(locale: Locale): GreenComplianceCopy {
-  return COPY[locale] ?? FR;
+  return COPY[resolveCatalogLocale(locale)] ?? FR;
 }

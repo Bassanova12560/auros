@@ -8,7 +8,7 @@ export const runtime = "nodejs";
 const bodySchema = z.object({
   email: z.string().email(),
   plan: z.enum(["starter", "pro"]),
-  locale: z.enum(["fr", "en", "es"]).default("fr"),
+  locale: z.enum(["fr", "en", "es", "ar", "zh"]).default("fr"),
 });
 
 export async function POST(req: Request) {
