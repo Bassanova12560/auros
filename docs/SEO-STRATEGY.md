@@ -31,6 +31,7 @@ Chaque hub a : entrée catalogue + `AiFirstPageJsonLd` + FAQ citables (HTML + FA
 3. **RAG** `/ai-first/rag?q=` — SearchAction WebSite pointe aussi ici.
 4. **page.json** — citation page par page.
 5. **FAQ** — questions naturelles alignées sur les intents utilisateurs.
+6. **Ownership de catégorie** — `/guides` (définitions) + `/guides/intents` (30 Q&A).
 
 ## Google
 

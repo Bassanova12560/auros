@@ -56,6 +56,9 @@ async function main() {
           "/compare",
           "/faq",
           "/data/terminal",
+          "/guides",
+          "/guides/intents",
+          "/guides/booking-engine-watts",
         ].includes(p.path)
       )
       .map((p) => p.canonicalUrl),

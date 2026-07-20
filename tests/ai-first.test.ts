@@ -43,6 +43,14 @@ describe("ai-first/catalog", () => {
     assert.ok(cat.pages.length >= 30);
   });
 
+  it("includes category ownership guides and intents", () => {
+    assert.ok(getAiFirstPageByPath("/guides"));
+    assert.ok(getAiFirstPageByPath("/guides/intents"));
+    assert.ok(getAiFirstPageByPath("/guides/booking-engine-watts"));
+    const intents = getAiFirstPageByPath("/guides/intents");
+    assert.ok(intents?.faq && intents.faq.length >= 30);
+  });
+
   it("includes Watts and ChargeFlow product hubs", () => {
     const paths = getAllAiFirstPages().map((p) => p.path);
     assert.ok(paths.includes("/green/watts"));

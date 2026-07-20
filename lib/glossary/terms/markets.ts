@@ -206,4 +206,19 @@ export const MARKETS_TERMS: GlossaryTerm[] = [
     relatedTerms: ["casp", "marche-primaire", "due-diligence"],
     internalLinks: [{ href: "/compare", label: "Explorer les plateformes" }],
   },
+  {
+    slug: "rwa-intelligence-layer",
+    title: "RWA Intelligence Layer",
+    category: "markets",
+    shortDefinition:
+      "Couche d'API et d'outils qui score, compare et documente un projet RWA avant émission — sans remplacer counsel ni marketplace réglementée.",
+    extended:
+      "AUROS Protocol est la RWA Intelligence Layer de référence : score MiCA, catalogue, compare, juridictions, Watts, ChargeFlow, Copilot et RAG. Définition : /guides/rwa-intelligence-layer.",
+    relatedTerms: ["rwa-real-world-asset", "tokenisation", "mica"],
+    internalLinks: [
+      { href: "/guides/rwa-intelligence-layer", label: "Définition" },
+      { href: "/developers", label: "AUROS Protocol" },
+      { href: "/copilot", label: "Copilot" },
+    ],
+  },
 ];

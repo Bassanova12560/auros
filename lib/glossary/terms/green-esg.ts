@@ -113,10 +113,11 @@ export const GREEN_ESG_TERMS: GlossaryTerm[] = [
       "Grille documentaire AUROS Green pour évaluer un actif énergétique tokenisé avant label.",
     extended:
       "RTMS structure la due diligence en quatre piliers actionnables — sans promesse de rendement ni agrément régulateur. Elle aide producteurs et analystes à préparer un dossier label ou marketplace. Résultat assistant RTMS indicatif, revue humaine pour Verified.",
-    relatedTerms: ["credit-carbone", "ppa-power-purchase", "label-verified-green"],
+    relatedTerms: ["credit-carbone", "ppa-power-purchase", "label-verified-green", "booking-engine-watts"],
     internalLinks: [
       { href: "/green/standards", label: "Grille complète" },
       { href: "/green/rtms-assistant", label: "Assistant RTMS" },
+      { href: "/guides/green-rtms", label: "Définition RTMS" },
     ],
   },
   {
@@ -230,10 +231,47 @@ export const GREEN_ESG_TERMS: GlossaryTerm[] = [
       "Statut accordé après revue documentaire AUROS d'un projet énergétique conforme à RTMS.",
     extended:
       "Verified distingue un projet revu humainement du simple dépôt marketplace ou score assistant RTMS. Ce n'est pas un agrément régulateur ni une notation de crédit. Le registre public liste les projets certifiés avec périmètre affiché honnêtement.",
-    relatedTerms: ["rtms", "greenwashing", "tokenisation-energie"],
+    relatedTerms: ["rtms", "greenwashing", "tokenisation-energie", "booking-engine-watts"],
     internalLinks: [
       { href: "/green/label", label: "Candidater au label" },
       { href: "/green/registry", label: "Registre public" },
+      { href: "/guides/green-rtms", label: "Définition RTMS" },
+    ],
+  },
+  {
+    slug: "booking-engine-watts",
+    title: "Booking engine des watts",
+    category: "green-esg",
+    shortDefinition:
+      "Système qui réserve un profil énergétique, matche la capacité, prouve via CFU et prépare le secondaire RWA — sans PPA ni marché réglementé.",
+    extended:
+      "AUROS Watts est l'implémentation de référence : matching déterministe, confirm → mint CFU, settle → retire, inventaire producteur et secondaire indicatif. Définition canonique : /guides/booking-engine-watts. Garde-fous : pas d'auto-mint ni auto-transfer.",
+    relatedTerms: ["chargeflow-cfu", "rtms", "tokenisation-energie", "ppa-power-purchase"],
+    internalLinks: [
+      { href: "/guides/booking-engine-watts", label: "Définition complète" },
+      { href: "/green/watts", label: "Hub AUROS Watts" },
+      { href: "/guides/intents", label: "Intents Watts" },
+    ],
+    faq: [
+      {
+        question: "Booking engine des watts vs PPA ?",
+        answer:
+          "Un PPA est un contrat d'achat d'électricité long terme. Le booking engine réserve et prouve des fenêtres unitaires — couches différentes, souvent complémentaires.",
+      },
+    ],
+  },
+  {
+    slug: "chargeflow-cfu",
+    title: "CFU (ChargeFlow Unit)",
+    category: "green-esg",
+    shortDefinition:
+      "Unité de charge vérifiable off-chain (CFU-E énergie, CFU-W hydrique, CFU-F flex) avec hash et page de vérification publique.",
+    extended:
+      "ChargeFlow standardise les CFU pour RWA/ESG. Mint et retire explicites. Compatible Supercharger-class sans claim de partnership Tesla. Définition : /guides/chargeflow-cfu.",
+    relatedTerms: ["booking-engine-watts", "tokenisation-energie", "tokenisation-eau"],
+    internalLinks: [
+      { href: "/guides/chargeflow-cfu", label: "Définition CFU" },
+      { href: "/green/chargeflow", label: "Demo ChargeFlow" },
     ],
   },
 ];

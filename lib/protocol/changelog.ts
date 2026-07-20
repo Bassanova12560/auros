@@ -25,6 +25,25 @@ export type ProtocolChangelogEntry = {
 /** Single source for `/developers/changelog` and GET `/api/v1/changelog`. Newest first. */
 export const PROTOCOL_CHANGELOG: ProtocolChangelogEntry[] = [
   {
+    id: "category-ownership-guides",
+    date: "2026-07-20",
+    title: "Ownership de catégorie — /guides + 30 intents",
+    summary:
+      "Hub /guides avec 4 définitions canoniques (booking engine watts, CFU, RWA Intelligence, RTMS) et /guides/intents (30 Q&A citables) pour Google et recherche IA.",
+    details: [
+      "3 piliers × 10 intents liés hub + outil.",
+      "Glossaire : booking-engine-watts, chargeflow-cfu, rwa-intelligence-layer.",
+      "llms.txt + sitemap priorités guides.",
+    ],
+    links: [
+      { href: "/guides", label: "Guides" },
+      { href: "/guides/intents", label: "30 intents" },
+      { href: "/guides/booking-engine-watts", label: "Booking engine watts" },
+    ],
+    tags: ["seo", "geo", "guides", "watts"],
+    status: "released",
+  },
+  {
     id: "seo-geo-visibility",
     date: "2026-07-20",
     title: "SEO/GEO — visibilité Google + recherche IA sur tout AUROS",
