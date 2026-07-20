@@ -3,8 +3,9 @@ import {
   SHIELD_VERSION,
   buildCbom,
   sealLocal,
+  tapLocal,
   verifyLocal
-} from "./chunk-OEUHLUD4.js";
+} from "./chunk-6FGC22L2.js";
 
 // src/server.ts
 import { createServer } from "http";
@@ -41,6 +42,16 @@ function startShieldServer(port = 8787) {
       if (req.method === "GET" && url.pathname === "/v1/cbom") {
         return json(res, 200, buildCbom("on_prem"));
       }
+      if (req.method === "POST" && url.pathname === "/v1/tap") {
+        const body = await readJson(req);
+        try {
+          return json(res, 200, tapLocal(body));
+        } catch (e) {
+          return json(res, 400, {
+            error: e instanceof Error ? e.message : "tap failed"
+          });
+        }
+      }
       if (req.method === "POST" && url.pathname === "/v1/seal") {
         const body = await readJson(req);
         if (!body.kind) return json(res, 400, { error: "kind required" });
@@ -73,7 +84,7 @@ function startShieldServer(port = 8787) {
       }
       return json(res, 404, {
         error: "not found",
-        paths: ["/health", "/v1/cbom", "/v1/seal", "/v1/verify"]
+        paths: ["/health", "/v1/cbom", "/v1/tap", "/v1/seal", "/v1/verify"]
       });
     } catch (e) {
       return json(res, 500, {

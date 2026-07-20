@@ -5,6 +5,7 @@ import {
   buildCbom,
   sealLocal,
   verifyLocal,
+  tapLocal,
   type ShieldSealKind,
 } from "./core.js";
 import { startShieldServer } from "./server.js";
@@ -14,6 +15,7 @@ function usage(): never {
 
 Usage:
   auros-shield cbom
+  auros-shield tap (--hash <hex> | --file <path>)
   auros-shield seal --kind <attest|cfu_e|cfu_w|cfu_f|audit> (--hash <hex> | --file <path>)
   auros-shield verify --kind <…> --hash <hex> --sig <hex>
   auros-shield serve [--port 8787]
@@ -38,6 +40,23 @@ if (!cmd || cmd === "-h" || cmd === "--help") usage();
 
 if (cmd === "cbom") {
   console.log(JSON.stringify(buildCbom("on_prem"), null, 2));
+  process.exit(0);
+}
+
+if (cmd === "tap") {
+  const hash = flag("--hash");
+  const file = flag("--file");
+  let payload: string | undefined;
+  if (file) payload = readFileSync(file, "utf8");
+  const result = tapLocal({
+    body: payload,
+    content_hash: hash,
+    profile: flag("--profile") as
+      | "classical_hmac_sha256_v1"
+      | "hybrid_pqc_ready_v1"
+      | undefined,
+  });
+  console.log(JSON.stringify(result, null, 2));
   process.exit(0);
 }
 

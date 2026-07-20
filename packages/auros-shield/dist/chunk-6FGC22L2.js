@@ -1,6 +1,6 @@
 // src/core.ts
 import { createHash, createHmac, timingSafeEqual } from "crypto";
-var SHIELD_VERSION = "0.1.0";
+var SHIELD_VERSION = "0.2.0";
 var SHIELD_DISCLAIMER = "AUROS Shield is an indicative on-prem proof runtime \u2014 not a regulated HSM certification, not legal advice, not a quantum-safe warranty until a NIST PQC suite is configured.";
 var CRYPTO_PROFILES = [
   "classical_hmac_sha256_v1",
@@ -141,6 +141,31 @@ function buildCbom(deployment = "on_prem") {
     disclaimer: SHIELD_DISCLAIMER
   };
 }
+var TAP_PREFIX = "auros-shield-tap:v1:";
+function tapLocal(input) {
+  const secret = resolveShieldSigningKey(input.signingKey);
+  if (!secret) throw new Error("AUROS_SHIELD_SIGNING_KEY required");
+  let content_hash = input.content_hash?.trim().toLowerCase();
+  if (!content_hash && input.body != null) {
+    content_hash = sha256Hex(input.body);
+  }
+  if (!content_hash || !SHA256_HEX.test(content_hash)) {
+    throw new Error("body or content_hash required");
+  }
+  const signature = createHmac("sha256", secret).update(`${TAP_PREFIX}${content_hash}`).digest("hex");
+  return {
+    shield_version: SHIELD_VERSION,
+    mode: "local_tap",
+    content_hash,
+    signature,
+    kind: input.kind ?? "tap",
+    profile: input.profile ?? "classical_hmac_sha256_v1",
+    sealed_at: (/* @__PURE__ */ new Date()).toISOString(),
+    payload_retained: false,
+    next_step: "POST content_hash to https://getauros.com/api/v1/shield/tap for public verify",
+    disclaimer: SHIELD_DISCLAIMER
+  };
+}
 
 export {
   SHIELD_VERSION,
@@ -151,5 +176,6 @@ export {
   isContentHash,
   sealLocal,
   verifyLocal,
-  buildCbom
+  buildCbom,
+  tapLocal
 };

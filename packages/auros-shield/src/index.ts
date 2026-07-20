@@ -8,5 +8,6 @@ export {
   sealLocal,
   verifyLocal,
   buildCbom,
+  tapLocal,
 } from "./core";
 export type { CryptoProfile, ShieldSealKind, ShieldSeal } from "./core";

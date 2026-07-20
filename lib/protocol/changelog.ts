@@ -25,6 +25,26 @@ export type ProtocolChangelogEntry = {
 /** Single source for `/developers/changelog` and GET `/api/v1/changelog`. Newest first. */
 export const PROTOCOL_CHANGELOG: ProtocolChangelogEntry[] = [
   {
+    id: "shield-proof-tap-freemium",
+    date: "2026-07-20",
+    title: "AUROS Shield Proof Tap — freemium indispensable",
+    summary:
+      "Tap non invasif (hash only), verify contrepartie gratuit, 100 ancrages/mo free · Premium illimité + hybrid PQC + export.",
+    details: [
+      "POST /api/v1/shield/tap · POST /api/v1/shield/verify · GET /api/v1/shield/receipts/:id",
+      "GET /api/v1/shield/export (Premium)",
+      "On-prem POST /v1/tap — package auros-shield 0.2.0",
+      "Payload jamais stocké — seule la preuve est publique.",
+    ],
+    links: [
+      { href: "/developers/shield", label: "AUROS Shield" },
+      { href: "/api/v1/shield/cbom", label: "CBOM" },
+      { href: "/developers#monitor", label: "Upgrade Premium" },
+    ],
+    tags: ["shield", "freemium", "tap", "institutions"],
+    status: "released",
+  },
+  {
     id: "auros-shield-onprem",
     date: "2026-07-20",
     title: "AUROS Shield — sous-couche crypto on-prem",

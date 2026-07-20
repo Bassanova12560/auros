@@ -1,13 +1,14 @@
 #!/usr/bin/env node
 import {
   startShieldServer
-} from "./chunk-DFRHBB4X.js";
+} from "./chunk-J4BFFLQZ.js";
 import {
   SHIELD_VERSION,
   buildCbom,
   sealLocal,
+  tapLocal,
   verifyLocal
-} from "./chunk-OEUHLUD4.js";
+} from "./chunk-6FGC22L2.js";
 
 // src/cli.ts
 import { readFileSync } from "fs";
@@ -16,6 +17,7 @@ function usage() {
 
 Usage:
   auros-shield cbom
+  auros-shield tap (--hash <hex> | --file <path>)
   auros-shield seal --kind <attest|cfu_e|cfu_w|cfu_f|audit> (--hash <hex> | --file <path>)
   auros-shield verify --kind <\u2026> --hash <hex> --sig <hex>
   auros-shield serve [--port 8787]
@@ -36,6 +38,19 @@ function flag(name) {
 if (!cmd || cmd === "-h" || cmd === "--help") usage();
 if (cmd === "cbom") {
   console.log(JSON.stringify(buildCbom("on_prem"), null, 2));
+  process.exit(0);
+}
+if (cmd === "tap") {
+  const hash = flag("--hash");
+  const file = flag("--file");
+  let payload;
+  if (file) payload = readFileSync(file, "utf8");
+  const result = tapLocal({
+    body: payload,
+    content_hash: hash,
+    profile: flag("--profile")
+  });
+  console.log(JSON.stringify(result, null, 2));
   process.exit(0);
 }
 if (cmd === "seal") {

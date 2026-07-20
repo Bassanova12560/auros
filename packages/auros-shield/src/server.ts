@@ -8,6 +8,7 @@ import {
   buildCbom,
   sealLocal,
   verifyLocal,
+  tapLocal,
   type ShieldSealKind,
 } from "./core.js";
 
@@ -50,6 +51,21 @@ export function startShieldServer(port = 8787) {
       }
       if (req.method === "GET" && url.pathname === "/v1/cbom") {
         return json(res, 200, buildCbom("on_prem"));
+      }
+      if (req.method === "POST" && url.pathname === "/v1/tap") {
+        const body = (await readJson(req)) as {
+          body?: string;
+          content_hash?: string;
+          kind?: ShieldSealKind | "tap";
+          profile?: "classical_hmac_sha256_v1" | "hybrid_pqc_ready_v1";
+        };
+        try {
+          return json(res, 200, tapLocal(body));
+        } catch (e) {
+          return json(res, 400, {
+            error: e instanceof Error ? e.message : "tap failed",
+          });
+        }
       }
       if (req.method === "POST" && url.pathname === "/v1/seal") {
         const body = (await readJson(req)) as {
@@ -94,7 +110,7 @@ export function startShieldServer(port = 8787) {
       }
       return json(res, 404, {
         error: "not found",
-        paths: ["/health", "/v1/cbom", "/v1/seal", "/v1/verify"],
+        paths: ["/health", "/v1/cbom", "/v1/tap", "/v1/seal", "/v1/verify"],
       });
     } catch (e) {
       return json(res, 500, {

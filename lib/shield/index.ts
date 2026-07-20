@@ -21,3 +21,25 @@ export {
   buildCbom,
   listProfiles,
 } from "./core";
+export {
+  SHIELD_FREE_TAP_MONTHLY,
+  SHIELD_PREMIUM_TAP_MONTHLY,
+  SHIELD_FREE_FEATURES,
+  SHIELD_PREMIUM_FEATURES,
+  shieldTapLimit,
+  shieldPlanFromPremium,
+} from "./freemium";
+export type { ShieldPlan } from "./freemium";
+export {
+  createCloudTapReceipt,
+  getReceipt,
+  listReceiptsForExport,
+  verifyCloudAnchor,
+  toPublicVerify,
+  getTapUsage,
+  incrementTapUsage,
+  ANCHOR_PREFIX,
+} from "./tap";
+export type { ShieldReceipt, ShieldTapInput, TapReceiptPublic } from "./tap";
+export { tapLocal, verifyLocalTap } from "./local-tap";
+export type { LocalTapResult } from "./local-tap";

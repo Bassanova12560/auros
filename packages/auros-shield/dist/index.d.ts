@@ -2,7 +2,7 @@
  * Standalone copy of AUROS Shield core for the npm package
  * (no Next.js path aliases — banks install this in their DMZ).
  */
-declare const SHIELD_VERSION = "0.1.0";
+declare const SHIELD_VERSION = "0.2.0";
 declare const SHIELD_DISCLAIMER = "AUROS Shield is an indicative on-prem proof runtime \u2014 not a regulated HSM certification, not legal advice, not a quantum-safe warranty until a NIST PQC suite is configured.";
 declare const CRYPTO_PROFILES: readonly ["classical_hmac_sha256_v1", "hybrid_pqc_ready_v1"];
 type CryptoProfile = (typeof CRYPTO_PROFILES)[number];
@@ -73,5 +73,24 @@ declare function buildCbom(deployment?: "on_prem" | "edge" | "cloud_gateway"): {
     };
     disclaimer: string;
 };
+/** Non-invasive local tap — hash body, discard, return receipt (no cloud). */
+declare function tapLocal(input: {
+    body?: string;
+    content_hash?: string;
+    kind?: ShieldSealKind | "tap";
+    profile?: CryptoProfile;
+    signingKey?: string | null;
+}): {
+    shield_version: string;
+    mode: "local_tap";
+    content_hash: string;
+    signature: string;
+    kind: ShieldSealKind | "tap";
+    profile: "hybrid_pqc_ready_v1" | "classical_hmac_sha256_v1";
+    sealed_at: string;
+    payload_retained: false;
+    next_step: string;
+    disclaimer: string;
+};
 
-export { CRYPTO_PROFILES, type CryptoProfile, SHIELD_DISCLAIMER, SHIELD_VERSION, type ShieldSeal, type ShieldSealKind, buildCbom, isContentHash, resolveShieldSigningKey, sealLocal, sha256Hex, verifyLocal };
+export { CRYPTO_PROFILES, type CryptoProfile, SHIELD_DISCLAIMER, SHIELD_VERSION, type ShieldSeal, type ShieldSealKind, buildCbom, isContentHash, resolveShieldSigningKey, sealLocal, sha256Hex, tapLocal, verifyLocal };

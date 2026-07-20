@@ -7,8 +7,9 @@ import {
   resolveShieldSigningKey,
   sealLocal,
   sha256Hex,
+  tapLocal,
   verifyLocal
-} from "./chunk-OEUHLUD4.js";
+} from "./chunk-6FGC22L2.js";
 export {
   CRYPTO_PROFILES,
   SHIELD_DISCLAIMER,
@@ -18,5 +19,6 @@ export {
   resolveShieldSigningKey,
   sealLocal,
   sha256Hex,
+  tapLocal,
   verifyLocal
 };

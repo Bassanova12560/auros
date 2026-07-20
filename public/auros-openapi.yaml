@@ -1261,6 +1261,71 @@ paths:
       responses:
         "200":
           description: Demo unit
+  /api/v1/shield/tap:
+    post:
+      operationId: shieldTap
+      summary: Proof Tap (freemium) — hash-only cloud anchor
+      description: |
+        Non-invasive RWA proof tap. Hashes body (or accepts content_hash), discards payload,
+        issues public AUROS cloud co-seal. Free: 100/mo. Premium: unlimited.
+        Never stores payload (payload_retained: false).
+      tags: [Shield]
+      security: [{ BearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                body: { type: string, description: Discarded after hashing }
+                content_hash: { type: string }
+                local_signature: { type: string }
+                label: { type: string }
+      responses:
+        '200':
+          description: Receipt with cloud_signature + verify_url
+        '429':
+          description: Free quota exceeded
+  /api/v1/shield/verify:
+    post:
+      operationId: shieldVerify
+      summary: Public counterparty verify (forever free)
+      tags: [Shield]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id: { type: string }
+                content_hash: { type: string }
+                cloud_signature: { type: string }
+      responses:
+        '200':
+          description: valid true/false
+  /api/v1/shield/receipts/{id}:
+    get:
+      operationId: shieldReceipt
+      summary: Public receipt by id (free)
+      tags: [Shield]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: Public receipt
+  /api/v1/shield/export:
+    get:
+      operationId: shieldExport
+      summary: Export receipt registry (Premium)
+      tags: [Shield]
+      security: [{ BearerAuth: [] }]
+      responses:
+        '200':
+          description: Hash-only receipt list
   /api/v1/shield/cbom:
     get:
       operationId: shieldCbom
