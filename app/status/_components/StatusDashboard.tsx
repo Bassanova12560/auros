@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 
@@ -62,18 +61,12 @@ export function StatusDashboard({ initial }: Props) {
     <>
       <Link
         href="/"
-        className="interactive-subtle mb-6 inline-flex items-center gap-3"
+        className="interactive-subtle mb-6 inline-flex items-center"
         aria-label="AUROS — home"
       >
-        <Image
-          src="/auros-logo.svg"
-          alt=""
-          width={32}
-          height={32}
-          className="h-8 w-8"
-          priority
-        />
-        <span className="font-mono text-[11px] tracking-wide text-white/45">AUROS</span>
+        <span className="font-display text-xs font-semibold tracking-[0.35em] text-white">
+          AUROS
+        </span>
       </Link>
 
       <header>

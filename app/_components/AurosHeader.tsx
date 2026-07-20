@@ -271,17 +271,9 @@ export function AurosHeader({
         >
           <Link
             href="/"
-            className="inline-flex items-center gap-2.5"
+            className="inline-flex items-center"
             onClick={closeMega}
           >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/auros-logo.svg"
-              alt=""
-              width={22}
-              height={22}
-              className="h-[22px] w-[22px] rounded-[2px] ring-1 ring-white/15"
-            />
             <span className="font-display text-xs font-semibold tracking-[0.35em] text-white">
               AUROS
             </span>
@@ -305,17 +297,9 @@ export function AurosHeader({
         <div className="mx-auto flex max-w-6xl items-center gap-2 px-4 py-3 pt-[max(0.75rem,env(safe-area-inset-top))] md:gap-4 md:px-6 md:py-3.5 md:pt-3.5">
           <Link
             href="/"
-            className="inline-flex items-center gap-2.5"
+            className="inline-flex items-center"
             onClick={closeMega}
           >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/auros-logo.svg"
-              alt=""
-              width={22}
-              height={22}
-              className="h-[22px] w-[22px] rounded-[2px] ring-1 ring-white/15"
-            />
             <span className="font-display text-xs font-semibold tracking-[0.35em] text-white">
               AUROS
             </span>
