@@ -8,9 +8,17 @@ export const runtime = "nodejs";
 
 const contextSchema = z
   .object({
-    surface: z.enum(["compare", "jurisdiction", "chargeflow", "generic"]),
+    surface: z.enum([
+      "compare",
+      "jurisdiction",
+      "chargeflow",
+      "green",
+      "rtms",
+      "generic",
+    ]),
     product_ids: z.array(z.string().trim().min(1)).max(4).optional(),
     jurisdiction_id: z.string().trim().min(1).max(64).optional(),
+    rtms_brief: z.string().trim().max(1500).optional(),
   })
   .optional();
 

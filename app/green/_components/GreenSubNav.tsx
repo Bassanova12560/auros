@@ -44,6 +44,12 @@ export function GreenSubNav() {
         ))}
         <div className="ml-auto flex items-center gap-x-4">
           <Link
+            href="/copilot?context=green"
+            className="font-mono text-[10px] uppercase tracking-wider text-emerald-400/70 transition hover:text-emerald-300"
+          >
+            Copilot
+          </Link>
+          <Link
             href={DATA_TERMINAL_ROUTE}
             className="font-mono text-[10px] uppercase tracking-wider text-white/30 transition hover:text-white/55"
           >

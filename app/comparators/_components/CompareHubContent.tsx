@@ -10,6 +10,7 @@ import { PlatformLogo } from "./PlatformLogo";
 import { ProductMetaBadges } from "./ProductMetaBadges";
 import { ProductRowLink } from "./ProductRowLink";
 import { ComparePanel } from "./ComparePanel";
+import { CompareAiAssist } from "./CompareAiAssist";
 import { CompareSelectCheckbox } from "./CompareSelectCheckbox";
 import { CompareSelectionBar } from "./CompareSelectionBar";
 import { RiskBadge } from "./RiskBadge";
@@ -88,6 +89,7 @@ export function CompareHubContent({ payload }: CompareHubContentProps) {
     setPanelOpen,
     toggleSelect,
     clearSelection,
+    addProductIds,
     isSelected,
     maxReached,
   } = useCompareSelection(payload.products);
@@ -143,6 +145,11 @@ export function CompareHubContent({ payload }: CompareHubContentProps) {
           {copy.updated(formattedDate)} · {copy.totalProducts(payload.totalProducts)}
         </p>
       </header>
+
+      <CompareAiAssist
+        selectedIds={selectedIds}
+        onAddIds={addProductIds}
+      />
 
       <aside className="mb-8 rounded-2xl border border-white/[0.1] bg-white/[0.03] p-5 md:flex md:items-center md:justify-between md:gap-6">
         <div>

@@ -7,7 +7,7 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 import { Mistral } from "@mistralai/mistralai";
 import Groq from "groq-sdk";
 
-import { AI_CONFIG, resolveProviderChain, type BillableAiProvider } from "@/lib/ai-config";
+import { AI_CONFIG, resolveGeminiApiKeys, resolveProviderChain, type BillableAiProvider } from "@/lib/ai-config";
 import type { Locale } from "@/lib/i18n";
 
 import { GREEN_RTMS_PILLARS, type GreenRtmsPillar } from "./constants";
@@ -177,15 +177,25 @@ async function callGroq(prompt: string): Promise<string> {
 }
 
 async function callGemini(prompt: string): Promise<string> {
-  const key = process.env.GEMINI_API_KEY;
-  if (!key) throw new Error("GEMINI_API_KEY missing");
-  const genAI = new GoogleGenerativeAI(key);
-  const model = genAI.getGenerativeModel({
-    model: AI_CONFIG.geminiModel,
-    generationConfig: { maxOutputTokens: 1200, temperature: 0.2 },
-  });
-  const result = await model.generateContent(prompt);
-  return result.response.text();
+  const keys = resolveGeminiApiKeys();
+  if (!keys.length) throw new Error("GEMINI_API_KEY missing");
+  let lastErr: unknown;
+  for (const key of keys) {
+    try {
+      const genAI = new GoogleGenerativeAI(key);
+      const model = genAI.getGenerativeModel({
+        model: AI_CONFIG.geminiModel,
+        generationConfig: { maxOutputTokens: 1200, temperature: 0.2 },
+      });
+      const result = await model.generateContent(prompt);
+      return result.response.text();
+    } catch (err) {
+      lastErr = err;
+      const msg = err instanceof Error ? err.message : String(err);
+      if (!/429|quota|Too Many Requests/i.test(msg)) throw err;
+    }
+  }
+  throw lastErr instanceof Error ? lastErr : new Error("Gemini failed");
 }
 
 async function callMistral(prompt: string): Promise<string> {

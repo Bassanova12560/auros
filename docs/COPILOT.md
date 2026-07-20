@@ -17,7 +17,9 @@
 - Rate limit on chat · shared `AI_DAILY_GENERATION_CAP` · provider chain Gemini → Groq → Mistral → OpenRouter (same as dossier).
 - Ops endpoints require `Authorization: Bearer CRON_SECRET`.
 - Content agent uses AI when keys are present; catalog scan stays deterministic (gap detection).
-- Page context via query (`?context=compare&ids=…`, `?context=jurisdiction&jid=…`, `?context=chargeflow`) seeds read-only tools — no auto-publish.
+- Page context via query (`?context=compare&ids=…`, `?context=jurisdiction&jid=…`, `?context=chargeflow`, `?context=green`, `?context=rtms`) seeds read-only tools — no auto-publish.
+- Compare assist can return `suggested_product_ids` for the user to add to `/compare` (human click only).
+- Optional `GEMINI_API_KEY_2` for quota failover.
 
 ## Ops quickstart
 

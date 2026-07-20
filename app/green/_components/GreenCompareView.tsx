@@ -690,6 +690,15 @@ export function GreenCompareView({
 
       <GreenPageHeader eyebrow={c.eyebrow} title={c.title} intro={c.intro} compact />
 
+      <p className="mt-3">
+        <a
+          href="/copilot?context=green"
+          className="font-mono text-[10px] uppercase tracking-wider text-emerald-500/80 transition hover:text-emerald-400"
+        >
+          Copilot Green — CQS / Watt / RTMS →
+        </a>
+      </p>
+
       {snapshotId ? (
 
         <div className="mt-4 flex flex-wrap items-center gap-3">

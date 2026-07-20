@@ -2,7 +2,7 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 import Groq from "groq-sdk";
 import { Mistral } from "@mistralai/mistralai";
 
-import { AI_CONFIG, resolveProviderChain } from "@/lib/ai-config";
+import { AI_CONFIG, resolveGeminiApiKeys, resolveProviderChain } from "@/lib/ai-config";
 import { checkAiDailyBudget, consumeAiDailyBudget } from "@/lib/ai-budget";
 
 import { COPILOT_DISCLAIMER } from "./types";
@@ -11,7 +11,11 @@ import type {
   CopilotCitation,
   CopilotPageContext,
 } from "./types";
-import { runCopilotTools, type CopilotToolResult } from "./tools";
+import {
+  collectSuggestedIds,
+  runCopilotTools,
+  type CopilotToolResult,
+} from "./tools";
 
 function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
   return new Promise((resolve, reject) => {
@@ -31,7 +35,7 @@ function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
 function buildSystemPrompt(locale: "fr" | "en" | "es"): string {
   const lang =
     locale === "en" ? "English" : locale === "es" ? "Spanish" : "French";
-  return `You are AUROS Copilot, an assistant for the AUROS RWA prep platform (comparator, jurisdictions, Protocol API, ChargeFlow).
+  return `You are AUROS Copilot, an assistant for the AUROS RWA prep platform (comparator, jurisdictions, Protocol API, ChargeFlow, Green).
 Language: ${lang}.
 Rules:
 - Be concise, professional, institutional tone.
@@ -39,22 +43,34 @@ Rules:
 - Always cite 1–3 concrete AUROS URLs from the tool citations when relevant.
 - Never claim to change scores, attestations, or mint/retire ChargeFlow units.
 - Never claim official Tesla or TotalEnergies partnership — format-compatible only.
+- If tool suggest_compare_products lists IDs, mention them clearly so the user can add them to /compare.
+- Never claim to auto-write the catalog or change scores.
 - End without repeating the full legal disclaimer (it is attached separately).
 ${COPILOT_DISCLAIMER}`;
 }
 
 function formatPageContext(context?: CopilotPageContext): string {
-  if (!context || context.surface === "generic") {
-    if (!context?.product_ids?.length && !context?.jurisdiction_id) return "";
+  if (!context) return "";
+  if (
+    context.surface === "generic" &&
+    !context.product_ids?.length &&
+    !context.jurisdiction_id &&
+    !context.rtms_brief
+  ) {
+    return "";
   }
-  const parts = [`surface=${context?.surface ?? "generic"}`];
-  if (context?.product_ids?.length) {
+  const parts = [`surface=${context.surface}`];
+  if (context.product_ids?.length) {
     parts.push(`product_ids=${context.product_ids.join(",")}`);
   }
-  if (context?.jurisdiction_id) {
+  if (context.jurisdiction_id) {
     parts.push(`jurisdiction_id=${context.jurisdiction_id}`);
   }
-  return `PAGE CONTEXT: ${parts.join(" · ")}\nUse this page context when answering; prefer tool data for these IDs.\n\n`;
+  let block = `PAGE CONTEXT: ${parts.join(" · ")}\nUse this page context when answering; prefer tool data for these IDs.\n`;
+  if (context.rtms_brief?.trim()) {
+    block += `RTMS_BRIEF:\n${context.rtms_brief.trim().slice(0, 1200)}\n`;
+  }
+  return `${block}\n`;
 }
 
 function buildUserPrompt(
@@ -141,18 +157,28 @@ function polishReply(
 }
 
 async function callGemini(system: string, user: string): Promise<string> {
-  const key = process.env.GEMINI_API_KEY;
-  if (!key) throw new Error("GEMINI_API_KEY missing");
-  const genAI = new GoogleGenerativeAI(key);
-  const model = genAI.getGenerativeModel({
-    model: AI_CONFIG.geminiModel,
-    generationConfig: {
-      maxOutputTokens: Math.min(AI_CONFIG.maxOutputTokens, 1200),
-      temperature: 0.3,
-    },
-  });
-  const result = await model.generateContent(`${system}\n\n${user}`);
-  return result.response.text().trim();
+  const keys = resolveGeminiApiKeys();
+  if (!keys.length) throw new Error("GEMINI_API_KEY missing");
+  let lastErr: unknown;
+  for (const key of keys) {
+    try {
+      const genAI = new GoogleGenerativeAI(key);
+      const model = genAI.getGenerativeModel({
+        model: AI_CONFIG.geminiModel,
+        generationConfig: {
+          maxOutputTokens: Math.min(AI_CONFIG.maxOutputTokens, 1200),
+          temperature: 0.3,
+        },
+      });
+      const result = await model.generateContent(`${system}\n\n${user}`);
+      return result.response.text().trim();
+    } catch (err) {
+      lastErr = err;
+      const msg = err instanceof Error ? err.message : String(err);
+      if (!/429|quota|Too Many Requests/i.test(msg)) throw err;
+    }
+  }
+  throw lastErr instanceof Error ? lastErr : new Error("Gemini failed");
 }
 
 async function callGroq(system: string, user: string): Promise<string> {
@@ -247,6 +273,7 @@ export async function runCopilotChat(input: {
   citations: CopilotCitation[];
   disclaimer: string;
   tools_used: string[];
+  suggested_product_ids: string[];
 }> {
   const locale = input.locale ?? "fr";
   const message = input.message.trim().slice(0, 2000);
@@ -257,6 +284,7 @@ export async function runCopilotChat(input: {
   const user = buildUserPrompt(message, tools, history, context);
   const citations = mergeCitations(tools);
   const tools_used = tools.map((t) => t.name);
+  const suggested_product_ids = collectSuggestedIds(tools);
 
   const budget = checkAiDailyBudget();
   const chain = resolveProviderChain();
@@ -285,6 +313,7 @@ export async function runCopilotChat(input: {
             citations,
             disclaimer: COPILOT_DISCLAIMER,
             tools_used,
+            suggested_product_ids,
           };
         }
       } catch (err) {
@@ -299,5 +328,6 @@ export async function runCopilotChat(input: {
     citations,
     disclaimer: COPILOT_DISCLAIMER,
     tools_used,
+    suggested_product_ids,
   };
 }

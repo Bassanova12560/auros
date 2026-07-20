@@ -16,7 +16,7 @@ export {
   type CopilotSurface,
 } from "./types";
 export { runCopilotChat } from "./chat";
-export { runCopilotTools } from "./tools";
+export { runCopilotTools, collectSuggestedIds } from "./tools";
 export {
   insertCopilotDraft,
   listCopilotDrafts,

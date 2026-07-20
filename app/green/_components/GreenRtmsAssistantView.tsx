@@ -218,6 +218,7 @@ export function GreenRtmsAssistantView() {
           <label className="block">
             <span className="text-xs uppercase tracking-wider text-emerald-500/50">{c.summary}</span>
             <textarea
+              id="rtms-summary"
               required
               rows={5}
               value={summary}
@@ -362,6 +363,28 @@ export function GreenRtmsAssistantView() {
                 className="rounded-lg border border-emerald-500/40 px-4 py-2 font-mono text-[11px] uppercase tracking-wider text-emerald-500 hover:border-emerald-400 hover:text-emerald-400"
               >
                 {c.marketCta} →
+              </Link>
+              <Link
+                href="/copilot?context=rtms"
+                onClick={() => {
+                  try {
+                    const priorities = extractTopRtmsGapPriorities(result, locale);
+                    sessionStorage.setItem(
+                      "auros_copilot_rtms_brief",
+                      JSON.stringify({
+                        score: result.overall,
+                        tier: result.tier,
+                        summary: summary.slice(0, 800),
+                        priorities: priorities.map((p) => p.label).slice(0, 3),
+                      })
+                    );
+                  } catch {
+                    /* ignore */
+                  }
+                }}
+                className="rounded-lg border border-emerald-500/40 px-4 py-2 font-mono text-[11px] uppercase tracking-wider text-emerald-500 hover:border-emerald-400 hover:text-emerald-400"
+              >
+                Demander au Copilot →
               </Link>
             </div>
           </div>

@@ -7,6 +7,14 @@ import {
   CHARGEFLOW_FLEETS_ROUTE,
   CHARGEFLOW_ROUTE,
 } from "@/lib/chargeflow/constants";
+import {
+  GREEN_COMPARE_ROUTE,
+  GREEN_LABEL_ROUTE,
+  GREEN_MARKET_ROUTE,
+  GREEN_ROUTE,
+  GREEN_RTMS_ASSISTANT_ROUTE,
+  GREEN_STANDARDS_ROUTE,
+} from "@/lib/green/constants";
 
 import type { CopilotCitation, CopilotPageContext } from "./types";
 
@@ -162,6 +170,91 @@ export function toolExplainChargeflow(): CopilotToolResult {
   };
 }
 
+export function toolExplainGreen(rtmsBrief?: string): CopilotToolResult {
+  const brief = rtmsBrief?.trim()
+    ? `\nRTMS project brief (user-provided, indicative):\n${rtmsBrief.trim().slice(0, 1200)}`
+    : "";
+  return {
+    name: "explain_green",
+    summary: [
+      "AUROS Green — tokenized climate / energy prep:",
+      "- CQS (Carbon Quality Score): indicative carbon credit quality.",
+      "- Watt Score: energy / flow companion metric (also used with ChargeFlow CFU-E).",
+      "- RTMS (Real / Transparent / Measurable / Sound): preliminary grid — not certification; human review for Green Verified label.",
+      `- Routes: hub ${GREEN_ROUTE}, compare ${GREEN_COMPARE_ROUTE}, market ${GREEN_MARKET_ROUTE}, RTMS assistant ${GREEN_RTMS_ASSISTANT_ROUTE}, standards ${GREEN_STANDARDS_ROUTE}, label ${GREEN_LABEL_ROUTE}.`,
+      "Do not invent CQS/Watt numbers; point to tools and pages.",
+      brief,
+    ]
+      .filter(Boolean)
+      .join("\n"),
+    citations: [
+      { title: "AUROS Green", url: `${siteBase()}${GREEN_ROUTE}` },
+      {
+        title: "Comparateur Green",
+        url: `${siteBase()}${GREEN_COMPARE_ROUTE}`,
+      },
+      {
+        title: "Assistant RTMS",
+        url: `${siteBase()}${GREEN_RTMS_ASSISTANT_ROUTE}`,
+      },
+      {
+        title: "Standards RTMS",
+        url: `${siteBase()}${GREEN_STANDARDS_ROUTE}`,
+      },
+    ],
+  };
+}
+
+/**
+ * Suggest hub products to add to /compare (never writes catalog).
+ * Returns suggested IDs in data.suggested_product_ids.
+ */
+export async function toolSuggestCompareProducts(opts?: {
+  exclude_ids?: string[];
+  category?:
+    | "all"
+    | "stablecoins"
+    | "real_estate"
+    | "bonds"
+    | "commodities"
+    | "private_credit";
+  limit?: number;
+}): Promise<CopilotToolResult> {
+  const exclude = new Set(
+    (opts?.exclude_ids ?? []).map((id) => id.toLowerCase())
+  );
+  const category = opts?.category ?? "all";
+  const listed = await listProtocolProducts({
+    category,
+    page: 1,
+    limit: 24,
+    sort: "apy",
+  });
+  const picks = listed.products
+    .filter((p) => !exclude.has(p.id.toLowerCase()) && p.live !== false)
+    .slice(0, Math.min(opts?.limit ?? 3, 4));
+  const suggested_product_ids = picks.map((p) => p.id);
+  const lines = picks.map(
+    (p) =>
+      `- ${p.id}: ${p.name} · APY ${p.apy}% · TVL $${Math.round(p.tvl_usd).toLocaleString("en-US")} · ${p.jurisdiction ?? "n/a"}`
+  );
+  return {
+    name: "suggest_compare_products",
+    summary:
+      picks.length > 0
+        ? `Suggested RWA to add to /compare (human chooses):\n${lines.join("\n")}\nIDs: ${suggested_product_ids.join(", ")}`
+        : "No additional live products to suggest for this filter.",
+    citations: [
+      { title: "Comparateur RWA", url: `${siteBase()}/compare` },
+      {
+        title: "API products",
+        url: `${siteBase()}/developers/docs/endpoint-products`,
+      },
+    ],
+    data: { suggested_product_ids },
+  };
+}
+
 export function toolListJurisdictions(focusId?: string): CopilotToolResult {
   const top = [...JURISDICTIONS]
     .sort((a, b) => b.score - a.score)
@@ -191,6 +284,27 @@ export function toolListJurisdictions(focusId?: string): CopilotToolResult {
   };
 }
 
+function collectSuggestedIds(tools: CopilotToolResult[]): string[] {
+  const out: string[] = [];
+  const seen = new Set<string>();
+  for (const t of tools) {
+    const raw = (t.data as { suggested_product_ids?: unknown } | undefined)
+      ?.suggested_product_ids;
+    if (!Array.isArray(raw)) continue;
+    for (const id of raw) {
+      if (typeof id !== "string" || !id.trim()) continue;
+      const key = id.trim().toLowerCase();
+      if (seen.has(key)) continue;
+      seen.add(key);
+      out.push(id.trim());
+      if (out.length >= 4) return out;
+    }
+  }
+  return out;
+}
+
+export { collectSuggestedIds };
+
 /** Heuristic tool selection — no model tool-calling required. */
 export async function runCopilotTools(
   message: string,
@@ -201,6 +315,17 @@ export async function runCopilotTools(
   const productIds = context?.product_ids?.slice(0, 4) ?? [];
 
   results.push(await toolSearchKnowledge(message));
+
+  const wantGreen =
+    context?.surface === "green" ||
+    context?.surface === "rtms" ||
+    Boolean(context?.rtms_brief) ||
+    /auros green|\bcqs\b|watt score|rtms|label green|green compare|cr[eé]dit.?carbone/.test(
+      q
+    );
+  if (wantGreen) {
+    results.push(toolExplainGreen(context?.rtms_brief));
+  }
 
   const wantChargeflow =
     context?.surface === "chargeflow" ||
@@ -219,6 +344,48 @@ export async function runCopilotTools(
     );
   if (wantJurisdictions) {
     results.push(toolListJurisdictions(context?.jurisdiction_id));
+  }
+
+  const wantSuggest =
+    /ajoute|ajout|sugg[eè]re|propose|recommande|add .*compar|suggest|more rwa|autres? (rwa|produits?)/i.test(
+      q
+    ) ||
+    (context?.surface === "compare" &&
+      /compl[eè]te|enrich|autre|more|ajouter/.test(q));
+
+  if (wantSuggest || (context?.surface === "compare" && productIds.length > 0 && productIds.length < 4 && /propose|suggest|ajout/.test(q))) {
+    let category:
+      | "all"
+      | "stablecoins"
+      | "real_estate"
+      | "bonds"
+      | "commodities"
+      | "private_credit" = "all";
+    if (/stablecoin/.test(q)) category = "stablecoins";
+    else if (/immobilier|real.?estate|estate/.test(q)) category = "real_estate";
+    else if (/bond|obligation/.test(q)) category = "bonds";
+    else if (/commodit|mati[eè]re/.test(q)) category = "commodities";
+    else if (/private.?credit|cr[eé]dit/.test(q)) category = "private_credit";
+    try {
+      results.push(
+        await toolSuggestCompareProducts({
+          exclude_ids: productIds,
+          category,
+          limit: Math.max(1, 4 - productIds.length),
+        })
+      );
+    } catch (err) {
+      console.warn("[copilot] suggest_compare_products", err);
+      results.push({
+        name: "suggest_compare_products",
+        summary:
+          "Product hub temporarily unavailable — open /compare to pick RWA manually.",
+        citations: [
+          { title: "Comparateur RWA", url: `${siteBase()}/compare` },
+        ],
+        data: { suggested_product_ids: [] as string[] },
+      });
+    }
   }
 
   if (productIds.length >= 2) {

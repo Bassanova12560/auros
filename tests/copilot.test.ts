@@ -82,6 +82,24 @@ describe("copilot", () => {
     assert.ok(withLinks.includes("https://getauros.com/green/chargeflow"));
   });
 
+  it("suggests product ids for compare and explains green", async () => {
+    const { runCopilotTools, collectSuggestedIds } = await import(
+      "../lib/copilot/tools"
+    );
+    const tools = await runCopilotTools("Propose des RWA à comparer", {
+      surface: "compare",
+      product_ids: [],
+    });
+    assert.ok(tools.some((t) => t.name === "suggest_compare_products"));
+    const ids = collectSuggestedIds(tools);
+    assert.ok(ids.length >= 0);
+
+    const green = await runCopilotTools("Explique CQS et Watt Score", {
+      surface: "green",
+    });
+    assert.ok(green.some((t) => t.name === "explain_green"));
+  });
+
   it("buildCopilotHref encodes context query", async () => {
     const { buildCopilotHref, parseCopilotSearchParams } = await import(
       "../lib/copilot/types"
@@ -97,5 +115,9 @@ describe("copilot", () => {
     });
     assert.equal(parsed.surface, "jurisdiction");
     assert.equal(parsed.jurisdiction_id, "luxembourg");
+    assert.equal(
+      parseCopilotSearchParams({ context: "green" }).surface,
+      "green"
+    );
   });
 });

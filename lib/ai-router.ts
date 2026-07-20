@@ -10,6 +10,7 @@ import Groq from "groq-sdk";
 
 import {
   AI_CONFIG,
+  resolveGeminiApiKeys,
   resolveProviderChain,
   type BillableAiProvider,
 } from "@/lib/ai-config";
@@ -156,18 +157,28 @@ async function callGroq(prompt: string): Promise<string> {
 }
 
 async function callGemini(prompt: string): Promise<string> {
-  const key = process.env.GEMINI_API_KEY;
-  if (!key) throw new Error("GEMINI_API_KEY missing");
-  const genAI = new GoogleGenerativeAI(key);
-  const model = genAI.getGenerativeModel({
-    model: AI_CONFIG.geminiModel,
-    generationConfig: {
-      maxOutputTokens: AI_CONFIG.maxOutputTokens,
-      temperature: 0.4,
-    },
-  });
-  const result = await model.generateContent(prompt);
-  return result.response.text();
+  const keys = resolveGeminiApiKeys();
+  if (!keys.length) throw new Error("GEMINI_API_KEY missing");
+  let lastErr: unknown;
+  for (const key of keys) {
+    try {
+      const genAI = new GoogleGenerativeAI(key);
+      const model = genAI.getGenerativeModel({
+        model: AI_CONFIG.geminiModel,
+        generationConfig: {
+          maxOutputTokens: AI_CONFIG.maxOutputTokens,
+          temperature: 0.4,
+        },
+      });
+      const result = await model.generateContent(prompt);
+      return result.response.text();
+    } catch (err) {
+      lastErr = err;
+      const msg = err instanceof Error ? err.message : String(err);
+      if (!/429|quota|Too Many Requests/i.test(msg)) throw err;
+    }
+  }
+  throw lastErr instanceof Error ? lastErr : new Error("Gemini failed");
 }
 
 async function callMistral(prompt: string): Promise<string> {
@@ -289,15 +300,25 @@ async function callGeminiChat(
   user: string,
   maxTokens: number
 ): Promise<string> {
-  const key = process.env.GEMINI_API_KEY;
-  if (!key) throw new Error("GEMINI_API_KEY missing");
-  const genAI = new GoogleGenerativeAI(key);
-  const model = genAI.getGenerativeModel({
-    model: AI_CONFIG.geminiModel,
-    generationConfig: { maxOutputTokens: maxTokens, temperature: 0.35 },
-  });
-  const result = await model.generateContent(`${system}\n\n${user}`);
-  return result.response.text();
+  const keys = resolveGeminiApiKeys();
+  if (!keys.length) throw new Error("GEMINI_API_KEY missing");
+  let lastErr: unknown;
+  for (const key of keys) {
+    try {
+      const genAI = new GoogleGenerativeAI(key);
+      const model = genAI.getGenerativeModel({
+        model: AI_CONFIG.geminiModel,
+        generationConfig: { maxOutputTokens: maxTokens, temperature: 0.35 },
+      });
+      const result = await model.generateContent(`${system}\n\n${user}`);
+      return result.response.text();
+    } catch (err) {
+      lastErr = err;
+      const msg = err instanceof Error ? err.message : String(err);
+      if (!/429|quota|Too Many Requests/i.test(msg)) throw err;
+    }
+  }
+  throw lastErr instanceof Error ? lastErr : new Error("Gemini failed");
 }
 
 async function callGroqChat(

@@ -1,5 +1,6 @@
 export const COPILOT_ROUTE = "/copilot";
 export const COPILOT_OPS_ROUTE = "/ops/copilot";
+export const COPILOT_RTMS_STORAGE_KEY = "auros_copilot_rtms_brief";
 export const COPILOT_DISCLAIMER =
   "AUROS Copilot is indicative only — not legal, investment, or regulatory advice. Scores, attestations, and ChargeFlow units are never modified by this assistant.";
 
@@ -20,12 +21,16 @@ export type CopilotSurface =
   | "compare"
   | "jurisdiction"
   | "chargeflow"
+  | "green"
+  | "rtms"
   | "generic";
 
 export type CopilotPageContext = {
   surface: CopilotSurface;
   product_ids?: string[];
   jurisdiction_id?: string;
+  /** Short RTMS project brief (from assistant bridge; not inventable). */
+  rtms_brief?: string;
 };
 
 export type CopilotChatRequest = {
@@ -41,6 +46,8 @@ export type CopilotChatResponse = {
   citations: CopilotCitation[];
   disclaimer: string;
   tools_used: string[];
+  /** Product IDs the assistant proposes to add to /compare (read-only suggestion). */
+  suggested_product_ids: string[];
 };
 
 export type CopilotDraft = {
@@ -83,7 +90,9 @@ export function parseCopilotSearchParams(params: {
   const surface: CopilotSurface =
     raw === "compare" ||
     raw === "jurisdiction" ||
-    raw === "chargeflow"
+    raw === "chargeflow" ||
+    raw === "green" ||
+    raw === "rtms"
       ? raw
       : params.ids
         ? "compare"
@@ -111,6 +120,20 @@ export function suggestionsForContext(ctx: CopilotPageContext): string[] {
       "Comment fonctionne la console opérateurs ?",
     ];
   }
+  if (ctx.surface === "green") {
+    return [
+      "Explique CQS et Watt Score",
+      "Comment préparer un dossier RTMS ?",
+      "Différence label Green et marketplace",
+    ];
+  }
+  if (ctx.surface === "rtms") {
+    return [
+      "Que manque-t-il pour le label Green Verified ?",
+      "Priorise 3 écarts RTMS sur mon brief",
+      "Prochaines étapes standards + label",
+    ];
+  }
   if (ctx.surface === "jurisdiction" && ctx.jurisdiction_id) {
     return [
       `Pourquoi considérer ${ctx.jurisdiction_id} pour un RWA ?`,
@@ -121,20 +144,20 @@ export function suggestionsForContext(ctx: CopilotPageContext): string[] {
   if (ctx.surface === "compare" && ctx.product_ids && ctx.product_ids.length >= 2) {
     return [
       `Compare ${ctx.product_ids.slice(0, 2).join(" et ")}`,
+      "Propose 1–2 RWA à ajouter à la comparaison",
       "Quels risques / liquidité pour cette sélection ?",
-      "Lien vers le comparateur et API Protocol",
     ];
   }
   if (ctx.surface === "compare") {
     return [
+      "Propose des RWA à comparer (stablecoins)",
       "Top stablecoins APY sur le comparateur",
       "Comment lire TVL et liquidité ?",
-      "Différence risk tiers conservative / core / advanced",
     ];
   }
   return [
-    "Compare maple-usdc et realt-portfolio",
+    "Propose des RWA à comparer",
     "Explique ChargeFlow CFU-E",
-    "Top juridictions pour un émetteur EU",
+    "Explique CQS et Watt Score",
   ];
 }

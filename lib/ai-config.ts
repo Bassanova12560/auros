@@ -49,6 +49,15 @@ export const AI_CONFIG = {
   cacheTtlMs: clampInt(process.env.AI_CACHE_TTL_MS, 60_000, 86_400_000, 86_400_000),
 } as const;
 
+/** Primary + optional secondary Gemini keys (quota failover). */
+export function resolveGeminiApiKeys(): string[] {
+  const keys = [
+    process.env.GEMINI_API_KEY?.trim(),
+    process.env.GEMINI_API_KEY_2?.trim(),
+  ].filter((k): k is string => Boolean(k));
+  return [...new Set(keys)];
+}
+
 function parseProviderOrder(raw: string): AiProvider[] {
   const allowed = new Set<AiProvider>([
     "gemini",
@@ -88,7 +97,7 @@ export function resolveProviderChain(
   ) as BillableAiProvider[];
 
   const filtered = order.filter((id) => {
-    if (id === "gemini") return Boolean(process.env.GEMINI_API_KEY?.trim());
+    if (id === "gemini") return resolveGeminiApiKeys().length > 0;
     if (id === "groq") return Boolean(process.env.GROQ_API_KEY?.trim());
     if (id === "mistral") return Boolean(process.env.MISTRAL_API_KEY?.trim());
     if (id === "openrouter")

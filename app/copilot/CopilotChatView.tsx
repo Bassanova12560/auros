@@ -1,10 +1,12 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { PrimaryButton } from "@/app/_components/ui/PrimaryButton";
+import { buildCompareHubShareUrl } from "@/lib/comparators/compare-selection";
 import {
+  COPILOT_RTMS_STORAGE_KEY,
   parseCopilotSearchParams,
   suggestionsForContext,
   type CopilotPageContext,
@@ -15,6 +17,8 @@ type Citation = { title: string; url: string };
 
 function contextBannerLabel(ctx: CopilotPageContext): string | null {
   if (ctx.surface === "chargeflow") return "Contexte : ChargeFlow";
+  if (ctx.surface === "green") return "Contexte : AUROS Green";
+  if (ctx.surface === "rtms") return "Contexte : RTMS";
   if (ctx.surface === "jurisdiction" && ctx.jurisdiction_id) {
     return `Contexte : juridiction · ${ctx.jurisdiction_id}`;
   }
@@ -26,9 +30,34 @@ function contextBannerLabel(ctx: CopilotPageContext): string | null {
   return null;
 }
 
+function readRtmsBriefFromStorage(): string | undefined {
+  if (typeof window === "undefined") return undefined;
+  try {
+    const raw = sessionStorage.getItem(COPILOT_RTMS_STORAGE_KEY);
+    if (!raw) return undefined;
+    const parsed = JSON.parse(raw) as {
+      summary?: string;
+      score?: number;
+      tier?: string;
+      priorities?: string[];
+    };
+    const parts = [
+      parsed.summary ? `Summary: ${parsed.summary}` : null,
+      parsed.score != null ? `Indicative score: ${parsed.score}/100` : null,
+      parsed.tier ? `Tier: ${parsed.tier}` : null,
+      parsed.priorities?.length
+        ? `Priorities: ${parsed.priorities.join(" · ")}`
+        : null,
+    ].filter(Boolean);
+    return parts.length ? parts.join("\n") : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
 export function CopilotChatView() {
   const searchParams = useSearchParams();
-  const pageContext = useMemo(
+  const pageContextBase = useMemo(
     () =>
       parseCopilotSearchParams({
         context: searchParams.get("context"),
@@ -37,6 +66,21 @@ export function CopilotChatView() {
       }),
     [searchParams]
   );
+  const [rtmsBrief, setRtmsBrief] = useState<string | undefined>();
+  useEffect(() => {
+    if (pageContextBase.surface === "rtms") {
+      setRtmsBrief(readRtmsBriefFromStorage());
+    }
+  }, [pageContextBase.surface]);
+
+  const pageContext: CopilotPageContext = useMemo(
+    () => ({
+      ...pageContextBase,
+      rtms_brief: rtmsBrief,
+    }),
+    [pageContextBase, rtmsBrief]
+  );
+
   const suggestions = useMemo(
     () => suggestionsForContext(pageContext),
     [pageContext]
@@ -46,6 +90,7 @@ export function CopilotChatView() {
   const [input, setInput] = useState("");
   const [history, setHistory] = useState<ChatTurn[]>([]);
   const [citations, setCitations] = useState<Citation[]>([]);
+  const [suggestedIds, setSuggestedIds] = useState<string[]>([]);
   const [provider, setProvider] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -73,6 +118,7 @@ export function CopilotChatView() {
         reply?: string;
         citations?: Citation[];
         provider?: string;
+        suggested_product_ids?: string[];
         error?: { message?: string };
       };
       if (!res.ok) {
@@ -84,6 +130,7 @@ export function CopilotChatView() {
         { role: "assistant", content: json.reply ?? "" },
       ]);
       setCitations(json.citations ?? []);
+      setSuggestedIds(json.suggested_product_ids ?? []);
       setProvider(json.provider ?? null);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Network error");
@@ -96,6 +143,14 @@ export function CopilotChatView() {
     void sendMessage(input);
   }
 
+  const compareHref =
+    suggestedIds.length > 0
+      ? buildCompareHubShareUrl([
+          ...(pageContext.product_ids ?? []),
+          ...suggestedIds,
+        ])
+      : null;
+
   return (
     <div className="space-y-8">
       <header className="space-y-3">
@@ -106,7 +161,7 @@ export function CopilotChatView() {
           Assistant AUROS
         </h1>
         <p className="max-w-2xl text-sm leading-relaxed text-white/55">
-          Posez une question sur le comparateur RWA, les juridictions, le
+          Posez une question sur le comparateur RWA, Green, les juridictions, le
           Protocol ou ChargeFlow. Réponses sourcées — indicatif uniquement, pas
           de conseil juridique.
         </p>
@@ -154,6 +209,30 @@ export function CopilotChatView() {
             ))
           )}
         </div>
+
+        {suggestedIds.length > 0 ? (
+          <div className="flex flex-wrap items-center gap-2 border-t border-white/[0.06] pt-3">
+            <span className="font-mono text-[10px] uppercase tracking-wider text-white/35">
+              RWA proposés
+            </span>
+            {suggestedIds.map((id) => (
+              <span
+                key={id}
+                className="rounded-full border border-emerald-500/25 px-2.5 py-1 font-mono text-[10px] text-emerald-300/90"
+              >
+                {id}
+              </span>
+            ))}
+            {compareHref ? (
+              <a
+                href={compareHref}
+                className="font-mono text-[10px] uppercase tracking-wider text-emerald-400/80 underline-offset-2 hover:underline"
+              >
+                Ajouter au comparateur →
+              </a>
+            ) : null}
+          </div>
+        ) : null}
 
         <div className="flex flex-col gap-3 sm:flex-row sm:items-end">
           <label className="block flex-1 space-y-2">

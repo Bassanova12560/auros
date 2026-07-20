@@ -81,6 +81,23 @@ export function useCompareSelection(products: HubProduct[]) {
     setPanelOpen(false);
   }, []);
 
+  const addProductIds = useCallback((ids: string[]) => {
+    setSelectedIds((current) => {
+      let next = [...current];
+      for (const raw of ids) {
+        const id = raw.trim();
+        if (!id || !validIds.has(id) || next.includes(id)) continue;
+        if (next.length >= 4) {
+          setMaxReached(true);
+          window.setTimeout(() => setMaxReached(false), 2500);
+          break;
+        }
+        next.push(id);
+      }
+      return normalizeCompareProductIds(next);
+    });
+  }, [validIds]);
+
   const isSelected = useCallback(
     (id: string) => selectedIds.includes(id),
     [selectedIds]
@@ -93,6 +110,7 @@ export function useCompareSelection(products: HubProduct[]) {
     setPanelOpen,
     toggleSelect,
     clearSelection,
+    addProductIds,
     isSelected,
     maxReached,
   };
