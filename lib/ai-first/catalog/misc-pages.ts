@@ -111,4 +111,43 @@ export const aboutPage = enrichPage({
   relatedPaths: ["/", "/jurisdictions", "/partners", "/legal"],
 });
 
-export const miscPages = [partnersPage, aboutPage, legalPage, privacyPage, termsPage];
+export const copilotPage = enrichPage({
+  id: "copilot",
+  path: "/copilot",
+  title: "AUROS Copilot | Assistant RWA",
+  description:
+    "Assistant AUROS pour le comparateur RWA, juridictions, Protocol API et ChargeFlow — réponses sourcées, indicatives. Validation humaine pour tout draft catalogue/contenu.",
+  summary:
+    "Copilot public + inbox ops. Tools lecture seule (RAG ai-first, products, compare, ChargeFlow). Les agents catalogue/contenu créent des drafts à approuver — jamais d'auto-publish des scores ou CFU.",
+  contentType: "guide",
+  language: "multi",
+  indexable: true,
+  lastUpdated: "2026-07-20",
+  keywords: [
+    "AUROS Copilot",
+    "RWA assistant",
+    "comparateur AI",
+    "ChargeFlow assistant",
+  ],
+  intents: [
+    "Assistant AUROS",
+    "Comparer produits RWA avec IA",
+    "Expliquer ChargeFlow",
+  ],
+  audience: ["émetteurs", "analystes", "développeurs", "ops"],
+  facts: [
+    { key: "Chat", value: "POST /api/v1/copilot/chat" },
+    { key: "Ops inbox", value: "/ops/copilot" },
+    { key: "Garde-fou", value: "Pas d'écriture scores / attest / CFU" },
+  ],
+  relatedPaths: ["/compare", "/jurisdictions", "/green/chargeflow", "/developers"],
+});
+
+export const miscPages = [
+  partnersPage,
+  aboutPage,
+  legalPage,
+  privacyPage,
+  termsPage,
+  copilotPage,
+];

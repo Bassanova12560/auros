@@ -33,6 +33,7 @@ const PRIORITY: Record<string, number> = {
   "/jurisdictions": 0.9,
   "/jurisdictions/starter-kit": 0.85,
   "/compare": 0.9,
+  "/copilot": 0.88,
   "/stablecoins": 0.95,
   "/real-estate": 0.95,
   "/bonds": 0.95,

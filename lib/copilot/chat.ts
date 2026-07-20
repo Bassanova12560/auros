@@ -1,0 +1,208 @@
+import { GoogleGenerativeAI } from "@google/generative-ai";
+import Groq from "groq-sdk";
+import { Mistral } from "@mistralai/mistralai";
+
+import { AI_CONFIG, resolveProviderChain } from "@/lib/ai-config";
+import { checkAiDailyBudget, consumeAiDailyBudget } from "@/lib/ai-budget";
+
+import { COPILOT_DISCLAIMER } from "./types";
+import type { CopilotChatMessage, CopilotCitation } from "./types";
+import { runCopilotTools, type CopilotToolResult } from "./tools";
+
+function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
+  return new Promise((resolve, reject) => {
+    const timer = setTimeout(() => reject(new Error("timeout")), ms);
+    promise
+      .then((v) => {
+        clearTimeout(timer);
+        resolve(v);
+      })
+      .catch((e) => {
+        clearTimeout(timer);
+        reject(e);
+      });
+  });
+}
+
+function buildSystemPrompt(locale: "fr" | "en" | "es"): string {
+  const lang =
+    locale === "en" ? "English" : locale === "es" ? "Spanish" : "French";
+  return `You are AUROS Copilot, an assistant for the AUROS RWA prep platform (comparator, jurisdictions, Protocol API, ChargeFlow).
+Language: ${lang}.
+Rules:
+- Be concise, professional, institutional tone.
+- Use ONLY the tool context provided — do not invent APYs, licenses, or partnerships.
+- Always cite 1–3 concrete AUROS URLs from the tool citations when relevant.
+- Never claim to change scores, attestations, or mint/retire ChargeFlow units.
+- Never claim official Tesla or TotalEnergies partnership — format-compatible only.
+- End without repeating the full legal disclaimer (it is attached separately).
+${COPILOT_DISCLAIMER}`;
+}
+
+function buildUserPrompt(
+  message: string,
+  tools: CopilotToolResult[],
+  history: CopilotChatMessage[]
+): string {
+  const hist = history
+    .slice(-6)
+    .map((m) => `${m.role.toUpperCase()}: ${m.content}`)
+    .join("\n");
+  const toolBlock = tools
+    .map(
+      (t) =>
+        `### Tool ${t.name}\n${t.summary}\nCitations: ${t.citations.map((c) => `${c.title} (${c.url})`).join("; ")}`
+    )
+    .join("\n\n");
+  return `${hist ? `Conversation:\n${hist}\n\n` : ""}Tool context:\n${toolBlock}\n\nUser question:\n${message}`;
+}
+
+function templateReply(
+  message: string,
+  tools: CopilotToolResult[],
+  locale: "fr" | "en" | "es"
+): string {
+  const cites = tools
+    .flatMap((t) => t.citations)
+    .slice(0, 4)
+    .map((c) => `- ${c.title}: ${c.url}`)
+    .join("\n");
+  const snippet = tools[0]?.summary.slice(0, 600) ?? "";
+  if (locale === "en") {
+    return `Based on AUROS knowledge (template mode — configure GEMINI_API_KEY for full AI):\n\n${snippet}\n\nUseful links:\n${cites || "- https://getauros.com/compare"}`;
+  }
+  if (locale === "es") {
+    return `Según el conocimiento AUROS (modo plantilla):\n\n${snippet}\n\nEnlaces:\n${cites || "- https://getauros.com/compare"}`;
+  }
+  return `D’après la base AUROS (mode template — configurez GEMINI_API_KEY pour l’IA complète) :\n\n${snippet}\n\nLiens utiles :\n${cites || "- https://getauros.com/compare"}\n\nQuestion : ${message.slice(0, 120)}`;
+}
+
+async function callGemini(system: string, user: string): Promise<string> {
+  const key = process.env.GEMINI_API_KEY;
+  if (!key) throw new Error("GEMINI_API_KEY missing");
+  const genAI = new GoogleGenerativeAI(key);
+  const model = genAI.getGenerativeModel({
+    model: AI_CONFIG.geminiModel,
+    generationConfig: {
+      maxOutputTokens: Math.min(AI_CONFIG.maxOutputTokens, 1200),
+      temperature: 0.3,
+    },
+  });
+  const result = await model.generateContent(`${system}\n\n${user}`);
+  return result.response.text().trim();
+}
+
+async function callGroq(system: string, user: string): Promise<string> {
+  const client = new Groq({ apiKey: process.env.GROQ_API_KEY });
+  const completion = await client.chat.completions.create({
+    model: AI_CONFIG.groqDossierModel.includes("8b")
+      ? "llama-3.1-8b-instant"
+      : "llama-3.1-8b-instant",
+    temperature: 0.3,
+    max_tokens: 1000,
+    messages: [
+      { role: "system", content: system },
+      { role: "user", content: user },
+    ],
+  });
+  return completion.choices[0]?.message?.content?.trim() ?? "";
+}
+
+async function callMistral(system: string, user: string): Promise<string> {
+  const client = new Mistral({ apiKey: process.env.MISTRAL_API_KEY });
+  const completion = await client.chat.complete({
+    model: AI_CONFIG.mistralModel,
+    temperature: 0.3,
+    maxTokens: 1000,
+    messages: [
+      { role: "system", content: system },
+      { role: "user", content: user },
+    ],
+  });
+  const content = completion.choices?.[0]?.message?.content;
+  if (typeof content === "string") return content.trim();
+  if (Array.isArray(content)) {
+    return content
+      .map((p) => ("text" in p ? p.text : ""))
+      .join("")
+      .trim();
+  }
+  return "";
+}
+
+function mergeCitations(tools: CopilotToolResult[]): CopilotCitation[] {
+  const seen = new Set<string>();
+  const out: CopilotCitation[] = [];
+  for (const t of tools) {
+    for (const c of t.citations) {
+      if (seen.has(c.url)) continue;
+      seen.add(c.url);
+      out.push(c);
+      if (out.length >= 6) return out;
+    }
+  }
+  return out;
+}
+
+export async function runCopilotChat(input: {
+  message: string;
+  locale?: "fr" | "en" | "es";
+  history?: CopilotChatMessage[];
+}): Promise<{
+  reply: string;
+  provider: string;
+  citations: CopilotCitation[];
+  disclaimer: string;
+  tools_used: string[];
+}> {
+  const locale = input.locale ?? "fr";
+  const message = input.message.trim().slice(0, 2000);
+  const history = (input.history ?? []).slice(-6);
+  const tools = await runCopilotTools(message);
+  const system = buildSystemPrompt(locale);
+  const user = buildUserPrompt(message, tools, history);
+  const citations = mergeCitations(tools);
+  const tools_used = tools.map((t) => t.name);
+
+  const budget = checkAiDailyBudget();
+  const chain = resolveProviderChain();
+
+  if (budget.allowed && chain.length > 0) {
+    consumeAiDailyBudget();
+    const callers: Record<
+      string,
+      (s: string, u: string) => Promise<string>
+    > = {
+      gemini: callGemini,
+      groq: callGroq,
+      mistral: callMistral,
+    };
+    for (const id of chain) {
+      try {
+        const reply = await withTimeout(
+          callers[id]!(system, user),
+          AI_CONFIG.providerTimeoutMs
+        );
+        if (reply.length > 40) {
+          return {
+            reply,
+            provider: id,
+            citations,
+            disclaimer: COPILOT_DISCLAIMER,
+            tools_used,
+          };
+        }
+      } catch (err) {
+        console.warn("[copilot]", id, err);
+      }
+    }
+  }
+
+  return {
+    reply: templateReply(message, tools, locale),
+    provider: "template",
+    citations,
+    disclaimer: COPILOT_DISCLAIMER,
+    tools_used,
+  };
+}

@@ -25,6 +25,24 @@ export type ProtocolChangelogEntry = {
 /** Single source for `/developers/changelog` and GET `/api/v1/changelog`. Newest first. */
 export const PROTOCOL_CHANGELOG: ProtocolChangelogEntry[] = [
   {
+    id: "auros-copilot-v1",
+    date: "2026-07-20",
+    title: "AUROS Copilot v1",
+    summary:
+      "Chat public /copilot + agents ops catalogue/contenu avec inbox approve/reject — pas d’auto-publish scores/CFU.",
+    details: [
+      "POST /api/v1/copilot/chat — RAG ai-first, products, compare, ChargeFlow explain.",
+      "Table copilot_drafts + /ops/copilot (Bearer CRON_SECRET).",
+      "Docs docs/COPILOT.md.",
+    ],
+    links: [
+      { href: "/copilot", label: "Copilot" },
+      { href: "/ops/copilot", label: "Ops inbox" },
+    ],
+    tags: ["copilot", "ai", "ops"],
+    status: "released",
+  },
+  {
     id: "chargeflow-partner-connectors",
     date: "2026-07-19",
     title: "ChargeFlow partner connectors (Tesla / Total / OCPI)",
