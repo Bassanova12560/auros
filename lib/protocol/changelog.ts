@@ -25,6 +25,24 @@ export type ProtocolChangelogEntry = {
 /** Single source for `/developers/changelog` and GET `/api/v1/changelog`. Newest first. */
 export const PROTOCOL_CHANGELOG: ProtocolChangelogEntry[] = [
   {
+    id: "watts-hub-mcp",
+    date: "2026-07-20",
+    title: "AUROS Watts hub + MCP tools",
+    summary:
+      "Hub produit /green/watts et outils MCP watts_reserve/confirm/settle/offers/secondary (auros-mcp 1.2.2).",
+    details: [
+      "UI hub brand-first · WattsFlowNav inclut Hub.",
+      "MCP: watts_reserve, watts_confirm, watts_settle, watts_create_offer, watts_match_offers, watts_secondary_list.",
+    ],
+    links: [
+      { href: "/green/watts", label: "Watts hub" },
+      { href: "/developers/docs/endpoint-watts-reserve", label: "Docs API" },
+      { href: "/developers/docs/mcp-server", label: "MCP" },
+    ],
+    tags: ["watts", "mcp", "product"],
+    status: "released",
+  },
+  {
     id: "watts-reserve-productize",
     date: "2026-07-20",
     title: "Watts Reserve — nav, docs Protocol, SDK 1.0.7",

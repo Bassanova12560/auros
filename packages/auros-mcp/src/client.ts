@@ -251,6 +251,48 @@ export class AurosApiClient {
     );
   }
 
+  async wattsReserve(body: Record<string, unknown>): Promise<unknown> {
+    return this.request("POST", "/api/v1/watts/reserve", body);
+  }
+
+  async wattsReservation(id: string): Promise<unknown> {
+    return this.request(
+      "GET",
+      `/api/v1/watts/reserve/${encodeURIComponent(id)}`
+    );
+  }
+
+  async wattsConfirm(id: string): Promise<unknown> {
+    return this.request(
+      "POST",
+      `/api/v1/watts/reserve/${encodeURIComponent(id)}/confirm`,
+      {}
+    );
+  }
+
+  async wattsSettle(
+    id: string,
+    body: Record<string, unknown> = {}
+  ): Promise<unknown> {
+    return this.request(
+      "POST",
+      `/api/v1/watts/reserve/${encodeURIComponent(id)}/settle`,
+      body
+    );
+  }
+
+  async wattsCreateOffer(body: Record<string, unknown>): Promise<unknown> {
+    return this.request("POST", "/api/v1/watts/offers", body);
+  }
+
+  async wattsMatchOffers(body: Record<string, unknown>): Promise<unknown> {
+    return this.request("POST", "/api/v1/watts/offers/match", body);
+  }
+
+  async wattsSecondaryList(body: Record<string, unknown>): Promise<unknown> {
+    return this.request("POST", "/api/v1/watts/secondary", body);
+  }
+
   private async request(
     method: string,
     path: string,

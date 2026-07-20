@@ -1084,6 +1084,8 @@ export async function POST(req: Request) {
           "• `green_api_status` — GET /api/green/status",
           "• `chargeflow_list` — GET /api/v1/chargeflow (Premium, filtres kind/status/operator_id)",
           "• `chargeflow_create_e` — POST /api/v1/chargeflow (Premium CFU-E)",
+          "• `watts_reserve` / `watts_confirm` / `watts_settle` — booking CFU Watts Reserve",
+          "• `watts_create_offer` / `watts_match_offers` / `watts_secondary_list` — inventaire + secondaire",
           "• `chargeflow_from_ocpi` — POST /api/v1/chargeflow/from-ocpi (stub offline)",
           "• `chargeflow_partners` — GET /api/v1/chargeflow/partners (catalogue public)",
           "• `chargeflow_partner_sync` — POST /api/v1/chargeflow/partners/sync (sandbox/live)",

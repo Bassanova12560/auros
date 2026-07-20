@@ -48,6 +48,7 @@ export {
   WATTS_RESERVE_ROUTE,
   WATTS_INVENTORY_ROUTE,
   WATTS_SECONDARY_ROUTE,
+  WATTS_HUB_ROUTE,
   WATTS_RESERVE_DISCLAIMER,
   wattReserveRequestSchema,
   wattSettleRequestSchema,

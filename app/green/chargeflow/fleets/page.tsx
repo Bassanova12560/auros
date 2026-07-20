@@ -39,8 +39,11 @@ export default function ChargeflowFleetsPage() {
               <PrimaryButton href={CHARGEFLOW_ROUTE}>
                 Essayer la demo CFU-E
               </PrimaryButton>
+              <PrimaryButton href="/green/watts">
+                AUROS Watts
+              </PrimaryButton>
               <PrimaryButton href="/green/chargeflow/reserve" variant="ghost">
-                Watts Reserve
+                Réserver
               </PrimaryButton>
               <PrimaryButton href="/green/chargeflow/inventory" variant="ghost">
                 Inventaire

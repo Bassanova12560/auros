@@ -229,10 +229,17 @@ export function ChargeflowPitchView() {
           </Link>
           {" · "}
           <Link
+            href="/green/watts"
+            className="text-white/55 underline-offset-2 hover:underline"
+          >
+            Watts
+          </Link>
+          {" · "}
+          <Link
             href="/green/chargeflow/reserve"
             className="text-white/55 underline-offset-2 hover:underline"
           >
-            Watts Reserve
+            réserver
           </Link>
           {" · "}
           <Link

@@ -446,6 +446,115 @@ export const AUROS_MCP_TOOLS = [
         reason: args.reason,
       }),
   },
+  {
+    name: "watts_reserve",
+    description:
+      "Create a Watts Reserve intent (Premium). Deterministic match_score — no CFU mint. Confirm separately.",
+    schema: {
+      window: z.object({
+        start: z.string(),
+        end: z.string(),
+      }),
+      energy_kwh: z.number().optional(),
+      capacity_kw: z.number().optional(),
+      zone: z.object({
+        country: z.string(),
+        zone_id: z.string().optional(),
+      }),
+      carbon_intensity_max_gco2_kwh: z.number().optional(),
+      firmness: z.enum(["firm", "flex"]).optional(),
+      buyer_ref: z.string().optional(),
+    },
+    handler: (client: AurosApiClient, args: Record<string, unknown>) =>
+      client.wattsReserve(args),
+  },
+  {
+    name: "watts_confirm",
+    description:
+      "Confirm a Watts reservation — mints CFU-E or CFU-F linked to reservation_id (Premium). Explicit only.",
+    schema: {
+      id: z.string().describe("reservation uuid"),
+    },
+    handler: (client: AurosApiClient, args: Record<string, unknown>) =>
+      client.wattsConfirm(String(args.id)),
+  },
+  {
+    name: "watts_settle",
+    description:
+      "Settle a confirmed Watts reservation on delivery — retires linked CFU (Premium). Explicit only.",
+    schema: {
+      id: z.string().describe("reservation uuid"),
+      delivery_ref: z.string().optional(),
+      energy_kwh_delivered: z.number().optional(),
+      capacity_kw_delivered: z.number().optional(),
+      reason: z.string().optional(),
+    },
+    handler: (client: AurosApiClient, args: Record<string, unknown>) => {
+      const { id, ...body } = args;
+      return client.wattsSettle(String(id), body);
+    },
+  },
+  {
+    name: "watts_create_offer",
+    description:
+      "Publish a producer capacity window to Watts inventory (Premium). Indicative — not a PPA.",
+    schema: {
+      window: z.object({ start: z.string(), end: z.string() }),
+      capacity_kw: z.number().optional(),
+      energy_kwh: z.number().optional(),
+      zone: z.object({
+        country: z.string(),
+        zone_id: z.string().optional(),
+      }),
+      carbon_intensity_gco2_kwh: z.number().optional(),
+      firmness: z.enum(["firm", "flex"]).optional(),
+      label: z.string().optional(),
+      producer_ref: z.string().optional(),
+    },
+    handler: (client: AurosApiClient, args: Record<string, unknown>) =>
+      client.wattsCreateOffer(args),
+  },
+  {
+    name: "watts_match_offers",
+    description:
+      "Rank open capacity offers against a buyer profile (Premium). Deterministic — no auto-reserve.",
+    schema: {
+      window: z.object({ start: z.string(), end: z.string() }),
+      energy_kwh: z.number().optional(),
+      capacity_kw: z.number().optional(),
+      zone: z.object({
+        country: z.string(),
+        zone_id: z.string().optional(),
+      }),
+      carbon_intensity_max_gco2_kwh: z.number().optional(),
+      firmness: z.enum(["firm", "flex"]).optional(),
+    },
+    handler: (client: AurosApiClient, args: Record<string, unknown>) =>
+      client.wattsMatchOffers(args),
+  },
+  {
+    name: "watts_secondary_list",
+    description:
+      "Create an indicative secondary listing (Premium). Optional compare_ref_id → /compare. Not a securities exchange.",
+    schema: {
+      reservation_id: z.string().uuid().optional(),
+      indicative_price_eur: z.number().positive(),
+      compare_ref_id: z.string().optional(),
+      label: z.string().optional(),
+      note: z.string().optional(),
+      energy_kwh: z.number().optional(),
+      capacity_kw: z.number().optional(),
+      zone: z
+        .object({
+          country: z.string(),
+          zone_id: z.string().optional(),
+        })
+        .optional(),
+      firmness: z.enum(["firm", "flex"]).optional(),
+    },
+    handler: (client: AurosApiClient, args: Record<string, unknown>) =>
+      client.wattsSecondaryList(args),
+  },
 ] as const;
 
 export function registerAurosTools(

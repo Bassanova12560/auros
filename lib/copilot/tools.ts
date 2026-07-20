@@ -18,7 +18,7 @@ import {
   GREEN_RTMS_ASSISTANT_ROUTE,
   GREEN_STANDARDS_ROUTE,
 } from "@/lib/green/constants";
-import { WATTS_RESERVE_DISCLAIMER, WATTS_INVENTORY_ROUTE, WATTS_RESERVE_ROUTE, WATTS_SECONDARY_ROUTE } from "@/lib/watts";
+import { WATTS_RESERVE_DISCLAIMER, WATTS_HUB_ROUTE, WATTS_INVENTORY_ROUTE, WATTS_RESERVE_ROUTE, WATTS_SECONDARY_ROUTE } from "@/lib/watts";
 
 import type { CopilotCitation, CopilotPageContext } from "./types";
 
@@ -155,10 +155,11 @@ export function toolExplainWattsReserve(): CopilotToolResult {
     summary: [
       "AUROS Watts Reserve full loop: profile → match → confirm (mint CFU) → settle (retire) → inventory → secondary listing.",
       "Secondary: indicative price + optional compare_ref_id → /compare (RWA prep). Interest is non-binding. No auto-transfer.",
-      `UI: ${WATTS_RESERVE_ROUTE} · ${WATTS_INVENTORY_ROUTE} · ${WATTS_SECONDARY_ROUTE}.`,
+      `UI: ${WATTS_HUB_ROUTE} · ${WATTS_RESERVE_ROUTE} · ${WATTS_INVENTORY_ROUTE} · ${WATTS_SECONDARY_ROUTE}.`,
       WATTS_RESERVE_DISCLAIMER,
     ].join("\n"),
     citations: [
+      { title: "Watts hub", url: `${siteBase()}${WATTS_HUB_ROUTE}` },
       { title: "Watts Reserve", url: `${siteBase()}${WATTS_RESERVE_ROUTE}` },
       {
         title: "Inventaire",

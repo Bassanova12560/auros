@@ -4,12 +4,14 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 import {
+  WATTS_HUB_ROUTE,
   WATTS_INVENTORY_ROUTE,
   WATTS_RESERVE_ROUTE,
   WATTS_SECONDARY_ROUTE,
 } from "@/lib/watts";
 
 const LINKS = [
+  { href: WATTS_HUB_ROUTE, label: "Hub", exact: true },
   { href: WATTS_RESERVE_ROUTE, label: "Réserver" },
   { href: WATTS_INVENTORY_ROUTE, label: "Inventaire" },
   { href: WATTS_SECONDARY_ROUTE, label: "Secondaire" },
@@ -25,7 +27,9 @@ export function WattsFlowNav() {
     >
       {LINKS.map((link) => {
         const active =
-          pathname === link.href || pathname?.startsWith(`${link.href}/`);
+          "exact" in link && link.exact
+            ? pathname === link.href
+            : pathname === link.href || pathname?.startsWith(`${link.href}/`);
         return (
           <Link
             key={link.href}

@@ -3,6 +3,7 @@ import { z } from "zod";
 export const WATTS_RESERVE_ROUTE = "/green/chargeflow/reserve";
 export const WATTS_INVENTORY_ROUTE = "/green/chargeflow/inventory";
 export const WATTS_SECONDARY_ROUTE = "/green/chargeflow/secondary";
+export const WATTS_HUB_ROUTE = "/green/watts";
 export const WATTS_RESERVE_DISCLAIMER =
   "AUROS Watts Reserve is indicative only — not a grid delivery guarantee, GO/REC legal certificate, or investment advice. Confirm/settle operate off-chain CFU proofs — not legal certificates or delivery guarantees. Capacity offers and secondary listings are indicative — not binding PPAs, securities, or a regulated exchange.";
 

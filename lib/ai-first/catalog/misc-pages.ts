@@ -143,6 +143,34 @@ export const copilotPage = enrichPage({
   relatedPaths: ["/compare", "/jurisdictions", "/green/chargeflow", "/developers"],
 });
 
+export const wattsHubPage = enrichPage({
+  id: "watts-hub",
+  path: "/green/watts",
+  title: "AUROS Watts | Booking engine des watts",
+  description:
+    "Réserver, prouver et préparer la finance des watts critiques — matching, CFU, inventaire, secondaire.",
+  summary:
+    "Hub produit Watts Reserve : entrée unique vers réserver, inventaire et secondaire.",
+  contentType: "guide",
+  language: "multi",
+  indexable: true,
+  lastUpdated: "2026-07-20",
+  keywords: ["AUROS Watts", "watts reserve", "CFU", "booking watts"],
+  intents: ["Découvrir Watts Reserve", "Réserver des watts"],
+  audience: ["flottes", "CPO", "producteurs", "équipes RWA"],
+  facts: [
+    { key: "Hub", value: "/green/watts" },
+    { key: "API", value: "POST /api/v1/watts/reserve" },
+    { key: "Docs", value: "/developers/docs/endpoint-watts-reserve" },
+  ],
+  relatedPaths: [
+    "/green/chargeflow/reserve",
+    "/green/chargeflow/inventory",
+    "/green/chargeflow/secondary",
+    "/green/chargeflow",
+  ],
+});
+
 export const wattsReservePage = enrichPage({
   id: "watts-reserve",
   path: "/green/chargeflow/reserve",
@@ -263,6 +291,7 @@ export const miscPages = [
   privacyPage,
   termsPage,
   copilotPage,
+  wattsHubPage,
   wattsReservePage,
   wattsInventoryPage,
   wattsSecondaryPage,
