@@ -44,6 +44,11 @@ const LINKS = [
     title: "Low-carbon Power",
     detail: "Nucléaire & bas-carbone — hors Green Verified",
   },
+  {
+    href: "/developers/shield",
+    title: "AUROS Shield",
+    detail: "Sous-couche on-prem — clés locales, CBOM, PQC-ready",
+  },
 ] as const;
 
 export default function InstitutionsPage() {

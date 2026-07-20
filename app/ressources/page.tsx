@@ -22,6 +22,7 @@ const SECTIONS = [
       { href: "/guides", label: "Définitions de catégories", desc: "Booking engine watts, CFU, RWA Intelligence, RTMS, low-carbon — + intents citables." },
       { href: "/power", label: "AUROS Power", desc: "Low-carbon / nucléaire — Watts + CFU, hors Green Verified." },
       { href: "/developers/institutions", label: "API institutions", desc: "OpenAPI, export CFU, Monitor, Watts — pack banques / risque." },
+      { href: "/developers/shield", label: "AUROS Shield", desc: "Sous-couche on-prem — clés locales, CBOM crypto, PQC-ready." },
       { href: "/comment-tokeniser", label: "Comment tokeniser mon actif", desc: "Guides immobilier, art, fonds, obligations, crédit privé, énergie, nucléaire et eau — wizard prérempli." },
       { href: "/estimate", label: "Score de préparation", desc: "Test indicatif en une phrase, sans compte." },
       { href: "/tools", label: "Outils tokenisation RWA", desc: "4 outils gratuits — MiCA, rendement, juridiction et coût indicatif." },

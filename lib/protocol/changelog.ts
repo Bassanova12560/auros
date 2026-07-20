@@ -25,6 +25,26 @@ export type ProtocolChangelogEntry = {
 /** Single source for `/developers/changelog` and GET `/api/v1/changelog`. Newest first. */
 export const PROTOCOL_CHANGELOG: ProtocolChangelogEntry[] = [
   {
+    id: "auros-shield-onprem",
+    date: "2026-07-20",
+    title: "AUROS Shield — sous-couche crypto on-prem",
+    summary:
+      "Runtime installable chez le client : seal/verify CFU-attest, CBOM crypto, profils hybrid_pqc_ready — racine de confiance avant que ce soit obligatoire.",
+    details: [
+      "Package @adrien1212balitrand/auros-shield (CLI + HTTP DMZ + Docker).",
+      "GET /api/v1/shield/cbom — inventaire exemple cloud.",
+      "Page /developers/shield · docs/AUROS-SHIELD.md.",
+      "Honnête : HMAC aujourd'hui, PQC NIST en roadmap derrière la même enveloppe.",
+    ],
+    links: [
+      { href: "/developers/shield", label: "AUROS Shield" },
+      { href: "/api/v1/shield/cbom", label: "CBOM sample" },
+      { href: "/developers/institutions", label: "Institutions" },
+    ],
+    tags: ["shield", "on-prem", "crypto", "institutions", "pqc"],
+    status: "released",
+  },
+  {
     id: "institutional-apis-power",
     date: "2026-07-20",
     title: "APIs institutionnelles + AUROS Power (low-carbon)",

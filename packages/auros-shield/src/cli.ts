@@ -1,0 +1,83 @@
+#!/usr/bin/env node
+import { readFileSync } from "node:fs";
+import {
+  SHIELD_VERSION,
+  buildCbom,
+  sealLocal,
+  verifyLocal,
+  type ShieldSealKind,
+} from "./core.js";
+import { startShieldServer } from "./server.js";
+
+function usage(): never {
+  console.log(`AUROS Shield ${SHIELD_VERSION}
+
+Usage:
+  auros-shield cbom
+  auros-shield seal --kind <attest|cfu_e|cfu_w|cfu_f|audit> (--hash <hex> | --file <path>)
+  auros-shield verify --kind <…> --hash <hex> --sig <hex>
+  auros-shield serve [--port 8787]
+
+Env:
+  AUROS_SHIELD_SIGNING_KEY   customer-held HMAC secret (HSM/KMS inject)
+  AUROS_SHIELD_PQC_MODE=ready  mark hybrid profile as pending PQC key
+`);
+  process.exit(1);
+}
+
+const args = process.argv.slice(2);
+const cmd = args[0];
+
+function flag(name: string): string | undefined {
+  const i = args.indexOf(name);
+  if (i === -1) return undefined;
+  return args[i + 1];
+}
+
+if (!cmd || cmd === "-h" || cmd === "--help") usage();
+
+if (cmd === "cbom") {
+  console.log(JSON.stringify(buildCbom("on_prem"), null, 2));
+  process.exit(0);
+}
+
+if (cmd === "seal") {
+  const kind = (flag("--kind") ?? "audit") as ShieldSealKind;
+  const hash = flag("--hash");
+  const file = flag("--file");
+  const profile = flag("--profile") as
+    | "classical_hmac_sha256_v1"
+    | "hybrid_pqc_ready_v1"
+    | undefined;
+  let payload: string | undefined;
+  const content_hash = hash;
+  if (file) {
+    payload = readFileSync(file, "utf8");
+  }
+  const seal = sealLocal({
+    kind,
+    payload,
+    content_hash,
+    profile,
+    tenant_ref: flag("--tenant"),
+  });
+  console.log(JSON.stringify(seal, null, 2));
+  process.exit(0);
+}
+
+if (cmd === "verify") {
+  const kind = (flag("--kind") ?? "audit") as ShieldSealKind;
+  const hash = flag("--hash");
+  const sig = flag("--sig");
+  if (!hash || !sig) usage();
+  const result = verifyLocal({ kind, content_hash: hash, signature: sig });
+  console.log(JSON.stringify(result, null, 2));
+  process.exit(result.valid ? 0 : 2);
+}
+
+if (cmd === "serve") {
+  const port = Number(flag("--port") ?? process.env.PORT ?? 8787);
+  startShieldServer(port);
+} else {
+  usage();
+}

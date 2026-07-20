@@ -71,6 +71,7 @@ const PRIORITY: Record<string, number> = {
   "/estimate": 0.77,
   "/developers": 0.82,
   "/developers/institutions": 0.84,
+  "/developers/shield": 0.86,
   "/developers/dashboard": 0.72,
   "/developers/docs": 0.8,
   "/developers/docs/page": 0.76,

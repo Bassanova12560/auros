@@ -1261,6 +1261,23 @@ paths:
       responses:
         "200":
           description: Demo unit
+  /api/v1/shield/cbom:
+    get:
+      operationId: shieldCbom
+      summary: Cryptographic Bill of Materials (sample)
+      description: |
+        Public sample CBOM for AUROS Shield on-prem underlayer.
+        Production seals run on customer premises via npm @adrien1212balitrand/auros-shield.
+        Not a NIST PQC certification.
+      tags: [Shield]
+      responses:
+        '200':
+          description: CBOM JSON inventory
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
   /api/v1/chargeflow/export:
     get:
       tags: [Premium]

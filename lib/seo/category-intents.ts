@@ -369,14 +369,14 @@ export const CATEGORY_INTENTS: CategoryIntent[] = [
     toolLabel: "OpenAPI",
   },
   {
-    id: "i3",
-    pillar: "watts",
-    question: "Comment traiter le nucléaire sans Green Verified ?",
+    id: "i4",
+    pillar: "protocol",
+    question: "Comment garder les clés de preuve RWA on-prem ?",
     answer:
-      "Utilisez AUROS Power (/power) et generation_source=nuclear sur Watts/CFU. Hors label Green Verified. Guide : /guides/low-carbon-power.",
-    canonicalPath: "/guides/low-carbon-power",
-    toolHref: "/power",
-    toolLabel: "AUROS Power",
+      "Installez AUROS Shield (/developers/shield) : seal/verify locaux avec AUROS_SHIELD_SIGNING_KEY dans le HSM/KMS client. CBOM via /api/v1/shield/cbom. Protocol cloud reste l'intelligence — pas les secrets.",
+    canonicalPath: "/developers/shield",
+    toolHref: "/developers/shield",
+    toolLabel: "AUROS Shield",
   },
 ];
 

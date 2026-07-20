@@ -284,6 +284,11 @@ await client.createChargeflowEBatch({ items: [/* … */] });`}
               </Link>
             </li>
             <li>
+              <Link href="/developers/shield" className="hover:text-white">
+                AUROS Shield (on-prem) →
+              </Link>
+            </li>
+            <li>
               <Link href="/developers/institutions" className="hover:text-white">
                 Pack institutions (banques) →
               </Link>
