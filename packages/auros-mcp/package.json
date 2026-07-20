@@ -1,6 +1,6 @@
 {
   "name": "@adrien1212balitrand/auros-mcp",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "MCP server for AUROS Protocol — RWA intelligence tools for Cursor and Claude Desktop",
   "license": "MIT",
   "type": "module",

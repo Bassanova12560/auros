@@ -25,6 +25,26 @@ export type ProtocolChangelogEntry = {
 /** Single source for `/developers/changelog` and GET `/api/v1/changelog`. Newest first. */
 export const PROTOCOL_CHANGELOG: ProtocolChangelogEntry[] = [
   {
+    id: "watts-hub-live-mcp",
+    date: "2026-07-20",
+    title: "Watts hub live + inventaire depuis réserve + MCP 1.2.3",
+    summary:
+      "Hub /green/watts avec aperçu inventaire/secondaire en direct, match capacité depuis la réserve, nav Green Standards, outils MCP watts_get / list_offers / secondary_book.",
+    details: [
+      "UI hub : compteurs + top offres/listings (demo API).",
+      "Réserve : « Voir capacité ouverte » → POST offers/demo/match.",
+      "Green Standards quick nav → AUROS Watts.",
+      "MCP 1.2.3 : watts_get, watts_list_offers, watts_secondary_book.",
+    ],
+    links: [
+      { href: "/green/watts", label: "Watts hub" },
+      { href: "/green/chargeflow/reserve", label: "Réserver" },
+      { href: "/developers/docs/mcp-server", label: "MCP" },
+    ],
+    tags: ["watts", "mcp", "green"],
+    status: "released",
+  },
+  {
     id: "watts-hub-mcp",
     date: "2026-07-20",
     title: "AUROS Watts hub + MCP tools",

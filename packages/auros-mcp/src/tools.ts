@@ -469,6 +469,15 @@ export const AUROS_MCP_TOOLS = [
       client.wattsReserve(args),
   },
   {
+    name: "watts_get",
+    description: "Get a Watts reservation by id (Premium).",
+    schema: {
+      id: z.string().describe("reservation uuid"),
+    },
+    handler: (client: AurosApiClient, args: Record<string, unknown>) =>
+      client.wattsReservation(String(args.id)),
+  },
+  {
     name: "watts_confirm",
     description:
       "Confirm a Watts reservation — mints CFU-E or CFU-F linked to reservation_id (Premium). Explicit only.",
@@ -493,6 +502,18 @@ export const AUROS_MCP_TOOLS = [
       const { id, ...body } = args;
       return client.wattsSettle(String(id), body);
     },
+  },
+  {
+    name: "watts_list_offers",
+    description:
+      "List open producer capacity offers (Premium). Optional filters: country, firmness, mine.",
+    schema: {
+      country: z.string().optional(),
+      firmness: z.enum(["firm", "flex"]).optional(),
+      mine: z.boolean().optional(),
+    },
+    handler: (client: AurosApiClient, args: Record<string, unknown>) =>
+      client.wattsOffers(args),
   },
   {
     name: "watts_create_offer",
@@ -531,6 +552,16 @@ export const AUROS_MCP_TOOLS = [
     },
     handler: (client: AurosApiClient, args: Record<string, unknown>) =>
       client.wattsMatchOffers(args),
+  },
+  {
+    name: "watts_secondary_book",
+    description:
+      "List open secondary listings (Premium). Optional mine=true for own listings.",
+    schema: {
+      mine: z.boolean().optional(),
+    },
+    handler: (client: AurosApiClient, args: Record<string, unknown>) =>
+      client.wattsSecondary(args),
   },
   {
     name: "watts_secondary_list",

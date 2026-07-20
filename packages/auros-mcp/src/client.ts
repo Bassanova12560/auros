@@ -285,12 +285,22 @@ export class AurosApiClient {
     return this.request("POST", "/api/v1/watts/offers", body);
   }
 
+  async wattsOffers(query: Record<string, unknown> = {}): Promise<unknown> {
+    return this.request("GET", "/api/v1/watts/offers", undefined, query);
+  }
+
   async wattsMatchOffers(body: Record<string, unknown>): Promise<unknown> {
     return this.request("POST", "/api/v1/watts/offers/match", body);
   }
 
   async wattsSecondaryList(body: Record<string, unknown>): Promise<unknown> {
     return this.request("POST", "/api/v1/watts/secondary", body);
+  }
+
+  async wattsSecondary(
+    query: Record<string, unknown> = {}
+  ): Promise<unknown> {
+    return this.request("GET", "/api/v1/watts/secondary", undefined, query);
   }
 
   private async request(

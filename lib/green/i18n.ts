@@ -225,6 +225,7 @@ export type GreenMessages = {
       compare: string;
       label: string;
       chargeflow: string;
+      watts: string;
       fleets: string;
       console: string;
       assistant: string;
@@ -1081,6 +1082,7 @@ const FR: GreenMessages = {
       compare: "Comparateur",
       label: "Candidature label",
       chargeflow: "ChargeFlow CFU-E",
+      watts: "AUROS Watts",
       fleets: "ChargeFlow flottes / CPO",
       console: "Console ChargeFlow",
       assistant: "Assistant RTMS (bêta)",
@@ -2028,6 +2030,7 @@ const EN: GreenMessages = {
       compare: "Comparator",
       label: "Label application",
       chargeflow: "ChargeFlow CFU-E",
+      watts: "AUROS Watts",
       fleets: "ChargeFlow fleets / CPO",
       console: "ChargeFlow console",
       assistant: "RTMS assistant (beta)",
@@ -2977,6 +2980,7 @@ const ES: GreenMessages = {
       compare: "Comparador",
       label: "Solicitud etiqueta",
       chargeflow: "ChargeFlow CFU-E",
+      watts: "AUROS Watts",
       fleets: "ChargeFlow flotas / CPO",
       console: "Consola ChargeFlow",
       assistant: "Asistente RTMS (beta)",

@@ -117,9 +117,9 @@ export function parseCopilotSearchParams(params: {
 export function suggestionsForContext(ctx: CopilotPageContext): string[] {
   if (ctx.surface === "watts") {
     return [
-      "Qu’est-ce qu’une réservation de watts AUROS ?",
+      "Qu’est-ce qu’AUROS Watts ?",
       "Différence firm vs flex (CFU-E / CFU-F) ?",
-      "Que signifie le match_score ?",
+      "Comment passer de réservation à listing secondaire ?",
     ];
   }
   if (ctx.surface === "chargeflow") {

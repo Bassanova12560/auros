@@ -66,11 +66,22 @@ export function WattsReserveView() {
   const [deliveryRef, setDeliveryRef] = useState("");
   const [result, setResult] = useState<ReserveResult | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [matchingOffers, setMatchingOffers] = useState(false);
+  const [offerMatches, setOfferMatches] = useState<
+    {
+      offer_id: string;
+      match_score: number;
+      offer: {
+        label: string | null;
+        zone: { country: string };
+        capacity_kw: number | null;
+        energy_kwh: number | null;
+        firmness: string;
+      };
+    }[]
+  >([]);
 
-  async function submit() {
-    setLoading(true);
-    setError(null);
-    setResult(null);
+  function profileBody() {
     const body: Record<string, unknown> = {
       window: {
         start: new Date(start).toISOString(),
@@ -90,12 +101,18 @@ export function WattsReserveView() {
     if (carbonMax.trim()) {
       body.carbon_intensity_max_gco2_kwh = Number(carbonMax);
     }
+    return body;
+  }
 
+  async function submit() {
+    setLoading(true);
+    setError(null);
+    setResult(null);
     try {
       const res = await fetch("/api/v1/watts/reserve/demo", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
+        body: JSON.stringify(profileBody()),
       });
       const json = (await res.json()) as ReserveResult;
       if (!res.ok) {
@@ -107,6 +124,31 @@ export function WattsReserveView() {
       setError(e instanceof Error ? e.message : "Network error");
     } finally {
       setLoading(false);
+    }
+  }
+
+  async function matchInventory() {
+    setMatchingOffers(true);
+    setError(null);
+    try {
+      const res = await fetch("/api/v1/watts/offers/demo/match", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(profileBody()),
+      });
+      const json = (await res.json()) as {
+        matches?: typeof offerMatches;
+        error?: { message?: string };
+      };
+      if (!res.ok) {
+        setError(json.error?.message ?? `Erreur ${res.status}`);
+        return;
+      }
+      setOfferMatches((json.matches ?? []).slice(0, 5));
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Network error");
+    } finally {
+      setMatchingOffers(false);
     }
   }
 
@@ -169,7 +211,7 @@ export function WattsReserveView() {
   const confirmed = result?.status === "confirmed";
   const pending = result?.status === "pending_confirm";
   const settled = result?.status === "settled";
-  const busy = loading || confirming || settling;
+  const busy = loading || confirming || settling || matchingOffers;
 
   return (
     <div className="relative">
@@ -311,13 +353,64 @@ export function WattsReserveView() {
             </label>
           </div>
 
-          <PrimaryButton
-            type="button"
-            onClick={() => void submit()}
-            disabled={busy}
-          >
-            {loading ? "Matching…" : "Calculer le matching"}
-          </PrimaryButton>
+          <div className="flex flex-wrap items-center gap-3">
+            <PrimaryButton
+              type="button"
+              onClick={() => void submit()}
+              disabled={busy}
+            >
+              {loading ? "Matching…" : "Calculer le matching"}
+            </PrimaryButton>
+            <PrimaryButton
+              type="button"
+              variant="ghost"
+              onClick={() => void matchInventory()}
+              disabled={busy}
+            >
+              {matchingOffers ? "Inventaire…" : "Voir capacité ouverte"}
+            </PrimaryButton>
+          </div>
+
+          {offerMatches.length > 0 ? (
+            <div className="space-y-3 border-t border-white/[0.08] pt-5">
+              <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/40">
+                Inventaire · top match
+              </p>
+              <ul className="space-y-2">
+                {offerMatches.map((m) => {
+                  const vol =
+                    m.offer.capacity_kw != null
+                      ? `${m.offer.capacity_kw} kW`
+                      : m.offer.energy_kwh != null
+                        ? `${m.offer.energy_kwh} kWh`
+                        : "—";
+                  return (
+                    <li
+                      key={m.offer_id}
+                      className="flex flex-wrap items-baseline justify-between gap-2 text-sm text-white/60"
+                    >
+                      <span>
+                        {m.offer.label || "Offre"} · {m.offer.zone.country} ·{" "}
+                        {vol} · {m.offer.firmness}
+                      </span>
+                      <span className="font-mono tabular-nums text-emerald-400/90">
+                        {m.match_score}
+                      </span>
+                    </li>
+                  );
+                })}
+              </ul>
+              <p className="text-xs text-white/35">
+                Indicatif — aucune réservation auto.{" "}
+                <Link
+                  href={WATTS_INVENTORY_ROUTE}
+                  className="underline-offset-2 hover:underline"
+                >
+                  Inventaire complet
+                </Link>
+              </p>
+            </div>
+          ) : null}
 
           {error ? (
             <p className="text-sm text-red-400/90" role="alert">

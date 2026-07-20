@@ -146,11 +146,17 @@ var AurosApiClient = class {
   async wattsCreateOffer(body) {
     return this.request("POST", "/api/v1/watts/offers", body);
   }
+  async wattsOffers(query = {}) {
+    return this.request("GET", "/api/v1/watts/offers", void 0, query);
+  }
   async wattsMatchOffers(body) {
     return this.request("POST", "/api/v1/watts/offers/match", body);
   }
   async wattsSecondaryList(body) {
     return this.request("POST", "/api/v1/watts/secondary", body);
+  }
+  async wattsSecondary(query = {}) {
+    return this.request("GET", "/api/v1/watts/secondary", void 0, query);
   }
   async request(method, path, body, query, auth = true) {
     const params = new URLSearchParams();
@@ -565,6 +571,14 @@ var AUROS_MCP_TOOLS = [
     handler: (client2, args) => client2.wattsReserve(args)
   },
   {
+    name: "watts_get",
+    description: "Get a Watts reservation by id (Premium).",
+    schema: {
+      id: z.string().describe("reservation uuid")
+    },
+    handler: (client2, args) => client2.wattsReservation(String(args.id))
+  },
+  {
     name: "watts_confirm",
     description: "Confirm a Watts reservation \u2014 mints CFU-E or CFU-F linked to reservation_id (Premium). Explicit only.",
     schema: {
@@ -586,6 +600,16 @@ var AUROS_MCP_TOOLS = [
       const { id, ...body } = args;
       return client2.wattsSettle(String(id), body);
     }
+  },
+  {
+    name: "watts_list_offers",
+    description: "List open producer capacity offers (Premium). Optional filters: country, firmness, mine.",
+    schema: {
+      country: z.string().optional(),
+      firmness: z.enum(["firm", "flex"]).optional(),
+      mine: z.boolean().optional()
+    },
+    handler: (client2, args) => client2.wattsOffers(args)
   },
   {
     name: "watts_create_offer",
@@ -620,6 +644,14 @@ var AUROS_MCP_TOOLS = [
       firmness: z.enum(["firm", "flex"]).optional()
     },
     handler: (client2, args) => client2.wattsMatchOffers(args)
+  },
+  {
+    name: "watts_secondary_book",
+    description: "List open secondary listings (Premium). Optional mine=true for own listings.",
+    schema: {
+      mine: z.boolean().optional()
+    },
+    handler: (client2, args) => client2.wattsSecondary(args)
   },
   {
     name: "watts_secondary_list",

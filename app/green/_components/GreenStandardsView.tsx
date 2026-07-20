@@ -19,6 +19,7 @@ import {
   GREEN_ROUTE,
   getGreenMessages,
 } from "@/lib/green";
+import { WATTS_HUB_ROUTE } from "@/lib/watts";
 import {
   downloadGreenRtmsChecklistCsv,
   greenRtmsChecklistToCsv,
@@ -57,6 +58,7 @@ export function GreenStandardsView() {
           { href: GREEN_COMPARE_ROUTE, title: s.quickNav.compare },
           { href: GREEN_LABEL_ROUTE, title: s.quickNav.label },
           { href: CHARGEFLOW_ROUTE, title: s.quickNav.chargeflow },
+          { href: WATTS_HUB_ROUTE, title: s.quickNav.watts },
           { href: CHARGEFLOW_FLEETS_ROUTE, title: s.quickNav.fleets },
           { href: CHARGEFLOW_CONSOLE_ROUTE, title: s.quickNav.console },
         ].map((item) => (
