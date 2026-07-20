@@ -40,7 +40,7 @@ export const POST = protocolRoute(async (req: Request) => {
     return protocolError("validation_error", "Valid email required", 400);
   }
 
-  const locale: Locale = isLocale(body.locale) ? body.locale : "fr";
+  const locale: Locale = isLocale(body.locale ?? "") ? (body.locale as Locale) : "fr";
   const origin = siteOrigin();
   const resumeUrl = `${origin}/wizard?expert=1&resume_email=${encodeURIComponent(email)}`;
 

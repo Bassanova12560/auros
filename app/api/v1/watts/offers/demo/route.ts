@@ -1,10 +1,6 @@
 import { protocolError, protocolJson, protocolRoute } from "@/lib/protocol";
-import {
-  insertWattCapacityOffer,
-  listWattCapacityOffers,
-  wattCapacityOfferRequestSchema,
-  wattOfferPublic,
-} from "@/lib/watts";
+import { wattCapacityOfferRequestSchema, wattOfferPublic } from "@/lib/watts";
+import { insertWattCapacityOffer, listWattCapacityOffers } from "@/lib/watts/server";
 import { checkRateLimitAsync, getRequestIp } from "@/lib/rate-limit";
 
 export const runtime = "nodejs";

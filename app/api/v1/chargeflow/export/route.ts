@@ -139,11 +139,12 @@ export const GET = protocolRoute(async (req: Request) => {
     if (offset >= page.total) break;
   }
 
-  await logProtocolUsage({
-    keyHash: auth.ctx.keyHash,
-    endpoint: "/api/v1/chargeflow/export",
-    status: 200,
-  });
+  await logProtocolUsage(
+    auth.ctx.keyHash,
+    "/api/v1/chargeflow/export",
+    "GET",
+    200
+  );
 
   const exported_at = new Date().toISOString();
   let shield:

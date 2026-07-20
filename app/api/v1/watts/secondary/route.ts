@@ -8,12 +8,8 @@ import {
   protocolJson,
   protocolRoute,
 } from "@/lib/protocol";
-import {
-  insertWattSecondaryListing,
-  listWattSecondaryListings,
-  wattSecondaryListingRequestSchema,
-  wattSecondaryPublic,
-} from "@/lib/watts";
+import { wattSecondaryListingRequestSchema, wattSecondaryPublic } from "@/lib/watts";
+import { insertWattSecondaryListing, listWattSecondaryListings } from "@/lib/watts/server";
 
 export const runtime = "nodejs";
 

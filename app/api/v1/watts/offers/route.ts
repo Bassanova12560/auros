@@ -8,12 +8,8 @@ import {
   protocolJson,
   protocolRoute,
 } from "@/lib/protocol";
-import {
-  insertWattCapacityOffer,
-  listWattCapacityOffers,
-  wattCapacityOfferRequestSchema,
-  wattOfferPublic,
-} from "@/lib/watts";
+import { wattCapacityOfferRequestSchema, wattOfferPublic } from "@/lib/watts";
+import { insertWattCapacityOffer, listWattCapacityOffers } from "@/lib/watts/server";
 
 export const runtime = "nodejs";
 

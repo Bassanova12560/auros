@@ -8,7 +8,8 @@ import {
   protocolJson,
   protocolRoute,
 } from "@/lib/protocol";
-import { getWattSecondaryListing, wattSecondaryPublic } from "@/lib/watts";
+import { wattSecondaryPublic } from "@/lib/watts";
+import { getWattSecondaryListing } from "@/lib/watts/server";
 
 export const runtime = "nodejs";
 

@@ -1,9 +1,6 @@
 import { protocolError, protocolJson, protocolRoute } from "@/lib/protocol";
-import {
-  confirmWattReservation,
-  getWattReservation,
-  wattReservePublicResponse,
-} from "@/lib/watts";
+import { wattReservePublicResponse } from "@/lib/watts";
+import { confirmWattReservation, getWattReservation } from "@/lib/watts/server";
 import { checkRateLimitAsync, getRequestIp } from "@/lib/rate-limit";
 import { z } from "zod";
 

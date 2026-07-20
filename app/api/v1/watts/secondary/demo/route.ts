@@ -1,10 +1,6 @@
 import { protocolError, protocolJson, protocolRoute } from "@/lib/protocol";
-import {
-  insertWattSecondaryListing,
-  listWattSecondaryListings,
-  wattSecondaryListingRequestSchema,
-  wattSecondaryPublic,
-} from "@/lib/watts";
+import { wattSecondaryListingRequestSchema, wattSecondaryPublic } from "@/lib/watts";
+import { insertWattSecondaryListing, listWattSecondaryListings } from "@/lib/watts/server";
 import { checkRateLimitAsync, getRequestIp } from "@/lib/rate-limit";
 
 export const runtime = "nodejs";

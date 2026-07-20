@@ -8,11 +8,8 @@ import {
   protocolJson,
   protocolRoute,
 } from "@/lib/protocol";
-import {
-  confirmWattReservation,
-  getWattReservation,
-  wattReservePublicResponse,
-} from "@/lib/watts";
+import { wattReservePublicResponse } from "@/lib/watts";
+import { confirmWattReservation, getWattReservation } from "@/lib/watts/server";
 
 export const runtime = "nodejs";
 
