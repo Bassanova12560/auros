@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 
 type Props = {
@@ -10,7 +11,8 @@ type Props = {
 };
 
 /**
- * Signature AUROS wordmark — typography first, mark secondary.
+ * Signature AUROS mark — every exceptional sub-page should open with this.
+ * Brand test: without nav, the first viewport still reads as AUROS.
  */
 export function AurosBrandLockup({
   product,
@@ -18,50 +20,38 @@ export function AurosBrandLockup({
   className = "",
   size = "sm",
 }: Props) {
+  const mark = size === "md" ? "h-9 w-9" : "h-7 w-7";
   const word =
     size === "md"
-      ? "text-base tracking-[0.28em] md:text-lg"
-      : "text-sm tracking-[0.28em]";
+      ? "text-sm tracking-[0.4em]"
+      : "text-xs tracking-[0.35em]";
 
   return (
     <Link
       href={href}
-      className={`group inline-flex items-center gap-2.5 ${className}`}
+      className={`group inline-flex items-center gap-3 ${className}`}
       aria-label={product ? `AUROS ${product}` : "AUROS"}
     >
-      <AurosMark className={size === "md" ? "h-6 w-6" : "h-5 w-5"} />
+      <Image
+        src="/auros-logo.svg"
+        alt=""
+        width={size === "md" ? 36 : 28}
+        height={size === "md" ? 36 : 28}
+        className={`${mark} rounded-sm ring-1 ring-white/10 transition group-hover:ring-white/25`}
+        priority={size === "md"}
+      />
       <span className="flex flex-col gap-0.5">
-        <span className={`font-display font-semibold text-white ${word}`}>
+        <span
+          className={`font-display font-semibold text-white ${word}`}
+        >
           AUROS
         </span>
         {product ? (
-          <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/40">
+          <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-white/40">
             {product}
           </span>
         ) : null}
       </span>
     </Link>
-  );
-}
-
-/** Inline mark — currentColor stroke, green corner. No black tile. */
-export function AurosMark({ className = "h-5 w-5" }: { className?: string }) {
-  return (
-    <svg
-      viewBox="0 0 32 32"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      className={`shrink-0 text-white/90 ${className}`}
-      aria-hidden
-    >
-      <path d="M5.5 5.5h21v21h-21v-21Z" stroke="currentColor" strokeWidth="1.5" />
-      <rect
-        x="19.5"
-        y="5.5"
-        width="7"
-        height="7"
-        fill="var(--auros-green-warm, #0F5A47)"
-      />
-    </svg>
   );
 }
