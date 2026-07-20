@@ -2,6 +2,7 @@
 
 import type { ReactNode } from "react";
 
+import { AurosBrandLockup } from "@/app/_components/AurosBrandLockup";
 import { useLocale } from "@/app/_components/i18n/LocaleProvider";
 import { resolveCatalogLocale } from "@/lib/i18n";
 import {
@@ -81,6 +82,13 @@ export function WizardShell({
 
   return (
     <main className="page-main page-main--nav mx-auto flex min-h-dvh max-w-3xl flex-col md:px-6 md:py-12">
+      <div className="mb-6 flex items-center justify-between gap-3">
+        <AurosBrandLockup
+          product={isExplore ? "Explore" : "Wizard"}
+          href="/"
+        />
+        <div className="auros-accent-rule hidden w-16 sm:block" aria-hidden />
+      </div>
       <div className="mb-3 flex flex-wrap items-center justify-between gap-2 font-mono text-[10px] uppercase tracking-[0.2em] text-white/40">
         <span>{shell.title}</span>
         <span className="tabular-nums tracking-[0.12em] text-white/55">

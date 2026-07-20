@@ -12,6 +12,7 @@ import {
   useState,
 } from "react";
 
+import { AurosBrandLockup } from "../_components/AurosBrandLockup";
 import { useLocale } from "../_components/i18n/LocaleProvider";
 import { Nav } from "../_components/Nav";
 import { getDossierMessages } from "@/lib/dossier-i18n";
@@ -502,6 +503,10 @@ function DossierMain() {
       <Nav />
       <main className="page-main page-main--nav min-h-dvh">
         <div className="page-inner page-inner--3xl mx-auto">
+        <div className="mb-8">
+          <AurosBrandLockup product="Dossier" />
+          <div className="auros-accent-rule mt-5" aria-hidden />
+        </div>
         <div className="mb-10 flex items-center justify-end border-b border-white/[0.06] pb-6">
           <span className="mr-auto font-mono text-[10px] uppercase tracking-[0.2em] text-muted">
             {dm.eyebrow}
@@ -854,6 +859,8 @@ function EmptyState() {
   return (
     <main className="page-main page-main--nav min-h-dvh bg-void text-white">
       <div className="page-inner page-inner--lg mx-auto text-center">
+        <AurosBrandLockup product="Dossier" size="md" className="mb-8 justify-center" />
+        <div className="auros-accent-rule mx-auto mb-8" aria-hidden />
         <p className="text-sm uppercase tracking-wider text-muted">
           {dm.empty.title}
         </p>

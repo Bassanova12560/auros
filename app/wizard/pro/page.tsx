@@ -3,6 +3,7 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useCallback, useEffect, useMemo, useState } from "react";
 
+import { AurosBrandLockup } from "@/app/_components/AurosBrandLockup";
 import { useLocale } from "@/app/_components/i18n/LocaleProvider";
 import { resolveCatalogLocale } from "@/lib/i18n";
 import { track } from "@/lib/analytics";
@@ -155,8 +156,10 @@ function WizardProContent() {
 
   return (
     <main className="page-main page-main--nav mx-auto min-h-dvh max-w-4xl px-4 py-10 md:px-6 md:py-14">
+      <AurosBrandLockup product="Wizard Pro" size="md" className="mb-8" />
+      <div className="auros-accent-rule mb-8" aria-hidden />
       <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-white/40">
-        Wizard Pro
+        Offre institutionnelle
       </p>
       <h1 className="mt-3 font-display text-2xl text-white md:text-3xl">
         {m.title}

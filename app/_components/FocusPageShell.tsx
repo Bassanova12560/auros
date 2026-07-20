@@ -19,6 +19,10 @@ const WIDTH_CLASS = {
   "6xl": "page-inner--6xl",
 } as const;
 
+/**
+ * Canonical AUROS sub-page shell — ambient void, hub nav, footer.
+ * Every exceptional page should feel like the same house.
+ */
 export function FocusPageShell({
   path,
   children,
@@ -29,10 +33,10 @@ export function FocusPageShell({
     <AmbientShell>
       <AiFirstPageJsonLd path={path} />
       <Nav />
-      <main
-        className={`page-main page-main--nav text-white ${className}`}
-      >
-        <div className={`page-inner ${WIDTH_CLASS[width]} mx-auto px-4 pb-20 pt-4 md:px-6 md:pt-6`}>
+      <main className={`page-main page-main--nav text-white ${className}`}>
+        <div
+          className={`page-inner ${WIDTH_CLASS[width]} auros-page-frame mx-auto px-4 pb-20 pt-4 md:px-6 md:pt-6`}
+        >
           {children}
         </div>
       </main>

@@ -30,7 +30,8 @@ export default function ShieldPage() {
       <AiFirstPageJsonLd path={SHIELD_ROUTE} />
       <FocusPageShell path={SHIELD_ROUTE} width="3xl">
         <ContentPageLayout
-          eyebrow={`AUROS Shield · v${SHIELD_VERSION}`}
+          product="Shield"
+          eyebrow={`Protocol · v${SHIELD_VERSION}`}
           title="Super facile. Vraiment utile."
           intro="Pas un projet d’intégration. Un geste : envoyer un export → recevoir une preuve. Contreparties vérifient sans vos données. Premium = le pack que la banque met au dossier."
           cta={{ href: "#essayer", label: "Essayer sans compte" }}

@@ -7,7 +7,6 @@ import { DEMO_API_KEY } from "@/lib/protocol/constants";
 import { PROTOCOL_CHANGELOG_ROUTE } from "@/lib/protocol/changelog";
 import { PROTOCOL_DOCS_ROUTE } from "@/lib/protocol/docs";
 
-import { DeveloperBrandMark } from "./_components/DeveloperBrandMark";
 import { DeveloperPlayground } from "./_components/DeveloperPlayground";
 import { MonitorCheckoutForm } from "./_components/MonitorCheckoutForm";
 
@@ -182,10 +181,10 @@ const ENDPOINTS = [
 export default function DevelopersPage() {
   return (
     <FocusPageShell path={DEVELOPERS_ROUTE} width="3xl">
-      <DeveloperBrandMark />
       <ContentPageLayout
-        eyebrow="AUROS Protocol · v1.0"
-        title="AUROS Protocol — The RWA Intelligence Layer"
+        product="Protocol"
+        eyebrow="API · v1.0"
+        title="The RWA Intelligence Layer"
         intro="API publique pour scorer la maturité MiCA, explorer le catalogue RWA, comparer des produits side-by-side et classer les juridictions — règles statiques, réponse < 200 ms, sans LLM. Disponible sur getauros.com/api/v1/* et api.getauros.com/v1/*. Indicatif uniquement ; validez avec un conseil avant toute émission."
         cta={{ href: "#playground", label: "Tester dans le playground" }}
       >

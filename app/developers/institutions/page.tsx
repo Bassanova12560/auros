@@ -62,7 +62,8 @@ export default function InstitutionsPage() {
       <AiFirstPageJsonLd path={INSTITUTIONS_ROUTE} />
       <FocusPageShell path={INSTITUTIONS_ROUTE} width="3xl">
         <ContentPageLayout
-          eyebrow="AUROS Protocol · Institutions"
+          product="Institutions"
+          eyebrow="Protocol"
           title="API pour banques et équipes risque"
           intro="OpenAPI, export CFU, Monitor et Watts — pour intégrer AUROS dans un process credit/ESG sans claim d'agrément bancaire."
           cta={{ href: "/developers", label: "Hub développeurs" }}

@@ -45,6 +45,7 @@ export default function PilotsPage() {
       <AiFirstPageJsonLd path="/pilots" />
       <FocusPageShell path="/pilots" width="3xl">
         <ContentPageLayout
+          product="Pilotes"
           eyebrow="Go-to-market · 30 jours"
           title="Trois pilotes — pas dix features"
           intro="Mesurer l’adoption réelle : flotte, banque, plateforme. Le reste est amplification."

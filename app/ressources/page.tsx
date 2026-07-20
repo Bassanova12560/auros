@@ -71,7 +71,8 @@ export default function ResourcesPage() {
   return (
     <FocusPageShell path={AUROS_RESOURCES_ROUTE} width="3xl">
       <ContentPageLayout
-        eyebrow="Ressources"
+        product="Ressources"
+        eyebrow="Hub éditorial"
         title="Guides et documentation"
         intro="Hub éditorial AUROS — contenus éducatifs pour préparer une tokenisation RWA ou un dossier Green. Un lien principal par besoin."
         cta={{ href: "/wizard", label: "Lancer le wizard gratuit" }}

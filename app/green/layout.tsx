@@ -1,9 +1,9 @@
-import "leaflet/dist/leaflet.css";
-
+import { AmbientShell } from "@/app/_components/ui/AmbientShell";
 import { Footer } from "@/app/_components/Footer";
 
-/** Site header: GreenSiteHeader → AurosHeader (not inline in page.tsx). */
 import { GreenSiteHeader } from "./_components/GreenSiteHeader";
+
+import "leaflet/dist/leaflet.css";
 
 export default function GreenLayout({
   children,
@@ -11,10 +11,12 @@ export default function GreenLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="green-zone min-h-screen bg-green-page font-sans font-light text-white">
-      <GreenSiteHeader />
-      <main className="page-main">{children}</main>
-      <Footer />
-    </div>
+    <AmbientShell>
+      <div className="green-zone min-h-dvh font-sans font-light text-white">
+        <GreenSiteHeader />
+        <main className="page-main">{children}</main>
+        <Footer />
+      </div>
+    </AmbientShell>
   );
 }

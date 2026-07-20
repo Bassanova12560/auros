@@ -21,6 +21,7 @@ export default function LiquidityPage() {
       <AiFirstPageJsonLd path="/liquidity" />
       <FocusPageShell path="/liquidity" width="2xl">
         <ContentPageLayout
+          product="Liquidity"
           eyebrow="Produit futur"
           title="Liquidity Bridge — pas encore"
           intro="Les petites plateformes manquent de liquidité après émission. AUROS le fera — après des dossiers issuer prouvés, pas avant."

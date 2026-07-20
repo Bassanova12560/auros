@@ -22,13 +22,14 @@ export default function StartPage() {
       <AiFirstPageJsonLd path={START_ROUTE} />
       <FocusPageShell path={START_ROUTE} width="3xl">
         <ContentPageLayout
+          product="Démarrer"
           eyebrow="Première victoire"
           title="Choisissez une porte — 4 minutes"
           intro="Pas de parcours infini. Une action, un résultat. Vous pourrez approfondir ensuite."
         >
           <div className="space-y-4">
-            <section className="rounded-xl border border-emerald-500/30 bg-emerald-500/[0.06] px-5 py-5">
-              <p className="font-mono text-[10px] uppercase tracking-wider text-emerald-400/80">
+            <section className="rounded-xl border border-[color-mix(in_srgb,var(--auros-green-warm)_45%,transparent)] bg-[color-mix(in_srgb,var(--auros-green-warm)_10%,transparent)] px-5 py-5">
+              <p className="font-mono text-[10px] uppercase tracking-wider text-[color-mix(in_srgb,var(--auros-green-warm)_80%,white)]">
                 Recommandé · non-pro
               </p>
               <h2 className="mt-2 font-display text-lg text-white">

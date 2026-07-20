@@ -73,6 +73,42 @@ body {
   @apply mt-5 max-w-2xl text-base font-light leading-relaxed text-white/55;
 }
 
+/* Signature frame for sub-pages */
+.auros-page-frame {
+  position: relative;
+}
+
+.auros-page-article {
+  position: relative;
+}
+
+.auros-accent-rule {
+  height: 1px;
+  max-width: 4.5rem;
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--auros-green-warm) 85%, white),
+    color-mix(in srgb, var(--auros-green-warm) 20%, transparent)
+  );
+}
+
+.auros-brand-mesh {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(
+      ellipse 70% 45% at 50% -10%,
+      color-mix(in srgb, var(--auros-green-warm) 22%, transparent),
+      transparent 58%
+    ),
+    radial-gradient(
+      ellipse 40% 30% at 100% 20%,
+      rgba(196, 165, 116, 0.06),
+      transparent 55%
+    );
+  opacity: 0.9;
+}
+
 .auros-divider {
   border-top: 1px solid var(--auros-border);
 }

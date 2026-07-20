@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import { AiFirstPageJsonLd } from "@/app/_components/ai-first/AiFirstPageJsonLd";
+import { FocusPageShell } from "@/app/_components/FocusPageShell";
 import { metadataFromPath } from "@/lib/seo/metadata";
 
 import { PowerHubView } from "./PowerHubView";
@@ -16,11 +16,8 @@ export const metadata: Metadata = {
 
 export default function PowerHubPage() {
   return (
-    <>
-      <AiFirstPageJsonLd path={POWER_HUB_ROUTE} />
-      <div className="page-inner page-inner--3xl mx-auto px-4 pb-20 pt-12 md:px-6 md:pt-16">
-        <PowerHubView />
-      </div>
-    </>
+    <FocusPageShell path={POWER_HUB_ROUTE} width="3xl">
+      <PowerHubView />
+    </FocusPageShell>
   );
 }

@@ -1,24 +1,12 @@
-import Image from "next/image";
-import Link from "next/link";
+import { AurosBrandLockup } from "@/app/_components/AurosBrandLockup";
 
+/** @deprecated Prefer AurosBrandLockup product="Protocol" via ContentPageLayout */
 export function DeveloperBrandMark() {
   return (
-    <Link
+    <AurosBrandLockup
+      product="Protocol"
       href="/developers"
-      className="interactive-subtle mb-6 inline-flex items-center gap-3"
-      aria-label="AUROS Protocol — developer hub"
-    >
-      <Image
-        src="/auros-logo.svg"
-        alt=""
-        width={32}
-        height={32}
-        className="h-8 w-8"
-        priority
-      />
-      <span className="font-mono text-[11px] tracking-wide text-white/45">
-        AUROS Protocol
-      </span>
-    </Link>
+      className="mb-6"
+    />
   );
 }
