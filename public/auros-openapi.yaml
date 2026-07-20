@@ -1261,6 +1261,20 @@ paths:
       responses:
         "200":
           description: Demo unit
+  /api/v1/shield/demo:
+    post:
+      operationId: shieldDemo
+      summary: Zero-key sandbox Proof Tap
+      description: POST any text body — no auth. Rate-limited. Payload discarded.
+      tags: [Shield]
+      requestBody:
+        required: true
+        content:
+          text/plain:
+            schema: { type: string }
+      responses:
+        '200':
+          description: Demo receipt
   /api/v1/shield/ingest:
     post:
       operationId: shieldIngest

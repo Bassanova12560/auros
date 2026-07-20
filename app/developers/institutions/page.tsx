@@ -47,7 +47,7 @@ const LINKS = [
   {
     href: "/developers/shield",
     title: "AUROS Shield",
-    detail: "Sous-couche on-prem — clés locales, CBOM, PQC-ready",
+    detail: "Collez → preuve (demo) · Evidence Pack Premium pour banques",
   },
 ] as const;
 

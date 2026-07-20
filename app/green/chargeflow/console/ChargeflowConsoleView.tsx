@@ -73,6 +73,8 @@ export function ChargeflowConsoleView() {
   const [importResult, setImportResult] = useState<string | null>(null);
   const [partnerSyncing, setPartnerSyncing] = useState<string | null>(null);
   const [partnerResult, setPartnerResult] = useState<string | null>(null);
+  const [shieldBusy, setShieldBusy] = useState(false);
+  const [shieldMsg, setShieldMsg] = useState<string | null>(null);
   const [teslaToken, setTeslaToken] = useState("");
   const [teslaVin, setTeslaVin] = useState("");
   const [totalBaseUrl, setTotalBaseUrl] = useState("");
@@ -216,6 +218,45 @@ export function ChargeflowConsoleView() {
       JSON.stringify({ total: items.length, items }, null, 2),
       "application/json"
     );
+  }
+
+  async function shieldTapExport() {
+    if (items.length === 0) return;
+    setShieldBusy(true);
+    setShieldMsg(null);
+    setError(null);
+    const payload = JSON.stringify({ total: items.length, items });
+    try {
+      const key = apiKey.trim();
+      const res = await fetch(
+        key ? "/api/v1/shield/ingest" : "/api/v1/shield/demo",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "text/plain; charset=utf-8",
+            ...(key ? { Authorization: `Bearer ${key}` } : {}),
+            "X-AUROS-Shield-Label": "chargeflow-console",
+          },
+          body: payload,
+        }
+      );
+      const json = (await res.json()) as {
+        id?: string;
+        verify_url?: string;
+        error?: { message?: string };
+      };
+      if (!res.ok) {
+        setError(json.error?.message ?? `Shield ${res.status}`);
+        return;
+      }
+      setShieldMsg(
+        `Shield OK · ${json.id}${json.verify_url ? ` · ${json.verify_url}` : ""}`
+      );
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Shield network error");
+    } finally {
+      setShieldBusy(false);
+    }
   }
 
   async function runImport() {
@@ -447,8 +488,28 @@ export function ChargeflowConsoleView() {
             >
               JSON
             </button>
+            <button
+              type="button"
+              disabled={items.length === 0 || shieldBusy}
+              onClick={() => void shieldTapExport()}
+              className="min-h-[44px] rounded-full border border-emerald-500/35 bg-emerald-500/10 px-4 font-mono text-[11px] uppercase tracking-wider text-emerald-300/90 transition hover:border-emerald-400/50 disabled:opacity-30"
+              title="Hashe l’export actuel → preuve Shield (sans stocker le payload)"
+            >
+              {shieldBusy ? "Shield…" : "Shield"}
+            </button>
           </div>
         </div>
+        {shieldMsg ? (
+          <p className="text-sm text-emerald-400/85">
+            {shieldMsg}{" "}
+            <Link
+              href="/developers/shield"
+              className="underline-offset-2 hover:underline"
+            >
+              docs
+            </Link>
+          </p>
+        ) : null}
         {error ? (
           <p className="text-sm text-red-400/90" role="alert">
             {error}

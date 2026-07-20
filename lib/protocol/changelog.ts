@@ -25,6 +25,24 @@ export type ProtocolChangelogEntry = {
 /** Single source for `/developers/changelog` and GET `/api/v1/changelog`. Newest first. */
 export const PROTOCOL_CHANGELOG: ProtocolChangelogEntry[] = [
   {
+    id: "shield-try-one-click",
+    date: "2026-07-20",
+    title: "Shield — essai 1 clic + bouton console CFU",
+    summary:
+      "POST /api/v1/shield/demo sans clé, panneau Essayer sur /developers/shield, bouton Shield dans la console ChargeFlow, CLI init.",
+    details: [
+      "Try panel : coller → preuve → verify auto",
+      "Console CFU : Shield tap de l’export listé",
+      "auros-shield init — snippets copy/paste",
+    ],
+    links: [
+      { href: "/developers/shield", label: "Essayer Shield" },
+      { href: "/green/chargeflow/console", label: "Console CFU" },
+    ],
+    tags: ["shield", "ux", "chargeflow"],
+    status: "released",
+  },
+  {
     id: "shield-easy-evidence-pack",
     date: "2026-07-20",
     title: "Shield v0.3 — ingest 1 ligne + Evidence Pack Premium",

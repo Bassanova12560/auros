@@ -16,6 +16,7 @@ function usage() {
   console.log(`AUROS Shield ${SHIELD_VERSION}
 
 Usage:
+  auros-shield init
   auros-shield cbom
   auros-shield tap (--hash <hex> | --file <path>)
   auros-shield seal --kind <attest|cfu_e|cfu_w|cfu_f|audit> (--hash <hex> | --file <path>)
@@ -38,6 +39,34 @@ function flag(name) {
 if (!cmd || cmd === "-h" || cmd === "--help") usage();
 if (cmd === "cbom") {
   console.log(JSON.stringify(buildCbom("on_prem"), null, 2));
+  process.exit(0);
+}
+if (cmd === "init") {
+  console.log(`# AUROS Shield \u2014 copy/paste
+
+# A) Essai sans compte
+curl -X POST https://getauros.com/api/v1/shield/demo \\
+  -H "Content-Type: text/plain" \\
+  --data-binary @./export.json
+
+# B) Production (cl\xE9 gratuite /developers)
+export AUROS_API_KEY="auros_pk_live_\u2026"
+curl -X POST https://getauros.com/api/v1/shield/ingest \\
+  -H "Authorization: Bearer $AUROS_API_KEY" \\
+  -H "Content-Type: text/plain" \\
+  --data-binary @./export.json
+
+# C) JS one-liner
+# npm i @adrien1212balitrand/auros-shield
+# import { instrumentFetch } from "@adrien1212balitrand/auros-shield";
+# globalThis.fetch = instrumentFetch({ apiKey: process.env.AUROS_API_KEY });
+
+# D) Premium Evidence Pack (banque)
+# curl -X POST https://getauros.com/api/v1/shield/pack \\
+#   -H "Authorization: Bearer $AUROS_API_KEY" -H "Content-Type: application/json" -d '{}'
+
+# Docs: https://getauros.com/developers/shield
+`);
   process.exit(0);
 }
 if (cmd === "tap") {
