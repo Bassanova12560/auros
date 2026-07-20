@@ -15,7 +15,7 @@ import {
   listWetsRiskEvents,
 } from "@/lib/wets/store";
 
-import { WetsNav } from "../../../_components/WetsUi";
+import { WetsNav } from "@/app/eau/trust/_components/WetsUi";
 import { ProjectScoreEditor } from "./_components/ProjectScoreEditor";
 
 export const dynamic = "force-dynamic";

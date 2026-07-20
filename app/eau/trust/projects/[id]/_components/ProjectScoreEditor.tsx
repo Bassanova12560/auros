@@ -15,7 +15,7 @@ import {
   type WetsCriterionScore,
 } from "@/lib/wets/constants";
 
-import { WetsGradeBadge } from "../../../_components/WetsUi";
+import { WetsGradeBadge } from "@/app/eau/trust/_components/WetsUi";
 
 export function ProjectScoreEditor({
   projectId,

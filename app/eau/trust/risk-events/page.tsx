@@ -9,7 +9,7 @@ import { createWetsRiskEventAction } from "@/lib/wets/actions";
 import { WETS_CONSOLE_ROUTE } from "@/lib/wets/constants";
 import { listWetsRiskEvents } from "@/lib/wets/store";
 
-import { WetsNav } from "../_components/WetsUi";
+import { WetsNav } from "@/app/eau/trust/_components/WetsUi";
 
 export const metadata: Metadata = {
   title: "Risk events WETS | AUROS",

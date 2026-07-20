@@ -6,7 +6,7 @@ import { ContentPageLayout } from "@/app/_components/ContentPageLayout";
 import { FocusPageShell } from "@/app/_components/FocusPageShell";
 import { WETS_CONSOLE_ROUTE } from "@/lib/wets/constants";
 
-import { WetsNav } from "../../_components/WetsUi";
+import { WetsNav } from "@/app/eau/trust/_components/WetsUi";
 import { NewWetsProjectForm } from "./_components/NewWetsProjectForm";
 
 export const metadata: Metadata = {
