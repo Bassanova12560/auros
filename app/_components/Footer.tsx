@@ -4,6 +4,7 @@ import Link from "next/link";
 
 import { getNavHub } from "@/lib/nav-hub";
 
+import { AurosMark } from "./AurosBrandLockup";
 import { useLocale, useTranslations } from "./i18n/LocaleProvider";
 
 export function Footer() {
@@ -28,15 +29,8 @@ export function Footer() {
       <div className="mx-auto max-w-6xl">
         <div className="flex flex-col gap-10 lg:flex-row lg:justify-between lg:gap-16">
           <div className="max-w-xs shrink-0">
-            <p className="inline-flex items-center gap-2.5 font-display text-sm font-semibold tracking-[0.35em] text-white">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src="/auros-logo.svg"
-                alt=""
-                width={22}
-                height={22}
-                className="h-[22px] w-[22px] rounded-[2px] ring-1 ring-white/15"
-              />
+            <p className="inline-flex items-center gap-2.5 font-display text-sm font-semibold tracking-[0.28em] text-white">
+              <AurosMark className="h-5 w-5" />
               AUROS
             </p>
             <p className="mt-3 text-sm leading-relaxed text-muted">{f.tagline}</p>

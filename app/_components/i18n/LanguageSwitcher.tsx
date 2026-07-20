@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect, useId, useRef, useState } from "react";
+
 import { LOCALES, type Locale } from "@/lib/i18n";
 import { useLocale } from "./LocaleProvider";
 
@@ -19,6 +21,10 @@ const NATIVE: Record<Locale, string> = {
   zh: "中文",
 };
 
+/**
+ * Compact language control — one chip + menu.
+ * Avoids wrapping 5 pills into a column on iPhone.
+ */
 export function LanguageSwitcher({
   className = "",
   ariaLabel = "Language",
@@ -27,33 +33,81 @@ export function LanguageSwitcher({
   ariaLabel?: string;
 }) {
   const { locale, setLocale } = useLocale();
+  const [open, setOpen] = useState(false);
+  const rootRef = useRef<HTMLDivElement>(null);
+  const listId = useId();
+
+  useEffect(() => {
+    if (!open) return;
+    const onPointer = (e: MouseEvent | TouchEvent) => {
+      if (!rootRef.current?.contains(e.target as Node)) setOpen(false);
+    };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpen(false);
+    };
+    document.addEventListener("mousedown", onPointer);
+    document.addEventListener("touchstart", onPointer);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("mousedown", onPointer);
+      document.removeEventListener("touchstart", onPointer);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [open]);
 
   return (
-    <div
-      className={`inline-flex flex-wrap items-center justify-end gap-0.5 rounded-full border border-white/10 bg-white/[0.03] p-0.5 ${className}`}
-      role="group"
-      aria-label={ariaLabel}
-    >
-      {LOCALES.map((code) => {
-        const active = locale === code;
-        return (
-          <button
-            key={code}
-            type="button"
-            onClick={() => setLocale(code)}
-            title={NATIVE[code]}
-            className={`rounded-full px-1.5 py-1 font-mono text-[10px] tracking-wider transition sm:px-2 ${
-              active
-                ? "bg-white text-void"
-                : "text-white/45 hover:text-white"
-            }`}
-            aria-pressed={active}
-            aria-label={NATIVE[code]}
-          >
-            {LABELS[code]}
-          </button>
-        );
-      })}
+    <div ref={rootRef} className={`relative shrink-0 ${className}`}>
+      <button
+        type="button"
+        className="inline-flex h-9 min-w-[3.25rem] items-center justify-center gap-1 rounded-full border border-white/12 bg-white/[0.04] px-2.5 font-mono text-[11px] tracking-wider text-white/75 transition hover:border-white/25 hover:text-white"
+        aria-label={ariaLabel}
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        aria-controls={listId}
+        onClick={() => setOpen((v) => !v)}
+      >
+        <span>{LABELS[locale]}</span>
+        <span
+          className={`text-[8px] text-white/40 transition ${open ? "rotate-180" : ""}`}
+          aria-hidden
+        >
+          ▾
+        </span>
+      </button>
+
+      {open ? (
+        <ul
+          id={listId}
+          role="listbox"
+          aria-label={ariaLabel}
+          className="absolute end-0 top-[calc(100%+6px)] z-50 min-w-[9.5rem] overflow-hidden rounded-xl border border-white/12 bg-void/95 py-1 shadow-none backdrop-blur-xl"
+        >
+          {LOCALES.map((code) => {
+            const active = locale === code;
+            return (
+              <li key={code} role="option" aria-selected={active}>
+                <button
+                  type="button"
+                  className={`flex w-full items-center justify-between gap-3 px-3 py-2.5 text-left text-sm transition ${
+                    active
+                      ? "bg-white/[0.08] text-white"
+                      : "text-white/55 hover:bg-white/[0.05] hover:text-white"
+                  }`}
+                  onClick={() => {
+                    setLocale(code);
+                    setOpen(false);
+                  }}
+                >
+                  <span>{NATIVE[code]}</span>
+                  <span className="font-mono text-[10px] tracking-wider text-white/35">
+                    {LABELS[code]}
+                  </span>
+                </button>
+              </li>
+            );
+          })}
+        </ul>
+      ) : null}
     </div>
   );
 }
