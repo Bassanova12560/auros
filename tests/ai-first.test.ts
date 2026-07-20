@@ -43,6 +43,18 @@ describe("ai-first/catalog", () => {
     assert.ok(cat.pages.length >= 30);
   });
 
+  it("includes Watts and ChargeFlow product hubs", () => {
+    const paths = getAllAiFirstPages().map((p) => p.path);
+    assert.ok(paths.includes("/green/watts"));
+    assert.ok(paths.includes("/green/chargeflow"));
+    assert.ok(paths.includes("/green/chargeflow/fleets"));
+    assert.ok(paths.includes("/eau/chargeflow"));
+    const watts = getAiFirstPageByPath("/green/watts");
+    assert.ok(watts?.faq && watts.faq.length >= 4);
+    const cf = getAiFirstPageByPath("/green/chargeflow");
+    assert.ok(cf?.faq && cf.faq.length >= 4);
+  });
+
   it("generates llms.txt with discovery links", () => {
     const txt = buildLlmsTxt(getAllAiFirstPages(), false);
     assert.match(txt, /# AUROS/);
@@ -50,8 +62,10 @@ describe("ai-first/catalog", () => {
     assert.match(txt, /ai-first\/rag/);
     assert.match(txt, /Primary products/);
     assert.match(txt, /AUROS Green/);
+    assert.match(txt, /AUROS Watts/);
+    assert.match(txt, /ChargeFlow/);
     assert.match(txt, /AUROS Protocol API/);
-    assert.match(txt, /\/green\/csrd-check/);
+    assert.match(txt, /Citation policy/);
     assert.match(txt, /api\.getauros\.com/);
   });
 

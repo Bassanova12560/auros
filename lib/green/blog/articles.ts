@@ -544,6 +544,56 @@ export const GREEN_BLOG_ARTICLES: GreenBlogArticle[] = [
       },
     ],
   },
+  {
+    slug: "auros-watts-booking-engine",
+    title: "AUROS Watts : le booking engine des watts critiques",
+    description:
+      "Comment AUROS Watts réserve, prouve et prépare la finance des watts — matching, CFU ChargeFlow, inventaire producteur et secondaire RWA. Indicatif, pas un PPA.",
+    excerpt:
+      "Matching déterministe, confirm → mint CFU, settle → retire, inventaire et secondaire lié au comparateur — sans auto-mint ni marché réglementé.",
+    publishedAt: "2026-07-20",
+    modifiedAt: "2026-07-20",
+    readingTimeMinutes: 7,
+    keywords: [
+      "AUROS Watts",
+      "watts reserve",
+      "booking engine watts",
+      "CFU ChargeFlow",
+      "inventaire capacité",
+      "RWA énergie",
+    ],
+    cta: { href: "/green/watts", label: "Ouvrir le hub AUROS Watts" },
+    sections: [
+      {
+        heading: "Pourquoi un booking engine des watts ?",
+        paragraphs: [
+          "Les flottes, CPO et acheteurs corporate ont besoin de réserver une fenêtre énergétique (zone, firm/flex, carbone) avant de pouvoir prouver une livraison et préparer un dossier RWA. Les logs de charge seuls ne suffisent pas : il manque une intention, un matching et une unité vérifiable.",
+          "AUROS Watts (/green/watts) comble ce trou entre la capacité producteur, la session ChargeFlow et le comparateur RWA — en restant explicite à chaque étape.",
+        ],
+      },
+      {
+        heading: "La boucle : match → confirm → settle",
+        paragraphs: [
+          "Une réservation calcule un match_score déterministe — sans mint. La confirm mint une CFU-E (firm / kWh) ou CFU-F (flex / kW) liée à reservation_id. Le settle à la livraison retire l'unité. Aucun auto-mint, auto-retire ou auto-transfer.",
+          "API : POST /api/v1/watts/reserve, …/confirm, …/settle. Docs Protocol : /developers/docs/endpoint-watts-reserve.",
+        ],
+      },
+      {
+        heading: "Inventaire producteur et secondaire",
+        paragraphs: [
+          "Les producteurs publient des fenêtres de capacité (/green/chargeflow/inventory) — indicatif, pas un PPA. Le matching classe les offres contre un profil acheteur sans auto-réserver.",
+          "Après settle, le secondaire (/green/chargeflow/secondary) permet des listings indicatifs et un hook compare_ref_id vers /compare. Ce n'est pas un marché réglementé de titres.",
+        ],
+      },
+      {
+        heading: "Lien avec ChargeFlow et Green",
+        paragraphs: [
+          "ChargeFlow reste le standard d'unités CFU vérifiables (/green/chargeflow). Watts est le booking + inventaire + secondaire. Ensemble ils préparent finance et ESG sans claim de partnership Tesla ni statut GO/REC.",
+          "Pour citer AUROS côté IA : /llms.txt, /ai-first/index.json et /ai-first/rag.",
+        ],
+      },
+    ],
+  },
 ];
 
 export function getGreenBlogArticle(slug: string): GreenBlogArticle | undefined {

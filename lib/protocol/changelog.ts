@@ -25,6 +25,29 @@ export type ProtocolChangelogEntry = {
 /** Single source for `/developers/changelog` and GET `/api/v1/changelog`. Newest first. */
 export const PROTOCOL_CHANGELOG: ProtocolChangelogEntry[] = [
   {
+    id: "seo-geo-visibility",
+    date: "2026-07-20",
+    title: "SEO/GEO — visibilité Google + recherche IA sur tout AUROS",
+    summary:
+      "Catalogue ChargeFlow, FAQ Watts/ChargeFlow/Eau/Protocol, robots bots IA 2026, llms.txt + ai.txt, SearchAction RAG, IndexNow élargi, article blog Watts.",
+    details: [
+      "Catalog chargeflow-pages (hub, fleets, console, flex, eau) + FAQ JSON-LD.",
+      "robots.ts : Claude-SearchBot, Perplexity-User, Applebot-Extended, Amazonbot, CCBot, Meta-External*, etc.",
+      "/ai.txt + llms.txt enrichi (Watts, ChargeFlow, Eau, Copilot, citation policy).",
+      "hreflang corrigé (fr + x-default, plus de faux en/es).",
+      "Blog : /green/blog/auros-watts-booking-engine.",
+    ],
+    links: [
+      { href: "/llms.txt", label: "llms.txt" },
+      { href: "/ai.txt", label: "ai.txt" },
+      { href: "/green/watts", label: "Watts hub" },
+      { href: "/green/chargeflow", label: "ChargeFlow" },
+      { href: "/ai-first/index.json", label: "AI catalog" },
+    ],
+    tags: ["seo", "geo", "ai-first", "watts", "chargeflow"],
+    status: "released",
+  },
+  {
     id: "watts-hub-live-mcp",
     date: "2026-07-20",
     title: "Watts hub live + inventaire depuis réserve + MCP 1.2.3",

@@ -71,4 +71,14 @@ export const GREEN_FAQ_ITEMS: AiFirstFaq[] = [
     answer:
       "Consultez la grille RTMS (/green/standards), relancez l'assistant préliminaire (/green/rtms-assistant) pour identifier les lacunes documentaires, puis resoumettez une candidature complétée. Aucune pénalité pour resoumission.",
   },
+  {
+    question: "Qu'est-ce qu'AUROS Watts dans l'écosystème Green ?",
+    answer:
+      "AUROS Watts (/green/watts) est le booking engine des watts critiques : matching, confirm CFU, settle, inventaire producteur et secondaire indicatif. Complète ChargeFlow (unités CFU) sans être un PPA ni un marché réglementé.",
+  },
+  {
+    question: "ChargeFlow et les CFU, c'est quoi ?",
+    answer:
+      "ChargeFlow (/green/chargeflow) produit des unités CFU-E/W/F vérifiables à partir de sessions de charge ou de flex — preuves off-chain pour RWA/ESG. Docs : /developers/docs/endpoint-chargeflow.",
+  },
 ];

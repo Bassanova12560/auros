@@ -2,28 +2,80 @@ import type { MetadataRoute } from "next";
 
 import { SITE_URL } from "@/lib/comparators/site";
 
-export default function robots(): MetadataRoute.Robots {
-  const aiBots = [
-    "GPTBot",
-    "ChatGPT-User",
-    "OAI-SearchBot",
-    "ClaudeBot",
-    "Claude-Web",
-    "PerplexityBot",
-    "Google-Extended",
-  ] as const;
+/** Bots IA / search-augmented — allow discovery surfaces for citation GEO. */
+const AI_BOTS = [
+  "GPTBot",
+  "ChatGPT-User",
+  "OAI-SearchBot",
+  "ClaudeBot",
+  "Claude-SearchBot",
+  "Claude-User",
+  "Claude-Web",
+  "PerplexityBot",
+  "Perplexity-User",
+  "Google-Extended",
+  "GoogleOther",
+  "Applebot-Extended",
+  "Amazonbot",
+  "Bytespider",
+  "CCBot",
+  "cohere-ai",
+  "Meta-ExternalAgent",
+  "Meta-ExternalFetcher",
+  "MistralAI-User",
+  "DuckAssistBot",
+  "YouBot",
+] as const;
 
+const AI_ALLOW = [
+  "/",
+  "/llms.txt",
+  "/llms-full.txt",
+  "/ai.txt",
+  "/humans.txt",
+  "/about",
+  "/academy",
+  "/ai-first/",
+  "/jurisdictions",
+  "/pricing",
+  "/green",
+  "/green/watts",
+  "/green/chargeflow",
+  "/green/faq",
+  "/green/blog",
+  "/green/market",
+  "/green/standards",
+  "/eau",
+  "/faq",
+  "/ressources",
+  "/how-it-works",
+  "/discover",
+  "/trust",
+  "/copilot",
+  "/compare",
+  "/tools",
+  "/data/",
+  "/glossary",
+  "/blog",
+  "/developers",
+  "/developers/docs",
+  "/developers/changelog",
+  "/auros-openapi.yaml",
+  "/status",
+] as const;
+
+export default function robots(): MetadataRoute.Robots {
   return {
     rules: [
       {
         userAgent: "*",
         allow: "/",
-        disallow: ["/starter/", "/api/dev/"],
+        disallow: ["/starter/", "/api/dev/", "/ops/"],
       },
-      ...aiBots.map((userAgent) => ({
+      ...AI_BOTS.map((userAgent) => ({
         userAgent,
-        allow: ["/", "/llms.txt", "/llms-full.txt", "/humans.txt", "/about", "/academy", "/ai-first/", "/jurisdictions", "/pricing", "/green", "/faq", "/ressources", "/how-it-works", "/discover", "/trust", "/developers", "/developers/docs", "/developers/changelog", "/auros-openapi.yaml"],
-        disallow: ["/starter/", "/api/dev/"],
+        allow: [...AI_ALLOW],
+        disallow: ["/starter/", "/api/dev/", "/ops/"],
       })),
     ],
     sitemap: `${SITE_URL}/sitemap.xml`,

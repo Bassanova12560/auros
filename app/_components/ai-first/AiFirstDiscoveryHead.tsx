@@ -20,7 +20,22 @@ export function AiFirstDiscoveryHead() {
         href={absoluteUrl("/llms.txt")}
         title="AUROS llms.txt"
       />
-      <meta name="ai-content-declaration" content="machine-readable catalog at /ai-first/index.json" />
+      <link
+        rel="alternate"
+        type="text/plain"
+        href={absoluteUrl("/ai.txt")}
+        title="AUROS AI declaration"
+      />
+      <link
+        rel="alternate"
+        type="application/json"
+        href={absoluteUrl("/ai-first/rag")}
+        title="AUROS RAG search"
+      />
+      <meta
+        name="ai-content-declaration"
+        content="machine-readable catalog at /ai-first/index.json ; llms.txt ; ai.txt ; RAG /ai-first/rag"
+      />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(org) }}

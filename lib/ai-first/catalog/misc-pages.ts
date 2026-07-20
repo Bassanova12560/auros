@@ -1,3 +1,5 @@
+import { WATTS_FAQ_ITEMS } from "@/lib/seo/content/watts-faq";
+
 import { enrichPage } from "../enrich";
 
 export const partnersPage = enrichPage({
@@ -128,19 +130,47 @@ export const copilotPage = enrichPage({
     "RWA assistant",
     "comparateur AI",
     "ChargeFlow assistant",
+    "Watts Reserve assistant",
+    "assistant tokenisation",
   ],
   intents: [
     "Assistant AUROS",
     "Comparer produits RWA avec IA",
     "Expliquer ChargeFlow",
+    "Expliquer Watts Reserve",
   ],
   audience: ["émetteurs", "analystes", "développeurs", "ops"],
   facts: [
     { key: "Chat", value: "POST /api/v1/copilot/chat" },
     { key: "Ops inbox", value: "/ops/copilot" },
     { key: "Garde-fou", value: "Pas d'écriture scores / attest / CFU" },
+    { key: "RAG", value: "/ai-first/rag" },
   ],
-  relatedPaths: ["/compare", "/jurisdictions", "/green/chargeflow", "/developers"],
+  faq: [
+    {
+      question: "Le Copilot AUROS peut-il publier des scores ou mint des CFU ?",
+      answer:
+        "Non. Les tools sont en lecture seule (RAG, products, compare, ChargeFlow/Watts explain). Les drafts catalogue/contenu passent par une inbox ops — jamais d'auto-publish des scores, attestations ou CFU.",
+    },
+    {
+      question: "Comment cibler Watts ou ChargeFlow dans le Copilot ?",
+      answer:
+        "Ouvrez /copilot?context=watts ou /copilot?context=chargeflow. Les suggestions et tools s'adaptent à la surface (Green, RTMS, juridictions, compare).",
+    },
+    {
+      question: "Les réponses Copilot remplacent-elles un counsel ?",
+      answer:
+        "Non. Réponses indicatives et sourcées sur le catalogue AUROS. Validation humaine et counsel requis avant toute décision d'émission ou d'investissement.",
+    },
+  ],
+  relatedPaths: [
+    "/compare",
+    "/jurisdictions",
+    "/green/chargeflow",
+    "/green/watts",
+    "/developers",
+    "/ai-first/rag",
+  ],
 });
 
 export const wattsHubPage = enrichPage({
@@ -148,26 +178,47 @@ export const wattsHubPage = enrichPage({
   path: "/green/watts",
   title: "AUROS Watts | Booking engine des watts",
   description:
-    "Réserver, prouver et préparer la finance des watts critiques — matching, CFU, inventaire, secondaire.",
+    "Réserver, prouver et préparer la finance des watts critiques — matching, CFU, inventaire, secondaire. Indicatif, pas un marché réglementé.",
   summary:
-    "Hub produit Watts Reserve : entrée unique vers réserver, inventaire et secondaire.",
+    "AUROS Watts est le booking engine des watts critiques : matching déterministe, confirm → mint CFU, settle → retire, inventaire producteur et secondaire lié au comparateur RWA. Hub produit /green/watts.",
   contentType: "guide",
   language: "multi",
   indexable: true,
   lastUpdated: "2026-07-20",
-  keywords: ["AUROS Watts", "watts reserve", "CFU", "booking watts"],
-  intents: ["Découvrir Watts Reserve", "Réserver des watts"],
-  audience: ["flottes", "CPO", "producteurs", "équipes RWA"],
+  keywords: [
+    "AUROS Watts",
+    "watts reserve",
+    "booking engine watts",
+    "réserver watts",
+    "CFU-E",
+    "CFU-F",
+    "hourly matching énergie",
+    "inventaire capacité producteur",
+    "secondaire watts RWA",
+    "ChargeFlow booking",
+  ],
+  intents: [
+    "Qu'est-ce qu'AUROS Watts ?",
+    "Réserver des watts critiques",
+    "Booking engine énergie flottes CPO",
+  ],
+  audience: ["flottes", "CPO", "producteurs", "équipes RWA", "acheteurs corporate"],
   facts: [
     { key: "Hub", value: "/green/watts" },
     { key: "API", value: "POST /api/v1/watts/reserve" },
     { key: "Docs", value: "/developers/docs/endpoint-watts-reserve" },
+    { key: "Machine", value: "/ai-first/page.json?path=/green/watts" },
+  ],
+  faq: WATTS_FAQ_ITEMS,
+  breadcrumbs: [
+    { name: "Green", path: "/green" },
   ],
   relatedPaths: [
     "/green/chargeflow/reserve",
     "/green/chargeflow/inventory",
     "/green/chargeflow/secondary",
     "/green/chargeflow",
+    "/copilot",
   ],
 });
 
@@ -189,6 +240,8 @@ export const wattsReservePage = enrichPage({
     "CFU",
     "ChargeFlow",
     "profil énergétique",
+    "mint CFU confirm",
+    "settle retire watts",
   ],
   intents: [
     "Réserver des watts",
@@ -201,7 +254,13 @@ export const wattsReservePage = enrichPage({
     { key: "Confirm", value: "POST /api/v1/watts/reserve/:id/confirm" },
     { key: "Settle", value: "POST /api/v1/watts/reserve/:id/settle" },
   ],
+  faq: WATTS_FAQ_ITEMS.slice(0, 4),
+  breadcrumbs: [
+    { name: "Green", path: "/green" },
+    { name: "Watts", path: "/green/watts" },
+  ],
   relatedPaths: [
+    "/green/watts",
     "/green/chargeflow",
     "/green/chargeflow/inventory",
     "/green/chargeflow/fleets",
@@ -226,6 +285,8 @@ export const wattsInventoryPage = enrichPage({
     "watts offers",
     "flex kW",
     "ChargeFlow",
+    "offre capacité producteur",
+    "matching inventaire énergie",
   ],
   intents: [
     "Publier capacité",
@@ -238,7 +299,24 @@ export const wattsInventoryPage = enrichPage({
     { key: "Match", value: "POST /api/v1/watts/offers/match" },
     { key: "Garde-fou", value: "Pas d’auto-reserve" },
   ],
+  faq: [
+    {
+      question: "L'inventaire Watts est-il un engagement PPA ?",
+      answer:
+        "Non. Les offres sont des fenêtres de capacité indicatives. Le matching classe les offres sans auto-réserver. Voir /green/chargeflow/inventory.",
+    },
+    {
+      question: "Comment matcher mon profil acheteur à l'inventaire ?",
+      answer:
+        "Depuis la réserve (/green/chargeflow/reserve) via « Voir capacité ouverte », ou POST /api/v1/watts/offers/match avec votre fenêtre, zone et firmness.",
+    },
+  ],
+  breadcrumbs: [
+    { name: "Green", path: "/green" },
+    { name: "Watts", path: "/green/watts" },
+  ],
   relatedPaths: [
+    "/green/watts",
     "/green/chargeflow/reserve",
     "/green/chargeflow/secondary",
     "/green/chargeflow",
@@ -264,6 +342,8 @@ export const wattsSecondaryPage = enrichPage({
     "RWA prep",
     "CFU listing",
     "compare",
+    "marché secondaire watts",
+    "listing indicatif énergie",
   ],
   intents: [
     "Lister position watts",
@@ -276,7 +356,24 @@ export const wattsSecondaryPage = enrichPage({
     { key: "Interest", value: "POST /api/v1/watts/secondary/:id/interest" },
     { key: "Garde-fou", value: "Pas d’auto-transfer ni marché réglementé" },
   ],
+  faq: [
+    {
+      question: "Le secondaire Watts est-il un marché réglementé ?",
+      answer:
+        "Non. Listings et intérêts sont indicatifs, non liants. compare_ref_id peut pointer vers /compare pour la prep RWA — pas d'exécution titres.",
+    },
+    {
+      question: "Quand lister une position ?",
+      answer:
+        "Après settle d'une réservation confirmée, ou en listing libre avec zone/firmness. CTA settle → secondaire avec ?reservation_id=.",
+    },
+  ],
+  breadcrumbs: [
+    { name: "Green", path: "/green" },
+    { name: "Watts", path: "/green/watts" },
+  ],
   relatedPaths: [
+    "/green/watts",
     "/green/chargeflow/reserve",
     "/green/chargeflow/inventory",
     "/compare",

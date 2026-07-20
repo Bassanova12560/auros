@@ -8,6 +8,7 @@ import {
   seoSubmissionTargets,
 } from "../lib/ai-first/seo-submit";
 import { getIndexablePages } from "../lib/ai-first";
+import { absoluteUrl } from "../lib/comparators/site";
 
 async function submitIndexNow(urls: string[]): Promise<void> {
   const { indexNowEndpoint } = seoSubmissionTargets();
@@ -38,14 +39,32 @@ async function main() {
     targets.sitemap,
     ...pages
       .filter((p) =>
-        ["/", "/about", "/academy", "/academy/fondamentaux", "/jurisdictions", "/jurisdictions/starter-kit"].includes(
-          p.path
-        )
+        [
+          "/",
+          "/about",
+          "/academy",
+          "/academy/fondamentaux",
+          "/jurisdictions",
+          "/jurisdictions/starter-kit",
+          "/green",
+          "/green/watts",
+          "/green/chargeflow",
+          "/green/faq",
+          "/eau",
+          "/developers",
+          "/copilot",
+          "/compare",
+          "/faq",
+          "/data/terminal",
+        ].includes(p.path)
       )
       .map((p) => p.canonicalUrl),
+    absoluteUrl("/llms.txt"),
+    absoluteUrl("/ai.txt"),
+    absoluteUrl("/ai-first/index.json"),
     ...pages
       .filter((p) => p.contentType === "landing")
-      .slice(0, 5)
+      .slice(0, 8)
       .map((p) => p.canonicalUrl),
   ];
 

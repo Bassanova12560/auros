@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 
+import { ContentFaqList } from "@/app/_components/ContentPageLayout";
 import { PrimaryButton } from "@/app/_components/ui/PrimaryButton";
 import {
   WATTS_HUB_ROUTE,
@@ -11,6 +12,7 @@ import {
   WATTS_RESERVE_ROUTE,
   WATTS_SECONDARY_ROUTE,
 } from "@/lib/watts";
+import { WATTS_FAQ_ITEMS } from "@/lib/seo/content/watts-faq";
 
 const PATHS = [
   {
@@ -255,7 +257,21 @@ export function WattsHubView() {
             >
               Copilot
             </Link>
+            {" · "}
+            <Link
+              href="/green/faq"
+              className="underline-offset-2 hover:underline"
+            >
+              FAQ Green
+            </Link>
           </p>
+        </section>
+
+        <section className="mx-auto max-w-xl space-y-4 text-left">
+          <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/35">
+            FAQ
+          </p>
+          <ContentFaqList items={WATTS_FAQ_ITEMS} />
         </section>
 
         <footer className="space-y-3">

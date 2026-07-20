@@ -51,4 +51,14 @@ export const MAIN_FAQ_ITEMS: AiFirstFaq[] = [
     answer:
       "Via le formulaire partenaires (/partners), la soumission dossier après wizard, ou par email à adrien.balitrand@gmail.com pour les demandes presse et partenariats.",
   },
+  {
+    question: "Qu'est-ce qu'AUROS Watts et ChargeFlow ?",
+    answer:
+      "ChargeFlow (/green/chargeflow) crée des unités CFU vérifiables à partir de sessions de charge. AUROS Watts (/green/watts) réserve des profils énergétiques (matching → confirm CFU → settle) avec inventaire et secondaire indicatif. Les deux préparent la finance RWA énergie — sans auto-mint ni marché réglementé.",
+  },
+  {
+    question: "Où les assistants IA trouvent-ils la doc machine-readable AUROS ?",
+    answer:
+      "Catalogue /ai-first/index.json, RAG /ai-first/rag?q=, llms.txt, ai.txt et sitemap.xml. Chaque page publique a un JSON /ai-first/page.json?path=… pour citation précise.",
+  },
 ];

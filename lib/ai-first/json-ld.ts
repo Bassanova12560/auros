@@ -26,10 +26,49 @@ export function webSiteJsonLd(): Record<string, unknown> {
     url: AUROS_ORG.url,
     description: AUROS_ORG.description,
     publisher: { "@type": "Organization", name: AUROS_ORG.name },
-    potentialAction: {
-      "@type": "SearchAction",
-      target: `${AUROS_ORG.url}/jurisdictions#comparator`,
-      "query-input": "required name=search_term_string",
+    potentialAction: [
+      {
+        "@type": "SearchAction",
+        target: {
+          "@type": "EntryPoint",
+          urlTemplate: `${AUROS_ORG.url}/ai-first/rag?q={search_term_string}`,
+        },
+        "query-input": "required name=search_term_string",
+      },
+      {
+        "@type": "SearchAction",
+        target: {
+          "@type": "EntryPoint",
+          urlTemplate: `${AUROS_ORG.url}/jurisdictions#comparator`,
+        },
+        "query-input": "required name=search_term_string",
+      },
+    ],
+  };
+}
+
+export function softwareApplicationJsonLd(
+  page: AiFirstPage
+): Record<string, unknown> | null {
+  if (page.path !== "/developers" && page.path !== "/green/api") return null;
+  return {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    name: page.path === "/green/api" ? "AUROS Green API" : "AUROS Protocol API",
+    applicationCategory: "BusinessApplication",
+    operatingSystem: "Web",
+    url: page.canonicalUrl,
+    description: page.description,
+    offers: {
+      "@type": "Offer",
+      price: "0",
+      priceCurrency: "EUR",
+      description: "Clé gratuite avec quota mensuel",
+    },
+    provider: {
+      "@type": "Organization",
+      name: AUROS_ORG.name,
+      url: AUROS_ORG.url,
     },
   };
 }
@@ -150,6 +189,8 @@ export function buildPageJsonLd(page: AiFirstPage): Record<string, unknown>[] {
   if (course) blocks.push(course);
   const product = productJsonLd(page);
   if (product) blocks.push(product);
+  const software = softwareApplicationJsonLd(page);
+  if (software) blocks.push(software);
   const article = articleJsonLd(page);
   if (article) blocks.push(article);
   if (page.breadcrumbs?.length) {

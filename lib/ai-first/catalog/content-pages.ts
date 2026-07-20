@@ -664,18 +664,22 @@ export const developersPage = enrichPage({
   contentType: "guide",
   language: "multi",
   indexable: true,
-  lastUpdated: "2026-06-13",
+  lastUpdated: "2026-07-20",
   keywords: [
     "AUROS Protocol API",
     "api.getauros.com",
     "RWA intelligence API",
     "MiCA scoring API",
     "tokenisation API",
+    "Watts Reserve API",
+    "ChargeFlow API",
+    "MCP AUROS",
   ],
   intents: [
     "Comment intégrer le score MiCA AUROS",
     "API catalogue RWA tokenisés",
     "Base URL api.getauros.com",
+    "API Watts Reserve et ChargeFlow",
   ],
   audience: ["développeurs", "fintech", "émetteurs", "intégrateurs"],
   facts: [
@@ -684,13 +688,33 @@ export const developersPage = enrichPage({
     { key: "Hub", value: "api.getauros.com/ → /developers" },
     { key: "Tier gratuit", value: "1000 requêtes/mois (Green + Protocol)" },
     { key: "Green API", value: "/green/api — CQS, Watt, index gratuit" },
+    { key: "Watts API", value: "/developers/docs/endpoint-watts-reserve" },
     { key: "Playground", value: "/developers#playground" },
     { key: "Postman", value: "/auros-postman.json" },
     { key: "OpenAPI", value: "/auros-openapi.yaml" },
   ],
+  faq: [
+    {
+      question: "Comment obtenir une clé API AUROS ?",
+      answer:
+        "Via le playground /developers ou POST /api/v1/keys. Le tier gratuit inclut un quota mensuel partagé Green + Protocol. Auth Bearer sur les endpoints Premium.",
+    },
+    {
+      question: "Quels endpoints Watts et ChargeFlow exposer ?",
+      answer:
+        "Watts : /api/v1/watts/reserve, confirm, settle, offers, secondary. ChargeFlow : /api/v1/chargeflow et from-ocpi. Docs Protocol et OpenAPI /auros-openapi.yaml.",
+    },
+    {
+      question: "Y a-t-il un serveur MCP ?",
+      answer:
+        "Oui — npm @adrien1212balitrand/auros-mcp pour Cursor/Claude Desktop (score, compare, watts_*, chargeflow_*). Config : /developers/docs/mcp-server.",
+    },
+  ],
   relatedPaths: [
     "/developers/docs",
     "/developers/changelog",
+    "/green/watts",
+    "/green/chargeflow",
     "/green/csrd-check",
     "/green/impact-report",
     "/tools/mica-checker",
