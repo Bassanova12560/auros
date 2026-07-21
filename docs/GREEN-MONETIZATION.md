@@ -27,7 +27,8 @@ Matching data / intro fee seulement — **pas de broker**, pas d’exécution de
 
 ## Asset DNA (vision)
 
-Spec v1 : [`ASSET-DNA-V1.md`](./ASSET-DNA-V1.md) · lib `lib/asset-dna/` — enrollment + maintain + read API (roadmap).
+Spec v1 : [`ASSET-DNA-V1.md`](./ASSET-DNA-V1.md) · lib `lib/asset-dna/` — **mint live** on register + label publish.  
+Proof Stream v0 : [`PROOF-STREAM-V0.md`](./PROOF-STREAM-V0.md) · `GET /api/v1/asset-dna/{id}/stream`.
 
 ## Funnel producteur
 

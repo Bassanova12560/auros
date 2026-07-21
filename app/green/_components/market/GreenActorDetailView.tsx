@@ -30,6 +30,7 @@ import {
   GreenPanel,
   GreenSectionTitle,
 } from "../green-ui";
+import { AssetDnaBadge } from "../AssetDnaBadge";
 
 const GreenMarketMap = dynamic(
   () => import("./GreenMarketMap").then((m) => m.GreenMarketMap),
@@ -130,6 +131,8 @@ export function GreenActorDetailView({ actor }: Props) {
           </p>
         </div>
       </GreenPanel>
+
+      {actor.assetDnaId ? <AssetDnaBadge assetDnaId={actor.assetDnaId} /> : null}
 
       {mailto ? (
         <div className="mt-8">

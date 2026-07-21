@@ -1,6 +1,6 @@
 # Asset DNA v1
 
-**Status:** spec + library (`lib/asset-dna/`) — not yet a market-enforced ID.  
+**Status:** wired on Green register + registry publish · Proof Stream v0 live (local + Supabase when migrated).  
 **Goal:** become the canonical identity for real-world assets before tokenization (energy, water, infra, fleets, compute).
 
 ## Identifier
@@ -36,6 +36,32 @@ Example: `auros:dna:v1:ge:550e8400-e29b-41d4-a716-446655440000`
 
 See TypeScript: [`lib/asset-dna/types.ts`](../lib/asset-dna/types.ts).
 
+## Wiring (live)
+
+| Moment | Behaviour |
+|--------|-----------|
+| `/green/register` | Mint DNA (`green_energy`), store `asset_dna_id` on `green_market_assets`, emit `dna.minted` + `market.submitted` |
+| Market approve/reject | Emit `market.approved` / `market.rejected` |
+| Label publish | Mint DNA from project type, store on `green_registry_projects` + application, emit `dna.minted` + `registry.published` |
+| UI | DNA badge + Proof Stream link on actor + registry project pages |
+
+Migration: [`0054_asset_dna_proof_stream.sql`](../supabase/migrations/0054_asset_dna_proof_stream.sql)  
+(graceful fallback if column not yet applied — DNA still minted locally).
+
+## Proof Stream v0
+
+Append-only journal keyed by DNA (`lib/proof-stream/`):
+
+- Actions: `dna.minted`, `market.submitted`, `market.approved`, `market.rejected`, `registry.published`, …
+- Persistence: `.data/proof-stream.json` + `proof_stream_events` (Supabase)
+
+## API (public read)
+
+```http
+GET /api/v1/asset-dna/{id}
+GET /api/v1/asset-dna/{id}/stream?limit=50
+```
+
 ## Pricing (target)
 
 | Moment | Product | Notes |
@@ -44,22 +70,12 @@ See TypeScript: [`lib/asset-dna/types.ts`](../lib/asset-dna/types.ts).
 | Life | Maintain subscription | docs / events / compliance refresh |
 | Read | Volume API | banks, funds, exchanges |
 
-## Roadmap wiring
+## Roadmap
 
-1. **v1 (now):** schema + id helpers + this spec  
-2. **Next:** attach DNA on Green register / registry publish  
-3. **Then:** Proof Stream events keyed by DNA  
-4. **Later:** OpenAPI read endpoints + Watt Ledger / Water Trust namespaces  
-
-## API sketch (future)
-
-```http
-POST /api/v1/asset-dna
-GET  /api/v1/asset-dna/{id}
-GET  /api/v1/asset-dna/{id}/compliance
-```
-
-Auth: existing Green API keys / institutional licenses.
+1. schema + id helpers — done  
+2. attach DNA on Green register / registry publish — done  
+3. Proof Stream v0 — done  
+4. **Next:** OpenAPI auth quotas · DNA on existing seeds · Portfolio Console  
 
 ## Non-goals (v1)
 
@@ -71,4 +87,5 @@ Auth: existing Green API keys / institutional licenses.
 
 - RTMS methodology: `/green/standards`  
 - Trust surface: `/green/trust`  
+- Proof Stream: [`PROOF-STREAM-V0.md`](./PROOF-STREAM-V0.md)  
 - Monetization: [`GREEN-MONETIZATION.md`](./GREEN-MONETIZATION.md)

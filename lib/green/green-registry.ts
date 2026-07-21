@@ -16,6 +16,7 @@ export type GreenRegistryProjectRow = {
   verifyToken: string;
   summaries: CatalogMap< string>;
   website?: string;
+  assetDnaId?: string;
 };
 
 export function greenProjectSummary(
@@ -187,6 +188,7 @@ export async function getGreenRegistrySnapshot(): Promise<GreenRegistrySnapshot>
         summary_es: String(row.summary_es),
       }),
       website: row.website ? String(row.website) : undefined,
+      assetDnaId: row.asset_dna_id ? String(row.asset_dna_id) : undefined,
     }));
 
     const experts: GreenRegistryExpertRow[] = (expertRes.data ?? []).map((row) => ({

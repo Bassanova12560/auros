@@ -15,3 +15,13 @@ export {
   parseAssetDnaId,
 } from "./id";
 export { createAssetDnaRecord } from "./create";
+export {
+  assetDnaClassFromGreenProject,
+  mintAssetDna,
+} from "./mint";
+export {
+  getAssetDnaLocal,
+  persistAssetDna,
+  resolveAssetDna,
+  saveAssetDnaLocal,
+} from "./store";

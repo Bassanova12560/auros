@@ -19,6 +19,7 @@ import {
   GreenPanel,
   GreenTierBadge,
 } from "./green-ui";
+import { AssetDnaBadge } from "./AssetDnaBadge";
 
 type Props = {
   project: GreenRegistryProjectRow;
@@ -145,6 +146,8 @@ export function GreenRegistryProjectDetailView({ project }: Props) {
           ) : null}
         </div>
       </GreenPanel>
+
+      {project.assetDnaId ? <AssetDnaBadge assetDnaId={project.assetDnaId} /> : null}
 
       <div className="mt-8 flex flex-wrap gap-4">
         <Link

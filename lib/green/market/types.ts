@@ -25,6 +25,8 @@ export type GreenMarketActor = {
   description: string;
   contactEmail: string;
   listingTier: GreenMarketListingTier;
+  /** Asset DNA id when minted (auros:dna:v1:…) */
+  assetDnaId?: string;
 };
 
 export type GreenMarketOffer = {

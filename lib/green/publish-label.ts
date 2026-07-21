@@ -39,6 +39,7 @@ export type PublishGreenLabelResult =
       contactName: string;
       projectName: string;
       preferredLocale: Locale;
+      assetDnaId?: string;
     }
   | { ok: false; error: "not_found" | "already_published" | "database" };
 
@@ -63,7 +64,28 @@ export async function publishGreenLabelApplication(
     `ag-verified-${Math.random().toString(36).slice(2, 10)}`;
   const now = new Date().toISOString();
 
-  const { error: insertErr } = await supabase.from("green_registry_projects").insert({
+  const { assetDnaClassFromGreenProject, mintAssetDna, persistAssetDna } =
+    await import("@/lib/asset-dna");
+  const { appendProofStreamEvent } = await import("@/lib/proof-stream");
+
+  const dna = await mintAssetDna({
+    assetClass: assetDnaClassFromGreenProject(String(app.project_type)),
+    displayName: String(app.project_name),
+    jurisdiction: { country: String(app.country) },
+    origin: {
+      operatorName: String(app.contact_name),
+      siteName: String(app.project_name),
+    },
+    compliance: {
+      labelTier: input.labelTier ?? "verified",
+      listingTier: "verified",
+    },
+    links: {
+      registryProjectId: projectId,
+    },
+  });
+
+  const insertPayload: Record<string, unknown> = {
     id: projectId,
     name: String(app.project_name),
     project_type: app.project_type as GreenProjectType,
@@ -76,12 +98,40 @@ export async function publishGreenLabelApplication(
     summary_es: input.summaryEs,
     website: String(app.website),
     source_application_id: input.applicationId,
-  });
+    asset_dna_id: dna.id,
+  };
+
+  let { error: insertErr } = await supabase
+    .from("green_registry_projects")
+    .insert(insertPayload);
+
+  if (insertErr?.message?.includes("asset_dna_id")) {
+    delete insertPayload.asset_dna_id;
+    const retry = await supabase.from("green_registry_projects").insert(insertPayload);
+    insertErr = retry.error;
+  }
 
   if (insertErr) {
     console.error("[publishGreenLabelApplication]", insertErr);
     return { ok: false, error: "database" };
   }
+
+  appendProofStreamEvent({
+    assetDnaId: dna.id,
+    action: "dna.minted",
+    meta: { registryProjectId: projectId },
+  });
+  appendProofStreamEvent({
+    assetDnaId: dna.id,
+    action: "registry.published",
+    meta: {
+      registryProjectId: projectId,
+      labelTier: input.labelTier ?? "verified",
+    },
+  });
+
+  dna.updatedAt = now;
+  await persistAssetDna(dna);
 
   const { error: updateErr } = await supabase
     .from("green_label_applications")
@@ -89,12 +139,29 @@ export async function publishGreenLabelApplication(
       status: "approved",
       registry_project_id: projectId,
       reviewed_at: now,
+      asset_dna_id: dna.id,
     })
     .eq("id", input.applicationId);
 
   if (updateErr) {
-    console.error("[publishGreenLabelApplication] update", updateErr);
-    return { ok: false, error: "database" };
+    // Retry without asset_dna_id if column missing
+    if (updateErr.message?.includes("asset_dna_id")) {
+      const retryUp = await supabase
+        .from("green_label_applications")
+        .update({
+          status: "approved",
+          registry_project_id: projectId,
+          reviewed_at: now,
+        })
+        .eq("id", input.applicationId);
+      if (retryUp.error) {
+        console.error("[publishGreenLabelApplication] update", retryUp.error);
+        return { ok: false, error: "database" };
+      }
+    } else {
+      console.error("[publishGreenLabelApplication] update", updateErr);
+      return { ok: false, error: "database" };
+    }
   }
 
   return {
@@ -107,6 +174,7 @@ export async function publishGreenLabelApplication(
     preferredLocale: normalizeGreenLabelPreferredLocale(
       app.preferred_locale as string | null | undefined
     ),
+    assetDnaId: dna.id,
   };
 }
 
