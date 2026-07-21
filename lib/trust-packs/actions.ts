@@ -10,6 +10,10 @@ import {
   publishTrustPackAssessment,
 } from "@/lib/trust-packs/store";
 import {
+  TRUST_PACKS_CATALOG_PATH,
+  TRUST_PACKS_WELCOME_PATH,
+} from "@/lib/vertical-welcome/config";
+import {
   TRUST_PACK_IDS,
   TRUST_PACKS_ROUTE,
   type TrustPackId,
@@ -92,7 +96,8 @@ export async function createTrustPackAction(formData: FormData) {
     return { ok: false as const, error: created.error ?? "create_failed" };
   }
 
-  revalidatePath(TRUST_PACKS_ROUTE);
+  revalidatePath(TRUST_PACKS_WELCOME_PATH);
+  revalidatePath(TRUST_PACKS_CATALOG_PATH);
   return { ok: true as const, id: created.assessment.id };
 }
 
@@ -106,7 +111,8 @@ export async function publishTrustPackAction(id: string) {
   }
 
   const pub = await publishTrustPackAssessment(id);
-  revalidatePath(TRUST_PACKS_ROUTE);
+  revalidatePath(TRUST_PACKS_WELCOME_PATH);
+  revalidatePath(TRUST_PACKS_CATALOG_PATH);
   if (pub.slug) {
     revalidatePath(`${TRUST_PACKS_ROUTE}/report/${pub.slug}`);
   }

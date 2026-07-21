@@ -13,6 +13,7 @@ import {
   WETS_CONSOLE_ROUTE,
   WETS_CRITERIA,
   WETS_PQC_QUESTIONS,
+  WETS_WELCOME_ROUTE,
   type WetsCategory,
   type WetsCriterionScore,
 } from "@/lib/wets/constants";
@@ -163,6 +164,7 @@ export async function createWetsProjectAction(formData: FormData) {
 
   await upsertWetsCriteria(created.project.id, criteria);
   revalidatePath(WETS_CONSOLE_ROUTE);
+  revalidatePath(WETS_WELCOME_ROUTE);
   revalidatePath("/trust/quantum");
   return {
     ok: true as const,
@@ -209,6 +211,7 @@ export async function publishWetsReportAction(projectId: string) {
     report.html
   );
   revalidatePath(WETS_CONSOLE_ROUTE);
+  revalidatePath(WETS_WELCOME_ROUTE);
   revalidatePath(`/report/${pub.slug}`);
   revalidatePath(`${WETS_CONSOLE_ROUTE}/reports`);
   revalidatePath(`/trust/quantum/report/${pub.slug}`);

@@ -3,6 +3,8 @@
  * marketplaces — AUROS owns the proof layer, not custody/DEX.
  */
 
+import { WETS_WELCOME_ROUTE } from "@/lib/wets/constants";
+
 export type RwaGateId =
   | "hash_seal"
   | "bank_pack"
@@ -74,8 +76,8 @@ export const RWA_GATES: readonly RwaGate[] = [
       "WELHR (stress + litige local + social license) et signaux Green / CFU — export machine, pas un claim marketing.",
     whyCompetitorsMiss:
       "ESG déclaratif. Aucune marketplace ne score le risque de blocage par l’autorité locale de l’eau.",
-    primaryHref: "/eau/trust",
-    primaryLabel: "Console Trust Score",
+    primaryHref: WETS_WELCOME_ROUTE,
+    primaryLabel: "Trust Score eau/énergie",
     secondaryHref: "/eau/risk",
     secondaryLabel: "WELHR rapide",
     apiHint: "POST /api/score-project · POST /api/green/eau/legal-risk",

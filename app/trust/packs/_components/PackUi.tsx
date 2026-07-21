@@ -34,7 +34,10 @@ export function TrustPacksNav() {
   return (
     <nav className="mb-8 flex flex-wrap gap-4 font-mono text-[11px] uppercase tracking-wider text-white/45">
       <Link href="/trust/packs" className="hover:text-white/80">
-        Packs
+        Accueil
+      </Link>
+      <Link href="/trust/packs/catalog" className="hover:text-white/80">
+        Catalogue
       </Link>
       <Link href="/trust/packs/new" className="hover:text-white/80">
         Nouveau

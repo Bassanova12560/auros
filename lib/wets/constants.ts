@@ -213,7 +213,9 @@ export function computeFinalScore(criteria: WetsCriterionScore[]): number {
   return Math.round(sum * 10) / 10;
 }
 
-export const WETS_CONSOLE_ROUTE = "/eau/trust";
+export const WETS_CONSOLE_ROUTE = "/eau/trust/console";
+/** Public SEO landing before console */
+export const WETS_WELCOME_ROUTE = "/eau/trust";
 export const WETS_QUANTUM_INDEX_ROUTE = "/trust/quantum";
 export const WETS_DISCLAIMER =
   "AUROS Water/Energy Trust Score — indicative independent screen for water/energy RWAs. Not a credit rating, legal opinion, or investment advice. Counsel required.";

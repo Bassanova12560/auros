@@ -42,7 +42,10 @@ export function WetsNav() {
   return (
     <nav className="mb-8 flex flex-wrap gap-4 font-mono text-[11px] uppercase tracking-wider text-white/45">
       <Link href="/eau/trust" className="hover:text-white/80">
-        Projets
+        Accueil WETS
+      </Link>
+      <Link href="/eau/trust/console" className="hover:text-white/80">
+        Console
       </Link>
       <Link href="/eau/trust/projects/new" className="hover:text-white/80">
         Nouveau

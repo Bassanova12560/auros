@@ -48,7 +48,8 @@ export function EauHubView() {
   ] as const;
 
   const moreLinks = [
-    { href: "/eau/trust", label: locale === "en" ? "WETS console" : "Console WETS" },
+    { href: "/eau/trust", label: locale === "en" ? "WETS hub" : "Accueil WETS" },
+    { href: "/eau/trust/console", label: locale === "en" ? "WETS console" : "Console WETS" },
     { href: "/eau/risk", label: locale === "en" ? "WELHR risk score" : "Score WELHR" },
     { href: "/comment-tokeniser/eau", label: copy.links.guide },
     { href: "/eau/embed/docs", label: copy.links.embed },
@@ -73,10 +74,17 @@ export function EauHubView() {
         <PrimaryButton href="#passport">{copy.checkerCta}</PrimaryButton>
         <PrimaryButton href="/eau/trust" variant="ghost">
           {locale === "en"
-            ? "Trust Score console"
+            ? "Trust Score (WETS)"
             : locale === "es"
-              ? "Consola Trust Score"
-              : "Console Trust Score"}
+              ? "Trust Score (WETS)"
+              : "Trust Score (WETS)"}
+        </PrimaryButton>
+        <PrimaryButton href="/eau/trust/console" variant="ghost">
+          {locale === "en"
+            ? "Console"
+            : locale === "es"
+              ? "Consola"
+              : "Console"}
         </PrimaryButton>
         <PrimaryButton href="/eau/risk" variant="ghost">
           {locale === "en"

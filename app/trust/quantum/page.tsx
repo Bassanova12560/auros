@@ -4,7 +4,7 @@ import Link from "next/link";
 import { ContentPageLayout } from "@/app/_components/ContentPageLayout";
 import { FocusPageShell } from "@/app/_components/FocusPageShell";
 import { PrimaryButton } from "@/app/_components/ui/PrimaryButton";
-import { WETS_CONSOLE_ROUTE, WETS_PQC_QUESTIONS } from "@/lib/wets/constants";
+import { WETS_CONSOLE_ROUTE, WETS_PQC_QUESTIONS, WETS_WELCOME_ROUTE } from "@/lib/wets/constants";
 import {
   QEI_METHODOLOGY,
   QEI_ROUTE,
@@ -31,7 +31,7 @@ export default function QuantumExposureIndexPage() {
         eyebrow="Year of Quantum Security · 2026"
         title="Quantum Exposure Index"
         intro="Classement structurel des verticaux RWA selon l’exposition custody / durée / recours légal off-chain — pas une note de crédit. Méthode ouverte, score WETS pour le projet unitaire."
-        cta={{ href: WETS_CONSOLE_ROUTE, label: "Scorer un projet (WETS)" }}
+        cta={{ href: WETS_WELCOME_ROUTE, label: "Découvrir WETS" }}
       >
         <section className="space-y-3 text-sm leading-relaxed text-white/55">
           <p>
@@ -101,7 +101,12 @@ export default function QuantumExposureIndexPage() {
         </section>
 
         <div className="mt-10 flex flex-wrap gap-3">
-          <PrimaryButton href={WETS_CONSOLE_ROUTE}>Console WETS</PrimaryButton>
+          <PrimaryButton href={`${WETS_CONSOLE_ROUTE}/projects/new`}>
+            Scorer un projet
+          </PrimaryButton>
+          <PrimaryButton href={WETS_WELCOME_ROUTE} variant="ghost">
+            Accueil WETS
+          </PrimaryButton>
           <PrimaryButton href="/trust/quantum/playbook" variant="ghost">
             Playbook clauses
           </PrimaryButton>
