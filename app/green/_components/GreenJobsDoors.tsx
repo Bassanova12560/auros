@@ -3,8 +3,8 @@
 import Link from "next/link";
 
 import { useLocale } from "@/app/_components/i18n/LocaleProvider";
+import { GREEN_API_DOCS_ROUTE } from "@/lib/green/api/constants";
 import {
-  GREEN_API_DOCS_ROUTE,
   GREEN_MARKET_ROUTE,
   GREEN_REGISTER_ROUTE,
   GREEN_REGISTRY_ROUTE,
