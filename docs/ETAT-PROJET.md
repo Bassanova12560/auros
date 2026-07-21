@@ -1,6 +1,6 @@
 # AUROS — état du projet
 
-Voir aussi : `docs/PRODUIT-AUROS.md`, `docs/MODELE-ECONOMIQUE.md`, `docs/VISION-RETENU.md`, `docs/RWA-DATA-ROOM.md`.
+Voir aussi : `docs/PRODUIT-AUROS.md`, `docs/MODELE-ECONOMIQUE.md`, `docs/VISION-RETENU.md`, `docs/RWA-DATA-ROOM.md`, **`docs/MANAGER-BACKLOG.md`** (priorités manager).
 
 ## Stack
 Next.js 16 · React 19 · Clerk · Supabase · Resend · Groq/Gemini/Mistral
