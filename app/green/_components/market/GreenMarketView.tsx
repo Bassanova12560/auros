@@ -667,7 +667,7 @@ export function GreenMarketView({ snapshot }: Props) {
                       <span className="inline-flex flex-col gap-1">
                         <span>{mm.status[offer.status]}</span>
                         <Link
-                          href={greenMarketOfferPath(offer.id)}
+                          href={`${greenMarketOfferPath(offer.id)}#intro`}
                           className="font-mono text-[10px] uppercase tracking-wider text-emerald-500/70 hover:text-emerald-400"
                         >
                           {mm.viewOffer} →
