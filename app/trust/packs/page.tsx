@@ -12,7 +12,7 @@ import {
   TRUST_PACKS_ROUTE,
 } from "@/lib/trust-packs/taxonomy";
 
-import { PackGradeBadge, TrustPacksNav } from "../_components/PackUi";
+import { PackGradeBadge, TrustPacksNav } from "./_components/PackUi";
 
 export const metadata: Metadata = {
   title: "Asset Trust Packs | AUROS",
