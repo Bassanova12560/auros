@@ -1,6 +1,7 @@
 /** Public Green pages probed by cron and `npm run green:health`. */
 export const GREEN_HEALTH_PATHS = [
   "/green",
+  "/green/hub",
   "/green/register",
   "/green/market",
   "/green/label",

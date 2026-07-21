@@ -169,4 +169,7 @@ export const QEI_METHODOLOGY = [
   "Indice indicatif 0–10 — plus haut = plus d’exposition structurelle. Pas une note de crédit.",
 ] as const;
 
+/** Public SEO landing */
 export const QEI_ROUTE = "/trust/quantum";
+/** Full index + methodology table */
+export const QEI_INDEX_ROUTE = "/trust/quantum/index";

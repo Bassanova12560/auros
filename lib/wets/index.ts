@@ -8,6 +8,7 @@ export { mergeCriteriaWithDefaults } from "./merge-criteria";
 export {
   QUANTUM_EXPOSURE_VERTICALS,
   QEI_ROUTE,
+  QEI_INDEX_ROUTE,
 } from "./quantum-exposure";
 export {
   computeProjectQuantumExposure,

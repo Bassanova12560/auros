@@ -3,6 +3,8 @@ export const GREEN_IMPACT_REPORT_ROUTE = "/green/impact-report";
 export const GREEN_IMPACT_REPORT_READY_ROUTE = "/green/impact-report/ready";
 export const GREEN_REGISTER_ROUTE = "/green/register";
 export const GREEN_ROUTE = "/green";
+/** Interactive hub (market, registry, KPIs) */
+export const GREEN_HUB_ROUTE = "/green/hub";
 export const GREEN_ABOUT_ROUTE = "/green/about";
 export const GREEN_MARKET_ROUTE = "/green/market";
 export const GREEN_MARKET_OFFER_ROUTE = "/green/market/offer";

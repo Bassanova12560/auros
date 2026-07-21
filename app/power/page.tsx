@@ -1,23 +1,21 @@
 import type { Metadata } from "next";
 
-import { FocusPageShell } from "@/app/_components/FocusPageShell";
+import { VerticalWelcomePage } from "@/app/_components/VerticalWelcomePage";
+import {
+  POWER_WELCOME_PATH,
+  VERTICAL_WELCOMES,
+} from "@/lib/vertical-welcome/config";
 import { metadataFromPath } from "@/lib/seo/metadata";
 
-import { PowerHubView } from "./PowerHubView";
-
-export const POWER_HUB_ROUTE = "/power";
-
 export const metadata: Metadata = {
-  ...metadataFromPath(POWER_HUB_ROUTE),
+  ...metadataFromPath(POWER_WELCOME_PATH),
   title: "AUROS Power | Low-carbon & nucléaire",
   description:
-    "Verticale low-carbon power AUROS — nucléaire et bas-carbone via Watts + ChargeFlow, hors Green Verified. Indicatif, pas un GO/REC.",
+    "Verticale power — Watts Reserve, ChargeFlow CFU, preuves institutionnelles. Indicatif, pas un GO/REC.",
 };
 
-export default function PowerHubPage() {
+export default function PowerWelcomePage() {
   return (
-    <FocusPageShell path={POWER_HUB_ROUTE} width="3xl">
-      <PowerHubView />
-    </FocusPageShell>
+    <VerticalWelcomePage config={VERTICAL_WELCOMES[POWER_WELCOME_PATH]!} />
   );
 }

@@ -26,4 +26,14 @@ describe("vertical welcome landings", () => {
     const w = VERTICAL_WELCOMES[WETS_WELCOME_PATH]!;
     assert.ok(w.ctas.some((c) => c.href.includes("/eau/trust/console")));
   });
+
+  it("verify welcome points to check console", () => {
+    const v = VERTICAL_WELCOMES["/verify"]!;
+    assert.ok(v.ctas.some((c) => c.href === "/verify/check" && c.primary));
+  });
+
+  it("green welcome points to hub", () => {
+    const g = VERTICAL_WELCOMES["/green"]!;
+    assert.ok(g.ctas.some((c) => c.href === "/green/hub" && c.primary));
+  });
 });
