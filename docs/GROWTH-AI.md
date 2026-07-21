@@ -2,47 +2,57 @@
 
 ## Principe manager
 
-**RAG + agents + human-in-the-loop d’abord.**  
-Fine-tune open-source ensuite, seulement si on a assez de conversations / mails validés pour mesurer un gain.
+**Gratuit pour aider le client. Payant pour scaler l’entreprise.**  
+RAG + agents + human-in-the-loop d’abord. Fine-tune open-source seulement avec dataset validé.
 
-Fine-tuner trop tôt = coût GPU, dérive, risque de claims faux. Un bon RAG sur le catalogue ai-first + drafts revus bat un modèle « custom » mal nourri.
+## Modèle freemium (clair)
+
+| Couche | Pour qui | Contenu | Prix |
+|--------|----------|---------|------|
+| **Free — aide client** | Issuers, acheteurs, RSE | Chat Green personnalisé `/green/assistant`, Copilot `/copilot`, scores WELHR/RTMS indicatifs, care **drafts** mails (ops envoie) | €0 |
+| **Growth — équipe** | PME / mid-market | Green API quotas, webhooks, plusieurs sièges, historique briefs | Abonnement (voir `/green/api` Premium) |
+| **Enterprise — RWA AI desk** | Banques, plateformes, counsel | SLA, RAG privé (leur data room hash-only), playbooks white-label, export preuves, SSO, quotas élevés, option fine-tune LoRA sur *leurs* FAQ | Contrat |
+
+Le free doit **faire sentir** qu’on est aidé (1 prochain pas, ton rassurant, personnalisation).  
+Le payant vend **volume, gouvernance, preuve, intégration** — pas le chat de base.
+
+## Où l’IA vit (produit)
+
+| Surface | Rôle |
+|---------|------|
+| `/green/assistant` | Chatbot Green **personnalisé** (rôle / actif / région) |
+| `/copilot` | Assistant RWA transverse |
+| `/ops/copilot` | Drafts care / social / catalogue — HITL |
+| Cron nurture | Relances dossier (template) |
+| Funnel `funnel_*` | Mesure Détecter → Décider → Prouver |
+
+## Pourquoi une entreprise paierait une IA « spéciale RWA »
+
+1. **Desk interne** — questions MiCA / admission / Green RTMS sans saturer counsel  
+2. **Preuves** — réponses sourcées + liens verify / Evidence Pack (pas de bullshit APY)  
+3. **Nurture** — mails / next-step automatisés *sous contrôle* (HITL puis règles)  
+4. **API** — intégrer le coach dans leur portail issuer / banque  
+5. **RAG privé** — leurs playbooks + AUROS public (isolation)  
+6. **Auditabilité** — logs, disclaimers, pas d’auto-mint CFU / scores  
+7. **White-label** — assistant « énergie / eau » pour partenaires  
+8. **Formation** — Academy + Copilot (sièges)  
+9. **Comparateur assisté** — suggestions compare pour risk desk  
+10. **Continuity / WELHR** — pack résilience data center pour corporate buyers  
 
 ## Phases
 
-### Phase A — maintenant (v1 livrée / en cours)
+### A — live
+RAG, Copilot, care drafts HITL, Green assistant personnalisé, funnel events.
 
-| Brique | Rôle |
-|--------|------|
-| RAG ai-first | `/ai-first/rag` + tools Copilot lecture seule |
-| Drafts ops | Catalogue, contenu, social — approve dans `/ops/copilot` |
-| **Care emails (draft)** | Mails personnalisés **proposés** (jamais auto-send) |
-| Nurture cron | Relance dossier incomplet (template, déjà live) |
-| Funnel events | `funnel_*` → Vercel Analytics |
+### B — 90 jours
+Care lié dossiers réels ; coach post-score ; A/B subjects ; mémoire session consentie.
 
-### Phase B — suite (90 jours)
-
-- Enrichir care drafts avec statut dossier (3 priorités manquantes, WELHR si eau)
-- A/B subject lines (draft variants) — envoi manuel Resend / ops
-- Copilot « coach » post-score : prochain pas unique (pas 15)
-- Mémoire courte session (consent) pour ne pas répéter les mêmes conseils
-
-### Phase C — fine-tune (si preuves)
-
-- Dataset : drafts **approuvés** + FAQ réelles (anonymisées)
-- Modèle : petit instruct open-source (ex. 7–8B) ou LoRA chez un hébergeur
-- Garde-fous : pas de chiffres inventés ; citation RAG obligatoire ; HITL send
-- Critère go : −20 % temps ops sur drafts **ou** +X % reprise dossier vs template
-
-## Ce que l’IA peut faire pour que le client se sente aidé
-
-1. **Un prochain pas** clair (reprendre express, 1 doc data room, verify)
-2. **Ton pro rassurant** (incomplet OK, indicatif, counsel)
-3. **Personnalisation réelle** (actif, juridiction, score) — pas de blabla générique
-4. **Preuves** (lien verify / Evidence Pack) quand pertinent
-5. **Jamais** promettre 35 %, sans clic, partenariat Tesla/Total
+### C — fine-tune (si preuves)
+Dataset drafts approuvés ; LoRA 7–8B ; citation RAG obligatoire ; critère go mesurable.
 
 ## Anti-patterns
 
-- Auto-envoyer des mails IA sans revue
-- Fine-tune sans dataset qualité
-- Laisser l’IA modifier scores / CFU / attestations
+- Auto-send mails IA sans revue  
+- Fine-tune avant RAG/HITL mature  
+- Modifier scores / CFU / attestations via chat  
+- Claims 35 % / sans clic / fake partners  

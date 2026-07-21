@@ -44,10 +44,10 @@ export function GreenSubNav() {
         ))}
         <div className="ml-auto flex items-center gap-x-4">
           <Link
-            href="/copilot?context=green"
+            href="/green/assistant"
             className="font-mono text-[10px] uppercase tracking-wider text-emerald-400/70 transition hover:text-emerald-300"
           >
-            Copilot
+            Assistant IA
           </Link>
           <Link
             href={DATA_TERMINAL_ROUTE}

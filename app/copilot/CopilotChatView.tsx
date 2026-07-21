@@ -10,17 +10,29 @@ import {
   parseCopilotSearchParams,
   suggestionsForContext,
   type CopilotPageContext,
+  type CopilotSurface,
 } from "@/lib/copilot/types";
 
 type ChatTurn = { role: "user" | "assistant"; content: string };
 type Citation = { title: string; url: string };
+
+export type CopilotChatViewProps = {
+  /** Override URL context (e.g. Green assistant always green). */
+  forcedSurface?: CopilotSurface;
+  eyebrow?: string;
+  title?: string;
+  intro?: string;
+  /** Extra client brief merged into context (personalized). */
+  clientBrief?: string;
+  hideHeader?: boolean;
+};
 
 function contextBannerLabel(ctx: CopilotPageContext): string | null {
   if (ctx.surface === "watts") return "Contexte : Watts Reserve";
   if (ctx.surface === "chargeflow") return "Contexte : ChargeFlow";
   if (ctx.surface === "green") return "Contexte : AUROS Green";
   if (ctx.surface === "rtms") return "Contexte : RTMS";
-  if (ctx.surface === "jurisdiction" && ctx.jurisdiction_id) {
+  if (ctx.jurisdiction_id) {
     return `Contexte : juridiction · ${ctx.jurisdiction_id}`;
   }
   if (ctx.surface === "jurisdiction") return "Contexte : juridictions";
@@ -56,17 +68,26 @@ function readRtmsBriefFromStorage(): string | undefined {
   }
 }
 
-export function CopilotChatView() {
+export function CopilotChatView({
+  forcedSurface,
+  eyebrow = "Copilot",
+  title = "Assistant AUROS",
+  intro = "Posez une question sur le comparateur RWA, Green, les juridictions, le Protocol ou ChargeFlow. Réponses sourcées — indicatif uniquement, pas de conseil juridique.",
+  clientBrief,
+  hideHeader = false,
+}: CopilotChatViewProps = {}) {
   const searchParams = useSearchParams();
-  const pageContextBase = useMemo(
-    () =>
-      parseCopilotSearchParams({
-        context: searchParams.get("context"),
-        ids: searchParams.get("ids"),
-        jid: searchParams.get("jid"),
-      }),
-    [searchParams]
-  );
+  const pageContextBase = useMemo(() => {
+    const fromUrl = parseCopilotSearchParams({
+      context: searchParams.get("context"),
+      ids: searchParams.get("ids"),
+      jid: searchParams.get("jid"),
+    });
+    if (forcedSurface) {
+      return { ...fromUrl, surface: forcedSurface };
+    }
+    return fromUrl;
+  }, [searchParams, forcedSurface]);
   const [rtmsBrief, setRtmsBrief] = useState<string | undefined>();
   useEffect(() => {
     if (pageContextBase.surface === "rtms") {
@@ -78,8 +99,9 @@ export function CopilotChatView() {
     () => ({
       ...pageContextBase,
       rtms_brief: rtmsBrief,
+      client_brief: clientBrief?.trim() || undefined,
     }),
-    [pageContextBase, rtmsBrief]
+    [pageContextBase, rtmsBrief, clientBrief]
   );
 
   const suggestions = useMemo(
@@ -154,24 +176,26 @@ export function CopilotChatView() {
 
   return (
     <div className="space-y-8">
-      <header className="space-y-3">
-        <p className="font-mono text-[11px] uppercase tracking-[0.25em] text-emerald-400/80">
-          Copilot
-        </p>
-        <h1 className="font-display text-3xl font-medium text-white md:text-4xl">
-          Assistant AUROS
-        </h1>
-        <p className="max-w-2xl text-sm leading-relaxed text-white/55">
-          Posez une question sur le comparateur RWA, Green, les juridictions, le
-          Protocol ou ChargeFlow. Réponses sourcées — indicatif uniquement, pas
-          de conseil juridique.
-        </p>
-        {banner ? (
-          <p className="font-mono text-[11px] tracking-wide text-emerald-300/70">
-            {banner}
+      {!hideHeader ? (
+        <header className="space-y-3">
+          <p className="font-mono text-[11px] uppercase tracking-[0.25em] text-emerald-400/80">
+            {eyebrow}
           </p>
-        ) : null}
-      </header>
+          <h1 className="font-display text-3xl font-medium text-white md:text-4xl">
+            {title}
+          </h1>
+          <p className="max-w-2xl text-sm leading-relaxed text-white/55">{intro}</p>
+          {banner ? (
+            <p className="font-mono text-[11px] tracking-wide text-emerald-300/70">
+              {banner}
+            </p>
+          ) : null}
+        </header>
+      ) : banner ? (
+        <p className="font-mono text-[11px] tracking-wide text-emerald-300/70">
+          {banner}
+        </p>
+      ) : null}
 
       <div className="space-y-4 border border-white/[0.08] bg-black/40 p-5 md:p-6">
         {history.length === 0 ? (

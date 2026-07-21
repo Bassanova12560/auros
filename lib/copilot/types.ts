@@ -1,6 +1,7 @@
 export const COPILOT_ROUTE = "/copilot";
 export const COPILOT_OPS_ROUTE = "/ops/copilot";
 export const COPILOT_RTMS_STORAGE_KEY = "auros_copilot_rtms_brief";
+export const COPILOT_GREEN_BRIEF_STORAGE_KEY = "auros_copilot_green_brief";
 export const COPILOT_DISCLAIMER =
   "AUROS Copilot is indicative only — not legal, investment, or regulatory advice. Scores, attestations, and ChargeFlow units are never modified by this assistant.";
 
@@ -32,6 +33,8 @@ export type CopilotPageContext = {
   jurisdiction_id?: string;
   /** Short RTMS project brief (from assistant bridge; not inventable). */
   rtms_brief?: string;
+  /** Personalized Green / client brief (session; not inventable facts). */
+  client_brief?: string;
 };
 
 export type CopilotChatRequest = {
@@ -134,6 +137,7 @@ export function suggestionsForContext(ctx: CopilotPageContext): string[] {
       "Explique CQS et Watt Score",
       "Comment préparer un dossier RTMS ?",
       "Différence label Green et marketplace",
+      "Quel prochain pas pour mon projet énergie ?",
     ];
   }
   if (ctx.surface === "rtms") {

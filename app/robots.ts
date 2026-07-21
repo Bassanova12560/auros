@@ -39,6 +39,7 @@ const AI_ALLOW = [
   "/jurisdictions",
   "/pricing",
   "/green",
+  "/green/assistant",
   "/green/watts",
   "/green/chargeflow",
   "/green/faq",

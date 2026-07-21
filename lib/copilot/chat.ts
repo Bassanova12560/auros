@@ -63,7 +63,8 @@ function formatPageContext(context?: CopilotPageContext): string {
     context.surface === "generic" &&
     !context.product_ids?.length &&
     !context.jurisdiction_id &&
-    !context.rtms_brief
+    !context.rtms_brief &&
+    !context.client_brief
   ) {
     return "";
   }
@@ -77,6 +78,9 @@ function formatPageContext(context?: CopilotPageContext): string {
   let block = `PAGE CONTEXT: ${parts.join(" · ")}\nUse this page context when answering; prefer tool data for these IDs.\n`;
   if (context.rtms_brief?.trim()) {
     block += `RTMS_BRIEF:\n${context.rtms_brief.trim().slice(0, 1200)}\n`;
+  }
+  if (context.client_brief?.trim()) {
+    block += `CLIENT_BRIEF (user-provided profile — do not invent beyond this):\n${context.client_brief.trim().slice(0, 1200)}\nPersonalize the next step using this brief; keep analyses indicative.\n`;
   }
   return `${block}\n`;
 }

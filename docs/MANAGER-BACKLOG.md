@@ -24,8 +24,8 @@ Last review: 2026-07-21 (P1 + Growth AI v1).
 
 | Phase | Contenu |
 |-------|---------|
-| **A (now)** | RAG + drafts + care emails HITL + nurture cron template |
-| **B** | Care lié aux dossiers réels, A/B subjects, coach post-score |
+| **A (now)** | RAG + drafts + care HITL + Green assistant `/green/assistant` + funnel |
+| **B** | Care lié dossiers réels ; coach post-score ; A/B subjects ; mémoire consentie |
 | **C** | Fine-tune open-source **seulement** si dataset drafts approuvés + métrique claire |
 
 ## Erreurs à ne plus refaire

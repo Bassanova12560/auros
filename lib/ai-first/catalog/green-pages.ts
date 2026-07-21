@@ -23,6 +23,7 @@ import {
   GREEN_REGISTER_ROUTE,
   GREEN_ROUTE,
   GREEN_RTMS_ASSISTANT_ROUTE,
+  GREEN_ASSISTANT_ROUTE,
   GREEN_STANDARDS_ROUTE,
   GREEN_STORERS_ROUTE,
 } from "@/lib/green";
@@ -588,6 +589,28 @@ export const greenRtmsAssistantPage = enrichPage({
   relatedPaths: [GREEN_STANDARDS_ROUTE, GREEN_LABEL_ROUTE, GREEN_ROUTE],
 });
 
+export const greenAssistantPage = enrichPage({
+  id: "green-assistant",
+  path: GREEN_ASSISTANT_ROUTE,
+  title: "Assistant Green personnalisé | AUROS",
+  description:
+    "Chatbot Green gratuit et personnalisé — rôle, actif, région. Aide clients RWA eau/énergie ; pas de conseil financier.",
+  summary:
+    "Assistant IA AUROS Green (freemium) : profil court + chat RAG pour questions Green/RWA. Brochures et mails en brouillon humain ; API Growth et desk entreprise en option payante.",
+  contentType: "landing",
+  language: "multi",
+  indexable: true,
+  lastUpdated: "2026-07-21",
+  keywords: ["assistant Green IA", "chatbot RWA vert", "aide client AUROS Green"],
+  intents: ["Poser une question Green", "Comprendre RTMS / label", "Personnaliser mon parcours"],
+  audience: ["promoteurs", "consultants ESG", "particuliers", "fonds impact"],
+  facts: [
+    { key: "Accès", value: "Gratuit — profil local navigateur" },
+    { key: "Limite", value: "Indicatif — pas de certification auto ni envoi mail auto" },
+  ],
+  relatedPaths: [GREEN_ROUTE, GREEN_RTMS_ASSISTANT_ROUTE, GREEN_STANDARDS_ROUTE, "/copilot"],
+});
+
 export const greenProducersPage = enrichPage({
   id: "green-producers",
   path: GREEN_PRODUCERS_ROUTE,
@@ -677,6 +700,7 @@ export const greenPages: AiFirstPage[] = [
   greenImpactReportPage,
   greenImpactReportReadyPage,
   greenRtmsAssistantPage,
+  greenAssistantPage,
   greenLabelPage,
   greenCertificationPage,
   greenPraticienPage,

@@ -23,6 +23,7 @@ export const GREEN_GUIDE_ROUTE = "/green/tokenize-surplus";
 export const GREEN_PRATICIEN_ROUTE = "/green/praticien";
 export const GREEN_PRATICIEN_EXAM_ROUTE = "/green/praticien/exam";
 export const GREEN_RTMS_ASSISTANT_ROUTE = "/green/rtms-assistant";
+export const GREEN_ASSISTANT_ROUTE = "/green/assistant";
 export const GREEN_FAQ_ROUTE = "/green/faq";
 export const GREEN_HOW_IT_WORKS_ROUTE = "/green/comment-ca-marche";
 export const GREEN_BLOG_ROUTE = "/green/blog";
