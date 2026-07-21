@@ -21,6 +21,8 @@ export {
 } from "./mint";
 export {
   getAssetDnaLocal,
+  listAssetDnaFromSupabase,
+  listAssetDnaLocal,
   persistAssetDna,
   resolveAssetDna,
   saveAssetDnaLocal,

@@ -75,7 +75,8 @@ GET /api/v1/asset-dna/{id}/stream?limit=50
 1. schema + id helpers — done  
 2. attach DNA on Green register / registry publish — done  
 3. Proof Stream v0 — done  
-4. **Next:** OpenAPI auth quotas · DNA on existing seeds · Portfolio Console  
+4. Portfolio Console v1 — done (`/green/portfolio`)  
+5. **Next:** OpenAPI auth quotas · DNA on existing seeds · alert digests  
 
 ## Non-goals (v1)
 

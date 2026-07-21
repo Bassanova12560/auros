@@ -51,6 +51,39 @@ export function getAssetDnaLocal(id: string): AssetDnaRecord | null {
   return load().find((r) => r.id === id) ?? null;
 }
 
+export function listAssetDnaLocal(limit = 200): AssetDnaRecord[] {
+  return load()
+    .slice()
+    .sort((a, b) => b.updatedAt.localeCompare(a.updatedAt))
+    .slice(0, Math.min(limit, 500));
+}
+
+export async function listAssetDnaFromSupabase(
+  limit = 200
+): Promise<AssetDnaRecord[]> {
+  const supabase = getAdminClient();
+  if (!supabase) return [];
+  const { data, error } = await supabase
+    .from("asset_dna_records")
+    .select("*")
+    .order("updated_at", { ascending: false })
+    .limit(Math.min(limit, 500));
+  if (error || !data) return [];
+  return data.map((row) => ({
+    id: String(row.id),
+    specVersion: "1.0.0" as const,
+    assetClass: row.asset_class,
+    displayName: String(row.display_name),
+    jurisdiction: (row.jurisdiction ?? {}) as AssetDnaRecord["jurisdiction"],
+    origin: (row.origin ?? {}) as AssetDnaRecord["origin"],
+    documents: (row.documents ?? []) as AssetDnaRecord["documents"],
+    compliance: (row.compliance ?? {}) as AssetDnaRecord["compliance"],
+    links: (row.links ?? {}) as AssetDnaRecord["links"],
+    createdAt: String(row.created_at),
+    updatedAt: String(row.updated_at),
+  }));
+}
+
 export async function mirrorAssetDnaToSupabase(
   record: AssetDnaRecord
 ): Promise<void> {

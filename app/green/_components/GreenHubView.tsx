@@ -8,6 +8,7 @@ import {
   GREEN_ABOUT_ROUTE,
   GREEN_CSRD_CHECK_ROUTE,
   GREEN_MARKET_ROUTE,
+  GREEN_PORTFOLIO_ROUTE,
   GREEN_REGISTER_ROUTE,
   GREEN_TRUST_ROUTE,
   getGreenMessages,
@@ -94,6 +95,12 @@ export function GreenHubView({ marketSnapshot, impact, registrySnapshot }: Props
               className="font-mono text-[11px] tracking-wide text-white/40 transition-colors duration-300 hover:text-white/70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
             >
               Trust →
+            </Link>
+            <Link
+              href={GREEN_PORTFOLIO_ROUTE}
+              className="font-mono text-[11px] tracking-wide text-white/40 transition-colors duration-300 hover:text-white/70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+            >
+              Portfolio →
             </Link>
           </p>
         </div>
