@@ -148,6 +148,7 @@ export {
 export { updateGreenLabelApplicationStatus } from "./update-label-status";
 export { publishGreenLabelApplication, listPendingGreenLabelApplications } from "./publish-label";
 export type { PendingGreenLabelApplication } from "./publish-label";
+// Note: Asset DNA hooks live in attach-asset-dna.ts — never re-export here (client barrel).
 export {
   computeGreenRtmsScore,
   isGreenWizardAsset,

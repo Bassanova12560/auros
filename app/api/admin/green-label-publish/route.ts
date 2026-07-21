@@ -52,6 +52,40 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ ok: false, error: result.error }, { status: 400 });
   }
 
+  let assetDnaId: string | undefined;
+  try {
+    const { mintAndAttachRegistryDna } = await import(
+      "@/lib/green/attach-asset-dna"
+    );
+    const { createClient } = await import("@supabase/supabase-js");
+    assetDnaId = await mintAndAttachRegistryDna({
+      projectId: result.projectId,
+      projectName: result.projectName,
+      projectType: result.projectType,
+      country: result.country,
+      contactName: result.contactName,
+      labelTier: result.labelTier,
+      applicationId: result.applicationId,
+    });
+    const url = process.env.NEXT_PUBLIC_SUPABASE_URL?.trim();
+    const key = process.env.SUPABASE_SECRET_KEY?.trim();
+    if (url && key && assetDnaId) {
+      const supabase = createClient(url, key, {
+        auth: { persistSession: false, autoRefreshToken: false },
+      });
+      await supabase
+        .from("green_registry_projects")
+        .update({ asset_dna_id: assetDnaId })
+        .eq("id", result.projectId);
+      await supabase
+        .from("green_label_applications")
+        .update({ asset_dna_id: assetDnaId })
+        .eq("id", result.applicationId);
+    }
+  } catch (err) {
+    console.warn("[green-label-publish] dna attach", err);
+  }
+
   const verifyUrl = `${siteOrigin()}${greenVerifyPath(result.verifyToken)}`;
   const registryUrl = `${siteOrigin()}/green/registry`;
 
@@ -70,5 +104,6 @@ export async function POST(req: NextRequest) {
     projectId: result.projectId,
     verifyToken: result.verifyToken,
     verifyUrl,
+    assetDnaId: assetDnaId ?? null,
   });
 }

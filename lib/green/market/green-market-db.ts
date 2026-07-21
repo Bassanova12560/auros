@@ -437,129 +437,77 @@ export type InsertGreenMarketAssetInput = {
   lon: number;
   publish?: boolean;
   ownerClerkId?: string | null;
+  /** Pre-minted Asset DNA id (server action / hooks only). */
+  assetDnaId?: string | null;
 };
 
 export async function insertGreenMarketAsset(
   input: InsertGreenMarketAssetInput
 ): Promise<
-  | { ok: true; id: string; pending: boolean; assetDnaId: string }
+  | { ok: true; id: string; pending: boolean; assetDnaId: string | null }
   | { ok: false; error: string }
 > {
   const supabase = getAdminClient();
   if (!supabase) return { ok: false, error: "database_unavailable" };
 
   const pending = input.publish !== true;
+  const assetDnaId = input.assetDnaId?.trim() || null;
 
-  const { mintAssetDna } = await import("@/lib/asset-dna");
-  const { appendProofStreamEvent } = await import("@/lib/proof-stream");
-
-  const dna = await mintAssetDna({
-    assetClass: "green_energy",
-    displayName: input.name,
-    jurisdiction: { country: input.country },
-    origin: {
-      operatorName: input.name,
-      siteName: `${input.city}, ${input.country}`,
-      coordinates: { lat: input.lat, lon: input.lon },
-    },
-    compliance: {
-      listingTier: "referenced",
-      labelTier: "none",
-    },
-  });
+  const baseRow: Record<string, unknown> = {
+    type: input.type,
+    name: input.name,
+    city: input.city,
+    country: input.country.trim(),
+    region: input.region?.trim() || null,
+    description: input.description,
+    contact_email: input.contactEmail,
+    capacity_kwh: input.capacityKwh,
+    price_per_kwh: input.pricePerKwh ?? null,
+    energy_type: input.energyType,
+    lat: input.lat,
+    lon: input.lon,
+    listing_tier: "referenced",
+    is_certified: false,
+    status: pending ? "pending" : "available",
+    owner_clerk_id: input.ownerClerkId?.trim() || null,
+  };
+  if (assetDnaId) baseRow.asset_dna_id = assetDnaId;
 
   const { data, error } = await supabase
     .from("green_market_assets")
-    .insert({
-      type: input.type,
-      name: input.name,
-      city: input.city,
-      country: input.country.trim(),
-      region: input.region?.trim() || null,
-      description: input.description,
-      contact_email: input.contactEmail,
-      capacity_kwh: input.capacityKwh,
-      price_per_kwh: input.pricePerKwh ?? null,
-      energy_type: input.energyType,
-      lat: input.lat,
-      lon: input.lon,
-      listing_tier: "referenced",
-      is_certified: false,
-      status: pending ? "pending" : "available",
-      owner_clerk_id: input.ownerClerkId?.trim() || null,
-      asset_dna_id: dna.id,
-    })
+    .insert(baseRow)
     .select("id")
     .single();
 
   if (error || !data) {
-    // Column missing (migration not applied) — retry without asset_dna_id
-    if (error?.message?.includes("asset_dna_id")) {
+    if (assetDnaId && error?.message?.includes("asset_dna_id")) {
+      delete baseRow.asset_dna_id;
       const retry = await supabase
         .from("green_market_assets")
-        .insert({
-          type: input.type,
-          name: input.name,
-          city: input.city,
-          country: input.country.trim(),
-          region: input.region?.trim() || null,
-          description: input.description,
-          contact_email: input.contactEmail,
-          capacity_kwh: input.capacityKwh,
-          price_per_kwh: input.pricePerKwh ?? null,
-          energy_type: input.energyType,
-          lat: input.lat,
-          lon: input.lon,
-          listing_tier: "referenced",
-          is_certified: false,
-          status: pending ? "pending" : "available",
-          owner_clerk_id: input.ownerClerkId?.trim() || null,
-        })
+        .insert(baseRow)
         .select("id")
         .single();
       if (retry.error || !retry.data) {
         console.error("[insertGreenMarketAsset]", retry.error);
         return { ok: false, error: retry.error?.message ?? "insert_failed" };
       }
-      const id = String(retry.data.id);
-      dna.links = { ...dna.links, marketActorId: id };
-      dna.updatedAt = new Date().toISOString();
-      const { persistAssetDna } = await import("@/lib/asset-dna");
-      await persistAssetDna(dna);
-      appendProofStreamEvent({
-        assetDnaId: dna.id,
-        action: "dna.minted",
-        meta: { marketActorId: id, pending },
-      });
-      appendProofStreamEvent({
-        assetDnaId: dna.id,
-        action: "market.submitted",
-        meta: { marketActorId: id, pending },
-      });
-      return { ok: true, id, pending, assetDnaId: dna.id };
+      return {
+        ok: true,
+        id: String(retry.data.id),
+        pending,
+        assetDnaId,
+      };
     }
     console.error("[insertGreenMarketAsset]", error);
     return { ok: false, error: error?.message ?? "insert_failed" };
   }
 
-  const id = String(data.id);
-  dna.links = { ...dna.links, marketActorId: id };
-  dna.updatedAt = new Date().toISOString();
-  const { persistAssetDna } = await import("@/lib/asset-dna");
-  await persistAssetDna(dna);
-
-  appendProofStreamEvent({
-    assetDnaId: dna.id,
-    action: "dna.minted",
-    meta: { marketActorId: id, pending },
-  });
-  appendProofStreamEvent({
-    assetDnaId: dna.id,
-    action: "market.submitted",
-    meta: { marketActorId: id, pending },
-  });
-
-  return { ok: true, id, pending, assetDnaId: dna.id };
+  return {
+    ok: true,
+    id: String(data.id),
+    pending,
+    assetDnaId,
+  };
 }
 
 export async function moderateGreenMarketListing(input: {
@@ -572,6 +520,7 @@ export async function moderateGreenMarketListing(input: {
       contactEmail: string | null;
       label: string;
       kind: "actor" | "offer";
+      assetDnaId: string | null;
     }
   | { ok: false; error: string }
 > {
@@ -594,6 +543,7 @@ export async function moderateGreenMarketListing(input: {
       ? String(row.name ?? "")
       : String(row.actor_name ?? "");
   const contactEmail = row.contact_email ? String(row.contact_email) : null;
+  const assetDnaId = row.asset_dna_id ? String(row.asset_dna_id) : null;
 
   if (input.action === "approve") {
     const { error } = await supabase
@@ -601,15 +551,7 @@ export async function moderateGreenMarketListing(input: {
       .update({ status: "available" })
       .eq("id", input.id);
     if (error) return { ok: false, error: error.message };
-    if (kind === "actor" && row.asset_dna_id) {
-      const { appendProofStreamEvent } = await import("@/lib/proof-stream");
-      appendProofStreamEvent({
-        assetDnaId: String(row.asset_dna_id),
-        action: "market.approved",
-        meta: { marketActorId: input.id },
-      });
-    }
-    return { ok: true, contactEmail, label, kind };
+    return { ok: true, contactEmail, label, kind, assetDnaId };
   }
 
   const { error } = await supabase
@@ -617,15 +559,7 @@ export async function moderateGreenMarketListing(input: {
     .update({ status: "closed" })
     .eq("id", input.id);
   if (error) return { ok: false, error: error.message };
-  if (kind === "actor" && row.asset_dna_id) {
-    const { appendProofStreamEvent } = await import("@/lib/proof-stream");
-    appendProofStreamEvent({
-      assetDnaId: String(row.asset_dna_id),
-      action: "market.rejected",
-      meta: { marketActorId: input.id },
-    });
-  }
-  return { ok: true, contactEmail, label, kind };
+  return { ok: true, contactEmail, label, kind, assetDnaId };
 }
 
 export type PendingGreenMarketListing = {

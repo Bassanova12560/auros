@@ -75,6 +75,17 @@ export async function saveGreenMarketActorAction(
   const coords = await geocodeCity(city, country);
   const { userId } = await auth();
 
+  const { mintDnaForMarketActor, linkMarketActorDna } = await import(
+    "@/lib/green/attach-asset-dna"
+  );
+  const assetDnaId = await mintDnaForMarketActor({
+    name,
+    country,
+    city,
+    lat: coords.lat,
+    lon: coords.lon,
+  });
+
   const result = await insertGreenMarketAsset({
     type: input.type,
     name,
@@ -89,11 +100,18 @@ export async function saveGreenMarketActorAction(
     lat: coords.lat,
     lon: coords.lon,
     ownerClerkId: userId,
+    assetDnaId,
   });
 
   if (!result.ok) {
     return { ok: false, error: "database", message: result.error };
   }
+
+  await linkMarketActorDna({
+    assetDnaId,
+    marketActorId: result.id,
+    pending: result.pending,
+  });
 
   void notifyGreenMarketSheets({
     id: result.id,

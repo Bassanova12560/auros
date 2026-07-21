@@ -43,6 +43,21 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ ok: false, error: result.error }, { status: 500 });
   }
 
+  if (
+    result.assetDnaId &&
+    table === "green_market_assets" &&
+    (action === "approve" || action === "reject")
+  ) {
+    const { emitMarketModerationProof } = await import(
+      "@/lib/green/attach-asset-dna"
+    );
+    emitMarketModerationProof({
+      assetDnaId: result.assetDnaId,
+      marketActorId: id,
+      action,
+    });
+  }
+
   if (action === "approve" && result.contactEmail) {
     void sendGreenMarketApproved(result.contactEmail, {
       name: result.label,
