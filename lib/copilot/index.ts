@@ -23,4 +23,4 @@ export {
   getCopilotDraft,
   reviewCopilotDraft,
 } from "./drafts-store";
-export { runCatalogDraftAgent, runContentDraftAgent } from "./agents";
+export { runCatalogDraftAgent, runContentDraftAgent, runSocialContentSignalsAgent } from "./agents";

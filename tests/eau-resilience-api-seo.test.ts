@@ -11,12 +11,15 @@ describe("eau resilience API openapi", () => {
       paths: Record<string, unknown>;
       info: { version: string };
     };
-    assert.equal(spec.info.version, "1.2.0");
+    assert.equal(spec.info.version, "1.3.0");
     assert.ok(spec.paths["/api/green/eau/legal-risk"]);
     assert.ok(spec.paths["/api/green/eau/continuity-playbook"]);
     assert.ok(spec.paths["/api/green/eau/roi"]);
     assert.ok(spec.paths["/api/green/eau/resilience-brief"]);
     assert.ok(spec.paths["/api/green/eau/resilience"]);
+    assert.ok(spec.paths["/api/green/eau/supplier-screen"]);
+    assert.ok(spec.paths["/api/green/eau/resource-signals"]);
+    assert.ok(spec.paths["/api/green/eau/connectors"]);
   });
 });
 

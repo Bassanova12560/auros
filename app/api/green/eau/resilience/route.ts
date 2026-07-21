@@ -50,6 +50,24 @@ export async function GET(req: Request) {
         },
         {
           method: "POST",
+          path: "/api/green/eau/supplier-screen",
+          role: "esg",
+          summary: "Hygiène claims fournisseurs (anti-washing)",
+        },
+        {
+          method: "GET",
+          path: "/api/green/eau/resource-signals",
+          role: "monitor",
+          summary: "Bandes indicatives spot / minerais / stress",
+        },
+        {
+          method: "GET",
+          path: "/api/green/eau/connectors",
+          role: "integrate",
+          summary: "Contrats export BIM/ERP",
+        },
+        {
+          method: "POST",
           path: "/api/resilience/continuity-playbook/pdf",
           role: "export",
           summary: "PDF one-pager (body: { playbook })",
@@ -62,8 +80,12 @@ export async function GET(req: Request) {
         playbook: "/eau/continuity/playbook",
         compass: "/compass",
         demo_100mw: "/demos/data-center-100mw",
+        suppliers: "/eau/suppliers",
+        integrations: "/integrations",
+        resource_signals: "/data/resource-signals",
         wets: "/eau/trust",
         openapi: "/api/green/openapi",
+        social_ops: "/ops/copilot",
       },
       disclaimer:
         "Indicatif — pas un conseil juridique, d’ingénierie ou d’investissement. Counsel / EPC requis.",

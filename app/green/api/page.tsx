@@ -136,6 +136,24 @@ const ENDPOINTS = [
   },
   {
     method: "POST",
+    path: "/api/green/eau/supplier-screen",
+    desc: "Audit claims fournisseurs ESG (anti-washing)",
+    free: true,
+  },
+  {
+    method: "GET",
+    path: "/api/green/eau/resource-signals",
+    desc: "Signaux spot / lithium / cobalt (snapshot indicatif)",
+    free: true,
+  },
+  {
+    method: "GET",
+    path: "/api/green/eau/connectors",
+    desc: "Contrats export BIM/ERP",
+    free: true,
+  },
+  {
+    method: "POST",
     path: "/api/v1/green/h2o/batch",
     desc: "Batch H₂O — tier premium requis (pas une clé free auros_pk_live_*)",
     free: false,

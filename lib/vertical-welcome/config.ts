@@ -299,8 +299,71 @@ export const VERTICAL_WELCOMES: Record<string, VerticalWelcomeConfig> = {
     ],
     secondaryLinks: [
       { href: "/h2o-rwa", label: "H₂O RWA" },
+      { href: "/eau/suppliers", label: "Supplier ESG" },
+      { href: "/integrations", label: "Connecteurs" },
+      { href: "/data/resource-signals", label: "Signaux ressources" },
+    ],
+  },
+  ["/eau/suppliers"]: {
+    path: "/eau/suppliers",
+    product: "Eau · ESG",
+    eyebrow: "Supplier screen",
+    title: "Audit claims fournisseurs — anti-greenwashing",
+    intro:
+      "Croisez pitch marketing et preuves URL avant onboarding ERP. Pas une base fournisseurs live ni une certification CSRD — une hygiène de claim.",
+    features: [
+      {
+        title: "Flags absolus",
+        body: "100 % green, net-zero garanti, GO sans URL — score pénalisé.",
+      },
+      {
+        title: "Preuve obligatoire",
+        body: "Sans https, le claim est traité comme marketing seul.",
+      },
+      {
+        title: "API machine",
+        body: "POST /api/green/eau/supplier-screen pour pipelines achats.",
+      },
+    ],
+    ctas: [
+      { href: "/eau/suppliers/screen", label: "Scanner un claim", primary: true },
       { href: "/green/csrd-check", label: "Check CSRD" },
-      { href: "/rwa-gates", label: "5 portes" },
+      { href: "/data/resource-signals", label: "Signaux lithium / cobalt" },
+    ],
+    secondaryLinks: [
+      { href: "/integrations", label: "Connecteurs ERP" },
+      { href: "/resilience", label: "Hub résilience" },
+    ],
+  },
+  ["/integrations"]: {
+    path: "/integrations",
+    product: "Developers",
+    eyebrow: "BIM · ERP · webhooks",
+    title: "One-click via export — pas de plugin day-one",
+    intro:
+      "Friction zéro = JSON + OpenAPI + middleware. AUROS exporte WELHR, playbooks et briefs vers votre ERP/BIM ; les connecteurs Autodesk/SAP natifs restent un chantier enterprise.",
+    features: [
+      {
+        title: "Contrats JSON",
+        body: "Payloads sample pour GRC, BI, achats — /integrations/schemas.",
+      },
+      {
+        title: "OpenAPI Green",
+        body: "Générateurs de clients depuis /api/green/openapi.",
+      },
+      {
+        title: "Webhook pattern",
+        body: "ERP → middleware → AUROS API — documenté, pas d’auto-exécution.",
+      },
+    ],
+    ctas: [
+      { href: "/integrations/schemas", label: "Voir les schémas", primary: true },
+      { href: "/api/green/eau/connectors", label: "GET connectors" },
+      { href: "/green/api", label: "Docs Green API" },
+    ],
+    secondaryLinks: [
+      { href: "/ops/copilot", label: "Ops drafts sociaux" },
+      { href: "/developers", label: "Developers" },
     ],
   },
   [QEI_WELCOME_PATH]: {

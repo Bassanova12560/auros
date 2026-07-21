@@ -65,8 +65,9 @@ export async function runCatalogDraftAgent(options?: {
 
 function templateContentBody(
   topic: string,
-  hint: "faq" | "listing_blurb" | "changelog",
-  productId?: string
+  hint: "faq" | "listing_blurb" | "changelog" | "social_linkedin" | "social_x",
+  productId?: string,
+  canonicalUrl?: string
 ): Record<string, unknown> {
   if (hint === "changelog") {
     return {
@@ -83,6 +84,26 @@ function templateContentBody(
       product_id: productId ?? null,
       blurb_fr: `Fiche indicative pour ${topic}. À valider (APY/TVL/juridiction).`,
       blurb_en: `Indicative listing blurb for ${topic}. Validate APY/TVL/jurisdiction before publish.`,
+    };
+  }
+  if (hint === "social_linkedin") {
+    return {
+      channel: "linkedin",
+      hook_fr: topic.slice(0, 120),
+      body_fr: `${topic}\n\nIndicatif — counsel requis. ${canonicalUrl ?? "https://getauros.com/resilience"}`,
+      cta_url: canonicalUrl ?? "https://getauros.com/resilience",
+      utm: "utm_source=linkedin&utm_medium=social&utm_campaign=auros_ops",
+    };
+  }
+  if (hint === "social_x") {
+    return {
+      channel: "x",
+      thread: [
+        topic.slice(0, 240),
+        `Preuves & playbooks — pas un exchange. ${canonicalUrl ?? "https://getauros.com/resilience"}`,
+      ],
+      cta_url: canonicalUrl ?? "https://getauros.com/resilience",
+      utm: "utm_source=x&utm_medium=social&utm_campaign=auros_ops",
     };
   }
   return {
@@ -117,11 +138,22 @@ function parseJsonObject(raw: string): Record<string, unknown> | null {
 export async function runContentDraftAgent(input: {
   topic: string;
   product_id?: string;
-  kind_hint?: "faq" | "listing_blurb" | "changelog";
+  kind_hint?:
+    | "faq"
+    | "listing_blurb"
+    | "changelog"
+    | "social_linkedin"
+    | "social_x";
+  canonical_url?: string;
 }): Promise<CopilotDraft> {
   const topic = input.topic.trim().slice(0, 500);
   const hint = input.kind_hint ?? "faq";
-  let body = templateContentBody(topic, hint, input.product_id);
+  let body = templateContentBody(
+    topic,
+    hint,
+    input.product_id,
+    input.canonical_url
+  );
   let confidence = 0.55;
   let aiProvider: string | null = null;
 
@@ -130,13 +162,17 @@ export async function runContentDraftAgent(input: {
       ? '{ "question": string, "answer_fr": string, "answer_en": string }'
       : hint === "listing_blurb"
         ? '{ "product_id": string|null, "blurb_fr": string, "blurb_en": string }'
-        : '{ "title": string, "summary": string, "details": string[] }';
+        : hint === "social_linkedin"
+          ? '{ "channel": "linkedin", "hook_fr": string, "body_fr": string, "cta_url": string, "utm": string }'
+          : hint === "social_x"
+            ? '{ "channel": "x", "thread": string[], "cta_url": string, "utm": string }'
+            : '{ "title": string, "summary": string, "details": string[] }';
 
   const enriched = await completeAiText({
     system: `You draft AUROS editorial content for human review.
 Output ONLY valid JSON matching: ${schemaHint}
-Rules: no invented APY/TVL/licenses; no Tesla/Total partnership claims; FR+EN when both fields exist; institutional tone; keep counsel disclaimer tone.`,
-    user: `content_kind=${hint}\ntopic=${topic}\nproduct_id=${input.product_id ?? "null"}`,
+Rules: no invented APY/TVL/licenses; no Tesla/Total partnership claims; FR+EN when both fields exist; institutional tone; keep counsel disclaimer tone; never claim auto-execution of cooling/ERP; one primary CTA URL.`,
+    user: `content_kind=${hint}\ntopic=${topic}\nproduct_id=${input.product_id ?? "null"}\ncanonical_url=${input.canonical_url ?? "null"}`,
     maxTokens: 700,
   });
 
@@ -162,7 +198,50 @@ Rules: no invented APY/TVL/licenses; no Tesla/Total partnership claims; FR+EN wh
       topic,
       body,
       ai_provider: aiProvider,
-      merge_hint: "Approve stores status only; merge into site content is manual.",
+      merge_hint:
+        hint.startsWith("social_")
+          ? "Approve only — publish manually via LinkedIn/X or Buffer. No auto-post."
+          : "Approve stores status only; merge into site content is manual.",
     },
   });
+}
+
+const SOCIAL_ROTATION: Array<{ topic: string; url: string }> = [
+  {
+    topic:
+      "H2O RWA : scorers avant listing — WELHR + WETS, pas une marketplace eau.",
+    url: "https://getauros.com/h2o-rwa",
+  },
+  {
+    topic:
+      "Data center 100 MW (démo) : playbook continuité + ROI eau indicatif — décision prête à valider.",
+    url: "https://getauros.com/demos/data-center-100mw",
+  },
+  {
+    topic:
+      "Auros Compass : 3 KPI (eau / carbone / budget), max 3 priorités — cockpit résilience.",
+    url: "https://getauros.com/compass",
+  },
+];
+
+/** Weekly social drafts for ops inbox — never auto-publishes. */
+export async function runSocialContentSignalsAgent(): Promise<CopilotDraft[]> {
+  const week = Math.floor(Date.now() / (7 * 24 * 3600 * 1000));
+  const pick = SOCIAL_ROTATION[week % SOCIAL_ROTATION.length]!;
+  const drafts: CopilotDraft[] = [];
+  drafts.push(
+    await runContentDraftAgent({
+      topic: pick.topic,
+      kind_hint: "social_linkedin",
+      canonical_url: pick.url,
+    })
+  );
+  drafts.push(
+    await runContentDraftAgent({
+      topic: pick.topic,
+      kind_hint: "social_x",
+      canonical_url: pick.url,
+    })
+  );
+  return drafts;
 }
