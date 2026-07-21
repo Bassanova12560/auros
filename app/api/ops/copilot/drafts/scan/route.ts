@@ -41,7 +41,9 @@ export async function POST(req: NextRequest) {
     const kind_hint =
       body.kind_hint === "faq" ||
       body.kind_hint === "listing_blurb" ||
-      body.kind_hint === "changelog"
+      body.kind_hint === "changelog" ||
+      body.kind_hint === "social_linkedin" ||
+      body.kind_hint === "social_x"
         ? body.kind_hint
         : "faq";
     const draft = await runContentDraftAgent({
@@ -49,6 +51,8 @@ export async function POST(req: NextRequest) {
       product_id:
         typeof body.product_id === "string" ? body.product_id : undefined,
       kind_hint,
+      canonical_url:
+        typeof body.canonical_url === "string" ? body.canonical_url : undefined,
     });
     return NextResponse.json({ ok: true, drafts: [draft] });
   }
