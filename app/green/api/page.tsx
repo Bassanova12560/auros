@@ -111,6 +111,30 @@ const ENDPOINTS = [
     free: true,
   },
   {
+    method: "GET",
+    path: "/api/green/eau/resilience",
+    desc: "Catalogue machine — chaîne détecter → décider → prouver",
+    free: true,
+  },
+  {
+    method: "POST",
+    path: "/api/green/eau/continuity-playbook",
+    desc: "Playbook continuité — 3 scénarios CAPEX/OPEX (indicatif)",
+    free: true,
+  },
+  {
+    method: "POST",
+    path: "/api/green/eau/roi",
+    desc: "Simulateur ROI eau / OPEX data center",
+    free: true,
+  },
+  {
+    method: "POST",
+    path: "/api/green/eau/resilience-brief",
+    desc: "Score résilience + max 3 priorités (Compass)",
+    free: true,
+  },
+  {
     method: "POST",
     path: "/api/v1/green/h2o/batch",
     desc: "Batch H₂O — tier premium requis (pas une clé free auros_pk_live_*)",

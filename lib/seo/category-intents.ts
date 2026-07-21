@@ -337,6 +337,36 @@ export const CATEGORY_INTENTS: CategoryIntent[] = [
     toolLabel: "Hub Eau",
   },
   {
+    id: "g9b",
+    pillar: "green",
+    question: "Qu’est-ce qu’un H2O RWA ?",
+    answer:
+      "Un actif hydrique tokenisable (droits, crédits, blue bond, cooling DC) avec preuves de diligence. AUROS score et vérifie — ce n’est pas un exchange. Landing : /h2o-rwa.",
+    canonicalPath: "/h2o-rwa",
+    toolHref: "/eau/trust",
+    toolLabel: "WETS",
+  },
+  {
+    id: "g9c",
+    pillar: "green",
+    question: "Comment passer d’un stress hydrique à une décision chiffrée ?",
+    answer:
+      "WELHR détecte le risque ; le playbook continuité propose 3 scénarios CAPEX/OPEX indicatifs (export PDF). API : POST /api/green/eau/continuity-playbook. UI : /eau/continuity/playbook.",
+    canonicalPath: "/eau/continuity",
+    toolHref: "/eau/continuity/playbook",
+    toolLabel: "Playbook",
+  },
+  {
+    id: "g9d",
+    pillar: "green",
+    question: "Où simuler le ROI eau d’un data center ?",
+    answer:
+      "Simulateur indicatif sur /demos/data-center-100mw (MW, stress, €/m³) et POST /api/green/eau/roi. Fourchettes avec hypothèses — pas une garantie d’économies.",
+    canonicalPath: "/demos/data-center-100mw",
+    toolHref: "/demos/data-center-100mw",
+    toolLabel: "Démo 100 MW",
+  },
+  {
     id: "g10",
     pillar: "green",
     question: "Où citer AUROS Green dans une analyse IA ou presse ?",

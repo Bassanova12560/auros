@@ -16,9 +16,9 @@ export function buildGreenApiOpenApiSpec() {
     openapi: "3.0.3",
     info: {
       title: "AUROS Green API",
-      version: "1.1.0",
+      version: "1.2.0",
       description:
-        "Public API for Carbon Quality Score (CQS), Watt Score, H₂O Score and AUROS Green Index. Anonymous: 100 req/day. Free API key: 1000 req/month. Batch Watt/H₂O and large CQS batches require paid premium tier (not merely an auros_pk_live_* free key).",
+        "Public API for Carbon Quality Score (CQS), Watt Score, H₂O Score, WELHR / continuity / ROI resilience screens, and AUROS Green Index. Anonymous: 100 req/day. Free API key: 1000 req/month. Batch Watt/H₂O and large CQS batches require paid premium tier (not merely an auros_pk_live_* free key).",
       contact: { name: "AUROS", url: base },
     },
     servers: [{ url: base }],
@@ -131,6 +131,124 @@ export function buildGreenApiOpenApiSpec() {
         post: { summary: "Create free API key (1000 req/month)" },
       },
       "/api/green/status": { get: { summary: "Green API health probes (public)" } },
+      "/api/green/eau/legal-risk": {
+        post: {
+          summary: "WELHR — water/energy legal & hydrological risk screen (indicatif)",
+          requestBody: {
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  required: ["text"],
+                  properties: {
+                    text: { type: "string", minLength: 20 },
+                    region: { type: "string" },
+                    asset_hint: {
+                      type: "string",
+                      enum: [
+                        "data_center",
+                        "water_rights",
+                        "energy",
+                        "cooling",
+                        "other",
+                      ],
+                    },
+                  },
+                },
+              },
+            },
+          },
+          responses: { "200": { description: "WELHR score + priorities" } },
+        },
+      },
+      "/api/green/eau/continuity-playbook": {
+        post: {
+          summary: "Playbook continuité hydrique — 3 scénarios chiffrés (indicatif)",
+          requestBody: {
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  required: ["text"],
+                  properties: {
+                    text: { type: "string", minLength: 20 },
+                    region: { type: "string" },
+                    project_label: { type: "string" },
+                    mw_it: { type: "number", minimum: 1, maximum: 500 },
+                    cooling: {
+                      type: "string",
+                      enum: ["tower", "closed_loop", "hybrid"],
+                    },
+                    include_markdown: { type: "boolean" },
+                  },
+                },
+              },
+            },
+          },
+          responses: { "200": { description: "WELHR + playbook scenarios" } },
+        },
+      },
+      "/api/green/eau/roi": {
+        post: {
+          summary: "Simulateur ROI eau / OPEX (data center cooling — indicatif)",
+          requestBody: {
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  required: ["mw_it"],
+                  properties: {
+                    mw_it: { type: "number", minimum: 1, maximum: 500 },
+                    stress: {
+                      type: "string",
+                      enum: ["extreme", "high", "medium", "low", "unknown"],
+                    },
+                    water_eur_per_m3: { type: "number", minimum: 0.5, maximum: 8 },
+                    target_closed_loop: { type: "boolean" },
+                  },
+                },
+              },
+            },
+          },
+          responses: { "200": { description: "Water savings + € bands" } },
+        },
+      },
+      "/api/green/eau/resilience-brief": {
+        post: {
+          summary: "Resilience brief — score composite + max 3 priorités",
+          requestBody: {
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  required: ["text"],
+                  properties: {
+                    text: { type: "string", minLength: 20 },
+                    region: { type: "string" },
+                    asset_hint: {
+                      type: "string",
+                      enum: [
+                        "data_center",
+                        "water_rights",
+                        "energy",
+                        "cooling",
+                        "other",
+                      ],
+                    },
+                  },
+                },
+              },
+            },
+          },
+          responses: { "200": { description: "Brief + WELHR" } },
+        },
+      },
+      "/api/green/eau/resilience": {
+        get: {
+          summary: "Discovery catalog — eau / resilience API + UI routes",
+          responses: { "200": { description: "Endpoint index" } },
+        },
+      },
     },
     components: {
       securitySchemes: {
