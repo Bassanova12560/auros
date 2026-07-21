@@ -17,7 +17,7 @@ export function FinalCta() {
             </h2>
             <p className="mx-auto mt-4 max-w-md text-muted">{t.finalCta.subtitle}</p>
             <div className="mt-8 flex flex-col items-center gap-4">
-              <PrimaryButton href="/wizard">{t.finalCta.wizard}</PrimaryButton>
+              <PrimaryButton href="/wizard?expert=1">{t.finalCta.wizard}</PrimaryButton>
               <a
                 href="/estimate"
                 className="font-mono text-[11px] tracking-wide text-white/40 transition hover:text-white/70"

@@ -24,3 +24,4 @@ export {
   reviewCopilotDraft,
 } from "./drafts-store";
 export { runCatalogDraftAgent, runContentDraftAgent, runSocialContentSignalsAgent } from "./agents";
+export { runClientCareDraftAgent } from "./care-agent";

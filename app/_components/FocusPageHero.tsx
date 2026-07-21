@@ -34,7 +34,7 @@ export function FocusPageHero({ page, secondaryHref }: Props) {
       </h1>
       <p className="page-intro mt-6 max-w-xl text-lg">{copy.subtitle}</p>
       <div className="green-hub-fade-in-delay mt-10">
-        <PrimaryButton href="/wizard">{copy.cta}</PrimaryButton>
+        <PrimaryButton href="/wizard?expert=1">{copy.cta}</PrimaryButton>
       </div>
       {secondaryHref && "secondary" in copy ? (
         <nav className="green-hub-fade-in-delay-2 mt-8">

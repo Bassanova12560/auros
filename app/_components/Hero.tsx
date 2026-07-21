@@ -41,7 +41,7 @@ export function Hero() {
 
           <div className="mt-10 grid max-w-xl gap-3 sm:grid-cols-2">
             <Link
-              href="/wizard"
+              href="/wizard?expert=1"
               className="group rounded-xl border border-white/15 bg-white/[0.04] px-5 py-4 transition hover:border-white/35 hover:bg-white/[0.07]"
             >
               <p className="font-display text-base text-white group-hover:text-white">

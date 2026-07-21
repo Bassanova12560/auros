@@ -146,9 +146,7 @@ export function AurosHeader({
         </AurosButton>
       )}
       <AurosButton
-        href="/wizard"
-        variant="primary"
-        className="hidden !px-4 !py-2.5 !text-xs sm:inline-flex"
+        href="/wizard?expert=1"
       >
         {hub.primaryCta}
       </AurosButton>

@@ -5,13 +5,14 @@ import {
   runCatalogDraftAgent,
   runContentDraftAgent,
 } from "@/lib/copilot/agents";
+import { runClientCareDraftAgent } from "@/lib/copilot/care-agent";
 
 export const runtime = "nodejs";
 
 /**
- * POST — run catalog and/or content draft agents (ops).
+ * POST — run catalog / content / care draft agents (ops).
  * Requires authenticated ops access
- * Body: { action: "catalog" | "content", topic?, product_id?, kind_hint?, limit? }
+ * Body: { action: "catalog" | "content" | "care", topic?, product_id?, kind_hint?, limit?, segment? }
  */
 export async function POST(req: NextRequest) {
   if (!isCronAuthorized(req, { allowDevWithoutSecret: false })) {
@@ -28,6 +29,16 @@ export async function POST(req: NextRequest) {
   const body = parsed.data;
 
   const action = typeof body.action === "string" ? body.action : "catalog";
+
+  if (action === "care") {
+    const limit =
+      typeof body.limit === "number" && body.limit > 0
+        ? Math.min(body.limit, 5)
+        : 3;
+    const segment = sanitizeUserText(body.segment, 80) ?? undefined;
+    const drafts = await runClientCareDraftAgent({ limit, segment });
+    return NextResponse.json({ ok: true, drafts, count: drafts.length });
+  }
 
   if (action === "content") {
     const topic = sanitizeUserText(body.topic, 200);

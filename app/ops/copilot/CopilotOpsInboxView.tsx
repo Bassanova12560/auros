@@ -88,6 +88,28 @@ export function CopilotOpsInboxView() {
     }
   }
 
+  async function scanCare() {
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await fetch("/api/ops/copilot/drafts/scan", {
+        method: "POST",
+        headers: authHeaders(),
+        body: JSON.stringify({ action: "care", limit: 3 }),
+      });
+      const json = (await res.json()) as { ok?: boolean; error?: string };
+      if (!res.ok) {
+        setError(json.error ?? `Care drafts failed ${res.status}`);
+        return;
+      }
+      await load();
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Network error");
+    } finally {
+      setLoading(false);
+    }
+  }
+
   async function createContent() {
     if (!contentTopic.trim()) return;
     setLoading(true);
@@ -186,6 +208,14 @@ export function CopilotOpsInboxView() {
             className="min-h-[44px] rounded-full border border-white/20 px-4 font-mono text-[11px] uppercase tracking-wider text-white/60 hover:text-white disabled:opacity-30"
           >
             Scan catalogue
+          </button>
+          <button
+            type="button"
+            onClick={() => void scanCare()}
+            disabled={loading}
+            className="min-h-[44px] rounded-full border border-emerald-400/30 px-4 font-mono text-[11px] uppercase tracking-wider text-emerald-200/70 hover:text-emerald-100 disabled:opacity-30"
+          >
+            Drafts care email
           </button>
         </div>
         <div className="flex flex-wrap gap-2">

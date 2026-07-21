@@ -1,45 +1,35 @@
 # Manager backlog — AUROS
 
 Living priorities. Manager owns this; update when shipping or discovering debt.
-Last review: 2026-07-21 (P0/P1 execution).
+Last review: 2026-07-21 (P1 + Growth AI v1).
 
-## P0 — maintenant (risque / trust / cash)
+## P0 — risque / trust
 
-| Item | Pourquoi | Statut |
-|------|----------|--------|
-| Repo GitHub **privé** + secret scanning | Code = surface d’attaque | **Bloqué** : `gh auth login` puis `gh repo edit Bassanova12560/auros --visibility private` |
-| Ne jamais re-exposer secrets / recettes ops | Déjà durci ; maintenir | OK — règle agent |
-| `ATTEST_SIGNING_KEY` dédiée en prod | Un leak cron ≠ falsifier preuves | **En cours** — ajout Vercel + redeploy |
-| Upstash Redis rate limits | Multi-instance Vercel | **Action user** — `docs/UPSTASH-SETUP.md` (5 min) |
+| Item | Statut |
+|------|--------|
+| Repo GitHub **privé** | **Bloqué** — `gh auth login` puis visibility private |
+| `ATTEST_SIGNING_KEY` prod | OK |
+| Upstash rate limits | **Action user** — `docs/UPSTASH-SETUP.md` |
 
-## P1 — performance produit (conversion)
+## P1 — conversion
 
-| Item | Pourquoi | Statut |
-|------|----------|--------|
-| Mesurer tunnel WELHR → playbook/ROI → verify | Savoir ce qui convertit | **Ship** — events `funnel_*` → Vercel Analytics |
-| Revue humaine inbox Copilot / social drafts | Drafts sans revue = feature morte | Ops habit |
-| Express wizard + 3 priorités sur CTA hot | Cohérence landing → start | À vérifier parcours |
-| Attribution partenaires → 2–3 pilotes | Modèle éco vivant | À venir |
+| Item | Statut |
+|------|--------|
+| Funnel `funnel_*` analytics | OK |
+| CTAs → express `/wizard?expert=1` | OK (hero, final CTA, focus heroes, nav, header) |
+| Care email drafts HITL | OK — `/ops/copilot` « Drafts care email » |
+| Attribution partenaires pilotes | À venir (ops business) |
 
-## P2 — idées fortes mais pas urgentes
+## P1+ — Growth AI (voir `docs/GROWTH-AI.md`)
 
-| Item | Note |
-|------|------|
-| Liquidity Bridge (RFQ / 1 MM) | Seulement avec LOI |
-| Academy Praticien (contenu) | Waitlist OK |
-| KYC / deploy SC | Hors cœur |
-| BIM/ERP plugins natifs | Export-first |
-| Auto-publish LinkedIn/X | Human-in-the-loop |
-| Spot/lithium live trading | Snapshot indicatif |
+| Phase | Contenu |
+|-------|---------|
+| **A (now)** | RAG + drafts + care emails HITL + nurture cron template |
+| **B** | Care lié aux dossiers réels, A/B subjects, coach post-score |
+| **C** | Fine-tune open-source **seulement** si dataset drafts approuvés + métrique claire |
 
 ## Erreurs à ne plus refaire
 
-- Claims **35 %**, **sans clic**, URLs affiliées inventées
-- « 15 étapes » en vedette (4 parties max)
-- Documenter `/api/admin` / cron / secrets en public
-- Ship sans check secrets / exposition
-- Overbuild hero marketing
-
-## Cœur produit
-
-**AUROS = dossier RWA + preuves eau/énergie (Détecter → Décider → Prouver).**
+- Fine-tune avant RAG/HITL mature
+- Auto-send mails IA
+- Claims 35 % / sans clic / fake partners

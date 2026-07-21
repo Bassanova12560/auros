@@ -40,7 +40,7 @@ const FR: HubCopy = {
           description: "Express, score ou Shield — une porte",
         },
         {
-          href: "/wizard",
+          href: "/wizard?expert=1",
           title: "Wizard tokenisation",
           description: "Data room, admission, studio",
         },
@@ -183,7 +183,7 @@ const EN: HubCopy = {
           description: "Express, score or Shield — one door",
         },
         {
-          href: "/wizard",
+          href: "/wizard?expert=1",
           title: "Tokenization wizard",
           description: "Data room, admission, studio",
         },
@@ -326,7 +326,7 @@ const ES: HubCopy = {
           description: "Express, score o Shield — una puerta",
         },
         {
-          href: "/wizard",
+          href: "/wizard?expert=1",
           title: "Wizard de tokenización",
           description: "Data room, admisión, estudio",
         },
@@ -469,7 +469,7 @@ const AR: HubCopy = {
           description: "Express أو نتيجة أو Shield — باب واحد",
         },
         {
-          href: "/wizard",
+          href: "/wizard?expert=1",
           title: "معالج التوكنة",
           description: "غرفة بيانات، قبول، استوديو",
         },
@@ -612,7 +612,7 @@ const ZH: HubCopy = {
           description: "Express、评分或 Shield — 一扇门",
         },
         {
-          href: "/wizard",
+          href: "/wizard?expert=1",
           title: "通证化向导",
           description: "资料室、准入、工作室",
         },
