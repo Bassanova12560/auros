@@ -511,6 +511,8 @@ export async function sendGreenMarketIntroPaidInternal(data: {
 export async function sendGreenMarketVerifiedPaidInternal(data: {
   email: string;
   company: string;
+  actorId: string;
+  notes: string;
   sessionId: string;
 }): Promise<boolean> {
   const internal = internalNotifyEmail();
@@ -525,9 +527,11 @@ export async function sendGreenMarketVerifiedPaidInternal(data: {
 <ul>
 <li>Email: ${escapeHtml(data.email)}</li>
 <li>Company: ${escapeHtml(data.company || "—")}</li>
+<li>Actor ID: ${escapeHtml(data.actorId || "—")}</li>
+<li>Notes: ${escapeHtml(data.notes || "—")}</li>
 <li>Session: ${escapeHtml(data.sessionId)}</li>
 </ul>
-<p>Ops: upgrade listing_tier to verified after RTMS / human review.</p>`,
+<p>Status: <strong>En revue</strong> — upgrade listing_tier to verified after RTMS / human review. Do not grant badge on payment alone.</p>`,
   });
 }
 

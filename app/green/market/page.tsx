@@ -16,7 +16,7 @@ export const metadata: Metadata = mergeAuditOg(
   {
     title: "Place de marché | AUROS Green",
     description:
-      "Carte interactive et annonces énergie locale — producteurs, stockeurs, rechargeurs, consommateurs. MVP AUROS Green.",
+      "Carte interactive et annonces énergie locale — producteurs, stockeurs, rechargeurs, consommateurs. Données indicatives AUROS Green.",
     alternates: { canonical: GREEN_MARKET_ROUTE },
     openGraph: {
       title: "AUROS Green marketplace",

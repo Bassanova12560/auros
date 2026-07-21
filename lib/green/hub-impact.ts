@@ -1,12 +1,9 @@
 import type { GreenRegistrySnapshot } from "./green-registry";
 
-/** Fallback when registry has no published cases yet. */
-export const GREEN_HUB_IMPACT_DEMO = {
-  carbonSavedTco2: 12_480,
-  mwhTraced: 847_200,
-} as const;
-
-/** Indicative RTMS constants — documented on /green/standards. */
+/**
+ * Indicative RTMS constants — documented on /green/standards.
+ * Applied only when registry has published cases (no fake demo MWh/tCO₂).
+ */
 const MWH_PER_REGISTRY_CASE = 12_400;
 const TCO2_PER_MWH = 0.0147;
 
@@ -22,7 +19,8 @@ export function computeGreenHubImpact(registry: GreenRegistrySnapshot): GreenHub
   const registryCaseCount = registry.projects.length;
   if (registryCaseCount === 0) {
     return {
-      ...GREEN_HUB_IMPACT_DEMO,
+      carbonSavedTco2: 0,
+      mwhTraced: 0,
       fromRegistry: false,
       registryCaseCount: 0,
     };

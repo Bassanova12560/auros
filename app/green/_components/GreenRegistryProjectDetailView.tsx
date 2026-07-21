@@ -89,6 +89,45 @@ export function GreenRegistryProjectDetailView({ project }: Props) {
             <GreenFieldLabel>{pd.descriptionTitle}</GreenFieldLabel>
             <p className="mt-2 leading-relaxed text-neutral-400">{summary}</p>
           </div>
+          <div className="border border-emerald-500/20 bg-emerald-500/[0.04] p-4">
+            <GreenFieldLabel>
+              {locale === "en"
+                ? "Mini case study"
+                : locale === "es"
+                  ? "Mini caso de estudio"
+                  : "Mini étude de cas"}
+            </GreenFieldLabel>
+            <ul className="mt-3 space-y-2 text-sm text-neutral-400">
+              <li>
+                <span className="text-neutral-500">
+                  {locale === "en" ? "Asset" : locale === "es" ? "Activo" : "Actif"} —{" "}
+                </span>
+                {c.projectTypes[project.projectType]} · {project.country}
+              </li>
+              <li>
+                <span className="text-neutral-500">
+                  {locale === "en" ? "Proof tier" : locale === "es" ? "Nivel de prueba" : "Tier de preuve"} —{" "}
+                </span>
+                {project.labelTier === "verified" ? r.tierVerified : r.tierPilot}
+              </li>
+              <li>
+                <span className="text-neutral-500">
+                  {locale === "en" ? "Outcome" : locale === "es" ? "Resultado" : "Résultat"} —{" "}
+                </span>
+                {summary}
+              </li>
+              <li>
+                <span className="text-neutral-500">
+                  {locale === "en" ? "Verify" : locale === "es" ? "Verificar" : "Vérifier"} —{" "}
+                </span>
+                {locale === "en"
+                  ? "Public proof link below (hash / token)."
+                  : locale === "es"
+                    ? "Enlace de prueba pública abajo (hash / token)."
+                    : "Lien de preuve public ci-dessous (hash / token)."}
+              </li>
+            </ul>
+          </div>
           {project.website ? (
             <div>
               <GreenFieldLabel>{pd.websiteTitle}</GreenFieldLabel>

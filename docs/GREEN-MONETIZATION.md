@@ -13,10 +13,21 @@ Matching data / intro fee seulement — **pas de broker**, pas d’exécution de
 | Offre | Prix | Surface |
 |-------|------|---------|
 | Intro fee « mise en relation » | **149 €** one-shot | Fiche offre Market → Stripe → ops HITL |
-| Listing Verified (featured) | **299 €** one-shot | Market / register → badge + priorité |
+| Listing Verified (featured) | **299 €** one-shot | Market `#listing-plans` → Stripe → **En revue** → ops HITL (actorId optionnel) |
 | Green API Free | 0 € | Clé `POST /api/v1/keys`, quotas anon |
 | Green API Premium | **299 €/mo** | `/green/api#premium` (déjà live) |
 | Green API Enterprise | Sur devis | `hello@getauros.com` |
+
+## Crédibilité (prérequis cash)
+
+- Méthodologie RTMS publique : `/green/standards` (poids, docs, refus, limites, tiers)
+- Trust Green : `/green/trust` (5 blocs + compteurs réels)
+- Tiers marché : Illustration / Pilote / Verified + filtre `?tier=verified`
+- Pas de MWh/tCO₂ inventés si registre vide
+
+## Asset DNA (vision)
+
+Spec v1 : [`ASSET-DNA-V1.md`](./ASSET-DNA-V1.md) · lib `lib/asset-dna/` — enrollment + maintain + read API (roadmap).
 
 ## Funnel producteur
 
@@ -27,8 +38,9 @@ Publier → Prouver (RTMS) → Structurer (wizard) → Match (intro fee / verifi
 - Claims financés inventés  
 - Auto-match sans revue humaine ops  
 - Confondre intro fee et conseil réglementé  
+- Badge Verified automatique au paiement  
 
 ## Suite (P1+)
 
-Fast Track 24h · Investor room · Indice Green · Readiness MRR · White-label widget.  
+Fast Track 24h · Investor room · Indice Green · Readiness MRR · White-label widget · DNA sur register.  
 Voir backlog manager.

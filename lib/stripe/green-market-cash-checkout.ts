@@ -47,7 +47,7 @@ export function parseGreenMarketIntroMetadata(
 
 export function parseGreenMarketVerifiedMetadata(
   meta: Record<string, string>
-): { email: string; locale: Locale; company: string } | null {
+): { email: string; locale: Locale; company: string; actorId: string; notes: string } | null {
   if (meta.product !== GREEN_MARKET_VERIFIED_PRODUCT) return null;
   const email = meta.email?.trim().toLowerCase();
   if (!email || !email.includes("@")) return null;
@@ -55,6 +55,8 @@ export function parseGreenMarketVerifiedMetadata(
     email,
     locale: resolveLocale(meta.locale),
     company: meta.company?.trim() || "",
+    actorId: meta.actorId?.trim() || "",
+    notes: meta.notes?.trim() || "",
   };
 }
 
@@ -117,6 +119,8 @@ export type GreenMarketVerifiedCheckoutInput = {
   email: string;
   locale: Locale;
   company?: string;
+  actorId?: string;
+  notes?: string;
 };
 
 export async function createGreenMarketVerifiedCheckoutSession(
@@ -132,6 +136,8 @@ export async function createGreenMarketVerifiedCheckoutSession(
     email: input.email,
     locale: input.locale,
     company: (input.company ?? "").slice(0, 160),
+    actorId: (input.actorId ?? "").slice(0, 120),
+    notes: (input.notes ?? "").slice(0, 400),
   };
 
   const session = await stripe.checkout.sessions.create({

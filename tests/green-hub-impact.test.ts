@@ -1,11 +1,11 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 
-import { computeGreenHubImpact, GREEN_HUB_IMPACT_DEMO } from "../lib/green/hub-impact";
+import { computeGreenHubImpact } from "../lib/green/hub-impact";
 import type { GreenRegistrySnapshot } from "../lib/green/green-registry";
 
 describe("green/hub-impact", () => {
-  it("uses demo figures when registry is empty", () => {
+  it("returns zeros when registry is empty (no fake demo MWh)", () => {
     const registry: GreenRegistrySnapshot = {
       available: false,
       projects: [],
@@ -13,7 +13,8 @@ describe("green/hub-impact", () => {
     };
     const impact = computeGreenHubImpact(registry);
     assert.equal(impact.fromRegistry, false);
-    assert.equal(impact.carbonSavedTco2, GREEN_HUB_IMPACT_DEMO.carbonSavedTco2);
+    assert.equal(impact.carbonSavedTco2, 0);
+    assert.equal(impact.mwhTraced, 0);
   });
 
   it("aggregates from registry case count", () => {

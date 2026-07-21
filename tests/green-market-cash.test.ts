@@ -40,9 +40,13 @@ describe("green market cash products", () => {
       email: "issuer@example.com",
       locale: "fr",
       company: "Acme",
+      actorId: "actor-1",
+      notes: "please review",
     });
     assert.ok(verified);
     assert.equal(verified!.company, "Acme");
+    assert.equal(verified!.actorId, "actor-1");
+    assert.equal(verified!.notes, "please review");
   });
 
   it("rejects wrong product metadata", () => {

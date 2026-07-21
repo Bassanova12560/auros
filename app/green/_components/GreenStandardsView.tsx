@@ -17,8 +17,10 @@ import {
   GREEN_RTMS_ASSISTANT_ROUTE,
   GREEN_RTMS_PILLARS,
   GREEN_ROUTE,
+  GREEN_TRUST_ROUTE,
   getGreenMessages,
 } from "@/lib/green";
+import { getRtmsMethodologyPublic } from "@/lib/green/rtms-methodology-public";
 import { WATTS_HUB_ROUTE } from "@/lib/watts";
 import {
   downloadGreenRtmsChecklistCsv,
@@ -38,6 +40,7 @@ export function GreenStandardsView() {
   const { locale } = useLocale();
   const m = getGreenMessages(locale);
   const s = m.standards;
+  const method = getRtmsMethodologyPublic(locale);
 
   const handleChecklistDownload = useCallback(() => {
     const csv = greenRtmsChecklistToCsv(s);
@@ -148,6 +151,94 @@ export function GreenStandardsView() {
           })}
         </div>
       </section>
+
+      <GreenPanel className="mt-4">
+        <div className="p-6 md:p-8">
+          <GreenSectionTitle>{method.weightsTitle}</GreenSectionTitle>
+          <p className="mt-4 max-w-2xl text-sm leading-relaxed text-neutral-400">
+            {method.weightsIntro}
+          </p>
+          <ul className="mt-6 space-y-3">
+            {method.weights.map((row) => (
+              <li
+                key={row.pillar}
+                className="flex flex-wrap items-baseline justify-between gap-2 border-b border-white/[0.06] pb-3 text-sm"
+              >
+                <span className="text-neutral-200">
+                  {row.pillar}{" "}
+                  <span className="font-mono text-emerald-400/90">{row.weightPct}%</span>
+                </span>
+                <span className="text-neutral-500">{row.focus}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </GreenPanel>
+
+      <div className="mt-4 grid gap-4 md:grid-cols-2">
+        <GreenPanel>
+          <div className="p-6 md:p-8">
+            <GreenSectionTitle>{method.docsTitle}</GreenSectionTitle>
+            <ul className="mt-4 space-y-2 text-sm text-neutral-400">
+              {method.docs.map((item) => (
+                <li key={item} className="flex gap-2">
+                  <span className="text-emerald-500">·</span>
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </GreenPanel>
+        <GreenPanel>
+          <div className="p-6 md:p-8">
+            <GreenSectionTitle>{method.refusalsTitle}</GreenSectionTitle>
+            <ul className="mt-4 space-y-2 text-sm text-neutral-400">
+              {method.refusals.map((item) => (
+                <li key={item} className="flex gap-2">
+                  <span className="text-amber-500/80">·</span>
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </GreenPanel>
+      </div>
+
+      <GreenPanel className="mt-4">
+        <div className="p-6 md:p-8">
+          <GreenSectionTitle>{method.limitsTitle}</GreenSectionTitle>
+          <ul className="mt-4 space-y-2 text-sm text-neutral-400">
+            {method.limits.map((item) => (
+              <li key={item} className="flex gap-2">
+                <span className="text-neutral-600">·</span>
+                <span>{item}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </GreenPanel>
+
+      <GreenPanel className="mt-4">
+        <div className="p-6 md:p-8">
+          <GreenSectionTitle>{method.tiersTitle}</GreenSectionTitle>
+          <ul className="mt-6 space-y-4">
+            {method.tiers.map((tier) => (
+              <li key={tier.id} className="border-l border-emerald-500/40 pl-5">
+                <p className="font-mono text-[11px] uppercase tracking-wider text-emerald-500">
+                  {tier.label}
+                </p>
+                <p className="mt-1 text-sm leading-relaxed text-neutral-400">{tier.meaning}</p>
+              </li>
+            ))}
+          </ul>
+          <Link
+            href={GREEN_TRUST_ROUTE}
+            className="mt-6 inline-block font-mono text-[11px] uppercase tracking-wider text-emerald-400/90 hover:text-emerald-300"
+          >
+            Trust →
+          </Link>
+        </div>
+      </GreenPanel>
 
       <GreenDisclaimer>{m.disclaimer}</GreenDisclaimer>
       <GreenBackLink href={GREEN_ROUTE}>{s.backLink}</GreenBackLink>

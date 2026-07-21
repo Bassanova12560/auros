@@ -792,7 +792,7 @@ const FR: GreenMessages = {
       mwh: "Énergie tracée",
       mwhUnit: "MWh",
       note: "Méthodologie RTMS · cas publiés au registre · chiffres évolutifs.",
-      noteDemo: "Chiffres indicatifs tant qu'aucun cas registre n'est agrégé.",
+      noteDemo: "Compteurs à zéro tant qu'aucun cas registre n'est publié — pas de chiffres marketing inventés.",
     },
     secondary: {
       title: "Standard & conformité",
@@ -1740,7 +1740,7 @@ const EN: GreenMessages = {
       mwh: "Energy traced",
       mwhUnit: "MWh",
       note: "RTMS methodology · cases on public registry · figures evolve.",
-      noteDemo: "Indicative figures until registry cases are aggregated.",
+      noteDemo: "Counters stay at zero until registry cases are published — no invented marketing figures.",
     },
     secondary: {
       title: "Standard & compliance",
@@ -2690,7 +2690,7 @@ const ES: GreenMessages = {
       mwh: "Energía trazada",
       mwhUnit: "MWh",
       note: "Metodología RTMS · casos en registro público · cifras evolutivas.",
-      noteDemo: "Cifras indicativas hasta agregar casos del registro.",
+      noteDemo: "Contadores en cero hasta publicar casos del registro — sin cifras de marketing inventadas.",
     },
     secondary: {
       title: "Estándar y conformidad",

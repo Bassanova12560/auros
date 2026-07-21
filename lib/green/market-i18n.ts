@@ -24,6 +24,8 @@ export type GreenMarketMessages = {
       allEnergy: string;
       side: string;
       allSides: string;
+      listingTier: string;
+      allTiers: string;
       search: string;
       searchPlaceholder: string;
       country: string;
@@ -177,7 +179,7 @@ const FR: GreenMarketMessages = {
     eyebrow: "Place de marché mondiale",
     title: "Énergie verte tokenisée",
     intro:
-      "Cartographie mondiale des producteurs, stockeurs, rechargeurs et consommateurs — données indicatives MVP, sans conseil ni garantie de transaction.",
+      "Cartographie mondiale des producteurs, stockeurs, rechargeurs et consommateurs — données indicatives, sans conseil ni garantie de transaction. Version produit en consolidation.",
     mapTitle: "Carte des acteurs",
     mapActorsCountries: (actors, countries) =>
       `${actors} acteurs · ${countries} pays`,
@@ -191,6 +193,8 @@ const FR: GreenMarketMessages = {
       allEnergy: "Toutes",
       side: "Transaction",
       allSides: "Toutes",
+      listingTier: "Preuve",
+      allTiers: "Tous les tiers",
       search: "Recherche",
       searchPlaceholder: "Ville, pays ou nom d'acteur…",
       country: "Pays",
@@ -241,8 +245,8 @@ const FR: GreenMarketMessages = {
     demoBanner:
       "Mode démonstration — acteurs fictifs à titre pédagogique. Référenciez votre structure pour apparaître en données réelles.",
     listingTier: {
-      demo: "Démo",
-      referenced: "Référencé",
+      demo: "Illustration",
+      referenced: "Pilote",
       verified: "Verified",
     },
     formTitle: "Publier une annonce",
@@ -315,7 +319,7 @@ const FR: GreenMarketMessages = {
     notFoundBody:
       "Cette annonce n'existe pas ou n'est plus disponible. Consultez la place de marché pour les offres actuelles.",
     indicativeNote:
-      "Données indicatives MVP — sans engagement ni conseil. Contactez l'acteur pour toute transaction.",
+      "Données indicatives — sans engagement ni conseil. Contactez l'acteur pour toute transaction.",
     defaultDescription: (side, energy, city, country, volumeKwh, pricePerKwh) =>
       `Annonce ${side.toLowerCase()} — ${energy.toLowerCase()} à ${city}, ${country}. Volume indicatif ${volumeKwh.toLocaleString("fr-FR")} kWh · ${pricePerKwh.toFixed(3)} €/kWh.`,
   },
@@ -401,7 +405,7 @@ const EN: GreenMarketMessages = {
     eyebrow: "Global marketplace",
     title: "Tokenized green energy",
     intro:
-      "Worldwide map of producers, storers, chargers and consumers — indicative MVP data, not investment or transaction advice.",
+      "Worldwide map of producers, storers, chargers and consumers — indicative data, not investment or transaction advice. Product version consolidating.",
     mapTitle: "Actor map",
     mapActorsCountries: (actors, countries) =>
       `${actors} actors · ${countries} countries`,
@@ -415,6 +419,8 @@ const EN: GreenMarketMessages = {
       allEnergy: "All",
       side: "Transaction",
       allSides: "All",
+      listingTier: "Proof",
+      allTiers: "All tiers",
       search: "Search",
       searchPlaceholder: "City, country or actor name…",
       country: "Country",
@@ -464,8 +470,8 @@ const EN: GreenMarketMessages = {
     demoBanner:
       "Demo mode — fictional actors for illustration. Register your organisation to appear as real data.",
     listingTier: {
-      demo: "Demo",
-      referenced: "Referenced",
+      demo: "Illustration",
+      referenced: "Pilot",
       verified: "Verified",
     },
     formTitle: "Post a listing",
@@ -538,7 +544,7 @@ const EN: GreenMarketMessages = {
     notFoundBody:
       "This listing does not exist or is no longer available. Browse the marketplace for current offers.",
     indicativeNote:
-      "Indicative MVP data — not advice or commitment. Contact the actor for any transaction.",
+      "Indicative data — not advice or commitment. Contact the actor for any transaction.",
     defaultDescription: (side, energy, city, country, volumeKwh, pricePerKwh) =>
       `${side} listing — ${energy.toLowerCase()} in ${city}, ${country}. Indicative volume ${volumeKwh.toLocaleString("en-GB")} kWh · ${pricePerKwh.toFixed(3)} €/kWh.`,
   },
@@ -624,7 +630,7 @@ const ES: GreenMarketMessages = {
     eyebrow: "Mercado mundial",
     title: "Energía verde tokenizada",
     intro:
-      "Mapa mundial de productores, almacenadores, cargadores y consumidores — datos indicativos MVP, sin consejo ni garantía de transacción.",
+      "Mapa mundial de productores, almacenadores, cargadores y consumidores — datos indicativos, sin consejo ni garantía de transacción. Versión de producto en consolidación.",
     mapTitle: "Mapa de actores",
     mapActorsCountries: (actors, countries) =>
       `${actors} actores · ${countries} países`,
@@ -638,6 +644,8 @@ const ES: GreenMarketMessages = {
       allEnergy: "Todas",
       side: "Transacción",
       allSides: "Todas",
+      listingTier: "Prueba",
+      allTiers: "Todos los niveles",
       search: "Búsqueda",
       searchPlaceholder: "Ciudad, país o nombre del actor…",
       country: "País",
@@ -688,8 +696,8 @@ const ES: GreenMarketMessages = {
     demoBanner:
       "Modo demo — actores ficticios con fines pedagógicos. Registre su estructura para aparecer como dato real.",
     listingTier: {
-      demo: "Demo",
-      referenced: "Referenciado",
+      demo: "Ilustración",
+      referenced: "Piloto",
       verified: "Verified",
     },
     formTitle: "Publicar anuncio",
@@ -762,7 +770,7 @@ const ES: GreenMarketMessages = {
     notFoundBody:
       "Este anuncio no existe o ya no está disponible. Consulte el mercado para ofertas actuales.",
     indicativeNote:
-      "Datos indicativos MVP — sin compromiso ni consejo. Contacte al actor para cualquier transacción.",
+      "Datos indicativos — sin compromiso ni consejo. Contacte al actor para cualquier transacción.",
     defaultDescription: (side, energy, city, country, volumeKwh, pricePerKwh) =>
       `Anuncio ${side.toLowerCase()} — ${energy.toLowerCase()} en ${city}, ${country}. Volumen indicativo ${volumeKwh.toLocaleString("es-ES")} kWh · ${pricePerKwh.toFixed(3)} €/kWh.`,
   },

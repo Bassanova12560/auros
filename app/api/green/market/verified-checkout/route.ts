@@ -28,6 +28,8 @@ export async function POST(request: Request) {
   const o = body as Record<string, unknown>;
   const email = typeof o.email === "string" ? o.email.trim().toLowerCase() : "";
   const company = typeof o.company === "string" ? o.company.trim() : "";
+  const actorId = typeof o.actorId === "string" ? o.actorId.trim() : "";
+  const notes = typeof o.notes === "string" ? o.notes.trim() : "";
 
   if (!email.includes("@")) {
     return NextResponse.json({ error: "invalid_email" }, { status: 400 });
@@ -46,6 +48,8 @@ export async function POST(request: Request) {
     email,
     locale,
     company,
+    actorId,
+    notes,
   });
   if (!result) {
     return NextResponse.json({ error: "stripe_unconfigured" }, { status: 503 });

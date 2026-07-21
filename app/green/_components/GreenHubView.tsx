@@ -9,6 +9,7 @@ import {
   GREEN_CSRD_CHECK_ROUTE,
   GREEN_MARKET_ROUTE,
   GREEN_REGISTER_ROUTE,
+  GREEN_TRUST_ROUTE,
   getGreenMessages,
 } from "@/lib/green";
 import type { GreenHubImpact } from "@/lib/green/hub-impact";
@@ -87,6 +88,12 @@ export function GreenHubView({ marketSnapshot, impact, registrySnapshot }: Props
                   ? "Mis fichas"
                   : "My listings"}{" "}
               →
+            </Link>
+            <Link
+              href={GREEN_TRUST_ROUTE}
+              className="font-mono text-[11px] tracking-wide text-white/40 transition-colors duration-300 hover:text-white/70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+            >
+              Trust →
             </Link>
           </p>
         </div>

@@ -22,6 +22,8 @@ const COPY: Record<
     verifiedBody: string;
     email: string;
     company: string;
+    actorId: string;
+    notes: string;
     cta: string;
     disclaimer: string;
     freeCta: string;
@@ -34,12 +36,14 @@ const COPY: Record<
     freeBody: "1 annonce, pas de mise en avant. Revue sous 48 h ouvrées.",
     verifiedTitle: `Verified — ${GREEN_MARKET_VERIFIED_EUR} €`,
     verifiedBody:
-      "Badge Verified + priorité liste + parcours RTMS. Revue humaine ops.",
+      "Badge Verified + priorité liste + parcours RTMS. Paiement = statut En revue jusqu’à validation humaine.",
     email: "E-mail",
     company: "Société (opt.)",
+    actorId: "ID acteur marché (opt.)",
+    notes: "Contexte / URL fiche (opt.)",
     cta: `Passer en Verified — ${GREEN_MARKET_VERIFIED_EUR} €`,
     disclaimer:
-      "Paiement = demande de mise en avant. Pas de certification automatique.",
+      "Paiement = demande de mise en avant (En revue). Pas de certification automatique.",
     freeCta: "Publier gratuitement",
     rtms: "Pré-diag RTMS",
   },
@@ -48,11 +52,14 @@ const COPY: Record<
     freeTitle: "Free",
     freeBody: "1 listing, no featured placement. Review within 48 business hours.",
     verifiedTitle: `Verified — ${GREEN_MARKET_VERIFIED_EUR} €`,
-    verifiedBody: "Verified badge + list priority + RTMS path. Human ops review.",
+    verifiedBody:
+      "Verified badge + list priority + RTMS path. Payment = In review until human validation.",
     email: "Email",
     company: "Company (opt.)",
+    actorId: "Market actor ID (opt.)",
+    notes: "Context / profile URL (opt.)",
     cta: `Go Verified — ${GREEN_MARKET_VERIFIED_EUR} €`,
-    disclaimer: "Payment = featured request. No automatic certification.",
+    disclaimer: "Payment = featured request (In review). No automatic certification.",
     freeCta: "List for free",
     rtms: "RTMS pre-check",
   },
@@ -61,11 +68,14 @@ const COPY: Record<
     freeTitle: "Free",
     freeBody: "1 anuncio, sin destacado. Revisión en 48 h laborables.",
     verifiedTitle: `Verified — ${GREEN_MARKET_VERIFIED_EUR} €`,
-    verifiedBody: "Badge Verified + prioridad + ruta RTMS. Revisión humana.",
+    verifiedBody:
+      "Badge Verified + prioridad + ruta RTMS. Pago = En revisión hasta validación humana.",
     email: "Email",
     company: "Empresa (opc.)",
+    actorId: "ID actor mercado (opc.)",
+    notes: "Contexto / URL ficha (opc.)",
     cta: `Pasar a Verified — ${GREEN_MARKET_VERIFIED_EUR} €`,
-    disclaimer: "Pago = solicitud de destacado. Sin certificación automática.",
+    disclaimer: "Pago = solicitud de destacado (En revisión). Sin certificación automática.",
     freeCta: "Publicar gratis",
     rtms: "Pre-diag RTMS",
   },
@@ -74,11 +84,13 @@ const COPY: Record<
     freeTitle: "Free",
     freeBody: "إعلان واحد، بلا تمييز. مراجعة خلال 48 ساعة عمل.",
     verifiedTitle: `Verified — ${GREEN_MARKET_VERIFIED_EUR} €`,
-    verifiedBody: "شارة Verified + أولوية + مسار RTMS. مراجعة بشرية.",
+    verifiedBody: "شارة Verified + أولوية + مسار RTMS. الدفع = قيد المراجعة حتى التحقق البشري.",
     email: "البريد",
     company: "الشركة (اختياري)",
+    actorId: "معرّف الممثل (اختياري)",
+    notes: "سياق / رابط (اختياري)",
     cta: `الترقية إلى Verified — ${GREEN_MARKET_VERIFIED_EUR} €`,
-    disclaimer: "الدفع = طلب تمييز. لا اعتماد تلقائي.",
+    disclaimer: "الدفع = طلب تمييز (قيد المراجعة). لا اعتماد تلقائي.",
     freeCta: "نشر مجاناً",
     rtms: "فحص RTMS أولي",
   },
@@ -87,11 +99,13 @@ const COPY: Record<
     freeTitle: "Free",
     freeBody: "1 条公告，无置顶。48 个工作小时内审核。",
     verifiedTitle: `Verified — ${GREEN_MARKET_VERIFIED_EUR} €`,
-    verifiedBody: "Verified 徽章 + 列表优先 + RTMS 路径。人工审核。",
+    verifiedBody: "Verified 徽章 + 列表优先 + RTMS 路径。付款后为「审核中」直至人工通过。",
     email: "邮箱",
     company: "公司（可选）",
+    actorId: "市场主体 ID（可选）",
+    notes: "说明 / 链接（可选）",
     cta: `升级 Verified — ${GREEN_MARKET_VERIFIED_EUR} €`,
-    disclaimer: "付款 = 置顶申请。非自动认证。",
+    disclaimer: "付款 = 置顶申请（审核中）。非自动认证。",
     freeCta: "免费上架",
     rtms: "RTMS 预检",
   },
@@ -102,6 +116,8 @@ export function GreenMarketListingPlans() {
   const c = COPY[locale] ?? COPY.fr;
   const [email, setEmail] = useState("");
   const [company, setCompany] = useState("");
+  const [actorId, setActorId] = useState("");
+  const [notes, setNotes] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -112,7 +128,7 @@ export function GreenMarketListingPlans() {
       const res = await fetch("/api/green/market/verified-checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, company, locale }),
+        body: JSON.stringify({ email, company, actorId, notes, locale }),
       });
       const json = (await res.json()) as {
         url?: string;
@@ -172,6 +188,28 @@ export function GreenMarketListingPlans() {
               type="text"
               value={company}
               onChange={(e) => setCompany(e.target.value.slice(0, 160))}
+              className="mt-1 w-full rounded-lg border border-white/10 bg-black px-3 py-2 text-sm text-white"
+            />
+          </label>
+          <label className="mt-3 block">
+            <span className="font-mono text-[10px] uppercase text-white/40">
+              {c.actorId}
+            </span>
+            <input
+              type="text"
+              value={actorId}
+              onChange={(e) => setActorId(e.target.value.slice(0, 120))}
+              className="mt-1 w-full rounded-lg border border-white/10 bg-black px-3 py-2 text-sm text-white"
+            />
+          </label>
+          <label className="mt-3 block">
+            <span className="font-mono text-[10px] uppercase text-white/40">
+              {c.notes}
+            </span>
+            <textarea
+              value={notes}
+              onChange={(e) => setNotes(e.target.value.slice(0, 400))}
+              rows={2}
               className="mt-1 w-full rounded-lg border border-white/10 bg-black px-3 py-2 text-sm text-white"
             />
           </label>

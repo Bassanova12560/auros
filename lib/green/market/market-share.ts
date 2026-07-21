@@ -2,6 +2,7 @@ import { GREEN_MARKET_ROUTE } from "../constants";
 import type {
   GreenMarketActorType,
   GreenMarketEnergyType,
+  GreenMarketListingTier,
   GreenMarketOfferSide,
   GreenMarketRadiusKm,
 } from "./types";
@@ -11,12 +12,14 @@ export type GreenMarketUrlFilters = {
   radius?: GreenMarketRadiusKm | 0;
   energy?: GreenMarketEnergyType | "all";
   side?: GreenMarketOfferSide | "all";
+  tier?: GreenMarketListingTier | "all";
   q?: string;
 };
 
 const ACTOR_TYPES = new Set(["producer", "storer", "charger", "consumer"]);
 const ENERGY_TYPES = new Set(["solar", "wind", "hydro", "battery", "mixed"]);
 const SIDES = new Set(["buy", "sell"]);
+const TIERS = new Set(["demo", "referenced", "verified"]);
 const RADII = new Set([5, 10, 20]);
 
 export function encodeGreenMarketFilters(filters: GreenMarketUrlFilters): URLSearchParams {
@@ -25,6 +28,7 @@ export function encodeGreenMarketFilters(filters: GreenMarketUrlFilters): URLSea
   if (filters.radius) params.set("radius", String(filters.radius));
   if (filters.energy && filters.energy !== "all") params.set("energy", filters.energy);
   if (filters.side && filters.side !== "all") params.set("side", filters.side);
+  if (filters.tier && filters.tier !== "all") params.set("tier", filters.tier);
   const q = filters.q?.trim();
   if (q) params.set("q", q);
   return params;
@@ -46,6 +50,8 @@ export function decodeGreenMarketFilters(
   }
   const side = params.get("side");
   if (side && SIDES.has(side)) out.side = side as GreenMarketOfferSide;
+  const tier = params.get("tier");
+  if (tier && TIERS.has(tier)) out.tier = tier as GreenMarketListingTier;
   const q = params.get("q")?.trim();
   if (q) out.q = q;
   return out;

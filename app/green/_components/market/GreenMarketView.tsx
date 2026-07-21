@@ -36,6 +36,7 @@ import { readStoredGreenMarketOffers } from "@/lib/green/market/offers-storage";
 import type {
   GreenMarketActorType,
   GreenMarketEnergyType,
+  GreenMarketListingTier,
   GreenMarketOffer,
   GreenMarketOfferSide,
   GreenMarketRadiusKm,
@@ -94,6 +95,7 @@ export function GreenMarketView({ snapshot }: Props) {
   const [radiusKm, setRadiusKm] = useState<GreenMarketRadiusKm | 0>(0);
   const [energyFilter, setEnergyFilter] = useState<GreenMarketEnergyType | "all">("all");
   const [sideFilter, setSideFilter] = useState<GreenMarketOfferSide | "all">("all");
+  const [tierFilter, setTierFilter] = useState<GreenMarketListingTier | "all">("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [countryFilter, setCountryFilter] = useState("");
   const [offersPage, setOffersPage] = useState(1);
@@ -109,9 +111,10 @@ export function GreenMarketView({ snapshot }: Props) {
       radius: radiusKm,
       energy: energyFilter,
       side: sideFilter,
+      tier: tierFilter,
       q: searchQuery,
     }),
-    [actorFilter, radiusKm, energyFilter, sideFilter, searchQuery]
+    [actorFilter, radiusKm, energyFilter, sideFilter, tierFilter, searchQuery]
   );
 
   useEffect(() => {
@@ -124,6 +127,7 @@ export function GreenMarketView({ snapshot }: Props) {
     setRadiusKm(decoded.radius ?? 0);
     setEnergyFilter(decoded.energy ?? "all");
     setSideFilter(decoded.side ?? "all");
+    setTierFilter(decoded.tier ?? "all");
     setSearchQuery(decoded.q ?? "");
     setUrlReady(true);
   }, [searchParams]);
@@ -161,6 +165,7 @@ export function GreenMarketView({ snapshot }: Props) {
     setRadiusKm(entry.filters.radius ?? 0);
     setEnergyFilter(entry.filters.energy ?? "all");
     setSideFilter(entry.filters.side ?? "all");
+    setTierFilter(entry.filters.tier ?? "all");
     setSearchQuery(entry.filters.q ?? "");
   }, []);
 
@@ -196,6 +201,7 @@ export function GreenMarketView({ snapshot }: Props) {
     return snapshot.actors.filter((a) => {
       if (countryFilter && a.country.trim() !== countryFilter) return false;
       if (actorFilter !== "all" && a.type !== actorFilter) return false;
+      if (tierFilter !== "all" && a.listingTier !== tierFilter) return false;
       if (
         !matchesGreenMarketSearch(searchQuery, {
           name: a.name,
@@ -218,6 +224,7 @@ export function GreenMarketView({ snapshot }: Props) {
     snapshot.actors,
     countryFilter,
     actorFilter,
+    tierFilter,
     radiusKm,
     mapCenter.lat,
     mapCenter.lon,
@@ -237,6 +244,7 @@ export function GreenMarketView({ snapshot }: Props) {
       if (countryFilter && o.country.trim() !== countryFilter) return false;
       if (energyFilter !== "all" && o.energyType !== energyFilter) return false;
       if (sideFilter !== "all" && o.side !== sideFilter) return false;
+      if (tierFilter !== "all" && o.listingTier !== tierFilter) return false;
       if (
         !matchesGreenMarketSearch(searchQuery, {
           name: o.actorName,
@@ -259,6 +267,7 @@ export function GreenMarketView({ snapshot }: Props) {
     countryFilter,
     energyFilter,
     sideFilter,
+    tierFilter,
     radiusKm,
     mapCenter.lat,
     mapCenter.lon,
@@ -595,6 +604,23 @@ export function GreenMarketView({ snapshot }: Props) {
                   {mm.sides[k]}
                 </option>
               ))}
+            </select>
+          </label>
+          <label className="flex flex-col gap-1">
+            <span className="font-mono text-[10px] uppercase tracking-wider text-white/40">
+              {mm.filters.listingTier}
+            </span>
+            <select
+              className={selectClass}
+              value={tierFilter}
+              onChange={(e) =>
+                setTierFilter(e.target.value as GreenMarketListingTier | "all")
+              }
+            >
+              <option value="all">{mm.filters.allTiers}</option>
+              <option value="verified">{mm.listingTier.verified}</option>
+              <option value="referenced">{mm.listingTier.referenced}</option>
+              <option value="demo">{mm.listingTier.demo}</option>
             </select>
           </label>
         </div>
