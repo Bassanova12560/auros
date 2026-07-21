@@ -19,7 +19,7 @@ export default function RwaGatesPage() {
         product="Protocol"
         eyebrow="Différenciation RWA"
         title="Cinq portes que les plateformes listing n’ouvrent pas"
-        intro="AUROS n’est pas une marketplace de tokens. Ce sont les preuves que banques et plateformes peuvent exiger — hash-only, continues, embarquables — pour qu’un RWA se démarque."
+        intro="AUROS n’est pas une marketplace de tokens. Ce sont les preuves que banques et plateformes peuvent exiger — hash-only, continues, embarquables — plus les Asset Trust Packs (eau/watts, capacity, lifestyle) pour l’admission multi-vertical."
         cta={{ href: "/verify", label: "Vérifier une preuve" }}
       >
         <ol className="mt-2 space-y-8">
@@ -75,6 +75,9 @@ export default function RwaGatesPage() {
           </p>
           <div className="mt-4 flex flex-wrap gap-3">
             <PrimaryButton href="/platforms">Hub plateformes</PrimaryButton>
+            <PrimaryButton href="/trust/packs" variant="ghost">
+              Asset Trust Packs
+            </PrimaryButton>
             <PrimaryButton href="/developers/institutions" variant="ghost">
               Console institutions
             </PrimaryButton>

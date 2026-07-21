@@ -9,6 +9,10 @@ export type QeiVerticalId =
   | "water_rights"
   | "energy_grid"
   | "energy_microgrid"
+  | "capacity_rights"
+  | "luxury_collectible"
+  | "vehicle_vessel"
+  | "sports_rights"
   | "private_credit"
   | "commodities";
 
@@ -85,6 +89,54 @@ export const QUANTUM_EXPOSURE_VERTICALS: QeiVertical[] = [
     rationale:
       "Moins dépendants de la queue réseau ; encore naissants en tokenisation — fenêtre pour imposer recours off-chain + Shield reseal dès le jour 1.",
     wets_link: "/power",
+  },
+  {
+    id: "capacity_rights",
+    label: "Capacity rights (MW / cooling / queue)",
+    exposure_score: 7.5,
+    band: "elevated",
+    avg_pool_concentration: "high",
+    asset_duration: "long",
+    legal_recourse_typical: "weak",
+    rationale:
+      "Droits longs, souvent « papier » avant COD ; concentration utility ; recours dépend entièrement du registre et du contrat de capacité.",
+    wets_link: "/trust/capacity",
+  },
+  {
+    id: "luxury_collectible",
+    label: "Luxe / collectibles",
+    exposure_score: 6.5,
+    band: "elevated",
+    avg_pool_concentration: "high",
+    asset_duration: "long",
+    legal_recourse_typical: "mixed",
+    rationale:
+      "Custody vault concentrée ; provenance critique ; token sans titre = exposition structurelle haute.",
+    wets_link: "/trust/passport",
+  },
+  {
+    id: "vehicle_vessel",
+    label: "Véhicules / bateaux",
+    exposure_score: 6.0,
+    band: "moderate",
+    avg_pool_concentration: "medium",
+    asset_duration: "medium",
+    legal_recourse_typical: "mixed",
+    rationale:
+      "Titre administratif / pavillon souvent plus fort que le token — à condition que le registre fasse foi.",
+    wets_link: "/trust/passport",
+  },
+  {
+    id: "sports_rights",
+    label: "Droits sportifs",
+    exposure_score: 7.0,
+    band: "elevated",
+    avg_pool_concentration: "high",
+    asset_duration: "medium",
+    legal_recourse_typical: "weak",
+    rationale:
+      "Cashflows contractuels ; contrepartie unique ; marketing ownership fréquent — claim vs title indispensable.",
+    wets_link: "/trust/passport",
   },
   {
     id: "private_credit",

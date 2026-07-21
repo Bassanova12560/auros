@@ -64,7 +64,11 @@ export default function TrustPage() {
               ["3 · Twin", "/developers/institutions#monitor-delta"],
               ["4 · WETS eau/énergie", "/eau/trust"],
               ["5 · Quantum index", "/trust/quantum"],
-              ["6 · Embed", "/platforms"],
+              ["6 · Asset Trust Packs", "/trust/packs"],
+              ["7 · Capacity rights", "/trust/capacity"],
+              ["8 · Lifestyle Passport", "/trust/passport"],
+              ["9 · Institutions RWA", "/trust/institutions"],
+              ["10 · Embed", "/platforms"],
             ] as const
           ).map(([label, href]) => (
             <li key={href}>
