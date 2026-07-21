@@ -62,7 +62,7 @@ async function runViaManagementApi(sql: string): Promise<void> {
   }
 }
 
-/** One-shot bootstrap for jurisdiction_leads — POST with Authorization: Bearer CRON_SECRET */
+/** One-shot bootstrap for jurisdiction_leads — POST with Requires authenticated ops access */
 export async function POST(req: NextRequest) {
   if (!authorized(req)) {
     return NextResponse.json({ ok: false, error: "unauthorized" }, { status: 401 });

@@ -69,7 +69,7 @@ async function runMigrationBatch(
   }
 }
 
-/** Bootstrap green marketplace — POST/GET Authorization: Bearer CRON_SECRET (GET for Vercel cron) */
+/** Bootstrap green marketplace — POST/GET Requires authenticated ops access (GET for Vercel cron) */
 export async function GET(req: NextRequest) {
   return POST(req);
 }

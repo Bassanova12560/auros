@@ -58,6 +58,7 @@ const AI_ALLOW = [
   "/how-it-works",
   "/discover",
   "/trust",
+  "/security",
   "/copilot",
   "/compare",
   "/tools",
@@ -71,18 +72,32 @@ const AI_ALLOW = [
   "/status",
 ] as const;
 
+const AI_DISALLOW = [
+  "/starter/",
+  "/api/",
+  "/ops/",
+  "/dashboard/",
+  "/green/admin/",
+  "/green/my/",
+  "/developers/dashboard/",
+  "/partners/dashboard/",
+  "/platforms/dashboard/",
+  "/sign-in",
+  "/sign-up",
+] as const;
+
 export default function robots(): MetadataRoute.Robots {
   return {
     rules: [
       {
         userAgent: "*",
         allow: "/",
-        disallow: ["/starter/", "/api/dev/", "/ops/"],
+        disallow: [...AI_DISALLOW],
       },
       ...AI_BOTS.map((userAgent) => ({
         userAgent,
         allow: [...AI_ALLOW],
-        disallow: ["/starter/", "/api/dev/", "/ops/"],
+        disallow: [...AI_DISALLOW],
       })),
     ],
     sitemap: `${SITE_URL}/sitemap.xml`,

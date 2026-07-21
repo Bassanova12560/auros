@@ -10,7 +10,7 @@ export const runtime = "nodejs";
 
 /**
  * POST — run catalog and/or content draft agents (ops).
- * Authorization: Bearer CRON_SECRET
+ * Requires authenticated ops access
  * Body: { action: "catalog" | "content", topic?, product_id?, kind_hint?, limit? }
  */
 export async function POST(req: NextRequest) {

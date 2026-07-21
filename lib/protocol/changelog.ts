@@ -360,12 +360,11 @@ export const PROTOCOL_CHANGELOG: ProtocolChangelogEntry[] = [
       "Chat public /copilot + agents ops catalogue/contenu avec inbox approve/reject — pas d’auto-publish scores/CFU.",
     details: [
       "POST /api/v1/copilot/chat — RAG ai-first, products, compare, ChargeFlow explain.",
-      "Table copilot_drafts + /ops/copilot (Bearer CRON_SECRET).",
+      "Drafts internes avec revue humaine — pas d’auto-publish.",
       "Docs docs/COPILOT.md.",
     ],
     links: [
       { href: "/copilot", label: "Copilot" },
-      { href: "/ops/copilot", label: "Ops inbox" },
     ],
     tags: ["copilot", "ai", "ops"],
     status: "released",
@@ -540,7 +539,7 @@ export const PROTOCOL_CHANGELOG: ProtocolChangelogEntry[] = [
     details: [
       "Snapshot sans branding ni PII (score, grade, MiCA, gaps, sections).",
       "Vérif par id ou hash+sig (stateless).",
-      "Clé ATTEST_SIGNING_KEY (fallback GREEN_EXPORT_SIGNING_KEY / CRON_SECRET).",
+      "Signature serveur via clé dédiée (configuration interne).",
     ],
     links: [
       { href: "/developers/docs/endpoint-attest", label: "Documentation attest" },

@@ -288,7 +288,7 @@ function printEnvHelp(): void {
 
       "",
 
-      "Prod HTTP fallback: POST /api/admin/bootstrap-green-market with Bearer CRON_SECRET",
+      "Prod HTTP fallback: authenticated ops bootstrap (internal).",
 
     ].join("\n")
 

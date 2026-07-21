@@ -13,7 +13,7 @@ function authorized(req: NextRequest): boolean {
   return req.headers.get("authorization") === `Bearer ${secret}`;
 }
 
-/** POST { table, id, action: approve|reject } — Authorization: Bearer CRON_SECRET */
+/** POST { table, id, action: approve|reject } — Requires authenticated ops access */
 export async function POST(req: NextRequest) {
   if (!authorized(req)) {
     return NextResponse.json({ ok: false, error: "unauthorized" }, { status: 401 });

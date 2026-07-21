@@ -26,6 +26,8 @@ node_modules/
 # misc
 .DS_Store
 *.pem
+*.p12
+*.pfx
 __pycache__/
 *.py[cod]
 packages/auros-protocol-python/dist/
@@ -36,16 +38,31 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env (keep .env.example committable)
-.env.local
-.env*.local
+# env — never commit secrets (keep .env.example only)
+.env
+.env.*
+!.env.example
 
-# vercel
+# vercel / local dumps
 .vercel
+.vercel-*
+.env.vercel*
+
+# scratch / scrape artifacts
+tmp/
+tmp-*
+tmp*.json
+*-prod.html
+*-tmp.html
+compare.html
+compare-tmp.html
+dashboard-prod.html
+est-prod.html
+green.html
+how-prod.html
+trust-prod.html
+scripts/tmp-*
 
 # typescript
 *.tsbuildinfo
 next-env.d.ts
-
-.vercel
-.env*

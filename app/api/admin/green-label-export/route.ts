@@ -17,7 +17,7 @@ function authorized(req: NextRequest): boolean {
   return req.headers.get("authorization") === `Bearer ${secret}`;
 }
 
-/** GET all label applications as CSV — Authorization: Bearer CRON_SECRET */
+/** GET all label applications as CSV — Requires authenticated ops access */
 export async function GET(req: NextRequest) {
   if (!authorized(req)) {
     return NextResponse.json({ ok: false, error: "unauthorized" }, { status: 401 });

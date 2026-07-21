@@ -10,7 +10,7 @@ function authorized(req: NextRequest): boolean {
   return req.headers.get("authorization") === `Bearer ${secret}`;
 }
 
-/** GET label dossier reminder stats — Authorization: Bearer CRON_SECRET */
+/** GET label dossier reminder stats — Requires authenticated ops access */
 export async function GET(req: NextRequest) {
   if (!authorized(req)) {
     return NextResponse.json({ ok: false, error: "unauthorized" }, { status: 401 });

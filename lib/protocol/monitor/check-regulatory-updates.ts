@@ -1,9 +1,6 @@
 /**
  * Cron / Trigger.dev job stub — checks curated ESMA feed and fires monitor webhooks.
- *
- * Wire on Vercel Cron or Trigger.dev:
- *   GET /api/cron/protocol-monitor  (protect with CRON_SECRET)
- * Or import `checkRegulatoryUpdates` in your scheduler.
+ * Wire via authenticated internal scheduler (do not expose recipes publicly).
  */
 
 import { PROTOCOL_DISCLAIMER } from "../constants";

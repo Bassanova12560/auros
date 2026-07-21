@@ -7,7 +7,7 @@ export const runtime = "nodejs";
 
 /**
  * GET — weekly social draft signals for /ops/copilot (LinkedIn + X).
- * Does NOT publish. Authorization: Bearer CRON_SECRET
+ * Does NOT publish. Requires authenticated ops access
  */
 export async function GET(request: Request) {
   if (!isCronAuthorized(request)) {

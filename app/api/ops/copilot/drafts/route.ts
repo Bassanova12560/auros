@@ -6,7 +6,7 @@ import type { CopilotDraftKind, CopilotDraftStatus } from "@/lib/copilot/types";
 
 export const runtime = "nodejs";
 
-/** GET — list Copilot drafts (ops). Authorization: Bearer CRON_SECRET */
+/** GET — list Copilot drafts (ops). Requires authenticated ops access */
 export async function GET(req: NextRequest) {
   if (!isCronAuthorized(req, { allowDevWithoutSecret: false })) {
     return NextResponse.json({ ok: false, error: "unauthorized" }, { status: 401 });

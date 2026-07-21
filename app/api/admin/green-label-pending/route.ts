@@ -10,7 +10,7 @@ function authorized(req: NextRequest): boolean {
   return req.headers.get("authorization") === `Bearer ${secret}`;
 }
 
-/** GET pending label applications — Authorization: Bearer CRON_SECRET */
+/** GET pending label applications — Requires authenticated ops access */
 export async function GET(req: NextRequest) {
   if (!authorized(req)) {
     return NextResponse.json({ ok: false, error: "unauthorized" }, { status: 401 });

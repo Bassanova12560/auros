@@ -17,7 +17,7 @@ function authorized(req: NextRequest): boolean {
 }
 
 /**
- * GET partner attribution export — Authorization: Bearer CRON_SECRET
+ * GET partner attribution export — Requires authenticated ops access
  * Query: ?partner=CODE (optional filter), ?view=summary (aggregate counts)
  */
 export async function GET(req: NextRequest) {

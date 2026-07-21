@@ -102,13 +102,7 @@ Prérequis : `NEXT_PUBLIC_SUPABASE_URL` et `SUPABASE_SECRET_KEY` dans `.env.loca
 
 Message attendu : *« No SQL credentials — seeding via service role »* puis *« Green marketplace seed complete »*.
 
-Optionnel (prod, même secret que les crons) :
-
-```powershell
-# CRON_SECRET lu depuis .env.local — ne le collez pas dans le chat
-$secret = (Get-Content .env.local | Where-Object { $_ -match '^\s*CRON_SECRET\s*=' }) -replace '^\s*CRON_SECRET\s*=\s*','' -replace '^["'']|["'']$',''
-Invoke-WebRequest -Uri "https://auros-delta.vercel.app/api/admin/bootstrap-green-market?seedOnly=1" -Method GET -Headers @{ Authorization = "Bearer $secret" } -UseBasicParsing
-```
+Optionnel (prod) : bootstrap HTTP via auth ops interne — **ne pas** coller de secrets dans le chat ni documenter les URLs d’admin publiquement.
 
 ## GitHub (optionnel)
 
@@ -132,4 +126,4 @@ En cas de souci : `npm run green:sync`, puis bootstrap HTTP ci-dessus, puis `npm
 
 ---
 
-*Résumé : gardez `.env.local` et `CRON_SECRET` sur Vercel ; une commande `green:deploy` après code ; le reste est cron + scripts autopilot.*
+*Résumé : gardez `.env.local` hors git ; secrets uniquement sur Vercel ; une commande `green:deploy` après code.*

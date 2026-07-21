@@ -7,7 +7,7 @@ export const runtime = "nodejs";
 
 /**
  * POST — activate a partner (ops).
- * Authorization: Bearer CRON_SECRET
+ * Requires authenticated ops access
  * Body: { id? | email?, code, clerk_user_id?, kind?, webhook_url?, webhook_secret? }
  */
 export async function POST(req: NextRequest) {

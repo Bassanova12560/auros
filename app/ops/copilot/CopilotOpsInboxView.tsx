@@ -39,7 +39,7 @@ export function CopilotOpsInboxView() {
   async function load() {
     const s = secret.trim();
     if (!s) {
-      setError("Collez CRON_SECRET (Bearer ops).");
+      setError("Collez le jeton ops (Bearer).");
       return;
     }
     sessionStorage.setItem(STORAGE_KEY, s);
@@ -165,7 +165,7 @@ export function CopilotOpsInboxView() {
       <section className="space-y-4 border border-white/[0.08] bg-black/40 p-5">
         <label className="block space-y-2">
           <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/40">
-            CRON_SECRET
+            Jeton ops
           </span>
           <input
             type="password"

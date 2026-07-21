@@ -9,8 +9,8 @@ import { isBlockedProbePath } from "@/lib/security/paths";
 
 /**
  * Auth posture: open by default (wizard, Green hub, APIs with own keys).
- * Explicit Clerk gates: dashboards, ops UI, developer/partner spaces.
- * Users-first: block probe paths, rate-limit sensitive APIs, request IDs.
+ * Explicit Clerk gates for account/dashboard surfaces.
+ * Edge: block common probe paths; burst-limit sensitive API prefixes; request IDs.
  */
 const isProtectedRoute = createRouteMatcher([
   "/dashboard(.*)",

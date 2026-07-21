@@ -72,22 +72,7 @@ Les **petites plateformes** souffrent des deux plus que les géants (Centrifuge,
 
 ### Ops — activer une plateforme
 
-```bash
-curl -X POST https://getauros.com/api/admin/partners/activate \
-  -H "Authorization: Bearer $CRON_SECRET" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "email":"ops@platform.example",
-    "code":"PLAT-DEMO",
-    "kind":"platform",
-    "webhook_url":"https://platform.example/hooks/auros",
-    "webhook_secret":"…"
-  }'
-```
-
-Optionnel : `DEFAULT_PLATFORM_PARTNER_CODE=PLAT-DEMO` sur Vercel pour router les soumissions sans match wizard.
-
-Inbox : `/platforms/dashboard` (Clerk, partner `kind=platform`).
+Activation via outils internes authentifiés (pas de recettes curl publiques). Inbox : `/platforms/dashboard` (Clerk).
 
 Ne pas annoncer la brique 2 sur la home **avant** d’avoir une LOI issuer ou un partenaire MM.
 

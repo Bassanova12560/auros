@@ -1161,7 +1161,7 @@ export async function POST(req: Request) {
       {
         heading: "Webhook regulatory.update",
         paragraphs: [
-          "Déclenché par le cron daily `/api/cron/protocol-monitor` (Authorization: Bearer $CRON_SECRET).",
+          "Déclenché par le job de monitoring quotidien (interne).",
           "Payload signé HMAC — même format que les autres webhooks Protocol.",
         ],
         code: `{
@@ -1309,7 +1309,7 @@ curl "${BASE}/api/v1/attest/verify?hash=<64hex>&sig=<64hex>"`,
         heading: "Disclaimer",
         paragraphs: [
           "Signal indicatif de readiness — pas un avis juridique, agrément ni conseil d'investissement.",
-          "Clé serveur : ATTEST_SIGNING_KEY (sinon GREEN_EXPORT_SIGNING_KEY / CRON_SECRET).",
+          "Signature serveur via clé dédiée (configuration interne).",
         ],
       },
     ],
@@ -1759,21 +1759,14 @@ curl -X POST ${BASE}/api/v1/webhooks/wh_abc123/replay \\
         paragraphs: [
           "1. Créez un monitor par actif/juridiction via POST /api/v1/monitor.",
           "2. Enregistrez un webhook global via POST /api/v1/webhooks (optionnel si webhook_url par monitor).",
-          "3. Planifiez le cron AUROS (feed ESMA statique) — daily via Vercel Cron ou Trigger.dev.",
+          "3. Le monitoring périodique est géré côté plateforme AUROS.",
         ],
       },
       {
-        heading: "Cron Vercel",
-        paragraphs: [],
-        code: `# vercel.json
-{
-  "crons": [{
-    "path": "/api/cron/protocol-monitor",
-    "schedule": "0 6 * * *"
-  }]
-}
-# Header: Authorization: Bearer $CRON_SECRET`,
-        language: "json",
+        heading: "Cron",
+        paragraphs: [
+          "Le monitoring périodique est planifié côté plateforme (auth interne). Les clients n’ont pas d’endpoint cron à appeler.",
+        ],
       },
       {
         heading: "SDK",

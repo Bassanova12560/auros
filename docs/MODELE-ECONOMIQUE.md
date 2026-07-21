@@ -100,7 +100,7 @@ Exemples de grilles (à valider juridiquement) :
 | **C — Portail partenaire (MVP)** | Registre `partners`, activation ops, `/partners/dashboard` (lien + stats, commission `estimated`) | Dev moyen | **Live (MVP)** |
 | **D — Paiement** | Export compta / Stripe / virement trimestriel | Ops + juridique | À venir |
 
-**Ops** : `POST /api/admin/partners/activate` (Bearer `CRON_SECRET`) — `{ id|email, code, clerk_user_id? }`.
+**Ops** : activation partenaires via outils internes authentifiés (non documentés publiquement).
 
 **Recommandation** : activer 2–3 partenaires pilotes via le dashboard, mesurer le volume avant payouts (phase D).
 

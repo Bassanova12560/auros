@@ -7,7 +7,7 @@ export const runtime = "nodejs";
 
 /**
  * POST — approve or reject a draft (ops).
- * Authorization: Bearer CRON_SECRET
+ * Requires authenticated ops access
  * Body: { status: "approved" | "rejected", review_note? }
  */
 export async function POST(

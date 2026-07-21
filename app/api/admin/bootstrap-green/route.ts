@@ -92,7 +92,7 @@ async function seedVerifiedProject(): Promise<void> {
   );
 }
 
-/** One-shot bootstrap for Green Phase 3 — POST with Authorization: Bearer CRON_SECRET */
+/** One-shot bootstrap for Green Phase 3 — POST with Requires authenticated ops access */
 export async function POST(req: NextRequest) {
   if (!authorized(req)) {
     return NextResponse.json({ ok: false, error: "unauthorized" }, { status: 401 });
