@@ -2,18 +2,11 @@ import type { NextConfig } from "next";
 
 import { LEGACY_COMPARATOR_REDIRECTS } from "./lib/comparators/constants";
 import { GREEN_LEGACY_REDIRECTS } from "./lib/green/constants";
+import {
+  EMBED_SECURITY_HEADERS,
+  MAIN_SECURITY_HEADERS,
+} from "./lib/security/headers";
 import { AUROS_LEGACY_REDIRECTS } from "./lib/site/redirects";
-
-const securityHeaders = [
-  { key: "X-DNS-Prefetch-Control", value: "on" },
-  { key: "X-Frame-Options", value: "SAMEORIGIN" },
-  { key: "X-Content-Type-Options", value: "nosniff" },
-  { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
-  {
-    key: "Permissions-Policy",
-    value: "camera=(), microphone=(), geolocation=()",
-  },
-];
 
 const nextConfig: NextConfig = {
   /** Avoid Turbopack chunk errors for Supabase sub-packages (common on WSL + /mnt/c). */
@@ -25,28 +18,18 @@ const nextConfig: NextConfig = {
     "pdf-parse",
   ],
   async headers() {
-    const embedHeaders = [
-      { key: "X-DNS-Prefetch-Control", value: "on" },
-      { key: "X-Content-Type-Options", value: "nosniff" },
-      { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
-      {
-        key: "Content-Security-Policy",
-        value: "frame-ancestors *",
-      },
-      {
-        key: "Permissions-Policy",
-        value: "camera=(), microphone=(), geolocation=()",
-      },
-    ];
-
     return [
       {
         source: "/eau/embed/:path*",
-        headers: embedHeaders,
+        headers: EMBED_SECURITY_HEADERS,
+      },
+      {
+        source: "/embed/:path*",
+        headers: EMBED_SECURITY_HEADERS,
       },
       {
         source: "/(.*)",
-        headers: securityHeaders,
+        headers: MAIN_SECURITY_HEADERS,
       },
     ];
   },

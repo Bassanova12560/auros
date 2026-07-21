@@ -16,6 +16,7 @@ export function Footer() {
   const legal = [
     { href: "/verify", label: "Verify" },
     { href: "/trust", label: f.trust },
+    { href: "/security", label: "Sécurité" },
     { href: "/about", label: f.about },
     { href: "/privacy", label: f.privacy },
     { href: "/terms", label: f.terms },

@@ -56,7 +56,29 @@ export const privacyPage = enrichPage({
     { key: "Hébergement", value: "UE" },
     { key: "Cadre", value: "RGPD" },
   ],
-  relatedPaths: ["/legal", "/terms"],
+  relatedPaths: ["/legal", "/terms", "/security"],
+});
+
+export const securityPage = enrichPage({
+  id: "security",
+  path: "/security",
+  title: "Sécurité & données utilisateurs | AUROS",
+  description:
+    "Posture sécurité AUROS : HSTS, CSP, Clerk, RLS Supabase, rate limits — données utilisateurs d’abord.",
+  summary:
+    "Transparence sécurité AUROS : transport TLS/HSTS, CSP, auth Clerk, RLS deny-by-default, quotas API, disclosure security.txt.",
+  contentType: "legal",
+  language: "multi",
+  indexable: true,
+  lastUpdated: "2026-07-21",
+  keywords: ["sécurité AUROS", "CSP HSTS", "RLS Supabase", "RGPD plateforme"],
+  intents: ["Sécurité plateforme AUROS", "Signaler une faille AUROS"],
+  audience: ["utilisateurs", "security researchers", "DPO"],
+  facts: [
+    { key: "Disclosure", value: "/.well-known/security.txt" },
+    { key: "Contact", value: "security@getauros.com" },
+  ],
+  relatedPaths: ["/privacy", "/status", "/verify"],
 });
 
 export const termsPage = enrichPage({
@@ -386,6 +408,7 @@ export const miscPages = [
   aboutPage,
   legalPage,
   privacyPage,
+  securityPage,
   termsPage,
   copilotPage,
   wattsHubPage,

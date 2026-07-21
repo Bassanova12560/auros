@@ -18,20 +18,19 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ ok: false, error: "unauthorized" }, { status: 401 });
   }
 
-  let body: Record<string, unknown>;
-  try {
-    body = (await req.json()) as Record<string, unknown>;
-  } catch {
-    return NextResponse.json({ ok: false, error: "invalid_json" }, { status: 400 });
-  }
+  const { readJsonBodyLimited } = await import("@/lib/security/request-guard");
+  const { sanitizeUserText } = await import("@/lib/security/sanitize");
+
+  const parsed = await readJsonBodyLimited<Record<string, unknown>>(req, {
+    sensitive: true,
+  });
+  if (!parsed.ok) return parsed.response;
+  const body = parsed.data;
 
   const action = typeof body.action === "string" ? body.action : "catalog";
 
   if (action === "content") {
-    const topic =
-      typeof body.topic === "string" && body.topic.trim()
-        ? body.topic.trim()
-        : null;
+    const topic = sanitizeUserText(body.topic, 200);
     if (!topic) {
       return NextResponse.json(
         { ok: false, error: "topic_required" },
