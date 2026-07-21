@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { ContentPageLayout } from "@/app/_components/ContentPageLayout";
 import { FocusPageShell } from "@/app/_components/FocusPageShell";
 import { PrimaryButton } from "@/app/_components/ui/PrimaryButton";
+import { DcRoiSimulator } from "./_components/DcRoiSimulator";
 import {
   DC_100MW_ASSUMPTIONS,
   DC_100MW_AUROS_STEPS,
@@ -49,6 +50,8 @@ export default function DataCenter100MwDemoPage() {
             </div>
           ))}
         </section>
+
+        <DcRoiSimulator />
 
         <section className="mt-12">
           <p className="font-mono text-[10px] uppercase tracking-wider text-white/40">

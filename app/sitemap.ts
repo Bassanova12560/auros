@@ -66,6 +66,7 @@ const PRIORITY: Record<string, number> = {
   "/demos/data-center-100mw": 0.88,
   "/eau/continuity": 0.87,
   "/compass": 0.87,
+  "/resilience": 0.9,
   "/trust/quantum": 0.87,
   "/trust/capacity": 0.86,
   "/trust/passport": 0.86,

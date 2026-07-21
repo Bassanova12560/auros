@@ -48,3 +48,32 @@ describe("dc 100mw demo", () => {
     assert.equal(DC_100MW_AUROS_STEPS.length, 3);
   });
 });
+
+describe("roi simulator", () => {
+  it("returns savings for 100MW closed loop", async () => {
+    const { simulateSustainableRoi } = await import("@/lib/resilience/roi-simulator");
+    const r = simulateSustainableRoi({
+      mw_it: 100,
+      stress: "medium",
+      water_eur_per_m3: 2,
+      target_closed_loop: true,
+    });
+    assert.ok(r.pct_water_reduction > 50);
+    assert.ok(r.savings_m3_year > 0);
+  });
+});
+
+describe("resilience brief", () => {
+  it("builds brief with 3 priorities max", async () => {
+    const { computeWelhrFromText } = await import("@/lib/eau/water-legal-risk");
+    const { buildResilienceBrief } = await import("@/lib/resilience/resilience-brief");
+    const welhr = computeWelhrFromText({
+      text: "data center Michigan moratorium",
+      region: "Michigan",
+      asset_hint: "data_center",
+    });
+    const b = buildResilienceBrief(welhr);
+    assert.ok(b.priorities.length <= 3);
+    assert.ok(b.resilience_score >= 0 && b.resilience_score <= 100);
+  });
+});

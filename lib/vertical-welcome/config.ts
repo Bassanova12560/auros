@@ -4,6 +4,7 @@ import {
   COMPASS_DASHBOARD_ROUTE,
   COMPASS_WELCOME_ROUTE,
 } from "@/lib/resilience/compass";
+import { RESILIENCE_ROUTE } from "@/lib/resilience/resilience-hub";
 import {
   CONTINUITY_PLAYBOOK_ROUTE,
   CONTINUITY_WELCOME_ROUTE,
@@ -264,6 +265,42 @@ export const VERTICAL_WELCOMES: Record<string, VerticalWelcomeConfig> = {
       { href: CONTINUITY_WELCOME_ROUTE, label: "Playbook continuité" },
       { href: "/eau/risk", label: "WELHR" },
       { href: "/trust/capacity", label: "Capacity" },
+    ],
+  },
+  [RESILIENCE_ROUTE]: {
+    path: RESILIENCE_ROUTE,
+    product: "Resilience",
+    eyebrow: "Tour de contrôle",
+    title: "Résilience des actifs — eau, énergie, preuve",
+    intro:
+      "AUROS ne pilote pas vos vannes : il enchaîne détection (WELHR), décision (playbook chiffré) et preuve (WETS / verify) pour RWA et data centers.",
+    features: [
+      {
+        title: "Détecter",
+        body: "Stress hydrique, litige local, social license — score WELHR avant token.",
+      },
+      {
+        title: "Décider",
+        body: "Playbook continuité 3 scénarios, export PDF — fourchettes CAPEX/OPEX indicatives.",
+      },
+      {
+        title: "Prouver",
+        body: "Trust Score, verify public, claims ESG sans URL ignorés au pack.",
+      },
+    ],
+    ctas: [
+      {
+        href: `${COMPASS_DASHBOARD_ROUTE}?mode=water`,
+        label: "Ouvrir Compass",
+        primary: true,
+      },
+      { href: "/eau/continuity/playbook", label: "Générer un playbook" },
+      { href: "/demos/data-center-100mw", label: "Démo 100 MW" },
+    ],
+    secondaryLinks: [
+      { href: "/h2o-rwa", label: "H₂O RWA" },
+      { href: "/green/csrd-check", label: "Check CSRD" },
+      { href: "/rwa-gates", label: "5 portes" },
     ],
   },
   [QEI_WELCOME_PATH]: {

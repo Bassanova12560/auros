@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 
 import { FocusPageShell } from "@/app/_components/FocusPageShell";
+import { ResilienceBriefPanel } from "./ResilienceBriefPanel";
 import {
   COMPASS_DASHBOARD_ROUTE,
   COMPASS_MODE_ORDER,
@@ -58,6 +59,8 @@ export function AurosCompassDashboard() {
             );
           })}
         </div>
+
+        <ResilienceBriefPanel />
 
         <ul className="mt-10 space-y-0">
           {cfg.tiles.map((tile, i) => (

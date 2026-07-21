@@ -1,4 +1,5 @@
 import type { TrustPackId } from "./taxonomy";
+import { ESG_CLAIM_QUESTION } from "./esg-claims";
 
 export type TrustPackQuestion = {
   id: string;
@@ -57,32 +58,37 @@ const CAPACITY: TrustPackQuestion[] = normalizeWeights([
   {
     id: "right_instrument",
     q: "Le droit de capacité (MW, cooling, file, allocation) est-il matérialisé par un contrat / permis opposable ?",
-    weight: 0.22,
+    weight: 0.2,
   },
   {
     id: "queue_or_btm",
     q: "Position file d’interconnexion crédible, OU behind-the-meter / limited export documenté ?",
-    weight: 0.2,
+    weight: 0.18,
   },
   {
     id: "cod_realism",
     q: "COD / mise en service réaliste vs upgrades réseau et permis obtenus (pas seulement filed) ?",
-    weight: 0.18,
+    weight: 0.16,
   },
   {
     id: "offtake_clarity",
     q: "Offtake / PPA / usage on-site clair — pas seulement « capacité papier » ?",
-    weight: 0.16,
+    weight: 0.14,
+  },
+  {
+    id: "esg_claim_sourced",
+    q: ESG_CLAIM_QUESTION,
+    weight: 0.12,
   },
   {
     id: "register_claim",
     q: "Registre off-chain + token = claim sur le droit (pas possession = titre) ?",
-    weight: 0.12,
+    weight: 0.1,
   },
   {
     id: "recourse_pqc",
     q: "Chemin reseal / remedy si compromission de clé documenté ?",
-    weight: 0.12,
+    weight: 0.1,
   },
 ]);
 
@@ -223,22 +229,27 @@ const WATER_ENERGY_POINTER: TrustPackQuestion[] = normalizeWeights([
   {
     id: "use_wets",
     q: "Le projet a-t-il un Water/Energy Trust Score publié (7 critères) ?",
-    weight: 0.35,
+    weight: 0.3,
   },
   {
     id: "hydro_or_grid",
     q: "Risque hydrique OU réalisme raccordement documenté (WELHR / queue / BTM) ?",
-    weight: 0.25,
+    weight: 0.22,
   },
   {
     id: "legal_spv",
     q: "SPV / concession / titre d’eau ou d’infra documenté ?",
-    weight: 0.2,
+    weight: 0.18,
+  },
+  {
+    id: "esg_claim_sourced",
+    q: ESG_CLAIM_QUESTION,
+    weight: 0.15,
   },
   {
     id: "recourse_pqc",
     q: "Recours post-quantique (registre + remedy) documenté ?",
-    weight: 0.2,
+    weight: 0.15,
   },
 ]);
 

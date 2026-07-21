@@ -30,6 +30,27 @@ export function ContinuityPlaybookConsole() {
     [playbook]
   );
 
+  async function downloadPdf() {
+    if (!playbook) return;
+    try {
+      const res = await fetch("/api/resilience/continuity-playbook/pdf", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ playbook }),
+      });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "auros-continuity-playbook.pdf";
+      a.click();
+      URL.revokeObjectURL(url);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "PDF failed");
+    }
+  }
+
   async function generate() {
     setBusy(true);
     setError(null);
@@ -184,6 +205,9 @@ export function ContinuityPlaybookConsole() {
           <div className="flex flex-wrap gap-3">
             <PrimaryButton type="button" onClick={downloadMd}>
               Télécharger Markdown
+            </PrimaryButton>
+            <PrimaryButton type="button" onClick={() => void downloadPdf()}>
+              Télécharger PDF
             </PrimaryButton>
             <PrimaryButton href={CONTINUITY_WELCOME_ROUTE} variant="ghost">
               Accueil continuité
