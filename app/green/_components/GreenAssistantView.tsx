@@ -6,6 +6,11 @@ import Link from "next/link";
 import { CopilotChatView } from "@/app/copilot/CopilotChatView";
 import { PrimaryButton } from "@/app/_components/ui/PrimaryButton";
 import { COPILOT_GREEN_BRIEF_STORAGE_KEY } from "@/lib/copilot/types";
+import {
+  greenAssistantMailDraft,
+  greenAssistantNextSteps,
+  greenAssistantSuggestions,
+} from "@/lib/green/assistant-playbook";
 import { GREEN_API_DOCS_ROUTE } from "@/lib/green/api/constants";
 import { track } from "@/lib/analytics";
 
@@ -52,11 +57,15 @@ function buildClientBrief(p: Profile): string {
   const role = ROLES.find((r) => r.id === p.role)?.label ?? p.role;
   const asset = ASSETS.find((a) => a.id === p.asset)?.label ?? p.asset;
   const region = p.region.trim() || "non précisée";
+  const steps = greenAssistantNextSteps(p)
+    .map((s) => `${s.label} (${s.href})`)
+    .join(" · ");
   return [
     `Role: ${role}`,
     `Asset focus: ${asset}`,
     `Region: ${region}`,
-    "Goal: one clear next step on AUROS Green (RTMS, label, compare, WELHR if water).",
+    `Preferred AUROS next steps (suggest from these when relevant): ${steps}`,
+    "Goal: one clear next step; max 3 priorities; indicative only.",
   ].join("\n");
 }
 
@@ -67,6 +76,7 @@ export function GreenAssistantView() {
     region: "",
   });
   const [ready, setReady] = useState(false);
+  const [mailCopied, setMailCopied] = useState(false);
 
   useEffect(() => {
     setProfile(loadProfile());
@@ -83,6 +93,26 @@ export function GreenAssistantView() {
   }, [profile, ready]);
 
   const clientBrief = useMemo(() => buildClientBrief(profile), [profile]);
+  const suggestions = useMemo(
+    () => greenAssistantSuggestions(profile),
+    [profile]
+  );
+  const nextSteps = useMemo(() => greenAssistantNextSteps(profile), [profile]);
+
+  async function copyMailDraft() {
+    const draft = greenAssistantMailDraft(profile);
+    try {
+      await navigator.clipboard.writeText(draft);
+      setMailCopied(true);
+      track("green_assistant_mail_copy", {
+        role: profile.role,
+        asset: profile.asset,
+      });
+      window.setTimeout(() => setMailCopied(false), 2500);
+    } catch {
+      setMailCopied(false);
+    }
+  }
 
   return (
     <div className="mx-auto max-w-3xl px-4 pb-20 pt-10 md:px-6 md:pt-12">
@@ -90,21 +120,24 @@ export function GreenAssistantView() {
         Green · Assistant gratuit
       </p>
       <h1 className="mt-3 font-display text-3xl text-white md:text-4xl">
-        Chatbot Green personnalisé
+        Votre prochain pas, pas un discours
       </h1>
       <p className="mt-3 max-w-2xl text-sm leading-relaxed text-white/55">
-        Gratuit pour vous aider à avancer (RTMS, label, scores, eau-énergie).
-        Indiquez votre profil — un prochain pas clair, pas un discours générique.
-        Les entreprises qui veulent volume API / sièges / mails automatisés
-        passent sur Green API Premium.
+        Profil → 3 questions adaptées → 3 actions concrètes. Analyses
+        indicatives. Brouillon mail à copier (vous envoyez). Volume API /
+        sièges : Green API Premium.
       </p>
 
       <section className="mt-8 grid gap-3 rounded-xl border border-emerald-400/20 bg-emerald-400/[0.04] p-4 sm:grid-cols-3">
         <label className="block space-y-1.5">
-          <span className="font-mono text-[10px] uppercase text-white/40">Rôle</span>
+          <span className="font-mono text-[10px] uppercase text-white/40">
+            Rôle
+          </span>
           <select
             value={profile.role}
-            onChange={(e) => setProfile((p) => ({ ...p, role: e.target.value }))}
+            onChange={(e) =>
+              setProfile((p) => ({ ...p, role: e.target.value }))
+            }
             className="w-full rounded-lg border border-white/10 bg-black px-3 py-2 text-sm text-white"
           >
             {ROLES.map((r) => (
@@ -115,10 +148,14 @@ export function GreenAssistantView() {
           </select>
         </label>
         <label className="block space-y-1.5">
-          <span className="font-mono text-[10px] uppercase text-white/40">Actif</span>
+          <span className="font-mono text-[10px] uppercase text-white/40">
+            Actif
+          </span>
           <select
             value={profile.asset}
-            onChange={(e) => setProfile((p) => ({ ...p, asset: e.target.value }))}
+            onChange={(e) =>
+              setProfile((p) => ({ ...p, asset: e.target.value }))
+            }
             className="w-full rounded-lg border border-white/10 bg-black px-3 py-2 text-sm text-white"
           >
             {ASSETS.map((a) => (
@@ -143,6 +180,45 @@ export function GreenAssistantView() {
         </label>
       </section>
 
+      <section className="mt-6 space-y-3">
+        <h2 className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/40">
+          3 prochains pas
+        </h2>
+        <ul className="grid gap-2 sm:grid-cols-3">
+          {nextSteps.map((step) => (
+            <li key={step.href}>
+              <Link
+                href={step.href}
+                onClick={() =>
+                  track("green_assistant_next_step", {
+                    href: step.href,
+                    role: profile.role,
+                    asset: profile.asset,
+                  })
+                }
+                className="block h-full rounded-lg border border-white/[0.1] bg-black/30 px-3 py-3 transition hover:border-emerald-400/35"
+              >
+                <span className="font-display text-sm text-white">
+                  {step.label}
+                </span>
+                <span className="mt-1 block text-xs leading-snug text-white/45">
+                  {step.why}
+                </span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+        <button
+          type="button"
+          onClick={() => void copyMailDraft()}
+          className="font-mono text-[11px] uppercase tracking-wider text-emerald-400/80 transition hover:text-emerald-300"
+        >
+          {mailCopied
+            ? "Brouillon mail copié"
+            : "Copier un mail de prochaines étapes →"}
+        </button>
+      </section>
+
       <div className="mt-8">
         <Suspense
           fallback={
@@ -151,9 +227,11 @@ export function GreenAssistantView() {
         >
           {ready ? (
             <CopilotChatView
+              key={`${profile.role}-${profile.asset}-${profile.region}`}
               forcedSurface="green"
               hideHeader
               clientBrief={clientBrief}
+              suggestionOverrides={suggestions}
               eyebrow="Green AI"
               title="Assistant Green"
             />
@@ -166,8 +244,10 @@ export function GreenAssistantView() {
           Gratuit pour aider · Premium pour scaler
         </h2>
         <ul className="mt-3 space-y-2 text-sm text-white/55">
-          <li>— Chat personnalisé, RAG AUROS, care emails en draft (revue humaine)</li>
-          <li>— Entreprises : quotas API, webhooks, sièges équipe, SLA</li>
+          <li>
+            — Chat + playbook perso + brouillon mail (vous envoyez)
+          </li>
+          <li>— Entreprises : quotas API, webhooks, sièges, SLA</li>
         </ul>
         <div className="mt-5 flex flex-wrap gap-3">
           <PrimaryButton href={GREEN_API_DOCS_ROUTE}>Green API</PrimaryButton>

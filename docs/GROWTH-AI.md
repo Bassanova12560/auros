@@ -42,7 +42,7 @@ Le payant vend **volume, gouvernance, preuve, intégration** — pas le chat de 
 ## Phases
 
 ### A — live
-RAG, Copilot, care drafts HITL, Green assistant personnalisé, funnel events.
+RAG, Copilot, care drafts HITL, Green assistant **playbook** (suggestions + 3 CTAs + mail à copier), FAB Green, funnel events.
 
 ### B — 90 jours
 Care lié dossiers réels ; coach post-score ; A/B subjects ; mémoire session consentie.

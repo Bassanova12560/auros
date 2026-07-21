@@ -80,7 +80,7 @@ function formatPageContext(context?: CopilotPageContext): string {
     block += `RTMS_BRIEF:\n${context.rtms_brief.trim().slice(0, 1200)}\n`;
   }
   if (context.client_brief?.trim()) {
-    block += `CLIENT_BRIEF (user-provided profile — do not invent beyond this):\n${context.client_brief.trim().slice(0, 1200)}\nPersonalize the next step using this brief; keep analyses indicative.\n`;
+    block += `CLIENT_BRIEF (user-provided profile — do not invent beyond this):\n${context.client_brief.trim().slice(0, 1200)}\nWhen CLIENT_BRIEF is present: (1) address their role/asset/region, (2) give exactly ONE clear next step on AUROS, (3) at most 3 priorities if gaps, (4) cite 1–2 AUROS URLs from tools. Keep analyses indicative — no legal/financial advice, no invented APY/partners.\n`;
   }
   return `${block}\n`;
 }

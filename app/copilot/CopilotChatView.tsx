@@ -25,6 +25,8 @@ export type CopilotChatViewProps = {
   /** Extra client brief merged into context (personalized). */
   clientBrief?: string;
   hideHeader?: boolean;
+  /** Override empty-state chips (max 3 recommended). */
+  suggestionOverrides?: string[];
 };
 
 function contextBannerLabel(ctx: CopilotPageContext): string | null {
@@ -75,6 +77,7 @@ export function CopilotChatView({
   intro = "Posez une question sur le comparateur RWA, Green, les juridictions, le Protocol ou ChargeFlow. Réponses sourcées — indicatif uniquement, pas de conseil juridique.",
   clientBrief,
   hideHeader = false,
+  suggestionOverrides,
 }: CopilotChatViewProps = {}) {
   const searchParams = useSearchParams();
   const pageContextBase = useMemo(() => {
@@ -104,10 +107,12 @@ export function CopilotChatView({
     [pageContextBase, rtmsBrief, clientBrief]
   );
 
-  const suggestions = useMemo(
-    () => suggestionsForContext(pageContext),
-    [pageContext]
-  );
+  const suggestions = useMemo(() => {
+    if (suggestionOverrides?.length) {
+      return suggestionOverrides.slice(0, 3);
+    }
+    return suggestionsForContext(pageContext).slice(0, 3);
+  }, [pageContext, suggestionOverrides]);
   const banner = contextBannerLabel(pageContext);
 
   const [input, setInput] = useState("");
