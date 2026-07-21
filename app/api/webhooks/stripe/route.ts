@@ -8,12 +8,20 @@ import { parseAcademyDiplomaMetadata } from "@/lib/academy/diploma-checkout";
 import { fulfillGreenImpactPaymentFromStripe } from "@/lib/green/fulfill-impact-payment";
 import { fulfillGreenApiPremiumSubscription, downgradeGreenApiPremiumByEmail } from "@/lib/green/fulfill-green-api-subscription";
 import {
+  fulfillGreenMarketIntroFromStripe,
+  fulfillGreenMarketVerifiedFromStripe,
+} from "@/lib/green/fulfill-market-cash";
+import {
   fulfillMonitorSubscription,
   downgradeMonitorByEmail,
 } from "@/lib/protocol/monitor/fulfill-subscription";
 import { getStripe, stripeWebhookSecret } from "@/lib/stripe/jurisdiction-checkout";
 import { parseGreenImpactCheckoutMetadata } from "@/lib/stripe/green-impact-checkout";
 import { parseGreenApiPremiumMetadata } from "@/lib/stripe/green-api-checkout";
+import {
+  parseGreenMarketIntroMetadata,
+  parseGreenMarketVerifiedMetadata,
+} from "@/lib/stripe/green-market-cash-checkout";
 import { parseMonitorCheckoutMetadata } from "@/lib/stripe/monitor-checkout";
 import { parseWizardCheckoutMetadata } from "@/lib/stripe/wizard-checkout";
 import { fulfillWizardPayment } from "@/lib/wizard/fulfill-payment";
@@ -69,6 +77,18 @@ export async function POST(request: Request) {
     const greenApiMeta = parseGreenApiPremiumMetadata(sessionMeta);
     if (greenApiMeta) {
       await fulfillGreenApiPremiumSubscription(session);
+      return NextResponse.json({ received: true });
+    }
+
+    const greenIntroMeta = parseGreenMarketIntroMetadata(sessionMeta);
+    if (greenIntroMeta) {
+      await fulfillGreenMarketIntroFromStripe(session);
+      return NextResponse.json({ received: true });
+    }
+
+    const greenVerifiedMeta = parseGreenMarketVerifiedMetadata(sessionMeta);
+    if (greenVerifiedMeta) {
+      await fulfillGreenMarketVerifiedFromStripe(session);
       return NextResponse.json({ received: true });
     }
 

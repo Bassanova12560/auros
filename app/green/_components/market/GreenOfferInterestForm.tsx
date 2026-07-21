@@ -3,7 +3,9 @@
 import { useState } from "react";
 
 import { useLocale } from "@/app/_components/i18n/LocaleProvider";
+import { PrimaryButton } from "@/app/_components/ui/PrimaryButton";
 import { submitGreenOfferInterestAction } from "@/lib/actions/green-offer-interest";
+import { GREEN_MARKET_INTRO_EUR } from "@/lib/green/market-cash-pricing";
 import { getGreenMarketMessages } from "@/lib/green/market-i18n";
 
 import { GreenPanel, GreenSectionTitle } from "../green-ui";
@@ -27,16 +29,63 @@ export function GreenOfferInterestForm({
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
-  const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
-  const [errorKind, setErrorKind] = useState<"invalid" | "rate_limit" | null>(null);
+  const [status, setStatus] = useState<
+    "idle" | "submitting" | "checkout" | "success" | "error"
+  >("idle");
+  const [errorKind, setErrorKind] = useState<
+    "invalid" | "rate_limit" | "stripe" | null
+  >(null);
 
-  const mailto =
-    actorEmail?.trim()
-      ? `mailto:${encodeURIComponent(actorEmail.trim())}?subject=${encodeURIComponent(`AUROS Green — ${offerTitle}`)}`
-      : null;
+  const mailto = actorEmail?.trim()
+    ? `mailto:${encodeURIComponent(actorEmail.trim())}?subject=${encodeURIComponent(`AUROS Green — ${offerTitle}`)}`
+    : null;
 
-  async function handleSubmit(e: React.FormEvent) {
+  const paidCta =
+    locale === "en"
+      ? `Qualified intro — ${GREEN_MARKET_INTRO_EUR} €`
+      : locale === "es"
+        ? `Intro cualificada — ${GREEN_MARKET_INTRO_EUR} €`
+        : `Mise en relation — ${GREEN_MARKET_INTRO_EUR} €`;
+
+  const paidHint =
+    locale === "en"
+      ? "Paid data matching (not brokerage). Ops reviews then connects. Indicative only."
+      : locale === "es"
+        ? "Matching de datos de pago (no corretaje). Ops revisa y conecta. Solo indicativo."
+        : "Matching data payant (pas de courtage). Revue ops puis connexion. Indicatif uniquement.";
+
+  async function handlePaidCheckout(e: React.FormEvent) {
     e.preventDefault();
+    setStatus("checkout");
+    setErrorKind(null);
+    try {
+      const res = await fetch("/api/green/market/intro-checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email,
+          visitorName: name,
+          message,
+          offerId,
+          offerTitle,
+          actorName,
+          locale,
+        }),
+      });
+      const json = (await res.json()) as { url?: string; error?: string };
+      if (!res.ok || !json.url) {
+        setStatus("error");
+        setErrorKind(json.error === "rate_limit" ? "rate_limit" : "stripe");
+        return;
+      }
+      window.location.href = json.url;
+    } catch {
+      setStatus("error");
+      setErrorKind("stripe");
+    }
+  }
+
+  async function handleFreeSubmit() {
     setStatus("submitting");
     setErrorKind(null);
     const result = await submitGreenOfferInterestAction({
@@ -61,7 +110,7 @@ export function GreenOfferInterestForm({
   }
 
   return (
-    <section className="mt-10">
+    <section className="mt-10" id="intro">
       <GreenSectionTitle>{od.contactTitle}</GreenSectionTitle>
       <div className="mt-4 flex flex-col gap-6 lg:flex-row lg:items-start">
         {mailto ? (
@@ -73,14 +122,19 @@ export function GreenOfferInterestForm({
           </a>
         ) : null}
         <GreenPanel className="w-full max-w-xl flex-1 p-6">
-          <h3 className="font-display text-base font-semibold text-white">{oi.title}</h3>
-          <p className="mt-2 text-xs leading-relaxed text-white/45">{oi.intro}</p>
+          <h3 className="font-display text-base font-semibold text-white">
+            {paidCta}
+          </h3>
+          <p className="mt-2 text-xs leading-relaxed text-white/45">{paidHint}</p>
           {status === "success" ? (
             <p className="mt-4 text-sm text-emerald-400/90" role="status">
               {oi.success}
             </p>
           ) : (
-            <form onSubmit={(e) => void handleSubmit(e)} className="mt-5 space-y-4">
+            <form
+              onSubmit={(e) => void handlePaidCheckout(e)}
+              className="mt-5 space-y-4"
+            >
               <label className="block">
                 <span className="font-mono text-[10px] uppercase tracking-wider text-white/40">
                   {oi.name}
@@ -121,13 +175,27 @@ export function GreenOfferInterestForm({
               </label>
               {status === "error" ? (
                 <p className="text-xs text-red-400/90" role="alert">
-                  {errorKind === "rate_limit" ? oi.errorRateLimit : oi.errorInvalid}
+                  {errorKind === "rate_limit"
+                    ? oi.errorRateLimit
+                    : errorKind === "stripe"
+                      ? locale === "en"
+                        ? "Checkout unavailable — try again or use free interest."
+                        : "Checkout indisponible — réessayez ou intérêt gratuit."
+                      : oi.errorInvalid}
                 </p>
               ) : null}
-              <button
+              <PrimaryButton
                 type="submit"
-                disabled={status === "submitting"}
-                className="rounded-lg border border-white/[0.12] px-5 py-2.5 font-mono text-[11px] tracking-wide text-white/70 transition hover:border-white/25 hover:text-white disabled:opacity-50"
+                disabled={status === "checkout" || !email.includes("@")}
+                className="!w-full"
+              >
+                {status === "checkout" ? "…" : paidCta}
+              </PrimaryButton>
+              <button
+                type="button"
+                disabled={status === "submitting" || status === "checkout"}
+                onClick={() => void handleFreeSubmit()}
+                className="w-full rounded-lg border border-white/[0.12] px-5 py-2.5 font-mono text-[11px] tracking-wide text-white/55 transition hover:border-white/25 hover:text-white disabled:opacity-50"
               >
                 {status === "submitting" ? oi.submitting : oi.submit}
               </button>

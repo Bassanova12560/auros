@@ -56,7 +56,9 @@ import {
   GreenPanel,
   GreenSectionTitle,
 } from "../green-ui";
+import { GreenJobsDoors } from "../GreenJobsDoors";
 import { GreenOfferForm } from "./GreenOfferForm";
+import { GreenMarketListingPlans } from "./GreenMarketListingPlans";
 import { GreenMarketMapLegend } from "./GreenMarketMapLegend";
 import { greenMarketOfferPath } from "@/lib/green/market/offer-routes";
 
@@ -297,6 +299,8 @@ export function GreenMarketView({ snapshot }: Props) {
   return (
     <div className="page-inner page-inner--6xl mx-auto px-4 pb-24 pt-12 md:px-6 md:pt-16">
       <GreenPageHeader eyebrow={mm.eyebrow} title={mm.title} intro={mm.intro} compact />
+
+      <GreenJobsDoors compact />
 
       {snapshot.mode === "demo" ? (
         <p className="mt-4 max-w-2xl border border-amber-500/20 bg-amber-500/5 px-4 py-3 text-sm leading-relaxed text-amber-200/80">
@@ -706,6 +710,8 @@ export function GreenMarketView({ snapshot }: Props) {
           </nav>
         ) : null}
       </section>
+
+      <GreenMarketListingPlans />
 
       <div className="mt-10">
         <GreenOfferForm

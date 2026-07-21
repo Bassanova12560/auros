@@ -61,6 +61,8 @@ Ligne de revenu **data** distincte du pipeline émetteurs : packaging des scores
 |-------|------|---------|
 | Index / CSV public | Gratuit (CC-BY-4.0) | `/data/green-index`, `/data/licence` |
 | **Green API Premium** | **299 €/mo** (`green_api_premium`) | `/green/api#premium`, checkout Stripe existant |
+| **Market intro fee** | **149 €** one-shot (`green_market_intro`) | Fiche offre → matching HITL |
+| **Listing Verified** | **299 €** one-shot (`green_market_verified`) | Market Free vs Verified |
 | Redistribution commerciale du feed | Sur devis partenaires | `/partners?intent=data-licence#contact` |
 
 Terminal unique : `/data/terminal` — pas de nouveau SKU Stripe ; on vend mieux le Premium existant.

@@ -478,6 +478,59 @@ export async function sendGreenApiPremiumInternal(email: string): Promise<boolea
   });
 }
 
+export async function sendGreenMarketIntroPaidInternal(data: {
+  email: string;
+  offerId: string;
+  offerTitle: string;
+  actorName: string;
+  visitorName: string;
+  message: string;
+  sessionId: string;
+}): Promise<boolean> {
+  const internal = internalNotifyEmail();
+  if (!internal) {
+    console.info("[green-market-intro] paid (no internal email)", data.email, data.offerId);
+    return false;
+  }
+  return sendSafe({
+    to: internal,
+    subject: `[HITL] Intro fee — ${data.offerTitle || data.offerId}`,
+    html: `<p><strong>Paid intro (matching only — not brokerage)</strong></p>
+<ul>
+<li>Email: ${escapeHtml(data.email)}</li>
+<li>Name: ${escapeHtml(data.visitorName || "—")}</li>
+<li>Offer: ${escapeHtml(data.offerId)} — ${escapeHtml(data.offerTitle)}</li>
+<li>Actor: ${escapeHtml(data.actorName)}</li>
+<li>Message: ${escapeHtml(data.message || "—")}</li>
+<li>Session: ${escapeHtml(data.sessionId)}</li>
+</ul>
+<p>Review then connect parties manually if appropriate.</p>`,
+  });
+}
+
+export async function sendGreenMarketVerifiedPaidInternal(data: {
+  email: string;
+  company: string;
+  sessionId: string;
+}): Promise<boolean> {
+  const internal = internalNotifyEmail();
+  if (!internal) {
+    console.info("[green-market-verified] paid (no internal email)", data.email);
+    return false;
+  }
+  return sendSafe({
+    to: internal,
+    subject: `[HITL] Verified listing — ${data.company || data.email}`,
+    html: `<p><strong>Paid Verified listing request</strong></p>
+<ul>
+<li>Email: ${escapeHtml(data.email)}</li>
+<li>Company: ${escapeHtml(data.company || "—")}</li>
+<li>Session: ${escapeHtml(data.sessionId)}</li>
+</ul>
+<p>Ops: upgrade listing_tier to verified after RTMS / human review.</p>`,
+  });
+}
+
 function escapeHtml(text: string): string {
   return text
     .replace(/&/g, "&amp;")

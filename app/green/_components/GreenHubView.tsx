@@ -16,6 +16,7 @@ import type { GreenRegistrySnapshot } from "@/lib/green/green-registry";
 import type { GreenMarketSnapshot } from "@/lib/green/market/green-market-db";
 
 import { GreenDisclaimer } from "./green-ui";
+import { GreenJobsDoors } from "./GreenJobsDoors";
 import { GreenHubActorFinder } from "./GreenHubActorFinder";
 import { GreenHubAssetsSection } from "./GreenHubAssetsSection";
 import { GreenHubEngagementSection } from "./GreenHubEngagementSection";
@@ -43,6 +44,8 @@ export function GreenHubView({ marketSnapshot, impact, registrySnapshot }: Props
   return (
     <div className="page-inner page-inner--6xl mx-auto px-4 pb-20 pt-2 md:px-6 md:pt-4">
       <GreenHubHeroSection marketMode={marketSnapshot.mode} />
+
+      <GreenJobsDoors />
 
       <GreenHubMoreSections>
         <GreenHubOnboarding />

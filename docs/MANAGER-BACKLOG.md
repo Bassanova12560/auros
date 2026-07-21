@@ -1,7 +1,7 @@
 # Manager backlog — AUROS
 
 Living priorities. Manager owns this; update when shipping or discovering debt.
-Last review: 2026-07-21 (5 locales Assistant + Copilot).
+Last review: 2026-07-21 (Green cash P0 producteurs).
 
 ## P0 — risque / trust
 
@@ -11,33 +11,43 @@ Last review: 2026-07-21 (5 locales Assistant + Copilot).
 | `ATTEST_SIGNING_KEY` prod | OK |
 | Upstash rate limits | **Action user** — `docs/UPSTASH-SETUP.md` |
 
+## P0 — Green cash (ICP producteurs)
+
+| Item | Statut |
+|------|--------|
+| Doc `docs/GREEN-MONETIZATION.md` | OK |
+| 3 portes hub/market | OK |
+| Intro fee 149 € + HITL | OK |
+| Listing Verified 299 € | OK |
+| API Free / Premium / Enterprise UI | OK |
+
 ## P1 — conversion
 
 | Item | Statut |
 |------|--------|
 | Funnel `funnel_*` analytics | OK |
-| CTAs → express `/wizard?expert=1` | OK (hero, final CTA, focus heroes, nav, header) |
-| Care email drafts HITL | OK — `/ops/copilot` « Drafts care email » |
-| Attribution partenaires pilotes | À venir (ops business) |
+| CTAs → express `/wizard?expert=1` | OK |
+| Care email drafts HITL | OK |
+| Attribution partenaires pilotes | À venir |
 
 ## P1+ — Growth AI (voir `docs/GROWTH-AI.md`)
 
 | Phase | Contenu |
 |-------|---------|
-| **A (now)** | RAG + drafts + care HITL + Green playbook + FAB + funnel + **5 locales** Assistant/Copilot |
-| **B** | Care lié dossiers réels ; coach post-score ; A/B subjects ; mémoire consentie |
-| **C** | Fine-tune open-source **seulement** si dataset drafts approuvés + métrique claire |
+| **A** | RAG + playbook + 5 locales Assistant/Copilot |
+| **B** | Care dossiers réels ; coach post-score |
+| **C** | Fine-tune seulement si dataset + métrique |
 
 ## Backlog i18n
 
 | Item | Statut |
 |------|--------|
-| GreenMessages AR + ZH complets | Hors scope — catalogue Green tombe encore sur EN |
+| GreenMessages AR + ZH complets | Hors scope — fallback EN |
 | Audit FR hardcodé wizard / trust | À venir |
 
 ## Erreurs à ne plus refaire
 
 - Fine-tune avant RAG/HITL mature
-- Auto-send mails IA
+- Auto-send mails IA / intro sans revue ops
 - Claims 35 % / sans clic / fake partners
-- Copilot / Assistant hardcodés `locale: "fr"`
+- Broker / exécution deals énergie

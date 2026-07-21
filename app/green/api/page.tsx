@@ -195,6 +195,60 @@ export default async function GreenApiPage({
           </p>
         </header>
 
+        <section id="pricing" className="scroll-mt-28">
+          <h2 className="font-mono text-[11px] uppercase tracking-wide text-white/45">
+            Plans
+          </h2>
+          <div className="mt-4 grid gap-4 md:grid-cols-3">
+            <div className="rounded-xl border border-white/[0.08] p-5">
+              <p className="font-display text-lg text-white">Free</p>
+              <p className="mt-1 font-mono text-2xl text-emerald-400">0 €</p>
+              <ul className="mt-3 space-y-1.5 text-xs text-white/50">
+                <li>— {FREE_TIER_MONTHLY_LIMIT} req/mois (clé)</li>
+                <li>— {GREEN_ANON_DAILY_LIMIT} req/jour sans clé</li>
+                <li>— Scores lecture + batch limité</li>
+              </ul>
+            </div>
+            <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/[0.05] p-5">
+              <p className="font-display text-lg text-white">Premium</p>
+              <p className="mt-1 font-mono text-2xl text-emerald-400">299 €/mo</p>
+              <ul className="mt-3 space-y-1.5 text-xs text-white/55">
+                <li>— 25k req/mois · batch 50</li>
+                <li>— Historique scores · webhooks</li>
+                <li>— SLA email · Terminal desks</li>
+              </ul>
+              <a
+                href="#premium"
+                className="mt-4 inline-block font-mono text-[11px] uppercase tracking-wider text-emerald-400/90 hover:text-emerald-300"
+              >
+                S&apos;abonner →
+              </a>
+            </div>
+            <div className="rounded-xl border border-white/[0.08] p-5">
+              <p className="font-display text-lg text-white">Enterprise</p>
+              <p className="mt-1 font-mono text-2xl text-white/80">Sur devis</p>
+              <ul className="mt-3 space-y-1.5 text-xs text-white/50">
+                <li>— Quotas élevés / SLA dédié</li>
+                <li>— Data room / white-label</li>
+                <li>— Support siège</li>
+              </ul>
+              <a
+                href="mailto:hello@getauros.com?subject=AUROS%20Green%20API%20Enterprise"
+                className="mt-4 inline-block font-mono text-[11px] uppercase tracking-wider text-white/55 hover:text-white/80"
+              >
+                Contacter →
+              </a>
+            </div>
+          </div>
+          <p className="mt-4 text-xs text-white/40">
+            Data Terminal pour desks :{" "}
+            <Link href={DATA_TERMINAL_ROUTE} className="text-emerald-400/80 hover:underline">
+              /data/terminal
+            </Link>
+            . Premium débloque le volume API derrière le terminal.
+          </p>
+        </section>
+
         <section className="grid gap-4 sm:grid-cols-3">
           <div className="card-flat p-5 text-center">
             <p className="font-mono text-3xl text-emerald-400">{GREEN_ANON_DAILY_LIMIT}</p>
