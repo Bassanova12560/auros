@@ -3,6 +3,8 @@
 import { useState } from "react";
 
 import { PrimaryButton } from "@/app/_components/ui/PrimaryButton";
+import { track } from "@/lib/analytics";
+import { FUNNEL_EVENTS } from "@/lib/funnel/events";
 import type { WelhrResult } from "@/lib/eau/water-legal-risk";
 
 const PRIORITY_LABELS: Record<string, string> = {
@@ -48,6 +50,10 @@ export function WelhrRiskConsole() {
         return;
       }
       setResult(json.welhr);
+      track(FUNNEL_EVENTS.detect_welhr, {
+        score: json.welhr.score,
+        tier: json.welhr.risk_tier,
+      });
     } catch (e) {
       setError(e instanceof Error ? e.message : "Erreur réseau");
     } finally {

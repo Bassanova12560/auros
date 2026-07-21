@@ -5,6 +5,8 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 
 import type { WelhrResult } from "@/lib/eau/water-legal-risk";
+import { track } from "@/lib/analytics";
+import { FUNNEL_EVENTS } from "@/lib/funnel/events";
 import { buildResilienceBrief, type ResilienceBrief } from "@/lib/resilience/resilience-brief";
 
 const ROLES = [
@@ -47,6 +49,10 @@ export function ResilienceBriefPanel() {
       .then((json: { welhr?: WelhrResult }) => {
         if (cancelled || !json.welhr) return;
         setBrief(buildResilienceBrief(json.welhr));
+        track(FUNNEL_EVENTS.decide_brief, {
+          score: json.welhr.score,
+          role,
+        });
       })
       .finally(() => {
         if (!cancelled) setLoading(false);

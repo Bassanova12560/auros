@@ -3,6 +3,8 @@
 import { useCallback, useEffect, useState } from "react";
 
 import { PrimaryButton } from "@/app/_components/ui/PrimaryButton";
+import { track } from "@/lib/analytics";
+import { FUNNEL_EVENTS } from "@/lib/funnel/events";
 
 export type VerifyKind = "shield" | "attest" | "auto";
 
@@ -106,6 +108,10 @@ export function VerifyConsole({
     try {
       const out = await verifyId(trimmed);
       setResult(out);
+      track(FUNNEL_EVENTS.prove_verify, {
+        kind: out.kind,
+        valid: out.valid,
+      });
     } catch (e) {
       setError(e instanceof Error ? e.message : "Erreur réseau");
     } finally {

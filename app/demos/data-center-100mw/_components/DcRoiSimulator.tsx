@@ -3,6 +3,8 @@
 import { useMemo, useState } from "react";
 
 import { PrimaryButton } from "@/app/_components/ui/PrimaryButton";
+import { track } from "@/lib/analytics";
+import { FUNNEL_EVENTS } from "@/lib/funnel/events";
 import {
   simulateSustainableRoi,
   type RoiStressChoice,
@@ -13,6 +15,7 @@ export function DcRoiSimulator() {
   const [stress, setStress] = useState<RoiStressChoice>("medium");
   const [waterPrice, setWaterPrice] = useState(2.4);
   const [closedLoop, setClosedLoop] = useState(true);
+  const [tracked, setTracked] = useState(false);
 
   const result = useMemo(
     () =>
@@ -24,6 +27,12 @@ export function DcRoiSimulator() {
       }),
     [mw, stress, waterPrice, closedLoop]
   );
+
+  function markRoiInteracted() {
+    if (tracked) return;
+    setTracked(true);
+    track(FUNNEL_EVENTS.decide_roi, { mw, stress });
+  }
 
   return (
     <section
@@ -45,7 +54,10 @@ export function DcRoiSimulator() {
             min={10}
             max={200}
             value={mw}
-            onChange={(e) => setMw(Number(e.target.value))}
+            onChange={(e) => {
+              setMw(Number(e.target.value));
+              markRoiInteracted();
+            }}
             className="w-full"
           />
           <span className="font-mono text-sm text-white/70">{mw} MW</span>
@@ -54,7 +66,10 @@ export function DcRoiSimulator() {
           <span className="font-mono text-[10px] uppercase text-white/40">Stress hydrique</span>
           <select
             value={stress}
-            onChange={(e) => setStress(e.target.value as RoiStressChoice)}
+            onChange={(e) => {
+              setStress(e.target.value as RoiStressChoice);
+              markRoiInteracted();
+            }}
             className="w-full rounded-lg border border-white/10 bg-black px-3 py-2 text-sm text-white"
           >
             <option value="low">Faible</option>

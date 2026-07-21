@@ -3,6 +3,8 @@
 import { useMemo, useState } from "react";
 
 import { PrimaryButton } from "@/app/_components/ui/PrimaryButton";
+import { track } from "@/lib/analytics";
+import { FUNNEL_EVENTS } from "@/lib/funnel/events";
 import type { WelhrResult } from "@/lib/eau/water-legal-risk";
 import {
   buildContinuityPlaybook,
@@ -46,6 +48,7 @@ export function ContinuityPlaybookConsole() {
       a.download = "auros-continuity-playbook.pdf";
       a.click();
       URL.revokeObjectURL(url);
+      track(FUNNEL_EVENTS.decide_playbook_pdf, { format: "pdf" });
     } catch (e) {
       setError(e instanceof Error ? e.message : "PDF failed");
     }
@@ -83,6 +86,11 @@ export function ContinuityPlaybookConsole() {
         welhr: json.welhr,
       });
       setPlaybook(pb);
+      track(FUNNEL_EVENTS.decide_playbook, {
+        mw,
+        cooling,
+        welhr_score: json.welhr.score,
+      });
     } catch (e) {
       setError(e instanceof Error ? e.message : "Erreur réseau");
     } finally {

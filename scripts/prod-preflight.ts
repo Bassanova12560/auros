@@ -138,6 +138,37 @@ function runEnvChecks(): Check[] {
     );
   }
 
+  if (has("ATTEST_SIGNING_KEY")) {
+    push(checks, "attest_key", "ok", "ATTEST_SIGNING_KEY is set (dedicated attest/ChargeFlow signing)");
+  } else if (has("GREEN_EXPORT_SIGNING_KEY")) {
+    push(
+      checks,
+      "attest_key",
+      "warn",
+      "ATTEST_SIGNING_KEY missing — falling back to GREEN_EXPORT_SIGNING_KEY; set a dedicated key"
+    );
+  } else if (has("CRON_SECRET")) {
+    push(
+      checks,
+      "attest_key",
+      "warn",
+      "ATTEST_SIGNING_KEY missing — falling back to CRON_SECRET (rotate into dedicated key)"
+    );
+  } else {
+    push(checks, "attest_key", "fail", "No signing key (ATTEST_SIGNING_KEY / GREEN_EXPORT / CRON)");
+  }
+
+  if (has("UPSTASH_REDIS_REST_URL") && has("UPSTASH_REDIS_REST_TOKEN")) {
+    push(checks, "upstash", "ok", "Upstash Redis configured for durable rate limits");
+  } else {
+    push(
+      checks,
+      "upstash",
+      "warn",
+      "Upstash unset — rate limits are in-memory only (weak on multi-instance Vercel). See docs/UPSTASH-SETUP.md"
+    );
+  }
+
   return checks;
 }
 
