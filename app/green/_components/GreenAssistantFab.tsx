@@ -3,11 +3,17 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
+import { useLocale } from "@/app/_components/i18n/LocaleProvider";
+import { getGreenAssistantUi } from "@/lib/green/assistant-i18n";
 import { GREEN_ASSISTANT_ROUTE } from "@/lib/green";
+import { isRtlLocale } from "@/lib/i18n";
 
 /** Soft entry to free Green AI — hidden on the assistant page itself. */
 export function GreenAssistantFab() {
   const pathname = usePathname();
+  const { locale } = useLocale();
+  const ui = getGreenAssistantUi(locale);
+
   if (!pathname || pathname.startsWith(GREEN_ASSISTANT_ROUTE)) {
     return null;
   }
@@ -16,13 +22,14 @@ export function GreenAssistantFab() {
     <Link
       href={GREEN_ASSISTANT_ROUTE}
       className="fixed bottom-5 right-4 z-40 max-w-[11rem] rounded-lg border border-emerald-400/30 bg-black/90 px-3 py-2.5 text-left shadow-lg backdrop-blur-md transition hover:border-emerald-400/55 md:bottom-8 md:right-6"
-      aria-label="Ouvrir l’assistant Green IA"
+      aria-label={ui.fabAria}
+      dir={isRtlLocale(locale) ? "rtl" : undefined}
     >
       <span className="block font-mono text-[9px] uppercase tracking-[0.18em] text-emerald-400/75">
-        Aide IA
+        {ui.fabEyebrow}
       </span>
       <span className="mt-0.5 block text-xs leading-snug text-white/80">
-        Prochain pas Green
+        {ui.fabTitle}
       </span>
     </Link>
   );

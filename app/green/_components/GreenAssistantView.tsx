@@ -3,15 +3,20 @@
 import { Suspense, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 
+import { useLocale } from "@/app/_components/i18n/LocaleProvider";
 import { CopilotChatView } from "@/app/copilot/CopilotChatView";
 import { PrimaryButton } from "@/app/_components/ui/PrimaryButton";
+import { getCopilotUi } from "@/lib/copilot/ui-i18n";
 import { COPILOT_GREEN_BRIEF_STORAGE_KEY } from "@/lib/copilot/types";
+import { getGreenAssistantUi } from "@/lib/green/assistant-i18n";
 import {
   greenAssistantMailDraft,
   greenAssistantNextSteps,
+  greenAssistantRoleAssetLabels,
   greenAssistantSuggestions,
 } from "@/lib/green/assistant-playbook";
 import { GREEN_API_DOCS_ROUTE } from "@/lib/green/api/constants";
+import { isRtlLocale } from "@/lib/i18n";
 import { track } from "@/lib/analytics";
 
 type Profile = {
@@ -19,21 +24,6 @@ type Profile = {
   asset: string;
   region: string;
 };
-
-const ROLES = [
-  { id: "issuer", label: "Émetteur / producteur" },
-  { id: "buyer", label: "Acheteur corporate" },
-  { id: "risk", label: "Risk / counsel" },
-  { id: "rse", label: "RSE / reporting" },
-] as const;
-
-const ASSETS = [
-  { id: "solar", label: "Solaire / PPA" },
-  { id: "wind", label: "Éolien" },
-  { id: "dc", label: "Data center / eau-énergie" },
-  { id: "carbon", label: "Carbone / crédit" },
-  { id: "other", label: "Autre RWA vert" },
-] as const;
 
 function loadProfile(): Profile {
   if (typeof window === "undefined") {
@@ -53,16 +43,15 @@ function loadProfile(): Profile {
   }
 }
 
-function buildClientBrief(p: Profile): string {
-  const role = ROLES.find((r) => r.id === p.role)?.label ?? p.role;
-  const asset = ASSETS.find((a) => a.id === p.asset)?.label ?? p.asset;
-  const region = p.region.trim() || "non précisée";
-  const steps = greenAssistantNextSteps(p)
+function buildClientBrief(p: Profile, locale: Parameters<typeof getGreenAssistantUi>[0]): string {
+  const labels = greenAssistantRoleAssetLabels(p, locale);
+  const region = p.region.trim() || "n/a";
+  const steps = greenAssistantNextSteps(p, locale)
     .map((s) => `${s.label} (${s.href})`)
     .join(" · ");
   return [
-    `Role: ${role}`,
-    `Asset focus: ${asset}`,
+    `Role: ${labels.role}`,
+    `Asset focus: ${labels.asset}`,
     `Region: ${region}`,
     `Preferred AUROS next steps (suggest from these when relevant): ${steps}`,
     "Goal: one clear next step; max 3 priorities; indicative only.",
@@ -70,6 +59,9 @@ function buildClientBrief(p: Profile): string {
 }
 
 export function GreenAssistantView() {
+  const { locale } = useLocale();
+  const ui = getGreenAssistantUi(locale);
+  const copilotUi = getCopilotUi(locale);
   const [profile, setProfile] = useState<Profile>({
     role: "issuer",
     asset: "solar",
@@ -81,8 +73,8 @@ export function GreenAssistantView() {
   useEffect(() => {
     setProfile(loadProfile());
     setReady(true);
-    track("green_assistant_open", { surface: "green" });
-  }, []);
+    track("green_assistant_open", { surface: "green", locale });
+  }, [locale]);
 
   useEffect(() => {
     if (!ready) return;
@@ -92,21 +84,42 @@ export function GreenAssistantView() {
     );
   }, [profile, ready]);
 
-  const clientBrief = useMemo(() => buildClientBrief(profile), [profile]);
-  const suggestions = useMemo(
-    () => greenAssistantSuggestions(profile),
-    [profile]
+  const clientBrief = useMemo(
+    () => buildClientBrief(profile, locale),
+    [profile, locale]
   );
-  const nextSteps = useMemo(() => greenAssistantNextSteps(profile), [profile]);
+  const suggestions = useMemo(
+    () => greenAssistantSuggestions(profile, locale),
+    [profile, locale]
+  );
+  const nextSteps = useMemo(
+    () => greenAssistantNextSteps(profile, locale),
+    [profile, locale]
+  );
+
+  const roles = [
+    { id: "issuer", label: ui.roles.issuer },
+    { id: "buyer", label: ui.roles.buyer },
+    { id: "risk", label: ui.roles.risk },
+    { id: "rse", label: ui.roles.rse },
+  ] as const;
+  const assets = [
+    { id: "solar", label: ui.assets.solar },
+    { id: "wind", label: ui.assets.wind },
+    { id: "dc", label: ui.assets.dc },
+    { id: "carbon", label: ui.assets.carbon },
+    { id: "other", label: ui.assets.other },
+  ] as const;
 
   async function copyMailDraft() {
-    const draft = greenAssistantMailDraft(profile);
+    const draft = greenAssistantMailDraft(profile, locale);
     try {
       await navigator.clipboard.writeText(draft);
       setMailCopied(true);
       track("green_assistant_mail_copy", {
         role: profile.role,
         asset: profile.asset,
+        locale,
       });
       window.setTimeout(() => setMailCopied(false), 2500);
     } catch {
@@ -115,23 +128,24 @@ export function GreenAssistantView() {
   }
 
   return (
-    <div className="mx-auto max-w-3xl px-4 pb-20 pt-10 md:px-6 md:pt-12">
+    <div
+      className="mx-auto max-w-3xl px-4 pb-20 pt-10 md:px-6 md:pt-12"
+      dir={isRtlLocale(locale) ? "rtl" : undefined}
+    >
       <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-emerald-400/70">
-        Green · Assistant gratuit
+        {ui.eyebrow}
       </p>
       <h1 className="mt-3 font-display text-3xl text-white md:text-4xl">
-        Votre prochain pas, pas un discours
+        {ui.title}
       </h1>
       <p className="mt-3 max-w-2xl text-sm leading-relaxed text-white/55">
-        Profil → 3 questions adaptées → 3 actions concrètes. Analyses
-        indicatives. Brouillon mail à copier (vous envoyez). Volume API /
-        sièges : Green API Premium.
+        {ui.intro}
       </p>
 
       <section className="mt-8 grid gap-3 rounded-xl border border-emerald-400/20 bg-emerald-400/[0.04] p-4 sm:grid-cols-3">
         <label className="block space-y-1.5">
           <span className="font-mono text-[10px] uppercase text-white/40">
-            Rôle
+            {ui.roleLabel}
           </span>
           <select
             value={profile.role}
@@ -140,7 +154,7 @@ export function GreenAssistantView() {
             }
             className="w-full rounded-lg border border-white/10 bg-black px-3 py-2 text-sm text-white"
           >
-            {ROLES.map((r) => (
+            {roles.map((r) => (
               <option key={r.id} value={r.id}>
                 {r.label}
               </option>
@@ -149,7 +163,7 @@ export function GreenAssistantView() {
         </label>
         <label className="block space-y-1.5">
           <span className="font-mono text-[10px] uppercase text-white/40">
-            Actif
+            {ui.assetLabel}
           </span>
           <select
             value={profile.asset}
@@ -158,7 +172,7 @@ export function GreenAssistantView() {
             }
             className="w-full rounded-lg border border-white/10 bg-black px-3 py-2 text-sm text-white"
           >
-            {ASSETS.map((a) => (
+            {assets.map((a) => (
               <option key={a.id} value={a.id}>
                 {a.label}
               </option>
@@ -167,14 +181,14 @@ export function GreenAssistantView() {
         </label>
         <label className="block space-y-1.5">
           <span className="font-mono text-[10px] uppercase text-white/40">
-            Région (opt.)
+            {ui.regionLabel}
           </span>
           <input
             value={profile.region}
             onChange={(e) =>
               setProfile((p) => ({ ...p, region: e.target.value.slice(0, 80) }))
             }
-            placeholder="ex. France, Texas…"
+            placeholder={ui.regionPlaceholder}
             className="w-full rounded-lg border border-white/10 bg-black px-3 py-2 text-sm text-white placeholder:text-white/25"
           />
         </label>
@@ -182,7 +196,7 @@ export function GreenAssistantView() {
 
       <section className="mt-6 space-y-3">
         <h2 className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/40">
-          3 prochains pas
+          {ui.nextStepsTitle}
         </h2>
         <ul className="grid gap-2 sm:grid-cols-3">
           {nextSteps.map((step) => (
@@ -194,6 +208,7 @@ export function GreenAssistantView() {
                     href: step.href,
                     role: profile.role,
                     asset: profile.asset,
+                    locale,
                   })
                 }
                 className="block h-full rounded-lg border border-white/[0.1] bg-black/30 px-3 py-3 transition hover:border-emerald-400/35"
@@ -213,21 +228,19 @@ export function GreenAssistantView() {
           onClick={() => void copyMailDraft()}
           className="font-mono text-[11px] uppercase tracking-wider text-emerald-400/80 transition hover:text-emerald-300"
         >
-          {mailCopied
-            ? "Brouillon mail copié"
-            : "Copier un mail de prochaines étapes →"}
+          {mailCopied ? ui.mailCopied : ui.copyMail}
         </button>
       </section>
 
       <div className="mt-8">
         <Suspense
           fallback={
-            <p className="font-mono text-sm text-white/40">Chargement chat…</p>
+            <p className="font-mono text-sm text-white/40">{copilotUi.loading}</p>
           }
         >
           {ready ? (
             <CopilotChatView
-              key={`${profile.role}-${profile.asset}-${profile.region}`}
+              key={`${locale}-${profile.role}-${profile.asset}-${profile.region}`}
               forcedSurface="green"
               hideHeader
               clientBrief={clientBrief}
@@ -240,22 +253,18 @@ export function GreenAssistantView() {
       </div>
 
       <section className="mt-12 border-t border-white/[0.08] pt-8">
-        <h2 className="font-display text-lg text-white">
-          Gratuit pour aider · Premium pour scaler
-        </h2>
+        <h2 className="font-display text-lg text-white">{ui.freemiumTitle}</h2>
         <ul className="mt-3 space-y-2 text-sm text-white/55">
-          <li>
-            — Chat + playbook perso + brouillon mail (vous envoyez)
-          </li>
-          <li>— Entreprises : quotas API, webhooks, sièges, SLA</li>
+          <li>{ui.freemiumBullets[0]}</li>
+          <li>{ui.freemiumBullets[1]}</li>
         </ul>
         <div className="mt-5 flex flex-wrap gap-3">
-          <PrimaryButton href={GREEN_API_DOCS_ROUTE}>Green API</PrimaryButton>
+          <PrimaryButton href={GREEN_API_DOCS_ROUTE}>{ui.apiCta}</PrimaryButton>
           <Link
             href="/pricing"
             className="inline-flex min-h-[44px] items-center font-mono text-[11px] uppercase tracking-wider text-white/45 hover:text-white/70"
           >
-            Tarifs →
+            {ui.pricingLink}
           </Link>
         </div>
       </section>

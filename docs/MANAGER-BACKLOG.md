@@ -1,7 +1,7 @@
 # Manager backlog — AUROS
 
 Living priorities. Manager owns this; update when shipping or discovering debt.
-Last review: 2026-07-21 (P1 + Growth AI v1).
+Last review: 2026-07-21 (5 locales Assistant + Copilot).
 
 ## P0 — risque / trust
 
@@ -24,12 +24,20 @@ Last review: 2026-07-21 (P1 + Growth AI v1).
 
 | Phase | Contenu |
 |-------|---------|
-| **A (now)** | RAG + drafts + care HITL + Green playbook (`/green/assistant`) + FAB + funnel |
+| **A (now)** | RAG + drafts + care HITL + Green playbook + FAB + funnel + **5 locales** Assistant/Copilot |
 | **B** | Care lié dossiers réels ; coach post-score ; A/B subjects ; mémoire consentie |
 | **C** | Fine-tune open-source **seulement** si dataset drafts approuvés + métrique claire |
+
+## Backlog i18n
+
+| Item | Statut |
+|------|--------|
+| GreenMessages AR + ZH complets | Hors scope — catalogue Green tombe encore sur EN |
+| Audit FR hardcodé wizard / trust | À venir |
 
 ## Erreurs à ne plus refaire
 
 - Fine-tune avant RAG/HITL mature
 - Auto-send mails IA
 - Claims 35 % / sans clic / fake partners
+- Copilot / Assistant hardcodés `locale: "fr"`

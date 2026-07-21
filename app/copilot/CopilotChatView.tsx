@@ -3,15 +3,21 @@
 import { useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 
+import { useLocale } from "@/app/_components/i18n/LocaleProvider";
 import { PrimaryButton } from "@/app/_components/ui/PrimaryButton";
 import { buildCompareHubShareUrl } from "@/lib/comparators/compare-selection";
 import {
   COPILOT_RTMS_STORAGE_KEY,
   parseCopilotSearchParams,
-  suggestionsForContext,
   type CopilotPageContext,
   type CopilotSurface,
 } from "@/lib/copilot/types";
+import {
+  copilotBannerLabel,
+  getCopilotUi,
+  suggestionsForContext,
+} from "@/lib/copilot/ui-i18n";
+import { isRtlLocale } from "@/lib/i18n";
 
 type ChatTurn = { role: "user" | "assistant"; content: string };
 type Citation = { title: string; url: string };
@@ -28,22 +34,6 @@ export type CopilotChatViewProps = {
   /** Override empty-state chips (max 3 recommended). */
   suggestionOverrides?: string[];
 };
-
-function contextBannerLabel(ctx: CopilotPageContext): string | null {
-  if (ctx.surface === "watts") return "Contexte : Watts Reserve";
-  if (ctx.surface === "chargeflow") return "Contexte : ChargeFlow";
-  if (ctx.surface === "green") return "Contexte : AUROS Green";
-  if (ctx.surface === "rtms") return "Contexte : RTMS";
-  if (ctx.jurisdiction_id) {
-    return `Contexte : juridiction · ${ctx.jurisdiction_id}`;
-  }
-  if (ctx.surface === "jurisdiction") return "Contexte : juridictions";
-  if (ctx.surface === "compare" && ctx.product_ids?.length) {
-    return `Contexte : compare · ${ctx.product_ids.join(", ")}`;
-  }
-  if (ctx.surface === "compare") return "Contexte : comparateur RWA";
-  return null;
-}
 
 function readRtmsBriefFromStorage(): string | undefined {
   if (typeof window === "undefined") return undefined;
@@ -72,13 +62,15 @@ function readRtmsBriefFromStorage(): string | undefined {
 
 export function CopilotChatView({
   forcedSurface,
-  eyebrow = "Copilot",
-  title = "Assistant AUROS",
-  intro = "Posez une question sur le comparateur RWA, Green, les juridictions, le Protocol ou ChargeFlow. Réponses sourcées — indicatif uniquement, pas de conseil juridique.",
+  eyebrow,
+  title,
+  intro,
   clientBrief,
   hideHeader = false,
   suggestionOverrides,
 }: CopilotChatViewProps = {}) {
+  const { locale } = useLocale();
+  const ui = getCopilotUi(locale);
   const searchParams = useSearchParams();
   const pageContextBase = useMemo(() => {
     const fromUrl = parseCopilotSearchParams({
@@ -111,9 +103,9 @@ export function CopilotChatView({
     if (suggestionOverrides?.length) {
       return suggestionOverrides.slice(0, 3);
     }
-    return suggestionsForContext(pageContext).slice(0, 3);
-  }, [pageContext, suggestionOverrides]);
-  const banner = contextBannerLabel(pageContext);
+    return suggestionsForContext(pageContext, locale).slice(0, 3);
+  }, [pageContext, suggestionOverrides, locale]);
+  const banner = copilotBannerLabel(pageContext, locale);
 
   const [input, setInput] = useState("");
   const [history, setHistory] = useState<ChatTurn[]>([]);
@@ -122,6 +114,14 @@ export function CopilotChatView({
   const [provider, setProvider] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    setHistory([]);
+    setCitations([]);
+    setSuggestedIds([]);
+    setError(null);
+    setProvider(null);
+  }, [locale]);
 
   async function sendMessage(raw: string) {
     const message = raw.trim();
@@ -137,7 +137,7 @@ export function CopilotChatView({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           message,
-          locale: "fr",
+          locale,
           history: history.slice(-6),
           context: pageContext,
         }),
@@ -150,7 +150,7 @@ export function CopilotChatView({
         error?: { message?: string };
       };
       if (!res.ok) {
-        setError(json.error?.message ?? `Erreur ${res.status}`);
+        setError(json.error?.message ?? ui.errorStatus(res.status));
         return;
       }
       setHistory([
@@ -161,7 +161,7 @@ export function CopilotChatView({
       setSuggestedIds(json.suggested_product_ids ?? []);
       setProvider(json.provider ?? null);
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Network error");
+      setError(e instanceof Error ? e.message : ui.networkError);
     } finally {
       setLoading(false);
     }
@@ -179,17 +179,23 @@ export function CopilotChatView({
         ])
       : null;
 
+  const displayEyebrow = eyebrow ?? ui.defaultEyebrow;
+  const displayTitle = title ?? ui.defaultTitle;
+  const displayIntro = intro ?? ui.defaultIntro;
+
   return (
-    <div className="space-y-8">
+    <div className="space-y-8" dir={isRtlLocale(locale) ? "rtl" : undefined}>
       {!hideHeader ? (
         <header className="space-y-3">
           <p className="font-mono text-[11px] uppercase tracking-[0.25em] text-emerald-400/80">
-            {eyebrow}
+            {displayEyebrow}
           </p>
           <h1 className="font-display text-3xl font-medium text-white md:text-4xl">
-            {title}
+            {displayTitle}
           </h1>
-          <p className="max-w-2xl text-sm leading-relaxed text-white/55">{intro}</p>
+          <p className="max-w-2xl text-sm leading-relaxed text-white/55">
+            {displayIntro}
+          </p>
           {banner ? (
             <p className="font-mono text-[11px] tracking-wide text-emerald-300/70">
               {banner}
@@ -221,9 +227,7 @@ export function CopilotChatView({
 
         <div className="max-h-[420px] space-y-4 overflow-y-auto">
           {history.length === 0 ? (
-            <p className="text-sm text-white/40">
-              Choisissez une suggestion ou tapez votre question.
-            </p>
+            <p className="text-sm text-white/40">{ui.emptyHint}</p>
           ) : (
             history.map((turn, i) => (
               <div
@@ -243,7 +247,7 @@ export function CopilotChatView({
         {suggestedIds.length > 0 ? (
           <div className="flex flex-wrap items-center gap-2 border-t border-white/[0.06] pt-3">
             <span className="font-mono text-[10px] uppercase tracking-wider text-white/35">
-              RWA proposés
+              {ui.proposedRwa}
             </span>
             {suggestedIds.map((id) => (
               <span
@@ -258,7 +262,7 @@ export function CopilotChatView({
                 href={compareHref}
                 className="font-mono text-[10px] uppercase tracking-wider text-emerald-400/80 underline-offset-2 hover:underline"
               >
-                Ajouter au comparateur →
+                {ui.addToCompare}
               </a>
             ) : null}
           </div>
@@ -267,13 +271,13 @@ export function CopilotChatView({
         <div className="flex flex-col gap-3 sm:flex-row sm:items-end">
           <label className="block flex-1 space-y-2">
             <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/40">
-              Message
+              {ui.messageLabel}
             </span>
             <textarea
               value={input}
               onChange={(e) => setInput(e.target.value)}
               rows={3}
-              placeholder="Votre question…"
+              placeholder={ui.placeholder}
               className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white placeholder:text-white/30"
               onKeyDown={(e) => {
                 if (e.key === "Enter" && !e.shiftKey) {
@@ -288,7 +292,7 @@ export function CopilotChatView({
             onClick={send}
             disabled={loading || !input.trim()}
           >
-            {loading ? "…" : "Envoyer"}
+            {loading ? "…" : ui.send}
           </PrimaryButton>
         </div>
 

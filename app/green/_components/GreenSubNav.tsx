@@ -4,6 +4,7 @@ import Link from "next/link";
 
 import { useLocale } from "@/app/_components/i18n/LocaleProvider";
 import { DATA_TERMINAL_ROUTE } from "@/lib/data-terminal/constants";
+import { getGreenAssistantUi } from "@/lib/green/assistant-i18n";
 import { GREEN_API_DOCS_ROUTE } from "@/lib/green/api/constants";
 import {
   AUROS_WIZARD_ROUTE,
@@ -26,6 +27,7 @@ const NAV_ROUTES = [
 export function GreenSubNav() {
   const { locale } = useLocale();
   const nav = getGreenMessages(locale).header.nav;
+  const assistantNav = getGreenAssistantUi(locale).navAssistant;
 
   return (
     <nav
@@ -47,7 +49,7 @@ export function GreenSubNav() {
             href="/green/assistant"
             className="font-mono text-[10px] uppercase tracking-wider text-emerald-400/70 transition hover:text-emerald-300"
           >
-            Assistant IA
+            {assistantNav}
           </Link>
           <Link
             href={DATA_TERMINAL_ROUTE}

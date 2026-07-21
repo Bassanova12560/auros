@@ -4,7 +4,6 @@ export {
   COPILOT_DISCLAIMER,
   buildCopilotHref,
   parseCopilotSearchParams,
-  suggestionsForContext,
   type CopilotDraft,
   type CopilotDraftKind,
   type CopilotDraftStatus,
@@ -15,6 +14,12 @@ export {
   type CopilotPageContext,
   type CopilotSurface,
 } from "./types";
+export {
+  suggestionsForContext,
+  getCopilotUi,
+  copilotBannerLabel,
+  localizedSuggestionsForContext,
+} from "./ui-i18n";
 export { runCopilotChat } from "./chat";
 export { runCopilotTools, collectSuggestedIds } from "./tools";
 export {

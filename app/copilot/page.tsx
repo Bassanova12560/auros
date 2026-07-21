@@ -6,6 +6,7 @@ import { COPILOT_ROUTE } from "@/lib/copilot/types";
 import { metadataFromPath } from "@/lib/seo/metadata";
 
 import { CopilotChatView } from "./CopilotChatView";
+import { CopilotLoadingFallback } from "./CopilotLoadingFallback";
 
 export const metadata: Metadata = {
   ...metadataFromPath(COPILOT_ROUTE),
@@ -19,11 +20,7 @@ export default function CopilotPage() {
     <>
       <AiFirstPageJsonLd path={COPILOT_ROUTE} />
       <div className="page-inner page-inner--3xl mx-auto px-4 pb-20 pt-12 md:px-6 md:pt-14">
-        <Suspense
-          fallback={
-            <p className="font-mono text-sm text-white/40">Chargement Copilot…</p>
-          }
-        >
+        <Suspense fallback={<CopilotLoadingFallback />}>
           <CopilotChatView />
         </Suspense>
       </div>
