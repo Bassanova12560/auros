@@ -26,10 +26,10 @@ Voir aussi : `AUROS-TOLL-MASTER-PLAN.md` · APIs live sous `/api/v1/toll/*` · `
 | 14 | Enterprise Tower | 5 | 3 | 4 | Banques, funds | **Live** `/green/toll/tower` |
 | 15 | Data Provenance Ledger | 3 | 4 | 5 | Auditors | **v0** `/api/v1/toll/provenance` · `/green/toll/provenance` |
 | 16 | Exception Management OS | 3 | 3 | 3 | Ops desks | **v0** `/green/toll/exceptions` · `/api/v1/toll/exceptions` |
-| 17 | Red-Team Asset Layer | 2 | 4 | 4 | Insurers, funds | Roadmap (security edge) |
-| 18 | Recovery & Continuity | 2 | 4 | 4 | Enterprise | Roadmap H2 |
-| 19 | Confidential / ZK | 2 | 5 | 5 | Institutional | Horizon 3 |
-| 20 | Reality Reputation | 3 | 3 | 4 | Issuers (pay to improve) | After volume |
+| 17 | Red-Team Asset Layer | 2 | 4 | 4 | Insurers, funds | **v0** `/api/v1/toll/red-team` · `/green/toll/red-team` |
+| 18 | Recovery & Continuity | 2 | 4 | 4 | Enterprise | **v0** `/green/toll/continuity` · `/api/v1/toll/continuity` |
+| 19 | Confidential / ZK | 2 | 5 | 5 | Institutional | **stub v0** `/api/v1/toll/zk-disclosure` · `/green/toll/zk` |
+| 20 | Reality Reputation | 3 | 3 | 4 | Issuers (pay to improve) | **v0** `/api/v1/toll/reputation` · `/green/toll/reputation` |
 
 **Quinté inévitable :** Resolve · Policy · Drift · Research · Audit Export.
 
@@ -63,11 +63,11 @@ Scores 1–5. **Fit** = proximité code actuel.
 | 20 | Event Certification | 4 | 4 | 4 | 4 | 4 | **v0** `/api/v1/toll/events` |
 | 21 | Provenance Ledger | 3 | 5 | 2 | 5 | 4 | v0 |
 | 22 | Exception OS | 3 | 3 | 3 | 4 | 4 | v0 desk + API |
-| 23 | Red-Team assets | 2 | 4 | 2 | 3 | 2 | H2 |
-| 24 | Recovery Continuity | 2 | 4 | 2 | 4 | 2 | H2 |
-| 25 | ZK / confidential | 2 | 5 | 1 | 4 | 1 | H3 |
-| 26 | Search Control Plane | 3 | 4 | 2 | 4 | 2 | H2 |
-| 27 | Reality Reputation | 3 | 4 | 3 | 3 | 2 | H2 |
+| 23 | Red-Team assets | 2 | 4 | 2 | 3 | 4 | **v0** `/api/v1/toll/red-team` · `/green/toll/red-team` |
+| 24 | Recovery Continuity | 2 | 4 | 2 | 4 | 4 | **v0** |
+| 25 | ZK / confidential | 2 | 5 | 1 | 4 | 2 | **stub v0** |
+| 26 | Search Control Plane | 3 | 4 | 2 | 4 | 4 | **v0** `/api/v1/toll/search-control` · `/green/toll/search-control` |
+| 27 | Reality Reputation | 3 | 4 | 3 | 3 | 4 | **v0** |
 | 28 | Benchmark API | 4 | 4 | 4 | 4 | 3 | Partial (index) |
 | 29 | Partner attribution | 3 | 3 | 4 | 2 | 5 | Live |
 | 30 | Institutional desk | 4 | 4 | 3 | 5 | 5 | Live |

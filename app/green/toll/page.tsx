@@ -84,10 +84,45 @@ export default function GreenTollPage() {
             </Link>
             {" · "}
             <Link
+              href="/green/toll/continuity"
+              className="underline underline-offset-4"
+            >
+              Continuity
+            </Link>
+            {" · "}
+            <Link
               href="/green/toll/provenance"
               className="underline underline-offset-4"
             >
               Provenance ledger
+            </Link>
+            {" · "}
+            <Link
+              href="/green/toll/red-team"
+              className="underline underline-offset-4"
+            >
+              Red-Team
+            </Link>
+            {" · "}
+            <Link
+              href="/green/toll/reputation"
+              className="underline underline-offset-4"
+            >
+              Reality Reputation
+            </Link>
+            {" · "}
+            <Link
+              href="/green/toll/zk"
+              className="underline underline-offset-4"
+            >
+              ZK disclosure stub
+            </Link>
+            {" · "}
+            <Link
+              href="/green/toll/search-control"
+              className="underline underline-offset-4"
+            >
+              Search control
             </Link>
           </p>
         </div>

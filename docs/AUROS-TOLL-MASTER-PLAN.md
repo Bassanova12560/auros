@@ -98,6 +98,7 @@
 |--------|------|
 | Resolve | `lib/toll/resolve.ts` · `POST/GET /api/v1/toll/resolve` |
 | Search | `lib/toll/search.ts` · `/api/v1/toll/search` |
+| Search Control | `lib/toll/search-control.ts` · `/api/v1/toll/search-control` · `/green/toll/search-control` |
 | Research | `lib/toll/research.ts` · `/api/v1/toll/research` |
 | Policy | `lib/toll/policy.ts` · `/api/v1/toll/policy` |
 | Drift | `lib/toll/drift.ts` · `/api/v1/toll/drift` |

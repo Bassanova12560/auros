@@ -71,9 +71,39 @@ const MODULES = [
     body: "Raw vs derived — citation indicative auditors / IA",
   },
   {
+    title: "Reality Reputation",
+    href: "/green/toll/reputation",
+    body: "Score opérationnel indicatif — issuers paient pour améliorer le signal",
+  },
+  {
     title: "Exception OS",
     href: "/green/toll/exceptions",
     body: "Cas sales — escalade / assignation / résolution HITL",
+  },
+  {
+    title: "Red-Team Asset Layer",
+    href: "/green/toll/red-team",
+    body: "Revue adversariale — gaps docs / droits / mapping (indicatif)",
+  },
+  {
+    title: "Recovery & Continuity",
+    href: "/green/toll/continuity",
+    body: "Playbooks HITL — source / opérateur / wallet / servicer / vendor",
+  },
+  {
+    title: "Search Control Plane",
+    href: "/green/toll/search-control",
+    body: "Audience ranking + ACL indicatif + audit de recherche",
+  },
+  {
+    title: "Red-Team Assets",
+    href: "/green/toll/red-team",
+    body: "Revue adversariale indicative — gaps docs / droits / mapping",
+  },
+  {
+    title: "ZK / Selective Disclosure",
+    href: "/green/toll/zk",
+    body: "Stub v0 — claim + commitment SHA-256 (pas de circuits ZK)",
   },
 ];
 

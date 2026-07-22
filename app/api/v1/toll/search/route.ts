@@ -16,6 +16,7 @@ export async function POST(request: Request) {
   const result = await searchAurosAssets({
     q: String(parsed.body.q ?? ""),
     limit: typeof parsed.body.limit === "number" ? parsed.body.limit : 20,
+    boostReputation: parsed.body.boostReputation === true,
   });
   return protocolJson({
     ok: true,

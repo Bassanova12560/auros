@@ -74,9 +74,72 @@ export {
   type TollExceptionKind,
 } from "./exceptions";
 export {
+  CONTINUITY_DISCLAIMER,
+  CONTINUITY_PLAYBOOKS,
+  CONTINUITY_SCENARIO_KINDS,
+  enrollContinuityPlan,
+  listContinuityPlans,
+  assessContinuityReadiness,
+  getContinuityPlaybook,
+  isContinuityScenarioKind,
+  type ContinuityScenarioKind,
+  type ContinuityPlanRecord,
+  type ContinuityReadiness,
+} from "./continuity";
+export {
   appendProvenanceRecord,
   listProvenanceForAsset,
   getProvenanceChain,
   isDerivedProvenance,
   type ProvenanceRecord,
 } from "./provenance";
+export {
+  evaluateAssetRedTeam,
+  runAssetRedTeam,
+  RED_TEAM_DISCLAIMER,
+  type TollRedTeamResult,
+  type TollRedTeamFinding,
+  type TollRedTeamSeverity,
+  type TollRedTeamCategory,
+} from "./red-team";
+export {
+  computeRealityReputation,
+  REALITY_REPUTATION_DISCLAIMER,
+  type RealityReputation,
+  type RealityReputationBand,
+  type RealityReputationDimensions,
+} from "./reputation";
+export {
+  searchWithControlPlane,
+  listSearchAudit,
+  applyControlPlaneRanking,
+  permissionForAudience,
+  defaultVisibilityForAudience,
+  assignHitVisibility,
+  canAudienceSeeVisibility,
+  clampVisibilityForAudience,
+  isSearchAudience,
+  isSearchVisibility,
+  SEARCH_AUDIENCES,
+  SEARCH_VISIBILITIES,
+  SEARCH_CONTROL_DISCLAIMER,
+  type SearchAudience,
+  type SearchVisibility,
+  type SearchPermissionLevel,
+  type SearchAuditEntry,
+  type ControlledSearchHit,
+  type ControlledSearchResult,
+} from "./search-control";
+export {
+  ZK_CLAIM_TYPES,
+  ZK_DISCLOSURE_DISCLAIMER,
+  buildSelectiveDisclosure,
+  verifyDisclosureStub,
+  computeDisclosureCommitment,
+  canonicalizeForCommitment,
+  isZkClaimType,
+  type ZkClaimType,
+  type SelectiveDisclosureInput,
+  type SelectiveDisclosureResult,
+  type SelectiveDisclosureRecipe,
+} from "./zk-disclosure";

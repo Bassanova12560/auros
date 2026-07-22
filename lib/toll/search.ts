@@ -2,9 +2,16 @@
  * AUROS Search Graph v0 — DNA + Green market retrieval.
  */
 
-import { listAssetDnaLocal, type AssetDnaRecord } from "@/lib/asset-dna";
+import {
+  getAssetDnaLocal,
+  listAssetDnaLocal,
+  type AssetDnaRecord,
+} from "@/lib/asset-dna";
 import { getGreenMarketSnapshot } from "@/lib/green/market/green-market-db";
 import { matchesGreenMarketSearch } from "@/lib/green/market/search";
+import { listProofStreamEvents } from "@/lib/proof-stream";
+import { listProvenanceForAsset } from "./provenance";
+import { computeRealityReputation } from "./reputation";
 
 export type TollSearchHit = {
   kind: "dna" | "market_actor" | "market_offer";
@@ -32,9 +39,27 @@ function dnaHit(dna: AssetDnaRecord): TollSearchHit {
   };
 }
 
+/** Light secondary boost from Reality Reputation (DNA hits only). Max ~0.5 rank units. */
+function reputationBoost(hit: TollSearchHit): number {
+  const id = hit.assetDnaId ?? (hit.kind === "dna" ? hit.id : undefined);
+  if (!id) return 0;
+  const dna = getAssetDnaLocal(id);
+  if (!dna) return 0;
+  const events = listProofStreamEvents(id, 30);
+  const provenanceCount = listProvenanceForAsset(id).length;
+  const overall = computeRealityReputation({
+    dna,
+    events,
+    provenanceCount,
+  }).overall;
+  return overall / 200;
+}
+
 export async function searchAurosAssets(input: {
   q: string;
   limit?: number;
+  /** When true, lightly prefer higher Reality Reputation DNA hits. Default off. */
+  boostReputation?: boolean;
 }): Promise<TollSearchResult> {
   const q = input.q?.trim() ?? "";
   const limit = Math.min(50, Math.max(1, input.limit ?? 20));
@@ -104,6 +129,14 @@ export async function searchAurosAssets(input: {
     // market snapshot optional
   }
 
-  const sliced = hits.slice(0, limit);
+  let ordered = hits;
+  if (input.boostReputation) {
+    ordered = hits
+      .map((h, i) => ({ h, score: -i + reputationBoost(h) }))
+      .sort((a, b) => b.score - a.score)
+      .map((x) => x.h);
+  }
+
+  const sliced = ordered.slice(0, limit);
   return { query: q, total: hits.length, hits: sliced };
 }

@@ -24,11 +24,15 @@ Last review: 2026-07-22 (Cash machine top20 + remaining H1).
 | Rights / Wallet / Sources v0 | OK |
 | Event Certification v0 | OK — `/api/v1/toll/events` · `docs/TOLL-EVENT-CERTIFICATION.md` |
 | Provenance Ledger v0 | OK — `/api/v1/toll/provenance` · `/green/toll/provenance` · `docs/TOLL-PROVENANCE.md` |
-| Control Tower page | OK — `/green/toll/tower` (+ Eligibility / Events / Provenance / Exceptions) |
+| Reality Reputation v0 | OK — `/api/v1/toll/reputation` · `/green/toll/reputation` · `docs/TOLL-REPUTATION.md` |
+| Control Tower page | OK — `/green/toll/tower` (+ Eligibility / Events / Provenance / Reputation / Exceptions / Continuity / Search Control / ZK stub / Red-team) |
 | Schema adoption guide | OK — `AUROS-SCHEMA-ADOPTION.md` |
 | Eligibility Router v0 | OK — `/api/v1/toll/eligibility` · `/green/toll/eligibility` · `docs/TOLL-ELIGIBILITY.md` |
 | Exception Management OS v0 | OK — `/api/v1/toll/exceptions` · `/green/toll/exceptions` · `docs/TOLL-EXCEPTIONS.md` |
-| ZK / Red-team | Horizon 2–3 |
+| Recovery & Continuity v0 | OK — `/api/v1/toll/continuity` · `/green/toll/continuity` · `docs/TOLL-CONTINUITY.md` |
+| Search Control Plane v0 | OK — `/api/v1/toll/search-control` · `/green/toll/search-control` · `docs/TOLL-SEARCH-CONTROL.md` |
+| ZK selective disclosure stub v0 | OK — `/api/v1/toll/zk-disclosure` · `/green/toll/zk` · `docs/TOLL-ZK-DISCLOSURE.md` |
+| Red-Team Asset Layer v0 | OK — `/api/v1/toll/red-team` · `/green/toll/red-team` · `docs/TOLL-RED-TEAM.md` |
 
 ## P0 — Green cash / DNA / institutionnel
 

@@ -16,9 +16,9 @@ export function buildGreenApiOpenApiSpec() {
     openapi: "3.0.3",
     info: {
       title: "AUROS Green API",
-      version: "1.8.0",
+      version: "1.9.0",
       description:
-        "Public API for Carbon Quality Score (CQS), Watt Score, H₂O Score, WELHR / continuity / ROI resilience screens, AUROS Green Index, Asset DNA, Proof Stream, Portfolio Console, air-gap export, and AUROS Toll (Resolve / Search / Research / Policy / Eligibility / Drift / Events / Audit / Rights / Wallet / Sources / Provenance / Exceptions / Agent Protocol). Anonymous: 100 req/day. Free API key: 1000 req/month. Batch Watt/H₂O and large CQS batches require paid premium tier (not merely an auros_pk_live_* free key).",
+        "Public API for Carbon Quality Score (CQS), Watt Score, H₂O Score, WELHR / continuity / ROI resilience screens, AUROS Green Index, Asset DNA, Proof Stream, Portfolio Console, air-gap export, and AUROS Toll (Resolve / Search / Search-Control / Research / Policy / Eligibility / Drift / Events / Audit / Rights / Wallet / Sources / Provenance / Exceptions / Continuity / Reputation / Red-Team / ZK-Disclosure / Agent Protocol). Anonymous: 100 req/day. Free API key: 1000 req/month. Batch Watt/H₂O and large CQS batches require paid premium tier (not merely an auros_pk_live_* free key).",
       contact: { name: "AUROS", url: base },
     },
     servers: [{ url: base }],
@@ -169,6 +169,18 @@ export function buildGreenApiOpenApiSpec() {
       "/api/v1/toll/search": {
         post: { summary: "Search Graph — DNA + Green market" },
       },
+      "/api/v1/toll/search-control": {
+        get: {
+          summary:
+            "List indicative search audit entries (Bearer + search credits)",
+          security: [{ bearerAuth: [] }],
+        },
+        post: {
+          summary:
+            "Search Control Plane — audience ranking + visibility ACL + audit (Bearer + search credits)",
+          security: [{ bearerAuth: [] }],
+        },
+      },
       "/api/v1/toll/research": {
         post: {
           summary: "Research pack + citations (Bearer required)",
@@ -268,6 +280,17 @@ export function buildGreenApiOpenApiSpec() {
           security: [{ bearerAuth: [] }],
         },
       },
+      "/api/v1/toll/continuity": {
+        get: {
+          summary:
+            "Recovery & Continuity — list enrollments + playbook templates (HITL)",
+        },
+        post: {
+          summary:
+            "Enroll continuity playbook or action=assess readiness (Bearer + policy credits)",
+          security: [{ bearerAuth: [] }],
+        },
+      },
 
       "/api/v1/toll/provenance": {
         get: {
@@ -278,6 +301,41 @@ export function buildGreenApiOpenApiSpec() {
         post: {
           summary:
             "Append provenance record (Bearer + research credits) — indicative HITL",
+          security: [{ bearerAuth: [] }],
+        },
+      },
+      "/api/v1/toll/red-team": {
+        post: {
+          summary:
+            "Red-Team Asset Layer — indicative adversarial findings (Bearer + research credits); not a pen-test / not Verified",
+          security: [{ bearerAuth: [] }],
+        },
+      },
+      "/api/v1/toll/reputation": {
+        get: {
+          summary:
+            "Reality Reputation — indicative operational score by assetDnaId (Bearer + policy credits)",
+          security: [{ bearerAuth: [] }],
+          parameters: [
+            {
+              name: "assetDnaId",
+              in: "query",
+              required: true,
+              schema: { type: "string" },
+            },
+          ],
+        },
+        post: {
+          summary:
+            "Reality Reputation compute (Bearer + research credits) — not a credit rating; HITL",
+          security: [{ bearerAuth: [] }],
+        },
+      },
+
+      "/api/v1/toll/zk-disclosure": {
+        post: {
+          summary:
+            "Selective-disclosure stub v0 — claim + SHA-256 commitment (Bearer + research credits). Demo only, not ZK proofs.",
           security: [{ bearerAuth: [] }],
         },
       },

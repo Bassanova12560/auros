@@ -38,7 +38,7 @@ describe("next iteration surfaces", () => {
       info: { version: string };
       paths: Record<string, unknown>;
     };
-    assert.equal(spec.info.version, "1.8.0");
+    assert.equal(spec.info.version, "1.9.0");
     assert.ok(spec.paths["/api/green/eau/supplier-screen"]);
     assert.ok(spec.paths["/api/green/eau/resource-signals"]);
     assert.ok(spec.paths["/api/green/eau/connectors"]);
@@ -47,5 +47,6 @@ describe("next iteration surfaces", () => {
     assert.ok(spec.paths["/api/v1/green/portfolio"]);
     assert.ok(spec.paths["/api/v1/green/portfolio/watchlist"]);
     assert.ok(spec.paths["/api/v1/green/portfolio/airgap"]);
+    assert.ok(spec.paths["/api/v1/toll/red-team"]);
   });
 });
