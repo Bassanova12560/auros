@@ -3,14 +3,14 @@ import {
   parseJsonBody,
   protocolError,
   protocolJson,
-  tollIpGuard,
+  tollMeteredGuard,
 } from "@/lib/toll/http";
 
 export const runtime = "nodejs";
 
 /** POST /api/v1/toll/drift { assetDnaId } */
 export async function POST(request: Request) {
-  const guard = await tollIpGuard("drift");
+  const guard = await tollMeteredGuard(request, "drift");
   if (!guard.ok) return guard.response;
   const parsed = await parseJsonBody(request);
   if (!parsed.ok) return parsed.response;
@@ -22,7 +22,19 @@ export async function POST(request: Request) {
   }
   const result = await getAssetDrift({ assetDnaId });
   if ("error" in result) {
-    return protocolError(result.error, result.error, result.error === "not_found" ? 404 : 400);
+    return protocolError(
+      result.error,
+      result.error,
+      result.error === "not_found" ? 404 : 400
+    );
   }
-  return protocolJson({ ok: true, ...result });
+  return protocolJson({
+    ok: true,
+    ...result,
+    meter: {
+      remaining: guard.meter.remaining,
+      limit: guard.meter.limit,
+      cost: guard.meter.cost,
+    },
+  });
 }

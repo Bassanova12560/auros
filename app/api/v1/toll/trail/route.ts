@@ -3,14 +3,14 @@ import {
   parseJsonBody,
   protocolError,
   protocolJson,
-  tollIpGuard,
+  tollMeteredGuard,
 } from "@/lib/toll/http";
 
 export const runtime = "nodejs";
 
 /** POST /api/v1/toll/trail { assetDnaId, limit? } */
 export async function POST(request: Request) {
-  const guard = await tollIpGuard("trail");
+  const guard = await tollMeteredGuard(request, "trail");
   if (!guard.ok) return guard.response;
   const parsed = await parseJsonBody(request);
   if (!parsed.ok) return parsed.response;
@@ -27,5 +27,13 @@ export async function POST(request: Request) {
   if ("error" in result) {
     return protocolError(result.error, "Invalid Asset DNA id", 400);
   }
-  return protocolJson({ ok: true, ...result });
+  return protocolJson({
+    ok: true,
+    ...result,
+    meter: {
+      remaining: guard.meter.remaining,
+      limit: guard.meter.limit,
+      cost: guard.meter.cost,
+    },
+  });
 }

@@ -1,7 +1,7 @@
 # Manager backlog — AUROS
 
 Living priorities. Manager owns this; update when shipping or discovering debt.
-Last review: 2026-07-22 (AUROS Toll / Agent Protocol v0).
+Last review: 2026-07-22 (Toll metering + lifecycle packs).
 
 ## P0 — risque / trust
 
@@ -43,8 +43,8 @@ Last review: 2026-07-22 (AUROS Toll / Agent Protocol v0).
 | Metadata Standard | OK — `/api/v1/toll/schema` |
 | Validation Trail | OK — `/api/v1/toll/trail` |
 | Agent Protocol + embed | OK — `/api/v1/toll/agent` · `/embed/asset-dna` |
-| Lookup metering credits | À venir (Upstash) |
-| Lifecycle event fees | À venir |
+| Lookup metering credits | OK — Upstash/memory + packs `/green/toll` |
+| Lifecycle event fees | OK — `/api/v1/toll/lifecycle` + Maintain 149 €/mo |
 
 ## P1 — conversion
 

@@ -12,6 +12,7 @@ import {
   fulfillGreenMarketVerifiedFromStripe,
 } from "@/lib/green/fulfill-market-cash";
 import { fulfillGreenP1FromStripe } from "@/lib/green/fulfill-p1-cash";
+import { fulfillTollCashFromStripe } from "@/lib/toll/fulfill-toll-cash";
 import {
   fulfillMonitorSubscription,
   downgradeMonitorByEmail,
@@ -24,6 +25,7 @@ import {
   parseGreenMarketVerifiedMetadata,
 } from "@/lib/stripe/green-market-cash-checkout";
 import { parseGreenP1CheckoutMetadata } from "@/lib/stripe/green-p1-checkout";
+import { parseTollCheckoutMetadata } from "@/lib/stripe/toll-checkout";
 import { parseMonitorCheckoutMetadata } from "@/lib/stripe/monitor-checkout";
 import { parseWizardCheckoutMetadata } from "@/lib/stripe/wizard-checkout";
 import { fulfillWizardPayment } from "@/lib/wizard/fulfill-payment";
@@ -97,6 +99,12 @@ export async function POST(request: Request) {
     const greenP1Meta = parseGreenP1CheckoutMetadata(sessionMeta);
     if (greenP1Meta) {
       await fulfillGreenP1FromStripe(session);
+      return NextResponse.json({ received: true });
+    }
+
+    const tollCashMeta = parseTollCheckoutMetadata(sessionMeta);
+    if (tollCashMeta) {
+      await fulfillTollCashFromStripe(session);
       return NextResponse.json({ received: true });
     }
 

@@ -120,6 +120,12 @@ export function GreenHubView({ marketSnapshot, impact, registrySnapshot }: Props
             >
               Readiness →
             </Link>
+            <Link
+              href="/green/toll"
+              className="font-mono text-[11px] tracking-wide text-white/40 transition-colors duration-300 hover:text-white/70"
+            >
+              Toll →
+            </Link>
           </p>
         </div>
 

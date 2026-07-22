@@ -40,6 +40,7 @@ export const GREEN_MY_ROUTE = "/green/my";
 export const GREEN_FAST_TRACK_ROUTE = "/green/fast-track";
 export const GREEN_INVESTORS_ROUTE = "/green/investors";
 export const GREEN_READINESS_ROUTE = "/green/readiness";
+export const GREEN_TOLL_ROUTE = "/green/toll";
 
 export const AUROS_FAQ_ROUTE = "/faq";
 export const AUROS_RESOURCES_ROUTE = "/ressources";

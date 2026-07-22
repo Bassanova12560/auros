@@ -3,15 +3,17 @@ import {
   parseJsonBody,
   protocolError,
   protocolJson,
-  tollRequireBearer,
+  tollMeteredGuard,
 } from "@/lib/toll/http";
 
 export const runtime = "nodejs";
 
-/** POST /api/v1/toll/research — Bearer required */
+/** POST /api/v1/toll/research — Bearer + credits */
 export async function POST(request: Request) {
-  const auth = await tollRequireBearer(request);
-  if (!auth.ok) return auth.response;
+  const guard = await tollMeteredGuard(request, "research", {
+    requireAuth: true,
+  });
+  if (!guard.ok) return guard.response;
   const parsed = await parseJsonBody(request);
   if (!parsed.ok) return parsed.response;
   const q = String(parsed.body.q ?? parsed.body.id ?? "").trim();
@@ -19,5 +21,13 @@ export async function POST(request: Request) {
     return protocolError("invalid_query", "Missing q", 400);
   }
   const result = await researchAurosAsset({ q });
-  return protocolJson({ ok: true, ...result });
+  return protocolJson({
+    ok: true,
+    ...result,
+    meter: {
+      remaining: guard.meter.remaining,
+      limit: guard.meter.limit,
+      cost: guard.meter.cost,
+    },
+  });
 }

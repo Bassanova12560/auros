@@ -6,13 +6,16 @@ Machine interface for banks, platforms, wallets, and AI agents. All responses ar
 
 ## Auth
 
-| Endpoint class | Auth |
-|----------------|------|
-| `GET /api/v1/toll/schema` | Public |
-| Resolve / Search / Trail / Drift / Trust (read) | Optional Bearer (higher volume with key) |
-| Research / Policy / Agent | Bearer `auros_pk_*` required |
+| Endpoint class | Auth | Credits |
+|----------------|------|---------|
+| `GET /api/v1/toll/schema` | Public | 0 |
+| Resolve / Search / Trail / Drift | Optional Bearer | 1 each (anon 200/mo · free 2k · premium 25k + packs) |
+| Research / Policy / Agent | Bearer required | 5 / 3 / 2 |
+| Lifecycle event | Bearer | 1 event credit (bonus pack first) |
 
-Keys: `POST /api/v1/keys`. Quotas: free 1k/mo · premium tiers via Green API Premium.
+Paid packs: `/green/toll` — Lookup Pack 99 € (10k) · Lifecycle Maintain 149 €/mo (500 events).
+
+Keys: `POST /api/v1/keys`. Upstash recommended for durable metering (`docs/UPSTASH-SETUP.md`).
 
 ## Tools (Agent)
 

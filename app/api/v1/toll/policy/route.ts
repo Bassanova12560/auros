@@ -4,15 +4,15 @@ import {
   parseJsonBody,
   protocolError,
   protocolJson,
-  tollRequireBearer,
+  tollMeteredGuard,
 } from "@/lib/toll/http";
 
 export const runtime = "nodejs";
 
-/** POST /api/v1/toll/policy — Bearer required */
+/** POST /api/v1/toll/policy — Bearer + credits */
 export async function POST(request: Request) {
-  const auth = await tollRequireBearer(request);
-  if (!auth.ok) return auth.response;
+  const guard = await tollMeteredGuard(request, "policy", { requireAuth: true });
+  if (!guard.ok) return guard.response;
   const parsed = await parseJsonBody(request);
   if (!parsed.ok) return parsed.response;
   const q = String(
@@ -32,5 +32,10 @@ export async function POST(request: Request) {
     query: q,
     resolved: resolved.resolved,
     ...decision,
+    meter: {
+      remaining: guard.meter.remaining,
+      limit: guard.meter.limit,
+      cost: guard.meter.cost,
+    },
   });
 }

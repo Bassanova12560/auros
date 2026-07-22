@@ -59,4 +59,5 @@ Publier → Prouver (RTMS) → Structurer (wizard) → Match (intro fee / verifi
 Attribution partenaires pilotes : **done** (`docs/PARTNER-PILOTS.md`).  
 White-label / DNA / Portfolio institutionnel : **done**.  
 **Toll / Agent Protocol v0** : Resolve · Search · Research · Policy · Drift · Schema · Trail · Embed (`docs/AUROS-TOLL-MASTER-PLAN.md`).  
-Suite : lookup metering · lifecycle event fees · pilote policy banque.
+**Metering live** : crédits lookup + Lifecycle Maintain — `/green/toll` · `POST /api/v1/toll/lifecycle`.  
+Suite : lier crédits → key hash self-serve · pilote policy banque.

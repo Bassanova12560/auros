@@ -189,7 +189,14 @@ export function buildGreenApiOpenApiSpec() {
       },
       "/api/v1/toll/agent": {
         post: {
-          summary: "Agent Protocol tool dispatcher (Bearer required)",
+          summary: "Agent Protocol tool dispatcher (Bearer + credits)",
+          security: [{ bearerAuth: [] }],
+        },
+      },
+      "/api/v1/toll/lifecycle": {
+        post: {
+          summary:
+            "Billable Proof Stream lifecycle event (Bearer — burns event credits)",
           security: [{ bearerAuth: [] }],
         },
       },

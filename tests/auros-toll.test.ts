@@ -10,7 +10,17 @@ import {
   getAurosMetadataSchema,
   resolveAurosAsset,
   searchAurosAssets,
+  grantTollCredits,
+  getTollBonusCredits,
+  TOLL_CREDIT_COST,
+  TOLL_MONTHLY_INCLUDED,
 } from "@/lib/toll";
+import {
+  TOLL_LOOKUP_PACK_CREDITS,
+  TOLL_LOOKUP_PACK_PRODUCT,
+  isTollCashProduct,
+} from "@/lib/toll/lifecycle-pricing";
+import { parseTollCheckoutMetadata } from "@/lib/stripe/toll-checkout";
 
 describe("auros-toll", () => {
   it("exposes metadata schema", () => {
@@ -75,5 +85,24 @@ describe("auros-toll", () => {
     if (!out.ok) return;
     const tools = (out.result as { tools: string[] }).tools;
     assert.ok(tools.includes("resolve_asset"));
+  });
+
+  it("meters credit costs and grants lookup packs", () => {
+    assert.equal(TOLL_CREDIT_COST.resolve, 1);
+    assert.equal(TOLL_CREDIT_COST.research, 5);
+    assert.ok(TOLL_MONTHLY_INCLUDED.anonymous >= 100);
+    const subject = `test:${Date.now()}`;
+    grantTollCredits({ subjectId: subject, lookups: TOLL_LOOKUP_PACK_CREDITS });
+    assert.equal(getTollBonusCredits(subject).lookups, TOLL_LOOKUP_PACK_CREDITS);
+    assert.ok(isTollCashProduct(TOLL_LOOKUP_PACK_PRODUCT));
+    const meta = parseTollCheckoutMetadata({
+      product: TOLL_LOOKUP_PACK_PRODUCT,
+      email: "Ops@Bank.com",
+      locale: "fr",
+      company: "Bank",
+      credit_subject: "email:ops@bank.com",
+    });
+    assert.ok(meta);
+    assert.equal(meta!.email, "ops@bank.com");
   });
 });
