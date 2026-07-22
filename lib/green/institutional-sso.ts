@@ -47,39 +47,37 @@ function parseTenantsJson(raw: string | undefined): SsoTenantRecord[] {
   try {
     const parsed = JSON.parse(raw) as unknown;
     if (!Array.isArray(parsed)) return [];
-    return parsed
-      .map((row) => {
-        if (!row || typeof row !== "object") return null;
-        const r = row as Record<string, unknown>;
-        const tenantId = String(r.tenantId ?? r.id ?? "")
-          .trim()
-          .toLowerCase()
-          .slice(0, 40);
-        const displayName = String(r.displayName ?? r.name ?? "").trim();
-        if (!tenantId || !displayName) return null;
-        const statusRaw = String(r.status ?? "draft");
-        const status: SsoTenantStatus =
-          statusRaw === "live" || statusRaw === "configured"
-            ? statusRaw
-            : "draft";
-        const protocol = String(r.idpProtocol ?? r.protocol ?? "saml");
-        return {
-          tenantId,
-          displayName: displayName.slice(0, 80),
-          clerkOrgId: r.clerkOrgId
-            ? String(r.clerkOrgId).trim()
-            : undefined,
-          domains: Array.isArray(r.domains)
-            ? (r.domains as unknown[])
-                .map((d) => String(d).trim().toLowerCase())
-                .filter((d) => d.includes("."))
-            : [],
-          idpProtocol: protocol === "oidc" ? "oidc" : "saml",
-          status,
-          notes: r.notes ? String(r.notes).slice(0, 200) : undefined,
-        } satisfies SsoTenantRecord;
-      })
-      .filter((t): t is SsoTenantRecord => Boolean(t));
+    const out: SsoTenantRecord[] = [];
+    for (const row of parsed) {
+      if (!row || typeof row !== "object") continue;
+      const r = row as Record<string, unknown>;
+      const tenantId = String(r.tenantId ?? r.id ?? "")
+        .trim()
+        .toLowerCase()
+        .slice(0, 40);
+      const displayName = String(r.displayName ?? r.name ?? "").trim();
+      if (!tenantId || !displayName) continue;
+      const statusRaw = String(r.status ?? "draft");
+      const status: SsoTenantStatus =
+        statusRaw === "live" || statusRaw === "configured"
+          ? statusRaw
+          : "draft";
+      const protocol = String(r.idpProtocol ?? r.protocol ?? "saml");
+      out.push({
+        tenantId,
+        displayName: displayName.slice(0, 80),
+        clerkOrgId: r.clerkOrgId ? String(r.clerkOrgId).trim() : undefined,
+        domains: Array.isArray(r.domains)
+          ? (r.domains as unknown[])
+              .map((d) => String(d).trim().toLowerCase())
+              .filter((d) => d.includes("."))
+          : [],
+        idpProtocol: protocol === "oidc" ? "oidc" : "saml",
+        status,
+        notes: r.notes ? String(r.notes).slice(0, 200) : undefined,
+      });
+    }
+    return out;
   } catch {
     return [];
   }
