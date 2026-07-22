@@ -11,6 +11,7 @@ import {
   fulfillGreenMarketIntroFromStripe,
   fulfillGreenMarketVerifiedFromStripe,
 } from "@/lib/green/fulfill-market-cash";
+import { fulfillGreenP1FromStripe } from "@/lib/green/fulfill-p1-cash";
 import {
   fulfillMonitorSubscription,
   downgradeMonitorByEmail,
@@ -22,6 +23,7 @@ import {
   parseGreenMarketIntroMetadata,
   parseGreenMarketVerifiedMetadata,
 } from "@/lib/stripe/green-market-cash-checkout";
+import { parseGreenP1CheckoutMetadata } from "@/lib/stripe/green-p1-checkout";
 import { parseMonitorCheckoutMetadata } from "@/lib/stripe/monitor-checkout";
 import { parseWizardCheckoutMetadata } from "@/lib/stripe/wizard-checkout";
 import { fulfillWizardPayment } from "@/lib/wizard/fulfill-payment";
@@ -89,6 +91,12 @@ export async function POST(request: Request) {
     const greenVerifiedMeta = parseGreenMarketVerifiedMetadata(sessionMeta);
     if (greenVerifiedMeta) {
       await fulfillGreenMarketVerifiedFromStripe(session);
+      return NextResponse.json({ received: true });
+    }
+
+    const greenP1Meta = parseGreenP1CheckoutMetadata(sessionMeta);
+    if (greenP1Meta) {
+      await fulfillGreenP1FromStripe(session);
       return NextResponse.json({ received: true });
     }
 

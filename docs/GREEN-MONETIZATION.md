@@ -18,6 +18,17 @@ Matching data / intro fee seulement — **pas de broker**, pas d’exécution de
 | Green API Premium | **299 €/mo** | `/green/api#premium` (déjà live) |
 | Green API Enterprise | Sur devis | `hello@getauros.com` |
 
+## Produits live (P1+)
+
+Voir [`GREEN-P1-CASH.md`](./GREEN-P1-CASH.md) :
+
+| Offre | Prix | Surface |
+|-------|------|---------|
+| Fast Track 24h | **499 €** | `/green/fast-track` |
+| Investor Room | **199 €** / 30 j | `/green/investors` |
+| Index Pack | **99 €/mo** | `/data/licence` |
+| Readiness MRR | **149 €/mo** | `/green/readiness` |
+
 ## Crédibilité (prérequis cash)
 
 - Méthodologie RTMS publique : `/green/standards` (poids, docs, refus, limites, tiers)
@@ -44,6 +55,6 @@ Publier → Prouver (RTMS) → Structurer (wizard) → Match (intro fee / verifi
 
 ## Suite (P1+)
 
-Fast Track 24h · Investor room · Indice Green · Readiness MRR.  
-White-label / DNA / Portfolio institutionnel : **done** (voir `docs/ASSET-DNA-V1.md`).  
-Voir backlog manager.
+**P1 cash shippé** — Fast Track · Investor Room · Index Pack · Readiness MRR (`docs/GREEN-P1-CASH.md`).  
+White-label / DNA / Portfolio institutionnel : **done**.  
+Suite possible : attribution partenaires · Growth AI.

@@ -102,6 +102,24 @@ export function GreenHubView({ marketSnapshot, impact, registrySnapshot }: Props
             >
               Portfolio →
             </Link>
+            <Link
+              href="/green/fast-track"
+              className="font-mono text-[11px] tracking-wide text-white/40 transition-colors duration-300 hover:text-white/70"
+            >
+              Fast Track →
+            </Link>
+            <Link
+              href="/green/investors"
+              className="font-mono text-[11px] tracking-wide text-white/40 transition-colors duration-300 hover:text-white/70"
+            >
+              Investor Room →
+            </Link>
+            <Link
+              href="/green/readiness"
+              className="font-mono text-[11px] tracking-wide text-white/40 transition-colors duration-300 hover:text-white/70"
+            >
+              Readiness →
+            </Link>
           </p>
         </div>
 

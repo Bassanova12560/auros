@@ -43,10 +43,11 @@ Last review: 2026-07-22 (DNA/institutionnel v1 closed).
 
 | Item | Statut |
 |------|--------|
-| Fast Track 24h | À venir |
-| Investor room | À venir |
-| Indice Green packagé | Partiel (Index live) |
-| Readiness MRR | À venir |
+| Fast Track 24h | OK — `/green/fast-track` |
+| Investor room | OK — `/green/investors` |
+| Indice Green packagé | OK — Index Pack `/data/licence` |
+| Readiness MRR | OK — `/green/readiness` |
+| Attribution partenaires pilotes | À venir |
 
 ## Backlog i18n
 

@@ -37,6 +37,9 @@ export const GREEN_REGISTRY_CONNECT_ROUTE = "/green/registry-connect";
 export const GREEN_DPP_ROUTE = "/green/dpp";
 export const GREEN_VERIFY_ROUTE = "/green/verify";
 export const GREEN_MY_ROUTE = "/green/my";
+export const GREEN_FAST_TRACK_ROUTE = "/green/fast-track";
+export const GREEN_INVESTORS_ROUTE = "/green/investors";
+export const GREEN_READINESS_ROUTE = "/green/readiness";
 
 export const AUROS_FAQ_ROUTE = "/faq";
 export const AUROS_RESOURCES_ROUTE = "/ressources";

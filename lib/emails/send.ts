@@ -579,6 +579,35 @@ export async function sendInstitutionalRequestInternal(data: {
   });
 }
 
+export async function sendGreenP1PaidInternal(data: {
+  product: string;
+  email: string;
+  company: string;
+  notes: string;
+  sessionId: string;
+  accessUrl?: string;
+}): Promise<boolean> {
+  const internal = internalNotifyEmail();
+  if (!internal) {
+    console.info("[green-p1] paid (no internal email)", data.product, data.email);
+    return false;
+  }
+  return sendSafe({
+    to: internal,
+    subject: `[HITL] ${data.product} — ${data.company || data.email}`,
+    html: `<p><strong>Paid Green P1 product</strong></p>
+<ul>
+<li>Product: ${escapeHtml(data.product)}</li>
+<li>Email: ${escapeHtml(data.email)}</li>
+<li>Company: ${escapeHtml(data.company || "—")}</li>
+<li>Notes: ${escapeHtml(data.notes || "—")}</li>
+<li>Session: ${escapeHtml(data.sessionId)}</li>
+${data.accessUrl ? `<li>Access: ${escapeHtml(data.accessUrl)}</li>` : ""}
+</ul>
+<p>Status: <strong>En revue</strong> — fulfill SLA manually. No auto-certification / no brokerage.</p>`,
+  });
+}
+
 function escapeHtml(text: string): string {
   return text
     .replace(/&/g, "&amp;")

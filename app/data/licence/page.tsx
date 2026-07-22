@@ -3,6 +3,7 @@ import Link from "next/link";
 
 import { FocusPageShell } from "@/app/_components/FocusPageShell";
 import { PrimaryButton } from "@/app/_components/ui/PrimaryButton";
+import { GreenP1CheckoutForm } from "@/app/green/_components/GreenP1CheckoutForm";
 import {
   DATA_LICENCE_ROUTE,
   DATA_TERMINAL_ROUTE,
@@ -12,6 +13,10 @@ import {
   GREEN_API_PREMIUM_MONTHLY_EUR,
   greenApiPremiumDescription,
 } from "@/lib/green/green-api-pricing";
+import {
+  GREEN_INDEX_PACK_EUR,
+  GREEN_INDEX_PACK_PRODUCT,
+} from "@/lib/green/p1-cash-pricing";
 import { GREEN_INDEX_ROUTE } from "@/lib/green-index";
 import { metadataFromPath } from "@/lib/seo/metadata";
 
@@ -19,7 +24,7 @@ export const metadata: Metadata = {
   ...metadataFromPath(DATA_LICENCE_ROUTE),
   title: "Licence data Green | AUROS",
   description:
-    "CC-BY pour l’index public, API Premium pour l’usage commercial API, redistribution sur devis partenaires.",
+    "CC-BY pour l’index public, Index Pack commercial, API Premium, redistribution sur devis.",
 };
 
 const TIERS = [
@@ -28,6 +33,12 @@ const TIERS = [
     title: "Free — index public",
     body: "Green Index, CSV et pages /data/* : licence Creative Commons BY 4.0. Citation « AUROS Green Index » obligatoire. Pas de garantie SLA.",
     cta: { href: GREEN_INDEX_ROUTE, label: "Voir l’index →" },
+  },
+  {
+    id: "index-pack",
+    title: `Index Pack — ${GREEN_INDEX_PACK_EUR} €/mo`,
+    body: "Kit citation + CSV packagé + droits d’usage interne / outils du feed. Pas une redistribution plein marché (voir partenaires).",
+    cta: null as null,
   },
   {
     id: "premium",
@@ -58,19 +69,20 @@ export default function DataLicencePage() {
             Data licence
           </p>
           <h1 className="font-display text-3xl font-medium text-white md:text-4xl">
-            Trois niveaux, une règle claire
+            Quatre niveaux, une règle claire
           </h1>
           <p className="mx-auto max-w-2xl text-sm leading-relaxed text-white/55">
-            L’index public reste ouvert (CC-BY). L’API payante finance le terminal.
-            La redistribution commerciale se négocie à part.
+            L’index public reste ouvert (CC-BY). Index Pack et API Premium
+            financent l’usage commercial. La redistribution plein marché se
+            négocie à part.
           </p>
         </header>
 
-        <div className="grid gap-5 md:grid-cols-3">
+        <div className="grid gap-5 sm:grid-cols-2">
           {TIERS.map((tier) => (
             <article
               key={tier.id}
-              className="flex flex-col rounded-2xl border border-white/[0.08] bg-white/[0.02] p-6"
+              className="flex flex-col border border-white/[0.08] bg-white/[0.02] p-6"
             >
               <h2 className="font-display text-lg font-semibold text-white">
                 {tier.title}
@@ -78,12 +90,22 @@ export default function DataLicencePage() {
               <p className="mt-3 flex-1 text-sm leading-relaxed text-white/55">
                 {tier.body}
               </p>
-              <Link
-                href={tier.cta.href}
-                className="mt-6 font-mono text-xs uppercase tracking-wider text-emerald-400/80 hover:text-emerald-300"
-              >
-                {tier.cta.label}
-              </Link>
+              {tier.id === "index-pack" ? (
+                <div className="mt-4">
+                  <GreenP1CheckoutForm
+                    product={GREEN_INDEX_PACK_PRODUCT}
+                    priceLabel={`${GREEN_INDEX_PACK_EUR} € / mois`}
+                    cta={`Souscrire Index Pack — ${GREEN_INDEX_PACK_EUR} €/mo`}
+                  />
+                </div>
+              ) : tier.cta ? (
+                <Link
+                  href={tier.cta.href}
+                  className="mt-6 font-mono text-xs uppercase tracking-wider text-emerald-400/80 hover:text-emerald-300"
+                >
+                  {tier.cta.label}
+                </Link>
+              ) : null}
             </article>
           ))}
         </div>
