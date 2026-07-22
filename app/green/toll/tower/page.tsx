@@ -106,6 +106,11 @@ const MODULES = [
     body: "Stub v0 — claim + commitment SHA-256 (pas de circuits ZK)",
   },
   {
+    title: "Bank Policy Pilot",
+    href: "/green/toll/bank",
+    body: "Tenant banque — règles figées + log de décisions HITL",
+  },
+  {
     title: "Benchmark API",
     href: "/api/v1/toll/benchmark",
     body: "Green Index top / segments / peer rank (indicatif)",

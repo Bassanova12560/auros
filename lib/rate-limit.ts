@@ -1,30 +1,9 @@
 import { headers } from "next/headers";
 
+import { upstashCommand } from "@/lib/upstash";
+
 /** In-memory limiter — fallback when Upstash is unset (dev / single instance). */
 const requests = new Map<string, { count: number; resetAt: number }>();
-
-type UpstashResponse = { result?: number | string | null };
-
-async function upstashCommand(command: (string | number)[]): Promise<UpstashResponse | null> {
-  const url = process.env.UPSTASH_REDIS_REST_URL?.trim();
-  const token = process.env.UPSTASH_REDIS_REST_TOKEN?.trim();
-  if (!url || !token) return null;
-
-  try {
-    const res = await fetch(url, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(command),
-    });
-    if (!res.ok) return null;
-    return (await res.json()) as UpstashResponse;
-  } catch {
-    return null;
-  }
-}
 
 export function checkRateLimit(
   identifier: string,

@@ -23,7 +23,11 @@ Last review: 2026-07-22 (Cash machine closeout + Benchmark + Agent tools).
 | Event Certification v0 | OK — `/api/v1/toll/events` · `docs/TOLL-EVENT-CERTIFICATION.md` |
 | Provenance Ledger v0 | OK — `/api/v1/toll/provenance` · `/green/toll/provenance` · `docs/TOLL-PROVENANCE.md` |
 | Reality Reputation v0 | OK — `/api/v1/toll/reputation` · `/green/toll/reputation` · `docs/TOLL-REPUTATION.md` |
-| Control Tower page | OK — `/green/toll/tower` (+ Eligibility / Events / Provenance / Reputation / Exceptions / Continuity / Search Control / ZK stub / Red-team) |
+| Control Tower page | OK — `/green/toll/tower` (+ Bank pilot / Eligibility / …) |
+| Bank Policy/Eligibility pilot | OK — `/green/toll/bank` · `/api/v1/toll/bank-pilot` · `docs/TOLL-BANK-PILOT.md` |
+| Wallet attribution v1 | OK — persist + self-dealing / reassignment flags |
+| Source attestation signed v1 | OK — HMAC enroll + sign_packet / activate |
+| Infra status (Upstash probe) | OK — `/api/v1/toll/infra-status` |
 | Schema adoption guide | OK — `AUROS-SCHEMA-ADOPTION.md` |
 | Eligibility Router v0 | OK — `/api/v1/toll/eligibility` · `/green/toll/eligibility` · `docs/TOLL-ELIGIBILITY.md` |
 | Exception Management OS v0 | OK — `/api/v1/toll/exceptions` · `/green/toll/exceptions` · `docs/TOLL-EXCEPTIONS.md` |

@@ -58,11 +58,25 @@ export {
 } from "./event-certification";
 export { buildAurosAuditExport } from "./audit-export";
 export { buildIndicativeRightsModel } from "./rights-engine";
-export { assessWalletBehavioralRisk } from "./wallet-risk";
+export {
+  assessWalletBehavioralRisk,
+  upsertWalletAttribution,
+  listWalletAttributions,
+} from "./wallet-risk";
 export {
   enrollSourceAttestation,
   listSourceAttestations,
+  activateSourceAttestation,
+  signSourceDataPacket,
+  verifySourcePacket,
 } from "./source-attestation";
+export {
+  enrollBankPilot,
+  getBankPilotBySlug,
+  listBankPilots,
+  appendBankDecision,
+  listBankDecisions,
+} from "./bank-pilot";
 export {
   createTollException,
   listTollExceptions,

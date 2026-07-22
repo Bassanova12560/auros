@@ -16,9 +16,9 @@ export function buildGreenApiOpenApiSpec() {
     openapi: "3.0.3",
     info: {
       title: "AUROS Green API",
-      version: "1.10.0",
+      version: "1.11.0",
       description:
-        "Public API for Carbon Quality Score (CQS), Watt Score, H₂O Score, WELHR / continuity / ROI resilience screens, AUROS Green Index, Asset DNA, Proof Stream, Portfolio Console, air-gap export, and AUROS Toll (Resolve / Search / Search-Control / Research / Policy / Eligibility / Drift / Events / Audit / Rights / Wallet / Sources / Provenance / Exceptions / Continuity / Reputation / Red-Team / Benchmark / ZK-Disclosure / Agent Protocol). Anonymous: 100 req/day. Free API key: 1000 req/month. Batch Watt/H₂O and large CQS batches require paid premium tier (not merely an auros_pk_live_* free key).",
+        "Public API for Carbon Quality Score (CQS), Watt Score, H₂O Score, WELHR / continuity / ROI resilience screens, AUROS Green Index, Asset DNA, Proof Stream, Portfolio Console, air-gap export, and AUROS Toll (Resolve / Search / Search-Control / Research / Policy / Eligibility / Bank-Pilot / Drift / Events / Audit / Rights / Wallet / Sources / Provenance / Exceptions / Continuity / Reputation / Red-Team / Benchmark / ZK-Disclosure / Agent Protocol / Infra). Anonymous: 100 req/day. Free API key: 1000 req/month. Batch Watt/H₂O and large CQS batches require paid premium tier (not merely an auros_pk_live_* free key).",
       contact: { name: "AUROS", url: base },
     },
     servers: [{ url: base }],
@@ -263,7 +263,20 @@ export function buildGreenApiOpenApiSpec() {
       },
       "/api/v1/toll/sources": {
         get: { summary: "List source attestation enrollments" },
-        post: { summary: "Enroll data source (HITL pending)" },
+        post: {
+          summary:
+            "Enroll / activate / sign_packet / verify_packet (HMAC via ATTEST_SIGNING_KEY)",
+        },
+      },
+      "/api/v1/toll/bank-pilot": {
+        get: { summary: "List bank pilots or get tenant by slug" },
+        post: {
+          summary:
+            "Enroll bank tenant or log policy/eligibility decision (HITL pilot)",
+        },
+      },
+      "/api/v1/toll/infra-status": {
+        get: { summary: "Upstash / infra probe for ops" },
       },
       "/api/v1/toll/exceptions": {
         get: { summary: "List Exception Management OS queue (HITL)" },

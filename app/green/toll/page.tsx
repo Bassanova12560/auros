@@ -70,6 +70,13 @@ export default function GreenTollPage() {
             </Link>
             {" · "}
             <Link
+              href="/green/toll/bank"
+              className="underline underline-offset-4"
+            >
+              Bank pilot
+            </Link>
+            {" · "}
+            <Link
               href="/green/toll/tower"
               className="underline underline-offset-4"
             >

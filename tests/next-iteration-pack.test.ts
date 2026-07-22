@@ -38,7 +38,7 @@ describe("next iteration surfaces", () => {
       info: { version: string };
       paths: Record<string, unknown>;
     };
-    assert.equal(spec.info.version, "1.10.0");
+    assert.equal(spec.info.version, "1.11.0");
     assert.ok(spec.paths["/api/green/eau/supplier-screen"]);
     assert.ok(spec.paths["/api/green/eau/resource-signals"]);
     assert.ok(spec.paths["/api/green/eau/connectors"]);

@@ -1,6 +1,8 @@
 # Upstash Redis — rate limits durables (prod)
 
-Sans Upstash, `checkRateLimitAsync` tombe en mémoire processus : **faible** sur Vercel (plusieurs instances / cold starts).
+Sans Upstash, `checkRateLimitAsync` / Toll metering tombent en **mémoire processus** : faible sur Vercel (plusieurs instances / cold starts).
+
+**Bloquant pour un vrai pilote banque** (Policy / Eligibility sticky).
 
 ## Setup (5 min)
 
@@ -13,12 +15,24 @@ UPSTASH_REDIS_REST_URL=https://….upstash.io
 UPSTASH_REDIS_REST_TOKEN=…
 ```
 
-4. Redeploy : `npx vercel deploy --prod`
+Ou CLI :
 
-## Vérif
+```bash
+npx vercel env add UPSTASH_REDIS_REST_URL production
+npx vercel env add UPSTASH_REDIS_REST_TOKEN production
+npx vercel deploy --prod
+```
+
+4. Vérif :
 
 ```bash
 npm run prod:check
+curl https://getauros.com/api/v1/toll/infra-status
 ```
 
-Doit afficher `upstash` = ok.
+Doit afficher `upstash.configured: true` et `reachable: true`.
+
+## Code
+
+- Helper partagé : `lib/upstash.ts` (`probeUpstashStatus`, `upstashCommand`)
+- Consommateurs : `lib/rate-limit.ts`, Toll metering, protocol rate-limit
