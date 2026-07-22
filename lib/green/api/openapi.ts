@@ -16,9 +16,9 @@ export function buildGreenApiOpenApiSpec() {
     openapi: "3.0.3",
     info: {
       title: "AUROS Green API",
-      version: "1.9.0",
+      version: "1.10.0",
       description:
-        "Public API for Carbon Quality Score (CQS), Watt Score, H₂O Score, WELHR / continuity / ROI resilience screens, AUROS Green Index, Asset DNA, Proof Stream, Portfolio Console, air-gap export, and AUROS Toll (Resolve / Search / Search-Control / Research / Policy / Eligibility / Drift / Events / Audit / Rights / Wallet / Sources / Provenance / Exceptions / Continuity / Reputation / Red-Team / ZK-Disclosure / Agent Protocol). Anonymous: 100 req/day. Free API key: 1000 req/month. Batch Watt/H₂O and large CQS batches require paid premium tier (not merely an auros_pk_live_* free key).",
+        "Public API for Carbon Quality Score (CQS), Watt Score, H₂O Score, WELHR / continuity / ROI resilience screens, AUROS Green Index, Asset DNA, Proof Stream, Portfolio Console, air-gap export, and AUROS Toll (Resolve / Search / Search-Control / Research / Policy / Eligibility / Drift / Events / Audit / Rights / Wallet / Sources / Provenance / Exceptions / Continuity / Reputation / Red-Team / Benchmark / ZK-Disclosure / Agent Protocol). Anonymous: 100 req/day. Free API key: 1000 req/month. Batch Watt/H₂O and large CQS batches require paid premium tier (not merely an auros_pk_live_* free key).",
       contact: { name: "AUROS", url: base },
     },
     servers: [{ url: base }],
@@ -336,6 +336,13 @@ export function buildGreenApiOpenApiSpec() {
         post: {
           summary:
             "Selective-disclosure stub v0 — claim + SHA-256 commitment (Bearer + research credits). Demo only, not ZK proofs.",
+          security: [{ bearerAuth: [] }],
+        },
+      },
+      "/api/v1/toll/benchmark": {
+        post: {
+          summary:
+            "RWA Benchmark API v0 — Green Index top / segments / peer rank (Bearer + search credits)",
           security: [{ bearerAuth: [] }],
         },
       },

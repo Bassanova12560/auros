@@ -45,6 +45,7 @@ export {
   TOLL_LIFECYCLE_EUR,
 } from "./lifecycle-pricing";
 export { appendBillableLifecycleEvent } from "./lifecycle";
+export { buildTollBenchmark } from "./benchmark";
 export {
   CERTIFIED_EVENT_KINDS,
   EVENT_CERTIFICATION_DISCLAIMER,

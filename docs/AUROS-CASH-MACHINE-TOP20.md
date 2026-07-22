@@ -68,7 +68,7 @@ Scores 1–5. **Fit** = proximité code actuel.
 | 25 | ZK / confidential | 2 | 5 | 1 | 4 | 2 | **stub v0** |
 | 26 | Search Control Plane | 3 | 4 | 2 | 4 | 4 | **v0** `/api/v1/toll/search-control` · `/green/toll/search-control` |
 | 27 | Reality Reputation | 3 | 4 | 3 | 3 | 4 | **v0** |
-| 28 | Benchmark API | 4 | 4 | 4 | 4 | 3 | Partial (index) |
+| 28 | Benchmark API | 4 | 4 | 4 | 4 | 4 | **v0** `/api/v1/toll/benchmark` |
 | 29 | Partner attribution | 3 | 3 | 4 | 2 | 5 | Live |
 | 30 | Institutional desk | 4 | 4 | 3 | 5 | 5 | Live |
 | 31 | Portfolio alerts | 4 | 3 | 4 | 4 | 5 | Live |

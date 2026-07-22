@@ -105,6 +105,11 @@ const MODULES = [
     href: "/green/toll/zk",
     body: "Stub v0 — claim + commitment SHA-256 (pas de circuits ZK)",
   },
+  {
+    title: "Benchmark API",
+    href: "/api/v1/toll/benchmark",
+    body: "Green Index top / segments / peer rank (indicatif)",
+  },
 ];
 
 export default function ControlTowerPage() {

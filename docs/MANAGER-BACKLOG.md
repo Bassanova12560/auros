@@ -1,15 +1,13 @@
 # Manager backlog — AUROS
 
 Living priorities. Manager owns this; update when shipping or discovering debt.
-Last review: 2026-07-22 (Cash machine top20 + remaining H1).
+Last review: 2026-07-22 (Cash machine closeout + Benchmark + Agent tools).
 
 ## P0 — risque / trust
 
 | Item | Statut |
 |------|--------|
-| Repo GitHub **privé** | **Bloqué** — `gh auth login` puis visibility private |
 | `ATTEST_SIGNING_KEY` prod | OK |
-| Upstash rate limits | **Action user** — `docs/UPSTASH-SETUP.md` |
 
 ## P0 — Toll / machine à cash
 
@@ -33,6 +31,16 @@ Last review: 2026-07-22 (Cash machine top20 + remaining H1).
 | Search Control Plane v0 | OK — `/api/v1/toll/search-control` · `/green/toll/search-control` · `docs/TOLL-SEARCH-CONTROL.md` |
 | ZK selective disclosure stub v0 | OK — `/api/v1/toll/zk-disclosure` · `/green/toll/zk` · `docs/TOLL-ZK-DISCLOSURE.md` |
 | Red-Team Asset Layer v0 | OK — `/api/v1/toll/red-team` · `/green/toll/red-team` · `docs/TOLL-RED-TEAM.md` |
+| Benchmark API v0 | OK — `/api/v1/toll/benchmark` · Agent `get_benchmark` · `docs/TOLL-BENCHMARK.md` |
+| Agent Protocol cash tools | OK — eligibility / wallet / reputation / red-team / benchmark |
+| Suite tests vitest→node | OK — funnel-events · security-hardening |
+
+## P0 — ops (action user)
+
+| Item | Statut |
+|------|--------|
+| Repo GitHub **privé** | **Bloqué** — `gh auth login` puis `gh repo edit --visibility private` |
+| Upstash rate limits | **Action user** — `docs/UPSTASH-SETUP.md` (Vercel env) |
 
 ## P0 — Green cash / DNA / institutionnel
 

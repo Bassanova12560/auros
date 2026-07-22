@@ -29,6 +29,11 @@ Keys: `POST /api/v1/keys`. Upstash recommended for durable metering (`docs/UPSTA
 | `get_validation_trail` | `POST /api/v1/toll/trail` | Proof Stream |
 | `get_policy_decision` | `POST /api/v1/toll/policy` | Rule evaluation |
 | `get_drift` | `POST /api/v1/toll/drift` | Protection signals |
+| `route_eligibility` | `POST /api/v1/toll/eligibility` | Transactional gate |
+| `assess_wallet_risk` | `POST /api/v1/toll/wallet-risk` | Attribution / behavioral flags |
+| `get_reputation` | `POST /api/v1/toll/reputation` | Reality reputation |
+| `run_red_team` | `POST /api/v1/toll/red-team` | Adversarial findings |
+| `get_benchmark` | `POST /api/v1/toll/benchmark` | Green Index / peers |
 | `get_trust_score` | (inside resolve/research) | Confidence layer |
 | `list_tools` | `POST /api/v1/toll/agent` | Discovery |
 
