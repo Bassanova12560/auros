@@ -1,9 +1,14 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useSearchParams } from "next/navigation";
+import { Suspense, useEffect, useState, type FormEvent } from "react";
 
 import { useLocale } from "@/app/_components/i18n/LocaleProvider";
 import type { GreenP1Product } from "@/lib/green/p1-cash-pricing";
+import {
+  capturePartnerFromSearchParams,
+  getPartnerCode,
+} from "@/lib/partner-attribution";
 
 type Props = {
   product: GreenP1Product;
@@ -11,9 +16,14 @@ type Props = {
   priceLabel: string;
 };
 
-export function GreenP1CheckoutForm({ product, cta, priceLabel }: Props) {
+function GreenP1CheckoutFormInner({ product, cta, priceLabel }: Props) {
   const { locale } = useLocale();
+  const searchParams = useSearchParams();
   const [status, setStatus] = useState<"idle" | "loading" | "err">("idle");
+
+  useEffect(() => {
+    capturePartnerFromSearchParams(new URLSearchParams(searchParams.toString()));
+  }, [searchParams]);
 
   async function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -29,6 +39,7 @@ export function GreenP1CheckoutForm({ product, cta, priceLabel }: Props) {
           company: fd.get("company"),
           notes: fd.get("notes"),
           locale,
+          partnerCode: getPartnerCode(),
         }),
       });
       const json = (await res.json()) as { url?: string };
@@ -81,5 +92,13 @@ export function GreenP1CheckoutForm({ product, cta, priceLabel }: Props) {
         </p>
       ) : null}
     </form>
+  );
+}
+
+export function GreenP1CheckoutForm(props: Props) {
+  return (
+    <Suspense fallback={null}>
+      <GreenP1CheckoutFormInner {...props} />
+    </Suspense>
   );
 }

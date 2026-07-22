@@ -45,10 +45,13 @@ export type PartnersMessages = {
     notPartnerBody: string;
     codeLabel: string;
     linkLabel: string;
+    linksLabel: string;
+    linkNames: Record<string, string>;
     copyLink: string;
     copied: string;
     leads: string;
     dossiers: string;
+    paid: string;
     total: string;
     commission: string;
     commissionEstimated: string;
@@ -183,10 +186,19 @@ const FR: PartnersMessages = {
       "Cet email n’est pas lié à un partenariat actif. Envoyez une demande depuis /partners, puis reconnectez-vous après activation.",
     codeLabel: "Code d’attribution",
     linkLabel: "Lien wizard",
+    linksLabel: "Liens d’attribution (pilote)",
+    linkNames: {
+      wizard: "Wizard dossier",
+      fast_track: "Fast Track 24h",
+      investors: "Investor Room",
+      readiness: "Readiness MRR",
+      index_pack: "Index Pack",
+    },
     copyLink: "Copier le lien",
     copied: "Copié",
     leads: "Leads",
     dossiers: "Dossiers",
+    paid: "Paiements",
     total: "Total",
     commission: "Commission",
     commissionEstimated: "Estimée (hors payout)",
@@ -321,10 +333,19 @@ const EN: PartnersMessages = {
       "This email is not linked to an active partnership. Submit a request on /partners, then sign in again after activation.",
     codeLabel: "Attribution code",
     linkLabel: "Wizard link",
+    linksLabel: "Attribution links (pilot)",
+    linkNames: {
+      wizard: "Dossier wizard",
+      fast_track: "Fast Track 24h",
+      investors: "Investor Room",
+      readiness: "Readiness MRR",
+      index_pack: "Index Pack",
+    },
     copyLink: "Copy link",
     copied: "Copied",
     leads: "Leads",
     dossiers: "Dossiers",
+    paid: "Paid",
     total: "Total",
     commission: "Commission",
     commissionEstimated: "Estimated (no payout yet)",
@@ -386,10 +407,19 @@ const ES: PartnersMessages = {
       "Este correo no está vinculado a un partnership activo. Envíe una solicitud en /partners y vuelva a iniciar sesión tras la activación.",
     codeLabel: "Código de atribución",
     linkLabel: "Enlace wizard",
+    linksLabel: "Enlaces de atribución (piloto)",
+    linkNames: {
+      wizard: "Wizard dossier",
+      fast_track: "Fast Track 24h",
+      investors: "Investor Room",
+      readiness: "Readiness MRR",
+      index_pack: "Index Pack",
+    },
     copyLink: "Copiar enlace",
     copied: "Copiado",
     leads: "Leads",
     dossiers: "Expedientes",
+    paid: "Pagos",
     total: "Total",
     commission: "Comisión",
     commissionEstimated: "Estimada (sin pago aún)",

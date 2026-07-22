@@ -21,6 +21,7 @@ export type PartnerStats = {
   partnerCode: string;
   leads: number;
   dossiers: number;
+  paid: number;
   total: number;
   commissionStatus: "estimated";
 };

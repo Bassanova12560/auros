@@ -5,6 +5,7 @@ import { grantInvestorRoomAccess } from "@/lib/green/investor-room-access";
 import { parseGreenP1CheckoutMetadata } from "@/lib/stripe/green-p1-checkout";
 import { GREEN_INVESTOR_ROOM_PRODUCT } from "@/lib/green/p1-cash-pricing";
 import { siteOrigin } from "@/lib/emails/constants";
+import { recordPartnerPaidReferral } from "@/lib/partners/paid-referrals";
 
 /** HITL notify + optional Investor Room token. Never auto-certify. */
 export async function fulfillGreenP1FromStripe(
@@ -25,6 +26,14 @@ export async function fulfillGreenP1FromStripe(
     accessUrl = `${siteOrigin()}/green/investors/room?token=${encodeURIComponent(access.token)}`;
   }
 
+  recordPartnerPaidReferral({
+    partnerCode: meta.partnerCode,
+    product: meta.product,
+    email: meta.email,
+    company: meta.company,
+    sessionId: session.id,
+  });
+
   await sendGreenP1PaidInternal({
     product: meta.product,
     email: meta.email,
@@ -32,5 +41,6 @@ export async function fulfillGreenP1FromStripe(
     notes: meta.notes,
     sessionId: session.id,
     accessUrl,
+    partnerCode: meta.partnerCode ?? undefined,
   });
 }

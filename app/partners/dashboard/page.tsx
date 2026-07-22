@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { auth, currentUser } from "@clerk/nextjs/server";
 
 import { SITE_URL } from "@/lib/comparators/site";
-import { buildPartnerWizardUrl } from "@/lib/partner-attribution";
+import { buildPartnerPilotLinks } from "@/lib/partner-attribution";
 import {
   getPartnerStats,
   resolvePartnerForClerkUser,
@@ -36,14 +36,14 @@ export default async function PartnerDashboardPage() {
   }
 
   const stats = await getPartnerStats(partner.code);
-  const wizardUrl = buildPartnerWizardUrl(partner.code, SITE_URL);
+  const pilotLinks = buildPartnerPilotLinks(partner.code, SITE_URL);
 
   return (
     <PartnerDashboardView
       state="active"
       partner={partner}
       stats={stats}
-      wizardUrl={wizardUrl}
+      pilotLinks={pilotLinks}
     />
   );
 }

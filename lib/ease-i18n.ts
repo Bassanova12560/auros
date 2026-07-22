@@ -46,6 +46,7 @@ export type EaseMessages = {
   score: {
     reassurance: string;
     wizardCta: string;
+    coachCta: string;
     jurisdictionsCta: string;
   };
 };
@@ -124,6 +125,7 @@ const FR: EaseMessages = {
     reassurance:
       "Ce score est indicatif. Le wizard structure tout le reste, étape par étape.",
     wizardCta: "Dossier guidé (~12 min)",
+    coachCta: "Coach RWA — prochain pas",
     jurisdictionsCta: "Où tokeniser ? Comparateur juridictions",
   },
 };
@@ -201,6 +203,7 @@ const EN: EaseMessages = {
     reassurance:
       "This score is indicative. The wizard structures everything else, step by step.",
     wizardCta: "Guided dossier (~12 min)",
+    coachCta: "RWA coach — next step",
     jurisdictionsCta: "Where to tokenize? Jurisdiction comparator",
   },
 };
@@ -279,6 +282,7 @@ const ES: EaseMessages = {
     reassurance:
       "Puntuación indicativa. El wizard estructura el resto paso a paso.",
     wizardCta: "Dossier guiado (~12 min)",
+    coachCta: "Coach RWA — siguiente paso",
     jurisdictionsCta: "¿Dónde tokenizar? Comparador de jurisdicciones",
   },
 };

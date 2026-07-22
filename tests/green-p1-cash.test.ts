@@ -32,10 +32,12 @@ describe("green-p1-cash", () => {
       locale: "fr",
       company: "Bank",
       notes: "",
+      partner_code: "cab-lux",
     });
     assert.ok(meta);
     assert.equal(meta!.email, "ops@bank.com");
     assert.equal(meta!.product, GREEN_FAST_TRACK_PRODUCT);
+    assert.equal(meta!.partnerCode, "CAB-LUX");
     assert.equal(
       parseGreenP1CheckoutMetadata({
         product: "nope",

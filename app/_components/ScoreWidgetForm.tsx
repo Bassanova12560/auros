@@ -272,6 +272,15 @@ export function ScoreWidgetForm() {
               </PrimaryButton>
             </div>
             <Link
+              href={`/copilot?from=score&score=${score ?? ""}`}
+              onClick={() =>
+                track("score_to_coach", { score: score ?? 0, source: "landing_widget" })
+              }
+              className="mt-1 block text-center text-sm text-emerald-200/70 underline-offset-4 transition hover:text-emerald-100 hover:underline"
+            >
+              {easeM.score.coachCta}
+            </Link>
+            <Link
               href={buildJurisdictionsUrl({ from: "score", hash: "guide" })}
               className="mt-2 block text-center text-sm text-white/40 underline-offset-4 transition hover:text-white/65 hover:underline"
             >

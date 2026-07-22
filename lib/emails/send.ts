@@ -586,6 +586,7 @@ export async function sendGreenP1PaidInternal(data: {
   notes: string;
   sessionId: string;
   accessUrl?: string;
+  partnerCode?: string;
 }): Promise<boolean> {
   const internal = internalNotifyEmail();
   if (!internal) {
@@ -600,6 +601,7 @@ export async function sendGreenP1PaidInternal(data: {
 <li>Product: ${escapeHtml(data.product)}</li>
 <li>Email: ${escapeHtml(data.email)}</li>
 <li>Company: ${escapeHtml(data.company || "—")}</li>
+<li>Partner: ${escapeHtml(data.partnerCode || "—")}</li>
 <li>Notes: ${escapeHtml(data.notes || "—")}</li>
 <li>Session: ${escapeHtml(data.sessionId)}</li>
 ${data.accessUrl ? `<li>Access: ${escapeHtml(data.accessUrl)}</li>` : ""}

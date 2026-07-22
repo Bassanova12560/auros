@@ -10,6 +10,7 @@ import {
   listPartnerReferrals,
   summarizePartnerReferrals,
 } from "@/lib/partners/referral-report";
+import { countPartnerPaidReferrals } from "@/lib/partners/paid-referrals";
 import type {
   PartnerKind,
   PartnerRecord,
@@ -298,5 +299,11 @@ export async function getPartnerStats(code: string): Promise<PartnerStats> {
   const summary = summarizePartnerReferrals(rows).find(
     (s) => s.partnerCode === normalized
   ) ?? { partnerCode: normalized, leads: 0, dossiers: 0, total: 0 };
-  return { ...summary, commissionStatus: "estimated" };
+  const paid = countPartnerPaidReferrals(normalized);
+  return {
+    ...summary,
+    paid,
+    total: summary.total + paid,
+    commissionStatus: "estimated",
+  };
 }

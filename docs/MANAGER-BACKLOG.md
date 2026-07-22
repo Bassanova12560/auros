@@ -1,7 +1,7 @@
 # Manager backlog — AUROS
 
 Living priorities. Manager owns this; update when shipping or discovering debt.
-Last review: 2026-07-22 (DNA/institutionnel v1 closed).
+Last review: 2026-07-22 (P1 cash + partner pilots attribution).
 
 ## P0 — risque / trust
 
@@ -37,7 +37,7 @@ Last review: 2026-07-22 (DNA/institutionnel v1 closed).
 | Funnel `funnel_*` analytics | OK |
 | CTAs → express `/wizard?expert=1` | OK |
 | Care email drafts HITL | OK |
-| Attribution partenaires pilotes | À venir |
+| Attribution partenaires pilotes | OK — `docs/PARTNER-PILOTS.md` · dashboard multi-liens · paid store |
 
 ## P1+ — cash / growth
 
@@ -47,14 +47,14 @@ Last review: 2026-07-22 (DNA/institutionnel v1 closed).
 | Investor room | OK — `/green/investors` |
 | Indice Green packagé | OK — Index Pack `/data/licence` |
 | Readiness MRR | OK — `/green/readiness` |
-| Attribution partenaires pilotes | À venir |
+| Attribution partenaires pilotes | OK — `docs/PARTNER-PILOTS.md` · dashboard multi-liens · paid store |
 
 ## Backlog i18n
 
 | Item | Statut |
 |------|--------|
 | GreenMessages AR + ZH complets | Hors scope — fallback EN |
-| Audit FR hardcodé wizard / trust | À venir |
+| Audit FR hardcodé wizard / trust | Progressif — hors sprint cash |
 
 ## Erreurs à ne plus refaire
 

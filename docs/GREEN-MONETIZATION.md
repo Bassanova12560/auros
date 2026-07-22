@@ -56,5 +56,6 @@ Publier → Prouver (RTMS) → Structurer (wizard) → Match (intro fee / verifi
 ## Suite (P1+)
 
 **P1 cash shippé** — Fast Track · Investor Room · Index Pack · Readiness MRR (`docs/GREEN-P1-CASH.md`).  
+Attribution partenaires pilotes : **done** (`docs/PARTNER-PILOTS.md`).  
 White-label / DNA / Portfolio institutionnel : **done**.  
-Suite possible : attribution partenaires · Growth AI.
+Suite possible : Growth AI phase B (mémoire session) · Liquidity Bridge (LOI MM).

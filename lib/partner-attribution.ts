@@ -46,7 +46,8 @@ export function getPartnerCode(): string | null {
   }
 }
 
-export function buildPartnerWizardUrl(
+export function buildPartnerUrl(
+  path: string,
   partnerCode: string,
   origin?: string
 ): string {
@@ -55,10 +56,37 @@ export function buildPartnerWizardUrl(
     (typeof window !== "undefined"
       ? window.location.origin
       : "https://getauros.com");
-  const url = new URL("/wizard", base);
+  const normalizedPath = path.startsWith("/") ? path : `/${path}`;
+  const url = new URL(normalizedPath, base);
   const code = normalizePartnerCode(partnerCode);
   if (code) url.searchParams.set("partner", code);
   return url.toString();
+}
+
+export function buildPartnerWizardUrl(
+  partnerCode: string,
+  origin?: string
+): string {
+  return buildPartnerUrl("/wizard", partnerCode, origin);
+}
+
+/** Attribution deep-links for Green P1+ cash + wizard (partner dashboard). */
+export function buildPartnerPilotLinks(
+  partnerCode: string,
+  origin?: string
+): Array<{ id: string; path: string; href: string }> {
+  const paths = [
+    { id: "wizard", path: "/wizard" },
+    { id: "fast_track", path: "/green/fast-track" },
+    { id: "investors", path: "/green/investors" },
+    { id: "readiness", path: "/green/readiness" },
+    { id: "index_pack", path: "/data/licence" },
+  ] as const;
+  return paths.map((p) => ({
+    id: p.id,
+    path: p.path,
+    href: buildPartnerUrl(p.path, partnerCode, origin),
+  }));
 }
 
 /** Suggest a referral code from company name (normalized). */

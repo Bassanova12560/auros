@@ -9,6 +9,8 @@ import type { PartnerRecord, PartnerStats } from "@/lib/partners/types";
 
 import { PartnerCopyLink } from "./PartnerCopyLink";
 
+type PilotLink = { id: string; path: string; href: string };
+
 type Props =
   | { state: "none" }
   | { state: "pending"; partner: PartnerRecord }
@@ -16,8 +18,15 @@ type Props =
       state: "active";
       partner: PartnerRecord;
       stats: PartnerStats;
-      wizardUrl: string;
+      pilotLinks: PilotLink[];
     };
+
+function linkLabel(
+  id: string,
+  labels: Record<string, string>
+): string {
+  return labels[id] ?? id;
+}
 
 export function PartnerDashboardView(props: Props) {
   const { locale } = useLocale();
@@ -67,18 +76,25 @@ export function PartnerDashboardView(props: Props) {
               <p className="mt-1 text-sm text-white/50">{props.partner.company}</p>
             </div>
 
-            <div>
-              <p className="mb-2 font-mono text-[10px] uppercase tracking-wider text-white/35">
-                {d.linkLabel}
+            <div className="space-y-5">
+              <p className="font-mono text-[10px] uppercase tracking-wider text-white/35">
+                {d.linksLabel}
               </p>
-              <PartnerCopyLink
-                value={props.wizardUrl}
-                copyLabel={d.copyLink}
-                copiedLabel={d.copied}
-              />
+              {props.pilotLinks.map((link) => (
+                <div key={link.id}>
+                  <p className="mb-2 text-sm text-white/55">
+                    {linkLabel(link.id, d.linkNames)}
+                  </p>
+                  <PartnerCopyLink
+                    value={link.href}
+                    copyLabel={d.copyLink}
+                    copiedLabel={d.copied}
+                  />
+                </div>
+              ))}
             </div>
 
-            <dl className="grid gap-4 sm:grid-cols-3">
+            <dl className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
               <div className="rounded-lg border border-white/10 px-4 py-3">
                 <dt className="font-mono text-[10px] uppercase tracking-wider text-white/35">
                   {d.leads}
@@ -90,6 +106,12 @@ export function PartnerDashboardView(props: Props) {
                   {d.dossiers}
                 </dt>
                 <dd className="mt-1 text-2xl text-white">{props.stats.dossiers}</dd>
+              </div>
+              <div className="rounded-lg border border-white/10 px-4 py-3">
+                <dt className="font-mono text-[10px] uppercase tracking-wider text-white/35">
+                  {d.paid}
+                </dt>
+                <dd className="mt-1 text-2xl text-white">{props.stats.paid}</dd>
               </div>
               <div className="rounded-lg border border-white/10 px-4 py-3">
                 <dt className="font-mono text-[10px] uppercase tracking-wider text-white/35">

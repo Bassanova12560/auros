@@ -91,12 +91,24 @@ export function CopilotChatView({
   }, [pageContextBase.surface]);
 
   const pageContext: CopilotPageContext = useMemo(
-    () => ({
-      ...pageContextBase,
-      rtms_brief: rtmsBrief,
-      client_brief: clientBrief?.trim() || undefined,
-    }),
-    [pageContextBase, rtmsBrief, clientBrief]
+    () => {
+      const fromScore = searchParams.get("from") === "score";
+      const scoreRaw = searchParams.get("score");
+      const scoreNum = scoreRaw != null ? Number(scoreRaw) : NaN;
+      const scoreBrief =
+        fromScore && Number.isFinite(scoreNum)
+          ? `User arrived from indicative readiness score ${Math.round(scoreNum)}/100. Suggest one next step (wizard, jurisdictions, or Green readiness). Do not invent APY, partners, or certifications.`
+          : undefined;
+      const mergedBrief = [clientBrief?.trim(), scoreBrief]
+        .filter(Boolean)
+        .join("\n");
+      return {
+        ...pageContextBase,
+        rtms_brief: rtmsBrief,
+        client_brief: mergedBrief || undefined,
+      };
+    },
+    [pageContextBase, rtmsBrief, clientBrief, searchParams]
   );
 
   const suggestions = useMemo(() => {

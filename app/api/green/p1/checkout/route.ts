@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 
 import type { Locale } from "@/lib/i18n";
+import { normalizePartnerCode } from "@/lib/partner-attribution";
 import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
 import {
   createGreenFastTrackCheckout,
@@ -56,11 +57,16 @@ export async function POST(request: Request) {
       ? localeRaw
       : "fr";
 
+  const partnerCode = normalizePartnerCode(
+    typeof body.partnerCode === "string" ? body.partnerCode : null
+  );
+
   const input = {
     email,
     locale,
     company: typeof body.company === "string" ? body.company.trim() : "",
     notes: typeof body.notes === "string" ? body.notes.trim() : "",
+    partnerCode,
   };
 
   const creator =

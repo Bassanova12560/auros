@@ -22,6 +22,8 @@ import {
   type GreenP1Product,
 } from "@/lib/green/p1-cash-pricing";
 
+import { normalizePartnerCode } from "@/lib/partner-attribution";
+
 import { getStripe } from "./jurisdiction-checkout";
 
 function resolveLocale(raw: string | undefined): Locale {
@@ -35,6 +37,7 @@ export type GreenP1CheckoutMeta = {
   locale: Locale;
   company: string;
   notes: string;
+  partnerCode: string | null;
 };
 
 export function parseGreenP1CheckoutMetadata(
@@ -57,6 +60,7 @@ export function parseGreenP1CheckoutMetadata(
     locale: resolveLocale(meta.locale),
     company: meta.company?.trim() || "",
     notes: meta.notes?.trim() || "",
+    partnerCode: normalizePartnerCode(meta.partner_code ?? meta.partnerCode),
   };
 }
 
@@ -65,6 +69,7 @@ export type GreenP1CheckoutInput = {
   locale: Locale;
   company?: string;
   notes?: string;
+  partnerCode?: string | null;
 };
 
 async function createSession(input: {
@@ -77,18 +82,21 @@ async function createSession(input: {
   locale: Locale;
   company?: string;
   notes?: string;
+  partnerCode?: string | null;
   successPath: string;
   cancelPath: string;
 }): Promise<{ url: string; sessionId: string } | null> {
   const stripe = getStripe();
   if (!stripe) return null;
   const origin = siteOrigin();
+  const partnerCode = normalizePartnerCode(input.partnerCode);
   const metadata: Record<string, string> = {
     product: input.product,
     email: input.email,
     locale: input.locale,
     company: (input.company ?? "").slice(0, 160),
     notes: (input.notes ?? "").slice(0, 400),
+    ...(partnerCode ? { partner_code: partnerCode } : {}),
   };
 
   const priceData: Stripe.Checkout.SessionCreateParams.LineItem.PriceData = {
@@ -131,6 +139,7 @@ export async function createGreenFastTrackCheckout(input: GreenP1CheckoutInput) 
     locale: input.locale,
     company: input.company,
     notes: input.notes,
+    partnerCode: input.partnerCode,
     successPath: "/green/fast-track/success",
     cancelPath: "/green/fast-track?cancelled=1",
   });
@@ -149,6 +158,7 @@ export async function createGreenInvestorRoomCheckout(
     locale: input.locale,
     company: input.company,
     notes: input.notes,
+    partnerCode: input.partnerCode,
     successPath: "/green/investors/success",
     cancelPath: "/green/investors?cancelled=1",
   });
@@ -165,6 +175,7 @@ export async function createGreenIndexPackCheckout(input: GreenP1CheckoutInput) 
     locale: input.locale,
     company: input.company,
     notes: input.notes,
+    partnerCode: input.partnerCode,
     successPath: "/data/index-pack/success",
     cancelPath: "/data/licence?cancelled=index-pack",
   });
@@ -183,6 +194,7 @@ export async function createGreenReadinessMrrCheckout(
     locale: input.locale,
     company: input.company,
     notes: input.notes,
+    partnerCode: input.partnerCode,
     successPath: "/green/readiness/success",
     cancelPath: "/green/readiness?cancelled=1",
   });

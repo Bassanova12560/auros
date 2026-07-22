@@ -5,6 +5,7 @@ import {
   getPartnerStats,
   resolvePartnerForClerkUser,
 } from "@/lib/partners/registry";
+import { listPartnerPaidReferrals } from "@/lib/partners/paid-referrals";
 import { listPartnerReferrals } from "@/lib/partners/referral-report";
 
 export const runtime = "nodejs";
@@ -31,6 +32,7 @@ export async function GET() {
   const code =
     normalizePartnerCode(partner.code) ?? partner.code.toUpperCase();
   const rows = await listPartnerReferrals(code);
+  const paid = listPartnerPaidReferrals(code);
   const stats = await getPartnerStats(code);
   const exportedAt = new Date().toISOString();
 
@@ -51,8 +53,22 @@ export async function GET() {
       ].join(",")
     );
   }
+  for (const r of paid) {
+    const emailCell = r.email.replace(/"/g, '""');
+    lines.push(
+      [
+        code,
+        `paid:${r.product}`,
+        r.id,
+        `"${emailCell}"`,
+        r.createdAt,
+        "estimated",
+        "green_p1_paid_not_settled",
+      ].join(",")
+    );
+  }
   lines.push(
-    `# summary leads=${stats.leads} dossiers=${stats.dossiers} total=${stats.total} exported_at=${exportedAt}`
+    `# summary leads=${stats.leads} dossiers=${stats.dossiers} paid=${stats.paid} total=${stats.total} exported_at=${exportedAt}`
   );
 
   return new Response(`${lines.join("\n")}\n`, {
