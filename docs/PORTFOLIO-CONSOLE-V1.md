@@ -38,8 +38,10 @@ Backfill DNA seeds: `POST /api/admin/backfill-asset-dna` (Bearer `CRON_SECRET`).
 | Cron | `GET /api/cron/portfolio-watchlist-digest` (daily 13:00 UTC) |
 | Storage | `.data/portfolio-watchlists.json` + `green_portfolio_watchlists` |
 
-Empty `assetDnaIds` = watch full portfolio snapshot. Digest skips if fingerprint unchanged within 20h.
+Empty `assetDnaIds` = watch full portfolio snapshot. Max 20 selected IDs. Digest skips if fingerprint unchanged within 20h.
+
+UI: `/green/portfolio` — scope « Tout » ou sélection checkbox (max 20).
 
 ## Next
 
-Auth institutionnelle / on-prem · filtres watchlist par DNA sélectionnés en UI.
+Auth institutionnelle / on-prem · unsubscribe token · OpenAPI Premium gates on DNA volume reads.

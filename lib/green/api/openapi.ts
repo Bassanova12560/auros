@@ -16,9 +16,9 @@ export function buildGreenApiOpenApiSpec() {
     openapi: "3.0.3",
     info: {
       title: "AUROS Green API",
-      version: "1.3.0",
+      version: "1.4.0",
       description:
-        "Public API for Carbon Quality Score (CQS), Watt Score, H₂O Score, WELHR / continuity / ROI resilience screens, and AUROS Green Index. Anonymous: 100 req/day. Free API key: 1000 req/month. Batch Watt/H₂O and large CQS batches require paid premium tier (not merely an auros_pk_live_* free key).",
+        "Public API for Carbon Quality Score (CQS), Watt Score, H₂O Score, WELHR / continuity / ROI resilience screens, AUROS Green Index, Asset DNA, Proof Stream, and Portfolio Console. Anonymous: 100 req/day. Free API key: 1000 req/month. Batch Watt/H₂O and large CQS batches require paid premium tier (not merely an auros_pk_live_* free key).",
       contact: { name: "AUROS", url: base },
     },
     servers: [{ url: base }],
@@ -129,6 +129,67 @@ export function buildGreenApiOpenApiSpec() {
       },
       "/api/v1/keys": {
         post: { summary: "Create free API key (1000 req/month)" },
+      },
+      "/api/v1/asset-dna/{id}": {
+        get: {
+          summary: "Asset DNA record (trust object for Green assets)",
+          parameters: [
+            { name: "id", in: "path", required: true, schema: { type: "string" } },
+          ],
+          responses: { "200": { description: "Asset DNA JSON" }, "404": { description: "Not found" } },
+        },
+      },
+      "/api/v1/asset-dna/{id}/stream": {
+        get: {
+          summary: "Proof Stream — append-only events for an Asset DNA",
+          parameters: [
+            { name: "id", in: "path", required: true, schema: { type: "string" } },
+            {
+              name: "limit",
+              in: "query",
+              schema: { type: "integer", minimum: 1, maximum: 100 },
+            },
+          ],
+          responses: { "200": { description: "Event list" } },
+        },
+      },
+      "/api/v1/green/portfolio": {
+        get: {
+          summary: "Portfolio Console snapshot (DNA + alerts, indicative)",
+          parameters: [
+            {
+              name: "limit",
+              in: "query",
+              schema: { type: "integer", minimum: 1, maximum: 100 },
+            },
+          ],
+          responses: { "200": { description: "Portfolio snapshot JSON" } },
+        },
+      },
+      "/api/v1/green/portfolio/watchlist": {
+        post: {
+          summary: "Subscribe to daily portfolio alert digest (max 20 DNA ids; empty = all)",
+          requestBody: {
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  required: ["email"],
+                  properties: {
+                    email: { type: "string", format: "email" },
+                    assetDnaIds: {
+                      type: "array",
+                      items: { type: "string" },
+                      maxItems: 20,
+                    },
+                    locale: { type: "string", enum: ["fr", "en", "es"] },
+                  },
+                },
+              },
+            },
+          },
+          responses: { "200": { description: "Watchlist upserted" } },
+        },
       },
       "/api/green/status": { get: { summary: "Green API health probes (public)" } },
       "/api/green/eau/legal-risk": {

@@ -69,7 +69,7 @@ export async function upsertPortfolioWatchlist(input: {
   const assetDnaIds = (input.assetDnaIds ?? [])
     .map((id) => id.trim())
     .filter(Boolean)
-    .slice(0, 100);
+    .slice(0, 20);
   const locale = normalizeLocale(input.locale);
 
   const all = load();

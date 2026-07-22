@@ -253,7 +253,13 @@ export function GreenPortfolioView({ snapshot }: Props) {
       </GreenPanel>
 
       <GreenPanel className="mt-4">
-        <PortfolioWatchlistForm />
+        <PortfolioWatchlistForm
+          assets={snapshot.assets.map((a) => ({
+            assetDnaId: a.assetDnaId,
+            displayName: a.displayName,
+            country: a.country,
+          }))}
+        />
       </GreenPanel>
 
       <section className="mt-10">

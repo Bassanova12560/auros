@@ -27,9 +27,13 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "invalid_email" }, { status: 400 });
   }
 
+  const assetDnaIds = Array.isArray(body.assetDnaIds)
+    ? body.assetDnaIds.map((id) => String(id).trim()).filter(Boolean).slice(0, 20)
+    : [];
+
   const row = await upsertPortfolioWatchlist({
     email,
-    assetDnaIds: Array.isArray(body.assetDnaIds) ? body.assetDnaIds : [],
+    assetDnaIds,
     locale: body.locale,
   });
 

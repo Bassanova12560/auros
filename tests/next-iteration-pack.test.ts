@@ -33,14 +33,18 @@ describe("next iteration surfaces", () => {
     assert.ok(VERTICAL_WELCOMES["/integrations"]);
   });
 
-  it("openapi 1.3 documents new paths", () => {
+  it("openapi 1.4 documents DNA portfolio paths", () => {
     const spec = buildGreenApiOpenApiSpec() as {
       info: { version: string };
       paths: Record<string, unknown>;
     };
-    assert.equal(spec.info.version, "1.3.0");
+    assert.equal(spec.info.version, "1.4.0");
     assert.ok(spec.paths["/api/green/eau/supplier-screen"]);
     assert.ok(spec.paths["/api/green/eau/resource-signals"]);
     assert.ok(spec.paths["/api/green/eau/connectors"]);
+    assert.ok(spec.paths["/api/v1/asset-dna/{id}"]);
+    assert.ok(spec.paths["/api/v1/asset-dna/{id}/stream"]);
+    assert.ok(spec.paths["/api/v1/green/portfolio"]);
+    assert.ok(spec.paths["/api/v1/green/portfolio/watchlist"]);
   });
 });
