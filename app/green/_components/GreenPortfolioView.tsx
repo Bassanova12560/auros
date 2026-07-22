@@ -22,6 +22,7 @@ import {
   GreenPanel,
   GreenSectionTitle,
 } from "./green-ui";
+import { PortfolioWatchlistForm } from "./PortfolioWatchlistForm";
 
 type Props = {
   snapshot: GreenPortfolioSnapshot;
@@ -249,6 +250,10 @@ export function GreenPortfolioView({ snapshot }: Props) {
             </ul>
           )}
         </div>
+      </GreenPanel>
+
+      <GreenPanel className="mt-4">
+        <PortfolioWatchlistForm />
       </GreenPanel>
 
       <section className="mt-10">

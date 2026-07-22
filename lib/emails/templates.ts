@@ -1457,3 +1457,58 @@ export function wizardResumeReminderEmail(data: WizardResumeReminderEmailData) {
   );
   return { subject, html };
 }
+
+export type PortfolioWatchlistDigestEmailData = {
+  locale?: Locale;
+  alertCount: number;
+  watchedCount: number;
+  portfolioUrl: string;
+  alerts: Array<{
+    displayName: string;
+    message: string;
+    severity: string;
+  }>;
+};
+
+export function portfolioWatchlistDigestEmail(
+  data: PortfolioWatchlistDigestEmailData
+) {
+  const locale = data.locale ?? "fr";
+  const copy = {
+    fr: {
+      subject: `AUROS Portfolio — ${data.alertCount} alerte${data.alertCount > 1 ? "s" : ""}`,
+      lead: `${data.alertCount} alerte(s) sur ${data.watchedCount} actif(s) suivis. Lecture indicative — pas un conseil d’investissement.`,
+      cta: "Ouvrir la Portfolio Console",
+    },
+    en: {
+      subject: `AUROS Portfolio — ${data.alertCount} alert${data.alertCount > 1 ? "s" : ""}`,
+      lead: `${data.alertCount} alert(s) across ${data.watchedCount} watched asset(s). Indicative — not investment advice.`,
+      cta: "Open Portfolio Console",
+    },
+    es: {
+      subject: `AUROS Portfolio — ${data.alertCount} alerta${data.alertCount > 1 ? "s" : ""}`,
+      lead: `${data.alertCount} alerta(s) en ${data.watchedCount} activo(s). Indicativo — no es consejo de inversión.`,
+      cta: "Abrir Portfolio Console",
+    },
+  }[locale === "fr" ? "fr" : locale === "es" ? "es" : "en"];
+
+  const rows = data.alerts
+    .map(
+      (a) =>
+        `<tr>
+          <td style="padding:8px 0;border-bottom:1px solid #1f2a24;vertical-align:top;">
+            <div style="color:#e8f5ef;font-weight:600;">${escapeHtml(a.displayName)}</div>
+            <div style="color:${BRAND_MUTED};font-size:13px;margin-top:4px;">${escapeHtml(a.message)}</div>
+            <div style="color:#6b8f7a;font-size:11px;margin-top:4px;text-transform:uppercase;">${escapeHtml(a.severity)}</div>
+          </td>
+        </tr>`
+    )
+    .join("");
+
+  const html = layout(
+    `<p style="margin:0 0 16px;color:${BRAND_MUTED};">${copy.lead}</p>
+    <table style="width:100%;border-collapse:collapse;">${rows}</table>
+    ${cta(data.portfolioUrl, copy.cta)}`
+  );
+  return { subject: copy.subject, html };
+}

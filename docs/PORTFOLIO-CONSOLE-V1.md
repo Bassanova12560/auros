@@ -21,10 +21,6 @@ Institutional read surface for Green assets linked to [Asset DNA](./ASSET-DNA-V1
 - Cap 100 DNA rows per request  
 - Server-only snapshot (`lib/green/portfolio-snapshot.ts`) — never imported via Green client barrel  
 
-## Next
-
-Watchlists abonnables · digest e-mail cron · auth institutionnelle / on-prem.
-
 ## Alerts v0
 
 Computed in snapshot (`lib/green/portfolio-alerts.ts`):
@@ -33,3 +29,17 @@ Computed in snapshot (`lib/green/portfolio-alerts.ts`):
 - `listing_pending` · `demo_tier` · `document_expired`  
 
 Backfill DNA seeds: `POST /api/admin/backfill-asset-dna` (Bearer `CRON_SECRET`).
+
+## Watchlists + digest
+
+| Surface | Path |
+|---------|------|
+| Subscribe | `POST /api/v1/green/portfolio/watchlist` `{ email, assetDnaIds?, locale? }` |
+| Cron | `GET /api/cron/portfolio-watchlist-digest` (daily 13:00 UTC) |
+| Storage | `.data/portfolio-watchlists.json` + `green_portfolio_watchlists` |
+
+Empty `assetDnaIds` = watch full portfolio snapshot. Digest skips if fingerprint unchanged within 20h.
+
+## Next
+
+Auth institutionnelle / on-prem · filtres watchlist par DNA sélectionnés en UI.

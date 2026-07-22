@@ -82,6 +82,8 @@ import {
   type WizardProPaymentEmailData,
   type WizardProPaymentInternalEmailData,
   type WizardResumeReminderEmailData,
+  portfolioWatchlistDigestEmail,
+  type PortfolioWatchlistDigestEmailData,
 } from "./templates";
 
 function getResend(): Resend | null {
@@ -533,6 +535,14 @@ export async function sendGreenMarketVerifiedPaidInternal(data: {
 </ul>
 <p>Status: <strong>En revue</strong> — upgrade listing_tier to verified after RTMS / human review. Do not grant badge on payment alone.</p>`,
   });
+}
+
+export async function sendPortfolioWatchlistDigest(
+  to: string,
+  data: PortfolioWatchlistDigestEmailData
+): Promise<boolean> {
+  const { subject, html } = portfolioWatchlistDigestEmail(data);
+  return sendSafe({ to, subject, html });
 }
 
 function escapeHtml(text: string): string {
