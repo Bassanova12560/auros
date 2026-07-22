@@ -7,6 +7,9 @@ Live routes are implemented in the Next.js **`app/`** tree (App Router). This `s
 | Route | Purpose |
 |-------|---------|
 | [/resource-layer](https://getauros.com/resource-layer) | Vision, manifesto, pillars |
+| [/builders](https://getauros.com/builders) | Architecture, repo, testnet access |
+| [/lab](https://getauros.com/lab) | Energy Lab — producer revenue sandbox |
+| [/press](https://getauros.com/press) | Press / diligence desk |
 | [/resource-layer/faq](https://getauros.com/resource-layer/faq) | ARL FAQ |
 | [/producer](https://getauros.com/producer) | Energy producer demo dashboard |
 | [/agent](https://getauros.com/agent) | AI / data-center agent demo dashboard |

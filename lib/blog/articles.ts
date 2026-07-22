@@ -905,7 +905,98 @@ export const BLOG_ARTICLES: BlogArticle[] = [
       },
       {
         question: "Where is the technical spec?",
-        answer: "docs/WHITEPAPER.md and ARL-README.md at the repository root.",
+        answer: "docs/WHITEPAPER.md and ARL-README.md at the repository root. Builders: /builders.",
+      },
+    ],
+  },
+  {
+    slug: "cross-exchange-risk-engine",
+    title: "How we think about cross-venue risk (without the theater)",
+    description:
+      "A practical engineering essay on inventory caps, oracle circuit-breakers, and HITL gates when routing liquidity across venues — for builders and institutional diligence.",
+    excerpt:
+      "Market makers talk about low latency and smart order routing. The harder problem is bounded risk when prices, oracles, and inventory diverge across venues — and saying so without theater.",
+    publishedAt: "2026-07-22",
+    modifiedAt: "2026-07-22",
+    readingTimeMinutes: 8,
+    keywords: [
+      "cross-exchange risk",
+      "market making risk engine",
+      "oracle circuit breaker",
+      "AUROS Resource Layer",
+      "inventory thresholds",
+      "HITL settlement",
+    ],
+    cta: { href: "/builders", label: "Explore the protocol" },
+    ctaBlocks: [
+      {
+        afterSection: 1,
+        title: "See the surfaces",
+        links: [
+          { href: "/trade", label: "Trade terminal" },
+          { href: "/builders", label: "Builders" },
+          { href: "/resource-layer", label: "Resource Layer" },
+        ],
+      },
+      {
+        afterSection: 3,
+        title: "Security posture",
+        links: [
+          { href: "/security", label: "Security" },
+          { href: "/careers", label: "Careers" },
+          { href: "/legal", label: "Legal notice" },
+        ],
+      },
+    ],
+    sections: [
+      {
+        heading: "The problem is not speed — it is disagreement",
+        paragraphs: [
+          "Across CEXs, AMMs, and resource indices, the same “price” can mean different things: last trade, mid, oracle TWAP, or a stale MQTT reading. A risk engine that only optimizes latency will happily accumulate inventory against a broken feed.",
+          "At AUROS we treat disagreement as first-class: max deviation on index updates, capped leverage and open interest on energy futures, and operator keys on privileged mark-price / mint paths in the agent API.",
+        ],
+        links: [
+          { href: "/builders", label: "Architecture" },
+          { href: "/blog/future-of-energy-trading-on-chain", label: "On-chain energy essay" },
+        ],
+      },
+      {
+        heading: "Inventory is a budget, not a vibe",
+        paragraphs: [
+          "Dynamic inventory thresholds beat slogans. Per-instrument notional caps, margin ceilings, and LTV limits on lending pools force the system to say no before a human has to mop up.",
+          "Where we still lack live venue connectivity, we label lab metrics as lab — see Auros Live on the homepage. Institutions should demand that honesty; we prefer it to borrowed logos.",
+        ],
+      },
+      {
+        heading: "Oracles with circuit-breakers",
+        paragraphs: [
+          "A single setPrice that jumps 2× is not “new information” — it is either a bug or an attack. MockIndexOracle (and production designs that follow it) reject updates beyond a configured BPS deviation unless an owner escapes with an explicit forced path.",
+          "Replay protection on IoT digests and used-proof maps on ResourceOracle close the other common hole: minting the same meter event twice.",
+        ],
+      },
+      {
+        heading: "HITL is a feature for settlement",
+        paragraphs: [
+          "Paid and compliance-sensitive paths stay human-in-the-loop. Automation can forecast and queue forwards; it should not silently settle institutional risk. That is slower marketing and better engineering.",
+          "If you are diligencing us: ask for the security notes, the Hardhat suite, and a walkthrough of what is mock vs chain — not a partnership slide.",
+        ],
+        links: [{ href: "/careers", label: "Join the risk & protocol team" }],
+      },
+    ],
+    faq: [
+      {
+        question: "Do you publish audited volume?",
+        answer:
+          "Not yet. Homepage Auros Live is explicitly labeled lab / illustrative. Third-party attestation is a future diligence artifact, not a marketing toggle.",
+      },
+      {
+        question: "Is this financial advice?",
+        answer:
+          "No. Educational engineering narrative only. Counsel and licensed operators remain required for real settlement.",
+      },
+      {
+        question: "Where is the code?",
+        answer: "Public monorepo — see /builders and ARL-README.md.",
       },
     ],
   },

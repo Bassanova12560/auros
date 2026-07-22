@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 
 import { ContentPageLayout } from "@/app/_components/ContentPageLayout";
 import { FocusPageShell } from "@/app/_components/FocusPageShell";
@@ -22,6 +23,17 @@ export default function ProducerPage() {
           title="Energy producer console"
           intro="Surplus kWh flows from meters and inverters into oracle-gated mints. This console previews how a site operator sees devices, production, and token balance."
         >
+          <p className="mb-6 flex flex-wrap gap-x-4 gap-y-2 font-mono text-[10px] uppercase tracking-wider text-white/40">
+            <Link href="/lab" className="hover:text-white/70">
+              Energy Lab →
+            </Link>
+            <Link href="/builders" className="hover:text-white/70">
+              Builders →
+            </Link>
+            <Link href="/resource-layer" className="hover:text-white/70">
+              Vision →
+            </Link>
+          </p>
           <ProducerDashboard />
         </ContentPageLayout>
       </FocusPageShell>

@@ -33,7 +33,7 @@ export const homePage = enrichPage({
     { key: "Juridictions comparées", value: "8 (UE, DIFC, Singapour, Suisse…)" },
     { key: "Offre payante juridiction", value: "Starter Kit phase 0 — 5 000 €" },
   ],
-  relatedPaths: ["/wizard", "/jurisdictions", "/compare"],
+  relatedPaths: ["/wizard", "/jurisdictions", "/compare", "/resource-layer", "/builders"],
 });
 
 export const wizardPage = enrichPage({

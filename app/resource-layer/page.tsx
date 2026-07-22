@@ -4,6 +4,7 @@ import { FocusPageShell } from "@/app/_components/FocusPageShell";
 import { ContentPageLayout } from "@/app/_components/ContentPageLayout";
 import { PrimaryButton } from "@/app/_components/ui/PrimaryButton";
 import { AiFirstPageJsonLd } from "@/app/_components/ai-first/AiFirstPageJsonLd";
+import { ArlGlossaryStrip } from "@/app/_components/arl/PlainTerm";
 
 import { ResourceLayerLab } from "./_components/ResourceLayerLab";
 
@@ -16,15 +17,57 @@ export const metadata = {
 const PILLARS = [
   {
     title: "Tokenize Any Resource",
-    body: "Resource Tokenization Protocol turns physical units (kWh, litres, carbon) into upgradeable on-chain ERC-20s with IoT Proof-of-Resource minting.",
+    body: "Turn physical units (kWh, litres, carbon) into digital units you can transfer — via IoT Proof-of-Resource minting (ERC-20 = standard transferable token).",
   },
   {
     title: "Instant Liquidity",
-    body: "Every new resource token can be bootstrapped into a deep Uniswap V3 market seeded by the Auros liquidity engine.",
+    body: "Bootstrap each new resource unit into a deep market (Uniswap V3 target) seeded by the Auros liquidity engine.",
   },
   {
     title: "Machine-Ready API",
-    body: "AI agents, robots, and data centers place spot and forward orders over a signed agent API — settlement stays on-chain.",
+    body: "AI agents, robots, and data centers place spot and forward orders over a signed agent API — settlement stays on-chain; paid paths stay human-gated.",
+  },
+] as const;
+
+const ROADMAP = [
+  {
+    phase: "Phase 1",
+    when: "Q3 2026",
+    title: "Testnet & demos",
+    body: "Protocol suite, agent API, IoT bridge, labeled UIs (/trade, /producer, /lab).",
+  },
+  {
+    phase: "Phase 2",
+    when: "H2 2026",
+    title: "Mainnet beta pilots",
+    body: "Geography-bound HITL pilots with metered producers — no fake volume badges.",
+  },
+  {
+    phase: "Phase 3",
+    when: "2027+",
+    title: "WATT launch window",
+    body: "Energy unit-of-account design exits preview when collateral + counsel clear — not a public sale today.",
+  },
+] as const;
+
+const COMPARE = [
+  {
+    axis: "Who can create supply",
+    classic: "Utility / offtaker paperwork",
+    otherRwa: "Often issuer-minted claims",
+    auros: "Only attested meters / oracles",
+  },
+  {
+    axis: "Buyer interface",
+    classic: "Phone + spreadsheet",
+    otherRwa: "Wallet + generic DEX",
+    auros: "Agent API + human dashboards",
+  },
+  {
+    axis: "Honesty of depth",
+    classic: "Opaque OTC",
+    otherRwa: "Sometimes marketing TVL",
+    auros: "Lab metrics labeled; caps on risk",
   },
 ] as const;
 
@@ -61,7 +104,73 @@ export default function ResourceLayerPage() {
           intro="Auros expands its institutional market making to tokenized physical resources: energy (kWh), water, carbon, and beyond."
         >
           <div className="space-y-14 text-sm leading-relaxed text-white/65">
+            <section className="flex flex-wrap gap-3">
+              <PrimaryButton href="/builders">Explore the protocol</PrimaryButton>
+              <PrimaryButton href="/lab" variant="ghost">
+                Energy Lab
+              </PrimaryButton>
+              <PrimaryButton
+                href="mailto:resources@getauros.com?subject=ARL%20testnet%20access"
+                variant="ghost"
+              >
+                Apply for testnet access
+              </PrimaryButton>
+            </section>
+
+            <ArlGlossaryStrip />
+
             <ResourceLayerLab />
+
+            <section id="watt" className="scroll-mt-28 space-y-3 border border-white/[0.08] bg-white/[0.02] px-5 py-5">
+              <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/40">
+                Unit of account · WATT
+              </p>
+              <h2 className="font-display text-xl text-white">WATT — energy as money for machines</h2>
+              <p>
+                <strong className="font-medium text-white/90">WATT</strong> is the energy stablecoin
+                design at the center of ARL monetization: collateralized by verified energy resource
+                tokens (1:1 MVP intent). Machines whose “survival cost” is electricity need a unit
+                that settles in power — not only USD stables.
+              </p>
+              <p className="text-white/50">
+                Status: protocol + docs preview. Not a public token offering on this site. Speculative
+                targets live in the whitepaper; pilots remain HITL.
+              </p>
+              <div className="flex flex-wrap gap-4 font-mono text-[11px]">
+                <Link
+                  href="/resource-layer/faq#watt"
+                  className="text-white/60 underline-offset-2 hover:text-white hover:underline"
+                >
+                  FAQ · WATT →
+                </Link>
+                <Link
+                  href="/lab"
+                  className="text-white/60 underline-offset-2 hover:text-white hover:underline"
+                >
+                  Simulate kWh revenue →
+                </Link>
+              </div>
+            </section>
+
+            <section id="roadmap" className="scroll-mt-28 space-y-5">
+              <div>
+                <h2 className="font-display text-xl text-white">Roadmap</h2>
+                <p className="mt-2 text-white/55">
+                  Indicative timeline — ships move with pilots and counsel, not slideware dates alone.
+                </p>
+              </div>
+              <ol className="grid gap-4 md:grid-cols-3">
+                {ROADMAP.map((r) => (
+                  <li key={r.phase} className="border-t border-white/15 pt-4">
+                    <p className="font-mono text-[10px] uppercase tracking-wider text-white/35">
+                      {r.phase} · {r.when}
+                    </p>
+                    <h3 className="mt-2 font-display text-base text-white">{r.title}</h3>
+                    <p className="mt-2">{r.body}</p>
+                  </li>
+                ))}
+              </ol>
+            </section>
 
             <section className="space-y-3">
               <h2 className="font-display text-xl text-white">Manifesto</h2>
@@ -71,21 +180,10 @@ export default function ResourceLayerPage() {
                 on-chain with deep liquidity provided by Auros.
               </p>
               <p>
-                Powered by{" "}
-                <Link
-                  href="/resource-layer/faq#watt"
-                  className="text-white/85 underline-offset-2 hover:text-white hover:underline"
-                >
-                  WATT
-                </Link>
-                — the energy stablecoin designed to become the unit of account
-                for machines.{" "}
-                <Link
-                  href="/resource-layer/faq#watt"
-                  className="font-mono text-[11px] text-white/40 underline-offset-2 hover:text-white/70 hover:underline"
-                >
-                  WATT notes →
-                </Link>
+                Concrete picture: your EV — or a GPU rack — buys kWh automatically
+                overnight through the agent API while you sleep. Forecast →
+                forward order → meter-backed settlement. Humans still gate paid
+                and compliance-sensitive steps.
               </p>
             </section>
 
@@ -98,14 +196,47 @@ export default function ResourceLayerPage() {
               ))}
             </section>
 
+            <section className="space-y-4">
+              <h2 className="font-display text-xl text-white">Why Auros</h2>
+              <p className="text-white/55">
+                Decision-makers compare. Here is the honest frame — not a claim that we already
+                displaced incumbents.
+              </p>
+              <div className="overflow-x-auto border border-white/[0.08]">
+                <table className="w-full min-w-[36rem] text-left text-xs">
+                  <thead className="font-mono text-[10px] uppercase tracking-wider text-white/35">
+                    <tr className="border-b border-white/[0.08]">
+                      <th className="px-3 py-3 font-normal">Axis</th>
+                      <th className="px-3 py-3 font-normal">Classic energy trade</th>
+                      <th className="px-3 py-3 font-normal">Generic RWA</th>
+                      <th className="px-3 py-3 font-normal text-white/70">Auros ARL</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {COMPARE.map((row) => (
+                      <tr key={row.axis} className="border-b border-white/[0.06] text-white/60">
+                        <td className="px-3 py-3 font-display text-white/85">{row.axis}</td>
+                        <td className="px-3 py-3">{row.classic}</td>
+                        <td className="px-3 py-3">{row.otherRwa}</td>
+                        <td className="px-3 py-3 text-white/80">{row.auros}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </section>
+
             <section id="get-started" className="space-y-4 scroll-mt-28">
               <h2 className="font-display text-xl text-white">Get started</h2>
               <p>
-                Don’t leave with a brochure. Enter the lab, mint a demo unit, or
-                apply for a pilot — human review on every paid path.
+                Don’t leave with a brochure. Run the Energy Lab, mint a demo unit, or
+                apply for testnet access — human review on every paid path.
               </p>
               <div className="flex flex-wrap gap-3">
-                <PrimaryButton href="/trade">Open trading terminal</PrimaryButton>
+                <PrimaryButton href="/lab">Open Energy Lab</PrimaryButton>
+                <PrimaryButton href="/builders" variant="ghost">
+                  Explore the protocol
+                </PrimaryButton>
                 <PrimaryButton href="/producer" variant="ghost">
                   Mint your first kWh (demo)
                 </PrimaryButton>
@@ -113,16 +244,12 @@ export default function ResourceLayerPage() {
                   Hiring · join the build
                 </PrimaryButton>
                 <a
-                  href="mailto:resources@getauros.com?subject=ARL%20early%20access"
+                  href="mailto:resources@getauros.com?subject=ARL%20testnet%20access"
                   className="inline-flex items-center font-mono text-[11px] text-white/50 underline-offset-4 hover:text-white hover:underline"
                 >
-                  Apply for early access →
+                  Apply for testnet access →
                 </a>
               </div>
-              <p className="font-mono text-[10px] text-white/35">
-                Local stack: see ARL-README.md · Run agent-api + protocol Hardhat
-                node for a full testnet loop.
-              </p>
             </section>
 
             <section className="space-y-6">
@@ -159,18 +286,6 @@ export default function ResourceLayerPage() {
                 The Resource Layer is not a side project — we are staffing
                 markets and IoT integration now.
               </p>
-              <ul className="space-y-2 text-white/70">
-                <li>
-                  <span className="text-white/90">Head of Resource Markets</span>
-                  {" — "}
-                  <span className="font-mono text-[11px] text-white/45">Hiring</span>
-                </li>
-                <li>
-                  <span className="text-white/90">IoT Integration Lead</span>
-                  {" — "}
-                  <span className="font-mono text-[11px] text-white/45">Hiring</span>
-                </li>
-              </ul>
               <PrimaryButton href="/careers" variant="ghost">
                 View open roles
               </PrimaryButton>

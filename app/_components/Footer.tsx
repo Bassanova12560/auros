@@ -14,12 +14,15 @@ export function Footer() {
   const year = new Date().getFullYear();
 
   const legal = [
-    { href: "/verify", label: "Verify" },
+    { href: "/legal", label: f.legalNotice },
+    { href: "/terms", label: f.terms },
+    { href: "/privacy", label: f.privacy },
+    { href: "/press", label: "Press" },
+    { href: "/builders", label: "Builders" },
+    { href: "/lab", label: "Energy Lab" },
     { href: "/trust", label: f.trust },
     { href: "/security", label: "Sécurité" },
     { href: "/about", label: f.about },
-    { href: "/privacy", label: f.privacy },
-    { href: "/terms", label: f.terms },
   ] as const;
 
   const linkClass =
@@ -34,6 +37,25 @@ export function Footer() {
               AUROS
             </p>
             <p className="mt-3 text-sm leading-relaxed text-muted">{f.tagline}</p>
+            <p className="mt-3 font-mono text-[10px] leading-relaxed text-white/35">
+              Jurisdiction posture: EU-facing operations · imprint &amp; entity pack on written
+              request via{" "}
+              <Link href="/legal" className="text-white/55 hover:text-white/80">
+                /legal
+              </Link>
+              {" · "}
+              <Link href="/press" className="text-white/55 hover:text-white/80">
+                /press
+              </Link>
+              <br />
+              <a href="mailto:resources@getauros.com" className="text-white/55 hover:text-white/80">
+                resources@getauros.com
+              </a>
+              {" · "}
+              <a href="mailto:legal@auros.app" className="text-white/55 hover:text-white/80">
+                legal@auros.app
+              </a>
+            </p>
             <div className="mt-5 flex flex-wrap gap-3">
               <Link
                 href="/start"

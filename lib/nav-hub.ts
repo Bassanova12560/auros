@@ -72,6 +72,21 @@ const FR: HubCopy = {
           description: "Énergie locale & label Verified",
         },
         {
+          href: "/resource-layer",
+          title: "Resource Layer",
+          description: "Tokeniser kWh · liquidité · agents",
+        },
+        {
+          href: "/builders",
+          title: "Builders ARL",
+          description: "Architecture · repo · testnet",
+        },
+        {
+          href: "/lab",
+          title: "Energy Lab",
+          description: "Simuler mint → revenu producteur",
+        },
+        {
           href: "/power",
           title: "Power (bas-carbone)",
           description: "Nucléaire & low-carbon — hors Green Verified",
@@ -213,6 +228,21 @@ const EN: HubCopy = {
           href: "/green",
           title: "AUROS Green",
           description: "Local energy & Verified label",
+        },
+        {
+          href: "/resource-layer",
+          title: "Resource Layer",
+          description: "Tokenize kWh · liquidity · agents",
+        },
+        {
+          href: "/builders",
+          title: "ARL Builders",
+          description: "Architecture · repo · testnet",
+        },
+        {
+          href: "/lab",
+          title: "Energy Lab",
+          description: "Simulate mint → producer revenue",
         },
         {
           href: "/power",
@@ -358,6 +388,21 @@ const ES: HubCopy = {
           description: "Energía local y label Verified",
         },
         {
+          href: "/resource-layer",
+          title: "Resource Layer",
+          description: "Tokenizar kWh · liquidez · agentes",
+        },
+        {
+          href: "/builders",
+          title: "Builders ARL",
+          description: "Arquitectura · repo · testnet",
+        },
+        {
+          href: "/lab",
+          title: "Energy Lab",
+          description: "Simular mint → ingreso productor",
+        },
+        {
           href: "/power",
           title: "Power (bajo carbono)",
           description: "Nuclear y low-carbon — fuera de Green Verified",
@@ -501,6 +546,21 @@ const AR: HubCopy = {
           description: "طاقة محلية وتسمية Verified",
         },
         {
+          href: "/resource-layer",
+          title: "Resource Layer",
+          description: "ترميز kWh · سيولة · وكلاء",
+        },
+        {
+          href: "/builders",
+          title: "Builders ARL",
+          description: "هندسة · مستودع · testnet",
+        },
+        {
+          href: "/lab",
+          title: "Energy Lab",
+          description: "محاكاة mint → إيراد المنتج",
+        },
+        {
           href: "/power",
           title: "Power (منخفض الكربون)",
           description: "نووي ومنخفض الكربون — خارج Green Verified",
@@ -642,6 +702,21 @@ const ZH: HubCopy = {
           href: "/green",
           title: "AUROS Green",
           description: "本地能源与 Verified 标签",
+        },
+        {
+          href: "/resource-layer",
+          title: "Resource Layer",
+          description: "代币化 kWh · 流动性 · 代理",
+        },
+        {
+          href: "/builders",
+          title: "ARL Builders",
+          description: "架构 · 仓库 · testnet",
+        },
+        {
+          href: "/lab",
+          title: "Energy Lab",
+          description: "模拟 mint → 生产商收入",
         },
         {
           href: "/power",

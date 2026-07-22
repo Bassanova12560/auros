@@ -1,7 +1,9 @@
 import { AmbientShell } from "./_components/ui/AmbientShell";
 import { AiFirstPageJsonLd } from "./_components/ai-first/AiFirstPageJsonLd";
+import { AurosLiveStrip } from "./_components/AurosLiveStrip";
 import { Footer } from "./_components/Footer";
 import { Hero } from "./_components/Hero";
+import { IntegrationTargetsStrip } from "./_components/IntegrationTargetsStrip";
 import { LandingReferral } from "./_components/LandingReferral";
 import { Nav } from "./_components/Nav";
 import { ResourceLayerBanner } from "./_components/ResourceLayerBanner";
@@ -23,6 +25,8 @@ export default function HomePage() {
       <main>
         <Hero />
         <ResourceLayerBanner />
+        <AurosLiveStrip />
+        <IntegrationTargetsStrip />
         <TrustStrip />
       </main>
       <Footer />

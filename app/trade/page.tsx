@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 
 import { ContentPageLayout } from "@/app/_components/ContentPageLayout";
 import { FocusPageShell } from "@/app/_components/FocusPageShell";
@@ -22,6 +23,17 @@ export default function TradePage() {
           title="Trade resources, perps & options"
           intro="Unified ticket for tokenized kWh, compute FLOP, and Phase 3 derivatives. Orders here are simulated — production routing goes through agent-api and on-chain settlements."
         >
+          <p className="mb-6 flex flex-wrap gap-x-4 gap-y-2 font-mono text-[10px] uppercase tracking-wider text-white/40">
+            <Link href="/builders" className="hover:text-white/70">
+              Protocol →
+            </Link>
+            <Link href="/lab" className="hover:text-white/70">
+              Energy Lab →
+            </Link>
+            <Link href="/market" className="hover:text-white/70">
+              Market →
+            </Link>
+          </p>
           <TradeTerminal />
         </ContentPageLayout>
       </FocusPageShell>

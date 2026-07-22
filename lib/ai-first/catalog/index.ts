@@ -25,6 +25,7 @@ import { buildResiliencePages } from "./resilience-pages";
 import { contentPages } from "./content-pages";
 import { glossaryPages } from "./glossary-pages";
 import { protocolDocsPages } from "./protocol-docs-pages";
+import { arlPages } from "./arl-pages";
 import { AUROS_ORG } from "../org";
 import { catalogVersion } from "../enrich";
 import type { AiFirstCatalog, AiFirstPage } from "../types";
@@ -55,6 +56,7 @@ export function getAllAiFirstPages(): AiFirstPage[] {
     ...contentPages,
     ...glossaryPages,
     ...protocolDocsPages,
+    ...arlPages,
     ...miscPages,
   ];
   return cachedPages;
