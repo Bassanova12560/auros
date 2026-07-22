@@ -1,16 +1,32 @@
-import { randomUUID } from "node:crypto";
+import { createHash, randomUUID } from "node:crypto";
 
 import { buildAssetDnaId } from "./id";
 import {
   ASSET_DNA_SPEC_VERSION,
+  type AssetDnaClass,
   type AssetDnaCreateInput,
   type AssetDnaRecord,
 } from "./types";
 
-/** In-memory / API helper — persistence layer lands with Proof Stream. */
+/** Stable UUID-shaped hex from a seed key (for bootstrap / backfill). */
+export function uuidFromSeedKey(seedKey: string): string {
+  const h = createHash("sha256").update(`auros:dna:seed:${seedKey}`).digest("hex");
+  return `${h.slice(0, 8)}-${h.slice(8, 12)}-4${h.slice(13, 16)}-a${h.slice(17, 20)}-${h.slice(20, 32)}`;
+}
+
+export function deterministicAssetDnaId(
+  assetClass: AssetDnaClass,
+  seedKey: string
+): string {
+  return buildAssetDnaId(assetClass, uuidFromSeedKey(seedKey));
+}
+
+/** In-memory / API helper — persistence via store. */
 export function createAssetDnaRecord(input: AssetDnaCreateInput): AssetDnaRecord {
   const now = new Date().toISOString();
-  const uuid = randomUUID();
+  const uuid = input.seedKey
+    ? uuidFromSeedKey(input.seedKey)
+    : randomUUID();
   const id = buildAssetDnaId(input.assetClass, uuid);
   return {
     id,

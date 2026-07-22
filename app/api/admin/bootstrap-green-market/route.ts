@@ -124,6 +124,23 @@ export async function POST(req: NextRequest) {
       });
       await seedGreenMarketData(supabase);
       seeded = true;
+      try {
+        const { backfillGreenAssetDna } = await import(
+          "@/lib/green/backfill-asset-dna"
+        );
+        const dna = await backfillGreenAssetDna(supabase);
+        return NextResponse.json({
+          ok: true,
+          migrationsApplied,
+          seeded,
+          assetDna: dna,
+          message: migrationsApplied
+            ? "green marketplace bootstrap applied"
+            : "green marketplace seed only (no SQL credentials)",
+        });
+      } catch (dnaErr) {
+        console.warn("[bootstrap-green-market] dna backfill", dnaErr);
+      }
     }
 
     return NextResponse.json({

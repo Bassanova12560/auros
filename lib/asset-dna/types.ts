@@ -77,4 +77,6 @@ export type AssetDnaCreateInput = {
   documents?: AssetDnaDocumentRef[];
   compliance?: AssetDnaComplianceSnapshot;
   links?: AssetDnaRecord["links"];
+  /** Stable mint for seeds / backfill (SHA-256 → uuid-shaped). */
+  seedKey?: string;
 };

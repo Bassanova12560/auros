@@ -40,6 +40,8 @@ const COPY = {
       market: "Marché",
     },
     actionsTitle: "Dernières actions (heatmap)",
+    alertsTitle: "Alertes portefeuille",
+    alertsEmpty: "Aucune alerte — flux et tiers dans les seuils.",
     tableTitle: "Actifs suivis",
     empty:
       "Aucun Asset DNA encore. Référencez un acteur ou publiez un label pour peupler la console.",
@@ -76,6 +78,8 @@ const COPY = {
       market: "Market",
     },
     actionsTitle: "Latest actions (heatmap)",
+    alertsTitle: "Portfolio alerts",
+    alertsEmpty: "No alerts — streams and tiers within thresholds.",
     tableTitle: "Tracked assets",
     empty:
       "No Asset DNA yet. Register an actor or publish a label to populate the console.",
@@ -112,6 +116,8 @@ const COPY = {
       market: "Mercado",
     },
     actionsTitle: "Últimas acciones (heatmap)",
+    alertsTitle: "Alertas de portafolio",
+    alertsEmpty: "Sin alertas — flujos y niveles dentro de umbrales.",
     tableTitle: "Activos seguidos",
     empty:
       "Aún no hay Asset DNA. Registre un actor o publique un label para poblar la consola.",
@@ -196,6 +202,50 @@ export function GreenPortfolioView({ snapshot }: Props) {
                   {action} · {count}
                 </li>
               ))}
+            </ul>
+          )}
+        </div>
+      </GreenPanel>
+
+      <GreenPanel className="mt-4">
+        <div className="p-5 md:p-6">
+          <div className="flex flex-wrap items-baseline justify-between gap-2">
+            <GreenSectionTitle>{c.alertsTitle}</GreenSectionTitle>
+            <span className="font-mono text-[10px] tabular-nums text-white/40">
+              {snapshot.alertCount}
+            </span>
+          </div>
+          {snapshot.alerts.length === 0 ? (
+            <p className="mt-4 text-sm text-neutral-500">{c.alertsEmpty}</p>
+          ) : (
+            <ul className="mt-4 space-y-2">
+              {snapshot.alerts.slice(0, 20).map((alert) => {
+                const tone =
+                  alert.severity === "critical"
+                    ? "border-red-500/40 text-red-300/90"
+                    : alert.severity === "warn"
+                      ? "border-amber-500/35 text-amber-200/85"
+                      : "border-white/15 text-white/55";
+                return (
+                  <li
+                    key={alert.id}
+                    className={`border bg-black/40 px-3 py-2 text-sm ${tone}`}
+                  >
+                    <p className="font-medium text-white/90">{alert.displayName}</p>
+                    <p className="mt-0.5 text-[13px] leading-relaxed opacity-90">
+                      {alert.message}
+                    </p>
+                    <a
+                      href={`/api/v1/asset-dna/${encodeURIComponent(alert.assetDnaId)}/stream`}
+                      className="mt-1 inline-block font-mono text-[10px] uppercase tracking-wider text-emerald-400/70 hover:text-emerald-300"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      stream →
+                    </a>
+                  </li>
+                );
+              })}
             </ul>
           )}
         </div>

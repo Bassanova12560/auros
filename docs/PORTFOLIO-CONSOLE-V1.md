@@ -23,4 +23,13 @@ Institutional read surface for Green assets linked to [Asset DNA](./ASSET-DNA-V1
 
 ## Next
 
-Watchlists, alert digests, institutional auth / on-prem.
+Watchlists abonnables · digest e-mail cron · auth institutionnelle / on-prem.
+
+## Alerts v0
+
+Computed in snapshot (`lib/green/portfolio-alerts.ts`):
+
+- `proof_stream_silent` / `proof_stream_stale` (>30d)  
+- `listing_pending` · `demo_tier` · `document_expired`  
+
+Backfill DNA seeds: `POST /api/admin/backfill-asset-dna` (Bearer `CRON_SECRET`).

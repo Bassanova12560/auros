@@ -122,7 +122,20 @@ export async function POST(req: NextRequest) {
     }
 
     await seedVerifiedProject();
-    return NextResponse.json({ ok: true, message: "green phase 3 bootstrap applied" });
+    try {
+      const { backfillGreenAssetDna } = await import(
+        "@/lib/green/backfill-asset-dna"
+      );
+      const dna = await backfillGreenAssetDna();
+      return NextResponse.json({
+        ok: true,
+        message: "green phase 3 bootstrap applied",
+        assetDna: dna,
+      });
+    } catch (dnaErr) {
+      console.warn("[bootstrap-green] dna backfill", dnaErr);
+      return NextResponse.json({ ok: true, message: "green phase 3 bootstrap applied" });
+    }
   } catch (err) {
     const message = err instanceof Error ? err.message : "bootstrap failed";
     console.error("[bootstrap-green]", message);

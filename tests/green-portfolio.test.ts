@@ -24,5 +24,7 @@ describe("green/portfolio-snapshot", () => {
     assert.ok(row);
     assert.equal(row!.displayName, "Portfolio test asset");
     assert.ok(row!.lastAction === "dna.minted" || row!.eventCount >= 1);
+    assert.ok(Array.isArray(snap.alerts));
+    assert.equal(typeof snap.alertCount, "number");
   });
 });

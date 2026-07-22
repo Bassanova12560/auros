@@ -11,6 +11,7 @@ import {
 import { getGreenRegistrySnapshot } from "@/lib/green/green-registry";
 import { getGreenMarketSnapshot } from "@/lib/green/market/green-market-db";
 import { listProofStreamEventsAsync } from "@/lib/proof-stream";
+import { computePortfolioAlerts } from "@/lib/green/portfolio-alerts";
 import type {
   GreenPortfolioSnapshot,
   PortfolioAssetRow,
@@ -29,9 +30,23 @@ function mergeDnaRecords(
   );
 }
 
+function expiredDocTitles(dna: AssetDnaRecord, nowIso: string): string[] {
+  const now = new Date(nowIso).getTime();
+  const out: string[] = [];
+  for (const doc of dna.documents ?? []) {
+    if (!doc.expiresAt) continue;
+    const exp = new Date(doc.expiresAt).getTime();
+    if (Number.isFinite(exp) && exp < now) {
+      out.push(doc.title || doc.role || "document");
+    }
+  }
+  return out;
+}
+
 export async function getGreenPortfolioSnapshot(
   limit = 50
 ): Promise<GreenPortfolioSnapshot> {
+  const generatedAt = new Date().toISOString();
   const [registry, market, localDna, remoteDna] = await Promise.all([
     getGreenRegistrySnapshot(),
     getGreenMarketSnapshot(),
@@ -73,8 +88,8 @@ export async function getGreenPortfolioSnapshot(
         documents: [],
         compliance: { listingTier: a.listingTier },
         links: { marketActorId: a.id },
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
+        createdAt: generatedAt,
+        updatedAt: generatedAt,
       });
     }
   }
@@ -130,6 +145,8 @@ export async function getGreenPortfolioSnapshot(
       sourceId,
       labelTier: reg?.labelTier ?? dna.compliance.labelTier,
       listingTier: mkt?.listingTier ?? dna.compliance.listingTier,
+      marketStatus: mkt?.status,
+      expiredDocuments: expiredDocTitles(dna, generatedAt),
       lastAction: last?.action,
       lastEventAt: last?.createdAt,
       eventCount: events.length,
@@ -137,12 +154,16 @@ export async function getGreenPortfolioSnapshot(
     });
   }
 
+  const alerts = computePortfolioAlerts({ assets, nowIso: generatedAt });
+
   return {
-    generatedAt: new Date().toISOString(),
+    generatedAt,
     totalDna: dnaMap.size,
     withRecentEvents,
     bySource,
     byLastAction,
     assets,
+    alerts,
+    alertCount: alerts.length,
   };
 }

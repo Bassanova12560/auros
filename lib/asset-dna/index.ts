@@ -14,7 +14,11 @@ export {
   isValidAssetDnaId,
   parseAssetDnaId,
 } from "./id";
-export { createAssetDnaRecord } from "./create";
+export {
+  createAssetDnaRecord,
+  deterministicAssetDnaId,
+  uuidFromSeedKey,
+} from "./create";
 export {
   assetDnaClassFromGreenProject,
   mintAssetDna,

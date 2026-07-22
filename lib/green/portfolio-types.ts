@@ -9,6 +9,10 @@ export type PortfolioAssetRow = {
   sourceId?: string;
   labelTier?: string;
   listingTier?: string;
+  /** Market actor status when source is market */
+  marketStatus?: string;
+  /** Doc titles past expiresAt (from DNA record) */
+  expiredDocuments?: string[];
   lastAction?: string;
   lastEventAt?: string;
   eventCount: number;
@@ -22,6 +26,25 @@ export type PortfolioAssetRow = {
   }[];
 };
 
+export type PortfolioAlertSeverity = "info" | "warn" | "critical";
+
+export type PortfolioAlertKind =
+  | "proof_stream_silent"
+  | "proof_stream_stale"
+  | "document_expired"
+  | "listing_pending"
+  | "demo_tier";
+
+export type PortfolioAlert = {
+  id: string;
+  kind: PortfolioAlertKind;
+  severity: PortfolioAlertSeverity;
+  assetDnaId: string;
+  displayName: string;
+  message: string;
+  evidence?: string;
+};
+
 export type GreenPortfolioSnapshot = {
   generatedAt: string;
   totalDna: number;
@@ -29,4 +52,6 @@ export type GreenPortfolioSnapshot = {
   bySource: { registry: number; market: number; dnaOnly: number };
   byLastAction: Record<string, number>;
   assets: PortfolioAssetRow[];
+  alerts: PortfolioAlert[];
+  alertCount: number;
 };
