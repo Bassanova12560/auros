@@ -58,4 +58,5 @@ Publier → Prouver (RTMS) → Structurer (wizard) → Match (intro fee / verifi
 **P1 cash shippé** — Fast Track · Investor Room · Index Pack · Readiness MRR (`docs/GREEN-P1-CASH.md`).  
 Attribution partenaires pilotes : **done** (`docs/PARTNER-PILOTS.md`).  
 White-label / DNA / Portfolio institutionnel : **done**.  
-Suite possible : Growth AI phase B (mémoire session) · Liquidity Bridge (LOI MM).
+**Toll / Agent Protocol v0** : Resolve · Search · Research · Policy · Drift · Schema · Trail · Embed (`docs/AUROS-TOLL-MASTER-PLAN.md`).  
+Suite : lookup metering · lifecycle event fees · pilote policy banque.

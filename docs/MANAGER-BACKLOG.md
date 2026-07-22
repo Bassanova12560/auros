@@ -1,7 +1,7 @@
 # Manager backlog — AUROS
 
 Living priorities. Manager owns this; update when shipping or discovering debt.
-Last review: 2026-07-22 (P1 cash + partner pilots attribution).
+Last review: 2026-07-22 (AUROS Toll / Agent Protocol v0).
 
 ## P0 — risque / trust
 
@@ -30,6 +30,22 @@ Last review: 2026-07-22 (P1 cash + partner pilots attribution).
 | Desk Clerk + SSO runbook + air-gap | OK |
 | Branding / IdP HITL + Shield import | OK |
 
+## P0 — Toll / machine à cash (péage)
+
+| Item | Statut |
+|------|--------|
+| Plan maître 3 horizons | OK — `docs/AUROS-TOLL-MASTER-PLAN.md` |
+| Resolve + unknown risk | OK — `/api/v1/toll/resolve` |
+| Search Graph | OK — `/api/v1/toll/search` |
+| Research API | OK — `/api/v1/toll/research` |
+| Policy Engine v0 | OK — `/api/v1/toll/policy` |
+| Drift Detection | OK — `/api/v1/toll/drift` |
+| Metadata Standard | OK — `/api/v1/toll/schema` |
+| Validation Trail | OK — `/api/v1/toll/trail` |
+| Agent Protocol + embed | OK — `/api/v1/toll/agent` · `/embed/asset-dna` |
+| Lookup metering credits | À venir (Upstash) |
+| Lifecycle event fees | À venir |
+
 ## P1 — conversion
 
 | Item | Statut |
@@ -37,7 +53,7 @@ Last review: 2026-07-22 (P1 cash + partner pilots attribution).
 | Funnel `funnel_*` analytics | OK |
 | CTAs → express `/wizard?expert=1` | OK |
 | Care email drafts HITL | OK |
-| Attribution partenaires pilotes | OK — `docs/PARTNER-PILOTS.md` · dashboard multi-liens · paid store |
+| Attribution partenaires pilotes | OK — `docs/PARTNER-PILOTS.md` |
 
 ## P1+ — cash / growth
 
@@ -47,7 +63,7 @@ Last review: 2026-07-22 (P1 cash + partner pilots attribution).
 | Investor room | OK — `/green/investors` |
 | Indice Green packagé | OK — Index Pack `/data/licence` |
 | Readiness MRR | OK — `/green/readiness` |
-| Attribution partenaires pilotes | OK — `docs/PARTNER-PILOTS.md` · dashboard multi-liens · paid store |
+| Attribution partenaires pilotes | OK — `docs/PARTNER-PILOTS.md` |
 
 ## Backlog i18n
 

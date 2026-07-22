@@ -16,9 +16,9 @@ export function buildGreenApiOpenApiSpec() {
     openapi: "3.0.3",
     info: {
       title: "AUROS Green API",
-      version: "1.5.0",
+      version: "1.6.0",
       description:
-        "Public API for Carbon Quality Score (CQS), Watt Score, H₂O Score, WELHR / continuity / ROI resilience screens, AUROS Green Index, Asset DNA, Proof Stream, Portfolio Console, and air-gap export. Anonymous: 100 req/day. Free API key: 1000 req/month. Batch Watt/H₂O and large CQS batches require paid premium tier (not merely an auros_pk_live_* free key).",
+        "Public API for Carbon Quality Score (CQS), Watt Score, H₂O Score, WELHR / continuity / ROI resilience screens, AUROS Green Index, Asset DNA, Proof Stream, Portfolio Console, air-gap export, and AUROS Toll (Resolve / Search / Research / Policy / Drift / Agent Protocol). Anonymous: 100 req/day. Free API key: 1000 req/month. Batch Watt/H₂O and large CQS batches require paid premium tier (not merely an auros_pk_live_* free key).",
       contact: { name: "AUROS", url: base },
     },
     servers: [{ url: base }],
@@ -152,6 +152,45 @@ export function buildGreenApiOpenApiSpec() {
             },
           ],
           responses: { "200": { description: "Event list + meta.tier" } },
+        },
+      },
+      "/api/v1/toll/schema": {
+        get: { summary: "AUROS Metadata Standard (RWA schema v0)" },
+      },
+      "/api/v1/toll/resolve": {
+        get: {
+          summary: "Mandatory Lookup — resolve Asset DNA or unknown-risk",
+          parameters: [
+            { name: "q", in: "query", required: true, schema: { type: "string" } },
+          ],
+        },
+        post: { summary: "Mandatory Lookup (JSON body { q })" },
+      },
+      "/api/v1/toll/search": {
+        post: { summary: "Search Graph — DNA + Green market" },
+      },
+      "/api/v1/toll/research": {
+        post: {
+          summary: "Research pack + citations (Bearer required)",
+          security: [{ bearerAuth: [] }],
+        },
+      },
+      "/api/v1/toll/policy": {
+        post: {
+          summary: "Policy Engine decision (Bearer required)",
+          security: [{ bearerAuth: [] }],
+        },
+      },
+      "/api/v1/toll/drift": {
+        post: { summary: "Drift Detection signals for an Asset DNA" },
+      },
+      "/api/v1/toll/trail": {
+        post: { summary: "Validation Trail (Proof Stream)" },
+      },
+      "/api/v1/toll/agent": {
+        post: {
+          summary: "Agent Protocol tool dispatcher (Bearer required)",
+          security: [{ bearerAuth: [] }],
         },
       },
       "/api/v1/green/portfolio": {
