@@ -88,3 +88,60 @@ export function buildPortfolioAirgapPack(
       "Indicative AUROS portfolio airgap pack — not investment advice, not a regulated statement. Import offline via AUROS Shield or tenant desk.",
   };
 }
+
+export type AirgapVerifyResult =
+  | {
+      ok: true;
+      version: string;
+      contentHash: string;
+      totals: PortfolioAirgapPack["totals"];
+      assetCount: number;
+      alertCount: number;
+    }
+  | { ok: false; error: string };
+
+/** Recompute sha256 over canonical body (excludes contentHash + disclaimer). */
+export function verifyPortfolioAirgapPack(
+  raw: unknown
+): AirgapVerifyResult {
+  if (!raw || typeof raw !== "object") {
+    return { ok: false, error: "invalid_json" };
+  }
+  const pack = raw as Record<string, unknown>;
+  if (pack.version !== AIRGAP_PACK_VERSION) {
+    return { ok: false, error: "unsupported_version" };
+  }
+  const contentHash = String(pack.contentHash ?? "");
+  if (!/^[a-f0-9]{64}$/i.test(contentHash)) {
+    return { ok: false, error: "invalid_hash" };
+  }
+  const totals = pack.totals as PortfolioAirgapPack["totals"] | undefined;
+  const assets = pack.assets;
+  const alerts = pack.alerts;
+  if (!totals || !Array.isArray(assets) || !Array.isArray(alerts)) {
+    return { ok: false, error: "invalid_shape" };
+  }
+
+  const body = {
+    version: pack.version,
+    generatedAt: pack.generatedAt,
+    totals,
+    assets,
+    alerts,
+  };
+  const expected = createHash("sha256")
+    .update(stableStringify(body))
+    .digest("hex");
+  if (expected.toLowerCase() !== contentHash.toLowerCase()) {
+    return { ok: false, error: "hash_mismatch" };
+  }
+
+  return {
+    ok: true,
+    version: String(pack.version),
+    contentHash: contentHash.toLowerCase(),
+    totals,
+    assetCount: assets.length,
+    alertCount: alerts.length,
+  };
+}

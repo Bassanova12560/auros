@@ -55,4 +55,4 @@ Single DNA record reads stay public (IP rate limit). Response includes `meta.tie
 
 ## Next
 
-Tenant self-serve branding UI · IdP metadata upload HITL · offline Shield importer CLI.
+**Piste DNA/institutionnel v1 fermée.** Suite produit P1+ : Fast Track 24h · Investor room · Indice Green.

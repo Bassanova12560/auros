@@ -246,3 +246,83 @@ export function tapLocal(input: {
     disclaimer: SHIELD_DISCLAIMER,
   };
 }
+
+export const PORTFOLIO_AIRGAP_VERSION = "auros.portfolio.airgap.v1";
+
+export type PortfolioAirgapImportResult =
+  | {
+      ok: true;
+      version: string;
+      contentHash: string;
+      assetCount: number;
+      alertCount: number;
+      totals: Record<string, number>;
+    }
+  | { ok: false; error: string };
+
+/**
+ * Verify an AUROS Portfolio air-gap JSON pack offline (hash integrity).
+ * Does not call the network — for DMZ / air-gapped desks.
+ */
+export function importPortfolioAirgapPack(
+  raw: string | unknown
+): PortfolioAirgapImportResult {
+  let parsed: unknown = raw;
+  if (typeof raw === "string") {
+    try {
+      parsed = JSON.parse(raw);
+    } catch {
+      return { ok: false, error: "invalid_json" };
+    }
+  }
+  if (!parsed || typeof parsed !== "object") {
+    return { ok: false, error: "invalid_json" };
+  }
+  const pack = parsed as Record<string, unknown>;
+  // Accept either bare pack or { ok, pack } API envelope
+  const body =
+    pack.pack && typeof pack.pack === "object"
+      ? (pack.pack as Record<string, unknown>)
+      : pack;
+
+  if (body.version !== PORTFOLIO_AIRGAP_VERSION) {
+    return { ok: false, error: "unsupported_version" };
+  }
+  const contentHash = String(body.contentHash ?? "");
+  if (!SHA256_HEX.test(contentHash)) {
+    return { ok: false, error: "invalid_hash" };
+  }
+  const totals = body.totals;
+  const assets = body.assets;
+  const alerts = body.alerts;
+  if (
+    !totals ||
+    typeof totals !== "object" ||
+    !Array.isArray(assets) ||
+    !Array.isArray(alerts)
+  ) {
+    return { ok: false, error: "invalid_shape" };
+  }
+
+  const canonical = {
+    version: body.version,
+    generatedAt: body.generatedAt,
+    totals,
+    assets,
+    alerts,
+  };
+  const expected = sha256Hex(JSON.stringify(canonical));
+  if (expected.toLowerCase() !== contentHash.toLowerCase()) {
+    return { ok: false, error: "hash_mismatch" };
+  }
+
+  return {
+    ok: true,
+    version: String(body.version),
+    contentHash: contentHash.toLowerCase(),
+    assetCount: assets.length,
+    alertCount: alerts.length,
+    totals: totals as Record<string, number>,
+  };
+}
+

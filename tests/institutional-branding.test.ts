@@ -16,8 +16,11 @@ import {
 import {
   AIRGAP_PACK_VERSION,
   buildPortfolioAirgapPack,
+  verifyPortfolioAirgapPack,
 } from "@/lib/green/portfolio-airgap";
 import type { GreenPortfolioSnapshot } from "@/lib/green/portfolio-types";
+import { importPortfolioAirgapPack } from "../packages/auros-shield/src/core";
+
 
 describe("institutional-branding", () => {
   it("validates hex and resolves demo partner", () => {
@@ -99,5 +102,15 @@ describe("portfolio-airgap", () => {
     assert.equal(a.contentHash, b.contentHash);
     assert.equal(a.contentHash.length, 64);
     assert.equal(a.assets.length, 1);
+
+    const verified = verifyPortfolioAirgapPack(a);
+    assert.equal(verified.ok, true);
+    if (verified.ok) assert.equal(verified.contentHash, a.contentHash);
+
+    const bad = verifyPortfolioAirgapPack({ ...a, contentHash: "0".repeat(64) });
+    assert.equal(bad.ok, false);
+
+    const fromShield = importPortfolioAirgapPack(JSON.stringify({ ok: true, pack: a }));
+    assert.equal(fromShield.ok, true);
   });
 });

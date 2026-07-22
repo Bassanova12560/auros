@@ -213,6 +213,32 @@ export function buildGreenApiOpenApiSpec() {
           responses: { "200": { description: "Hash-only pack + contentHash" } },
         },
       },
+      "/api/v1/green/institutional/request": {
+        post: {
+          summary:
+            "HITL request — white-label branding or IdP metadata (ops review, no auto-activate)",
+          requestBody: {
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  required: ["kind", "email", "companyName"],
+                  properties: {
+                    kind: { type: "string", enum: ["branding", "idp"] },
+                    email: { type: "string", format: "email" },
+                    companyName: { type: "string" },
+                    partnerId: { type: "string" },
+                    primaryColor: { type: "string" },
+                    metadataUrl: { type: "string" },
+                    idpProtocol: { type: "string", enum: ["saml", "oidc"] },
+                  },
+                },
+              },
+            },
+          },
+          responses: { "200": { description: "pending_hitl" } },
+        },
+      },
       "/api/green/status": { get: { summary: "Green API health probes (public)" } },
       "/api/green/eau/legal-risk": {
         post: {

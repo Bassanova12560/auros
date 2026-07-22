@@ -166,6 +166,54 @@ function tapLocal(input) {
     disclaimer: SHIELD_DISCLAIMER
   };
 }
+var PORTFOLIO_AIRGAP_VERSION = "auros.portfolio.airgap.v1";
+function importPortfolioAirgapPack(raw) {
+  let parsed = raw;
+  if (typeof raw === "string") {
+    try {
+      parsed = JSON.parse(raw);
+    } catch {
+      return { ok: false, error: "invalid_json" };
+    }
+  }
+  if (!parsed || typeof parsed !== "object") {
+    return { ok: false, error: "invalid_json" };
+  }
+  const pack = parsed;
+  const body = pack.pack && typeof pack.pack === "object" ? pack.pack : pack;
+  if (body.version !== PORTFOLIO_AIRGAP_VERSION) {
+    return { ok: false, error: "unsupported_version" };
+  }
+  const contentHash = String(body.contentHash ?? "");
+  if (!SHA256_HEX.test(contentHash)) {
+    return { ok: false, error: "invalid_hash" };
+  }
+  const totals = body.totals;
+  const assets = body.assets;
+  const alerts = body.alerts;
+  if (!totals || typeof totals !== "object" || !Array.isArray(assets) || !Array.isArray(alerts)) {
+    return { ok: false, error: "invalid_shape" };
+  }
+  const canonical = {
+    version: body.version,
+    generatedAt: body.generatedAt,
+    totals,
+    assets,
+    alerts
+  };
+  const expected = sha256Hex(JSON.stringify(canonical));
+  if (expected.toLowerCase() !== contentHash.toLowerCase()) {
+    return { ok: false, error: "hash_mismatch" };
+  }
+  return {
+    ok: true,
+    version: String(body.version),
+    contentHash: contentHash.toLowerCase(),
+    assetCount: assets.length,
+    alertCount: alerts.length,
+    totals
+  };
+}
 
 export {
   SHIELD_VERSION,
@@ -177,5 +225,7 @@ export {
   sealLocal,
   verifyLocal,
   buildCbom,
-  tapLocal
+  tapLocal,
+  PORTFOLIO_AIRGAP_VERSION,
+  importPortfolioAirgapPack
 };

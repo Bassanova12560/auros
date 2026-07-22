@@ -1,7 +1,7 @@
 # Manager backlog — AUROS
 
 Living priorities. Manager owns this; update when shipping or discovering debt.
-Last review: 2026-07-21 (Green cash P0 producteurs).
+Last review: 2026-07-22 (DNA/institutionnel v1 closed).
 
 ## P0 — risque / trust
 
@@ -21,6 +21,15 @@ Last review: 2026-07-21 (Green cash P0 producteurs).
 | Listing Verified 299 € | OK |
 | API Free / Premium / Enterprise UI | OK |
 
+## P0 — DNA / Portfolio / institutionnel
+
+| Item | Statut |
+|------|--------|
+| Asset DNA + Proof Stream + Portfolio | OK |
+| Watchlists + digest + unsubscribe | OK |
+| Desk Clerk + SSO runbook + air-gap | OK |
+| Branding / IdP HITL + Shield import | OK |
+
 ## P1 — conversion
 
 | Item | Statut |
@@ -30,13 +39,14 @@ Last review: 2026-07-21 (Green cash P0 producteurs).
 | Care email drafts HITL | OK |
 | Attribution partenaires pilotes | À venir |
 
-## P1+ — Growth AI (voir `docs/GROWTH-AI.md`)
+## P1+ — cash / growth
 
-| Phase | Contenu |
-|-------|---------|
-| **A** | RAG + playbook + 5 locales Assistant/Copilot |
-| **B** | Care dossiers réels ; coach post-score |
-| **C** | Fine-tune seulement si dataset + métrique |
+| Item | Statut |
+|------|--------|
+| Fast Track 24h | À venir |
+| Investor room | À venir |
+| Indice Green packagé | Partiel (Index live) |
+| Readiness MRR | À venir |
 
 ## Backlog i18n
 

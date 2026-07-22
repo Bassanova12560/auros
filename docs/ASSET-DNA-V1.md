@@ -82,7 +82,8 @@ GET /api/v1/asset-dna/{id}/stream?limit=50
 8. Watchlist unsubscribe + DNA volume gates (anon/free/premium) — done  
 9. Institutional auth v0 — Clerk desk + session boost + embed widget — done  
 10. Branding tokens + SSO runbook + air-gap pack — done  
-11. **Next:** Tenant self-serve branding · IdP metadata HITL · Shield airgap importer  
+11. Self-serve branding + IdP HITL + Shield `airgap-import` — done  
+12. **Track DNA/institutionnel v1 — closed.** Next = P1+ cash (Fast Track · Investor room · Indice)  
 
 ## Non-goals (v1)
 

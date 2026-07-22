@@ -1,15 +1,17 @@
 import {
   CRYPTO_PROFILES,
+  PORTFOLIO_AIRGAP_VERSION,
   SHIELD_DISCLAIMER,
   SHIELD_VERSION,
   buildCbom,
+  importPortfolioAirgapPack,
   isContentHash,
   resolveShieldSigningKey,
   sealLocal,
   sha256Hex,
   tapLocal,
   verifyLocal
-} from "./chunk-N2VJYS7S.js";
+} from "./chunk-5FUSY5DM.js";
 
 // src/index.ts
 function instrumentFetch(config, fetchImpl = fetch) {
@@ -109,10 +111,12 @@ var MIDDLEWARE_SNIPPETS = {
 export {
   CRYPTO_PROFILES,
   MIDDLEWARE_SNIPPETS,
+  PORTFOLIO_AIRGAP_VERSION,
   SHIELD_DISCLAIMER,
   SHIELD_VERSION,
   buildCbom,
   expressShieldTap,
+  importPortfolioAirgapPack,
   instrumentFetch,
   isContentHash,
   resolveShieldSigningKey,

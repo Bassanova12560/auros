@@ -545,6 +545,40 @@ export async function sendPortfolioWatchlistDigest(
   return sendSafe({ to, subject, html });
 }
 
+export async function sendInstitutionalRequestInternal(data: {
+  id: string;
+  kind: string;
+  email: string;
+  companyName: string;
+  partnerId?: string;
+  primaryColor?: string;
+  idpProtocol?: string;
+  metadataUrl?: string;
+  notes?: string;
+}): Promise<boolean> {
+  const internal = internalNotifyEmail();
+  if (!internal) {
+    console.info("[institutional-request] HITL (no internal email)", data.id);
+    return false;
+  }
+  return sendSafe({
+    to: internal,
+    subject: `[HITL] Institutional ${data.kind} — ${data.companyName}`,
+    html: `<p><strong>Institutional request (${escapeHtml(data.kind)})</strong></p>
+<ul>
+<li>ID: ${escapeHtml(data.id)}</li>
+<li>Email: ${escapeHtml(data.email)}</li>
+<li>Company: ${escapeHtml(data.companyName)}</li>
+<li>Partner: ${escapeHtml(data.partnerId || "—")}</li>
+<li>Color: ${escapeHtml(data.primaryColor || "—")}</li>
+<li>IdP: ${escapeHtml(data.idpProtocol || "—")}</li>
+<li>Metadata URL: ${escapeHtml(data.metadataUrl || "—")}</li>
+<li>Notes: ${escapeHtml(data.notes || "—")}</li>
+</ul>
+<p>Status: <strong>En revue</strong> — apply AUROS_INSTITUTIONAL_BRANDS / AUROS_SSO_TENANTS / Clerk SAML manually. Do not auto-activate.</p>`,
+  });
+}
+
 function escapeHtml(text: string): string {
   return text
     .replace(/&/g, "&amp;")

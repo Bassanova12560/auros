@@ -92,6 +92,23 @@ declare function tapLocal(input: {
     next_step: string;
     disclaimer: string;
 };
+declare const PORTFOLIO_AIRGAP_VERSION = "auros.portfolio.airgap.v1";
+type PortfolioAirgapImportResult = {
+    ok: true;
+    version: string;
+    contentHash: string;
+    assetCount: number;
+    alertCount: number;
+    totals: Record<string, number>;
+} | {
+    ok: false;
+    error: string;
+};
+/**
+ * Verify an AUROS Portfolio air-gap JSON pack offline (hash integrity).
+ * Does not call the network — for DMZ / air-gapped desks.
+ */
+declare function importPortfolioAirgapPack(raw: string | unknown): PortfolioAirgapImportResult;
 
 /** One-liner fetch wrapper — non-invasive cloud tap. */
 declare function instrumentFetch(config: {
@@ -126,4 +143,4 @@ declare const MIDDLEWARE_SNIPPETS: {
     readonly express: "app.use(expressShieldTap({ apiKey: process.env.AUROS_API_KEY! }));";
 };
 
-export { CRYPTO_PROFILES, type CryptoProfile, type EasyTapConfig, MIDDLEWARE_SNIPPETS, SHIELD_DISCLAIMER, SHIELD_VERSION, type ShieldMiddlewareConfig, type ShieldSeal, type ShieldSealKind, buildCbom, expressShieldTap, instrumentFetch, isContentHash, resolveShieldSigningKey, sealLocal, sha256Hex, tapLocal, verifyLocal, withShieldTap };
+export { CRYPTO_PROFILES, type CryptoProfile, type EasyTapConfig, MIDDLEWARE_SNIPPETS, PORTFOLIO_AIRGAP_VERSION, type PortfolioAirgapImportResult, SHIELD_DISCLAIMER, SHIELD_VERSION, type ShieldMiddlewareConfig, type ShieldSeal, type ShieldSealKind, buildCbom, expressShieldTap, importPortfolioAirgapPack, instrumentFetch, isContentHash, resolveShieldSigningKey, sealLocal, sha256Hex, tapLocal, verifyLocal, withShieldTap };

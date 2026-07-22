@@ -11,7 +11,8 @@ Trust layer for banks / funds before full SSO contracts.
 | SSO runbook / tenants | `/green/portfolio/sso` | Public sales + ops |
 | White-label KPIs | `/embed/portfolio?partner=` | iframe (`frame-ancestors *`) |
 | Air-gap pack | `GET /api/v1/green/portfolio/airgap` | Clerk · Premium+ key · cron |
-| On-prem proofs | AUROS Shield (`docs/AUROS-SHIELD.md`) | Customer-held keys |
+| Branding / IdP self-serve | `/green/portfolio/branding` | HITL ops (no auto-activate) |
+| On-prem proofs | AUROS Shield (`airgap-import`) | Customer-held keys |
 
 ## Volume boost (session)
 
@@ -50,7 +51,17 @@ Runbook live on `/green/portfolio/sso` (5 steps). SAML/OIDC IdP stays in Clerk E
 ## Air-gap pack
 
 `GET /api/v1/green/portfolio/airgap?download=1` → JSON `auros.portfolio.airgap.v1` + `contentHash` (sha256).  
-Import offline / Shield — no emails, no keys.
+
+Offline verify:
+
+```bash
+npx auros-shield airgap-import --file ./auros-portfolio-airgap-….json
+```
+
+## Self-serve HITL
+
+`/green/portfolio/branding` → branding + IdP metadata requests → ops email.  
+Apply manually to `AUROS_INSTITUTIONAL_BRANDS` / `AUROS_SSO_TENANTS` / Clerk.
 
 ## Non-goals (v0)
 

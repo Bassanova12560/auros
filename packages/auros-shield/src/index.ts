@@ -9,6 +9,8 @@ export {
   verifyLocal,
   buildCbom,
   tapLocal,
+  importPortfolioAirgapPack,
+  PORTFOLIO_AIRGAP_VERSION,
 } from "./core";
 
 /** One-liner fetch wrapper — non-invasive cloud tap. */
@@ -162,4 +164,9 @@ export const MIDDLEWARE_SNIPPETS = {
   express: `app.use(expressShieldTap({ apiKey: process.env.AUROS_API_KEY! }));`,
 } as const;
 
-export type { CryptoProfile, ShieldSealKind, ShieldSeal } from "./core";
+export type {
+  CryptoProfile,
+  ShieldSealKind,
+  ShieldSeal,
+  PortfolioAirgapImportResult,
+} from "./core";

@@ -132,6 +132,12 @@ export default async function GreenPortfolioDeskPage() {
             >
               Runbook SAML →
             </Link>
+            <Link
+              href="/green/portfolio/branding"
+              className="font-mono text-[11px] uppercase tracking-wider text-emerald-400/90 hover:text-emerald-300"
+            >
+              Branding / IdP →
+            </Link>
             <a
               href="/api/v1/green/portfolio/airgap?download=1"
               className="font-mono text-[11px] uppercase tracking-wider text-white/45 hover:text-white/70"

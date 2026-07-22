@@ -44,5 +44,6 @@ Publier → Prouver (RTMS) → Structurer (wizard) → Match (intro fee / verifi
 
 ## Suite (P1+)
 
-Fast Track 24h · Investor room · Indice Green · Readiness MRR · White-label widget · DNA sur register.  
+Fast Track 24h · Investor room · Indice Green · Readiness MRR.  
+White-label / DNA / Portfolio institutionnel : **done** (voir `docs/ASSET-DNA-V1.md`).  
 Voir backlog manager.

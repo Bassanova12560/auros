@@ -6,6 +6,7 @@ import {
   sealLocal,
   verifyLocal,
   tapLocal,
+  importPortfolioAirgapPack,
   type ShieldSealKind,
 } from "./core.js";
 import { startShieldServer } from "./server.js";
@@ -19,6 +20,7 @@ Usage:
   auros-shield tap (--hash <hex> | --file <path>)
   auros-shield seal --kind <attest|cfu_e|cfu_w|cfu_f|audit> (--hash <hex> | --file <path>)
   auros-shield verify --kind <…> --hash <hex> --sig <hex>
+  auros-shield airgap-import --file <pack.json>
   auros-shield serve [--port 8787]
 
 Env:
@@ -47,26 +49,10 @@ if (cmd === "cbom") {
 if (cmd === "init") {
   console.log(`# AUROS Shield — copy/paste
 
-# A) Essai sans compte
-curl -X POST https://getauros.com/api/v1/shield/demo \\
-  -H "Content-Type: text/plain" \\
-  --data-binary @./export.json
-
-# B) Production (clé gratuite /developers)
-export AUROS_API_KEY="auros_pk_live_…"
-curl -X POST https://getauros.com/api/v1/shield/ingest \\
-  -H "Authorization: Bearer $AUROS_API_KEY" \\
-  -H "Content-Type: text/plain" \\
-  --data-binary @./export.json
-
-# C) JS one-liner
-# npm i @adrien1212balitrand/auros-shield
-# import { instrumentFetch } from "@adrien1212balitrand/auros-shield";
-# globalThis.fetch = instrumentFetch({ apiKey: process.env.AUROS_API_KEY });
-
-# D) Premium Evidence Pack (banque)
-# curl -X POST https://getauros.com/api/v1/shield/pack \\
-#   -H "Authorization: Bearer $AUROS_API_KEY" -H "Content-Type: application/json" -d '{}'
+# Portfolio air-gap pack (offline verify)
+# curl -OJ "https://getauros.com/api/v1/green/portfolio/airgap?download=1" \\
+#   -H "Authorization: Bearer $AUROS_API_KEY"
+# npx auros-shield airgap-import --file ./auros-portfolio-airgap-….json
 
 # Docs: https://getauros.com/developers/shield
 `);
@@ -122,6 +108,15 @@ if (cmd === "verify") {
   const result = verifyLocal({ kind, content_hash: hash, signature: sig });
   console.log(JSON.stringify(result, null, 2));
   process.exit(result.valid ? 0 : 2);
+}
+
+if (cmd === "airgap-import") {
+  const file = flag("--file");
+  if (!file) usage();
+  const raw = readFileSync(file, "utf8");
+  const result = importPortfolioAirgapPack(raw);
+  console.log(JSON.stringify(result, null, 2));
+  process.exit(result.ok ? 0 : 2);
 }
 
 if (cmd === "serve") {

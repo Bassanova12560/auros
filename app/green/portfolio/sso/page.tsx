@@ -107,6 +107,12 @@ export default function GreenPortfolioSsoPage() {
           </pre>
           <div className="mt-5 flex flex-wrap gap-4">
             <Link
+              href="/green/portfolio/branding"
+              className="font-mono text-[11px] uppercase tracking-wider text-emerald-400/90 hover:text-emerald-300"
+            >
+              Branding / IdP →
+            </Link>
+            <Link
               href={GREEN_PORTFOLIO_DESK_ROUTE}
               className="font-mono text-[11px] uppercase tracking-wider text-emerald-400/90 hover:text-emerald-300"
             >
