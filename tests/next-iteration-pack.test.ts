@@ -33,12 +33,12 @@ describe("next iteration surfaces", () => {
     assert.ok(VERTICAL_WELCOMES["/integrations"]);
   });
 
-  it("openapi 1.4 documents DNA portfolio paths", () => {
+  it("openapi 1.5 documents DNA portfolio airgap", () => {
     const spec = buildGreenApiOpenApiSpec() as {
       info: { version: string };
       paths: Record<string, unknown>;
     };
-    assert.equal(spec.info.version, "1.4.0");
+    assert.equal(spec.info.version, "1.5.0");
     assert.ok(spec.paths["/api/green/eau/supplier-screen"]);
     assert.ok(spec.paths["/api/green/eau/resource-signals"]);
     assert.ok(spec.paths["/api/green/eau/connectors"]);
@@ -46,5 +46,6 @@ describe("next iteration surfaces", () => {
     assert.ok(spec.paths["/api/v1/asset-dna/{id}/stream"]);
     assert.ok(spec.paths["/api/v1/green/portfolio"]);
     assert.ok(spec.paths["/api/v1/green/portfolio/watchlist"]);
+    assert.ok(spec.paths["/api/v1/green/portfolio/airgap"]);
   });
 });

@@ -81,7 +81,8 @@ GET /api/v1/asset-dna/{id}/stream?limit=50
 7. OpenAPI 1.4 documents DNA / stream / portfolio / watchlist — done  
 8. Watchlist unsubscribe + DNA volume gates (anon/free/premium) — done  
 9. Institutional auth v0 — Clerk desk + session boost + embed widget — done  
-10. **Next:** SSO SAML per tenant · air-gapped desk · branding tokens  
+10. Branding tokens + SSO runbook + air-gap pack — done  
+11. **Next:** Tenant self-serve branding · IdP metadata HITL · Shield airgap importer  
 
 ## Non-goals (v1)
 

@@ -1,4 +1,4 @@
-# Institutional auth v0 — Portfolio desk · SSO · on-prem
+# Institutional auth v0 — Portfolio desk · SSO · on-prem · branding
 
 Trust layer for banks / funds before full SSO contracts.
 
@@ -8,7 +8,9 @@ Trust layer for banks / funds before full SSO contracts.
 |---------|------|--------|
 | Public Portfolio Console | `/green/portfolio` | Open (volume-gated API) |
 | Institutional desk | `/green/portfolio/desk` | **Clerk sign-in** |
-| White-label KPIs | `/embed/portfolio` | iframe (`frame-ancestors *`) |
+| SSO runbook / tenants | `/green/portfolio/sso` | Public sales + ops |
+| White-label KPIs | `/embed/portfolio?partner=` | iframe (`frame-ancestors *`) |
+| Air-gap pack | `GET /api/v1/green/portfolio/airgap` | Clerk · Premium+ key · cron |
 | On-prem proofs | AUROS Shield (`docs/AUROS-SHIELD.md`) | Customer-held keys |
 
 ## Volume boost (session)
@@ -29,19 +31,26 @@ AUROS_INSTITUTIONAL_DOMAINS=example-bank.com,fund.lu
 AUROS_INSTITUTIONAL_ORG_IDS=org_xxx,org_yyy
 ```
 
-## SSO (path)
+## White-label branding
 
-1. **Now:** Clerk Organizations + desk gate (`/green/portfolio/desk`)  
-2. **Sales:** Clerk Enterprise SAML/OIDC (IdP client) — configure in Clerk Dashboard, map org → allowlist  
-3. **Contract:** dedicated tenant / allowlist domains + Enterprise API key  
+```bash
+AUROS_INSTITUTIONAL_BRANDS='[{"partnerId":"acme","companyName":"Acme Bank","primaryColor":"#0B3D2E","hideAurosBranding":false,"productLabel":"Portfolio"}]'
+```
 
-Contact: `hello@getauros.com`
+Embed: `/embed/portfolio?partner=acme&theme=dark`
 
-## On-prem
+## SSO tenants
 
-- Proof seals stay customer-side via **AUROS Shield** (`npx auros-shield serve`)  
-- Cloud Portfolio reads DNA hashes / streams — no private key exfil  
-- Full air-gapped desk = Enterprise engagement
+```bash
+AUROS_SSO_TENANTS='[{"tenantId":"acme","displayName":"Acme Bank","idpProtocol":"saml","status":"configured","domains":["acme.bank"],"clerkOrgId":"org_xxx"}]'
+```
+
+Runbook live on `/green/portfolio/sso` (5 steps). SAML/OIDC IdP stays in Clerk Enterprise.
+
+## Air-gap pack
+
+`GET /api/v1/green/portfolio/airgap?download=1` → JSON `auros.portfolio.airgap.v1` + `contentHash` (sha256).  
+Import offline / Shield — no emails, no keys.
 
 ## Non-goals (v0)
 

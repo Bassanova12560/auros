@@ -9,6 +9,7 @@ export const GREEN_ABOUT_ROUTE = "/green/about";
 export const GREEN_TRUST_ROUTE = "/green/trust";
 export const GREEN_PORTFOLIO_ROUTE = "/green/portfolio";
 export const GREEN_PORTFOLIO_DESK_ROUTE = "/green/portfolio/desk";
+export const GREEN_PORTFOLIO_SSO_ROUTE = "/green/portfolio/sso";
 export const GREEN_MARKET_ROUTE = "/green/market";
 export const GREEN_MARKET_OFFER_ROUTE = "/green/market/offer";
 export const GREEN_MARKET_ACTOR_ROUTE = "/green/market/actor";

@@ -55,6 +55,4 @@ Single DNA record reads stay public (IP rate limit). Response includes `meta.tie
 
 ## Next
 
-White-label branding tokens · SSO SAML go-live per tenant · air-gapped desk.
-
-See [`INSTITUTIONAL-AUTH-V0.md`](./INSTITUTIONAL-AUTH-V0.md).
+Tenant self-serve branding UI · IdP metadata upload HITL · offline Shield importer CLI.

@@ -11,6 +11,7 @@ import {
 } from "@/app/green/_components/green-ui";
 import {
   GREEN_PORTFOLIO_ROUTE,
+  GREEN_PORTFOLIO_SSO_ROUTE,
   GREEN_ROUTE,
 } from "@/lib/green";
 import { GREEN_API_DOCS_ROUTE } from "@/lib/green/api";
@@ -126,6 +127,18 @@ export default async function GreenPortfolioDeskPage() {
               Demander SSO →
             </a>
             <Link
+              href={GREEN_PORTFOLIO_SSO_ROUTE}
+              className="font-mono text-[11px] uppercase tracking-wider text-emerald-400/90 hover:text-emerald-300"
+            >
+              Runbook SAML →
+            </Link>
+            <a
+              href="/api/v1/green/portfolio/airgap?download=1"
+              className="font-mono text-[11px] uppercase tracking-wider text-white/45 hover:text-white/70"
+            >
+              Export air-gap →
+            </a>
+            <Link
               href="/developers/shield"
               className="font-mono text-[11px] uppercase tracking-wider text-white/45 hover:text-white/70"
             >
@@ -138,7 +151,7 @@ export default async function GreenPortfolioDeskPage() {
               Green API Enterprise →
             </Link>
             <Link
-              href="/embed/portfolio"
+              href="/embed/portfolio?partner=demo"
               className="font-mono text-[11px] uppercase tracking-wider text-white/45 hover:text-white/70"
               target="_blank"
               rel="noopener noreferrer"

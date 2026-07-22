@@ -2,6 +2,10 @@ import Link from "next/link";
 
 import { absoluteUrl } from "@/lib/comparators/site";
 import { GREEN_PORTFOLIO_ROUTE } from "@/lib/green";
+import {
+  brandCssVars,
+  resolveInstitutionalBrand,
+} from "@/lib/green/institutional-branding";
 import { getGreenPortfolioSnapshot } from "@/lib/green/portfolio-snapshot";
 
 export const dynamic = "force-dynamic";
@@ -20,23 +24,55 @@ export default async function EmbedPortfolioPage({ searchParams }: PageProps) {
   const sp = await searchParams;
   const theme = sp.theme === "light" ? "light" : "dark";
   const partner = sp.partner?.trim().slice(0, 40) || null;
+  const brand = resolveInstitutionalBrand(partner);
   const snapshot = await getGreenPortfolioSnapshot(20);
   const dark = theme === "dark";
 
+  const primary = brand?.primaryColor ?? (dark ? "#34d399" : "#047857");
+  const accent = brand?.accentColor ?? primary;
+  const label = brand
+    ? `${brand.hideAurosBranding ? "" : "AUROS · "}${brand.companyName} · ${brand.productLabel ?? "Portfolio"}`
+    : `AUROS · Portfolio${partner ? ` · ${partner}` : ""}`;
+
   const shell = dark
-    ? "min-h-[140px] border border-emerald-500/30 bg-[#0a0f0d] p-4 font-sans text-white"
-    : "min-h-[140px] border border-emerald-600/25 bg-[#f7faf8] p-4 font-sans text-slate-900";
+    ? "min-h-[140px] border p-4 font-sans text-white"
+    : "min-h-[140px] border p-4 font-sans text-slate-900";
   const muted = dark ? "text-white/45" : "text-slate-500";
-  const accent = dark ? "text-emerald-400" : "text-emerald-700";
 
   return (
-    <div className={shell}>
-      <p
-        className={`font-mono text-[10px] uppercase tracking-[0.2em] ${accent}`}
-      >
-        AUROS · Portfolio
-        {partner ? ` · ${partner}` : ""}
-      </p>
+    <div
+      className={shell}
+      style={{
+        ...brandCssVars(
+          brand ?? {
+            partnerId: "default",
+            companyName: "AUROS",
+            primaryColor: primary,
+            accentColor: accent,
+          }
+        ),
+        borderColor: `${primary}55`,
+        backgroundColor: dark ? "#0a0f0d" : "#f7faf8",
+      }}
+    >
+      <div className="flex items-center gap-2">
+        {brand?.logoUrl ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={brand.logoUrl}
+            alt=""
+            width={72}
+            height={24}
+            className="h-6 w-auto object-contain"
+          />
+        ) : null}
+        <p
+          className="font-mono text-[10px] uppercase tracking-[0.2em]"
+          style={{ color: accent }}
+        >
+          {label}
+        </p>
+      </div>
       <div className="mt-4 grid grid-cols-3 gap-3">
         <div>
           <p className={`font-mono text-[9px] uppercase tracking-wider ${muted}`}>
@@ -62,7 +98,8 @@ export default async function EmbedPortfolioPage({ searchParams }: PageProps) {
       </p>
       <Link
         href={absoluteUrl(GREEN_PORTFOLIO_ROUTE)}
-        className={`mt-2 inline-block font-mono text-[10px] uppercase tracking-wider ${accent} hover:underline`}
+        className="mt-2 inline-block font-mono text-[10px] uppercase tracking-wider hover:underline"
+        style={{ color: accent }}
         target="_blank"
         rel="noopener noreferrer"
       >

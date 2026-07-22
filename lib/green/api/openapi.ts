@@ -16,9 +16,9 @@ export function buildGreenApiOpenApiSpec() {
     openapi: "3.0.3",
     info: {
       title: "AUROS Green API",
-      version: "1.4.0",
+      version: "1.5.0",
       description:
-        "Public API for Carbon Quality Score (CQS), Watt Score, H₂O Score, WELHR / continuity / ROI resilience screens, AUROS Green Index, Asset DNA, Proof Stream, and Portfolio Console. Anonymous: 100 req/day. Free API key: 1000 req/month. Batch Watt/H₂O and large CQS batches require paid premium tier (not merely an auros_pk_live_* free key).",
+        "Public API for Carbon Quality Score (CQS), Watt Score, H₂O Score, WELHR / continuity / ROI resilience screens, AUROS Green Index, Asset DNA, Proof Stream, Portfolio Console, and air-gap export. Anonymous: 100 req/day. Free API key: 1000 req/month. Batch Watt/H₂O and large CQS batches require paid premium tier (not merely an auros_pk_live_* free key).",
       contact: { name: "AUROS", url: base },
     },
     servers: [{ url: base }],
@@ -191,6 +191,26 @@ export function buildGreenApiOpenApiSpec() {
             },
           },
           responses: { "200": { description: "Watchlist upserted" } },
+        },
+      },
+      "/api/v1/green/portfolio/airgap": {
+        get: {
+          summary:
+            "Air-gapped portfolio pack (Clerk session, Premium+ API key, or CRON_SECRET)",
+          security: [{ bearerAuth: [] }],
+          parameters: [
+            {
+              name: "limit",
+              in: "query",
+              schema: { type: "integer", minimum: 1, maximum: 100 },
+            },
+            {
+              name: "download",
+              in: "query",
+              schema: { type: "string", enum: ["1"] },
+            },
+          ],
+          responses: { "200": { description: "Hash-only pack + contentHash" } },
         },
       },
       "/api/green/status": { get: { summary: "Green API health probes (public)" } },
