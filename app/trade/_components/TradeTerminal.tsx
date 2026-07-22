@@ -13,11 +13,13 @@ import {
   type SpotSide,
 } from "@/lib/arl/trade-engine";
 import {
+  ARL_LEDGER_EVENT,
   fetchArlAccount,
   getOrCreateArlAccountId,
   postArlSpot,
   type ArlClientSnapshot,
 } from "@/lib/arl/client";
+import { ArlLabWallet } from "@/app/_components/arl/ArlLabWallet";
 
 type Tab = "spot" | "perps" | "options";
 
@@ -70,6 +72,9 @@ export function TradeTerminal() {
     refreshBalances(id).catch((e) =>
       setError(e instanceof Error ? e.message : "Balance load failed"),
     );
+    const onUpdate = () => void refreshBalances(id).catch(() => undefined);
+    window.addEventListener(ARL_LEDGER_EVENT, onUpdate);
+    return () => window.removeEventListener(ARL_LEDGER_EVENT, onUpdate);
   }, [refreshBalances]);
 
   useEffect(() => {
@@ -175,28 +180,7 @@ export function TradeTerminal() {
 
   return (
     <div className="space-y-8">
-      <div className="grid gap-2 sm:grid-cols-5 font-mono text-[11px]">
-        {[
-          { label: "EUR", value: snap ? fmt(snap.account.balances.EUR, 2) : "…" },
-          { label: "akWh", value: snap ? fmt(snap.account.balances.akWh, 2) : "…" },
-          { label: "WATT", value: snap ? fmt(snap.account.balances.WATT, 2) : "…" },
-          { label: "H2O", value: snap ? fmt(snap.account.balances.H2O, 4) : "…" },
-          { label: "FLOP", value: snap ? fmt(snap.account.balances.FLOP, 2) : "…" },
-        ].map((row) => (
-          <div key={row.label} className="border border-white/[0.08] px-3 py-2">
-            <p className="text-white/35">{row.label}</p>
-            <p className="mt-1 text-white tabular-nums">{row.value}</p>
-          </div>
-        ))}
-      </div>
-      <p className="font-mono text-[10px] text-white/35">
-        Lab account {accountId ?? "…"}
-        {snap ? ` · ${snap.backend}` : null}
-        {" · "}
-        <Link href="/producer" className="text-white/55 underline-offset-2 hover:text-white hover:underline">
-          Mint akWh / wrap WATT →
-        </Link>
-      </p>
+      <ArlLabWallet step="sell" />
 
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex flex-wrap gap-2 font-mono text-[11px] uppercase tracking-wide">

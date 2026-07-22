@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 
+import { ArlLabWallet } from "@/app/_components/arl/ArlLabWallet";
 import {
   getOrCreateArlAccountId,
   postArlMint,
@@ -51,7 +52,7 @@ export function EnergyLabSimulator() {
         wattNote = ` · WATT ${wrapped.account.balances.WATT.toFixed(0)}`;
       }
       setNote(
-        `Minted ${result.tokens} akWh into lab account${wattNote}. Open /producer or /trade to continue.`,
+        `Minted ${result.tokens} akWh into your lab wallet${wattNote}. Next: Producer (convert) or Trade (sell).`,
       );
     } catch (e) {
       setError(e instanceof Error ? e.message : "Mint failed");
@@ -62,8 +63,10 @@ export function EnergyLabSimulator() {
 
   return (
     <div className="space-y-8">
+      <ArlLabWallet step="produce" />
+
       <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/40">
-        Lab sandbox · illustrative · mint writes the shared ARL ledger
+        Lab sandbox · mint writes your lab wallet
       </p>
 
       <div className="grid gap-8 lg:grid-cols-2">
@@ -145,7 +148,6 @@ export function EnergyLabSimulator() {
           </dl>
           <p className="mt-5 text-xs leading-relaxed text-white/40">
             Story: solar farm mints ≈{result.tokens} akWh/day → wraps to WATT → sells on /trade.
-            Grid fees, taxes, and balancing stay off-chain with licensed operators.
           </p>
           <button
             type="button"
@@ -153,19 +155,16 @@ export function EnergyLabSimulator() {
             onClick={() => void mintLabDay()}
             className="mt-4 w-full rounded border border-white/25 bg-white/10 py-2.5 font-mono text-[11px] uppercase tracking-wide text-white hover:bg-white/15 disabled:opacity-40"
           >
-            {busy ? "Minting…" : "Mint this lab day → ledger"}
+            {busy ? "Minting…" : "Mint this lab day → wallet"}
           </button>
           {error ? <p className="mt-2 text-xs text-rose-300/90">{error}</p> : null}
           {note ? <p className="mt-2 text-xs text-emerald-300/80">{note}</p> : null}
           <div className="mt-4 flex flex-wrap gap-3 font-mono text-[10px] uppercase tracking-wider">
             <Link href="/producer" className="text-white/55 underline-offset-2 hover:text-white hover:underline">
-              Producer →
+              2. Convert →
             </Link>
             <Link href="/trade" className="text-white/55 underline-offset-2 hover:text-white hover:underline">
-              Trade →
-            </Link>
-            <Link href="/builders" className="text-white/55 underline-offset-2 hover:text-white hover:underline">
-              Builders →
+              3. Sell →
             </Link>
           </div>
         </div>

@@ -1,6 +1,7 @@
 /** Browser helpers for ARL lab ledger account + API. */
 
 export const ARL_ACCOUNT_STORAGE_KEY = "auros_arl_account_id";
+export const ARL_LEDGER_EVENT = "auros-arl-ledger";
 
 export function getOrCreateArlAccountId(): string {
   if (typeof window === "undefined") return "server";
@@ -13,6 +14,12 @@ export function getOrCreateArlAccountId(): string {
   } catch {
     return `lab_ephemeral_${Date.now().toString(36)}`;
   }
+}
+
+/** Notify shared Lab wallet UIs to refresh balances. */
+export function notifyArlLedgerUpdated() {
+  if (typeof window === "undefined") return;
+  window.dispatchEvent(new Event(ARL_LEDGER_EVENT));
 }
 
 export type ArlClientSnapshot = {
@@ -58,7 +65,9 @@ export async function postArlMint(input: {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(input),
   });
-  return parseJson(res);
+  const snap = await parseJson(res);
+  notifyArlLedgerUpdated();
+  return snap;
 }
 
 export async function postArlWatt(input: {
@@ -71,7 +80,9 @@ export async function postArlWatt(input: {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(input),
   });
-  return parseJson(res);
+  const snap = await parseJson(res);
+  notifyArlLedgerUpdated();
+  return snap;
 }
 
 export async function postArlSpot(input: {
@@ -86,5 +97,7 @@ export async function postArlSpot(input: {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(input),
   });
-  return parseJson(res);
+  const snap = await parseJson(res);
+  notifyArlLedgerUpdated();
+  return snap;
 }

@@ -233,15 +233,15 @@ export default function ResourceLayerPage() {
                 apply for testnet access — human review on every paid path.
               </p>
               <div className="flex flex-wrap gap-3">
-                <PrimaryButton href="/lab">Open Energy Lab</PrimaryButton>
-                <PrimaryButton href="/builders" variant="ghost">
-                  Explore the protocol
-                </PrimaryButton>
+                <PrimaryButton href="/lab">1 · Produire (Lab)</PrimaryButton>
                 <PrimaryButton href="/producer" variant="ghost">
-                  Mint your first kWh (demo)
+                  2 · Convertir (WATT)
                 </PrimaryButton>
-                <PrimaryButton href="/careers" variant="ghost">
-                  Hiring · join the build
+                <PrimaryButton href="/trade" variant="ghost">
+                  3 · Vendre (Trade)
+                </PrimaryButton>
+                <PrimaryButton href="/builders" variant="ghost">
+                  Protocol
                 </PrimaryButton>
                 <a
                   href="mailto:resources@getauros.com?subject=ARL%20testnet%20access"
