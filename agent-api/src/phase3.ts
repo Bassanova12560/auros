@@ -24,8 +24,22 @@ const options = new Map<string, Option>();
 let optSeq = 1;
 
 export function writeOption(input: Omit<Option, "id">) {
+  if (!Number.isFinite(input.strike) || input.strike <= 0) throw new Error("bad strike");
+  if (!Number.isFinite(input.premium) || input.premium <= 0 || input.premium > 1_000_000) {
+    throw new Error("bad premium");
+  }
+  if (!Number.isFinite(input.size) || input.size <= 0 || input.size > 1_000_000) {
+    throw new Error("bad size");
+  }
+  if (!Number.isFinite(input.margin) || input.margin <= 0) throw new Error("bad margin");
+  const now = Math.floor(Date.now() / 1000);
+  if (input.expiry <= now || input.expiry > now + 365 * 24 * 3600) {
+    throw new Error("expiry out of range");
+  }
+  if (!input.seller?.trim()) throw new Error("seller required");
+  if (input.side !== "call" && input.side !== "put") throw new Error("bad side");
   const id = `opt_${optSeq++}`;
-  options.set(id, { ...input, id });
+  options.set(id, { ...input, id, seller: input.seller.trim() });
   return { txHash: tx(), id, mode: "mock" as const };
 }
 
@@ -58,6 +72,8 @@ function lendAcc(id: string): LendingAccount {
 }
 
 export function lendDeposit(agentId: string, side: "resource" | "quote", amount: number) {
+  if (!agentId?.trim()) throw new Error("agentId required");
+  if (!Number.isFinite(amount) || amount <= 0 || amount > 1_000_000) throw new Error("bad amount");
   const a = lendAcc(agentId);
   if (side === "resource") a.resourceDeposit += amount;
   else {
@@ -68,6 +84,7 @@ export function lendDeposit(agentId: string, side: "resource" | "quote", amount:
 }
 
 export function lendBorrowQuote(agentId: string, amount: number) {
+  if (!Number.isFinite(amount) || amount <= 0 || amount > 1_000_000) throw new Error("bad amount");
   const a = lendAcc(agentId);
   if (a.resourceDeposit / 2 < a.quoteDebt + amount) throw new Error("LTV");
   if (quotePool < amount) throw new Error("liquidity");
@@ -114,6 +131,11 @@ export function buyInsurance(input: {
   premium: number;
   durationSec: number;
 }) {
+  if (!input.insured?.trim()) throw new Error("insured required");
+  if (!Number.isFinite(input.coverage) || input.coverage <= 0) throw new Error("bad coverage");
+  if (!Number.isFinite(input.premium) || input.premium <= 0) throw new Error("bad premium");
+  if (!Number.isFinite(input.durationSec) || input.durationSec <= 0) throw new Error("bad duration");
+  if (!Number.isFinite(input.threshold) || input.threshold < 0) throw new Error("bad threshold");
   if (insPool < input.coverage) throw new Error("pool");
   const commission = input.premium * 0.15;
   insCommission += commission;
@@ -121,7 +143,7 @@ export function buyInsurance(input: {
   const id = `pol_${polSeq++}`;
   policies.set(id, {
     id,
-    insured: input.insured,
+    insured: input.insured.trim(),
     threshold: input.threshold,
     coverage: input.coverage,
     premium: input.premium,
@@ -159,6 +181,9 @@ const flopBalances = new Map<string, number>();
 let flopMinted = 0;
 
 export function mintFlop(agentId: string, amount: number, jobId: string) {
+  if (!agentId?.trim()) throw new Error("agentId required");
+  if (!jobId?.trim()) throw new Error("jobId required");
+  if (!Number.isFinite(amount) || amount <= 0 || amount > 1_000_000) throw new Error("bad amount");
   flopBalances.set(agentId, (flopBalances.get(agentId) ?? 0) + amount);
   flopMinted += amount;
   return { txHash: tx(), agentId, amount, jobId, balance: flopBalances.get(agentId), mode: "mock" as const };

@@ -31,8 +31,16 @@ export type PerpMarketState = {
 
 const FEE_BPS = 10;
 const FUNDING_INTERVAL_MS = 8 * 60 * 60 * 1000;
+export const MAX_LEVERAGE = 10;
+export const MAX_MARGIN = 1_000_000;
+export const MAX_OPEN_INTEREST = 50_000_000;
+const MAX_MARK_JUMP = 0.5; // 50% circuit breaker
 
 const markets = new Map<string, PerpMarketState>();
+
+function assertPositiveFinite(n: number, label: string) {
+  if (!Number.isFinite(n) || n <= 0) throw new Error(`${label} must be positive`);
+}
 
 function market(indexId: string): PerpMarketState {
   let m = markets.get(indexId);
@@ -58,12 +66,27 @@ function feeOn(size: number): number {
 }
 
 export function setMarkPrice(indexId: string, price: number) {
+  assertPositiveFinite(price, "price");
+  const m = market(indexId);
+  const old = m.markPrice;
+  if (old > 0) {
+    const jump = Math.abs(price - old) / old;
+    if (jump > MAX_MARK_JUMP) throw new Error("circuit breaker");
+  }
+  m.markPrice = price;
+  return { indexId, markPrice: price };
+}
+
+export function setMarkPriceForced(indexId: string, price: number) {
+  assertPositiveFinite(price, "price");
   const m = market(indexId);
   m.markPrice = price;
   return { indexId, markPrice: price };
 }
 
 export function addLiquidity(indexId: string, amount: number) {
+  assertPositiveFinite(amount, "amount");
+  if (amount > MAX_MARGIN * 10) throw new Error("amount too large");
   const m = market(indexId);
   m.lpLiquidity += amount;
   return {
@@ -81,15 +104,24 @@ export function openPerp(input: {
   margin: number;
   leverage: number;
 }) {
-  if (input.leverage < 1 || input.leverage > 10) {
+  assertPositiveFinite(input.margin, "margin");
+  if (input.margin > MAX_MARGIN) throw new Error("margin cap");
+  if (!Number.isInteger(input.leverage) || input.leverage < 1 || input.leverage > MAX_LEVERAGE) {
     throw new Error("leverage must be 1..10");
   }
+  if (!input.agentId?.trim()) throw new Error("agentId required");
+  if (input.side !== "long" && input.side !== "short") throw new Error("bad side");
+
   const m = market(input.indexId);
+  if (m.markPrice <= 0) throw new Error("invalid mark");
   if (m.positions.has(input.agentId)) {
     throw new Error("position already open");
   }
   settleFunding(input.indexId);
   const size = input.margin * input.leverage;
+  const oi = input.side === "long" ? m.longOi : m.shortOi;
+  if (oi + size > MAX_OPEN_INTEREST) throw new Error("max open interest");
+
   const fee = feeOn(size);
   m.protocolFees += fee;
   const pos: PerpPosition = {
@@ -120,6 +152,7 @@ export function closePerp(indexId: string, agentId: string) {
   settleFunding(indexId);
   const pos = m.positions.get(agentId);
   if (!pos) throw new Error("no position");
+  if (pos.entryPrice <= 0) throw new Error("corrupt entry");
 
   const priceDiff = m.markPrice - pos.entryPrice;
   const raw = (pos.size * priceDiff) / pos.entryPrice;
@@ -127,8 +160,8 @@ export function closePerp(indexId: string, agentId: string) {
   const fee = feeOn(pos.size);
   m.protocolFees += fee;
 
-  if (pos.side === "long") m.longOi -= pos.size;
-  else m.shortOi -= pos.size;
+  if (pos.side === "long") m.longOi = Math.max(0, m.longOi - pos.size);
+  else m.shortOi = Math.max(0, m.shortOi - pos.size);
 
   if (pnl > 0) m.lpLiquidity -= Math.min(m.lpLiquidity, pnl);
   else m.lpLiquidity += -pnl;
@@ -158,7 +191,7 @@ export function settleFunding(indexId: string) {
   const total = m.longOi + m.shortOi;
   if (total > 0) {
     const skew = (m.longOi - m.shortOi) / total;
-    m.fundingIndex += skew * 0.001 * periods; // max ~0.1% per period at full skew
+    m.fundingIndex += skew * 0.001 * periods;
   }
   return { settled: true, fundingIndex: m.fundingIndex, periods };
 }
@@ -181,6 +214,9 @@ export function getPerpPosition(indexId: string, agentId: string) {
   const m = market(indexId);
   const pos = m.positions.get(agentId);
   if (!pos) return null;
+  if (pos.entryPrice <= 0) {
+    return { ...pos, upnl: 0, equity: pos.margin, markPrice: m.markPrice };
+  }
   const priceDiff = m.markPrice - pos.entryPrice;
   const raw = (pos.size * priceDiff) / pos.entryPrice;
   const upnl = pos.side === "long" ? raw : -raw;

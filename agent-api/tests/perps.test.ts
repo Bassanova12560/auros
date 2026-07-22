@@ -5,12 +5,13 @@ import {
   getPerpMarket,
   openPerp,
   setMarkPrice,
+  setMarkPriceForced,
 } from "../src/perps.ts";
 
 describe("perps mock engine", () => {
   it("opens and closes a long with protocol fee", () => {
     const indexId = `kwh-france-${Date.now()}`;
-    setMarkPrice(indexId, 0.12);
+    setMarkPriceForced(indexId, 0.12);
     const opened = openPerp({
       indexId,
       agentId: "agent-1",
@@ -29,12 +30,30 @@ describe("perps mock engine", () => {
   it("rejects leverage > 10", () => {
     assert.throws(() =>
       openPerp({
-        indexId: "kwh-tx",
+        indexId: `lev-${Date.now()}`,
         agentId: "a",
         side: "short",
         margin: 10,
         leverage: 11,
-      })
+      }),
+    );
+  });
+
+  it("rejects non-positive margin and circuit-breaker jumps", () => {
+    const indexId = `cb-${Date.now()}`;
+    setMarkPriceForced(indexId, 0.12);
+    assert.throws(() =>
+      openPerp({ indexId, agentId: "x", side: "long", margin: 0, leverage: 2 }),
+    );
+    assert.throws(() => setMarkPrice(indexId, 0.3)); // >50%
+  });
+
+  it("rejects second open for same agent", () => {
+    const indexId = `dup-${Date.now()}`;
+    setMarkPriceForced(indexId, 0.1);
+    openPerp({ indexId, agentId: "same", side: "long", margin: 100, leverage: 2 });
+    assert.throws(() =>
+      openPerp({ indexId, agentId: "same", side: "short", margin: 50, leverage: 2 }),
     );
   });
 });

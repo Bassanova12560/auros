@@ -21,8 +21,14 @@ export default function TradePage() {
           product="Resource Layer"
           eyebrow="Terminal · Demo"
           title="Trade resources, perps & options"
-          intro="Unified ticket for tokenized kWh, compute FLOP, and Phase 3 derivatives. Orders here are simulated — production routing goes through agent-api and on-chain settlements."
+          intro="Hardened demo engine: spot, perps, and options with leverage caps, OI limits, oracle circuit-breaker, and self-trade guards. Not live venue execution — HITL for real settlement."
         >
+          <div className="mb-6">
+            <p className="rounded-lg border border-amber-500/20 bg-amber-500/[0.06] px-4 py-3 font-mono text-[11px] leading-relaxed text-amber-200/80">
+              Demo engine runs in your browser session. Invalid tickets are rejected with reason —
+              no silent bad fills.
+            </p>
+          </div>
           <p className="mb-6 flex flex-wrap gap-x-4 gap-y-2 font-mono text-[10px] uppercase tracking-wider text-white/40">
             <Link href="/builders" className="hover:text-white/70">
               Protocol →

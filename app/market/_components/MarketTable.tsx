@@ -1,20 +1,21 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 
 import { DemoDisclaimer } from "@/app/_components/arl/DemoDisclaimer";
 import { AurosButton } from "@/app/_components/AurosButton";
 
 const MARKETS = [
   {
-    id: "kwh-fr",
+    id: "kwh-france",
     resource: "kWh · France (AKWH)",
     price: "€ 0.142 / kWh",
     volume: "2.4M",
     liquidity: "High",
   },
   {
-    id: "kwh-tx",
+    id: "kwh-texas",
     resource: "kWh · Texas (AKWH-US)",
     price: "$ 0.068 / kWh",
     volume: "8.1M",
@@ -28,10 +29,10 @@ const MARKETS = [
     liquidity: "Medium",
   },
   {
-    id: "kwh-de",
-    resource: "kWh · Germany (AKWH)",
-    price: "€ 0.158 / kWh",
-    volume: "1.1M",
+    id: "flop",
+    resource: "Compute · FLOP",
+    price: "$ 1.27 / unit",
+    volume: "88K",
     liquidity: "Medium",
   },
 ] as const;
@@ -40,7 +41,7 @@ export function MarketTable() {
   const [tradeMsg, setTradeMsg] = useState<string | null>(null);
 
   function onTrade(id: string) {
-    setTradeMsg(`Trade intent for ${id} logged — routing & HITL not enabled in this demo.`);
+    setTradeMsg(`Opening hardened demo terminal for ${id}…`);
   }
 
   return (
@@ -65,7 +66,11 @@ export function MarketTable() {
                 <td className="px-4 py-3">{m.volume}</td>
                 <td className="px-4 py-3">{m.liquidity}</td>
                 <td className="px-4 py-3">
-                  <AurosButton type="button" variant="ghost" onClick={() => onTrade(m.id)}>
+                  <AurosButton
+                    href={`/trade`}
+                    variant="ghost"
+                    onClick={() => onTrade(m.id)}
+                  >
                     Trade
                   </AurosButton>
                 </td>
@@ -74,6 +79,13 @@ export function MarketTable() {
           </tbody>
         </table>
       </div>
+      <p className="text-xs text-white/45">
+        Execution uses the local demo engine on{" "}
+        <Link href="/trade" className="underline hover:text-white">
+          /trade
+        </Link>{" "}
+        (caps, circuit-breaker, HITL labels) — not live venue routing.
+      </p>
       {tradeMsg ? <p className="text-xs text-white/50">{tradeMsg}</p> : null}
     </div>
   );

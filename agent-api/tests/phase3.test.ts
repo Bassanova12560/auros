@@ -17,7 +17,7 @@ describe("phase3 mock flywheel", () => {
     const written = writeOption({
       side: "call",
       strike: 0.12,
-      expiry: Date.now() + 3600_000,
+      expiry: Math.floor(Date.now() / 1000) + 3600,
       premium: 100,
       margin: 1000,
       size: 1000,
@@ -31,7 +31,7 @@ describe("phase3 mock flywheel", () => {
     const written = writeOption({
       side: "put",
       strike: 0.1,
-      expiry: Date.now() + 3600_000,
+      expiry: Math.floor(Date.now() / 1000) + 3600,
       premium: 50,
       margin: 500,
       size: 100,

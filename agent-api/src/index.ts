@@ -19,6 +19,7 @@ import {
   getPerpPosition,
   openPerp,
   setMarkPrice,
+  setMarkPriceForced,
   settleFunding as settlePerpFunding,
 } from "./perps.js";
 import {
@@ -219,8 +220,17 @@ app.post("/perps/:indexId/funding", mutateLimit, (request, response) => {
 
 app.post("/perps/:indexId/mark-price", requireOperatorKey, mutateLimit, (request, response) => {
   const indexId = indexIdSchema.parse(request.params.indexId);
-  const body = z.object({ price: z.number().positive().max(1e9) }).parse(request.body);
-  response.json(setMarkPrice(indexId, body.price));
+  const body = z
+    .object({
+      price: z.number().positive().max(1e9),
+      force: z.boolean().optional(),
+    })
+    .parse(request.body);
+  response.json(
+    body.force
+      ? setMarkPriceForced(indexId, body.price)
+      : setMarkPrice(indexId, body.price),
+  );
 });
 
 app.get("/options", (_request, response) => {
