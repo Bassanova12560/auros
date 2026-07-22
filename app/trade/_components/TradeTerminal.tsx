@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 
 import {
@@ -12,6 +12,12 @@ import {
   type PerpSide,
   type SpotSide,
 } from "@/lib/arl/trade-engine";
+import {
+  fetchArlAccount,
+  getOrCreateArlAccountId,
+  postArlSpot,
+  type ArlClientSnapshot,
+} from "@/lib/arl/client";
 
 type Tab = "spot" | "perps" | "options";
 
@@ -23,10 +29,11 @@ function fmt(n: number, digits = 4): string {
 }
 
 /**
- * Hardened demo trading terminal — local engine with caps, validation, positions.
+ * Hardened trading terminal — spot settles on shared ARL lab ledger;
+ * perps/options remain session-local with caps.
  */
 export function TradeTerminal() {
-  const [tab, setTab] = useState<Tab>("perps");
+  const [tab, setTab] = useState<Tab>("spot");
   const [marketId, setMarketId] = useState<MarketId>("kwh-france");
   const [perpSide, setPerpSide] = useState<PerpSide>("long");
   const [spotSide, setSpotSide] = useState<SpotSide>("buy");
@@ -42,12 +49,28 @@ export function TradeTerminal() {
   const [error, setError] = useState<string | null>(null);
   const [log, setLog] = useState<LogLine[]>([]);
   const [tick, setTick] = useState(0);
+  const [accountId, setAccountId] = useState<string | null>(null);
+  const [snap, setSnap] = useState<ArlClientSnapshot | null>(null);
+  const [spotBusy, setSpotBusy] = useState(false);
 
   const market = useMemo(() => tradeEngine.getMarket(marketId), [marketId, tick]);
   const position = useMemo(() => tradeEngine.getPosition(marketId), [marketId, tick]);
   const options = useMemo(() => tradeEngine.listOptions(), [tick]);
   const chartBars = useMemo(() => tradeEngine.sparkline(marketId), [marketId, tick]);
   const maxBar = Math.max(...chartBars, 1e-9);
+
+  const refreshBalances = useCallback(async (id: string) => {
+    const next = await fetchArlAccount(id);
+    setSnap(next);
+  }, []);
+
+  useEffect(() => {
+    const id = getOrCreateArlAccountId();
+    setAccountId(id);
+    refreshBalances(id).catch((e) =>
+      setError(e instanceof Error ? e.message : "Balance load failed"),
+    );
+  }, [refreshBalances]);
 
   useEffect(() => {
     setError(null);
@@ -90,12 +113,33 @@ export function TradeTerminal() {
     });
   }
 
-  function onSpot() {
-    run(() => {
+  async function onSpot() {
+    if (!accountId) return;
+    setSpotBusy(true);
+    setError(null);
+    try {
       const amount = Number(spotAmount);
-      const res = tradeEngine.executeSpot({ marketId, side: spotSide, amount });
-      return `[spot] ${spotSide} ${amount} @ ${fmt(res.executionPrice)} fee=${fmt(res.fee, 4)}`;
-    });
+      const res = await postArlSpot({
+        accountId,
+        marketId,
+        side: spotSide,
+        amount,
+        markOverride: market.markPrice,
+      });
+      setSnap(res);
+      const fillPrice = res.fill?.executionPrice ?? market.markPrice;
+      const fillFee = res.fill?.fee ?? 0;
+      pushLog(
+        `[spot·ledger] ${spotSide} ${amount} @ ${fmt(fillPrice)} fee=${fmt(fillFee, 4)} EUR`,
+        true,
+      );
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : "Spot rejected";
+      setError(msg);
+      pushLog(`[reject] ${msg}`, false);
+    } finally {
+      setSpotBusy(false);
+    }
   }
 
   function onWriteOption() {
@@ -131,6 +175,29 @@ export function TradeTerminal() {
 
   return (
     <div className="space-y-8">
+      <div className="grid gap-2 sm:grid-cols-5 font-mono text-[11px]">
+        {[
+          { label: "EUR", value: snap ? fmt(snap.account.balances.EUR, 2) : "…" },
+          { label: "akWh", value: snap ? fmt(snap.account.balances.akWh, 2) : "…" },
+          { label: "WATT", value: snap ? fmt(snap.account.balances.WATT, 2) : "…" },
+          { label: "H2O", value: snap ? fmt(snap.account.balances.H2O, 4) : "…" },
+          { label: "FLOP", value: snap ? fmt(snap.account.balances.FLOP, 2) : "…" },
+        ].map((row) => (
+          <div key={row.label} className="border border-white/[0.08] px-3 py-2">
+            <p className="text-white/35">{row.label}</p>
+            <p className="mt-1 text-white tabular-nums">{row.value}</p>
+          </div>
+        ))}
+      </div>
+      <p className="font-mono text-[10px] text-white/35">
+        Lab account {accountId ?? "…"}
+        {snap ? ` · ${snap.backend}` : null}
+        {" · "}
+        <Link href="/producer" className="text-white/55 underline-offset-2 hover:text-white hover:underline">
+          Mint akWh / wrap WATT →
+        </Link>
+      </p>
+
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex flex-wrap gap-2 font-mono text-[11px] uppercase tracking-wide">
           {(["spot", "perps", "options"] as const).map((t) => (
@@ -345,11 +412,15 @@ export function TradeTerminal() {
               </label>
               <button
                 type="button"
-                onClick={onSpot}
-                className="w-full rounded border border-white/25 bg-white/10 py-2.5 text-sm text-white hover:bg-white/15"
+                onClick={() => void onSpot()}
+                disabled={spotBusy}
+                className="w-full rounded border border-white/25 bg-white/10 py-2.5 text-sm text-white hover:bg-white/15 disabled:opacity-40"
               >
-                Simulate {spotSide}
+                {spotBusy ? "Settling…" : `Settle ${spotSide} on ledger`}
               </button>
+              <p className="font-mono text-[10px] text-white/35">
+                Spot credits/debits your shared lab balances (EUR ↔ resource).
+              </p>
             </>
           ) : null}
 
@@ -453,7 +524,7 @@ export function TradeTerminal() {
           ) : null}
 
           <p className="font-mono text-[10px] text-white/35">
-            Caps: lev≤{MAX_LEVERAGE} · circuit-breaker 50% · self-trade blocked · HITL —{" "}
+            Spot = shared ledger · Perps/options = session engine · lev≤{MAX_LEVERAGE} · HITL —{" "}
             <Link href="/builders" className="underline hover:text-white/60">
               builders
             </Link>

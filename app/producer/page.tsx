@@ -21,7 +21,7 @@ export default function ProducerPage() {
           product="Resource Layer"
           eyebrow="Producer · Demo"
           title="Energy producer console"
-          intro="Surplus kWh flows from meters and inverters into oracle-gated mints. This console previews how a site operator sees devices, production, and token balance."
+          intro="Surplus kWh flows from meters into oracle-gated mints. Mint akWh here, wrap to WATT 1:1, then settle spot on /trade — shared lab ledger across producer, lab, and trade."
         >
           <p className="mb-6 flex flex-wrap gap-x-4 gap-y-2 font-mono text-[10px] uppercase tracking-wider text-white/40">
             <Link href="/lab" className="hover:text-white/70">

@@ -3,14 +3,22 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 
+import {
+  getOrCreateArlAccountId,
+  postArlMint,
+  postArlWatt,
+} from "@/lib/arl/client";
+
 /**
- * Energy Lab — illustrative revenue sandbox for producers.
- * Numbers are educational mocks, not offers or PPAs.
+ * Energy Lab — illustrative revenue sandbox + one-click mint into the shared ARL ledger.
  */
 export function EnergyLabSimulator() {
   const [kwhPerDay, setKwhPerDay] = useState(420);
   const [priceEur, setPriceEur] = useState(0.11);
   const [uptime, setUptime] = useState(92);
+  const [busy, setBusy] = useState(false);
+  const [note, setNote] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   const result = useMemo(() => {
     const effectiveKwh = kwhPerDay * (uptime / 100);
@@ -21,10 +29,41 @@ export function EnergyLabSimulator() {
     return { effectiveKwh, daily, monthly, yearly, tokens };
   }, [kwhPerDay, priceEur, uptime]);
 
+  async function mintLabDay() {
+    setBusy(true);
+    setError(null);
+    setNote(null);
+    try {
+      const accountId = getOrCreateArlAccountId();
+      const minted = await postArlMint({
+        accountId,
+        amount: result.tokens,
+        deviceId: "lab-simulator",
+      });
+      const wrapAmt = Math.min(result.tokens, minted.account.balances.akWh);
+      let wattNote = "";
+      if (wrapAmt > 0) {
+        const wrapped = await postArlWatt({
+          accountId,
+          amount: Math.min(100, wrapAmt),
+          action: "mint",
+        });
+        wattNote = ` · WATT ${wrapped.account.balances.WATT.toFixed(0)}`;
+      }
+      setNote(
+        `Minted ${result.tokens} akWh into lab account${wattNote}. Open /producer or /trade to continue.`,
+      );
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Mint failed");
+    } finally {
+      setBusy(false);
+    }
+  }
+
   return (
     <div className="space-y-8">
       <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/40">
-        Lab sandbox · illustrative · not a PPA quote
+        Lab sandbox · illustrative · mint writes the shared ARL ledger
       </p>
 
       <div className="grid gap-8 lg:grid-cols-2">
@@ -105,22 +144,29 @@ export function EnergyLabSimulator() {
             </div>
           </dl>
           <p className="mt-5 text-xs leading-relaxed text-white/40">
-            Story: solar farm mints ≈{result.tokens} akWh/day → sells to a data-center agent at the
-            mock mid. Grid fees, taxes, and balancing stay off-chain with licensed operators.
+            Story: solar farm mints ≈{result.tokens} akWh/day → wraps to WATT → sells on /trade.
+            Grid fees, taxes, and balancing stay off-chain with licensed operators.
           </p>
+          <button
+            type="button"
+            disabled={busy}
+            onClick={() => void mintLabDay()}
+            className="mt-4 w-full rounded border border-white/25 bg-white/10 py-2.5 font-mono text-[11px] uppercase tracking-wide text-white hover:bg-white/15 disabled:opacity-40"
+          >
+            {busy ? "Minting…" : "Mint this lab day → ledger"}
+          </button>
+          {error ? <p className="mt-2 text-xs text-rose-300/90">{error}</p> : null}
+          {note ? <p className="mt-2 text-xs text-emerald-300/80">{note}</p> : null}
           <div className="mt-4 flex flex-wrap gap-3 font-mono text-[10px] uppercase tracking-wider">
             <Link href="/producer" className="text-white/55 underline-offset-2 hover:text-white hover:underline">
-              Producer demo →
+              Producer →
+            </Link>
+            <Link href="/trade" className="text-white/55 underline-offset-2 hover:text-white hover:underline">
+              Trade →
             </Link>
             <Link href="/builders" className="text-white/55 underline-offset-2 hover:text-white hover:underline">
               Builders →
             </Link>
-            <a
-              href="mailto:resources@getauros.com?subject=Energy%20Lab%20pilot"
-              className="text-white/55 underline-offset-2 hover:text-white hover:underline"
-            >
-              Talk pilots →
-            </a>
           </div>
         </div>
       </div>
