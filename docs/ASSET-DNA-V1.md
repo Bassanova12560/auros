@@ -79,7 +79,8 @@ GET /api/v1/asset-dna/{id}/stream?limit=50
 5. DNA seed backfill + portfolio alerts v0 — done  
 6. Watchlists + digest cron + DNA select UI — done  
 7. OpenAPI 1.4 documents DNA / stream / portfolio / watchlist — done  
-8. **Next:** Auth institutionnelle / on-prem · Premium volume gates on DNA reads  
+8. Watchlist unsubscribe + DNA volume gates (anon/free/premium) — done  
+9. **Next:** Auth institutionnelle / on-prem · SSO  
 
 ## Non-goals (v1)
 

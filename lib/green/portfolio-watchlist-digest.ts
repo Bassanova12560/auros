@@ -9,6 +9,7 @@ import {
   fingerprintAlerts,
   listActivePortfolioWatchlists,
   markWatchlistDigestSent,
+  portfolioWatchlistUnsubscribeUrl,
 } from "@/lib/green/portfolio-watchlist";
 
 export type PortfolioDigestRunResult = {
@@ -70,6 +71,7 @@ export async function runPortfolioWatchlistDigest(): Promise<PortfolioDigestRunR
         })),
         portfolioUrl: `${siteOrigin()}/green/portfolio`,
         watchedCount: assets.length,
+        unsubscribeUrl: portfolioWatchlistUnsubscribeUrl(wl.unsubscribeToken),
       });
 
       if (ok) {

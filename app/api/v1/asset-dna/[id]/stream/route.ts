@@ -1,21 +1,18 @@
 import { NextResponse } from "next/server";
 
 import { isValidAssetDnaId } from "@/lib/asset-dna";
+import { authorizeDnaVolumeRead } from "@/lib/green/dna-read-auth";
 import { listProofStreamEventsAsync } from "@/lib/proof-stream";
-import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
 
 export const runtime = "nodejs";
 
 type Params = { params: Promise<{ id: string }> };
 
-/** Public read — Proof Stream events for an Asset DNA. */
+/**
+ * Proof Stream events for an Asset DNA.
+ * Volume: anon ≤20 · free key ≤50 · premium ≤100.
+ */
 export async function GET(request: Request, { params }: Params) {
-  const ip = await getClientIp();
-  const { allowed } = checkRateLimit(`asset-dna-stream:${ip}`, 60, 60_000);
-  if (!allowed) {
-    return NextResponse.json({ error: "rate_limit" }, { status: 429 });
-  }
-
   const { id: raw } = await params;
   const id = decodeURIComponent(raw ?? "").trim();
   if (!isValidAssetDnaId(id)) {
@@ -24,14 +21,20 @@ export async function GET(request: Request, { params }: Params) {
 
   const url = new URL(request.url);
   const limitRaw = Number(url.searchParams.get("limit") ?? "50");
-  const limit = Number.isFinite(limitRaw) ? Math.min(Math.max(limitRaw, 1), 100) : 50;
+  const auth = await authorizeDnaVolumeRead(request, limitRaw, "stream");
+  if (!auth.ok) return auth.response;
 
-  const events = await listProofStreamEventsAsync(id, limit);
+  const events = await listProofStreamEventsAsync(id, auth.limit);
 
   return NextResponse.json({
     ok: true,
     assetDnaId: id,
     count: events.length,
     events,
+    meta: {
+      tier: auth.tier,
+      limit: auth.limit,
+      capped: auth.capped,
+    },
   });
 }

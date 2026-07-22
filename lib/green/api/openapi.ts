@@ -141,7 +141,8 @@ export function buildGreenApiOpenApiSpec() {
       },
       "/api/v1/asset-dna/{id}/stream": {
         get: {
-          summary: "Proof Stream — append-only events for an Asset DNA",
+          summary:
+            "Proof Stream — append-only events (anon ≤20 · free key ≤50 · premium ≤100)",
           parameters: [
             { name: "id", in: "path", required: true, schema: { type: "string" } },
             {
@@ -150,12 +151,13 @@ export function buildGreenApiOpenApiSpec() {
               schema: { type: "integer", minimum: 1, maximum: 100 },
             },
           ],
-          responses: { "200": { description: "Event list" } },
+          responses: { "200": { description: "Event list + meta.tier" } },
         },
       },
       "/api/v1/green/portfolio": {
         get: {
-          summary: "Portfolio Console snapshot (DNA + alerts, indicative)",
+          summary:
+            "Portfolio Console snapshot (anon ≤20 · free key ≤50 · premium ≤100 DNA rows)",
           parameters: [
             {
               name: "limit",
@@ -163,7 +165,7 @@ export function buildGreenApiOpenApiSpec() {
               schema: { type: "integer", minimum: 1, maximum: 100 },
             },
           ],
-          responses: { "200": { description: "Portfolio snapshot JSON" } },
+          responses: { "200": { description: "Portfolio snapshot JSON + meta.tier" } },
         },
       },
       "/api/v1/green/portfolio/watchlist": {
@@ -340,6 +342,12 @@ export function buildGreenApiOpenApiSpec() {
       free_monthly: 1000,
       free_batch_max: GREEN_FREE_BATCH_MAX_ITEMS,
       premium_batch_max: GREEN_PREMIUM_BATCH_MAX_ITEMS,
+      dna_portfolio_anon: 20,
+      dna_portfolio_free: 50,
+      dna_portfolio_premium: 100,
+      dna_stream_anon: 20,
+      dna_stream_free: 50,
+      dna_stream_premium: 100,
     },
     "x-openapi-self": absoluteUrl(GREEN_API_OPENAPI_PATH),
   };

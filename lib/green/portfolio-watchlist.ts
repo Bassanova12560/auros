@@ -9,6 +9,7 @@ import { randomBytes } from "node:crypto";
 import { createClient } from "@supabase/supabase-js";
 
 import type { Locale } from "@/lib/i18n";
+import { absoluteUrl } from "@/lib/comparators/site";
 
 export type PortfolioWatchlist = {
   id: string;
@@ -17,6 +18,7 @@ export type PortfolioWatchlist = {
   assetDnaIds: string[];
   locale: Locale;
   active: boolean;
+  unsubscribeToken: string;
   lastDigestAt?: string;
   lastDigestFingerprint?: string;
   createdAt: string;
@@ -29,8 +31,23 @@ const FILE = join(DATA_DIR, "portfolio-watchlists.json");
 function load(): PortfolioWatchlist[] {
   try {
     if (!existsSync(FILE)) return [];
-    const parsed = JSON.parse(readFileSync(FILE, "utf8")) as PortfolioWatchlist[];
-    return Array.isArray(parsed) ? parsed : [];
+    const parsed = JSON.parse(readFileSync(FILE, "utf8")) as Array<
+      Partial<PortfolioWatchlist> & { email: string }
+    >;
+    if (!Array.isArray(parsed)) return [];
+    return parsed.map((row) => ({
+      id: row.id ?? `pw_${randomBytes(8).toString("hex")}`,
+      email: String(row.email).toLowerCase(),
+      assetDnaIds: Array.isArray(row.assetDnaIds) ? row.assetDnaIds : [],
+      locale: normalizeLocale(row.locale),
+      active: row.active !== false,
+      unsubscribeToken:
+        row.unsubscribeToken ?? randomBytes(18).toString("base64url"),
+      lastDigestAt: row.lastDigestAt,
+      lastDigestFingerprint: row.lastDigestFingerprint,
+      createdAt: row.createdAt ?? new Date().toISOString(),
+      updatedAt: row.updatedAt ?? new Date().toISOString(),
+    }));
   } catch {
     return [];
   }
@@ -59,6 +76,16 @@ function normalizeLocale(raw?: string): Locale {
   return "fr";
 }
 
+function newUnsubscribeToken(): string {
+  return randomBytes(18).toString("base64url");
+}
+
+export function portfolioWatchlistUnsubscribeUrl(token: string): string {
+  return absoluteUrl(
+    `/green/portfolio/unsubscribe?token=${encodeURIComponent(token)}`
+  );
+}
+
 export async function upsertPortfolioWatchlist(input: {
   email: string;
   assetDnaIds?: string[];
@@ -76,11 +103,13 @@ export async function upsertPortfolioWatchlist(input: {
   const idx = all.findIndex((w) => w.email === email);
   let row: PortfolioWatchlist;
   if (idx >= 0) {
+    const prev = all[idx]!;
     row = {
-      ...all[idx]!,
+      ...prev,
       assetDnaIds,
       locale,
       active: true,
+      unsubscribeToken: prev.unsubscribeToken || newUnsubscribeToken(),
       updatedAt: now,
     };
     all[idx] = row;
@@ -91,6 +120,7 @@ export async function upsertPortfolioWatchlist(input: {
       assetDnaIds,
       locale,
       active: true,
+      unsubscribeToken: newUnsubscribeToken(),
       createdAt: now,
       updatedAt: now,
     };
@@ -106,6 +136,7 @@ export async function upsertPortfolioWatchlist(input: {
         asset_dna_ids: assetDnaIds,
         locale,
         active: true,
+        unsubscribe_token: row.unsubscribeToken,
         updated_at: now,
       },
       { onConflict: "email" }
@@ -138,6 +169,8 @@ export async function listActivePortfolioWatchlists(): Promise<
       : [],
     locale: normalizeLocale(String(row.locale ?? "fr")),
     active: Boolean(row.active),
+    unsubscribeToken:
+      (row.unsubscribe_token as string | null) ?? newUnsubscribeToken(),
     lastDigestAt: row.last_digest_at
       ? String(row.last_digest_at)
       : undefined,
@@ -181,6 +214,36 @@ export async function markWatchlistDigestSent(input: {
       updated_at: now,
     })
     .eq("email", email);
+}
+
+export async function unsubscribePortfolioWatchlist(
+  token: string
+): Promise<boolean> {
+  const t = token.trim();
+  if (!t || t.length < 8) return false;
+  const now = new Date().toISOString();
+  let ok = false;
+
+  const all = load();
+  const idx = all.findIndex((w) => w.unsubscribeToken === t);
+  if (idx >= 0) {
+    all[idx] = { ...all[idx]!, active: false, updatedAt: now };
+    save(all);
+    ok = true;
+  }
+
+  const supabase = getAdminClient();
+  if (supabase) {
+    const { data, error } = await supabase
+      .from("green_portfolio_watchlists")
+      .update({ active: false, updated_at: now })
+      .eq("unsubscribe_token", t)
+      .select("id")
+      .maybeSingle();
+    if (!error && data) ok = true;
+  }
+
+  return ok;
 }
 
 export function fingerprintAlerts(alertIds: string[]): string {

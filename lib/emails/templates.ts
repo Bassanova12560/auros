@@ -1463,6 +1463,7 @@ export type PortfolioWatchlistDigestEmailData = {
   alertCount: number;
   watchedCount: number;
   portfolioUrl: string;
+  unsubscribeUrl?: string;
   alerts: Array<{
     displayName: string;
     message: string;
@@ -1479,16 +1480,19 @@ export function portfolioWatchlistDigestEmail(
       subject: `AUROS Portfolio — ${data.alertCount} alerte${data.alertCount > 1 ? "s" : ""}`,
       lead: `${data.alertCount} alerte(s) sur ${data.watchedCount} actif(s) suivis. Lecture indicative — pas un conseil d’investissement.`,
       cta: "Ouvrir la Portfolio Console",
+      unsub: "Se désinscrire du digest",
     },
     en: {
       subject: `AUROS Portfolio — ${data.alertCount} alert${data.alertCount > 1 ? "s" : ""}`,
       lead: `${data.alertCount} alert(s) across ${data.watchedCount} watched asset(s). Indicative — not investment advice.`,
       cta: "Open Portfolio Console",
+      unsub: "Unsubscribe from digest",
     },
     es: {
       subject: `AUROS Portfolio — ${data.alertCount} alerta${data.alertCount > 1 ? "s" : ""}`,
       lead: `${data.alertCount} alerta(s) en ${data.watchedCount} activo(s). Indicativo — no es consejo de inversión.`,
       cta: "Abrir Portfolio Console",
+      unsub: "Cancelar suscripción",
     },
   }[locale === "fr" ? "fr" : locale === "es" ? "es" : "en"];
 
@@ -1505,10 +1509,17 @@ export function portfolioWatchlistDigestEmail(
     )
     .join("");
 
+  const origin = siteOrigin();
+  const privacy = `${origin}/privacy`;
+  const footer = data.unsubscribeUrl
+    ? `AUROS · <a href="${privacy}" style="color:${BRAND_MUTED};">Privacy</a> · <a href="${escapeHtml(data.unsubscribeUrl)}" style="color:${BRAND_MUTED};">${copy.unsub}</a>`
+    : undefined;
+
   const html = layout(
     `<p style="margin:0 0 16px;color:${BRAND_MUTED};">${copy.lead}</p>
     <table style="width:100%;border-collapse:collapse;">${rows}</table>
-    ${cta(data.portfolioUrl, copy.cta)}`
+    ${cta(data.portfolioUrl, copy.cta)}`,
+    footer
   );
   return { subject: copy.subject, html };
 }

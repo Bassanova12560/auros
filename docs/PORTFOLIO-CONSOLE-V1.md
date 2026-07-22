@@ -35,6 +35,7 @@ Backfill DNA seeds: `POST /api/admin/backfill-asset-dna` (Bearer `CRON_SECRET`).
 | Surface | Path |
 |---------|------|
 | Subscribe | `POST /api/v1/green/portfolio/watchlist` `{ email, assetDnaIds?, locale? }` |
+| Unsubscribe | `/green/portfolio/unsubscribe?token=…` (one-click in digest footer) |
 | Cron | `GET /api/cron/portfolio-watchlist-digest` (daily 13:00 UTC) |
 | Storage | `.data/portfolio-watchlists.json` + `green_portfolio_watchlists` |
 
@@ -42,6 +43,15 @@ Empty `assetDnaIds` = watch full portfolio snapshot. Max 20 selected IDs. Digest
 
 UI: `/green/portfolio` — scope « Tout » ou sélection checkbox (max 20).
 
+## Volume gates (API)
+
+| Surface | Anon | Free key | Premium+ |
+|---------|------|----------|----------|
+| `GET /api/v1/green/portfolio?limit=` | 20 | 50 | 100 |
+| `GET /api/v1/asset-dna/{id}/stream?limit=` | 20 | 50 | 100 |
+
+Single DNA record reads stay public (IP rate limit). Response includes `meta.tier` / `meta.capped`.
+
 ## Next
 
-Auth institutionnelle / on-prem · unsubscribe token · OpenAPI Premium gates on DNA volume reads.
+Auth institutionnelle / on-prem · SSO · white-label widget.
