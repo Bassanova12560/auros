@@ -63,10 +63,31 @@ export default function GreenTollPage() {
             </Link>
             {" · "}
             <Link
+              href="/green/toll/eligibility"
+              className="underline underline-offset-4"
+            >
+              Eligibility router
+            </Link>
+            {" · "}
+            <Link
               href="/green/toll/tower"
               className="underline underline-offset-4"
             >
               Control Tower
+            </Link>
+            {" · "}
+            <Link
+              href="/green/toll/exceptions"
+              className="underline underline-offset-4"
+            >
+              Exceptions
+            </Link>
+            {" · "}
+            <Link
+              href="/green/toll/provenance"
+              className="underline underline-offset-4"
+            >
+              Provenance ledger
             </Link>
           </p>
         </div>

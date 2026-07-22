@@ -16,9 +16,9 @@ export function buildGreenApiOpenApiSpec() {
     openapi: "3.0.3",
     info: {
       title: "AUROS Green API",
-      version: "1.7.0",
+      version: "1.8.0",
       description:
-        "Public API for Carbon Quality Score (CQS), Watt Score, H₂O Score, WELHR / continuity / ROI resilience screens, AUROS Green Index, Asset DNA, Proof Stream, Portfolio Console, air-gap export, and AUROS Toll (Resolve / Search / Research / Policy / Drift / Audit / Rights / Wallet / Sources / Agent Protocol). Anonymous: 100 req/day. Free API key: 1000 req/month. Batch Watt/H₂O and large CQS batches require paid premium tier (not merely an auros_pk_live_* free key).",
+        "Public API for Carbon Quality Score (CQS), Watt Score, H₂O Score, WELHR / continuity / ROI resilience screens, AUROS Green Index, Asset DNA, Proof Stream, Portfolio Console, air-gap export, and AUROS Toll (Resolve / Search / Research / Policy / Eligibility / Drift / Events / Audit / Rights / Wallet / Sources / Provenance / Exceptions / Agent Protocol). Anonymous: 100 req/day. Free API key: 1000 req/month. Batch Watt/H₂O and large CQS batches require paid premium tier (not merely an auros_pk_live_* free key).",
       contact: { name: "AUROS", url: base },
     },
     servers: [{ url: base }],
@@ -181,6 +181,13 @@ export function buildGreenApiOpenApiSpec() {
           security: [{ bearerAuth: [] }],
         },
       },
+      "/api/v1/toll/eligibility": {
+        post: {
+          summary:
+            "Eligibility Router — indicative allow/deny/review/restrictions before mint/buy/transfer/redeem/list (Bearer + policy credits)",
+          security: [{ bearerAuth: [] }],
+        },
+      },
       "/api/v1/toll/drift": {
         post: { summary: "Drift Detection signals for an Asset DNA" },
       },
@@ -197,6 +204,30 @@ export function buildGreenApiOpenApiSpec() {
         post: {
           summary:
             "Billable Proof Stream lifecycle event (Bearer — burns event credits)",
+          security: [{ bearerAuth: [] }],
+        },
+      },
+      "/api/v1/toll/events": {
+        get: {
+          summary:
+            "List certified lifecycle events for an Asset DNA (metered trail)",
+          parameters: [
+            {
+              name: "assetDnaId",
+              in: "query",
+              required: true,
+              schema: { type: "string" },
+            },
+            {
+              name: "limit",
+              in: "query",
+              schema: { type: "integer", minimum: 1, maximum: 200 },
+            },
+          ],
+        },
+        post: {
+          summary:
+            "Certify indicative lifecycle event (Bearer — burns lifecycle event credits)",
           security: [{ bearerAuth: [] }],
         },
       },
@@ -221,6 +252,34 @@ export function buildGreenApiOpenApiSpec() {
       "/api/v1/toll/sources": {
         get: { summary: "List source attestation enrollments" },
         post: { summary: "Enroll data source (HITL pending)" },
+      },
+      "/api/v1/toll/exceptions": {
+        get: { summary: "List Exception Management OS queue (HITL)" },
+        post: {
+          summary: "Open exception case (Bearer + light trail credit)",
+          security: [{ bearerAuth: [] }],
+        },
+      },
+      "/api/v1/toll/exceptions/{id}": {
+        get: { summary: "Get exception + evidence trail" },
+        patch: {
+          summary:
+            "Update / escalate / assign, or action=resolve with resolutionNote (Bearer)",
+          security: [{ bearerAuth: [] }],
+        },
+      },
+
+      "/api/v1/toll/provenance": {
+        get: {
+          summary:
+            "Provenance ledger — list asset rows or field chain (Bearer + policy credits)",
+          security: [{ bearerAuth: [] }],
+        },
+        post: {
+          summary:
+            "Append provenance record (Bearer + research credits) — indicative HITL",
+          security: [{ bearerAuth: [] }],
+        },
       },
       "/api/v1/green/portfolio": {
         get: {

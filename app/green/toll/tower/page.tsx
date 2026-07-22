@@ -11,7 +11,7 @@ import {
 export const metadata: Metadata = {
   title: "Enterprise Control Tower | AUROS Toll",
   description:
-    "Console enterprise : Resolve, Policy, Monitoring, Audit, Rights, Wallet risk — packagé pour banques et fonds.",
+    "Console enterprise : Resolve, Policy, Monitoring, Audit, Rights, Wallet, Provenance — packagé pour banques et fonds.",
 };
 
 const MODULES = [
@@ -29,6 +29,11 @@ const MODULES = [
     title: "Policy",
     href: "/green/toll/policy",
     body: "Allow / deny / review — pilote banque HITL",
+  },
+  {
+    title: "Eligibility",
+    href: "/green/toll/eligibility",
+    body: "Router transactionnel — mint/buy/transfer/redeem (indicatif)",
   },
   {
     title: "Monitoring / Drift",
@@ -54,6 +59,21 @@ const MODULES = [
     title: "Source Attestation",
     href: "/api/v1/toll/sources",
     body: "Enrôlement sources — chaîne d’authenticité",
+  },
+  {
+    title: "Event Certification",
+    href: "/api/v1/toll/events",
+    body: "Audit by query — maintenance, downtime, coupons (indicatif)",
+  },
+  {
+    title: "Provenance Ledger",
+    href: "/green/toll/provenance",
+    body: "Raw vs derived — citation indicative auditors / IA",
+  },
+  {
+    title: "Exception OS",
+    href: "/green/toll/exceptions",
+    body: "Cas sales — escalade / assignation / résolution HITL",
   },
 ];
 

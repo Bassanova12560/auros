@@ -22,10 +22,13 @@ Last review: 2026-07-22 (Cash machine top20 + remaining H1).
 | Policy pilote banque | OK — `/green/toll/policy` |
 | Audit Export | OK — `/api/v1/toll/audit-export` |
 | Rights / Wallet / Sources v0 | OK |
-| Control Tower page | OK — `/green/toll/tower` |
+| Event Certification v0 | OK — `/api/v1/toll/events` · `docs/TOLL-EVENT-CERTIFICATION.md` |
+| Provenance Ledger v0 | OK — `/api/v1/toll/provenance` · `/green/toll/provenance` · `docs/TOLL-PROVENANCE.md` |
+| Control Tower page | OK — `/green/toll/tower` (+ Eligibility / Events / Provenance / Exceptions) |
 | Schema adoption guide | OK — `AUROS-SCHEMA-ADOPTION.md` |
-| Eligibility Router GA | À venir |
-| Provenance / ZK / Red-team | Horizon 2–3 |
+| Eligibility Router v0 | OK — `/api/v1/toll/eligibility` · `/green/toll/eligibility` · `docs/TOLL-ELIGIBILITY.md` |
+| Exception Management OS v0 | OK — `/api/v1/toll/exceptions` · `/green/toll/exceptions` · `docs/TOLL-EXCEPTIONS.md` |
+| ZK / Red-team | Horizon 2–3 |
 
 ## P0 — Green cash / DNA / institutionnel
 

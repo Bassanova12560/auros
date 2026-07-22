@@ -15,7 +15,8 @@ export type ProofStreamAction =
   | "label.submitted"
   | "registry.published"
   | "compliance.updated"
-  | "doc.attached";
+  | "doc.attached"
+  | "event.certified";
 
 export type ProofStreamEvent = {
   id: string;

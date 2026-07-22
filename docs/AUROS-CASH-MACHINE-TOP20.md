@@ -20,12 +20,12 @@ Voir aussi : `AUROS-TOLL-MASTER-PLAN.md` · APIs live sous `/api/v1/toll/*` · `
 | 8 | Rights Engine | 3 | 3 | 5 | Structuring, counsel | **v0** `/api/v1/toll/rights` |
 | 9 | Wallet Attribution | 3 | 4 | 5 | Compliance banks | **v0** `/api/v1/toll/wallet-risk` |
 | 10 | Source Attestation | 3 | 4 | 5 | Utilities, auditors | **v0** `/api/v1/toll/sources` |
-| 11 | Eligibility Router | 4 | 4 | 5 | Plateformes, banques | Extend Policy (next) |
+| 11 | Eligibility Router | 4 | 4 | 5 | Plateformes, banques | **v0** `/api/v1/toll/eligibility` + `/green/toll/eligibility` |
 | 12 | Behavioral Risk | 3 | 4 | 5 | AML desks | Coupled wallet-risk v0 |
-| 13 | Event Certification | 4 | 3 | 4 | Ops, reporting | Lifecycle billable events |
+| 13 | Event Certification | 4 | 3 | 4 | Ops, reporting | **v0** `/api/v1/toll/events` |
 | 14 | Enterprise Tower | 5 | 3 | 4 | Banques, funds | **Live** `/green/toll/tower` |
-| 15 | Data Provenance Ledger | 3 | 4 | 5 | Auditors | Roadmap H2 |
-| 16 | Exception Management OS | 3 | 3 | 3 | Ops desks | Roadmap H2 |
+| 15 | Data Provenance Ledger | 3 | 4 | 5 | Auditors | **v0** `/api/v1/toll/provenance` · `/green/toll/provenance` |
+| 16 | Exception Management OS | 3 | 3 | 3 | Ops desks | **v0** `/green/toll/exceptions` · `/api/v1/toll/exceptions` |
 | 17 | Red-Team Asset Layer | 2 | 4 | 4 | Insurers, funds | Roadmap (security edge) |
 | 18 | Recovery & Continuity | 2 | 4 | 4 | Enterprise | Roadmap H2 |
 | 19 | Confidential / ZK | 2 | 5 | 5 | Institutional | Horizon 3 |
@@ -59,10 +59,10 @@ Scores 1–5. **Fit** = proximité code actuel.
 | 16 | Behavioral flags | 3 | 5 | 3 | 5 | 3 | v0 |
 | 17 | Source Attestation | 3 | 5 | 3 | 5 | 3 | v0 |
 | 18 | Control Tower | 5 | 4 | 4 | 5 | 4 | Live page |
-| 19 | Eligibility Router | 4 | 5 | 3 | 5 | 3 | Next |
-| 20 | Event Certification | 4 | 4 | 4 | 4 | 4 | Partial (lifecycle) |
-| 21 | Provenance Ledger | 3 | 5 | 2 | 5 | 2 | H2 |
-| 22 | Exception OS | 3 | 3 | 3 | 4 | 2 | H2 |
+| 19 | Eligibility Router | 4 | 5 | 3 | 5 | 4 | **v0** |
+| 20 | Event Certification | 4 | 4 | 4 | 4 | 4 | **v0** `/api/v1/toll/events` |
+| 21 | Provenance Ledger | 3 | 5 | 2 | 5 | 4 | v0 |
+| 22 | Exception OS | 3 | 3 | 3 | 4 | 4 | v0 desk + API |
 | 23 | Red-Team assets | 2 | 4 | 2 | 3 | 2 | H2 |
 | 24 | Recovery Continuity | 2 | 4 | 2 | 4 | 2 | H2 |
 | 25 | ZK / confidential | 2 | 5 | 1 | 4 | 1 | H3 |

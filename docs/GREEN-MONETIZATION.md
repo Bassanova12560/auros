@@ -60,5 +60,5 @@ Attribution partenaires pilotes : **done** (`docs/PARTNER-PILOTS.md`).
 White-label / DNA / Portfolio institutionnel : **done**.  
 **Toll / Agent Protocol v0** : Resolve · Search · Research · Policy · Drift · Schema · Trail · Embed (`docs/AUROS-TOLL-MASTER-PLAN.md`).  
 **Metering live** : crédits lookup + Lifecycle Maintain — `/green/toll` · `POST /api/v1/toll/lifecycle`.  
-**Cash machine** : Top20/40 + Audit / Rights / Wallet / Sources / Tower (`docs/AUROS-CASH-MACHINE-TOP20.md`).  
-Suite : Eligibility Router GA · Upstash prod (user) · pilotes banque.
+**Cash machine** : Top20/40 + Audit / Rights / Wallet / Sources / Provenance / Tower (`docs/AUROS-CASH-MACHINE-TOP20.md`).  
+Suite : Eligibility Router GA (v0 shippé) · Upstash prod (user) · pilotes banque.
