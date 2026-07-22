@@ -1,0 +1,56 @@
+# Auros Resource Layer — local stack
+# Next.js app runs separately: npm run dev (repo root)
+
+services:
+  hardhat-node:
+    image: node:20-bookworm-slim
+    working_dir: /protocol
+    volumes:
+      - ./protocol:/protocol
+    command: >
+      sh -c "npm install && npx hardhat node --hostname 0.0.0.0"
+    ports:
+      - "8545:8545"
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:8545').catch(()=>process.exit(1))"]
+      interval: 15s
+      timeout: 5s
+      retries: 8
+      start_period: 120s
+
+  mosquitto:
+    image: eclipse-mosquitto:2
+    ports:
+      - "1883:1883"
+    volumes:
+      - ./docker/mosquitto.conf:/mosquitto/config/mosquitto.conf:ro
+
+  iot-bridge:
+    image: node:20-alpine
+    working_dir: /bridge
+    environment:
+      MQTT_URL: mqtt://mosquitto:1883
+      BRIDGE_STUB: "1"
+    command: >
+      node -e "console.log('[iot-bridge] stub listening for MQTT at', process.env.MQTT_URL);
+      setInterval(() => console.log('[iot-bridge] heartbeat'), 60000);"
+    depends_on:
+      - mosquitto
+
+  agent-api:
+    image: node:20-bookworm-slim
+    working_dir: /agent-api
+    volumes:
+      - ./agent-api:/agent-api
+    environment:
+      PORT: "4100"
+      MOCK_MODE: "true"
+      AGENT_ID_REQUIRED: "false"
+      RPC_URL: http://hardhat-node:8545
+    command: >
+      sh -c "npm install && npm run dev"
+    ports:
+      - "4100:4100"
+    depends_on:
+      hardhat-node:
+        condition: service_started

@@ -4,6 +4,7 @@ import { Footer } from "./_components/Footer";
 import { Hero } from "./_components/Hero";
 import { LandingReferral } from "./_components/LandingReferral";
 import { Nav } from "./_components/Nav";
+import { ResourceLayerBanner } from "./_components/ResourceLayerBanner";
 import { TrustStrip } from "./_components/TrustStrip";
 import { metadataFromPath } from "@/lib/seo/metadata";
 
@@ -21,6 +22,7 @@ export default function HomePage() {
       <LandingReferral />
       <main>
         <Hero />
+        <ResourceLayerBanner />
         <TrustStrip />
       </main>
       <Footer />

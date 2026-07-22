@@ -1,0 +1,7 @@
+{
+  "chain_id": "auros-local-1",
+  "block_time_ms": 500,
+  "consensus": "por-weighted-stub",
+  "min_validator_stake_aur": "1000000000000000000000",
+  "fee_denom": "uwatt"
+}

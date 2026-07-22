@@ -813,6 +813,102 @@ export const BLOG_ARTICLES: BlogArticle[] = [
       },
     ],
   },
+  {
+    slug: "future-of-energy-trading-on-chain",
+    title: "The Future of Energy Trading is On-Chain",
+    description:
+      "Why metered renewables, AI load, and oracle-gated resource tokens change energy trading — and what must stay off-chain.",
+    excerpt:
+      "Energy markets are still spreadsheets and phone calls at the edge of the grid. On-chain resource units can align producers, data centers, and liquidity — if we tokenize meters, not marketing.",
+    publishedAt: "2026-07-22",
+    modifiedAt: "2026-07-22",
+    readingTimeMinutes: 9,
+    keywords: [
+      "energy trading blockchain",
+      "tokenized kWh",
+      "RWA energy",
+      "AUROS Resource Layer",
+      "renewable PPA on-chain",
+      "AI data center power",
+    ],
+    cta: { href: "/resource-layer", label: "Explore Auros Resource Layer" },
+    ctaBlocks: [
+      {
+        afterSection: 1,
+        title: "Preview dashboards",
+        links: [
+          { href: "/producer", label: "Producer console" },
+          { href: "/agent", label: "Agent console" },
+          { href: "/market", label: "Resource market" },
+        ],
+      },
+    ],
+    sections: [
+      {
+        heading: "The gap between tokenized assets and tokenized flows",
+        paragraphs: [
+          "Real-world asset tokenization solved part of the story: cap tables, transfer restrictions, and investor-facing documents can live on-chain. But the economic life of many RWAs — especially energy-linked instruments — is still settled in legacy markets. The electron does not ride inside the JWT.",
+          "On-chain energy trading, in a useful sense, means representing metered production and consumption as fungible resource units with clear mint and burn rules, then letting liquidity pools and agent APIs price those units in real time. That is a different problem from tokenizing a fund share in a solar SPV.",
+          "AUROS Resource Layer (ARL) targets the flow layer: kWh (and related resources) as ERC-20 units gated by oracles, not promises in a PDF.",
+        ],
+        links: [
+          { href: "/resource-layer", label: "ARL vision" },
+          { href: "/how-it-works", label: "How AUROS works" },
+        ],
+      },
+      {
+        heading: "Why AI load makes timing matter",
+        paragraphs: [
+          "Data centers and inference clusters are reshaping load profiles: sharp ramps, geographic arbitrage, and hedge desks that think in megawatt-hours, not annual PPAs alone. Agents that forecast consumption need a machine-readable way to lock forward energy — without pretending the grid is fully decentralized.",
+          "A practical stack combines predicted load, open forward orders, and a hedge ratio dashboard — exactly the surfaces in the ARL agent preview. Automation proposes; humans approve settlement where regulation and grid operators require it.",
+        ],
+        links: [{ href: "/agent", label: "Agent dashboard demo" }],
+      },
+      {
+        heading: "Producers need liquidity, not another portal",
+        paragraphs: [
+          "Solar and storage operators already juggle inverters, export limits, and imbalance charges. Tokenizing surplus should feel like a revenue line, not a science project. Oracle-gated mint from verified meters, visible token balance, and a withdraw path with human gates beats opaque OTC quotes.",
+          "The producer preview shows devices, production curves, and minted AKWH — mock data today, same UX targets for pilots.",
+        ],
+        links: [{ href: "/producer", label: "Producer dashboard demo" }],
+      },
+      {
+        heading: "Regional markets and honest liquidity labels",
+        paragraphs: [
+          "Energy is local. A kWh in France and a kWh in Texas share a unit name but not the same constraints. Resource marketplaces must expose region, depth, and indicative price — and never badge demo liquidity as “verified.”",
+          "ARL’s market preview lists regional instruments (kWh France, kWh Texas, water California) with volume and liquidity tiers as educational placeholders.",
+        ],
+        links: [{ href: "/market", label: "Marketplace demo" }],
+      },
+      {
+        heading: "What stays off-chain",
+        paragraphs: [
+          "Grid compliance, balancing responsibility, and physical delivery remain with licensed operators and counsel. Smart contracts coordinate claims on metered reality; they do not replace the wire.",
+          "Readers building issuers should still run the AUROS wizard for dossier readiness; ARL is complementary infrastructure for resource liquidity after — or alongside — structured issuance.",
+        ],
+        links: [
+          { href: "/wizard", label: "Issuer wizard" },
+          { href: "/resource-layer/faq", label: "ARL FAQ" },
+        ],
+      },
+    ],
+    faq: [
+      {
+        question: "Is on-chain energy trading live on AUROS?",
+        answer:
+          "Preview UIs and protocol contracts exist for development; production settlement depends on pilot geography and HITL processes. See /resource-layer/faq.",
+      },
+      {
+        question: "Does AUROS guarantee renewable origin on-chain?",
+        answer:
+          "No. Guarantees of origin and grid programs remain off-chain attestations feeding oracles — not marketing badges in a demo UI.",
+      },
+      {
+        question: "Where is the technical spec?",
+        answer: "docs/WHITEPAPER.md and ARL-README.md at the repository root.",
+      },
+    ],
+  },
 ];
 
 export function getAllBlogSlugs(): string[] {

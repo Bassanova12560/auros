@@ -19,6 +19,8 @@ node_modules/
 
 # production
 /build
+dist/
+**/dist/
 
 # protocol dev keys (local fallback)
 .data/

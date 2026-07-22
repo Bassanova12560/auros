@@ -2,6 +2,17 @@
 
 Luxury-minimal Next.js app: free asset score, 10-step wizard, AI dossier generation (Groq), PDF export.
 
+## Auros Resource Layer (ARL)
+
+Monorepo packages for tokenized physical resources + machine economy — see [`ARL-README.md`](./ARL-README.md).
+
+| Path | Role |
+|------|------|
+| `protocol/` | Hardhat — ResourceToken, Oracle, WattCoin, AUR, Bridge, Water rights |
+| `agent-api/` | Express API for AI/IoT agents |
+| `iot-bridge/` | MQTT Proof-of-Resource bridge |
+| `/resource-layer` | Vision page (+ `/producer`, `/agent`, `/market` demos) |
+
 ## Stack
 
 - Next.js App Router · TypeScript · Tailwind CSS v4
