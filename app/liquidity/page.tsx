@@ -6,10 +6,12 @@ import { FocusPageShell } from "@/app/_components/FocusPageShell";
 import { AiFirstPageJsonLd } from "@/app/_components/ai-first/AiFirstPageJsonLd";
 import { PrimaryButton } from "@/app/_components/ui/PrimaryButton";
 
+import { LiquidityWaitlistForm } from "./_components/LiquidityWaitlistForm";
+
 export const metadata: Metadata = {
   title: "Liquidity Bridge — liste d’attente | AUROS",
   description:
-    "Pont de liquidité pour RWA déjà émis — après pilotes issuer. Pas encore en production.",
+    "Pont de liquidité pour RWA déjà émis — after issuer pilots. Waitlist only — no MM execution.",
 };
 
 /**
@@ -22,9 +24,9 @@ export default function LiquidityPage() {
       <FocusPageShell path="/liquidity" width="2xl">
         <ContentPageLayout
           product="Liquidity"
-          eyebrow="Produit futur"
-          title="Liquidity Bridge — pas encore"
-          intro="Les petites plateformes manquent de liquidité après émission. AUROS le fera — après des dossiers issuer prouvés, pas avant."
+          eyebrow="Waitlist"
+          title="Liquidity Bridge — après les pilotes issuer"
+          intro="Les petites plateformes manquent de liquidité après émission. AUROS orchestrera un pont RFQ avec partenaires MM — pas avant des dossiers prouvés, et jamais comme broker."
         >
           <div className="space-y-6 text-sm text-white/60">
             <p>
@@ -43,6 +45,7 @@ export default function LiquidityPage() {
               .
             </p>
             <PrimaryButton href="/pilots">Voir les pilotes 30 jours</PrimaryButton>
+            <LiquidityWaitlistForm />
           </div>
         </ContentPageLayout>
       </FocusPageShell>

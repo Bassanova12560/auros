@@ -7,6 +7,10 @@ import { useLocale } from "@/app/_components/i18n/LocaleProvider";
 import { CopilotChatView } from "@/app/copilot/CopilotChatView";
 import { PrimaryButton } from "@/app/_components/ui/PrimaryButton";
 import { getCopilotUi } from "@/lib/copilot/ui-i18n";
+import {
+  clearCopilotSessionMemory,
+  hasCopilotMemoryConsent,
+} from "@/lib/copilot/session-memory";
 import { COPILOT_GREEN_BRIEF_STORAGE_KEY } from "@/lib/copilot/types";
 import { getGreenAssistantUi } from "@/lib/green/assistant-i18n";
 import {
@@ -26,7 +30,7 @@ type Profile = {
 };
 
 function loadProfile(): Profile {
-  if (typeof window === "undefined") {
+  if (typeof window === "undefined" || !hasCopilotMemoryConsent()) {
     return { role: "issuer", asset: "solar", region: "" };
   }
   try {
@@ -40,6 +44,18 @@ function loadProfile(): Profile {
     };
   } catch {
     return { role: "issuer", asset: "solar", region: "" };
+  }
+}
+
+function writeProfile(profile: Profile) {
+  if (typeof window === "undefined" || !hasCopilotMemoryConsent()) return;
+  try {
+    sessionStorage.setItem(
+      COPILOT_GREEN_BRIEF_STORAGE_KEY,
+      JSON.stringify(profile)
+    );
+  } catch {
+    // ignore
   }
 }
 
@@ -78,11 +94,16 @@ export function GreenAssistantView() {
 
   useEffect(() => {
     if (!ready) return;
-    sessionStorage.setItem(
-      COPILOT_GREEN_BRIEF_STORAGE_KEY,
-      JSON.stringify(profile)
-    );
+    writeProfile(profile);
   }, [profile, ready]);
+
+  function handleMemoryConsentChange(consented: boolean) {
+    if (consented) {
+      writeProfile(profile);
+    } else {
+      clearCopilotSessionMemory();
+    }
+  }
 
   const clientBrief = useMemo(
     () => buildClientBrief(profile, locale),
@@ -247,6 +268,7 @@ export function GreenAssistantView() {
               suggestionOverrides={suggestions}
               eyebrow="Green AI"
               title="Assistant Green"
+              onMemoryConsentChange={handleMemoryConsentChange}
             />
           ) : null}
         </Suspense>

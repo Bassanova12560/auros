@@ -14,6 +14,8 @@ export type CopilotUi = {
   networkError: string;
   proposedRwa: string;
   addToCompare: string;
+  /** Device session memory — not marketing consent. */
+  memoryConsent: string;
   banners: {
     watts: string;
     chargeflow: string;
@@ -40,6 +42,8 @@ const FR: CopilotUi = {
   networkError: "Erreur réseau",
   proposedRwa: "RWA proposés",
   addToCompare: "Ajouter au comparateur →",
+  memoryConsent:
+    "Mémoriser cette conversation sur cet appareil (session uniquement) — aucun e-mail automatique.",
   banners: {
     watts: "Contexte : Watts Reserve",
     chargeflow: "Contexte : ChargeFlow",
@@ -66,6 +70,8 @@ const EN: CopilotUi = {
   networkError: "Network error",
   proposedRwa: "Suggested RWA",
   addToCompare: "Add to comparator →",
+  memoryConsent:
+    "Remember this chat on this device (session only) — no automatic emails.",
   banners: {
     watts: "Context: Watts Reserve",
     chargeflow: "Context: ChargeFlow",
@@ -92,6 +98,8 @@ const ES: CopilotUi = {
   networkError: "Error de red",
   proposedRwa: "RWA propuestos",
   addToCompare: "Añadir al comparador →",
+  memoryConsent:
+    "Recordar este chat en este dispositivo (solo sesión) — sin correos automáticos.",
   banners: {
     watts: "Contexto: Watts Reserve",
     chargeflow: "Contexto: ChargeFlow",
@@ -118,6 +126,8 @@ const AR: CopilotUi = {
   networkError: "خطأ في الشبكة",
   proposedRwa: "RWA مقترحة",
   addToCompare: "إضافة إلى المقارن ←",
+  memoryConsent:
+    "حفظ هذه المحادثة على هذا الجهاز (للجلسة فقط) — بدون رسائل بريد تلقائية.",
   banners: {
     watts: "السياق: Watts Reserve",
     chargeflow: "السياق: ChargeFlow",
@@ -144,6 +154,7 @@ const ZH: CopilotUi = {
   networkError: "网络错误",
   proposedRwa: "建议的 RWA",
   addToCompare: "加入比较器 →",
+  memoryConsent: "在此设备记住本次对话（仅会话）— 不会自动发邮件。",
   banners: {
     watts: "上下文：Watts Reserve",
     chargeflow: "上下文：ChargeFlow",

@@ -15,6 +15,8 @@ Machine interface for banks, platforms, wallets, and AI agents. All responses ar
 
 Paid packs: `/green/toll` — Lookup Pack 99 € (10k) · Lifecycle Maintain 149 €/mo (500 events).
 
+**Credit subjects:** Bonus packs attach to a subject id — prefer `key:{sha256(api_key)}` so Bearer API usage sees paid credits; fallback `email:{normalized}`. Checkout accepts `apiKey` or `creditSubject` (never store the raw key in Stripe metadata). Self-serve link: `POST /api/green/toll/link` with `Authorization: Bearer <key>` and body `{ "fromEmail" }` moves balances from `email:…` → `key:…`.
+
 Keys: `POST /api/v1/keys`. Upstash recommended for durable metering (`docs/UPSTASH-SETUP.md`).
 
 ## Tools (Agent)

@@ -16,9 +16,9 @@ export function buildGreenApiOpenApiSpec() {
     openapi: "3.0.3",
     info: {
       title: "AUROS Green API",
-      version: "1.6.0",
+      version: "1.7.0",
       description:
-        "Public API for Carbon Quality Score (CQS), Watt Score, H₂O Score, WELHR / continuity / ROI resilience screens, AUROS Green Index, Asset DNA, Proof Stream, Portfolio Console, air-gap export, and AUROS Toll (Resolve / Search / Research / Policy / Drift / Agent Protocol). Anonymous: 100 req/day. Free API key: 1000 req/month. Batch Watt/H₂O and large CQS batches require paid premium tier (not merely an auros_pk_live_* free key).",
+        "Public API for Carbon Quality Score (CQS), Watt Score, H₂O Score, WELHR / continuity / ROI resilience screens, AUROS Green Index, Asset DNA, Proof Stream, Portfolio Console, air-gap export, and AUROS Toll (Resolve / Search / Research / Policy / Drift / Audit / Rights / Wallet / Sources / Agent Protocol). Anonymous: 100 req/day. Free API key: 1000 req/month. Batch Watt/H₂O and large CQS batches require paid premium tier (not merely an auros_pk_live_* free key).",
       contact: { name: "AUROS", url: base },
     },
     servers: [{ url: base }],
@@ -199,6 +199,28 @@ export function buildGreenApiOpenApiSpec() {
             "Billable Proof Stream lifecycle event (Bearer — burns event credits)",
           security: [{ bearerAuth: [] }],
         },
+      },
+      "/api/v1/toll/audit-export": {
+        post: {
+          summary: "Audit export JSON pack (Bearer + research credits)",
+          security: [{ bearerAuth: [] }],
+        },
+      },
+      "/api/v1/toll/rights": {
+        post: {
+          summary: "Rights Engine v0 — indicative rights mapping",
+          security: [{ bearerAuth: [] }],
+        },
+      },
+      "/api/v1/toll/wallet-risk": {
+        post: {
+          summary: "Wallet attribution + behavioral risk (indicative)",
+          security: [{ bearerAuth: [] }],
+        },
+      },
+      "/api/v1/toll/sources": {
+        get: { summary: "List source attestation enrollments" },
+        post: { summary: "Enroll data source (HITL pending)" },
       },
       "/api/v1/green/portfolio": {
         get: {

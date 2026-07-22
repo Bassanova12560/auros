@@ -8,6 +8,7 @@ import {
   isTollCashProduct,
   type TollCashProduct,
 } from "@/lib/toll/lifecycle-pricing";
+import { resolveTollCreditSubject } from "@/lib/toll/credit-subject";
 import {
   createTollLifecycleCheckout,
   createTollLookupPackCheckout,
@@ -53,17 +54,23 @@ export async function POST(request: Request) {
   const partnerCode = normalizePartnerCode(
     typeof body.partnerCode === "string" ? body.partnerCode : null
   );
-  const creditSubject =
-    typeof body.creditSubject === "string" && body.creditSubject.trim()
-      ? body.creditSubject.trim()
-      : `email:${email}`;
+
+  const subject = resolveTollCreditSubject({
+    email,
+    apiKey: typeof body.apiKey === "string" ? body.apiKey : null,
+    creditSubject:
+      typeof body.creditSubject === "string" ? body.creditSubject : null,
+  });
+  if (!subject.ok) {
+    return NextResponse.json({ error: subject.error }, { status: 400 });
+  }
 
   const input = {
     email,
     locale,
     company: typeof body.company === "string" ? body.company.trim() : "",
     partnerCode,
-    creditSubject,
+    creditSubject: subject.subject,
   };
 
   const creator =
@@ -80,5 +87,6 @@ export async function POST(request: Request) {
     ok: true,
     url: result.url,
     sessionId: result.sessionId,
+    creditSubjectKind: subject.subject.startsWith("key:") ? "key" : "email",
   });
 }

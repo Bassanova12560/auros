@@ -150,3 +150,24 @@ export async function createTollLifecycleCheckout(input: TollCheckoutInput) {
     cancelPath: "/green/toll?cancelled=1",
   });
 }
+
+/** Retrieve a paid/complete Toll checkout session (success page). */
+export async function retrievePaidTollSession(
+  sessionId: string
+): Promise<Stripe.Checkout.Session | null> {
+  const stripe = getStripe();
+  if (!stripe || !sessionId.trim()) return null;
+  try {
+    const session = await stripe.checkout.sessions.retrieve(sessionId.trim());
+    if (session.payment_status !== "paid" && session.status !== "complete") {
+      return null;
+    }
+    const meta = parseTollCheckoutMetadata(
+      (session.metadata ?? {}) as Record<string, string>
+    );
+    if (!meta) return null;
+    return session;
+  } catch {
+    return null;
+  }
+}

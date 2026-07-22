@@ -54,6 +54,20 @@ export default function GreenTollPage() {
             <Link href="/embed/asset-dna" className="underline underline-offset-4">
               embed DNA
             </Link>
+            {" · "}
+            <Link
+              href="/green/toll/policy"
+              className="underline underline-offset-4"
+            >
+              Policy pilot (HITL)
+            </Link>
+            {" · "}
+            <Link
+              href="/green/toll/tower"
+              className="underline underline-offset-4"
+            >
+              Control Tower
+            </Link>
           </p>
         </div>
       </GreenPanel>

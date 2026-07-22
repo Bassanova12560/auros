@@ -3,15 +3,21 @@ import { describe, it } from "node:test";
 
 import { mintAssetDna } from "@/lib/asset-dna";
 import { appendProofStreamEvent } from "@/lib/proof-stream";
+import { hashKey } from "@/lib/protocol/auth/keys";
 import {
+  assessWalletBehavioralRisk,
+  buildIndicativeRightsModel,
   computeAurosTrustScore,
   dispatchTollAgentTool,
+  enrollSourceAttestation,
   evaluateTollPolicy,
   getAurosMetadataSchema,
   resolveAurosAsset,
   searchAurosAssets,
   grantTollCredits,
   getTollBonusCredits,
+  transferTollCredits,
+  resolveTollCreditSubject,
   TOLL_CREDIT_COST,
   TOLL_MONTHLY_INCLUDED,
 } from "@/lib/toll";
@@ -104,5 +110,81 @@ describe("auros-toll", () => {
     });
     assert.ok(meta);
     assert.equal(meta!.email, "ops@bank.com");
+  });
+
+  it("grants and transfers under key: credit subjects", () => {
+    const keyHash = hashKey(`auros_pk_test_toll_${Date.now()}`);
+    const keySubject = `key:${keyHash}`;
+    grantTollCredits({
+      subjectId: keySubject,
+      lookups: 100,
+      events: 5,
+    });
+    assert.equal(getTollBonusCredits(keySubject).lookups, 100);
+    assert.equal(getTollBonusCredits(keySubject).events, 5);
+
+    const emailSubject = `email:ops-toll-${Date.now()}@bank.com`;
+    grantTollCredits({ subjectId: emailSubject, lookups: 50, events: 2 });
+    const moved = transferTollCredits({
+      fromSubjectId: emailSubject,
+      toSubjectId: keySubject,
+    });
+    assert.equal(moved.ok, true);
+    if (!moved.ok) return;
+    assert.equal(moved.transferred.lookups, 50);
+    assert.equal(getTollBonusCredits(emailSubject).lookups, 0);
+    assert.equal(getTollBonusCredits(keySubject).lookups, 150);
+
+    const metaKey = parseTollCheckoutMetadata({
+      product: TOLL_LOOKUP_PACK_PRODUCT,
+      email: "ops@bank.com",
+      locale: "fr",
+      company: "Bank",
+      credit_subject: keySubject,
+    });
+    assert.ok(metaKey);
+    assert.equal(metaKey!.creditSubject, keySubject);
+
+    const resolved = resolveTollCreditSubject({
+      email: "ops@bank.com",
+      apiKey: "auros_pk_live_examplekeyfortest1234567890",
+    });
+    assert.equal(resolved.ok, true);
+    if (!resolved.ok) return;
+    assert.ok(resolved.subject.startsWith("key:"));
+    assert.equal(
+      resolved.subject,
+      `key:${hashKey("auros_pk_live_examplekeyfortest1234567890")}`
+    );
+  });
+
+  it("models rights, wallet risk, and source attestation v0", () => {
+    const rights = buildIndicativeRightsModel({
+      assetDnaId: "dna_test",
+      displayName: "Solar",
+      revenueSharePct: 15,
+    });
+    assert.equal(rights.slices[0]?.kind, "revenue_share");
+    assert.equal(rights.slices[0]?.share, 0.15);
+
+    const high = assessWalletBehavioralRisk({ wallet: "0xab" });
+    assert.equal(high.band, "high");
+    assert.ok(high.flags.includes("unattributed_wallet"));
+
+    const mid = assessWalletBehavioralRisk({
+      wallet: "0xabc1234567890def",
+      entityLabel: "Issuer SPV",
+      role: "issuer",
+    });
+    assert.equal(mid.band, "medium");
+    assert.equal(mid.links.length, 1);
+
+    const src = enrollSourceAttestation({
+      name: "Utility feed",
+      kind: "utility",
+      contactEmail: "ops@utility.test",
+    });
+    assert.equal(src.status, "pending");
+    assert.ok(src.id.startsWith("src_"));
   });
 });

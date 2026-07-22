@@ -1,4 +1,6 @@
-import type { Metadata } from "next";
+"use client";
+
+import { useState, type FormEvent } from "react";
 import Link from "next/link";
 
 import {
@@ -7,40 +9,102 @@ import {
   GreenPanel,
 } from "@/app/green/_components/green-ui";
 
-export const metadata: Metadata = {
-  title: "Toll — paiement reçu | AUROS Green",
-  description: "Crédits lookup / lifecycle en cours d’activation HITL.",
-};
-
 export default function GreenTollSuccessPage() {
+  const [status, setStatus] = useState<"idle" | "loading" | "ok" | "err">(
+    "idle"
+  );
+  const [msg, setMsg] = useState("");
+
+  async function onLink(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setStatus("loading");
+    const fd = new FormData(e.currentTarget);
+    const apiKey = String(fd.get("apiKey") ?? "").trim();
+    const fromEmail = String(fd.get("fromEmail") ?? "")
+      .trim()
+      .toLowerCase();
+    try {
+      const res = await fetch("/api/green/toll/link", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${apiKey}`,
+        },
+        body: JSON.stringify({ fromEmail }),
+      });
+      const json = (await res.json()) as { error?: string; transferred?: unknown };
+      if (!res.ok) {
+        setStatus("err");
+        setMsg(json.error ?? "link_failed");
+        return;
+      }
+      setStatus("ok");
+      setMsg("Crédits transférés sur la clé API.");
+    } catch {
+      setStatus("err");
+      setMsg("network");
+    }
+  }
+
+  const field =
+    "mt-1.5 w-full border border-white/15 bg-black/50 px-3 py-2 text-sm text-white outline-none focus:border-emerald-500/50";
+
   return (
     <div className="page-inner page-inner--2xl mx-auto px-4 pb-20 pt-12 md:px-6">
       <GreenPageHeader
         eyebrow="Toll"
-        title="Paiement reçu — crédits en activation"
-        intro="Ops AUROS crédite votre sujet (e-mail) sous revue humaine. Pas de badge auto."
+        title="Paiement reçu"
+        intro="Si vous avez collé une clé API au checkout, les crédits sont déjà sur key:{hash}. Sinon, liez-les ci-dessous."
         compact
       />
       <GreenPanel className="mt-8">
-        <div className="p-5 md:p-6 space-y-3 text-sm text-white/70">
+        <div className="p-5 md:p-6 space-y-4 text-sm text-white/70">
           <p>
-            Les crédits Lookup / Lifecycle sont attachés à l’e-mail du checkout.
-            Pour lier une clé API : contactez hello@getauros.com avec votre{" "}
-            <code className="text-emerald-200/80">key hash</code>.
+            Packs Lookup / Lifecycle · HITL notify ops. Pas de badge auto.
           </p>
-          <p>
-            <Link
-              href="/green/toll"
-              className="underline underline-offset-4 hover:text-white"
+          <form onSubmit={onLink} className="space-y-3">
+            <p className="font-mono text-[10px] uppercase tracking-wider text-white/40">
+              Lier e-mail → clé API
+            </p>
+            <input
+              name="fromEmail"
+              type="email"
+              required
+              placeholder="e-mail du checkout"
+              className={field}
+            />
+            <input
+              name="apiKey"
+              type="password"
+              required
+              autoComplete="off"
+              placeholder="auros_pk_live_…"
+              className={field}
+            />
+            <button
+              type="submit"
+              disabled={status === "loading"}
+              className="border border-emerald-500/40 bg-emerald-500/10 px-4 py-2 font-mono text-[11px] uppercase tracking-wider text-emerald-200/90 disabled:opacity-50"
             >
+              Transférer les crédits
+            </button>
+            {status === "ok" ? (
+              <p className="text-emerald-300/80">{msg}</p>
+            ) : null}
+            {status === "err" ? (
+              <p className="text-red-300/80">{msg}</p>
+            ) : null}
+          </form>
+          <p>
+            <Link href="/green/toll" className="underline underline-offset-4">
               Retour Toll
             </Link>
             {" · "}
             <Link
-              href="/green/api"
-              className="underline underline-offset-4 hover:text-white"
+              href="/green/toll/tower"
+              className="underline underline-offset-4"
             >
-              Green API
+              Control Tower
             </Link>
           </p>
         </div>

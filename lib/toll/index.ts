@@ -21,7 +21,13 @@ export {
   consumeTollCredits,
   getTollBonusCredits,
   grantTollCredits,
+  transferTollCredits,
 } from "./metering";
+export {
+  resolveTollCreditSubject,
+  emailCreditSubject,
+  keyCreditSubjectFromHash,
+} from "./credit-subject";
 export {
   TOLL_LOOKUP_PACK_PRODUCT,
   TOLL_LIFECYCLE_PRODUCT,
@@ -29,3 +35,10 @@ export {
   TOLL_LIFECYCLE_EUR,
 } from "./lifecycle-pricing";
 export { appendBillableLifecycleEvent } from "./lifecycle";
+export { buildAurosAuditExport } from "./audit-export";
+export { buildIndicativeRightsModel } from "./rights-engine";
+export { assessWalletBehavioralRisk } from "./wallet-risk";
+export {
+  enrollSourceAttestation,
+  listSourceAttestations,
+} from "./source-attestation";

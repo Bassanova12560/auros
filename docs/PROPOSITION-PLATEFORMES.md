@@ -33,6 +33,8 @@ Les **petites plateformes** souffrent des deux plus que les géants (Centrifuge,
 
 **Outil de market making / pont de liquidité** pour tokens RWA **déjà émis** — surtout sur plateformes sans desk ni MM dédié.
 
+**Statut** : liste d’attente live sur [`/liquidity`](/liquidity) — pas d’exécution RFQ, pas de matching, pas de garantie de liquidité.
+
 | Fonction cible (vision) | Note |
 |-------------------------|------|
 | Carnet indicatif / RFQ | Plus réaliste en v1 que « full CEX » |
@@ -68,7 +70,7 @@ Les **petites plateformes** souffrent des deux plus que les géants (Centrifuge,
 | **0** | Prod + 1 plateforme pilote (issuer pipeline) | 5–10 dossiers, webhook soumission | Live (webhook env + submit) |
 | **1** | `partner_platform_id` + inbox `/platforms/dashboard` + webhook par tenant | Triage in_review / needs_info / approved | **MVP live** |
 | **2** | Landing « tokeniser [actif] » → flux SEO | Volume leads | À venir |
-| **3** | **Liquidity Bridge** MVP (RFQ / 1 MM partenaire / 1 chaîne) | Pilote 1 token | À venir |
+| **3** | **Liquidity Bridge** — waitlist live (`/liquidity`) ; MVP exécution (RFQ / 1 MM / 1 chaîne) plus tard | Liste d’attente + pilote 1 token | **Waitlist live** (pas d’exécution) |
 
 ### Ops — activer une plateforme
 
@@ -105,3 +107,4 @@ Les géants ne ciblent pas ce segment ; les conseils ne font pas le MM.
 - `docs/MODELE-ECONOMIQUE.md` — % apporteurs + revenus
 - `docs/PRODUIT-AUROS.md` — périmètre actuel
 - `PARTNER_WEBHOOK_URL` — déjà prêt pour notifier une plateforme à la soumission
+- `app/liquidity/` + `app/api/liquidity-waitlist/` — waitlist Liquidity Bridge (fichier `.data/liquidity-waitlist.json`)

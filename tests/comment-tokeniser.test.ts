@@ -14,9 +14,9 @@ import {
 import { buildCommentTokeniserLandingPages } from "@/lib/ai-first/catalog/comment-tokeniser-pages";
 
 describe("comment-tokeniser/landings", () => {
-  it("lists seven asset guides including eau", () => {
+  it("lists asset guides including eau", () => {
     const landings = getAllCommentTokeniserLandings();
-    assert.equal(landings.length, 7);
+    assert.equal(landings.length, 8);
     assert.ok(landings.some((l) => l.slug === "immobilier"));
     assert.ok(landings.some((l) => l.slug === "energie"));
     assert.ok(landings.some((l) => l.slug === "eau"));
@@ -92,7 +92,7 @@ describe("comment-tokeniser/prefill", () => {
 describe("comment-tokeniser/catalog", () => {
   it("exports indexable landing pages", () => {
     const pages = buildCommentTokeniserLandingPages();
-    assert.equal(pages.length, 7);
+    assert.equal(pages.length, 8);
     assert.ok(pages.every((p) => p.indexable));
     assert.ok(pages.some((p) => p.path === "/comment-tokeniser/eau"));
   });

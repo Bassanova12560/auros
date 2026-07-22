@@ -44,8 +44,8 @@ Le payant vend **volume, gouvernance, preuve, intégration** — pas le chat de 
 ### A — live
 RAG, Copilot, care drafts HITL, Green assistant **playbook** (suggestions + 3 CTAs + mail à copier), FAB Green, funnel events, **5 locales** (FR/EN/ES/AR/ZH) sur Assistant + Copilot UI/API.
 
-### B — 90 jours
-Care lié dossiers réels ; **coach post-score** (CTA `/copilot?from=score`) ; A/B subjects ; mémoire session consentie.
+### B — 90 jours (partiellement live)
+Care lié dossiers réels ; **coach post-score** (CTA `/copilot?from=score`) — live ; A/B subjects ; **mémoire session consentie** (opt-in device `sessionStorage`, tours Copilot + brief Green) — live.
 
 ### C — fine-tune (si preuves)
 Dataset drafts approuvés ; LoRA 7–8B ; citation RAG obligatoire ; critère go mesurable.

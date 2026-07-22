@@ -147,6 +147,45 @@ export function grantTollCredits(input: {
   return next;
 }
 
+/** Move bonus credits from one subject to another (self-serve email → key). */
+export function transferTollCredits(input: {
+  fromSubjectId: string;
+  toSubjectId: string;
+}): { ok: true; transferred: CreditBalance } | { ok: false; error: string } {
+  const fromId = input.fromSubjectId.trim();
+  const toId = input.toSubjectId.trim();
+  if (!fromId || !toId || fromId === toId) {
+    return { ok: false, error: "invalid_subjects" };
+  }
+  const all = loadBalances();
+  const from = all[fromId] ?? {
+    lookups: 0,
+    events: 0,
+    updatedAt: new Date().toISOString(),
+  };
+  if (from.lookups <= 0 && from.events <= 0) {
+    return { ok: false, error: "nothing_to_transfer" };
+  }
+  const to = all[toId] ?? {
+    lookups: 0,
+    events: 0,
+    updatedAt: new Date().toISOString(),
+  };
+  const transferred: CreditBalance = {
+    lookups: from.lookups,
+    events: from.events,
+    updatedAt: new Date().toISOString(),
+  };
+  all[toId] = {
+    lookups: to.lookups + from.lookups,
+    events: to.events + from.events,
+    updatedAt: transferred.updatedAt,
+  };
+  all[fromId] = { lookups: 0, events: 0, updatedAt: transferred.updatedAt };
+  saveBalances(all);
+  return { ok: true, transferred };
+}
+
 /** Consume bonus event credits (lifecycle). Returns false if none left (falls back to monthly). */
 export function consumeBonusEventCredit(subjectId: string): boolean {
   const all = loadBalances();

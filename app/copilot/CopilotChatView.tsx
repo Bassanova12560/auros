@@ -1,11 +1,18 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import { useLocale } from "@/app/_components/i18n/LocaleProvider";
 import { PrimaryButton } from "@/app/_components/ui/PrimaryButton";
 import { buildCompareHubShareUrl } from "@/lib/comparators/compare-selection";
+import {
+  clearCopilotSessionMemory,
+  hasCopilotMemoryConsent,
+  loadCopilotTurns,
+  saveCopilotTurns,
+  setCopilotMemoryConsent,
+} from "@/lib/copilot/session-memory";
 import {
   COPILOT_RTMS_STORAGE_KEY,
   parseCopilotSearchParams,
@@ -33,6 +40,8 @@ export type CopilotChatViewProps = {
   hideHeader?: boolean;
   /** Override empty-state chips (max 3 recommended). */
   suggestionOverrides?: string[];
+  /** Notified when device session-memory consent changes (not marketing). */
+  onMemoryConsentChange?: (consented: boolean) => void;
 };
 
 function readRtmsBriefFromStorage(): string | undefined {
@@ -68,6 +77,7 @@ export function CopilotChatView({
   clientBrief,
   hideHeader = false,
   suggestionOverrides,
+  onMemoryConsentChange,
 }: CopilotChatViewProps = {}) {
   const { locale } = useLocale();
   const ui = getCopilotUi(locale);
@@ -126,14 +136,42 @@ export function CopilotChatView({
   const [provider, setProvider] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [memoryConsent, setMemoryConsent] = useState(false);
+  const skipLocaleReset = useRef(true);
 
   useEffect(() => {
+    const consented = hasCopilotMemoryConsent();
+    setMemoryConsent(consented);
+    if (consented) {
+      setHistory(loadCopilotTurns());
+    }
+  }, []);
+
+  useEffect(() => {
+    if (skipLocaleReset.current) {
+      skipLocaleReset.current = false;
+      return;
+    }
     setHistory([]);
     setCitations([]);
     setSuggestedIds([]);
     setError(null);
     setProvider(null);
+    if (hasCopilotMemoryConsent()) {
+      saveCopilotTurns([]);
+    }
   }, [locale]);
+
+  function handleMemoryConsent(checked: boolean) {
+    setMemoryConsent(checked);
+    setCopilotMemoryConsent(checked);
+    if (checked) {
+      saveCopilotTurns(history);
+    } else {
+      clearCopilotSessionMemory();
+    }
+    onMemoryConsentChange?.(checked);
+  }
 
   async function sendMessage(raw: string) {
     const message = raw.trim();
@@ -142,6 +180,7 @@ export function CopilotChatView({
     setError(null);
     const nextHistory = [...history, { role: "user" as const, content: message }];
     setHistory(nextHistory);
+    if (hasCopilotMemoryConsent()) saveCopilotTurns(nextHistory);
     setInput("");
     try {
       const res = await fetch("/api/v1/copilot/chat", {
@@ -165,10 +204,12 @@ export function CopilotChatView({
         setError(json.error?.message ?? ui.errorStatus(res.status));
         return;
       }
-      setHistory([
+      const withAssistant: ChatTurn[] = [
         ...nextHistory,
         { role: "assistant", content: json.reply ?? "" },
-      ]);
+      ];
+      setHistory(withAssistant);
+      if (hasCopilotMemoryConsent()) saveCopilotTurns(withAssistant);
       setCitations(json.citations ?? []);
       setSuggestedIds(json.suggested_product_ids ?? []);
       setProvider(json.provider ?? null);
@@ -307,6 +348,20 @@ export function CopilotChatView({
             {loading ? "…" : ui.send}
           </PrimaryButton>
         </div>
+
+        <label
+          htmlFor="copilot-memory-consent"
+          className="flex cursor-pointer items-start gap-3 text-left text-xs leading-relaxed text-white/55"
+        >
+          <input
+            id="copilot-memory-consent"
+            type="checkbox"
+            checked={memoryConsent}
+            onChange={(e) => handleMemoryConsent(e.target.checked)}
+            className="mt-0.5 h-4 w-4 shrink-0 rounded border-white/25 bg-white/5 accent-emerald-500"
+          />
+          <span>{ui.memoryConsent}</span>
+        </label>
 
         {error ? (
           <p className="text-sm text-red-400/90" role="alert">
