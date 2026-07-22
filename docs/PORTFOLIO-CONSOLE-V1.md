@@ -39,9 +39,10 @@ Backfill DNA seeds: `POST /api/admin/backfill-asset-dna` (Bearer `CRON_SECRET`).
 | Cron | `GET /api/cron/portfolio-watchlist-digest` (daily 13:00 UTC) |
 | Storage | `.data/portfolio-watchlists.json` + `green_portfolio_watchlists` |
 
-Empty `assetDnaIds` = watch full portfolio snapshot. Max 20 selected IDs. Digest skips if fingerprint unchanged within 20h.
+| White-label KPIs | `/embed/portfolio` | iframe (`frame-ancestors *`) |
+| Spec | [`INSTITUTIONAL-AUTH-V0.md`](./INSTITUTIONAL-AUTH-V0.md) | SSO / on-prem path |
 
-UI: `/green/portfolio` — scope « Tout » ou sélection checkbox (max 20).
+Empty `assetDnaIds` = watch full portfolio snapshot. Max 20 selected IDs. Digest skips if fingerprint unchanged within 20h.
 
 ## Volume gates (API)
 
@@ -54,4 +55,6 @@ Single DNA record reads stay public (IP rate limit). Response includes `meta.tie
 
 ## Next
 
-Auth institutionnelle / on-prem · SSO · white-label widget.
+White-label branding tokens · SSO SAML go-live per tenant · air-gapped desk.
+
+See [`INSTITUTIONAL-AUTH-V0.md`](./INSTITUTIONAL-AUTH-V0.md).

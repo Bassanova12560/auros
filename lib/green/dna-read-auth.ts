@@ -1,6 +1,6 @@
 /**
  * Volume gates for Asset DNA / Proof Stream / Portfolio reads.
- * Anonymous: small · free API key: medium · premium+: full.
+ * Anonymous: small · free API key / signed-in: medium · premium+/institutional: full.
  */
 
 import {
@@ -8,6 +8,10 @@ import {
   type GreenApiTier,
 } from "@/lib/green/api/auth";
 import { greenApiError } from "@/lib/green/api/response";
+import {
+  maxTier,
+  sessionTierBoost,
+} from "@/lib/green/institutional-access";
 
 export const DNA_ANON_PORTFOLIO_LIMIT = 20;
 export const DNA_FREE_PORTFOLIO_LIMIT = 50;
@@ -33,9 +37,29 @@ export function streamLimitForTier(tier: GreenApiTier): number {
   return DNA_ANON_STREAM_LIMIT;
 }
 
+async function clerkSessionBoost(): Promise<GreenApiTier | null> {
+  try {
+    const { auth, currentUser } = await import("@clerk/nextjs/server");
+    const session = await auth();
+    if (!session.userId) return null;
+    const user = await currentUser();
+    const email =
+      user?.primaryEmailAddress?.emailAddress ??
+      user?.emailAddresses?.[0]?.emailAddress ??
+      null;
+    return sessionTierBoost({
+      userId: session.userId,
+      orgId: session.orgId,
+      email,
+    });
+  } catch {
+    return null;
+  }
+}
+
 /**
  * Authenticate (optional Bearer) and clamp requested limit to tier max.
- * Returns 401/429 responses from Green auth when key invalid / quota hit.
+ * Signed-in Clerk sessions boost anonymous → free (or enterprise if allowlisted).
  */
 export async function authorizeDnaVolumeRead(
   req: Request,
@@ -53,17 +77,23 @@ export async function authorizeDnaVolumeRead(
   const auth = await authenticateGreenPublicRequest(req);
   if (!auth.ok) return auth;
 
+  let tier = auth.auth.tier;
+  if (tier === "anonymous") {
+    const boost = await clerkSessionBoost();
+    if (boost) tier = maxTier(tier, boost);
+  }
+
   const max =
     kind === "portfolio"
-      ? portfolioLimitForTier(auth.auth.tier)
-      : streamLimitForTier(auth.auth.tier);
+      ? portfolioLimitForTier(tier)
+      : streamLimitForTier(tier);
   const safeRequested = Number.isFinite(requestedLimit)
     ? Math.max(1, Math.floor(requestedLimit))
     : max;
   const limit = Math.min(safeRequested, max);
   return {
     ok: true,
-    tier: auth.auth.tier,
+    tier,
     limit,
     capped: safeRequested > max,
   };

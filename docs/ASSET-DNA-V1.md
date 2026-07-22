@@ -80,7 +80,8 @@ GET /api/v1/asset-dna/{id}/stream?limit=50
 6. Watchlists + digest cron + DNA select UI — done  
 7. OpenAPI 1.4 documents DNA / stream / portfolio / watchlist — done  
 8. Watchlist unsubscribe + DNA volume gates (anon/free/premium) — done  
-9. **Next:** Auth institutionnelle / on-prem · SSO  
+9. Institutional auth v0 — Clerk desk + session boost + embed widget — done  
+10. **Next:** SSO SAML per tenant · air-gapped desk · branding tokens  
 
 ## Non-goals (v1)
 

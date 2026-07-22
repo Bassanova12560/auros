@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useLocale } from "@/app/_components/i18n/LocaleProvider";
 import {
   GREEN_LABEL_ROUTE,
+  GREEN_PORTFOLIO_DESK_ROUTE,
   GREEN_REGISTER_ROUTE,
   GREEN_REGISTRY_ROUTE,
   GREEN_ROUTE,
@@ -62,6 +63,7 @@ const COPY = {
     ctaLabel: "Candidature label",
     ctaTrust: "Trust Green",
     ctaRegistry: "Registre",
+    ctaDesk: "Desk institutionnel",
     disclaimer:
       "Console v1 — agrégation technique. Pas de conseil d’investissement, pas de garantie de liquidité.",
     back: "← Hub Green",
@@ -100,6 +102,7 @@ const COPY = {
     ctaLabel: "Label application",
     ctaTrust: "Green Trust",
     ctaRegistry: "Registry",
+    ctaDesk: "Institutional desk",
     disclaimer:
       "Console v1 — technical aggregation. Not investment advice, no liquidity guarantee.",
     back: "← Green hub",
@@ -138,6 +141,7 @@ const COPY = {
     ctaLabel: "Candidatura label",
     ctaTrust: "Trust Green",
     ctaRegistry: "Registro",
+    ctaDesk: "Desk institucional",
     disclaimer:
       "Consola v1 — agregación técnica. Sin consejo de inversión ni garantía de liquidez.",
     back: "← Hub Green",
@@ -362,6 +366,12 @@ export function GreenPortfolioView({ snapshot }: Props) {
       </section>
 
       <div className="mt-8 flex flex-wrap gap-4">
+        <Link
+          href={GREEN_PORTFOLIO_DESK_ROUTE}
+          className="font-mono text-[11px] uppercase tracking-wider text-emerald-400/90 hover:text-emerald-300"
+        >
+          {c.ctaDesk} →
+        </Link>
         <Link
           href={GREEN_TRUST_ROUTE}
           className="font-mono text-[11px] uppercase tracking-wider text-white/45 hover:text-white/70"

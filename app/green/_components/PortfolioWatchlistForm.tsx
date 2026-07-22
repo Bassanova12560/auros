@@ -13,6 +13,7 @@ export type WatchlistAssetOption = {
 
 type Props = {
   assets: WatchlistAssetOption[];
+  defaultEmail?: string;
 };
 
 const COPY = {
@@ -74,10 +75,10 @@ const COPY = {
 
 const MAX_PICK = 20;
 
-export function PortfolioWatchlistForm({ assets }: Props) {
+export function PortfolioWatchlistForm({ assets, defaultEmail }: Props) {
   const { locale } = useLocale();
   const c = COPY[resolveCatalogLocale(locale)] ?? COPY.fr;
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState(defaultEmail?.trim() ?? "");
   const [scope, setScope] = useState<"all" | "selected">("all");
   const [selected, setSelected] = useState<Set<string>>(() => new Set());
   const [status, setStatus] = useState<"idle" | "loading" | "ok" | "err">(
