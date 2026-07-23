@@ -5,6 +5,7 @@ import { ContentPageLayout } from "@/app/_components/ContentPageLayout";
 import { PrimaryButton } from "@/app/_components/ui/PrimaryButton";
 import { AiFirstPageJsonLd } from "@/app/_components/ai-first/AiFirstPageJsonLd";
 import { ArlGlossaryStrip } from "@/app/_components/arl/PlainTerm";
+import { MintTradeDemo } from "@/app/_components/arl/MintTradeDemo";
 
 import { ResourceLayerLab } from "./_components/ResourceLayerLab";
 
@@ -13,6 +14,27 @@ export const metadata = {
   description:
     "Institutional market making for tokenized energy, water, carbon — and the machine economy. Powered by WATT.",
 };
+
+const JOURNEY = [
+  {
+    n: "01",
+    title: "Produce",
+    body: "Solar farm / meter attests kWh. Lab wallet credits akWh.",
+    href: "/lab",
+  },
+  {
+    n: "02",
+    title: "Convert",
+    body: "Wrap akWh → WATT 1:1 (energy unit of account for machines).",
+    href: "/watt",
+  },
+  {
+    n: "03",
+    title: "Trade",
+    body: "Spot settles on the shared ledger; agents hedge load with HITL.",
+    href: "/trade",
+  },
+] as const;
 
 const PILLARS = [
   {
@@ -109,6 +131,9 @@ export default function ResourceLayerPage() {
               <PrimaryButton href="/lab" variant="ghost">
                 Energy Lab
               </PrimaryButton>
+              <PrimaryButton href="/watt" variant="ghost">
+                WATT
+              </PrimaryButton>
               <PrimaryButton
                 href="mailto:resources@getauros.com?subject=ARL%20testnet%20access"
                 variant="ghost"
@@ -118,6 +143,39 @@ export default function ResourceLayerPage() {
             </section>
 
             <ArlGlossaryStrip />
+
+            <section className="space-y-4">
+              <h2 className="font-display text-xl text-white">From meter to market</h2>
+              <p className="text-white/55">
+                Three steps — no brochure fog. Same lab wallet across Lab, Producer, and Trade.
+              </p>
+              <ol className="grid gap-4 md:grid-cols-3">
+                {JOURNEY.map((step) => (
+                  <li key={step.n} className="border border-white/[0.08] bg-white/[0.02] px-4 py-4">
+                    <p className="font-mono text-[10px] uppercase tracking-wider text-white/35">
+                      {step.n}
+                    </p>
+                    <h3 className="mt-2 font-display text-base text-white">{step.title}</h3>
+                    <p className="mt-2 text-white/55">{step.body}</p>
+                    <Link
+                      href={step.href}
+                      className="mt-3 inline-block font-mono text-[10px] uppercase tracking-wider text-white/50 underline-offset-2 hover:text-white hover:underline"
+                    >
+                      Open →
+                    </Link>
+                  </li>
+                ))}
+              </ol>
+            </section>
+
+            <section className="space-y-4">
+              <h2 className="font-display text-xl text-white">Product in motion</h2>
+              <p className="text-white/55">
+                Animated lab loop — meter signs → mint → agent order → labeled fill. Not a staged
+                partnership video.
+              </p>
+              <MintTradeDemo />
+            </section>
 
             <ResourceLayerLab />
 
@@ -137,6 +195,12 @@ export default function ResourceLayerPage() {
                 targets live in the whitepaper; pilots remain HITL.
               </p>
               <div className="flex flex-wrap gap-4 font-mono text-[11px]">
+                <Link
+                  href="/watt"
+                  className="text-white/60 underline-offset-2 hover:text-white hover:underline"
+                >
+                  Full WATT page →
+                </Link>
                 <Link
                   href="/resource-layer/faq#watt"
                   className="text-white/60 underline-offset-2 hover:text-white hover:underline"

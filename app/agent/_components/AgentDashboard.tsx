@@ -1,29 +1,85 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import Link from "next/link";
 
+import { ArlLabWallet } from "@/app/_components/arl/ArlLabWallet";
 import { DemoDisclaimer } from "@/app/_components/arl/DemoDisclaimer";
 import { AurosButton } from "@/app/_components/AurosButton";
+import { getOrCreateArlAccountId, postArlSpot } from "@/lib/arl/client";
 
-const FORWARD_ORDERS = [
+type ForwardRow = {
+  id: string;
+  window: string;
+  mwh: number;
+  status: "open" | "filled" | "rejected";
+  detail?: string;
+};
+
+const SEED_ORDERS: ForwardRow[] = [
   { id: "FO-1021", window: "2026-07-24 06:00–10:00 UTC", mwh: 12, status: "open" },
   { id: "FO-1018", window: "2026-07-23 18:00–22:00 UTC", mwh: 8, status: "filled" },
-] as const;
+];
 
+/**
+ * Agent console — lab wallet + hedge that buys akWh on the shared ledger (HITL-labeled).
+ */
 export function AgentDashboard() {
-  const [mwh, setMwh] = useState("6");
+  const [mwh, setMwh] = useState("2");
   const [start, setStart] = useState("2026-07-25T06:00");
+  const [orders, setOrders] = useState<ForwardRow[]>(SEED_ORDERS);
+  const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
-  function scheduleForwardBuy(e: React.FormEvent<HTMLFormElement>) {
+  const kwhPreview = useMemo(() => {
+    const n = Number(mwh);
+    if (!Number.isFinite(n) || n <= 0) return 0;
+    return Math.round(n * 1000);
+  }, [mwh]);
+
+  async function scheduleForwardBuy(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    setMessage(
-      `Forward buy (${mwh} MWh from ${start}) submitted to agent-api queue — operator HITL before settlement.`
-    );
+    setBusy(true);
+    setError(null);
+    setMessage(null);
+    try {
+      const mwhNum = Number(mwh);
+      if (!Number.isFinite(mwhNum) || mwhNum <= 0 || mwhNum > 50) {
+        throw new Error("MWh must be between 0 and 50 for lab hedges");
+      }
+      const amountKwh = Math.round(mwhNum * 1000);
+      const accountId = getOrCreateArlAccountId();
+      const snap = await postArlSpot({
+        accountId,
+        marketId: "kwh-france",
+        side: "buy",
+        amount: amountKwh,
+      });
+      const id = `FO-${Date.now().toString(36).slice(-5).toUpperCase()}`;
+      setOrders((prev) => [
+        {
+          id,
+          window: `${start} · lab hedge`,
+          mwh: mwhNum,
+          status: "filled",
+          detail: `Bought ${amountKwh} akWh @ ${snap.fill?.executionPrice ?? "—"}`,
+        },
+        ...prev,
+      ]);
+      setMessage(
+        `Hedge filled on lab ledger: +${amountKwh} akWh (≈${mwhNum} MWh). Wallet EUR → akWh. HITL still required for production settlement.`,
+      );
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Hedge failed");
+    } finally {
+      setBusy(false);
+    }
   }
 
   return (
     <div className="space-y-8">
+      <ArlLabWallet step="sell" />
       <DemoDisclaimer />
 
       <div className="grid gap-4 md:grid-cols-3">
@@ -35,17 +91,22 @@ export function AgentDashboard() {
         <div className="rounded-xl border border-white/[0.08] bg-white/[0.02] p-4">
           <p className="font-mono text-[10px] uppercase text-white/40">Hedge ratio</p>
           <p className="mt-1 font-display text-2xl text-white">72%</p>
-          <p className="mt-1 text-xs text-white/45">Target 85% · rebalance suggested</p>
+          <p className="mt-1 text-xs text-white/45">Target 85% · buy spot to rebalance</p>
         </div>
         <div className="rounded-xl border border-white/[0.08] bg-white/[0.02] p-4">
           <p className="font-mono text-[10px] uppercase text-white/40">Hedge status</p>
           <p className="mt-1 font-display text-lg text-amber-200/90">Under-hedged</p>
-          <p className="mt-1 text-xs text-white/45">Next cron check in ~5 min (demo)</p>
+          <p className="mt-1 text-xs text-white/45">
+            Use form below — settles into{" "}
+            <Link href="/trade" className="underline hover:text-white">
+              lab wallet
+            </Link>
+          </p>
         </div>
       </div>
 
       <section className="space-y-3">
-        <h2 className="font-display text-base font-medium text-white">Forward orders</h2>
+        <h2 className="font-display text-base font-medium text-white">Forward / hedge book</h2>
         <div className="overflow-x-auto rounded-xl border border-white/[0.08]">
           <table className="w-full min-w-[480px] text-left text-sm text-white/60">
             <thead className="font-mono text-[10px] uppercase text-white/35">
@@ -57,10 +118,15 @@ export function AgentDashboard() {
               </tr>
             </thead>
             <tbody>
-              {FORWARD_ORDERS.map((o) => (
+              {orders.map((o) => (
                 <tr key={o.id} className="border-b border-white/[0.04]">
                   <td className="px-4 py-3 font-mono text-white/70">{o.id}</td>
-                  <td className="px-4 py-3">{o.window}</td>
+                  <td className="px-4 py-3">
+                    {o.window}
+                    {o.detail ? (
+                      <span className="mt-0.5 block font-mono text-[10px] text-white/35">{o.detail}</span>
+                    ) : null}
+                  </td>
                   <td className="px-4 py-3">{o.mwh}</td>
                   <td className="px-4 py-3 capitalize">{o.status}</td>
                 </tr>
@@ -71,8 +137,12 @@ export function AgentDashboard() {
       </section>
 
       <section className="space-y-4 rounded-xl border border-white/[0.08] bg-white/[0.02] p-5">
-        <h2 className="font-display text-base font-medium text-white">Schedule forward buy</h2>
-        <form className="grid gap-4 sm:grid-cols-2" onSubmit={scheduleForwardBuy}>
+        <h2 className="font-display text-base font-medium text-white">Schedule hedge (lab spot buy)</h2>
+        <p className="text-xs text-white/45">
+          Converts MWh → kWh and buys <span className="text-white/70">akWh-FR</span> with your wallet
+          EUR. Caps: ≤50 MWh / ticket. Not a production PPA.
+        </p>
+        <form className="grid gap-4 sm:grid-cols-2" onSubmit={(e) => void scheduleForwardBuy(e)}>
           <label className="block space-y-1.5">
             <span className="font-mono text-[10px] uppercase text-white/40">MWh</span>
             <input
@@ -80,6 +150,7 @@ export function AgentDashboard() {
               onChange={(e) => setMwh(e.target.value)}
               className="w-full rounded-lg border border-white/10 bg-black px-3 py-2.5 text-sm text-white"
             />
+            <span className="font-mono text-[10px] text-white/35">≈ {kwhPreview} akWh</span>
           </label>
           <label className="block space-y-1.5">
             <span className="font-mono text-[10px] uppercase text-white/40">Start (local)</span>
@@ -91,8 +162,11 @@ export function AgentDashboard() {
             />
           </label>
           <div className="sm:col-span-2">
-            <AurosButton type="submit">Submit to agent-api</AurosButton>
-            {message ? <p className="mt-3 text-xs text-white/50">{message}</p> : null}
+            <AurosButton type="submit" disabled={busy}>
+              {busy ? "Hedging…" : "Buy hedge on ledger"}
+            </AurosButton>
+            {error ? <p className="mt-3 text-xs text-rose-300/90">{error}</p> : null}
+            {message ? <p className="mt-3 text-xs text-emerald-300/80">{message}</p> : null}
           </div>
         </form>
       </section>

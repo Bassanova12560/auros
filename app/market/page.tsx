@@ -20,7 +20,7 @@ export default function MarketPage() {
           product="Resource Layer"
           eyebrow="Market · Demo"
           title="Resource marketplace"
-          intro="Indicative prices and depth for regional resource tokens. Live execution connects to protocol pools and partner liquidity — not simulated here."
+          intro="Indicative marks from the same index as /trade. Spot opens your lab wallet terminal — volumes are labels, not claimed exchange volume."
         >
           <MarketTable />
         </ContentPageLayout>

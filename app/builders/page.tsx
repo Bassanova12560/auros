@@ -105,6 +105,25 @@ Users ──HTTPS──► Next.js (getauros.com)`}
 
             <section className="space-y-3">
               <h2 className="font-display text-xl text-white">Read the source</h2>
+              <div className="rounded-lg border border-white/[0.08] bg-white/[0.02] px-4 py-3">
+                <p className="font-mono text-[10px] uppercase tracking-wider text-white/40">
+                  Security posture
+                </p>
+                <p className="mt-1 text-white/70">
+                  Hardhat suites + caps/circuit-breakers shipped in-repo.{" "}
+                  <strong className="font-medium text-white/90">No third-party audit badge claimed</strong>{" "}
+                  — external audit is on the roadmap before mainnet collateral. Read{" "}
+                  <a
+                    href={`${REPO}/blob/main/docs/ARL-SECURITY.md`}
+                    className="underline-offset-2 hover:underline"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    ARL-SECURITY.md
+                  </a>
+                  .
+                </p>
+              </div>
               <ul className="space-y-2">
                 <li>
                   <a
@@ -125,6 +144,10 @@ Users ──HTTPS──► Next.js (getauros.com)`}
                     Vision
                   </Link>
                   {" · "}
+                  <Link href="/watt" className="underline-offset-2 hover:underline">
+                    WATT
+                  </Link>
+                  {" · "}
                   <Link href="/lab" className="underline-offset-2 hover:underline">
                     Energy Lab
                   </Link>
@@ -137,17 +160,27 @@ Users ──HTTPS──► Next.js (getauros.com)`}
                   >
                     Whitepaper
                   </a>
-                  {" · "}
-                  <a
-                    href={`${REPO}/blob/main/docs/ARL-SECURITY.md`}
-                    className="underline-offset-2 hover:underline"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    Security notes
-                  </a>
                 </li>
               </ul>
+            </section>
+
+            <section className="space-y-3">
+              <h2 className="font-display text-xl text-white">Run a Resource Node (preview)</h2>
+              <p>
+                Commands below match the public monorepo layout. MQTT credentials and production
+                keys ship after testnet approval (HITL).
+              </p>
+              <pre className="overflow-x-auto border border-white/[0.08] bg-black/40 p-4 font-mono text-[10px] leading-5 text-white/55">
+{`git clone https://github.com/Bassanova12560/auros.git
+cd auros/protocol && npm i && npm test
+cd ../iot-bridge && npm i   # MQTT → Proof-of-Resource (access after approval)
+cd ../agent-api && npm i && npm run dev
+# Full stack (local): docker compose -f docker-compose.yml up
+# Lab wallet (site): open /lab → mint → /producer wrap WATT → /trade spot`}
+              </pre>
+              <p className="font-mono text-[10px] text-white/35">
+                Access granted after testnet approval · no silent mainnet keys
+              </p>
             </section>
 
             <section className="space-y-3">

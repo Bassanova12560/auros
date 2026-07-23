@@ -24,7 +24,7 @@ describe("lib/arl ledger", () => {
     const minted = await mintAkWh({ accountId: id, amount: 500, deviceId: "pv-1" });
     assert.equal(minted.account.balances.akWh, 500);
     assert.equal(minted.account.balances.EUR, SEED_EUR);
-    assert.equal(minted.backend, "memory");
+    assert.ok(minted.backend === "memory" || minted.backend === "file");
 
     const wrapped = await mintWatt({ accountId: id, amount: 200 });
     assert.equal(wrapped.account.balances.akWh, 300);

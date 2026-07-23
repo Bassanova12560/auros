@@ -74,6 +74,13 @@ export function TradeTerminal() {
     );
     const onUpdate = () => void refreshBalances(id).catch(() => undefined);
     window.addEventListener(ARL_LEDGER_EVENT, onUpdate);
+
+    const marketParam = new URLSearchParams(window.location.search).get("market");
+    if (marketParam && SPOT_MARKETS.some((m) => m.id === marketParam)) {
+      setMarketId(marketParam as MarketId);
+      setTab("spot");
+    }
+
     return () => window.removeEventListener(ARL_LEDGER_EVENT, onUpdate);
   }, [refreshBalances]);
 

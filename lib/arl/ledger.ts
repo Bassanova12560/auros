@@ -1,9 +1,11 @@
 /**
  * ARL lab ledger — shared mint / WATT / spot settlement for producer, trade, lab.
- * HITL demo: Upstash when configured, else process memory (survives warm instances).
+ * Persistence order: Upstash → .data/arl-ledger.json → process memory.
  * Mirrors WattCoin 1:1 collateral: wrap akWh → WATT, redeem WATT → akWh.
  */
 
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { join } from "node:path";
 import { isUpstashConfigured, upstashCommand } from "@/lib/upstash";
 import { SPOT_MARKETS, type MarketId, type SpotSide } from "@/lib/arl/trade-engine";
 
@@ -13,6 +15,11 @@ export const MAX_MINT_PER_ACCOUNT = 500_000;
 export const MAX_SPOT_AMOUNT = 100_000;
 export const SPOT_FEE_BPS = 10;
 export const SEED_EUR = 10_000;
+
+const DATA_DIR = join(process.cwd(), ".data");
+const LEDGER_FILE = join(DATA_DIR, "arl-ledger.json");
+
+export type ArlBackend = "upstash" | "file" | "memory";
 
 export type ArlAsset = "akWh" | "WATT" | "H2O" | "FLOP" | "EUR";
 
@@ -48,6 +55,7 @@ export type ArlLedgerState = {
 type GlobalLedger = {
   state: ArlLedgerState;
   chain: Promise<unknown>;
+  hydrated: boolean;
 };
 
 declare global {
@@ -72,9 +80,47 @@ function freshState(): ArlLedgerState {
 
 function memoryStore(): GlobalLedger {
   if (!globalThis.__aurosArlLedger) {
-    globalThis.__aurosArlLedger = { state: freshState(), chain: Promise.resolve() };
+    globalThis.__aurosArlLedger = {
+      state: freshState(),
+      chain: Promise.resolve(),
+      hydrated: false,
+    };
   }
   return globalThis.__aurosArlLedger;
+}
+
+function parseLedgerState(raw: string): ArlLedgerState | null {
+  try {
+    const parsed = JSON.parse(raw) as ArlLedgerState;
+    if (parsed?.version === 1 && parsed.accounts) {
+      return parsed;
+    }
+  } catch {
+    /* fall through */
+  }
+  return null;
+}
+
+function readFileState(): ArlLedgerState | null {
+  if (!existsSync(LEDGER_FILE)) return null;
+  try {
+    const raw = readFileSync(LEDGER_FILE, "utf8");
+    return parseLedgerState(raw);
+  } catch {
+    return null;
+  }
+}
+
+function saveFileState(state: ArlLedgerState): boolean {
+  try {
+    if (!existsSync(DATA_DIR)) {
+      mkdirSync(DATA_DIR, { recursive: true });
+    }
+    writeFileSync(LEDGER_FILE, JSON.stringify(state), "utf8");
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 function assertPositive(n: number, label: string) {
@@ -123,41 +169,50 @@ function ensureAccount(state: ArlLedgerState, accountId: string): ArlAccount {
   return acc;
 }
 
-async function loadState(): Promise<{ state: ArlLedgerState; backend: "upstash" | "memory" }> {
+async function loadState(): Promise<{ state: ArlLedgerState; backend: ArlBackend }> {
   if (isUpstashConfigured()) {
     const res = await upstashCommand(["GET", ARL_LEDGER_KEY]);
     if (res?.result != null && typeof res.result === "string" && res.result.length > 0) {
-      try {
-        const parsed = JSON.parse(res.result) as ArlLedgerState;
-        if (parsed?.version === 1 && parsed.accounts) {
-          return { state: parsed, backend: "upstash" };
-        }
-      } catch {
-        /* fall through */
+      const parsed = parseLedgerState(res.result);
+      if (parsed) {
+        return { state: parsed, backend: "upstash" };
       }
     }
     return { state: freshState(), backend: "upstash" };
   }
-  return { state: structuredClone(memoryStore().state), backend: "memory" };
+
+  const store = memoryStore();
+  if (!store.hydrated) {
+    const fromFile = readFileState();
+    if (fromFile) {
+      store.state = structuredClone(fromFile);
+    }
+    store.hydrated = true;
+  }
+
+  const fileExists = existsSync(LEDGER_FILE);
+  const hasAccounts = Object.keys(store.state.accounts).length > 0;
+  const backend: ArlBackend = fileExists || hasAccounts ? "file" : "memory";
+  return { state: structuredClone(store.state), backend };
 }
 
-async function saveState(
-  state: ArlLedgerState,
-  backend: "upstash" | "memory",
-): Promise<"upstash" | "memory"> {
+async function saveState(state: ArlLedgerState, backend: ArlBackend): Promise<ArlBackend> {
   if (backend === "upstash" && isUpstashConfigured()) {
     const payload = JSON.stringify(state);
     const res = await upstashCommand(["SET", ARL_LEDGER_KEY, payload]);
     if (res != null) return "upstash";
   }
   memoryStore().state = structuredClone(state);
+  if (saveFileState(state)) {
+    return "file";
+  }
   return "memory";
 }
 
 /** Serialize mutations so concurrent lab calls don't clobber memory state. */
 export async function withArlLedger<T>(
   fn: (state: ArlLedgerState) => T | Promise<T>,
-): Promise<{ result: T; backend: "upstash" | "memory"; state: ArlLedgerState }> {
+): Promise<{ result: T; backend: ArlBackend; state: ArlLedgerState }> {
   const store = memoryStore();
   const run = store.chain.then(async () => {
     const { state, backend } = await loadState();
@@ -174,7 +229,7 @@ export async function withArlLedger<T>(
 
 export type ArlPublicSnapshot = {
   mode: "lab";
-  backend: "upstash" | "memory";
+  backend: ArlBackend;
   account: ArlAccount;
   vaultAkWh: number;
   wattSupply: number;
@@ -183,11 +238,7 @@ export type ArlPublicSnapshot = {
   disclaimer: string;
 };
 
-function snapshot(
-  state: ArlLedgerState,
-  accountId: string,
-  backend: "upstash" | "memory",
-): ArlPublicSnapshot {
+function snapshot(state: ArlLedgerState, accountId: string, backend: ArlBackend): ArlPublicSnapshot {
   const account = ensureAccount(state, accountId);
   return {
     mode: "lab",
@@ -353,7 +404,10 @@ export async function settleSpot(input: {
   return { ...snapshot(state, input.accountId, backend), fill };
 }
 
-/** Test helper — wipe memory ledger (no-op for Upstash). */
+/** Test helper — wipe memory ledger and local file (no-op for Upstash). */
 export function resetArlLedgerMemory() {
-  globalThis.__aurosArlLedger = { state: freshState(), chain: Promise.resolve() };
+  const state = freshState();
+  globalThis.__aurosArlLedger = { state, chain: Promise.resolve(), hydrated: true };
+  saveFileState(state);
 }
+

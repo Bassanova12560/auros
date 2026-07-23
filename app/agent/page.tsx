@@ -21,7 +21,7 @@ export default function AgentPage() {
           product="Resource Layer"
           eyebrow="Agent · Demo"
           title="AI & data-center agent console"
-          intro="Agents predict load, compare hedge ratio, and propose forward buys against resource markets — always subject to human approval before settlement."
+          intro="Agents predict load and buy hedges into the shared lab wallet (EUR → akWh). Production settlement stays human-gated."
         >
           <AgentDashboard />
         </ContentPageLayout>

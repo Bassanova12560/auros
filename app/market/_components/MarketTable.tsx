@@ -1,77 +1,51 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
 
+import { ArlLabWallet } from "@/app/_components/arl/ArlLabWallet";
 import { DemoDisclaimer } from "@/app/_components/arl/DemoDisclaimer";
 import { AurosButton } from "@/app/_components/AurosButton";
+import { SPOT_MARKETS } from "@/lib/arl/trade-engine";
 
-const MARKETS = [
-  {
-    id: "kwh-france",
-    resource: "kWh · France (AKWH)",
-    price: "€ 0.142 / kWh",
-    volume: "2.4M",
-    liquidity: "High",
-  },
-  {
-    id: "kwh-texas",
-    resource: "kWh · Texas (AKWH-US)",
-    price: "$ 0.068 / kWh",
-    volume: "8.1M",
-    liquidity: "High",
-  },
-  {
-    id: "h2o-ca",
-    resource: "Water · California (AH2O)",
-    price: "$ 0.0042 / L",
-    volume: "420K",
-    liquidity: "Medium",
-  },
-  {
-    id: "flop",
-    resource: "Compute · FLOP",
-    price: "$ 1.27 / unit",
-    volume: "88K",
-    liquidity: "Medium",
-  },
-] as const;
+function fmtPrice(n: number, id: string): string {
+  if (id === "h2o-ca") return `$ ${n.toFixed(4)} / L`;
+  if (id === "flop") return `$ ${n.toFixed(2)} / unit`;
+  if (id === "kwh-texas") return `$ ${n.toFixed(3)} / kWh`;
+  return `€ ${n.toFixed(3)} / kWh`;
+}
 
+/**
+ * Marketplace — same index as trade engine + lab wallet; Trade opens spot with market preselected.
+ */
 export function MarketTable() {
-  const [tradeMsg, setTradeMsg] = useState<string | null>(null);
-
-  function onTrade(id: string) {
-    setTradeMsg(`Opening hardened demo terminal for ${id}…`);
-  }
-
   return (
     <div className="space-y-6">
+      <ArlLabWallet step="sell" />
       <DemoDisclaimer />
       <div className="overflow-x-auto rounded-xl border border-white/[0.08]">
         <table className="w-full min-w-[640px] text-left text-sm text-white/60">
           <thead className="font-mono text-[10px] uppercase text-white/35">
             <tr className="border-b border-white/[0.06]">
               <th className="px-4 py-3 font-normal">Resource</th>
-              <th className="px-4 py-3 font-normal">Price</th>
-              <th className="px-4 py-3 font-normal">Volume (30d)</th>
-              <th className="px-4 py-3 font-normal">Liquidity</th>
+              <th className="px-4 py-3 font-normal">Mark</th>
+              <th className="px-4 py-3 font-normal">24h</th>
+              <th className="px-4 py-3 font-normal">Vol label</th>
               <th className="px-4 py-3 font-normal" />
             </tr>
           </thead>
           <tbody>
-            {MARKETS.map((m) => (
+            {SPOT_MARKETS.map((m) => (
               <tr key={m.id} className="border-b border-white/[0.04]">
-                <td className="px-4 py-3 font-medium text-white">{m.resource}</td>
-                <td className="px-4 py-3 font-mono text-white/70">{m.price}</td>
-                <td className="px-4 py-3">{m.volume}</td>
-                <td className="px-4 py-3">{m.liquidity}</td>
+                <td className="px-4 py-3 font-medium text-white">{m.symbol}</td>
+                <td className="px-4 py-3 font-mono text-white/70">{fmtPrice(m.last, m.id)}</td>
                 <td className="px-4 py-3">
-                  <AurosButton
-                    href={`/trade`}
-                    variant="ghost"
-                    onClick={() => onTrade(m.id)}
-                  >
-                    Trade
+                  {m.changeBps >= 0 ? "+" : ""}
+                  {(m.changeBps / 10).toFixed(1)}%
+                </td>
+                <td className="px-4 py-3">{m.volLabel}</td>
+                <td className="px-4 py-3">
+                  <AurosButton href={`/trade?market=${m.id}`} variant="ghost">
+                    Trade spot
                   </AurosButton>
                 </td>
               </tr>
@@ -80,13 +54,16 @@ export function MarketTable() {
         </table>
       </div>
       <p className="text-xs text-white/45">
-        Execution uses the local demo engine on{" "}
+        Spot settles against your{" "}
+        <Link href="/lab" className="underline hover:text-white">
+          lab wallet
+        </Link>{" "}
+        on{" "}
         <Link href="/trade" className="underline hover:text-white">
           /trade
-        </Link>{" "}
-        (caps, circuit-breaker, HITL labels) — not live venue routing.
+        </Link>
+        . Perps/options stay session-local. Volumes are labels, not claimed exchange volume.
       </p>
-      {tradeMsg ? <p className="text-xs text-white/50">{tradeMsg}</p> : null}
     </div>
   );
 }

@@ -24,7 +24,7 @@ export function notifyArlLedgerUpdated() {
 
 export type ArlClientSnapshot = {
   mode: "lab";
-  backend: "upstash" | "memory";
+  backend: "upstash" | "file" | "memory";
   account: {
     id: string;
     balances: { akWh: number; WATT: number; H2O: number; FLOP: number; EUR: number };

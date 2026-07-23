@@ -18,6 +18,7 @@ export function Footer() {
     { href: "/terms", label: f.terms },
     { href: "/privacy", label: f.privacy },
     { href: "/press", label: "Press" },
+    { href: "/watt", label: "WATT" },
     { href: "/builders", label: "Builders" },
     { href: "/lab", label: "Energy Lab" },
     { href: "/trust", label: f.trust },

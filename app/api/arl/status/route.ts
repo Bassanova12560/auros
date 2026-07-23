@@ -9,7 +9,7 @@ export async function GET() {
   return NextResponse.json({
     ok: true,
     product: "arl-lab-ledger",
-    persistence: isUpstashConfigured() ? "upstash" : "memory",
+    persistence: isUpstashConfigured() ? "upstash" : "file|memory",
     endpoints: {
       account: "GET /api/arl/account?account=",
       mint: "POST /api/arl/mint",
@@ -17,6 +17,6 @@ export async function GET() {
       spot: "POST /api/arl/spot",
     },
     disclaimer:
-      "Lab ledger only — mirrors ResourceToken + WattCoin economics. Not mainnet listing.",
+      "Lab ledger only — mirrors ResourceToken + WattCoin economics. Not mainnet listing. Prefer Upstash in prod for multi-instance.",
   });
 }
