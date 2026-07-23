@@ -1,14 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 
-import { isCronAuthorized } from "@/lib/cron-auth";
 import { listCopilotDrafts } from "@/lib/copilot/drafts-store";
 import type { CopilotDraftKind, CopilotDraftStatus } from "@/lib/copilot/types";
+import { isOpsAuthorized } from "@/lib/ops/session";
 
 export const runtime = "nodejs";
 
-/** GET — list Copilot drafts (ops). Requires authenticated ops access */
+/** GET — list Copilot drafts (ops). Cookie session or Bearer. */
 export async function GET(req: NextRequest) {
-  if (!isCronAuthorized(req, { allowDevWithoutSecret: false })) {
+  if (!isOpsAuthorized(req, { allowDevWithoutSecret: false })) {
     return NextResponse.json({ ok: false, error: "unauthorized" }, { status: 401 });
   }
 

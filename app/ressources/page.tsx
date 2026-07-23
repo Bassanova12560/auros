@@ -69,6 +69,11 @@ const SECTIONS = [
         desc: "Vision ARL — tokeniser kWh, liquidité, agents (démos labellisées).",
       },
       {
+        href: "/presence",
+        label: "Présence marchés (green)",
+        desc: "Directories RWA / climate / ESG — dossiers prêts, sans faux badges.",
+      },
+      {
         href: "/lab",
         label: "Energy Lab",
         desc: "Simuler mint → wrap WATT → revenu producteur.",

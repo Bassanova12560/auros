@@ -362,8 +362,8 @@ export const VERTICAL_WELCOMES: Record<string, VerticalWelcomeConfig> = {
       { href: "/green/api", label: "Docs Green API" },
     ],
     secondaryLinks: [
-      { href: "/ops/copilot", label: "Ops drafts sociaux" },
       { href: "/developers", label: "Developers" },
+      { href: "/status", label: "Status" },
     ],
   },
   [QEI_WELCOME_PATH]: {

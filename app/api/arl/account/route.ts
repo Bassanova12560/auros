@@ -1,6 +1,11 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 
+import {
+  attachArlLabCookie,
+  isValidArlAccountId,
+  resolveArlLabAccount,
+} from "@/lib/arl/lab-session";
 import { getArlAccount } from "@/lib/arl/ledger";
 import { checkRateLimitAsync, getRequestIp } from "@/lib/rate-limit";
 
@@ -16,17 +21,16 @@ export async function GET(req: Request) {
   }
 
   const url = new URL(req.url);
-  const parsed = accountQuery.safeParse(url.searchParams.get("account") ?? "");
-  if (!parsed.success) {
-    return NextResponse.json(
-      { error: "validation_error", message: "account query required (3–64 [a-zA-Z0-9_-])" },
-      { status: 400 },
-    );
-  }
+  const raw = url.searchParams.get("account");
+  const claimed =
+    raw && accountQuery.safeParse(raw).success && isValidArlAccountId(raw) ? raw : null;
+
+  const { accountId, cookieValue } = resolveArlLabAccount(req, claimed);
 
   try {
-    const snap = await getArlAccount(parsed.data);
-    return NextResponse.json(snap);
+    const snap = await getArlAccount(accountId);
+    const res = NextResponse.json(snap);
+    return attachArlLabCookie(res, cookieValue);
   } catch (e) {
     const msg = e instanceof Error ? e.message : "ledger error";
     return NextResponse.json({ error: "ledger_error", message: msg }, { status: 400 });

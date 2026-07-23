@@ -2,7 +2,12 @@
 
 import { useEffect, useId, useRef, useState } from "react";
 
-import { LOCALES, type Locale } from "@/lib/i18n";
+import {
+  LOCALES,
+  applyDocumentLocale,
+  storeLocale,
+  type Locale,
+} from "@/lib/i18n";
 import { useLocale } from "./LocaleProvider";
 
 const LABELS: Record<Locale, string> = {
@@ -55,6 +60,20 @@ export function LanguageSwitcher({
     };
   }, [open]);
 
+  function selectLocale(code: Locale) {
+    if (code === locale) {
+      setOpen(false);
+      return;
+    }
+    setLocale(code);
+    storeLocale(code);
+    applyDocumentLocale(code);
+    setOpen(false);
+    // Full reload remounts client trees and lets the root layout re-read the
+    // `auros_locale` cookie so hybrid RSC pages re-init in the new language.
+    window.location.reload();
+  }
+
   return (
     <div ref={rootRef} className={`relative shrink-0 ${className}`}>
       <button
@@ -93,10 +112,7 @@ export function LanguageSwitcher({
                       ? "bg-white/[0.08] text-white"
                       : "text-white/55 hover:bg-white/[0.05] hover:text-white"
                   }`}
-                  onClick={() => {
-                    setLocale(code);
-                    setOpen(false);
-                  }}
+                  onClick={() => selectLocale(code)}
                 >
                   <span>{NATIVE[code]}</span>
                   <span className="font-mono text-[10px] tracking-wider text-white/35">

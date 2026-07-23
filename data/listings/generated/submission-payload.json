@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-15T10:34:04.654Z",
+  "generatedAt": "2026-07-23T17:05:57.644Z",
   "project": {
     "slug": "auros",
     "name": "AUROS",
@@ -29,14 +29,21 @@
       "Yield Aggregator",
       "Comparator",
       "B2B",
-      "MiCA"
+      "MiCA",
+      "Green Fintech",
+      "Climate Tech",
+      "CSRD",
+      "EU Taxonomy",
+      "Energy RWA"
     ],
     "defillamaCategory": "Services",
     "coingeckoRequestType": "Others — RWA analytics / comparator platform (no native token)",
     "languages": [
       "fr",
       "en",
-      "es"
+      "es",
+      "ar",
+      "zh"
     ],
     "jurisdictionsCompared": 8,
     "productCountClaim": "120+",
@@ -59,6 +66,7 @@
       "adaptersRepo": "https://github.com/DefiLlama/DefiLlama-Adapters",
       "listingMetadataRepo": "https://github.com/DefiLlama/defillama-server/blob/master/defi/src/protocols/data2.ts",
       "submitProjectDocs": "https://docs.llama.fi/list-your-project/submit-a-project",
+      "rwaSubmissionForm": "https://forms.defillama.com/rwa-submission",
       "rwaDashboard": "https://defillama.com/rwa",
       "rwaPlatforms": "https://defillama.com/rwa/platforms",
       "discord": "https://discord.defillama.com/",
@@ -102,7 +110,7 @@
       "assetClass": "commodities",
       "defillamaSlug": "agrotoken",
       "source": "defillama_config",
-      "aurosPage": "https://auros-delta.vercel.app/commodities",
+      "aurosPage": "https://getauros.com/commodities",
       "externalLink": "https://agrotoken.io"
     },
     {
@@ -112,7 +120,7 @@
       "assetClass": "commodities",
       "defillamaSlug": "agrotoken",
       "source": "manual",
-      "aurosPage": "https://auros-delta.vercel.app/commodities",
+      "aurosPage": "https://getauros.com/commodities",
       "externalLink": "https://agrotoken.io"
     },
     {
@@ -122,7 +130,7 @@
       "assetClass": "bonds",
       "defillamaSlug": "apollo-securitize",
       "source": "defillama_config",
-      "aurosPage": "https://auros-delta.vercel.app/bonds",
+      "aurosPage": "https://getauros.com/bonds",
       "externalLink": "https://www.securitize.io"
     },
     {
@@ -132,7 +140,7 @@
       "assetClass": "bonds",
       "defillamaSlug": "apollo-securitize",
       "source": "manual",
-      "aurosPage": "https://auros-delta.vercel.app/bonds",
+      "aurosPage": "https://getauros.com/bonds",
       "externalLink": "https://www.securitize.io"
     },
     {
@@ -142,7 +150,7 @@
       "assetClass": "stablecoins",
       "defillamaSlug": "backed-finance",
       "source": "defillama_config",
-      "aurosPage": "https://auros-delta.vercel.app/stablecoins",
+      "aurosPage": "https://getauros.com/stablecoins",
       "externalLink": "https://backed.fi"
     },
     {
@@ -152,7 +160,7 @@
       "assetClass": "bonds",
       "defillamaSlug": "backed-finance",
       "source": "manual",
-      "aurosPage": "https://auros-delta.vercel.app/bonds",
+      "aurosPage": "https://getauros.com/bonds",
       "externalLink": "https://backed.fi/products/bCSPX"
     },
     {
@@ -162,7 +170,7 @@
       "assetClass": "bonds",
       "defillamaSlug": "backed-finance",
       "source": "manual",
-      "aurosPage": "https://auros-delta.vercel.app/bonds",
+      "aurosPage": "https://getauros.com/bonds",
       "externalLink": "https://backed.fi"
     },
     {
@@ -172,7 +180,7 @@
       "assetClass": "bonds",
       "defillamaSlug": "bitbond",
       "source": "defillama_config",
-      "aurosPage": "https://auros-delta.vercel.app/bonds",
+      "aurosPage": "https://getauros.com/bonds",
       "externalLink": "https://www.bitbond.com"
     },
     {
@@ -182,7 +190,7 @@
       "assetClass": "bonds",
       "defillamaSlug": "bitbond",
       "source": "manual",
-      "aurosPage": "https://auros-delta.vercel.app/bonds",
+      "aurosPage": "https://getauros.com/bonds",
       "externalLink": "https://www.bitbond.com"
     },
     {
@@ -192,7 +200,7 @@
       "assetClass": "bonds",
       "defillamaSlug": "blackstone-securitize",
       "source": "defillama_config",
-      "aurosPage": "https://auros-delta.vercel.app/bonds",
+      "aurosPage": "https://getauros.com/bonds",
       "externalLink": "https://www.securitize.io"
     },
     {
@@ -202,7 +210,7 @@
       "assetClass": "bonds",
       "defillamaSlug": "blackstone-securitize",
       "source": "manual",
-      "aurosPage": "https://auros-delta.vercel.app/bonds",
+      "aurosPage": "https://getauros.com/bonds",
       "externalLink": "https://www.securitize.io"
     },
     {
@@ -212,7 +220,7 @@
       "assetClass": "real_estate",
       "defillamaSlug": "blocksquare",
       "source": "manual",
-      "aurosPage": "https://auros-delta.vercel.app/real-estate",
+      "aurosPage": "https://getauros.com/real-estate",
       "externalLink": "https://blocksquare.io"
     },
     {
@@ -222,7 +230,7 @@
       "assetClass": "real_estate",
       "defillamaSlug": "blocksquare",
       "source": "defillama_config",
-      "aurosPage": "https://auros-delta.vercel.app/real-estate",
+      "aurosPage": "https://getauros.com/real-estate",
       "externalLink": "https://blocksquare.io"
     },
     {
@@ -232,7 +240,7 @@
       "assetClass": "commodities",
       "defillamaSlug": "cache-gold",
       "source": "defillama_config",
-      "aurosPage": "https://auros-delta.vercel.app/commodities",
+      "aurosPage": "https://getauros.com/commodities",
       "externalLink": "https://cache.gold"
     },
     {
@@ -242,7 +250,7 @@
       "assetClass": "commodities",
       "defillamaSlug": "cache-gold",
       "source": "manual",
-      "aurosPage": "https://auros-delta.vercel.app/commodities",
+      "aurosPage": "https://getauros.com/commodities",
       "externalLink": "https://cache.gold"
     },
     {
@@ -252,7 +260,7 @@
       "assetClass": "private_credit",
       "defillamaSlug": "centrifuge-protocol",
       "source": "manual",
-      "aurosPage": "https://auros-delta.vercel.app/private-credit",
+      "aurosPage": "https://getauros.com/private-credit",
       "externalLink": "https://centrifuge.io"
     },
     {
@@ -262,7 +270,7 @@
       "assetClass": "private_credit",
       "defillamaSlug": "centrifuge-protocol",
       "source": "manual",
-      "aurosPage": "https://auros-delta.vercel.app/private-credit",
+      "aurosPage": "https://getauros.com/private-credit",
       "externalLink": "https://centrifuge.io"
     },
     {
@@ -272,7 +280,7 @@
       "assetClass": "private_credit",
       "defillamaSlug": "centrifuge-protocol",
       "source": "manual",
-      "aurosPage": "https://auros-delta.vercel.app/private-credit",
+      "aurosPage": "https://getauros.com/private-credit",
       "externalLink": "https://centrifuge.io"
     },
     {
@@ -282,7 +290,7 @@
       "assetClass": "stablecoins",
       "defillamaSlug": "centrifuge-protocol",
       "source": "defillama_config",
-      "aurosPage": "https://auros-delta.vercel.app/stablecoins",
+      "aurosPage": "https://getauros.com/stablecoins",
       "externalLink": "https://centrifuge.io"
     },
     {
@@ -292,7 +300,7 @@
       "assetClass": "private_credit",
       "defillamaSlug": "centrifuge-protocol",
       "source": "manual",
-      "aurosPage": "https://auros-delta.vercel.app/private-credit",
+      "aurosPage": "https://getauros.com/private-credit",
       "externalLink": "https://centrifuge.io"
     },
     {
@@ -302,7 +310,7 @@
       "assetClass": "private_credit",
       "defillamaSlug": "centrifuge-protocol",
       "source": "manual",
-      "aurosPage": "https://auros-delta.vercel.app/private-credit",
+      "aurosPage": "https://getauros.com/private-credit",
       "externalLink": "https://centrifuge.io"
     },
     {
@@ -312,7 +320,7 @@
       "assetClass": "private_credit",
       "defillamaSlug": "clearpool",
       "source": "defillama_config",
-      "aurosPage": "https://auros-delta.vercel.app/private-credit",
+      "aurosPage": "https://getauros.com/private-credit",
       "externalLink": "https://clearpool.finance"
     },
     {
@@ -322,7 +330,7 @@
       "assetClass": "private_credit",
       "defillamaSlug": "clearpool",
       "source": "manual",
-      "aurosPage": "https://auros-delta.vercel.app/private-credit",
+      "aurosPage": "https://getauros.com/private-credit",
       "externalLink": "https://clearpool.finance"
     },
     {
@@ -332,7 +340,7 @@
       "assetClass": "private_credit",
       "defillamaSlug": "credix",
       "source": "manual",
-      "aurosPage": "https://auros-delta.vercel.app/private-credit",
+      "aurosPage": "https://getauros.com/private-credit",
       "externalLink": "https://credix.finance"
     },
     {
@@ -342,7 +350,7 @@
       "assetClass": "private_credit",
       "defillamaSlug": "credix",
       "source": "defillama_config",
-      "aurosPage": "https://auros-delta.vercel.app/private-credit",
+      "aurosPage": "https://getauros.com/private-credit",
       "externalLink": "https://credix.finance"
     },
     {
@@ -352,7 +360,7 @@
       "assetClass": "real_estate",
       "defillamaSlug": "estate-protocol",
       "source": "defillama_config",
-      "aurosPage": "https://auros-delta.vercel.app/real-estate",
+      "aurosPage": "https://getauros.com/real-estate",
       "externalLink": "https://estateprotocol.io"
     },
     {
@@ -362,7 +370,7 @@
       "assetClass": "real_estate",
       "defillamaSlug": "estate-protocol",
       "source": "manual",
-      "aurosPage": "https://auros-delta.vercel.app/real-estate",
+      "aurosPage": "https://getauros.com/real-estate",
       "externalLink": "https://estateprotocol.io"
     },
     {
@@ -372,7 +380,7 @@
       "assetClass": "private_credit",
       "defillamaSlug": "figure",
       "source": "defillama_config",
-      "aurosPage": "https://auros-delta.vercel.app/private-credit",
+      "aurosPage": "https://getauros.com/private-credit",
       "externalLink": "https://figure.com"
     },
     {
@@ -382,7 +390,7 @@
       "assetClass": "private_credit",
       "defillamaSlug": "figure",
       "source": "manual",
-      "aurosPage": "https://auros-delta.vercel.app/private-credit",
+      "aurosPage": "https://getauros.com/private-credit",
       "externalLink": "https://figure.com"
     },
     {
@@ -392,7 +400,7 @@
       "assetClass": "bonds",
       "defillamaSlug": "flowcarbon",
       "source": "defillama_config",
-      "aurosPage": "https://auros-delta.vercel.app/bonds"
+      "aurosPage": "https://getauros.com/bonds"
     },
     {
       "id": "flowcarbon-gnt",
@@ -401,7 +409,7 @@
       "assetClass": "bonds",
       "defillamaSlug": "flowcarbon",
       "source": "manual",
-      "aurosPage": "https://auros-delta.vercel.app/bonds"
+      "aurosPage": "https://getauros.com/bonds"
     },
     {
       "id": "franklin-benji",
@@ -410,7 +418,7 @@
       "assetClass": "bonds",
       "defillamaSlug": "franklin-templeton",
       "source": "manual",
-      "aurosPage": "https://auros-delta.vercel.app/bonds",
+      "aurosPage": "https://getauros.com/bonds",
       "externalLink": "https://www.franklintempleton.com/products/benji"
     },
     {
@@ -420,7 +428,7 @@
       "assetClass": "bonds",
       "defillamaSlug": "franklin-templeton",
       "source": "defillama_config",
-      "aurosPage": "https://auros-delta.vercel.app/bonds",
+      "aurosPage": "https://getauros.com/bonds",
       "externalLink": "https://www.franklintempleton.com/products/benji"
     },
     {
@@ -430,7 +438,7 @@
       "assetClass": "stablecoins",
       "defillamaSlug": "goldfinch",
       "source": "defillama_config",
-      "aurosPage": "https://auros-delta.vercel.app/stablecoins",
+      "aurosPage": "https://getauros.com/stablecoins",
       "externalLink": "https://goldfinch.finance"
     },
     {
@@ -440,7 +448,7 @@
       "assetClass": "bonds",
       "defillamaSlug": "hamilton-lane",
       "source": "defillama_config",
-      "aurosPage": "https://auros-delta.vercel.app/bonds",
+      "aurosPage": "https://getauros.com/bonds",
       "externalLink": "https://www.securitize.io"
     },
     {
@@ -450,7 +458,7 @@
       "assetClass": "bonds",
       "defillamaSlug": "hamilton-lane",
       "source": "manual",
-      "aurosPage": "https://auros-delta.vercel.app/bonds",
+      "aurosPage": "https://getauros.com/bonds",
       "externalLink": "https://www.securitize.io"
     },
     {
@@ -460,7 +468,7 @@
       "assetClass": "bonds",
       "defillamaSlug": "hashnote",
       "source": "defillama_config",
-      "aurosPage": "https://auros-delta.vercel.app/bonds",
+      "aurosPage": "https://getauros.com/bonds",
       "externalLink": "https://usyc.hashnote.com"
     },
     {
@@ -470,7 +478,7 @@
       "assetClass": "bonds",
       "defillamaSlug": "hashnote",
       "source": "manual",
-      "aurosPage": "https://auros-delta.vercel.app/bonds",
+      "aurosPage": "https://getauros.com/bonds",
       "externalLink": "https://usyc.hashnote.com"
     },
     {
@@ -480,7 +488,7 @@
       "assetClass": "private_credit",
       "defillamaSlug": "huma-finance",
       "source": "defillama_config",
-      "aurosPage": "https://auros-delta.vercel.app/private-credit",
+      "aurosPage": "https://getauros.com/private-credit",
       "externalLink": "https://huma.finance"
     },
     {
@@ -490,7 +498,7 @@
       "assetClass": "private_credit",
       "defillamaSlug": "huma-finance",
       "source": "manual",
-      "aurosPage": "https://auros-delta.vercel.app/private-credit",
+      "aurosPage": "https://getauros.com/private-credit",
       "externalLink": "https://huma.finance"
     },
     {
@@ -500,7 +508,7 @@
       "assetClass": "bonds",
       "defillamaSlug": "kkr-securitize",
       "source": "manual",
-      "aurosPage": "https://auros-delta.vercel.app/bonds",
+      "aurosPage": "https://getauros.com/bonds",
       "externalLink": "https://www.securitize.io"
     },
     {
@@ -510,7 +518,7 @@
       "assetClass": "bonds",
       "defillamaSlug": "kkr-securitize",
       "source": "defillama_config",
-      "aurosPage": "https://auros-delta.vercel.app/bonds",
+      "aurosPage": "https://getauros.com/bonds",
       "externalLink": "https://www.securitize.io"
     },
     {
@@ -520,7 +528,7 @@
       "assetClass": "bonds",
       "defillamaSlug": "klima-dao",
       "source": "manual",
-      "aurosPage": "https://auros-delta.vercel.app/bonds"
+      "aurosPage": "https://getauros.com/bonds"
     },
     {
       "id": "defillama-klima-dao",
@@ -529,7 +537,7 @@
       "assetClass": "bonds",
       "defillamaSlug": "klima-dao",
       "source": "defillama_config",
-      "aurosPage": "https://auros-delta.vercel.app/bonds"
+      "aurosPage": "https://getauros.com/bonds"
     },
     {
       "id": "landshare-properties",
@@ -538,7 +546,7 @@
       "assetClass": "real_estate",
       "defillamaSlug": "landshare",
       "source": "manual",
-      "aurosPage": "https://auros-delta.vercel.app/real-estate",
+      "aurosPage": "https://getauros.com/real-estate",
       "externalLink": "https://landshare.io"
     },
     {
@@ -548,7 +556,7 @@
       "assetClass": "real_estate",
       "defillamaSlug": "landshare",
       "source": "defillama_config",
-      "aurosPage": "https://auros-delta.vercel.app/real-estate",
+      "aurosPage": "https://getauros.com/real-estate",
       "externalLink": "https://landshare.io"
     },
     {
@@ -558,7 +566,7 @@
       "assetClass": "commodities",
       "defillamaSlug": "landx-finance",
       "source": "defillama_config",
-      "aurosPage": "https://auros-delta.vercel.app/commodities",
+      "aurosPage": "https://getauros.com/commodities",
       "externalLink": "https://landx.fi"
     },
     {
@@ -568,7 +576,7 @@
       "assetClass": "real_estate",
       "defillamaSlug": "lofty",
       "source": "manual",
-      "aurosPage": "https://auros-delta.vercel.app/real-estate",
+      "aurosPage": "https://getauros.com/real-estate",
       "externalLink": "https://lofty.ai"
     },
     {
@@ -578,7 +586,7 @@
       "assetClass": "real_estate",
       "defillamaSlug": "lofty",
       "source": "defillama_config",
-      "aurosPage": "https://auros-delta.vercel.app/real-estate",
+      "aurosPage": "https://getauros.com/real-estate",
       "externalLink": "https://lofty.ai"
     },
     {
@@ -588,7 +596,7 @@
       "assetClass": "stablecoins",
       "defillamaSlug": "maple",
       "source": "defillama_config",
-      "aurosPage": "https://auros-delta.vercel.app/stablecoins",
+      "aurosPage": "https://getauros.com/stablecoins",
       "externalLink": "https://maple.finance"
     },
     {
@@ -598,7 +606,7 @@
       "assetClass": "private_credit",
       "defillamaSlug": "maple",
       "source": "manual",
-      "aurosPage": "https://auros-delta.vercel.app/private-credit",
+      "aurosPage": "https://getauros.com/private-credit",
       "externalLink": "https://maple.finance"
     },
     {
@@ -608,7 +616,7 @@
       "assetClass": "bonds",
       "defillamaSlug": "matrixdock-sbtb",
       "source": "defillama_config",
-      "aurosPage": "https://auros-delta.vercel.app/bonds",
+      "aurosPage": "https://getauros.com/bonds",
       "externalLink": "https://matrixdock.com"
     },
     {
@@ -618,7 +626,7 @@
       "assetClass": "bonds",
       "defillamaSlug": "matrixdock-sbtb",
       "source": "manual",
-      "aurosPage": "https://auros-delta.vercel.app/bonds",
+      "aurosPage": "https://getauros.com/bonds",
       "externalLink": "https://matrixdock.com"
     },
     {
@@ -628,7 +636,7 @@
       "assetClass": "commodities",
       "defillamaSlug": "matrixdock-xaum",
       "source": "manual",
-      "aurosPage": "https://auros-delta.vercel.app/commodities",
+      "aurosPage": "https://getauros.com/commodities",
       "externalLink": "https://matrixdock.com"
     },
     {
@@ -638,7 +646,7 @@
       "assetClass": "bonds",
       "defillamaSlug": "moss-earth",
       "source": "manual",
-      "aurosPage": "https://auros-delta.vercel.app/bonds"
+      "aurosPage": "https://getauros.com/bonds"
     },
     {
       "id": "defillama-moss-earth",
@@ -647,7 +655,7 @@
       "assetClass": "bonds",
       "defillamaSlug": "moss-earth",
       "source": "defillama_config",
-      "aurosPage": "https://auros-delta.vercel.app/bonds"
+      "aurosPage": "https://getauros.com/bonds"
     },
     {
       "id": "mountain-usdm",
@@ -656,7 +664,7 @@
       "assetClass": "stablecoins",
       "defillamaSlug": "mountain-protocol",
       "source": "manual",
-      "aurosPage": "https://auros-delta.vercel.app/stablecoins",
+      "aurosPage": "https://getauros.com/stablecoins",
       "externalLink": "https://mountainprotocol.com"
     },
     {
@@ -666,7 +674,7 @@
       "assetClass": "bonds",
       "defillamaSlug": "mt-pelerin",
       "source": "manual",
-      "aurosPage": "https://auros-delta.vercel.app/bonds",
+      "aurosPage": "https://getauros.com/bonds",
       "externalLink": "https://www.mtpelerin.com"
     },
     {
@@ -676,7 +684,7 @@
       "assetClass": "bonds",
       "defillamaSlug": "mt-pelerin",
       "source": "defillama_config",
-      "aurosPage": "https://auros-delta.vercel.app/bonds",
+      "aurosPage": "https://getauros.com/bonds",
       "externalLink": "https://www.mtpelerin.com"
     },
     {
@@ -686,7 +694,7 @@
       "assetClass": "private_credit",
       "defillamaSlug": "nest-credit",
       "source": "defillama_config",
-      "aurosPage": "https://auros-delta.vercel.app/private-credit",
+      "aurosPage": "https://getauros.com/private-credit",
       "externalLink": "https://nest.credit"
     },
     {
@@ -696,7 +704,7 @@
       "assetClass": "commodities",
       "defillamaSlug": "ondo-global-markets",
       "source": "manual",
-      "aurosPage": "https://auros-delta.vercel.app/commodities",
+      "aurosPage": "https://getauros.com/commodities",
       "externalLink": "https://ondo.finance/global-markets"
     },
     {
@@ -706,7 +714,7 @@
       "assetClass": "commodities",
       "defillamaSlug": "ondo-global-markets",
       "source": "defillama_config",
-      "aurosPage": "https://auros-delta.vercel.app/commodities",
+      "aurosPage": "https://getauros.com/commodities",
       "externalLink": "https://ondo.finance/global-markets"
     },
     {
@@ -716,7 +724,7 @@
       "assetClass": "stablecoins",
       "defillamaSlug": "ondo-yield-assets",
       "source": "defillama_config",
-      "aurosPage": "https://auros-delta.vercel.app/stablecoins",
+      "aurosPage": "https://getauros.com/stablecoins",
       "externalLink": "https://ondo.finance"
     },
     {
@@ -726,7 +734,7 @@
       "assetClass": "stablecoins",
       "defillamaSlug": "openeden-tbill",
       "source": "defillama_config",
-      "aurosPage": "https://auros-delta.vercel.app/stablecoins",
+      "aurosPage": "https://getauros.com/stablecoins",
       "externalLink": "https://openeden.com"
     },
     {
@@ -736,7 +744,7 @@
       "assetClass": "stablecoins",
       "defillamaSlug": "openeden-usdo",
       "source": "defillama_config",
-      "aurosPage": "https://auros-delta.vercel.app/stablecoins",
+      "aurosPage": "https://getauros.com/stablecoins",
       "externalLink": "https://openeden.com"
     },
     {
@@ -746,7 +754,7 @@
       "assetClass": "bonds",
       "defillamaSlug": "openeden-hybond",
       "source": "manual",
-      "aurosPage": "https://auros-delta.vercel.app/bonds",
+      "aurosPage": "https://getauros.com/bonds",
       "externalLink": "https://openeden.com"
     },
     {
@@ -756,7 +764,7 @@
       "assetClass": "bonds",
       "defillamaSlug": "openeden-hybond",
       "source": "defillama_config",
-      "aurosPage": "https://auros-delta.vercel.app/bonds",
+      "aurosPage": "https://getauros.com/bonds",
       "externalLink": "https://openeden.com"
     },
     {
@@ -766,7 +774,7 @@
       "assetClass": "commodities",
       "defillamaSlug": "paxos-gold",
       "source": "manual",
-      "aurosPage": "https://auros-delta.vercel.app/commodities",
+      "aurosPage": "https://getauros.com/commodities",
       "externalLink": "https://paxos.com/paxgold"
     },
     {
@@ -776,7 +784,7 @@
       "assetClass": "real_estate",
       "defillamaSlug": "realt-tokens",
       "source": "manual",
-      "aurosPage": "https://auros-delta.vercel.app/real-estate",
+      "aurosPage": "https://getauros.com/real-estate",
       "externalLink": "https://realt.co"
     },
     {
@@ -786,7 +794,7 @@
       "assetClass": "real_estate",
       "defillamaSlug": "realt-tokens",
       "source": "defillama_config",
-      "aurosPage": "https://auros-delta.vercel.app/real-estate",
+      "aurosPage": "https://getauros.com/real-estate",
       "externalLink": "https://realt.co"
     },
     {
@@ -796,7 +804,7 @@
       "assetClass": "real_estate",
       "defillamaSlug": "realtyx",
       "source": "manual",
-      "aurosPage": "https://auros-delta.vercel.app/real-estate",
+      "aurosPage": "https://getauros.com/real-estate",
       "externalLink": "https://realtyx.io"
     },
     {
@@ -806,7 +814,7 @@
       "assetClass": "real_estate",
       "defillamaSlug": "realtyx",
       "source": "defillama_config",
-      "aurosPage": "https://auros-delta.vercel.app/real-estate",
+      "aurosPage": "https://getauros.com/real-estate",
       "externalLink": "https://realtyx.io"
     },
     {
@@ -816,7 +824,7 @@
       "assetClass": "bonds",
       "defillamaSlug": "republic-note",
       "source": "manual",
-      "aurosPage": "https://auros-delta.vercel.app/bonds",
+      "aurosPage": "https://getauros.com/bonds",
       "externalLink": "https://republic.com/note"
     },
     {
@@ -826,7 +834,7 @@
       "assetClass": "real_estate",
       "defillamaSlug": "stegx",
       "source": "manual",
-      "aurosPage": "https://auros-delta.vercel.app/real-estate",
+      "aurosPage": "https://getauros.com/real-estate",
       "externalLink": "https://stegx.com"
     },
     {
@@ -836,7 +844,7 @@
       "assetClass": "real_estate",
       "defillamaSlug": "stegx",
       "source": "defillama_config",
-      "aurosPage": "https://auros-delta.vercel.app/real-estate",
+      "aurosPage": "https://getauros.com/real-estate",
       "externalLink": "https://stegx.com"
     },
     {
@@ -846,7 +854,7 @@
       "assetClass": "stablecoins",
       "defillamaSlug": "superstate-uscc",
       "source": "defillama_config",
-      "aurosPage": "https://auros-delta.vercel.app/stablecoins",
+      "aurosPage": "https://getauros.com/stablecoins",
       "externalLink": "https://superstate.co"
     },
     {
@@ -856,7 +864,7 @@
       "assetClass": "stablecoins",
       "defillamaSlug": "superstate-ustb",
       "source": "defillama_config",
-      "aurosPage": "https://auros-delta.vercel.app/stablecoins",
+      "aurosPage": "https://getauros.com/stablecoins",
       "externalLink": "https://superstate.co"
     },
     {
@@ -866,7 +874,7 @@
       "assetClass": "bonds",
       "defillamaSlug": "swarm-markets",
       "source": "defillama_config",
-      "aurosPage": "https://auros-delta.vercel.app/bonds",
+      "aurosPage": "https://getauros.com/bonds",
       "externalLink": "https://swarm.com"
     },
     {
@@ -876,7 +884,7 @@
       "assetClass": "bonds",
       "defillamaSlug": "swarm-markets",
       "source": "manual",
-      "aurosPage": "https://auros-delta.vercel.app/bonds",
+      "aurosPage": "https://getauros.com/bonds",
       "externalLink": "https://swarm.com"
     },
     {
@@ -886,7 +894,7 @@
       "assetClass": "real_estate",
       "defillamaSlug": "tangible",
       "source": "defillama_config",
-      "aurosPage": "https://auros-delta.vercel.app/real-estate",
+      "aurosPage": "https://getauros.com/real-estate",
       "externalLink": "https://www.tangible.store"
     },
     {
@@ -896,7 +904,7 @@
       "assetClass": "real_estate",
       "defillamaSlug": "tangible",
       "source": "manual",
-      "aurosPage": "https://auros-delta.vercel.app/real-estate",
+      "aurosPage": "https://getauros.com/real-estate",
       "externalLink": "https://www.tangible.store"
     },
     {
@@ -906,7 +914,7 @@
       "assetClass": "commodities",
       "defillamaSlug": "tether-gold",
       "source": "manual",
-      "aurosPage": "https://auros-delta.vercel.app/commodities",
+      "aurosPage": "https://getauros.com/commodities",
       "externalLink": "https://gold.tether.to"
     },
     {
@@ -916,7 +924,7 @@
       "assetClass": "bonds",
       "defillamaSlug": "theo-network-thbill",
       "source": "defillama_config",
-      "aurosPage": "https://auros-delta.vercel.app/bonds",
+      "aurosPage": "https://getauros.com/bonds",
       "externalLink": "https://theo.xyz"
     },
     {
@@ -926,7 +934,7 @@
       "assetClass": "bonds",
       "defillamaSlug": "toucan",
       "source": "manual",
-      "aurosPage": "https://auros-delta.vercel.app/bonds"
+      "aurosPage": "https://getauros.com/bonds"
     },
     {
       "id": "defillama-toucan",
@@ -935,7 +943,7 @@
       "assetClass": "bonds",
       "defillamaSlug": "toucan",
       "source": "defillama_config",
-      "aurosPage": "https://auros-delta.vercel.app/bonds"
+      "aurosPage": "https://getauros.com/bonds"
     },
     {
       "id": "truefi-global",
@@ -944,7 +952,7 @@
       "assetClass": "private_credit",
       "defillamaSlug": "truefi",
       "source": "manual",
-      "aurosPage": "https://auros-delta.vercel.app/private-credit",
+      "aurosPage": "https://getauros.com/private-credit",
       "externalLink": "https://truefi.io"
     },
     {
@@ -954,7 +962,7 @@
       "assetClass": "private_credit",
       "defillamaSlug": "truefi",
       "source": "defillama_config",
-      "aurosPage": "https://auros-delta.vercel.app/private-credit",
+      "aurosPage": "https://getauros.com/private-credit",
       "externalLink": "https://truefi.io"
     },
     {
@@ -964,7 +972,7 @@
       "assetClass": "bonds",
       "defillamaSlug": "vaneck-treasury-fund",
       "source": "defillama_config",
-      "aurosPage": "https://auros-delta.vercel.app/bonds",
+      "aurosPage": "https://getauros.com/bonds",
       "externalLink": "https://vaneck.com"
     },
     {
@@ -974,7 +982,7 @@
       "assetClass": "bonds",
       "defillamaSlug": "wisdomtree",
       "source": "defillama_config",
-      "aurosPage": "https://auros-delta.vercel.app/bonds",
+      "aurosPage": "https://getauros.com/bonds",
       "externalLink": "https://www.wisdomtree.com/investments/digital-assets"
     },
     {
@@ -984,7 +992,7 @@
       "assetClass": "bonds",
       "defillamaSlug": "wisdomtree",
       "source": "manual",
-      "aurosPage": "https://auros-delta.vercel.app/bonds",
+      "aurosPage": "https://getauros.com/bonds",
       "externalLink": "https://www.wisdomtree.com/investments/digital-assets"
     },
     {
@@ -994,7 +1002,7 @@
       "assetClass": "real_estate",
       "defillamaSlug": "yieldbricks",
       "source": "manual",
-      "aurosPage": "https://auros-delta.vercel.app/real-estate",
+      "aurosPage": "https://getauros.com/real-estate",
       "externalLink": "https://yieldbricks.com"
     },
     {
@@ -1004,7 +1012,7 @@
       "assetClass": "real_estate",
       "defillamaSlug": "yieldbricks",
       "source": "defillama_config",
-      "aurosPage": "https://auros-delta.vercel.app/real-estate",
+      "aurosPage": "https://getauros.com/real-estate",
       "externalLink": "https://yieldbricks.com"
     }
   ],
@@ -1183,6 +1191,7 @@
       "longDescription": "AUROS helps issuers structure real-world asset tokenization with a jurisdiction-first workflow (8 hubs compared) and a free asset admission wizard. The /compare hub is an independent RWA yield comparator covering stablecoins & treasury, tokenized bonds, real estate, private credit and commodities — aggregating DeFiLlama yields hourly and manual catalog entries for products not yet indexed. Educational content only; not investment advice. Public API at https://getauros.com/developers: MiCA readiness scoring (0–100), jurisdiction ranking across 8 regulatory hubs, compliance checklists, and a paginated RWA product catalog. Python SDK on PyPI (auros-protocol). AUROS does not custody funds, issue tokens, or report on-chain TVL — we are an independent comparator and B2B issuer onboarding platform.",
       "differentiators": [
         "Open RWA yield comparator at /compare — 120+ products, hourly DeFiLlama APY/TVL + curated catalog",
+        "AUROS Green — RTMS, CQS, CSRD-oriented checks, impact report (/green)",
         "MiCA intelligence API — static rules, <200ms, no LLM (indicative only)",
         "Python SDK on PyPI: https://pypi.org/project/auros-protocol/",
         "Jurisdiction-first tokenization wizard for issuers (8 hubs compared)",
@@ -1218,6 +1227,12 @@
       "detail": "Paste subject + body from generated submission-payload.json → defillama.supportTicket"
     },
     {
+      "step": 3.5,
+      "action": "DeFiLlama RWA submission form",
+      "url": "https://forms.defillama.com/rwa-submission",
+      "detail": "If form fits platform/reference (not issuer token): use AUROS_LISTING fields. Prefer support ticket if category mismatch."
+    },
+    {
       "step": 4,
       "action": "DeFiLlama metadata PR (optional)",
       "url": "https://github.com/DefiLlama/defillama-server/blob/master/defi/src/protocols/data2.ts",
@@ -1246,6 +1261,12 @@
       "action": "RWA.xyz email fallback",
       "url": "mailto:team@rwa.xyz",
       "detail": "If no company email yet, send rwaXyz.emailOutreach (subject + body) to team@rwa.xyz from getauros.com address."
+    },
+    {
+      "step": 9,
+      "action": "Green directories (ClimateTechList, KnowESG, Readi)",
+      "url": "https://getauros.com/presence",
+      "detail": "Open /presence board + data/listings/generated/green-markets.json outreach packs. Green-first — CSRD wave."
     }
   ],
   "rapidapi": {

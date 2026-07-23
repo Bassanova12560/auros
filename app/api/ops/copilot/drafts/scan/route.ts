@@ -1,21 +1,21 @@
 import { NextRequest, NextResponse } from "next/server";
 
-import { isCronAuthorized } from "@/lib/cron-auth";
 import {
   runCatalogDraftAgent,
   runContentDraftAgent,
 } from "@/lib/copilot/agents";
 import { runClientCareDraftAgent } from "@/lib/copilot/care-agent";
+import { isOpsAuthorized } from "@/lib/ops/session";
 
 export const runtime = "nodejs";
 
 /**
  * POST — run catalog / content / care draft agents (ops).
- * Requires authenticated ops access
+ * Cookie session or Bearer.
  * Body: { action: "catalog" | "content" | "care", topic?, product_id?, kind_hint?, limit?, segment? }
  */
 export async function POST(req: NextRequest) {
-  if (!isCronAuthorized(req, { allowDevWithoutSecret: false })) {
+  if (!isOpsAuthorized(req, { allowDevWithoutSecret: false })) {
     return NextResponse.json({ ok: false, error: "unauthorized" }, { status: 401 });
   }
 

@@ -8,6 +8,8 @@ Last review: 2026-07-22 (Cash machine closeout + Benchmark + Agent tools).
 | Item | Statut |
 |------|--------|
 | `ATTEST_SIGNING_KEY` prod | OK |
+| Lab soft cookie (`ARL_LAB_SIGNING_KEY`) | OK — HttpOnly `auros_arl_lab` · mutations bind cookie |
+| Ops gate (`OPS_SESSION_SECRET`) | OK — `/ops/login` → cookie · `/ops/copilot` 404 sans session · plus de Bearer dans l’UI |
 
 ## P0 — Toll / machine à cash
 
@@ -62,6 +64,7 @@ Last review: 2026-07-22 (Cash machine closeout + Benchmark + Agent tools).
 | Funnel + express wizard + care HITL | OK |
 | Coach post-score + mémoire Copilot consentie | OK |
 | Liquidity waitlist | OK — `/liquidity` |
+| Présence marchés green-first | OK — `/presence` + `data/listings/green-markets.ts` · dossiers prêts (pas de faux « Listed on ») |
 
 ## Backlog i18n
 

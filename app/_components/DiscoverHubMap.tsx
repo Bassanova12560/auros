@@ -19,21 +19,33 @@ export function DiscoverHubMap() {
             ? "AUROS map"
             : locale === "es"
               ? "Mapa AUROS"
-              : "Carte AUROS"}
+              : locale === "ar"
+                ? "خريطة AUROS"
+                : locale === "zh"
+                  ? "AUROS 地图"
+                  : "Carte AUROS"}
         </p>
         <h2 className="mt-2 font-display text-2xl text-white md:text-3xl">
           {locale === "en"
             ? "The full extent — five doors"
             : locale === "es"
               ? "Toda la extensión — cinco puertas"
-              : "Toute l’étendue — cinq portes"}
+              : locale === "ar"
+                ? "المدى الكامل — خمسة أبواب"
+                : locale === "zh"
+                  ? "全貌 — 五扇门"
+                  : "Toute l’étendue — cinq portes"}
         </h2>
         <p className="mt-2 max-w-xl text-sm text-white/50">
           {locale === "en"
             ? "Same structure as the header hub: dossier, energy, protocol, ecosystem, company."
             : locale === "es"
               ? "Misma estructura que el hub del header: expediente, energía, protocol, ecosistema, empresa."
-              : "Même structure que le hub du header : dossier, énergie, protocol, écosystème, entreprise."}
+              : locale === "ar"
+                ? "نفس هيكل محور الترويسة: ملف، طاقة، بروتوكول، منظومة، شركة."
+                : locale === "zh"
+                  ? "与页眉枢纽相同结构：档案、能源、协议、生态、公司。"
+                  : "Même structure que le hub du header : dossier, énergie, protocol, écosystème, entreprise."}
         </p>
 
         <div className="mt-10 grid gap-8 sm:grid-cols-2 xl:grid-cols-5">

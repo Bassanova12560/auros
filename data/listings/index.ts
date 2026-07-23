@@ -10,6 +10,14 @@ export {
   RWA_XYZ_FORM_FIELDS,
 } from "./auros-listing";
 export {
+  GREEN_DIRECTION_BLURB,
+  GREEN_MARKET_TARGETS,
+  GREEN_OUTREACH_PACK,
+  greenOutreachEmail,
+  type GreenMarketTarget,
+  type PresenceStatus,
+} from "./green-markets";
+export {
   DEFILLAMA_INDEXED_PROTOCOLS,
   getTrackableProducts,
   getTrackableProductsSummary,

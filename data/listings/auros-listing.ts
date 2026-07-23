@@ -15,6 +15,7 @@ export const LISTING_SUBMISSION_URLS = {
     listingMetadataRepo:
       "https://github.com/DefiLlama/defillama-server/blob/master/defi/src/protocols/data2.ts",
     submitProjectDocs: "https://docs.llama.fi/list-your-project/submit-a-project",
+    rwaSubmissionForm: "https://forms.defillama.com/rwa-submission",
     rwaDashboard: "https://defillama.com/rwa",
     rwaPlatforms: "https://defillama.com/rwa/platforms",
     discord: "https://discord.defillama.com/",
@@ -70,6 +71,11 @@ export const AUROS_LISTING = {
     "Comparator",
     "B2B",
     "MiCA",
+    "Green Fintech",
+    "Climate Tech",
+    "CSRD",
+    "EU Taxonomy",
+    "Energy RWA",
   ],
   defillamaCategory: "Services",
   coingeckoRequestType: "Others — RWA analytics / comparator platform (no native token)",
@@ -160,6 +166,7 @@ export const RWA_XYZ_FORM_FIELDS = {
   longDescription: `${AUROS_DESCRIPTIONS.longEn} Public API at ${listingUrl("/developers")}: MiCA readiness scoring (0–100), jurisdiction ranking across 8 regulatory hubs, compliance checklists, and a paginated RWA product catalog. Python SDK on PyPI (auros-protocol). AUROS does not custody funds, issue tokens, or report on-chain TVL — we are an independent comparator and B2B issuer onboarding platform.`,
   differentiators: [
     "Open RWA yield comparator at /compare — 120+ products, hourly DeFiLlama APY/TVL + curated catalog",
+    "AUROS Green — RTMS, CQS, CSRD-oriented checks, impact report (/green)",
     "MiCA intelligence API — static rules, <200ms, no LLM (indicative only)",
     "Python SDK on PyPI: https://pypi.org/project/auros-protocol/",
     "Jurisdiction-first tokenization wizard for issuers (8 hubs compared)",
@@ -266,6 +273,13 @@ export const MANUAL_SUBMISSION_CHECKLIST = [
     detail: "Paste subject + body from generated submission-payload.json → defillama.supportTicket",
   },
   {
+    step: 3.5,
+    action: "DeFiLlama RWA submission form",
+    url: LISTING_SUBMISSION_URLS.defillama.rwaSubmissionForm,
+    detail:
+      "If form fits platform/reference (not issuer token): use AUROS_LISTING fields. Prefer support ticket if category mismatch.",
+  },
+  {
     step: 4,
     action: "DeFiLlama metadata PR (optional)",
     url: LISTING_SUBMISSION_URLS.defillama.listingMetadataRepo,
@@ -296,5 +310,12 @@ export const MANUAL_SUBMISSION_CHECKLIST = [
     url: `mailto:${LISTING_SUBMISSION_URLS.rwaXyz.contactEmail}`,
     detail:
       "If no company email yet, send rwaXyz.emailOutreach (subject + body) to team@rwa.xyz from getauros.com address.",
+  },
+  {
+    step: 9,
+    action: "Green directories (ClimateTechList, KnowESG, Readi)",
+    url: "https://getauros.com/presence",
+    detail:
+      "Open /presence board + data/listings/generated/green-markets.json outreach packs. Green-first — CSRD wave.",
   },
 ] as const;

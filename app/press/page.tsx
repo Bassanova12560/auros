@@ -22,7 +22,7 @@ const FACTS = [
   },
   {
     label: "Primary URLs",
-    body: "getauros.com · /investors · /resource-layer · /builders · /lab · /trade",
+    body: "getauros.com · /investors · /presence · /green · /compare · /resource-layer · /builders · /lab",
   },
   {
     label: "Contact",

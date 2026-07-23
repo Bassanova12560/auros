@@ -85,7 +85,6 @@ export async function GET(req: Request) {
         resource_signals: "/data/resource-signals",
         wets: "/eau/trust",
         openapi: "/api/green/openapi",
-        social_ops: "/ops/copilot",
       },
       disclaimer:
         "Indicatif — pas un conseil juridique, d’ingénierie ou d’investissement. Counsel / EPC requis.",

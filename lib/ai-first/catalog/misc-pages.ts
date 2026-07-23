@@ -163,7 +163,6 @@ export const copilotPage = enrichPage({
   audience: ["émetteurs", "analystes", "développeurs", "ops"],
   facts: [
     { key: "Chat", value: "POST /api/v1/copilot/chat" },
-    { key: "Ops inbox", value: "/ops/copilot" },
     { key: "Garde-fou", value: "Pas d'écriture scores / attest / CFU" },
     { key: "RAG", value: "/ai-first/rag" },
   ],
@@ -171,7 +170,7 @@ export const copilotPage = enrichPage({
     {
       question: "Le Copilot AUROS peut-il publier des scores ou mint des CFU ?",
       answer:
-        "Non. Les tools sont en lecture seule (RAG, products, compare, ChargeFlow/Watts explain). Les drafts catalogue/contenu passent par une inbox ops — jamais d'auto-publish des scores, attestations ou CFU.",
+        "Non. Les tools sont en lecture seule (RAG, products, compare, ChargeFlow/Watts explain). Les drafts catalogue/contenu passent par une revue humaine authentifiée — jamais d'auto-publish des scores, attestations ou CFU.",
     },
     {
       question: "Comment cibler Watts ou ChargeFlow dans le Copilot ?",

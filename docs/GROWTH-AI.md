@@ -22,7 +22,7 @@ Le payant vend **volume, gouvernance, preuve, intégration** — pas le chat de 
 |---------|------|
 | `/green/assistant` | Chatbot Green **personnalisé** (rôle / actif / région) |
 | `/copilot` | Assistant RWA transverse |
-| `/ops/copilot` | Drafts care / social / catalogue — HITL |
+| Authenticated ops inbox | Drafts care / social / catalogue — HITL (gated) |
 | Cron nurture | Relances dossier (template) |
 | Funnel `funnel_*` | Mesure Détecter → Décider → Prouver |
 

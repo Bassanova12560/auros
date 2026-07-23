@@ -1,4 +1,4 @@
-/** Browser helpers for ARL lab ledger account + API. */
+/** Browser helpers for ARL lab ledger account + API (cookie session). */
 
 export const ARL_ACCOUNT_STORAGE_KEY = "auros_arl_account_id";
 export const ARL_LEDGER_EVENT = "auros-arl-ledger";
@@ -13,6 +13,17 @@ export function getOrCreateArlAccountId(): string {
     return id;
   } catch {
     return `lab_ephemeral_${Date.now().toString(36)}`;
+  }
+}
+
+function rememberAccountId(id: string) {
+  if (typeof window === "undefined") return;
+  try {
+    if (/^[a-zA-Z0-9_-]+$/.test(id)) {
+      window.localStorage.setItem(ARL_ACCOUNT_STORAGE_KEY, id);
+    }
+  } catch {
+    // ignore
   }
 }
 
@@ -58,12 +69,17 @@ async function parseJson(res: Response): Promise<ArlClientSnapshot> {
     }
     throw new Error(body.message || body.error || `ARL API ${res.status}`);
   }
-  return body as ArlClientSnapshot;
+  const snap = body as ArlClientSnapshot;
+  if (snap.account?.id) rememberAccountId(snap.account.id);
+  return snap;
 }
+
+const CREDENTIALS: RequestCredentials = "include";
 
 export async function fetchArlAccount(accountId: string): Promise<ArlClientSnapshot> {
   const res = await fetch(`/api/arl/account?account=${encodeURIComponent(accountId)}`, {
     cache: "no-store",
+    credentials: CREDENTIALS,
   });
   return parseJson(res);
 }
@@ -76,6 +92,7 @@ export async function postArlMint(input: {
   const res = await fetch("/api/arl/mint", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
+    credentials: CREDENTIALS,
     body: JSON.stringify(input),
   });
   const snap = await parseJson(res);
@@ -91,6 +108,7 @@ export async function postArlWatt(input: {
   const res = await fetch("/api/arl/watt", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
+    credentials: CREDENTIALS,
     body: JSON.stringify(input),
   });
   const snap = await parseJson(res);
@@ -108,6 +126,7 @@ export async function postArlSpot(input: {
   const res = await fetch("/api/arl/spot", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
+    credentials: CREDENTIALS,
     body: JSON.stringify(input),
   });
   const snap = await parseJson(res);

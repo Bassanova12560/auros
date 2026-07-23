@@ -6,11 +6,18 @@ import {
   Noto_Sans_SC,
   Syne,
 } from "next/font/google";
+import { cookies } from "next/headers";
 
 import { AiFirstDiscoveryHead } from "./_components/ai-first/AiFirstDiscoveryHead";
 import { ConditionalAnalytics } from "./_components/ConditionalAnalytics";
 import { Providers } from "./_components/Providers";
 import { SITE_URL } from "@/lib/comparators/site";
+import {
+  DEFAULT_LOCALE,
+  LOCALE_STORAGE_KEY,
+  isRtlLocale,
+  localeFromCookieValue,
+} from "@/lib/i18n";
 import "./globals.css";
 
 const organizationJsonLd = {
@@ -80,14 +87,19 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const jar = await cookies();
+  const locale =
+    localeFromCookieValue(jar.get(LOCALE_STORAGE_KEY)?.value) ?? DEFAULT_LOCALE;
+
   return (
     <html
-      lang="fr"
+      lang={locale}
+      dir={isRtlLocale(locale) ? "rtl" : "ltr"}
       className={`${syne.variable} ${dmSans.variable} ${jetbrains.variable} ${notoArabic.variable} ${notoSc.variable}`}
     >
       <head>
@@ -98,7 +110,7 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-dvh bg-void font-sans text-white">
-        <Providers>{children}</Providers>
+        <Providers initialLocale={locale}>{children}</Providers>
         <ConditionalAnalytics />
       </body>
     </html>

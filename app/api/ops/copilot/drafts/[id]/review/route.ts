@@ -1,20 +1,20 @@
 import { NextRequest, NextResponse } from "next/server";
 
-import { isCronAuthorized } from "@/lib/cron-auth";
 import { reviewCopilotDraft } from "@/lib/copilot/drafts-store";
+import { isOpsAuthorized } from "@/lib/ops/session";
 
 export const runtime = "nodejs";
 
 /**
  * POST — approve or reject a draft (ops).
- * Requires authenticated ops access
+ * Cookie session or Bearer.
  * Body: { status: "approved" | "rejected", review_note? }
  */
 export async function POST(
   req: NextRequest,
   ctx: { params: Promise<{ id: string }> }
 ) {
-  if (!isCronAuthorized(req, { allowDevWithoutSecret: false })) {
+  if (!isOpsAuthorized(req, { allowDevWithoutSecret: false })) {
     return NextResponse.json({ ok: false, error: "unauthorized" }, { status: 401 });
   }
 

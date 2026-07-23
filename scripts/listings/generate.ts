@@ -18,6 +18,11 @@ import {
   RWA_XYZ_FORM_FIELDS,
 } from "../../data/listings/auros-listing";
 import {
+  GREEN_DIRECTION_BLURB,
+  GREEN_MARKET_TARGETS,
+  GREEN_OUTREACH_PACK,
+} from "../../data/listings/green-markets";
+import {
   RAPIDAPI_LISTING,
   RAPIDAPI_SUBMISSION_PAYLOAD,
 } from "../../data/listings/rapidapi-listing";
@@ -123,11 +128,29 @@ async function main() {
     "utf8"
   );
 
+  const greenPath = join(OUT_DIR, "green-markets.json");
+  writeFileSync(
+    greenPath,
+    `${JSON.stringify(
+      {
+        generatedAt: new Date().toISOString(),
+        presencePage: "https://getauros.com/presence",
+        direction: GREEN_DIRECTION_BLURB,
+        targets: GREEN_MARKET_TARGETS,
+        outreachEmails: GREEN_OUTREACH_PACK,
+      },
+      null,
+      2
+    )}\n`,
+    "utf8"
+  );
+
   console.log("AUROS listing submission package generated\n");
   console.log("Output:", outPath);
   console.log("DeFiLlama draft:", data2Path);
   console.log("RapidAPI:", rapidapiPath);
   console.log("RWA.xyz:", rwaXyzPath);
+  console.log("Green markets:", greenPath);
   console.log("");
   console.log("Catalog (static):", summary.totalProducts, "products,", summary.uniquePlatforms, "platforms");
   if (liveHubCount != null) {

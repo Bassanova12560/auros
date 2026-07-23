@@ -1,18 +1,22 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 
+import {
+  attachArlLabCookie,
+  resolveArlLabMutationAccount,
+} from "@/lib/arl/lab-session";
 import { mintAkWh } from "@/lib/arl/ledger";
 import { checkRateLimitAsync, getRequestIp } from "@/lib/rate-limit";
 
 export const runtime = "nodejs";
 
 const bodySchema = z.object({
-  accountId: z.string().min(3).max(64).regex(/^[a-zA-Z0-9_-]+$/),
+  accountId: z.string().min(3).max(64).regex(/^[a-zA-Z0-9_-]+$/).optional(),
   amount: z.number().positive().max(50_000),
   deviceId: z.string().max(64).optional(),
 });
 
-/** Mint lab akWh (demo surface · IP rate-limited · not production oracle). */
+/** Mint lab akWh (demo · cookie session · IP rate-limited · not production oracle). */
 export async function POST(req: Request) {
   const ip = getRequestIp(req);
   const rate = await checkRateLimitAsync(`arl-mint:${ip}`, 40, 3_600_000);
@@ -35,9 +39,22 @@ export async function POST(req: Request) {
     );
   }
 
+  const session = resolveArlLabMutationAccount(req, parsed.data.accountId);
+  if (!session.ok) {
+    return NextResponse.json(
+      { error: session.error, message: session.message },
+      { status: session.status },
+    );
+  }
+
   try {
-    const snap = await mintAkWh(parsed.data);
-    return NextResponse.json(snap);
+    const snap = await mintAkWh({
+      accountId: session.accountId,
+      amount: parsed.data.amount,
+      deviceId: parsed.data.deviceId,
+    });
+    const res = NextResponse.json(snap);
+    return attachArlLabCookie(res, session.cookieValue);
   } catch (e) {
     const msg = e instanceof Error ? e.message : "mint failed";
     const unavailable = /unavailable|transport|corrupt|save failed/i.test(msg);

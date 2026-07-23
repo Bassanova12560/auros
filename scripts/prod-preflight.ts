@@ -158,6 +158,32 @@ function runEnvChecks(): Check[] {
     push(checks, "attest_key", "fail", "No signing key (ATTEST_SIGNING_KEY / GREEN_EXPORT / CRON)");
   }
 
+  if (has("ARL_LAB_SIGNING_KEY")) {
+    push(checks, "arl_lab_key", "ok", "ARL_LAB_SIGNING_KEY set (lab HttpOnly cookie)");
+  } else if (has("CRON_SECRET")) {
+    push(
+      checks,
+      "arl_lab_key",
+      "warn",
+      "ARL_LAB_SIGNING_KEY missing — lab cookie falls back to CRON_SECRET; set a dedicated key"
+    );
+  } else {
+    push(checks, "arl_lab_key", "warn", "No ARL_LAB_SIGNING_KEY / CRON_SECRET — lab cookie weak in prod");
+  }
+
+  if (has("OPS_SESSION_SECRET")) {
+    push(checks, "ops_session", "ok", "OPS_SESSION_SECRET set (ops UI unlock)");
+  } else if (has("CRON_SECRET")) {
+    push(
+      checks,
+      "ops_session",
+      "warn",
+      "OPS_SESSION_SECRET missing — /ops/login accepts CRON_SECRET; prefer a dedicated ops secret"
+    );
+  } else {
+    push(checks, "ops_session", "fail", "No OPS_SESSION_SECRET / CRON_SECRET — ops unlock impossible");
+  }
+
   if (has("UPSTASH_REDIS_REST_URL") && has("UPSTASH_REDIS_REST_TOKEN")) {
     push(checks, "upstash", "ok", "Upstash Redis configured for durable rate limits");
   } else {

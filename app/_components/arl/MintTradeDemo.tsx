@@ -2,41 +2,39 @@
 
 import { useEffect, useState } from "react";
 
-const STEPS = [
-  { id: "meter", label: "Meter signs", detail: "IoT ECDSA · 250 Wh" },
-  { id: "mint", label: "Oracle mints", detail: "akWh → producer" },
-  { id: "book", label: "Agent orders", detail: "Forward 2.4 MWh" },
-  { id: "fill", label: "Market fills", detail: "HITL · demo settle" },
-] as const;
+import { useLocale } from "@/app/_components/i18n/LocaleProvider";
+import { getMintTradeDemoMessages } from "@/lib/i18n/pages/mint-trade-demo";
 
 /**
  * Motion proof of the mint → order loop — no fake video asset required.
  */
 export function MintTradeDemo() {
+  const { locale } = useLocale();
+  const m = getMintTradeDemoMessages(locale);
   const [step, setStep] = useState(0);
 
   useEffect(() => {
     const id = window.setInterval(() => {
-      setStep((s) => (s + 1) % STEPS.length);
+      setStep((s) => (s + 1) % m.steps.length);
     }, 2200);
     return () => window.clearInterval(id);
-  }, []);
+  }, [m.steps.length]);
 
   return (
     <div
       className="overflow-hidden border border-white/[0.08] bg-black/40"
-      aria-label="Animated lab demo: meter to trade"
+      aria-label={m.ariaLabel}
     >
       <div className="flex items-center justify-between border-b border-white/[0.06] px-4 py-2">
         <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/40">
-          Animation · lab · not a live fill
+          {m.header}
         </p>
         <p className="font-mono text-[10px] tabular-nums text-white/30">
-          {String(step + 1).padStart(2, "0")} / {String(STEPS.length).padStart(2, "0")}
+          {String(step + 1).padStart(2, "0")} / {String(m.steps.length).padStart(2, "0")}
         </p>
       </div>
       <div className="grid gap-0 sm:grid-cols-4">
-        {STEPS.map((s, i) => {
+        {m.steps.map((s, i) => {
           const active = i === step;
           const done = i < step;
           return (
@@ -69,8 +67,7 @@ export function MintTradeDemo() {
         })}
       </div>
       <p className="border-t border-white/[0.06] px-4 py-3 font-mono text-[10px] leading-relaxed text-white/35">
-        Sequence repeats: attested production → mint → order → labeled demo fill. Run the real
-        loop on /lab → /producer → /trade.
+        {m.footer}
       </p>
     </div>
   );

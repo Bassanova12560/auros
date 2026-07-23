@@ -1,13 +1,24 @@
 export const LOCALES = ["fr", "en", "es", "ar", "zh"] as const;
 export type Locale = (typeof LOCALES)[number];
 
-/** Fully translated secondary catalogs (hub chrome uses all LOCALES). */
-export const CATALOG_LOCALES = ["fr", "en", "es"] as const;
-export type CatalogLocale = (typeof CATALOG_LOCALES)[number];
-export type CatalogMap<T> = Record<CatalogLocale, T>;
+/** Catalog keys — same as UI locales; maps may omit `ar` / `zh` until translated. */
+export const CATALOG_LOCALES = LOCALES;
+export type CatalogLocale = Locale;
+
+/**
+ * Secondary string catalogs. `fr` / `en` / `es` are required today;
+ * `ar` / `zh` are optional — `fromCatalog` falls back to `en` then `fr`.
+ */
+export type CatalogMap<T> = {
+  fr: T;
+  en: T;
+  es: T;
+} & Partial<Record<"ar" | "zh", T>>;
 
 export const DEFAULT_LOCALE: Locale = "fr";
 export const LOCALE_STORAGE_KEY = "auros_locale";
+/** 1 year — keeps preference across sessions for cookie + reload flow. */
+export const LOCALE_COOKIE_MAX_AGE = 60 * 60 * 24 * 365;
 
 export type Messages = {
   nav: {

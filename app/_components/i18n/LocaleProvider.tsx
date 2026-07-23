@@ -12,8 +12,8 @@ import {
 
 import {
   DEFAULT_LOCALE,
+  applyDocumentLocale,
   getMessages,
-  isRtlLocale,
   readStoredLocale,
   storeLocale,
   type Locale,
@@ -28,17 +28,26 @@ type LocaleContextValue = {
 
 const LocaleContext = createContext<LocaleContextValue | null>(null);
 
-export function LocaleProvider({ children }: { children: ReactNode }) {
-  const [locale, setLocaleState] = useState<Locale>(DEFAULT_LOCALE);
+export function LocaleProvider({
+  children,
+  initialLocale,
+}: {
+  children: ReactNode;
+  /** From server cookie — avoids FR flash when preference is already set. */
+  initialLocale?: Locale;
+}) {
+  const [locale, setLocaleState] = useState<Locale>(
+    () => initialLocale ?? readStoredLocale() ?? DEFAULT_LOCALE
+  );
 
+  // Migrate localStorage-only prefs (pre-cookie) after hydrate.
   useEffect(() => {
     const stored = readStoredLocale();
     if (stored) setLocaleState(stored);
   }, []);
 
   useEffect(() => {
-    document.documentElement.lang = locale;
-    document.documentElement.dir = isRtlLocale(locale) ? "rtl" : "ltr";
+    applyDocumentLocale(locale);
     storeLocale(locale);
   }, [locale]);
 

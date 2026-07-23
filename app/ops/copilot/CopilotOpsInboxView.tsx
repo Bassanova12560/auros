@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 import { PrimaryButton } from "@/app/_components/ui/PrimaryButton";
 
@@ -17,37 +18,35 @@ type Draft = {
   created_at: string;
 };
 
-const STORAGE_KEY = "auros_copilot_ops_secret";
+const jsonHeaders: HeadersInit = {
+  Accept: "application/json",
+  "Content-Type": "application/json",
+};
 
 export function CopilotOpsInboxView() {
-  const [secret, setSecret] = useState("");
+  const router = useRouter();
   const [drafts, setDrafts] = useState<Draft[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [contentTopic, setContentTopic] = useState("");
   const [note, setNote] = useState("");
 
-  const authHeaders = useCallback((): HeadersInit => {
-    const s = secret.trim();
-    return {
-      Authorization: `Bearer ${s}`,
-      Accept: "application/json",
-      "Content-Type": "application/json",
-    };
-  }, [secret]);
+  const handleAuthFailure = useCallback(
+    (status: number) => {
+      if (status === 401 || status === 403) {
+        router.replace("/ops/login");
+      }
+    },
+    [router],
+  );
 
   async function load() {
-    const s = secret.trim();
-    if (!s) {
-      setError("Collez le jeton ops (Bearer).");
-      return;
-    }
-    sessionStorage.setItem(STORAGE_KEY, s);
     setLoading(true);
     setError(null);
     try {
       const res = await fetch("/api/ops/copilot/drafts?status=pending", {
-        headers: authHeaders(),
+        headers: jsonHeaders,
+        credentials: "include",
       });
       const json = (await res.json()) as {
         ok?: boolean;
@@ -55,6 +54,7 @@ export function CopilotOpsInboxView() {
         error?: string;
       };
       if (!res.ok) {
+        handleAuthFailure(res.status);
         setError(json.error ?? `Erreur ${res.status}`);
         return;
       }
@@ -72,11 +72,13 @@ export function CopilotOpsInboxView() {
     try {
       const res = await fetch("/api/ops/copilot/drafts/scan", {
         method: "POST",
-        headers: authHeaders(),
+        headers: jsonHeaders,
+        credentials: "include",
         body: JSON.stringify({ action: "catalog", limit: 8 }),
       });
       const json = (await res.json()) as { ok?: boolean; error?: string };
       if (!res.ok) {
+        handleAuthFailure(res.status);
         setError(json.error ?? `Scan failed ${res.status}`);
         return;
       }
@@ -94,11 +96,13 @@ export function CopilotOpsInboxView() {
     try {
       const res = await fetch("/api/ops/copilot/drafts/scan", {
         method: "POST",
-        headers: authHeaders(),
+        headers: jsonHeaders,
+        credentials: "include",
         body: JSON.stringify({ action: "care", limit: 3 }),
       });
       const json = (await res.json()) as { ok?: boolean; error?: string };
       if (!res.ok) {
+        handleAuthFailure(res.status);
         setError(json.error ?? `Care drafts failed ${res.status}`);
         return;
       }
@@ -117,7 +121,8 @@ export function CopilotOpsInboxView() {
     try {
       const res = await fetch("/api/ops/copilot/drafts/scan", {
         method: "POST",
-        headers: authHeaders(),
+        headers: jsonHeaders,
+        credentials: "include",
         body: JSON.stringify({
           action: "content",
           topic: contentTopic.trim(),
@@ -126,6 +131,7 @@ export function CopilotOpsInboxView() {
       });
       const json = (await res.json()) as { ok?: boolean; error?: string };
       if (!res.ok) {
+        handleAuthFailure(res.status);
         setError(json.error ?? `Content draft failed ${res.status}`);
         return;
       }
@@ -144,7 +150,8 @@ export function CopilotOpsInboxView() {
     try {
       const res = await fetch(`/api/ops/copilot/drafts/${encodeURIComponent(id)}/review`, {
         method: "POST",
-        headers: authHeaders(),
+        headers: jsonHeaders,
+        credentials: "include",
         body: JSON.stringify({
           status,
           review_note: note.trim() || undefined,
@@ -152,6 +159,7 @@ export function CopilotOpsInboxView() {
       });
       const json = (await res.json()) as { ok?: boolean; error?: string };
       if (!res.ok) {
+        handleAuthFailure(res.status);
         setError(json.error ?? `Review failed ${res.status}`);
         return;
       }
@@ -163,9 +171,15 @@ export function CopilotOpsInboxView() {
     }
   }
 
+  async function lock() {
+    await fetch("/api/ops/session", { method: "DELETE", credentials: "include" });
+    router.replace("/ops/login");
+    router.refresh();
+  }
+
   useEffect(() => {
-    const stored = sessionStorage.getItem(STORAGE_KEY);
-    if (stored) setSecret(stored);
+    void load();
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- mount load once
   }, []);
 
   return (
@@ -185,18 +199,6 @@ export function CopilotOpsInboxView() {
       </header>
 
       <section className="space-y-4 border border-white/[0.08] bg-black/40 p-5">
-        <label className="block space-y-2">
-          <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/40">
-            Jeton ops
-          </span>
-          <input
-            type="password"
-            autoComplete="off"
-            value={secret}
-            onChange={(e) => setSecret(e.target.value)}
-            className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-2.5 font-mono text-sm text-white"
-          />
-        </label>
         <div className="flex flex-wrap gap-2">
           <PrimaryButton type="button" onClick={load} disabled={loading}>
             Charger pending
@@ -216,6 +218,13 @@ export function CopilotOpsInboxView() {
             className="min-h-[44px] rounded-full border border-emerald-400/30 px-4 font-mono text-[11px] uppercase tracking-wider text-emerald-200/70 hover:text-emerald-100 disabled:opacity-30"
           >
             Drafts care email
+          </button>
+          <button
+            type="button"
+            onClick={() => void lock()}
+            className="min-h-[44px] rounded-full border border-white/10 px-4 font-mono text-[11px] uppercase tracking-wider text-white/40 hover:text-white/70"
+          >
+            Lock session
           </button>
         </div>
         <div className="flex flex-wrap gap-2">
@@ -284,7 +293,7 @@ export function CopilotOpsInboxView() {
                   type="button"
                   onClick={() => review(d.id, "rejected")}
                   disabled={loading}
-                  className="min-h-[44px] rounded-full border border-red-400/30 px-4 font-mono text-[11px] uppercase tracking-wider text-red-300/80 hover:border-red-400/50 disabled:opacity-30"
+                  className="min-h-[44px] rounded-full border border-red-400/30 px-4 font-mono text-[11px] uppercase tracking-wider text-red-200/70 hover:text-red-100 disabled:opacity-30"
                 >
                   Reject
                 </button>

@@ -6,7 +6,7 @@ import { runSocialContentSignalsAgent } from "@/lib/copilot/agents";
 export const runtime = "nodejs";
 
 /**
- * GET — weekly social draft signals for /ops/copilot (LinkedIn + X).
+ * GET — weekly social draft signals for authenticated ops inbox (LinkedIn + X).
  * Does NOT publish. Requires authenticated ops access
  */
 export async function GET(request: Request) {
@@ -24,7 +24,6 @@ export async function GET(request: Request) {
     ok: true,
     created: drafts.length,
     draft_ids: drafts.map((d) => d.id),
-    inbox: "/ops/copilot",
-    note: "Human approve required — no auto-publish to LinkedIn/X.",
+    note: "Human approve required via authenticated ops session — no auto-publish.",
   });
 }

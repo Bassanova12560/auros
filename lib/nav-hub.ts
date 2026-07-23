@@ -161,6 +161,11 @@ const FR: HubCopy = {
           description: "Issuer pipeline · dashboard",
         },
         {
+          href: "/presence",
+          title: "Présence marchés",
+          description: "Green · directories · listings prêts",
+        },
+        {
           href: "/pilots",
           title: "Pilotes 30 jours",
           description: "Flotte · banque · plateforme",
@@ -369,6 +374,11 @@ const EN: HubCopy = {
           href: "/partners",
           title: "Platforms & partners",
           description: "Issuer pipeline · dashboard",
+        },
+        {
+          href: "/presence",
+          title: "Market presence",
+          description: "Green · directories · submission-ready",
         },
         {
           href: "/pilots",
@@ -581,6 +591,11 @@ const ES: HubCopy = {
           description: "Issuer pipeline · dashboard",
         },
         {
+          href: "/presence",
+          title: "Presencia en mercados",
+          description: "Green · directorios · listo para enviar",
+        },
+        {
           href: "/pilots",
           title: "Pilotos 30 días",
           description: "Flota · banco · plataforma",
@@ -791,6 +806,11 @@ const AR: HubCopy = {
           description: "مسار المصدر · لوحة التحكم",
         },
         {
+          href: "/presence",
+          title: "الحضور في الأسواق",
+          description: "أخضر · أدلة · جاهز للإرسال",
+        },
+        {
           href: "/pilots",
           title: "تجارب 30 يوماً",
           description: "أسطول · بنك · منصة",
@@ -999,6 +1019,11 @@ const ZH: HubCopy = {
           href: "/partners",
           title: "平台与合作伙伴",
           description: "发行人管道 · 仪表盘",
+        },
+        {
+          href: "/presence",
+          title: "市场露出",
+          description: "绿色 · 名录 · 可提交",
         },
         {
           href: "/pilots",
