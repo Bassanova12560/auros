@@ -13,9 +13,13 @@
 | Surface | URL | Status |
 |---------|-----|--------|
 | Vision | `/resource-layer` | Shipped (Next.js) |
-| Producer console | `/producer` | Demo / mock |
-| Agent console | `/agent` | Demo / mock |
-| Marketplace | `/market` | Demo / mock |
+| Energy Lab | `/lab` | Working lab ledger demo (mint) |
+| Producer console | `/producer` | Working lab ledger demo (wrap → WATT) |
+| Trade | `/trade` | Working lab ledger demo (labeled spot) |
+| Agent console | `/agent` | Lab spot hedge (caps; HITL on paid paths) |
+| Marketplace | `/market` | Labeled marks — not live exchange volume |
+| Builders | `/builders` | Architecture + mint→trade demo |
+| Status | `/status` | Live surface health checks |
 
 ## Stack
 

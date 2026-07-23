@@ -19,9 +19,9 @@ const STEPS: Array<{
   href: string;
   hint: string;
 }> = [
-  { id: "produce", n: "1", label: "Produire", href: "/lab", hint: "Mint akWh" },
-  { id: "convert", n: "2", label: "Convertir", href: "/producer", hint: "→ WATT 1:1" },
-  { id: "sell", n: "3", label: "Vendre", href: "/trade", hint: "Spot ledger" },
+  { id: "produce", n: "1", label: "Produce", href: "/lab", hint: "Mint akWh" },
+  { id: "convert", n: "2", label: "Convert", href: "/producer", hint: "Wrap → WATT 1:1" },
+  { id: "sell", n: "3", label: "Sell", href: "/trade", hint: "Spot (akWh · auto-redeem)" },
 ];
 
 function fmt(n: number, digits = 2): string {
@@ -79,16 +79,17 @@ export function ArlLabWallet({ step }: { step: ArlJourneyStep }) {
   return (
     <section
       className="space-y-4 rounded-xl border border-white/[0.1] bg-gradient-to-br from-white/[0.04] to-transparent px-4 py-4"
-      aria-label="Lab wallet Auros"
+      aria-label="AUROS lab wallet"
     >
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-white/40">
-            Lab wallet · pas MetaMask · pas mainnet
+            Lab wallet · not MetaMask · not mainnet
           </p>
-          <p className="mt-1 font-display text-lg text-white">Ton compte ressource</p>
+          <p className="mt-1 font-display text-lg text-white">Your resource account</p>
           <p className="mt-1 max-w-xl text-xs leading-relaxed text-white/45">
-            Même portefeuille sur Lab, Producer et Trade. Mint → wrap WATT → vendre au spot.
+            Same wallet on Lab, Producer, and Trade. Mint akWh → optional wrap to WATT → spot sell
+            (sells akWh; wrapped WATT auto-redeems 1:1).
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-2 font-mono text-[10px] text-white/40">
@@ -98,7 +99,7 @@ export function ArlLabWallet({ step }: { step: ArlJourneyStep }) {
             onClick={() => void copyId()}
             className="rounded border border-white/15 px-2 py-1 text-white/55 hover:border-white/30 hover:text-white"
           >
-            {copied ? "Copié" : "Copier ID"}
+            {copied ? "Copied" : "Copy ID"}
           </button>
           <button
             type="button"
@@ -113,10 +114,10 @@ export function ArlLabWallet({ step }: { step: ArlJourneyStep }) {
 
       <div className="grid grid-cols-2 gap-2 sm:grid-cols-5">
         {[
-          { label: "EUR", value: b ? fmt(b.EUR, 2) : "…", tip: "Cash lab pour trader" },
-          { label: "akWh", value: b ? fmt(b.akWh, 2) : "…", tip: "Énergie mintée" },
-          { label: "WATT", value: b ? fmt(b.WATT, 2) : "…", tip: "1:1 vs akWh vault" },
-          { label: "H2O", value: b ? fmt(b.H2O, 4) : "…", tip: "Eau" },
+          { label: "EUR", value: b ? fmt(b.EUR, 2) : "…", tip: "Lab cash for spot" },
+          { label: "akWh", value: b ? fmt(b.akWh, 2) : "…", tip: "Minted energy" },
+          { label: "WATT", value: b ? fmt(b.WATT, 2) : "…", tip: "1:1 vault wrap" },
+          { label: "H2O", value: b ? fmt(b.H2O, 4) : "…", tip: "Water" },
           { label: "FLOP", value: b ? fmt(b.FLOP, 2) : "…", tip: "Compute" },
         ].map((row) => (
           <div key={row.label} className="rounded-lg border border-white/[0.07] bg-black/30 px-3 py-2">
@@ -130,7 +131,7 @@ export function ArlLabWallet({ step }: { step: ArlJourneyStep }) {
 
       {error ? <p className="text-xs text-rose-300/90">{error}</p> : null}
 
-      <nav aria-label="Parcours lab" className="grid gap-2 sm:grid-cols-3">
+      <nav aria-label="Lab journey" className="grid gap-2 sm:grid-cols-3">
         {STEPS.map((s) => {
           const active = s.id === step;
           return (

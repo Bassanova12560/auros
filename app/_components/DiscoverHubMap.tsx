@@ -23,20 +23,20 @@ export function DiscoverHubMap() {
         </p>
         <h2 className="mt-2 font-display text-2xl text-white md:text-3xl">
           {locale === "en"
-            ? "The full extent — four doors"
+            ? "The full extent — five doors"
             : locale === "es"
-              ? "Toda la extensión — cuatro puertas"
-              : "Toute l’étendue — quatre portes"}
+              ? "Toda la extensión — cinco puertas"
+              : "Toute l’étendue — cinq portes"}
         </h2>
         <p className="mt-2 max-w-xl text-sm text-white/50">
           {locale === "en"
-            ? "Same structure as the header hub: dossier, energy, protocol, ecosystem."
+            ? "Same structure as the header hub: dossier, energy, protocol, ecosystem, company."
             : locale === "es"
-              ? "Misma estructura que el hub del header: expediente, energía, protocol, ecosistema."
-              : "Même structure que le hub du header : dossier, énergie, protocol, écosystème."}
+              ? "Misma estructura que el hub del header: expediente, energía, protocol, ecosistema, empresa."
+              : "Même structure que le hub du header : dossier, énergie, protocol, écosystème, entreprise."}
         </p>
 
-        <div className="mt-10 grid gap-8 sm:grid-cols-2 xl:grid-cols-4">
+        <div className="mt-10 grid gap-8 sm:grid-cols-2 xl:grid-cols-5">
           {hub.groups.map((group) => (
             <div key={group.id}>
               <p className="font-display text-base text-white">{group.label}</p>

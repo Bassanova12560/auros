@@ -68,4 +68,24 @@ describe("lib/arl ledger", () => {
     await getArlAccount(id);
     await assert.rejects(() => mintWatt({ accountId: id, amount: 1 }));
   });
+
+  it("auto-redeems WATT when selling akWh with wrapped-only inventory", async () => {
+    const id = "lab_test_wrap_sell_01";
+    await mintAkWh({ accountId: id, amount: 100 });
+    await mintWatt({ accountId: id, amount: 100 });
+    const before = await getArlAccount(id);
+    assert.equal(before.account.balances.akWh, 0);
+    assert.equal(before.account.balances.WATT, 100);
+
+    const sell = await settleSpot({
+      accountId: id,
+      marketId: "kwh-france",
+      side: "sell",
+      amount: 40,
+      markOverride: 0.12,
+    });
+    assert.equal(sell.account.balances.WATT, 60);
+    assert.equal(sell.account.balances.akWh, 0);
+    assert.ok(sell.account.balances.EUR > SEED_EUR);
+  });
 });

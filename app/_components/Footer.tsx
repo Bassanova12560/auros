@@ -13,18 +13,23 @@ export function Footer() {
   const f = t.footer;
   const year = new Date().getFullYear();
 
+  const securityLabel =
+    locale === "en"
+      ? "Security"
+      : locale === "es"
+        ? "Seguridad"
+        : locale === "zh"
+          ? "安全"
+          : locale === "ar"
+            ? "الأمان"
+            : "Sécurité";
+
   const legal = [
     { href: "/legal", label: f.legalNotice },
     { href: "/terms", label: f.terms },
     { href: "/privacy", label: f.privacy },
-    { href: "/press", label: "Press" },
-    { href: "/why", label: "Why Auros" },
-    { href: "/watt", label: "WATT" },
-    { href: "/status", label: "Status" },
-    { href: "/builders", label: "Builders" },
-    { href: "/lab", label: "Energy Lab" },
     { href: "/trust", label: f.trust },
-    { href: "/security", label: "Sécurité" },
+    { href: "/security", label: securityLabel },
     { href: "/about", label: f.about },
   ] as const;
 
@@ -75,14 +80,14 @@ export function Footer() {
             </div>
           </div>
 
-          <div className="grid flex-1 grid-cols-2 gap-8 sm:grid-cols-2 md:grid-cols-4">
+          <div className="grid flex-1 grid-cols-2 gap-8 sm:grid-cols-3 lg:grid-cols-5">
             {hub.groups.map((group) => (
               <div key={group.id}>
                 <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/35">
                   {group.label}
                 </p>
                 <ul className="mt-3 space-y-0.5">
-                  {group.items.slice(0, 5).map((item) => (
+                  {group.items.map((item) => (
                     <li key={item.href}>
                       <Link href={item.href} className={linkClass}>
                         {item.title}

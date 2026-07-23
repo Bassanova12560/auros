@@ -29,7 +29,7 @@ export function MintTradeDemo() {
     >
       <div className="flex items-center justify-between border-b border-white/[0.06] px-4 py-2">
         <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/40">
-          Live loop · lab · not production video
+          Animation · lab · not a live fill
         </p>
         <p className="font-mono text-[10px] tabular-nums text-white/30">
           {String(step + 1).padStart(2, "0")} / {String(STEPS.length).padStart(2, "0")}
@@ -69,8 +69,8 @@ export function MintTradeDemo() {
         })}
       </div>
       <p className="border-t border-white/[0.06] px-4 py-3 font-mono text-[10px] leading-relaxed text-white/35">
-        Sequence repeats: attested production → mint → agent forward → labeled demo fill.
-        Open /producer and /trade for interactive surfaces.
+        Sequence repeats: attested production → mint → order → labeled demo fill. Run the real
+        loop on /lab → /producer → /trade.
       </p>
     </div>
   );

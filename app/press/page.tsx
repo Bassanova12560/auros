@@ -22,7 +22,7 @@ const FACTS = [
   },
   {
     label: "Primary URLs",
-    body: "getauros.com · /resource-layer · /builders · /lab · /trade",
+    body: "getauros.com · /investors · /resource-layer · /builders · /lab · /trade",
   },
   {
     label: "Contact",
@@ -65,6 +65,12 @@ export default function PressPage() {
                     auros-logo.svg
                   </a>{" "}
                   — wordmark / logo
+                </li>
+                <li>
+                  <Link href="/investors" className="underline-offset-2 hover:underline">
+                    /investors
+                  </Link>{" "}
+                  — diligence one-pager
                 </li>
                 <li>
                   <Link href="/watt" className="underline-offset-2 hover:underline">

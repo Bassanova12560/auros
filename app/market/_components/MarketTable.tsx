@@ -8,9 +8,8 @@ import { AurosButton } from "@/app/_components/AurosButton";
 import { SPOT_MARKETS } from "@/lib/arl/trade-engine";
 
 function fmtPrice(n: number, id: string): string {
-  if (id === "h2o-ca") return `$ ${n.toFixed(4)} / L`;
-  if (id === "flop") return `$ ${n.toFixed(2)} / unit`;
-  if (id === "kwh-texas") return `$ ${n.toFixed(3)} / kWh`;
+  if (id === "h2o-ca") return `€ ${n.toFixed(4)} / L`;
+  if (id === "flop") return `€ ${n.toFixed(2)} / unit`;
   return `€ ${n.toFixed(3)} / kWh`;
 }
 
@@ -54,7 +53,7 @@ export function MarketTable() {
         </table>
       </div>
       <p className="text-xs text-white/45">
-        Spot settles against your{" "}
+        Spot settles in <span className="text-white/70">EUR</span> against your{" "}
         <Link href="/lab" className="underline hover:text-white">
           lab wallet
         </Link>{" "}
@@ -62,7 +61,7 @@ export function MarketTable() {
         <Link href="/trade" className="underline hover:text-white">
           /trade
         </Link>
-        . Perps/options stay session-local. Volumes are labels, not claimed exchange volume.
+        . Perps/options stay session-local. 24h % and volumes are labels, not claimed exchange data.
       </p>
     </div>
   );

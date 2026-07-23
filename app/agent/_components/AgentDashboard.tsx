@@ -84,22 +84,27 @@ export function AgentDashboard() {
 
       <div className="grid gap-4 md:grid-cols-3">
         <div className="rounded-xl border border-white/[0.08] bg-white/[0.02] p-4">
-          <p className="font-mono text-[10px] uppercase text-white/40">Predicted consumption (24h)</p>
-          <p className="mt-1 font-display text-2xl text-white">38.4 MWh</p>
-          <p className="mt-1 text-xs text-white/45">Model v0.3 · training data mock</p>
-        </div>
-        <div className="rounded-xl border border-white/[0.08] bg-white/[0.02] p-4">
-          <p className="font-mono text-[10px] uppercase text-white/40">Hedge ratio</p>
-          <p className="mt-1 font-display text-2xl text-white">72%</p>
-          <p className="mt-1 text-xs text-white/45">Target 85% · buy spot to rebalance</p>
-        </div>
-        <div className="rounded-xl border border-white/[0.08] bg-white/[0.02] p-4">
-          <p className="font-mono text-[10px] uppercase text-white/40">Hedge status</p>
-          <p className="mt-1 font-display text-lg text-amber-200/90">Under-hedged</p>
+          <p className="font-mono text-[10px] uppercase text-white/40">Lab hedge mode</p>
+          <p className="mt-1 font-display text-2xl text-white">Spot buy</p>
           <p className="mt-1 text-xs text-white/45">
-            Use form below — settles into{" "}
-            <Link href="/trade" className="underline hover:text-white">
-              lab wallet
+            Not a cleared forward — EUR → akWh on the shared ledger
+          </p>
+        </div>
+        <div className="rounded-xl border border-white/[0.08] bg-white/[0.02] p-4">
+          <p className="font-mono text-[10px] uppercase text-white/40">Ticket cap</p>
+          <p className="mt-1 font-display text-2xl text-white">≤50 MWh</p>
+          <p className="mt-1 text-xs text-white/45">Lab guardrail · production needs HITL</p>
+        </div>
+        <div className="rounded-xl border border-white/[0.08] bg-white/[0.02] p-4">
+          <p className="font-mono text-[10px] uppercase text-white/40">Next surfaces</p>
+          <p className="mt-1 font-display text-lg text-white">API · wrap</p>
+          <p className="mt-1 text-xs text-white/45">
+            <Link href="/builders" className="underline hover:text-white">
+              /builders
+            </Link>
+            {" · "}
+            <Link href="/producer" className="underline hover:text-white">
+              /producer
             </Link>
           </p>
         </div>

@@ -1,7 +1,6 @@
-"use client";
-
 import type { ReactNode } from "react";
 
+/** Decorative ambient chrome — RSC-safe (no hooks). */
 export function AmbientShell({ children }: { children: ReactNode }) {
   return (
     <div className="relative min-h-dvh bg-void">

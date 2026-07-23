@@ -7,7 +7,7 @@ export type NavHubItem = {
 };
 
 export type NavHubGroup = {
-  id: "dossier" | "energy" | "protocol" | "ecosystem";
+  id: "dossier" | "energy" | "protocol" | "ecosystem" | "company";
   label: string;
   blurb: string;
   items: NavHubItem[];
@@ -64,22 +64,12 @@ const FR: HubCopy = {
     {
       id: "energy",
       label: "Énergie",
-      blurb: "Green Verified · Power · eau · flottes",
+      blurb: "ARL · Green · producteurs · marché",
       items: [
-        {
-          href: "/green",
-          title: "AUROS Green",
-          description: "Énergie locale & label Verified",
-        },
         {
           href: "/resource-layer",
           title: "Resource Layer",
           description: "Tokeniser kWh · liquidité · agents",
-        },
-        {
-          href: "/builders",
-          title: "Builders ARL",
-          description: "Architecture · repo · testnet",
         },
         {
           href: "/lab",
@@ -87,24 +77,34 @@ const FR: HubCopy = {
           description: "Simuler mint → revenu producteur",
         },
         {
-          href: "/power",
-          title: "Power (bas-carbone)",
-          description: "Nucléaire & low-carbon — hors Green Verified",
+          href: "/producer",
+          title: "Producer",
+          description: "Mint · wrap WATT · console",
         },
         {
-          href: "/eau",
-          title: "Eau / H₂O",
-          description: "Infrastructure eau & passeport",
+          href: "/trade",
+          title: "Trade",
+          description: "Spot · perps · options (lab)",
         },
         {
-          href: "/green/chargeflow/console",
-          title: "ChargeFlow CFU",
-          description: "Unités E/W/F + Shield",
+          href: "/agent",
+          title: "Agent",
+          description: "Console agents / data centers",
         },
         {
-          href: "/green/api",
-          title: "Green API",
-          description: "Watt, CQS, Premium data",
+          href: "/market",
+          title: "Market",
+          description: "Marketplace ressources (démo)",
+        },
+        {
+          href: "/builders",
+          title: "Builders ARL",
+          description: "Architecture · repo · testnet",
+        },
+        {
+          href: "/green",
+          title: "AUROS Green",
+          description: "Énergie locale & label Verified",
         },
       ],
     },
@@ -177,6 +177,48 @@ const FR: HubCopy = {
         },
       ],
     },
+    {
+      id: "company",
+      label: "Entreprise",
+      blurb: "Pourquoi AUROS · investisseurs · presse",
+      items: [
+        {
+          href: "/why",
+          title: "Pourquoi AUROS",
+          description: "Bénéfice d’abord — liquidité ressources",
+        },
+        {
+          href: "/about",
+          title: "À propos",
+          description: "Mission et posture",
+        },
+        {
+          href: "/investors",
+          title: "Investisseurs",
+          description: "Desk diligence — sans claims inventés",
+        },
+        {
+          href: "/press",
+          title: "Presse",
+          description: "Kit média minimal",
+        },
+        {
+          href: "/careers",
+          title: "Carrières",
+          description: "Rôles ouverts ARL",
+        },
+        {
+          href: "/status",
+          title: "Status",
+          description: "Sondes protocol & lab",
+        },
+        {
+          href: "/blog",
+          title: "Blog",
+          description: "Guides tokenisation RWA",
+        },
+      ],
+    },
   ],
 };
 
@@ -222,22 +264,12 @@ const EN: HubCopy = {
     {
       id: "energy",
       label: "Energy",
-      blurb: "Green Verified · Power · water · fleets",
+      blurb: "ARL · Green · producers · market",
       items: [
-        {
-          href: "/green",
-          title: "AUROS Green",
-          description: "Local energy & Verified label",
-        },
         {
           href: "/resource-layer",
           title: "Resource Layer",
           description: "Tokenize kWh · liquidity · agents",
-        },
-        {
-          href: "/builders",
-          title: "ARL Builders",
-          description: "Architecture · repo · testnet",
         },
         {
           href: "/lab",
@@ -245,24 +277,34 @@ const EN: HubCopy = {
           description: "Simulate mint → producer revenue",
         },
         {
-          href: "/power",
-          title: "Power (low-carbon)",
-          description: "Nuclear & low-carbon — not Green Verified",
+          href: "/producer",
+          title: "Producer",
+          description: "Mint · wrap WATT · console",
         },
         {
-          href: "/eau",
-          title: "Water / H₂O",
-          description: "Water infrastructure & passport",
+          href: "/trade",
+          title: "Trade",
+          description: "Spot · perps · options (lab)",
         },
         {
-          href: "/green/chargeflow/console",
-          title: "ChargeFlow CFU",
-          description: "E/W/F units + Shield",
+          href: "/agent",
+          title: "Agent",
+          description: "AI / data-center agent console",
         },
         {
-          href: "/green/api",
-          title: "Green API",
-          description: "Watt, CQS, Premium data",
+          href: "/market",
+          title: "Market",
+          description: "Resource marketplace (demo)",
+        },
+        {
+          href: "/builders",
+          title: "ARL Builders",
+          description: "Architecture · repo · testnet",
+        },
+        {
+          href: "/green",
+          title: "AUROS Green",
+          description: "Local energy & Verified label",
         },
       ],
     },
@@ -335,6 +377,48 @@ const EN: HubCopy = {
         },
       ],
     },
+    {
+      id: "company",
+      label: "Company",
+      blurb: "Why AUROS · investors · press",
+      items: [
+        {
+          href: "/why",
+          title: "Why AUROS",
+          description: "Benefit-first — resource liquidity",
+        },
+        {
+          href: "/about",
+          title: "About",
+          description: "Mission and posture",
+        },
+        {
+          href: "/investors",
+          title: "Investors",
+          description: "Diligence desk — no invented claims",
+        },
+        {
+          href: "/press",
+          title: "Press",
+          description: "Minimal media kit",
+        },
+        {
+          href: "/careers",
+          title: "Careers",
+          description: "Open ARL roles",
+        },
+        {
+          href: "/status",
+          title: "Status",
+          description: "Protocol & lab probes",
+        },
+        {
+          href: "/blog",
+          title: "Blog",
+          description: "RWA tokenization guides",
+        },
+      ],
+    },
   ],
 };
 
@@ -380,22 +464,12 @@ const ES: HubCopy = {
     {
       id: "energy",
       label: "Energía",
-      blurb: "Green Verified · Power · agua · flotas",
+      blurb: "ARL · Green · productores · mercado",
       items: [
-        {
-          href: "/green",
-          title: "AUROS Green",
-          description: "Energía local y label Verified",
-        },
         {
           href: "/resource-layer",
           title: "Resource Layer",
           description: "Tokenizar kWh · liquidez · agentes",
-        },
-        {
-          href: "/builders",
-          title: "Builders ARL",
-          description: "Arquitectura · repo · testnet",
         },
         {
           href: "/lab",
@@ -403,24 +477,34 @@ const ES: HubCopy = {
           description: "Simular mint → ingreso productor",
         },
         {
-          href: "/power",
-          title: "Power (bajo carbono)",
-          description: "Nuclear y low-carbon — fuera de Green Verified",
+          href: "/producer",
+          title: "Producer",
+          description: "Mint · wrap WATT · consola",
         },
         {
-          href: "/eau",
-          title: "Agua / H₂O",
-          description: "Infraestructura agua y pasaporte",
+          href: "/trade",
+          title: "Trade",
+          description: "Spot · perps · opciones (lab)",
         },
         {
-          href: "/green/chargeflow/console",
-          title: "ChargeFlow CFU",
-          description: "Unidades E/W/F + Shield",
+          href: "/agent",
+          title: "Agent",
+          description: "Consola agentes / data centers",
         },
         {
-          href: "/green/api",
-          title: "Green API",
-          description: "Watt, CQS, datos Premium",
+          href: "/market",
+          title: "Market",
+          description: "Marketplace de recursos (demo)",
+        },
+        {
+          href: "/builders",
+          title: "Builders ARL",
+          description: "Arquitectura · repo · testnet",
+        },
+        {
+          href: "/green",
+          title: "AUROS Green",
+          description: "Energía local y label Verified",
         },
       ],
     },
@@ -493,6 +577,48 @@ const ES: HubCopy = {
         },
       ],
     },
+    {
+      id: "company",
+      label: "Empresa",
+      blurb: "Por qué AUROS · inversores · prensa",
+      items: [
+        {
+          href: "/why",
+          title: "Por qué AUROS",
+          description: "Beneficio primero — liquidez de recursos",
+        },
+        {
+          href: "/about",
+          title: "Acerca de",
+          description: "Misión y postura",
+        },
+        {
+          href: "/investors",
+          title: "Inversores",
+          description: "Desk de diligencia — sin claims inventados",
+        },
+        {
+          href: "/press",
+          title: "Prensa",
+          description: "Kit de medios mínimo",
+        },
+        {
+          href: "/careers",
+          title: "Carreras",
+          description: "Roles abiertos ARL",
+        },
+        {
+          href: "/status",
+          title: "Status",
+          description: "Sondas de protocol y lab",
+        },
+        {
+          href: "/blog",
+          title: "Blog",
+          description: "Guías de tokenización RWA",
+        },
+      ],
+    },
   ],
 };
 
@@ -538,22 +664,12 @@ const AR: HubCopy = {
     {
       id: "energy",
       label: "الطاقة",
-      blurb: "Green Verified · Power · ماء · أساطيل",
+      blurb: "ARL · Green · منتجون · سوق",
       items: [
-        {
-          href: "/green",
-          title: "AUROS Green",
-          description: "طاقة محلية وتسمية Verified",
-        },
         {
           href: "/resource-layer",
           title: "Resource Layer",
           description: "ترميز kWh · سيولة · وكلاء",
-        },
-        {
-          href: "/builders",
-          title: "Builders ARL",
-          description: "هندسة · مستودع · testnet",
         },
         {
           href: "/lab",
@@ -561,24 +677,34 @@ const AR: HubCopy = {
           description: "محاكاة mint → إيراد المنتج",
         },
         {
-          href: "/power",
-          title: "Power (منخفض الكربون)",
-          description: "نووي ومنخفض الكربون — خارج Green Verified",
+          href: "/producer",
+          title: "Producer",
+          description: "Mint · wrap WATT · لوحة",
         },
         {
-          href: "/eau",
-          title: "ماء / H₂O",
-          description: "بنية مائية وجواز سفر",
+          href: "/trade",
+          title: "Trade",
+          description: "Spot · perps · خيارات (lab)",
         },
         {
-          href: "/green/chargeflow/console",
-          title: "ChargeFlow CFU",
-          description: "وحدات E/W/F + Shield",
+          href: "/agent",
+          title: "Agent",
+          description: "لوحة وكلاء / مراكز بيانات",
         },
         {
-          href: "/green/api",
-          title: "Green API",
-          description: "Watt، CQS، بيانات Premium",
+          href: "/market",
+          title: "Market",
+          description: "سوق الموارد (تجريبي)",
+        },
+        {
+          href: "/builders",
+          title: "Builders ARL",
+          description: "هندسة · مستودع · testnet",
+        },
+        {
+          href: "/green",
+          title: "AUROS Green",
+          description: "طاقة محلية وتسمية Verified",
         },
       ],
     },
@@ -651,6 +777,48 @@ const AR: HubCopy = {
         },
       ],
     },
+    {
+      id: "company",
+      label: "الشركة",
+      blurb: "لماذا AUROS · مستثمرون · صحافة",
+      items: [
+        {
+          href: "/why",
+          title: "لماذا AUROS",
+          description: "الفائدة أولاً — سيولة الموارد",
+        },
+        {
+          href: "/about",
+          title: "من نحن",
+          description: "المهمة والموقف",
+        },
+        {
+          href: "/investors",
+          title: "المستثمرون",
+          description: "مكتب العناية — بلا ادعاءات مختلقة",
+        },
+        {
+          href: "/press",
+          title: "الصحافة",
+          description: "حقيبة إعلامية بسيطة",
+        },
+        {
+          href: "/careers",
+          title: "الوظائف",
+          description: "أدوار ARL مفتوحة",
+        },
+        {
+          href: "/status",
+          title: "Status",
+          description: "فحوصات البروتوكول والمختبر",
+        },
+        {
+          href: "/blog",
+          title: "المدونة",
+          description: "أدلة توكنة RWA",
+        },
+      ],
+    },
   ],
 };
 
@@ -696,22 +864,12 @@ const ZH: HubCopy = {
     {
       id: "energy",
       label: "能源",
-      blurb: "Green Verified · Power · 水 · 车队",
+      blurb: "ARL · Green · 生产商 · 市场",
       items: [
-        {
-          href: "/green",
-          title: "AUROS Green",
-          description: "本地能源与 Verified 标签",
-        },
         {
           href: "/resource-layer",
           title: "Resource Layer",
           description: "代币化 kWh · 流动性 · 代理",
-        },
-        {
-          href: "/builders",
-          title: "ARL Builders",
-          description: "架构 · 仓库 · testnet",
         },
         {
           href: "/lab",
@@ -719,24 +877,34 @@ const ZH: HubCopy = {
           description: "模拟 mint → 生产商收入",
         },
         {
-          href: "/power",
-          title: "Power（低碳）",
-          description: "核电与低碳 — 不属于 Green Verified",
+          href: "/producer",
+          title: "Producer",
+          description: "Mint · wrap WATT · 控制台",
         },
         {
-          href: "/eau",
-          title: "水 / H₂O",
-          description: "水基础设施与护照",
+          href: "/trade",
+          title: "Trade",
+          description: "Spot · perps · 期权（lab）",
         },
         {
-          href: "/green/chargeflow/console",
-          title: "ChargeFlow CFU",
-          description: "E/W/F 单位 + Shield",
+          href: "/agent",
+          title: "Agent",
+          description: "AI / 数据中心代理控制台",
         },
         {
-          href: "/green/api",
-          title: "Green API",
-          description: "Watt、CQS、Premium 数据",
+          href: "/market",
+          title: "Market",
+          description: "资源市场（演示）",
+        },
+        {
+          href: "/builders",
+          title: "ARL Builders",
+          description: "架构 · 仓库 · testnet",
+        },
+        {
+          href: "/green",
+          title: "AUROS Green",
+          description: "本地能源与 Verified 标签",
         },
       ],
     },
@@ -806,6 +974,48 @@ const ZH: HubCopy = {
           href: "/liquidity",
           title: "Liquidity Bridge",
           description: "候补名单（发行人之后）",
+        },
+      ],
+    },
+    {
+      id: "company",
+      label: "公司",
+      blurb: "为何 AUROS · 投资者 · 媒体",
+      items: [
+        {
+          href: "/why",
+          title: "为何 AUROS",
+          description: "收益优先 — 资源流动性",
+        },
+        {
+          href: "/about",
+          title: "关于",
+          description: "使命与立场",
+        },
+        {
+          href: "/investors",
+          title: "投资者",
+          description: "尽职调查台 — 无虚构主张",
+        },
+        {
+          href: "/press",
+          title: "媒体",
+          description: "精简媒体包",
+        },
+        {
+          href: "/careers",
+          title: "招聘",
+          description: "ARL 开放岗位",
+        },
+        {
+          href: "/status",
+          title: "Status",
+          description: "协议与实验室探针",
+        },
+        {
+          href: "/blog",
+          title: "博客",
+          description: "RWA 通证化指南",
         },
       ],
     },

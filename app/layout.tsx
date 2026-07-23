@@ -31,7 +31,7 @@ export const viewport = {
 
 const syne = Syne({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
+  weight: ["500", "600", "700"],
   variable: "--font-display",
   display: "swap",
 });

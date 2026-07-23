@@ -213,6 +213,11 @@ export function TradeTerminal() {
           </Link>
           . You still have seeded EUR for buys.
         </div>
+      ) : snap && snap.account.balances.akWh <= 0 && snap.account.balances.WATT > 0 ? (
+        <div className="rounded-lg border border-white/15 bg-white/[0.03] px-4 py-3 font-mono text-[11px] leading-relaxed text-white/60">
+          Inventory is wrapped as WATT. Spot sells <span className="text-white/85">akWh</span> —
+          selling will auto-redeem WATT 1:1 from the vault, then settle EUR.
+        </div>
       ) : null}
 
       <div className="flex flex-wrap items-center justify-between gap-3">

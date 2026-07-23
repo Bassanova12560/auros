@@ -57,6 +57,46 @@ const SECTIONS = [
     ],
   },
   {
+    title: "ARL / Resource Layer",
+    links: [
+      {
+        href: "/resource-layer",
+        label: "Resource Layer",
+        desc: "Vision ARL — tokeniser kWh, liquidité, agents (démos labellisées).",
+      },
+      {
+        href: "/lab",
+        label: "Energy Lab",
+        desc: "Simuler mint → wrap WATT → revenu producteur.",
+      },
+      {
+        href: "/builders",
+        label: "Builders ARL",
+        desc: "Architecture, repo et chemin testnet.",
+      },
+      {
+        href: "/watt",
+        label: "WATT",
+        desc: "Unité de compte énergie — narrative produit.",
+      },
+      {
+        href: "/why",
+        label: "Pourquoi AUROS",
+        desc: "Bénéfice d’abord — liquidité pour ressources critiques.",
+      },
+      {
+        href: "/status",
+        label: "Status",
+        desc: "Sondes publiques protocol & lab — pas un SLA contractuel.",
+      },
+      {
+        href: "/investors",
+        label: "Investisseurs",
+        desc: "Desk diligence — liens produit, sans claims inventés.",
+      },
+    ],
+  },
+  {
     title: "Formation & machine-readable",
     links: [
       { href: "/academy", label: "AUROS Academy", desc: "Fondamentaux RWA gratuits — FR/EN/ES." },

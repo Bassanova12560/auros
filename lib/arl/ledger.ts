@@ -380,6 +380,26 @@ export async function settleSpot(input: {
       acc.balances.EUR = round6(acc.balances.EUR - cost);
       acc.balances[asset] = round6(acc.balances[asset] + amt);
     } else {
+      // Energy spot sells akWh. If inventory is wrapped as WATT, auto-redeem 1:1 first
+      // so the investor path mint → wrap → sell never dead-ends.
+      if (asset === "akWh" && acc.balances.akWh < amt) {
+        const need = round6(amt - acc.balances.akWh);
+        if (acc.balances.WATT < need) {
+          throw new Error("insufficient akWh (and WATT to redeem)");
+        }
+        if (state.vaultAkWh < need) throw new Error("vault insolvent");
+        acc.balances.WATT = round6(acc.balances.WATT - need);
+        acc.balances.akWh = round6(acc.balances.akWh + need);
+        acc.wattOutstanding = round6(Math.max(0, acc.wattOutstanding - need));
+        state.vaultAkWh = round6(state.vaultAkWh - need);
+        state.wattSupply = round6(Math.max(0, state.wattSupply - need));
+        pushEvent(state, {
+          accountId: acc.id,
+          kind: "redeem_watt",
+          detail: `Auto-redeemed ${need} WATT → akWh before spot sell`,
+          amounts: { WATT: -need, akWh: need },
+        });
+      }
       if (acc.balances[asset] < amt) throw new Error(`insufficient ${asset}`);
       const credit = round6(notional - fee);
       if (credit < 0) throw new Error("fee exceeds notional");
