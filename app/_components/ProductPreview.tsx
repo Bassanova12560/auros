@@ -1,10 +1,13 @@
 "use client";
 
+import Link from "next/link";
 import { motion } from "framer-motion";
 
 import { fadeUp, staggerContainer } from "@/lib/motion";
 
-/** Aperçu statique du dossier tokenisation (hero). */
+/**
+ * Hero visual aligned with liquidity / Resource Layer story (not RWA dossier).
+ */
 export function ProductPreview() {
   return (
     <motion.div
@@ -17,57 +20,68 @@ export function ProductPreview() {
         <div className="bezel-inner p-5 md:p-6">
           <motion.div variants={fadeUp} className="flex items-center justify-between">
             <p className="font-mono text-[9px] uppercase tracking-[0.24em] text-white/45">
-              Dossier AUROS
+              Lab wallet · preview
             </p>
             <span className="rounded-full border border-white/15 px-2 py-0.5 font-mono text-[8px] uppercase tracking-wider text-white/50">
-              Preview
+              No MetaMask
             </span>
           </motion.div>
 
-          <motion.div variants={fadeUp} className="mt-5 space-y-3">
-            <PreviewRow label="Actif" value="Immobilier · Bordeaux" />
-            <PreviewRow label="Valeur" value="1 200 000 €" />
-            <PreviewRow label="Maturité" value="72% · dossier prêt" />
-          </motion.div>
-
-          <motion.div
-            variants={fadeUp}
-            className="mt-6 rounded-xl border border-white/[0.08] bg-white/[0.02] p-4"
-          >
-            <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-white/40">
-              Score tokenisation
-            </p>
-            <p className="mt-2 font-display text-4xl font-semibold tabular-nums text-white">
-              78
-            </p>
-            <div className="mt-3 h-1 overflow-hidden rounded-full bg-white/[0.06]">
-              <div className="h-full w-[78%] rounded-full bg-white/70" />
-            </div>
-          </motion.div>
-
-          <motion.div variants={fadeUp} className="mt-4 grid grid-cols-2 gap-2">
-            {["Legal", "KYC", "MiCA", "Data room"].map((item) => (
+          <motion.div variants={fadeUp} className="mt-5 grid grid-cols-3 gap-2">
+            {[
+              { label: "EUR", value: "10,000" },
+              { label: "akWh", value: "—" },
+              { label: "WATT", value: "—" },
+            ].map((row) => (
               <div
-                key={item}
-                className="rounded-lg border border-white/[0.06] px-2.5 py-2 font-mono text-[9px] uppercase tracking-wider text-white/45"
+                key={row.label}
+                className="rounded-lg border border-white/[0.08] bg-black/30 px-2.5 py-2"
               >
-                {item}
+                <p className="font-mono text-[8px] uppercase tracking-wider text-white/35">
+                  {row.label}
+                </p>
+                <p className="mt-1 font-display text-sm tabular-nums text-white">{row.value}</p>
               </div>
             ))}
+          </motion.div>
+
+          <motion.ol variants={fadeUp} className="mt-6 space-y-0 border border-white/[0.08]">
+            {[
+              { n: "1", title: "Produce", hint: "Mint akWh · /lab" },
+              { n: "2", title: "Convert", hint: "Wrap → WATT · /producer" },
+              { n: "3", title: "Sell", hint: "Spot settle · /trade" },
+            ].map((step, i) => (
+              <li
+                key={step.n}
+                className={`flex items-center gap-3 px-3 py-3 ${
+                  i > 0 ? "border-t border-white/[0.06]" : ""
+                } ${i === 0 ? "bg-white/[0.05]" : ""}`}
+              >
+                <span
+                  className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full font-mono text-[10px] ${
+                    i === 0 ? "bg-white text-black" : "bg-white/10 text-white/50"
+                  }`}
+                >
+                  {step.n}
+                </span>
+                <span>
+                  <span className="block font-display text-sm text-white">{step.title}</span>
+                  <span className="font-mono text-[9px] text-white/35">{step.hint}</span>
+                </span>
+              </li>
+            ))}
+          </motion.ol>
+
+          <motion.div variants={fadeUp} className="mt-4">
+            <Link
+              href="/lab"
+              className="block w-full rounded border border-white/25 bg-white/10 py-2.5 text-center font-mono text-[10px] uppercase tracking-wider text-white hover:bg-white/15"
+            >
+              Start in Energy Lab →
+            </Link>
           </motion.div>
         </div>
       </div>
     </motion.div>
-  );
-}
-
-function PreviewRow({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="flex items-baseline justify-between gap-4 border-b border-white/[0.05] pb-2">
-      <span className="font-mono text-[9px] uppercase tracking-[0.18em] text-white/35">
-        {label}
-      </span>
-      <span className="text-right text-sm text-white/75">{value}</span>
-    </div>
   );
 }

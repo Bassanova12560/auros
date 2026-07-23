@@ -10,7 +10,7 @@ import { PrimaryButton } from "./ui/PrimaryButton";
 import { EASE_OUT_EXPO } from "@/lib/motion";
 
 /**
- * Unified homepage hero — one liquidity story; audience paths live in HomeSolutions.
+ * Unified homepage hero — one primary CTA; audience paths live in HomeSolutions.
  */
 export function Hero() {
   const t = useTranslations();
@@ -28,20 +28,53 @@ export function Hero() {
 
           <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted">{t.hero.subtitle}</p>
 
-          <div className="mt-10 flex flex-col items-start gap-3 sm:flex-row sm:flex-wrap sm:items-center">
+          <div className="mt-10 flex flex-col items-start gap-4">
             <PrimaryButton href="/lab">{t.hero.firstWinLabel}</PrimaryButton>
-            <PrimaryButton href="mailto:resources@getauros.com?subject=Auros%20intro" variant="ghost">
-              {t.hero.ctaPrimary}
-            </PrimaryButton>
-            <Link href="/start" className="auros-btn auros-btn--link">
-              {t.hero.ctaEstimate} →
-            </Link>
+            <p className="font-mono text-[11px] leading-relaxed text-white/40">
+              {locale === "fr" ? (
+                <>
+                  Ou{" "}
+                  <a
+                    href="mailto:resources@getauros.com?subject=Auros%20intro"
+                    className="text-white/60 underline-offset-2 hover:text-white hover:underline"
+                  >
+                    parler à l’équipe
+                  </a>
+                  {" · "}
+                  <Link href="/#solutions" className="text-white/60 underline-offset-2 hover:text-white hover:underline">
+                    choisir mon profil
+                  </Link>
+                  {" · "}
+                  <Link href="/start" className="text-white/60 underline-offset-2 hover:text-white hover:underline">
+                    dossier RWA
+                  </Link>
+                </>
+              ) : (
+                <>
+                  Or{" "}
+                  <a
+                    href="mailto:resources@getauros.com?subject=Auros%20intro"
+                    className="text-white/60 underline-offset-2 hover:text-white hover:underline"
+                  >
+                    talk to the team
+                  </a>
+                  {" · "}
+                  <Link href="/#solutions" className="text-white/60 underline-offset-2 hover:text-white hover:underline">
+                    pick your path
+                  </Link>
+                  {" · "}
+                  <Link href="/start" className="text-white/60 underline-offset-2 hover:text-white hover:underline">
+                    RWA dossier
+                  </Link>
+                </>
+              )}
+            </p>
           </div>
 
           <p className="mt-8 max-w-lg text-xs leading-relaxed text-white/40">
             {locale === "fr"
-              ? "Même moteur : marchés institutionnels pour actifs numériques, et couche de règlement pour l’énergie, l’eau et le compute tokenisés."
-              : "Same engine: institutional markets for digital assets, and a settlement layer for tokenized energy, water, and compute."}
+              ? "Un moteur : liquidité institutionnelle pour actifs numériques, et règlement pour l’énergie, l’eau et le compute tokenisés. Lab wallet partagé — pas de MetaMask."
+              : "One engine: institutional liquidity for digital assets, and settlement for tokenized energy, water, and compute. Shared lab wallet — no MetaMask."}
           </p>
         </div>
 

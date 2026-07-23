@@ -20,6 +20,7 @@ export function EnergyLabSimulator() {
   const [busy, setBusy] = useState(false);
   const [note, setNote] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [mintedOk, setMintedOk] = useState(false);
 
   const result = useMemo(() => {
     const effectiveKwh = kwhPerDay * (uptime / 100);
@@ -34,6 +35,7 @@ export function EnergyLabSimulator() {
     setBusy(true);
     setError(null);
     setNote(null);
+    setMintedOk(false);
     try {
       const accountId = getOrCreateArlAccountId();
       const minted = await postArlMint({
@@ -44,16 +46,16 @@ export function EnergyLabSimulator() {
       const wrapAmt = Math.min(result.tokens, minted.account.balances.akWh);
       let wattNote = "";
       if (wrapAmt > 0) {
+        const wrapQty = Math.min(100, wrapAmt);
         const wrapped = await postArlWatt({
           accountId,
-          amount: Math.min(100, wrapAmt),
+          amount: wrapQty,
           action: "mint",
         });
-        wattNote = ` · WATT ${wrapped.account.balances.WATT.toFixed(0)}`;
+        wattNote = ` · auto-wrapped ${wrapQty} → WATT (cap 100/tx) · bal ${wrapped.account.balances.WATT.toFixed(0)}`;
       }
-      setNote(
-        `Minted ${result.tokens} akWh into your lab wallet${wattNote}. Next: Producer (convert) or Trade (sell).`,
-      );
+      setNote(`Minted ${result.tokens} akWh into your lab wallet${wattNote}.`);
+      setMintedOk(true);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Mint failed");
     } finally {
@@ -159,14 +161,31 @@ export function EnergyLabSimulator() {
           </button>
           {error ? <p className="mt-2 text-xs text-rose-300/90">{error}</p> : null}
           {note ? <p className="mt-2 text-xs text-emerald-300/80">{note}</p> : null}
-          <div className="mt-4 flex flex-wrap gap-3 font-mono text-[10px] uppercase tracking-wider">
-            <Link href="/producer" className="text-white/55 underline-offset-2 hover:text-white hover:underline">
-              2. Convert →
-            </Link>
-            <Link href="/trade" className="text-white/55 underline-offset-2 hover:text-white hover:underline">
-              3. Sell →
-            </Link>
-          </div>
+          {mintedOk ? (
+            <div className="mt-4 flex flex-col gap-2 sm:flex-row">
+              <Link
+                href="/trade?market=kwh-france"
+                className="flex-1 rounded border border-white/30 bg-white/10 py-2.5 text-center font-mono text-[11px] uppercase tracking-wide text-white hover:bg-white/15"
+              >
+                Sell on Trade →
+              </Link>
+              <Link
+                href="/producer"
+                className="flex-1 rounded border border-white/20 py-2.5 text-center font-mono text-[11px] uppercase tracking-wide text-white/75 hover:border-white/40 hover:text-white"
+              >
+                Wrap more on Producer →
+              </Link>
+            </div>
+          ) : (
+            <div className="mt-4 flex flex-wrap gap-3 font-mono text-[10px] uppercase tracking-wider">
+              <Link href="/producer" className="text-white/55 underline-offset-2 hover:text-white hover:underline">
+                2. Convert →
+              </Link>
+              <Link href="/trade" className="text-white/55 underline-offset-2 hover:text-white hover:underline">
+                3. Sell →
+              </Link>
+            </div>
+          )}
         </div>
       </div>
     </div>

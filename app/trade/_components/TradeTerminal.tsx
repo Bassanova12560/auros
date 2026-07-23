@@ -54,6 +54,7 @@ export function TradeTerminal() {
   const [accountId, setAccountId] = useState<string | null>(null);
   const [snap, setSnap] = useState<ArlClientSnapshot | null>(null);
   const [spotBusy, setSpotBusy] = useState(false);
+  const [showAdvanced, setShowAdvanced] = useState(false);
 
   const market = useMemo(() => tradeEngine.getMarket(marketId), [marketId, tick]);
   const position = useMemo(() => tradeEngine.getPosition(marketId), [marketId, tick]);
@@ -87,6 +88,10 @@ export function TradeTerminal() {
   useEffect(() => {
     setError(null);
   }, [tab, marketId]);
+
+  useEffect(() => {
+    if (!showAdvanced && tab !== "spot") setTab("spot");
+  }, [showAdvanced, tab]);
 
   function pushLog(text: string, ok = true) {
     setLog((prev) => [{ id: `${Date.now()}-${Math.random()}`, text, ok }, ...prev].slice(0, 12));
@@ -185,26 +190,69 @@ export function TradeTerminal() {
     });
   }
 
+  const needsInventory =
+    snap != null &&
+    snap.account.balances.akWh <= 0 &&
+    snap.account.balances.WATT <= 0 &&
+    snap.account.balances.H2O <= 0 &&
+    snap.account.balances.FLOP <= 0;
+
   return (
     <div className="space-y-8">
       <ArlLabWallet step="sell" />
 
+      {needsInventory ? (
+        <div className="rounded-lg border border-amber-500/25 bg-amber-500/[0.07] px-4 py-3 font-mono text-[11px] leading-relaxed text-amber-100/85">
+          Lab wallet has no resource inventory yet.{" "}
+          <Link href="/lab" className="underline underline-offset-2 hover:text-white">
+            Mint on /lab first
+          </Link>
+          {" · "}
+          <Link href="/producer" className="underline underline-offset-2 hover:text-white">
+            or wrap on /producer
+          </Link>
+          . You still have seeded EUR for buys.
+        </div>
+      ) : null}
+
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <div className="flex flex-wrap gap-2 font-mono text-[11px] uppercase tracking-wide">
-          {(["spot", "perps", "options"] as const).map((t) => (
-            <button
-              key={t}
-              type="button"
-              onClick={() => setTab(t)}
-              className={`rounded border px-3 py-1.5 ${
-                tab === t
-                  ? "border-white/40 bg-white/10 text-white"
-                  : "border-white/10 text-white/45 hover:border-white/25"
-              }`}
-            >
-              {t}
-            </button>
-          ))}
+        <div className="flex flex-wrap items-center gap-2 font-mono text-[11px] uppercase tracking-wide">
+          <button
+            type="button"
+            onClick={() => setTab("spot")}
+            className={`rounded border px-3 py-1.5 ${
+              tab === "spot"
+                ? "border-white/40 bg-white/10 text-white"
+                : "border-white/10 text-white/45 hover:border-white/25"
+            }`}
+          >
+            spot
+          </button>
+          <button
+            type="button"
+            onClick={() => setShowAdvanced((v) => !v)}
+            className="rounded border border-white/10 px-3 py-1.5 text-white/40 hover:border-white/25 hover:text-white/70"
+          >
+            {showAdvanced ? "Hide advanced" : "Advanced (session-local)"}
+          </button>
+          {showAdvanced ? (
+            <>
+              {(["perps", "options"] as const).map((t) => (
+                <button
+                  key={t}
+                  type="button"
+                  onClick={() => setTab(t)}
+                  className={`rounded border px-3 py-1.5 ${
+                    tab === t
+                      ? "border-white/40 bg-white/10 text-white"
+                      : "border-white/10 text-white/45 hover:border-white/25"
+                  }`}
+                >
+                  {t}
+                </button>
+              ))}
+            </>
+          ) : null}
         </div>
         <label className="flex items-center gap-2 font-mono text-[11px] text-white/45">
           Market
@@ -221,6 +269,12 @@ export function TradeTerminal() {
           </select>
         </label>
       </div>
+
+      {showAdvanced && tab !== "spot" ? (
+        <p className="font-mono text-[10px] text-amber-200/70">
+          Advanced · session-local only — does not move lab wallet balances. Spot does.
+        </p>
+      ) : null}
 
       <div className="grid gap-3 sm:grid-cols-4 font-mono text-[11px]">
         <div className="border border-white/[0.08] px-3 py-2">
