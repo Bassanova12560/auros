@@ -90,7 +90,7 @@ export function CompareSelectionBar({
               })}
               className="rounded-full border border-emerald-500/25 px-3 py-2 font-mono text-[10px] uppercase tracking-wider text-emerald-300/80 transition hover:border-emerald-400/40 hover:text-emerald-200"
             >
-              Copilot
+              {copy.copilot}
             </a>
           ) : null}
           <button

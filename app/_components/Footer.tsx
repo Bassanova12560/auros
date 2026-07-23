@@ -77,6 +77,14 @@ export function Footer() {
               >
                 {hub.secondaryCta}
               </Link>
+              <Link
+                href="/compare"
+                className="rounded-full border border-white/10 px-3 py-1.5 font-mono text-[10px] uppercase tracking-wider text-white/45 hover:text-white/70"
+              >
+                {hub.groups
+                  .find((g) => g.id === "dossier")
+                  ?.items.find((i) => i.href.startsWith("/compare"))?.title ?? "Compare"}
+              </Link>
             </div>
           </div>
 

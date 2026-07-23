@@ -1,4 +1,4 @@
-import { fromCatalog, type CatalogMap, type Locale } from "@/lib/i18n";
+import { localeCatalog, type Locale } from "@/lib/i18n";
 
 export type NextLink = {
   href: string;
@@ -37,6 +37,8 @@ export type ArlUiCopy = {
     intro: string;
     dossierHint: string;
     dossierCta: string;
+    compareHint: string;
+    compareCta: string;
     doors: Array<{ who: string; plain: string; cta: string; href: string }>;
   };
   hero: {
@@ -44,6 +46,7 @@ export type ArlUiCopy = {
     talk: string;
     pickPath: string;
     dossier: string;
+    compare: string;
     footnote: string;
   };
   banner: {
@@ -101,6 +104,8 @@ const FR: ArlUiCopy = {
     intro: "Un moteur de liquidité. Trois portes. Pas de jargon — le chemin qui match ton métier.",
     dossierHint: "Tu prépares un dossier RWA classique (immo, art, créances) ?",
     dossierCta: "Démarrer la readiness (~4 min)",
+    compareHint: "Tu veux lire le marché avant de structurer ?",
+    compareCta: "Ouvrir le comparateur RWA",
     doors: [
       {
         who: "Exchanges & actifs digitaux",
@@ -130,6 +135,7 @@ const FR: ArlUiCopy = {
     talk: "parler à l’équipe",
     pickPath: "choisir mon profil",
     dossier: "dossier RWA",
+    compare: "comparateur marché",
     footnote:
       "Un moteur : liquidité institutionnelle pour actifs numériques, et règlement pour l’énergie, l’eau et le compute tokenisés. Lab wallet partagé — pas de MetaMask.",
   },
@@ -202,6 +208,7 @@ const FR: ArlUiCopy = {
       ],
       neighbors: [
         { href: "/investors", label: "Investisseurs" },
+        { href: "/compare", label: "Comparateur RWA" },
         { href: "/press", label: "Press" },
         { href: "/careers", label: "Carrières" },
         { href: "/status", label: "Status" },
@@ -213,6 +220,7 @@ const FR: ArlUiCopy = {
       secondary: [{ href: "/builders", label: "Builders" }],
       neighbors: [
         { href: "/why", label: "Pourquoi" },
+        { href: "/compare", label: "Comparateur RWA" },
         { href: "/watt", label: "WATT" },
         { href: "/investors", label: "Investisseurs" },
       ],
@@ -252,6 +260,8 @@ const EN: ArlUiCopy = {
     intro: "One liquidity engine. Three doors. No jargon maze — choose the path that matches your job.",
     dossierHint: "Preparing a classic RWA dossier (real estate, art, receivables)?",
     dossierCta: "Start readiness in ~4 min",
+    compareHint: "Want to read the market before you structure?",
+    compareCta: "Open the RWA comparator",
     doors: [
       {
         who: "Exchanges & digital assets",
@@ -280,6 +290,7 @@ const EN: ArlUiCopy = {
     talk: "talk to the team",
     pickPath: "pick your path",
     dossier: "RWA dossier",
+    compare: "market comparator",
     footnote:
       "One engine: institutional liquidity for digital assets, and settlement for tokenized energy, water, and compute. Shared lab wallet — no MetaMask.",
   },
@@ -352,6 +363,7 @@ const EN: ArlUiCopy = {
       ],
       neighbors: [
         { href: "/investors", label: "Investors" },
+        { href: "/compare", label: "RWA comparator" },
         { href: "/press", label: "Press" },
         { href: "/careers", label: "Careers" },
         { href: "/status", label: "Status" },
@@ -363,6 +375,7 @@ const EN: ArlUiCopy = {
       secondary: [{ href: "/builders", label: "Builders" }],
       neighbors: [
         { href: "/why", label: "Why" },
+        { href: "/compare", label: "RWA comparator" },
         { href: "/watt", label: "WATT" },
         { href: "/investors", label: "Investors" },
       ],
@@ -402,6 +415,8 @@ const ES: ArlUiCopy = {
     intro: "Un motor de liquidez. Tres puertas. Sin jerga — elige el camino de tu rol.",
     dossierHint: "¿Preparas un dossier RWA clásico (inmueble, arte, créditos)?",
     dossierCta: "Empezar readiness (~4 min)",
+    compareHint: "¿Quieres leer el mercado antes de estructurar?",
+    compareCta: "Abrir el comparador RWA",
     doors: [
       {
         who: "Exchanges y activos digitales",
@@ -431,6 +446,7 @@ const ES: ArlUiCopy = {
     talk: "hablar con el equipo",
     pickPath: "elegir mi perfil",
     dossier: "dossier RWA",
+    compare: "comparador de mercado",
     footnote:
       "Un motor: liquidez institucional para activos digitales, y settlement para energía, agua y compute tokenizados. Lab wallet compartido — sin MetaMask.",
   },
@@ -503,6 +519,7 @@ const ES: ArlUiCopy = {
       ],
       neighbors: [
         { href: "/investors", label: "Inversores" },
+        { href: "/compare", label: "Comparador RWA" },
         { href: "/press", label: "Press" },
         { href: "/careers", label: "Carreras" },
         { href: "/status", label: "Status" },
@@ -514,6 +531,7 @@ const ES: ArlUiCopy = {
       secondary: [{ href: "/builders", label: "Builders" }],
       neighbors: [
         { href: "/why", label: "Por qué" },
+        { href: "/compare", label: "Comparador RWA" },
         { href: "/watt", label: "WATT" },
         { href: "/investors", label: "Inversores" },
       ],
@@ -521,10 +539,321 @@ const ES: ArlUiCopy = {
   },
 };
 
-const CATALOG: CatalogMap<ArlUiCopy> = { fr: FR, en: EN, es: ES };
+const AR: ArlUiCopy = {
+  strip: {
+    nextStepsAria: "الخطوات التالية",
+    alsoNearby: "أيضاً بالقرب",
+  },
+  wallet: {
+    eyebrow: "محفظة Lab · ليست MetaMask · ليست mainnet",
+    title: "حساب الموارد الخاص بك",
+    body: "نفس المحفظة على Lab وProducer وTrade. سكّ akWh ← تغليف WATT اختياري ← بيع فوري (يبيع akWh؛ WATT المغلف يُسترد تلقائياً 1:1).",
+    copyId: "نسخ المعرّف",
+    copied: "تم النسخ",
+    refresh: "تحديث",
+    tipEur: "نقد Lab للتداول الفوري",
+    tipAkWh: "طاقة مسكوكة",
+    tipWatt: "تغليف خزنة 1:1",
+    tipH2o: "ماء",
+    tipFlop: "حوسبة",
+    steps: {
+      produce: { label: "إنتاج", hint: "سكّ akWh" },
+      convert: { label: "تحويل", hint: "تغليف ← WATT 1:1" },
+      sell: { label: "بيع", hint: "فوري (akWh · استرداد تلقائي)" },
+    },
+    journeyAria: "مسار Lab",
+  },
+  disclaimer:
+    "دفتر Lab يعمل مباشرة (سكّ akWh، تغليف WATT 1:1، بيع فوري مع استرداد تلقائي). ليست mainnet وليست طرحاً عاماً — السحوبات وتسوية الإنتاج ما زالت تتطلب موافقة بشرية (HITL).",
+  homeSolutions: {
+    eyebrow: "اختر مسارك",
+    title: "لمن أنت هنا؟",
+    intro: "محرك سيولة واحد. ثلاثة أبواب. بلا متاهة مصطلحات — اختر المسار الذي يطابق دورك.",
+    dossierHint: "تُعدّ ملفاً كلاسيكياً لـ RWA (عقار، فن، مستحقات)؟",
+    dossierCta: "ابدأ الجاهزية خلال ~4 دقائق",
+    compareHint: "أتريد قراءة السوق قبل الهيكلة؟",
+    compareCta: "فتح مقارن RWA",
+    doors: [
+      {
+        who: "البورصات والأصول الرقمية",
+        plain:
+          "سيولة عميقة، انضباط مخاطر على مدار الساعة، وواجهات API جاهزة للمنصات التي تحتاج أسواقاً حقيقية.",
+        cta: "فتح السوق",
+        href: "/market",
+      },
+      {
+        who: "منتجو الطاقة والمياه",
+        plain:
+          "حوّل الإنتاج المقاس إلى وحدات قابلة للبيع — مسارات أقصر إلى المشترين، عروض توضيحية مُسمّاة أولاً.",
+        cta: "فتح Energy Lab",
+        href: "/lab",
+      },
+      {
+        who: "المطوّرون ووكلاء الذكاء الاصطناعي",
+        plain:
+          "ابنِ على Resource Layer: أسطح البروتوكول، واجهة Agent API، ومحفظة Lab مشتركة.",
+        cta: "Builders / testnet",
+        href: "/builders",
+      },
+    ],
+  },
+  hero: {
+    or: "أو",
+    talk: "التحدث مع الفريق",
+    pickPath: "اختيار مساري",
+    dossier: "ملف RWA",
+    compare: "مقارن السوق",
+    footnote:
+      "محرك واحد: سيولة مؤسسية للأصول الرقمية، وتسوية للطاقة والمياه والحوسبة المرمّزة. محفظة Lab مشتركة — بلا MetaMask.",
+  },
+  banner: {
+    eyebrow: "نفس المحرك · الحدود التالية",
+    title: "الطاقة والمياه والحوسبة المرمّزة تتبع نفس انضباط السيولة.",
+    bodyBefore: "إنتاج مقاس ← محفظة Lab ← فوري. مدعوم بـ",
+    bodyAfter: "(معاينة — ليست طرحاً عاماً). عروض توضيحية مُسمّاة؛ التسوية تبقى HITL.",
+    links: [
+      { href: "/resource-layer", label: "لماذا الموارد" },
+      { href: "/watt", label: "WATT" },
+      { href: "/lab", label: "Lab" },
+      { href: "/trade", label: "Trade" },
+    ],
+  },
+  preview: {
+    eyebrow: "محفظة Lab · معاينة",
+    badge: "بدون MetaMask",
+    steps: [
+      { n: "1", title: "إنتاج", hint: "سكّ akWh · /lab" },
+      { n: "2", title: "تحويل", hint: "تغليف ← WATT · /producer" },
+      { n: "3", title: "بيع", hint: "تسوية فورية · /trade" },
+    ],
+    cta: "ابدأ في Energy Lab ←",
+  },
+  neighbors: {
+    afterLab: {
+      primary: { href: "/producer", label: "التالي · التغليف على Producer" },
+      secondary: [{ href: "/resource-layer", label: "الرؤية", hint: "لماذا ARL" }],
+      neighbors: [
+        { href: "/watt", label: "WATT" },
+        { href: "/builders", label: "Builders" },
+        { href: "/trade", label: "Trade" },
+      ],
+    },
+    afterProducer: {
+      primary: { href: "/trade?market=kwh-france&side=sell", label: "التالي · البيع على Trade" },
+      secondary: [{ href: "/watt", label: "وحدة WATT" }],
+      neighbors: [
+        { href: "/lab", label: "Lab" },
+        { href: "/earn", label: "Earn" },
+        { href: "/market", label: "Market" },
+      ],
+    },
+    afterTrade: {
+      primary: { href: "/agent", label: "اختياري · تحوّط الوكيل" },
+      secondary: [{ href: "/earn", label: "معاينة Earn" }],
+      neighbors: [
+        { href: "/market", label: "Market" },
+        { href: "/builders", label: "Builders" },
+        { href: "/status", label: "Status" },
+      ],
+    },
+    afterAgent: {
+      primary: { href: "/trade", label: "العودة إلى Trade" },
+      secondary: [{ href: "/builders", label: "مسار Agent API" }],
+      neighbors: [
+        { href: "/producer", label: "Producer" },
+        { href: "/market", label: "Market" },
+        { href: "/investors", label: "المستثمرون" },
+      ],
+    },
+    company: {
+      primary: { href: "/lab", label: "تشغيل حلقة Lab" },
+      secondary: [
+        {
+          href: "mailto:resources@getauros.com?subject=AUROS%20diligence",
+          label: "تواصل معنا",
+        },
+      ],
+      neighbors: [
+        { href: "/investors", label: "المستثمرون" },
+        { href: "/compare", label: "مقارن RWA" },
+        { href: "/press", label: "الصحافة" },
+        { href: "/careers", label: "الوظائف" },
+        { href: "/status", label: "Status" },
+        { href: "/why", label: "لماذا" },
+      ],
+    },
+    vision: {
+      primary: { href: "/lab", label: "فتح Energy Lab" },
+      secondary: [{ href: "/builders", label: "Builders" }],
+      neighbors: [
+        { href: "/why", label: "لماذا" },
+        { href: "/compare", label: "مقارن RWA" },
+        { href: "/watt", label: "WATT" },
+        { href: "/investors", label: "المستثمرون" },
+      ],
+    },
+  },
+};
+
+const ZH: ArlUiCopy = {
+  strip: {
+    nextStepsAria: "下一步",
+    alsoNearby: "附近也有",
+  },
+  wallet: {
+    eyebrow: "Lab 钱包 · 非 MetaMask · 非主网",
+    title: "您的资源账户",
+    body: "在 Lab、Producer 与 Trade 使用同一钱包。铸造 akWh → 可选 wrap 为 WATT → 现货卖出（卖出 akWh；已 wrap 的 WATT 按 1:1 自动赎回）。",
+    copyId: "复制 ID",
+    copied: "已复制",
+    refresh: "刷新",
+    tipEur: "Lab 现金用于现货",
+    tipAkWh: "已铸造能源",
+    tipWatt: "金库 1:1 wrap",
+    tipH2o: "水",
+    tipFlop: "算力",
+    steps: {
+      produce: { label: "生产", hint: "铸造 akWh" },
+      convert: { label: "转换", hint: "Wrap → WATT 1:1" },
+      sell: { label: "出售", hint: "现货（akWh · 自动赎回）" },
+    },
+    journeyAria: "Lab 流程",
+  },
+  disclaimer:
+    "Lab 账本已上线（铸造 akWh、wrap WATT 1:1、现货卖出并自动赎回）。非主网、非公开发售——提现与生产结算仍需人工审批（HITL）。",
+  homeSolutions: {
+    eyebrow: "选择您的路径",
+    title: "您为谁而来？",
+    intro: "一个流动性引擎。三扇门。没有术语迷宫——选择匹配您职责的路径。",
+    dossierHint: "正在准备经典 RWA 档案（不动产、艺术品、应收账款）？",
+    dossierCta: "约 4 分钟开始就绪评估",
+    compareHint: "想在结构化之前先了解市场？",
+    compareCta: "打开 RWA 对比器",
+    doors: [
+      {
+        who: "交易所与数字资产",
+        plain:
+          "深厚流动性、全天候风险纪律，以及面向需要真实市场的代币的场馆级 API。",
+        cta: "打开市场",
+        href: "/market",
+      },
+      {
+        who: "能源与水生产商",
+        plain:
+          "将计量产量转化为可售单位——更快触达买方，优先使用标注演示。",
+        cta: "打开 Energy Lab",
+        href: "/lab",
+      },
+      {
+        who: "开发者与 AI 代理",
+        plain: "基于 Resource Layer 构建：协议接口、Agent API，以及共享 Lab 钱包。",
+        cta: "Builders / testnet",
+        href: "/builders",
+      },
+    ],
+  },
+  hero: {
+    or: "或",
+    talk: "与团队沟通",
+    pickPath: "选择我的路径",
+    dossier: "RWA 档案",
+    compare: "市场对比器",
+    footnote:
+      "一个引擎：为数字资产提供机构级流动性，并为代币化能源、水与算力提供结算。共享 Lab 钱包——无需 MetaMask。",
+  },
+  banner: {
+    eyebrow: "同一引擎 · 下一前沿",
+    title: "代币化能源、水与算力遵循同一套流动性纪律。",
+    bodyBefore: "计量产量 → Lab 钱包 → 现货。由",
+    bodyAfter: "驱动（预览——非公开发售）。演示已标注；结算保持 HITL。",
+    links: [
+      { href: "/resource-layer", label: "为何选择资源" },
+      { href: "/watt", label: "WATT" },
+      { href: "/lab", label: "Lab" },
+      { href: "/trade", label: "Trade" },
+    ],
+  },
+  preview: {
+    eyebrow: "Lab 钱包 · 预览",
+    badge: "无需 MetaMask",
+    steps: [
+      { n: "1", title: "生产", hint: "铸造 akWh · /lab" },
+      { n: "2", title: "转换", hint: "Wrap → WATT · /producer" },
+      { n: "3", title: "出售", hint: "现货结算 · /trade" },
+    ],
+    cta: "在 Energy Lab 开始 →",
+  },
+  neighbors: {
+    afterLab: {
+      primary: { href: "/producer", label: "下一步 · 在 Producer 上 Wrap" },
+      secondary: [{ href: "/resource-layer", label: "愿景", hint: "为何选择 ARL" }],
+      neighbors: [
+        { href: "/watt", label: "WATT" },
+        { href: "/builders", label: "Builders" },
+        { href: "/trade", label: "Trade" },
+      ],
+    },
+    afterProducer: {
+      primary: { href: "/trade?market=kwh-france&side=sell", label: "下一步 · 在 Trade 出售" },
+      secondary: [{ href: "/watt", label: "WATT 单位" }],
+      neighbors: [
+        { href: "/lab", label: "Lab" },
+        { href: "/earn", label: "Earn" },
+        { href: "/market", label: "Market" },
+      ],
+    },
+    afterTrade: {
+      primary: { href: "/agent", label: "可选 · 代理对冲" },
+      secondary: [{ href: "/earn", label: "Earn 预览" }],
+      neighbors: [
+        { href: "/market", label: "Market" },
+        { href: "/builders", label: "Builders" },
+        { href: "/status", label: "Status" },
+      ],
+    },
+    afterAgent: {
+      primary: { href: "/trade", label: "返回 Trade" },
+      secondary: [{ href: "/builders", label: "Agent API 路径" }],
+      neighbors: [
+        { href: "/producer", label: "Producer" },
+        { href: "/market", label: "Market" },
+        { href: "/investors", label: "投资者" },
+      ],
+    },
+    company: {
+      primary: { href: "/lab", label: "运行 Lab 闭环" },
+      secondary: [
+        {
+          href: "mailto:resources@getauros.com?subject=AUROS%20diligence",
+          label: "联系我们",
+        },
+      ],
+      neighbors: [
+        { href: "/investors", label: "投资者" },
+        { href: "/compare", label: "RWA 对比器" },
+        { href: "/press", label: "媒体" },
+        { href: "/careers", label: "招聘" },
+        { href: "/status", label: "Status" },
+        { href: "/why", label: "为何" },
+      ],
+    },
+    vision: {
+      primary: { href: "/lab", label: "打开 Energy Lab" },
+      secondary: [{ href: "/builders", label: "Builders" }],
+      neighbors: [
+        { href: "/why", label: "为何" },
+        { href: "/compare", label: "RWA 对比器" },
+        { href: "/watt", label: "WATT" },
+        { href: "/investors", label: "投资者" },
+      ],
+    },
+  },
+};
+
+const CATALOG = localeCatalog({ fr: FR, en: EN, es: ES, ar: AR, zh: ZH });
 
 export function getArlUi(locale: Locale): ArlUiCopy {
-  return fromCatalog(CATALOG, locale);
+  return CATALOG[locale] ?? CATALOG.fr;
 }
 
 export type EcosystemPreset = keyof ArlUiCopy["neighbors"];

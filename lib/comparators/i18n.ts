@@ -1,4 +1,6 @@
-import { resolveCatalogLocale, type CatalogMap, type Locale } from "@/lib/i18n";
+import { localeCatalog, type Locale } from "@/lib/i18n";
+import { AR } from "./locales/ar";
+import { ZH } from "./locales/zh";
 
 export type ComparatorPageCopy = {
   tool: string;
@@ -89,6 +91,31 @@ export type ComparatorMessages = {
       subtitle: string;
       cta: string;
     };
+    /** Strip CTA when on /compare (maps to ComparatorPageCopy.cta shape). */
+    dossierCta: {
+      eyebrow: string;
+      title: string;
+      subtitle: string;
+      button: string;
+    };
+    micaCheckerLink: string;
+    askCopilot: string;
+    aiAssist: {
+      ariaLabel: string;
+      eyebrow: string;
+      explain: string;
+      suggest: string;
+      openCopilot: string;
+      hint: string;
+      add: string;
+      applyViaUrl: string;
+      promptSuggestWithSelection: string;
+      promptSuggestEmpty: string;
+      promptExplainSelection: (ids: string) => string;
+      promptExplainEmpty: string;
+      errorStatus: (status: number) => string;
+      networkError: string;
+    };
     filters: {
       label: string;
       all: string;
@@ -128,6 +155,7 @@ export type ComparatorMessages = {
       selectProduct: string;
       copyLink: string;
       linkCopied: string;
+      copilot: string;
     };
     comparePanel: {
       eyebrow: string;
@@ -255,6 +283,34 @@ const FR: ComparatorMessages = {
       subtitle: "Préparez votre dossier d'admission en quelques minutes — score, data room, conformité.",
       cta: "Préparer mon dossier",
     },
+    dossierCta: {
+      eyebrow: "Auros Dossier",
+      title: "Vous structurez un actif RWA ?",
+      subtitle: "Préparez votre dossier d'admission en quelques minutes.",
+      button: "Préparer mon dossier avec Auros",
+    },
+    micaCheckerLink: "Test MiCA indicatif →",
+    askCopilot: "Poser une question au Copilot →",
+    aiAssist: {
+      ariaLabel: "Assistant comparateur",
+      eyebrow: "Copilot · sélection",
+      explain: "Expliquer",
+      suggest: "Proposer des RWA",
+      openCopilot: "Ouvrir Copilot →",
+      hint: "Expliquez la sélection ou demandez des RWA à ajouter (max 4).",
+      add: "Ajouter",
+      applyViaUrl: "Tout appliquer via URL →",
+      promptSuggestWithSelection:
+        "Propose 1 à 2 RWA à ajouter à ma sélection de comparaison (IDs hub).",
+      promptSuggestEmpty:
+        "Propose 2 à 3 RWA intéressants à comparer sur le hub AUROS.",
+      promptExplainSelection: (ids) =>
+        `Explique brièvement ma sélection (${ids}) — APY, TVL, liquidité, risques indicatifs.`,
+      promptExplainEmpty:
+        "Explique comment utiliser le comparateur RWA AUROS en 3 phrases.",
+      errorStatus: (status) => `Erreur ${status}`,
+      networkError: "Erreur réseau",
+    },
     filters: {
       label: "Filtrer par minimum",
       all: "Tous",
@@ -297,6 +353,7 @@ const FR: ComparatorMessages = {
       selectProduct: "Sélectionner pour comparer",
       copyLink: "Copier le lien",
       linkCopied: "Lien copié",
+      copilot: "Copilot",
     },
     comparePanel: {
       eyebrow: "Comparaison côte à côte",
@@ -655,6 +712,34 @@ const EN: ComparatorMessages = {
       subtitle: "Prepare your admission dossier in minutes — score, data room, compliance.",
       cta: "Prepare my dossier",
     },
+    dossierCta: {
+      eyebrow: "Auros Dossier",
+      title: "Structuring an RWA asset?",
+      subtitle: "Prepare your admission dossier in minutes.",
+      button: "Prepare my dossier with Auros",
+    },
+    micaCheckerLink: "Indicative MiCA check →",
+    askCopilot: "Ask Copilot a question →",
+    aiAssist: {
+      ariaLabel: "Comparator assistant",
+      eyebrow: "Copilot · selection",
+      explain: "Explain",
+      suggest: "Suggest RWAs",
+      openCopilot: "Open Copilot →",
+      hint: "Explain the selection or ask for RWAs to add (max 4).",
+      add: "Add",
+      applyViaUrl: "Apply all via URL →",
+      promptSuggestWithSelection:
+        "Suggest 1–2 RWAs to add to my comparison selection (hub IDs).",
+      promptSuggestEmpty:
+        "Suggest 2–3 interesting RWAs to compare on the AUROS hub.",
+      promptExplainSelection: (ids) =>
+        `Briefly explain my selection (${ids}) — APY, TVL, liquidity, indicative risks.`,
+      promptExplainEmpty:
+        "Explain how to use the AUROS RWA comparator in 3 sentences.",
+      errorStatus: (status) => `Error ${status}`,
+      networkError: "Network error",
+    },
     filters: {
       label: "Filter by minimum",
       all: "All",
@@ -697,6 +782,7 @@ const EN: ComparatorMessages = {
       selectProduct: "Select to compare",
       copyLink: "Copy link",
       linkCopied: "Link copied",
+      copilot: "Copilot",
     },
     comparePanel: {
       eyebrow: "Side-by-side comparison",
@@ -1055,6 +1141,34 @@ const ES: ComparatorMessages = {
       subtitle: "Prepare su expediente de admisión en minutos — score, data room, cumplimiento.",
       cta: "Preparar mi expediente",
     },
+    dossierCta: {
+      eyebrow: "Auros Expediente",
+      title: "¿Estructura un activo RWA?",
+      subtitle: "Prepare su expediente de admisión en minutos.",
+      button: "Preparar mi expediente con Auros",
+    },
+    micaCheckerLink: "Test MiCA indicativo →",
+    askCopilot: "Hacer una pregunta al Copilot →",
+    aiAssist: {
+      ariaLabel: "Asistente del comparador",
+      eyebrow: "Copilot · selección",
+      explain: "Explicar",
+      suggest: "Proponer RWA",
+      openCopilot: "Abrir Copilot →",
+      hint: "Explique la selección o pida RWA para añadir (máx. 4).",
+      add: "Añadir",
+      applyViaUrl: "Aplicar todo vía URL →",
+      promptSuggestWithSelection:
+        "Propón 1 o 2 RWA para añadir a mi selección de comparación (IDs hub).",
+      promptSuggestEmpty:
+        "Propón 2 o 3 RWA interesantes para comparar en el hub AUROS.",
+      promptExplainSelection: (ids) =>
+        `Explica brevemente mi selección (${ids}) — APY, TVL, liquidez, riesgos indicativos.`,
+      promptExplainEmpty:
+        "Explica cómo usar el comparador RWA AUROS en 3 frases.",
+      errorStatus: (status) => `Error ${status}`,
+      networkError: "Error de red",
+    },
     filters: {
       label: "Filtrar por mínimo",
       all: "Todos",
@@ -1097,6 +1211,7 @@ const ES: ComparatorMessages = {
       selectProduct: "Seleccionar para comparar",
       copyLink: "Copiar enlace",
       linkCopied: "Enlace copiado",
+      copilot: "Copilot",
     },
     comparePanel: {
       eyebrow: "Comparación lado a lado",
@@ -1399,14 +1514,23 @@ const ES: ComparatorMessages = {
   loading: "Cargando datos…",
 };
 
-const CATALOG: CatalogMap< ComparatorMessages> = { fr: FR, en: EN, es: ES };
+const CATALOG = localeCatalog({ fr: FR, en: EN, es: ES, ar: AR, zh: ZH });
 
 export function getComparatorMessages(locale: Locale): ComparatorMessages {
-  return CATALOG[resolveCatalogLocale(locale)] ?? FR;
+  return CATALOG[locale] ?? FR;
 }
 
 export function formatComparatorDate(iso: string, locale: Locale): string {
-  const tag = locale === "fr" ? "fr-FR" : locale === "es" ? "es-ES" : "en-GB";
+  const tag =
+    locale === "fr"
+      ? "fr-FR"
+      : locale === "es"
+        ? "es-ES"
+        : locale === "ar"
+          ? "ar"
+          : locale === "zh"
+            ? "zh-CN"
+            : "en-GB";
   return new Date(iso).toLocaleString(tag, {
     day: "numeric",
     month: "short",

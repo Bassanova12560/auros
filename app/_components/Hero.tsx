@@ -51,6 +51,10 @@ export function Hero() {
                     <Link href="/start" className="text-white/60 underline-offset-2 hover:text-white hover:underline">
                       {h.dossier}
                     </Link>
+                    {" · "}
+                    <Link href="/compare" className="text-white/60 underline-offset-2 hover:text-white hover:underline">
+                      {h.compare}
+                    </Link>
                   </>
                 );
               })()}

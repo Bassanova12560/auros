@@ -32,7 +32,7 @@ const FR: HubCopy = {
     {
       id: "dossier",
       label: "Dossier RWA",
-      blurb: "Préparer un actif sans être expert",
+      blurb: "Score, comparateur marché, juridictions",
       items: [
         {
           href: "/start",
@@ -55,9 +55,14 @@ const FR: HubCopy = {
           description: "Reprise, PDF, suivi",
         },
         {
+          href: "/compare?from=nav",
+          title: "Comparateur RWA",
+          description: "120+ produits · APY live · multi-classes",
+        },
+        {
           href: "/jurisdictions?from=nav",
           title: "Juridictions",
-          description: "Cadre indicatif MiCA / UK / US",
+          description: "Où structurer · MiCA / SPV",
         },
       ],
     },
@@ -237,7 +242,7 @@ const EN: HubCopy = {
     {
       id: "dossier",
       label: "RWA dossier",
-      blurb: "Prepare an asset without being an expert",
+      blurb: "Score, market comparator, jurisdictions",
       items: [
         {
           href: "/start",
@@ -259,10 +264,15 @@ const EN: HubCopy = {
           title: "My dossiers",
           description: "Resume, PDF, tracking",
         },
+                {
+          href: "/compare?from=nav",
+          title: "RWA comparator",
+          description: "120+ products · live APY · multi-class",
+        },
         {
           href: "/jurisdictions?from=nav",
           title: "Jurisdictions",
-          description: "Indicative MiCA / UK / US frame",
+          description: "Where to structure · MiCA / SPV",
         },
       ],
     },
@@ -442,7 +452,7 @@ const ES: HubCopy = {
     {
       id: "dossier",
       label: "Expediente RWA",
-      blurb: "Preparar un activo sin ser experto",
+      blurb: "Score, comparador de mercado, jurisdicciones",
       items: [
         {
           href: "/start",
@@ -464,10 +474,15 @@ const ES: HubCopy = {
           title: "Mis expedientes",
           description: "Reanudación, PDF, seguimiento",
         },
+                {
+          href: "/compare?from=nav",
+          title: "Comparador RWA",
+          description: "120+ productos · APY live · multi-clase",
+        },
         {
           href: "/jurisdictions?from=nav",
           title: "Jurisdicciones",
-          description: "Marco indicativo MiCA / UK / US",
+          description: "Dónde estructurar · MiCA / SPV",
         },
       ],
     },
@@ -647,7 +662,7 @@ const AR: HubCopy = {
     {
       id: "dossier",
       label: "ملف RWA",
-      blurb: "جهّز أصلاً دون أن تكون خبيراً",
+      blurb: "تقييم · مقارن السوق · اختصاصات",
       items: [
         {
           href: "/start",
@@ -669,10 +684,15 @@ const AR: HubCopy = {
           title: "ملفاتي",
           description: "استئناف، PDF، متابعة",
         },
+                {
+          href: "/compare?from=nav",
+          title: "مقارن RWA",
+          description: "120+ منتج · عوائد مباشرة",
+        },
         {
           href: "/jurisdictions?from=nav",
-          title: "الاختصاصات",
-          description: "إطار إرشادي MiCA / UK / US",
+          title: "الولايات القضائية",
+          description: "أين تُهيكل · MiCA / SPV",
         },
       ],
     },
@@ -852,7 +872,7 @@ const ZH: HubCopy = {
     {
       id: "dossier",
       label: "RWA 档案",
-      blurb: "无需成为专家即可准备资产",
+      blurb: "评分 · 市场对比 · 司法辖区",
       items: [
         {
           href: "/start",
@@ -874,10 +894,15 @@ const ZH: HubCopy = {
           title: "我的档案",
           description: "恢复、PDF、跟踪",
         },
+                {
+          href: "/compare?from=nav",
+          title: "RWA 对比器",
+          description: "120+ 产品 · 实时 APY · 多资产",
+        },
         {
           href: "/jurisdictions?from=nav",
-          title: "司法辖区",
-          description: "参考 MiCA / UK / US 框架",
+          title: "司法管辖区",
+          description: "在哪里结构化 · MiCA / SPV",
         },
       ],
     },

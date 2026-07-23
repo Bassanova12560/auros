@@ -25,6 +25,11 @@ const SECTIONS = [
       { href: "/developers/shield", label: "AUROS Shield", desc: "Sous-couche on-prem — clés locales, CBOM crypto, PQC-ready." },
       { href: "/comment-tokeniser", label: "Comment tokeniser mon actif", desc: "Guides immobilier, art, fonds, obligations, crédit privé, énergie, nucléaire et eau — wizard prérempli." },
       { href: "/estimate", label: "Score de préparation", desc: "Test indicatif en une phrase, sans compte." },
+      {
+        href: COMPARATOR_ROUTES.compare,
+        label: "Comparateur rendements RWA",
+        desc: "Pièce unique — 120+ produits, APY live, multi-classes.",
+      },
       { href: "/tools", label: "Outils tokenisation RWA", desc: "4 outils gratuits — MiCA, rendement, juridiction et coût indicatif." },
       { href: "/wizard", label: "Wizard tokenisation", desc: "Parcours gratuit — score et data room." },
       { href: AUROS_FAQ_ROUTE, label: "FAQ AUROS", desc: "10 réponses sur wizard, juridictions, RGPD." },
@@ -42,7 +47,6 @@ const SECTIONS = [
       { href: "/discover", label: "Découvrir AUROS", desc: "Univers d'actifs et livrables dossier." },
       { href: "/trust", label: "Confiance & conformité", desc: "MiCA, RGPD, cadre réglementaire." },
       { href: "/jurisdictions", label: "Comparateur juridictions", desc: "8 juridictions — régulateur, fiscalité, délais." },
-      { href: COMPARATOR_ROUTES.compare, label: "Comparateur rendements RWA", desc: "Données live multi-classes d'actifs." },
     ],
   },
   {

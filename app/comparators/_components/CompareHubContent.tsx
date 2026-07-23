@@ -162,7 +162,7 @@ export function CompareHubContent({ payload }: CompareHubContentProps) {
               href="/tools/mica-checker"
               className="font-mono text-[11px] text-white/40 underline-offset-2 hover:text-white/65 hover:underline"
             >
-              Test MiCA indicatif →
+              {copy.micaCheckerLink}
             </Link>
           </p>
         </div>

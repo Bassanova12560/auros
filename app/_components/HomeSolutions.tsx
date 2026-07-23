@@ -37,12 +37,21 @@ export function HomeSolutions() {
             </li>
           ))}
         </ul>
-        <p className="mt-6 text-xs text-white/35">
-          {m.dossierHint}{" "}
-          <Link href="/start" className="underline-offset-2 hover:underline">
-            {m.dossierCta}
-          </Link>
-          .
+        <p className="mt-6 space-y-1 text-xs text-white/35">
+          <span className="block">
+            {m.dossierHint}{" "}
+            <Link href="/start" className="underline-offset-2 hover:underline">
+              {m.dossierCta}
+            </Link>
+            .
+          </span>
+          <span className="block">
+            {m.compareHint}{" "}
+            <Link href="/compare" className="underline-offset-2 hover:underline">
+              {m.compareCta}
+            </Link>
+            .
+          </span>
         </p>
       </div>
     </section>

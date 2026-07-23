@@ -1,16 +1,20 @@
 "use client";
 
+import { usePathname } from "next/navigation";
+
 import { PrimaryButton } from "@/app/_components/ui/PrimaryButton";
 import { useComparatorPage } from "./useComparatorPage";
-import { DOSSIER_CTA } from "@/lib/comparators";
+import { DOSSIER_CTA, isCompareHubPath } from "@/lib/comparators";
 import { pageCopyForId } from "@/lib/comparators/page-copy";
 import { track } from "@/lib/analytics";
 import { buildCopilotHref } from "@/lib/copilot/types";
 
 export function DossierCtaStrip() {
+  const pathname = usePathname();
   const { messages, comparatorId, entry } = useComparatorPage();
-  const cta =
-    pageCopyForId(messages, entry?.id)?.cta ?? messages.stablecoins.cta;
+  const cta = isCompareHubPath(pathname)
+    ? messages.compareHub.dossierCta
+    : (pageCopyForId(messages, entry?.id)?.cta ?? messages.stablecoins.cta);
 
   return (
     <section className="hidden border-t border-white/[0.06] px-6 py-10 md:block">
@@ -44,7 +48,7 @@ export function DossierCtaStrip() {
               })
             }
           >
-            Poser une question au Copilot →
+            {messages.compareHub.askCopilot}
           </a>
         </div>
       </div>
