@@ -52,6 +52,7 @@ export type EligibilityProduct = {
   entity_id: string;
   issuer_key: string;
   parent_issuer: string | null;
+  token_addresses: ReturnType<typeof toCompareApiProduct>["token_addresses"];
   as_of: string;
   compare: ReturnType<typeof toCompareApiProduct>;
   mica: MicaOrientedFlags;
@@ -149,7 +150,7 @@ function micaFlags(product: HubProduct, region: JurisdictionHint["region"]): Mic
 function greenFlags(product: HubProduct): GreenEligibilityFlags {
   const green_relevant = isGreenRelevantHubProduct(product);
   const hay = `${product.row.id} ${product.row.product}`.toLowerCase();
-  const carbon_token_hint = /toucan|klima|moss|flowcarbon|bct|nct|mco2|carbon/.test(
+  const carbon_token_hint = /toucan|klima|moss|flowcarbon|bct|nct|mco2|carbon|regen|solid.?world|crbw|energy.?web|powerledger|powr/.test(
     hay
   );
   const cqs = resolveCompareCqs(product);
@@ -179,6 +180,7 @@ export function buildEligibilityForProduct(
     entity_id: compare.entity_id,
     issuer_key: compare.issuer_key,
     parent_issuer: compare.parent_issuer,
+    token_addresses: compare.token_addresses,
     as_of: asOf,
     compare,
     mica: micaFlags(product, region),

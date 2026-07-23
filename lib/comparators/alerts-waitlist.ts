@@ -1,11 +1,17 @@
 /**
  * Compare shortlist alerts — email waitlist and/or webhook URL.
  * Registration persists watchers; live APY/TVL moves via cron (alerts-apy-moves).
+ * Durable when Upstash configured; else file/.data with ephemeral warning on serverless.
  */
 
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
-import { join } from "node:path";
-
+import {
+  ALERTS_WATCHERS_FILE,
+  ALERTS_WATCHERS_KEY,
+  loadAlertsJson,
+  saveAlertsJson,
+  type AlertsPersistResult,
+  type AlertsStoreBackend,
+} from "./alerts-durable-store";
 import {
   normalizeCompareProductIds,
   COMPARE_HUB_MAX,
@@ -22,8 +28,6 @@ export type CompareAlertsWaitlistEntry = {
   createdAt: string;
 };
 
-const DATA_DIR = join(process.cwd(), ".data");
-const FILE = join(DATA_DIR, "compare-alerts-waitlist.json");
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export function normalizeCompareAlertsEmail(value: unknown): string | null {
@@ -100,34 +104,45 @@ export function parseCompareAlertsWaitlistInput(raw: unknown):
   };
 }
 
-export function listCompareAlertsWatchers(): CompareAlertsWaitlistEntry[] {
-  try {
-    if (!existsSync(FILE)) return [];
-    const parsed = JSON.parse(
-      readFileSync(FILE, "utf8")
-    ) as CompareAlertsWaitlistEntry[];
-    return Array.isArray(parsed) ? parsed : [];
-  } catch {
-    return [];
-  }
+export async function listCompareAlertsWatchers(): Promise<
+  AlertsPersistResult<CompareAlertsWaitlistEntry[]>
+> {
+  const loaded = await loadAlertsJson<CompareAlertsWaitlistEntry[]>(
+    ALERTS_WATCHERS_KEY,
+    ALERTS_WATCHERS_FILE,
+    []
+  );
+  const value = Array.isArray(loaded.value) ? loaded.value : [];
+  return { ...loaded, value };
 }
 
-export function appendCompareAlertsWaitlist(
+export type AppendWatcherResult = {
+  entry: CompareAlertsWaitlistEntry;
+  backend: AlertsStoreBackend;
+  ephemeral: boolean;
+  warning: string | null;
+};
+
+export async function appendCompareAlertsWaitlist(
   entry: Omit<CompareAlertsWaitlistEntry, "createdAt">
-): CompareAlertsWaitlistEntry {
+): Promise<AppendWatcherResult> {
   const row: CompareAlertsWaitlistEntry = {
     ...entry,
     createdAt: new Date().toISOString(),
   };
-  const all = listCompareAlertsWatchers();
-  all.push(row);
-  try {
-    if (!existsSync(DATA_DIR)) mkdirSync(DATA_DIR, { recursive: true });
-    writeFileSync(FILE, JSON.stringify(all.slice(-2_000), null, 2), "utf8");
-  } catch {
-    // serverless may be read-only — still return row for notify path
-  }
-  return row;
+  const listed = await listCompareAlertsWatchers();
+  const all = [...listed.value, row].slice(-2_000);
+  const saved = await saveAlertsJson(
+    ALERTS_WATCHERS_KEY,
+    ALERTS_WATCHERS_FILE,
+    all
+  );
+  return {
+    entry: row,
+    backend: saved.backend,
+    ephemeral: saved.ephemeral,
+    warning: saved.warning,
+  };
 }
 
 /** Best-effort confirmation ping — not a live yield webhook. */

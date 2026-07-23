@@ -1,3 +1,9 @@
+/** Optional per-chain underlying token from DeFiLlama (fail soft when absent). */
+export type UnderlyingTokenRef = {
+  chain: string;
+  address: string;
+};
+
 export type ComparatorProductRow = {
   id: string;
   project: string;
@@ -14,6 +20,8 @@ export type ComparatorProductRow = {
   live: boolean;
   category: string;
   jurisdiction?: string;
+  /** DeFiLlama underlyingTokens when present — never invent. */
+  underlyingTokens?: UnderlyingTokenRef[];
 };
 
 export type StablecoinCategory = "treasury" | "credit" | "mixed";

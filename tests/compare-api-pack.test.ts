@@ -28,14 +28,19 @@ function sampleProduct(overrides: Partial<HubProduct["row"]> = {}): HubProduct {
   return {
     row: {
       id: "yieldbricks-eu",
+      project: "yieldbricks",
       platform: "YieldBricks",
       product: "EU Real Estate",
       category: "residential",
       apy: 7.1,
+      apyBase: null,
+      apyReward: null,
       tvlUsd: 1_000_000,
       chains: ["ethereum"],
       live: false,
       link: "/real-estate",
+      affiliate_link: "",
+      logo: "",
       ...overrides,
     },
     comparatorId: "immobilier",
@@ -163,6 +168,22 @@ describe("eligibility composite", () => {
     assert.ok(typeof green.cqs!.score === "number");
     assert.equal(green.csrd.source, "green_compare_row");
   });
+
+  it("maps expanded aliases (regen / energy-web) without inventing APY", () => {
+    const regen = sampleProduct({
+      id: "regen-network",
+      platform: "Regen Network",
+      product: "ecocredits",
+    });
+    assert.ok(resolveCompareCqs(regen));
+    const energy = sampleProduct({
+      id: "energy-web",
+      platform: "Energy Web",
+      product: "EW Zero",
+    });
+    assert.ok(resolveCompareCqs(energy));
+    assert.equal(energy.row.apy, 7.1); // sample default — never rewritten by CQS
+  });
 });
 
 describe("entity graph", () => {
@@ -181,6 +202,74 @@ describe("entity graph", () => {
     assert.equal(entity.issuer_key, "maple");
     assert.equal(entity.entity_id, "ent:maple:mcusdc");
     assert.ok(entity.entity_key.includes("::"));
+  });
+
+  it("attaches known token addresses and fails soft when unknown", () => {
+    const known = resolveCompareEntity(
+      sampleProduct({
+        id: "toucan-bct-nct",
+        platform: "Toucan Protocol",
+        product: "BCT / NCT",
+        chains: ["polygon"],
+      })
+    );
+    assert.ok(known.token_addresses.length >= 1);
+    assert.equal(known.token_addresses[0]!.source, "manual_catalog");
+    assert.match(known.token_addresses[0]!.address, /^0x[a-f0-9]{40}$/);
+
+    const unknown = resolveCompareEntity(sampleProduct());
+    assert.equal(unknown.token_addresses.length, 0);
+  });
+
+  it("accepts DeFiLlama underlyingTokens when present", () => {
+    const product = sampleProduct({
+      id: "some-live::TOKEN",
+      platform: "Unknown Desk",
+      product: "TOKEN",
+      project: "some-live",
+      chains: ["ethereum"],
+    });
+    product.row.underlyingTokens = [
+      {
+        chain: "ethereum",
+        address: "0x1111111111111111111111111111111111111111",
+      },
+    ];
+    const entity = resolveCompareEntity(product);
+    assert.equal(entity.token_addresses.length, 1);
+    assert.equal(entity.token_addresses[0]!.source, "defillama");
+  });
+});
+
+describe("durable alerts store honesty", () => {
+  it("reports ephemeral backend when Upstash unset (file or ephemeral)", async () => {
+    const prevUrl = process.env.UPSTASH_REDIS_REST_URL;
+    const prevToken = process.env.UPSTASH_REDIS_REST_TOKEN;
+    delete process.env.UPSTASH_REDIS_REST_URL;
+    delete process.env.UPSTASH_REDIS_REST_TOKEN;
+    try {
+      const { appendCompareAlertsWaitlist } = await import(
+        "../lib/comparators/alerts-waitlist"
+      );
+      const result = await appendCompareAlertsWaitlist({
+        email: "durable-test@example.com",
+        productIds: ["maple-mcusdc"],
+        locale: "en",
+        channel: "email",
+      });
+      assert.ok(
+        result.backend === "file" || result.backend === "ephemeral"
+      );
+      assert.equal(typeof result.ephemeral, "boolean");
+      if (result.ephemeral) {
+        assert.ok(result.warning?.includes("UPSTASH"));
+      }
+    } finally {
+      if (prevUrl != null) process.env.UPSTASH_REDIS_REST_URL = prevUrl;
+      else delete process.env.UPSTASH_REDIS_REST_URL;
+      if (prevToken != null) process.env.UPSTASH_REDIS_REST_TOKEN = prevToken;
+      else delete process.env.UPSTASH_REDIS_REST_TOKEN;
+    }
   });
 });
 

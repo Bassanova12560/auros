@@ -1,8 +1,10 @@
-# Upstash Redis — rate limits durables (prod)
+# Upstash Redis — rate limits durables + compare alert store (prod)
 
 Sans Upstash, `checkRateLimitAsync` / Toll metering tombent en **mémoire processus** : faible sur Vercel (plusieurs instances / cold starts).
 
-**Bloquant pour un vrai pilote banque** (Policy / Eligibility sticky).
+Compare alert watchers / APY snapshots (`/api/compare-alerts-waitlist`, cron compare-apy-alerts) utilisent aussi Upstash quand configuré ; sinon fichier `.data` (souvent **éphémère** sur serverless).
+
+**Bloquant pour un vrai pilote banque** (Policy / Eligibility sticky) et pour des alertes compare durables.
 
 ## Setup (5 min)
 
@@ -35,4 +37,4 @@ Doit afficher `upstash.configured: true` et `reachable: true`.
 ## Code
 
 - Helper partagé : `lib/upstash.ts` (`probeUpstashStatus`, `upstashCommand`)
-- Consommateurs : `lib/rate-limit.ts`, Toll metering, protocol rate-limit
+- Consommateurs : `lib/rate-limit.ts`, Toll metering, protocol rate-limit, `lib/comparators/alerts-durable-store.ts`

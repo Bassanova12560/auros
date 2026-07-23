@@ -125,7 +125,18 @@ export const RAPIDAPI_LISTING = {
     { language: "TypeScript", package: "@adrien1212balitrand/auros-protocol", install: "npm install @adrien1212balitrand/auros-protocol" },
     { language: "Python", package: "auros-protocol", install: "pip install auros-protocol" },
   ],
-  tags: ["RWA", "MiCA", "tokenization", "compliance", "real-world-assets", "fintech", "regulatory"],
+  tags: [
+    "RWA",
+    "MiCA",
+    "tokenization",
+    "compliance",
+    "real-world-assets",
+    "fintech",
+    "regulatory",
+    "compare",
+    "eligibility",
+    "APY",
+  ],
 } as const;
 
 export const RAPIDAPI_SUBMISSION_PAYLOAD = {

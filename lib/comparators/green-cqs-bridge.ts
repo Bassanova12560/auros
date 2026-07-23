@@ -14,20 +14,53 @@ import {
 } from "@/lib/green/scoring/carbon-profiles";
 import type { HubProduct } from "./compare-hub";
 
-/** RWA product id / platform hints → Green compare row id. */
+/**
+ * RWA product id / platform / symbol hints → Green compare row id.
+ * Expanded aliases only — never invent scores when profile missing.
+ */
 const RWA_TO_GREEN_ROW: Record<string, string> = {
+  // Toucan
   "toucan-bct-nct": "toucan",
   toucan: "toucan",
+  "toucan-protocol": "toucan",
+  bct: "toucan",
+  nct: "toucan",
+  tco2: "toucan",
+  // KlimaDAO
   "klima-klima": "klim",
   "klima-dao": "klim",
   klimadao: "klim",
+  klim: "klim",
+  klima: "klim",
+  // Moss
   "moss-mco2": "moss",
   "moss-earth": "moss",
   moss: "moss",
+  mco2: "moss",
+  // Flow Carbon
   "flowcarbon-gnt": "flowcarbon",
   flowcarbon: "flowcarbon",
+  "flow-carbon": "flowcarbon",
+  gnt: "flowcarbon",
+  // Regen
   "regen-network": "regen-network",
+  regen: "regen-network",
+  "regen-network::regen": "regen-network",
+  // Solid World
   "solid-world": "solid-world",
+  solidworld: "solid-world",
+  "solid-world-dao": "solid-world",
+  crbw: "solid-world",
+  // Energy / REC references (CSRD path via green row; CQS only if profile exists)
+  "energy-web": "energy-web",
+  energyweb: "energy-web",
+  ewt: "energy-web",
+  powerledger: "powerledger",
+  "power-ledger": "powerledger",
+  powr: "powerledger",
+  wepower: "wepower",
+  sunexchange: "sunexchange",
+  "sun-exchange": "sunexchange",
 };
 
 export type CompareCqsAttachment = {
@@ -55,10 +88,24 @@ export type CompareCsrdAttachment = {
 function resolveGreenRowId(product: HubProduct): string | null {
   const id = product.row.id.toLowerCase();
   if (RWA_TO_GREEN_ROW[id]) return RWA_TO_GREEN_ROW[id];
+  // Live DeFiLlama: project::symbol
+  if (id.includes("::")) {
+    const [project, symbol] = id.split("::");
+    if (project && RWA_TO_GREEN_ROW[project]) return RWA_TO_GREEN_ROW[project];
+    if (symbol && RWA_TO_GREEN_ROW[symbol.toLowerCase()]) {
+      return RWA_TO_GREEN_ROW[symbol.toLowerCase()];
+    }
+  }
   const platform = product.row.platform.trim().toLowerCase();
   if (RWA_TO_GREEN_ROW[platform]) return RWA_TO_GREEN_ROW[platform];
+  const project = product.row.project.trim().toLowerCase();
+  if (RWA_TO_GREEN_ROW[project]) return RWA_TO_GREEN_ROW[project];
+  const productName = product.row.product.trim().toLowerCase();
+  if (RWA_TO_GREEN_ROW[productName]) return RWA_TO_GREEN_ROW[productName];
   for (const [hint, greenId] of Object.entries(RWA_TO_GREEN_ROW)) {
-    if (id.includes(hint) || platform.includes(hint)) return greenId;
+    if (id.includes(hint) || platform.includes(hint) || project.includes(hint)) {
+      return greenId;
+    }
   }
   return null;
 }

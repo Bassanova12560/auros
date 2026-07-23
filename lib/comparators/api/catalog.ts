@@ -32,6 +32,12 @@ export type CompareApiProduct = {
   apy_note: "indicative_never_invented";
   tvl_usd: number;
   chains: string[];
+  /** Known contracts per chain — empty when unknown (never invented). */
+  token_addresses: {
+    chain: string;
+    address: string;
+    source: "manual_catalog" | "defillama";
+  }[];
   live: boolean;
   source_type: SourceType;
   risk_tier: RiskTier;
@@ -80,6 +86,7 @@ export function toCompareApiProduct(
     apy_note: "indicative_never_invented",
     tvl_usd: product.row.tvlUsd,
     chains: product.row.chains,
+    token_addresses: entity.token_addresses,
     live: product.row.live,
     source_type,
     risk_tier: product.riskTier,

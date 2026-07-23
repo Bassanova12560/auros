@@ -38,6 +38,9 @@ function groupedToRow(
     apyReward: group.apyReward,
     tvlUsd: group.tvlUsd,
     chains: group.chains,
+    underlyingTokens: group.underlyingTokens.length
+      ? group.underlyingTokens
+      : undefined,
     link: meta?.link ?? "#",
     affiliate_link: meta?.affiliate_link ?? "",
     logo: meta?.logo ?? "",

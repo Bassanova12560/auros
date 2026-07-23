@@ -8,6 +8,8 @@ import {
 import { notifyCompareAlertsWaitlistSignup } from "@/lib/comparators/alerts-waitlist-notify";
 import { checkRateLimit, getRequestIp } from "@/lib/rate-limit";
 
+export const runtime = "nodejs";
+
 /** Watch shortlist — email and/or HTTPS webhook. Best-effort delivery. */
 export async function POST(req: Request) {
   const ip = getRequestIp(req);
@@ -28,7 +30,8 @@ export async function POST(req: Request) {
     return NextResponse.json({ ok: false, error: parsed.error }, { status: 400 });
   }
 
-  const row = appendCompareAlertsWaitlist(parsed.data);
+  const persisted = await appendCompareAlertsWaitlist(parsed.data);
+  const row = persisted.entry;
   const webhookPing = await pingCompareAlertsWebhook(row);
   const notify = await notifyCompareAlertsWaitlistSignup(row);
   if (!notify.ok) {
@@ -38,9 +41,16 @@ export async function POST(req: Request) {
     ok: true,
     message: "waitlist_joined",
     delivery: "best_effort",
-    note: "Watcher persisted — live APY/TVL moves delivered best-effort when thresholds hit (schema auros.compare.alerts.move.v1)",
+    note: persisted.ephemeral
+      ? "Watcher accepted but store is ephemeral on this instance — configure Upstash for durable serverless persistence"
+      : "Watcher persisted — live APY/TVL moves delivered best-effort when thresholds hit (schema auros.compare.alerts.move.v1)",
     channel: row.channel,
     webhook_ping_ok: webhookPing.ok,
     move_event: "compare.alerts.apy_move",
+    store: {
+      backend: persisted.backend,
+      ephemeral: persisted.ephemeral,
+      warning: persisted.warning,
+    },
   });
 }

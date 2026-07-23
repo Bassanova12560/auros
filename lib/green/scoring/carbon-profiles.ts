@@ -69,4 +69,24 @@ export const GREEN_CARBON_PROFILES: Record<string, CarbonQualityProfile> = {
     vintage_risk: "high",
     on_chain_wrapper: true,
   },
+  /**
+   * REC / energy tooling — not carbon-credit wrappers.
+   * Conservative profiles only; never invent stronger scores.
+   */
+  "energy-web": {
+    registry: "other",
+    ccp_aligned: "unknown",
+    additionality: "moderate",
+    permanence: "moderate",
+    vintage_risk: "low",
+    on_chain_wrapper: false,
+  },
+  powerledger: {
+    registry: "other",
+    ccp_aligned: "unknown",
+    additionality: "moderate",
+    permanence: "moderate",
+    vintage_risk: "low",
+    on_chain_wrapper: false,
+  },
 };

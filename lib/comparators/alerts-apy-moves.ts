@@ -6,22 +6,25 @@
  */
 
 import { createHash } from "node:crypto";
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
-import { join } from "node:path";
 
 import { Resend } from "resend";
 
 import { resendFrom } from "@/lib/emails/constants";
+import {
+  ALERTS_DELIVERIES_FILE,
+  ALERTS_DELIVERIES_KEY,
+  ALERTS_SNAPSHOTS_FILE,
+  ALERTS_SNAPSHOTS_KEY,
+  loadAlertsJson,
+  saveAlertsJson,
+  type AlertsStoreBackend,
+} from "./alerts-durable-store";
 import { getCompareHubPayload, type HubProduct } from "./compare-hub";
 import { resolveCompareEntity } from "./entity-graph";
 import {
   listCompareAlertsWatchers,
   type CompareAlertsWaitlistEntry,
 } from "./alerts-waitlist";
-
-const DATA_DIR = join(process.cwd(), ".data");
-const SNAPSHOT_FILE = join(DATA_DIR, "compare-alerts-metric-snapshots.json");
-const DELIVERY_FILE = join(DATA_DIR, "compare-alerts-deliveries.json");
 
 /** Absolute APY change (percentage points) to emit a move. */
 export const APY_MOVE_THRESHOLD_PP = 0.25;
@@ -84,52 +87,70 @@ type DeliveryLedger = {
   keys: string[];
 };
 
-function readJson<T>(path: string, fallback: T): T {
-  try {
-    if (!existsSync(path)) return fallback;
-    return JSON.parse(readFileSync(path, "utf8")) as T;
-  } catch {
-    return fallback;
-  }
+const EMPTY_SNAPSHOTS: MetricSnapshotStore = {
+  updated_at: new Date(0).toISOString(),
+  products: {},
+};
+
+export async function loadMetricSnapshots(): Promise<{
+  store: MetricSnapshotStore;
+  backend: AlertsStoreBackend;
+  warning: string | null;
+}> {
+  const loaded = await loadAlertsJson<MetricSnapshotStore>(
+    ALERTS_SNAPSHOTS_KEY,
+    ALERTS_SNAPSHOTS_FILE,
+    EMPTY_SNAPSHOTS
+  );
+  const store =
+    loaded.value?.products && typeof loaded.value.products === "object"
+      ? loaded.value
+      : EMPTY_SNAPSHOTS;
+  return { store, backend: loaded.backend, warning: loaded.warning };
 }
 
-function writeJson(path: string, value: unknown): void {
-  try {
-    if (!existsSync(DATA_DIR)) mkdirSync(DATA_DIR, { recursive: true });
-    writeFileSync(path, JSON.stringify(value, null, 2), "utf8");
-  } catch {
-    // serverless may be read-only
-  }
+export async function saveMetricSnapshots(
+  store: MetricSnapshotStore
+): Promise<{ backend: AlertsStoreBackend; warning: string | null }> {
+  const saved = await saveAlertsJson(
+    ALERTS_SNAPSHOTS_KEY,
+    ALERTS_SNAPSHOTS_FILE,
+    store
+  );
+  return { backend: saved.backend, warning: saved.warning };
 }
 
-export function loadMetricSnapshots(): MetricSnapshotStore {
-  return readJson<MetricSnapshotStore>(SNAPSHOT_FILE, {
-    updated_at: new Date(0).toISOString(),
-    products: {},
+async function loadDeliveryLedger(): Promise<DeliveryLedger> {
+  const loaded = await loadAlertsJson<DeliveryLedger>(
+    ALERTS_DELIVERIES_KEY,
+    ALERTS_DELIVERIES_FILE,
+    { keys: [] }
+  );
+  return Array.isArray(loaded.value?.keys)
+    ? loaded.value
+    : { keys: [] };
+}
+
+async function saveDeliveryLedger(ledger: DeliveryLedger): Promise<void> {
+  await saveAlertsJson(ALERTS_DELIVERIES_KEY, ALERTS_DELIVERIES_FILE, {
+    keys: ledger.keys.slice(-5_000),
   });
 }
 
-export function saveMetricSnapshots(store: MetricSnapshotStore): void {
-  writeJson(SNAPSHOT_FILE, store);
+export async function wasDeliveryAttempted(
+  idempotencyKey: string
+): Promise<boolean> {
+  const ledger = await loadDeliveryLedger();
+  return ledger.keys.includes(idempotencyKey);
 }
 
-function loadDeliveryLedger(): DeliveryLedger {
-  return readJson<DeliveryLedger>(DELIVERY_FILE, { keys: [] });
-}
-
-function saveDeliveryLedger(ledger: DeliveryLedger): void {
-  writeJson(DELIVERY_FILE, { keys: ledger.keys.slice(-5_000) });
-}
-
-export function wasDeliveryAttempted(idempotencyKey: string): boolean {
-  return loadDeliveryLedger().keys.includes(idempotencyKey);
-}
-
-export function markDeliveryAttempted(idempotencyKey: string): void {
-  const ledger = loadDeliveryLedger();
+export async function markDeliveryAttempted(
+  idempotencyKey: string
+): Promise<void> {
+  const ledger = await loadDeliveryLedger();
   if (!ledger.keys.includes(idempotencyKey)) {
     ledger.keys.push(idempotencyKey);
-    saveDeliveryLedger(ledger);
+    await saveDeliveryLedger(ledger);
   }
 }
 
@@ -315,6 +336,9 @@ export type CompareApyAlertsRunResult = {
   email_ok: number;
   errors: number;
   seeded_baseline: boolean;
+  store_backend: AlertsStoreBackend;
+  store_ephemeral: boolean;
+  store_warning: string | null;
 };
 
 function watcherKey(w: CompareAlertsWaitlistEntry): string {
@@ -333,11 +357,19 @@ export async function runCompareApyAlerts(): Promise<CompareApyAlertsRunResult> 
     email_ok: 0,
     errors: 0,
     seeded_baseline: false,
+    store_backend: "ephemeral",
+    store_ephemeral: true,
+    store_warning: null,
   };
 
   const hub = await getCompareHubPayload();
   const asOf = hub.fetchedAt;
-  const previous = loadMetricSnapshots();
+  const { store: previous, backend: loadBackend, warning: loadWarning } =
+    await loadMetricSnapshots();
+  result.store_backend = loadBackend;
+  result.store_ephemeral = loadBackend === "ephemeral";
+  result.store_warning = loadWarning;
+
   const hadBaseline = Object.keys(previous.products).length > 0;
 
   const { moves: allMoves, next } = detectMovesForProducts(
@@ -345,7 +377,10 @@ export async function runCompareApyAlerts(): Promise<CompareApyAlertsRunResult> 
     previous,
     asOf
   );
-  saveMetricSnapshots(next);
+  const saved = await saveMetricSnapshots(next);
+  result.store_backend = saved.backend;
+  result.store_ephemeral = saved.backend === "ephemeral";
+  result.store_warning = saved.warning ?? result.store_warning;
   result.products_tracked = hub.products.length;
 
   if (!hadBaseline) {
@@ -357,7 +392,15 @@ export async function runCompareApyAlerts(): Promise<CompareApyAlertsRunResult> 
   result.moves_detected = allMoves.length;
   if (allMoves.length === 0) return result;
 
-  const watchers = listCompareAlertsWatchers();
+  const watchersLoaded = await listCompareAlertsWatchers();
+  if (watchersLoaded.backend === "ephemeral") {
+    result.store_ephemeral = true;
+    result.store_warning =
+      watchersLoaded.warning ?? result.store_warning;
+  } else if (result.store_backend !== "upstash") {
+    result.store_backend = watchersLoaded.backend;
+  }
+  const watchers = watchersLoaded.value;
   result.watchers = watchers.length;
   const asOfDay = asOf.slice(0, 10);
 
@@ -374,7 +417,7 @@ export async function runCompareApyAlerts(): Promise<CompareApyAlertsRunResult> 
     if (moves.length === 0) continue;
 
     const idem = buildIdempotencyKey(watcherKey(watcher), moves, asOfDay);
-    if (wasDeliveryAttempted(idem)) {
+    if (await wasDeliveryAttempted(idem)) {
       result.deliveries_skipped_idempotent += 1;
       continue;
     }
@@ -387,7 +430,7 @@ export async function runCompareApyAlerts(): Promise<CompareApyAlertsRunResult> 
     });
 
     result.deliveries_attempted += 1;
-    markDeliveryAttempted(idem);
+    await markDeliveryAttempted(idem);
 
     try {
       if (

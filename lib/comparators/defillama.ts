@@ -10,6 +10,8 @@ export type DefiLlamaPool = {
   apy: number;
   apyBase?: number;
   apyReward?: number;
+  /** Token addresses when DeFiLlama provides them — may be empty. */
+  underlyingTokens?: string[];
 };
 
 type YieldsResponse = {
@@ -51,7 +53,19 @@ export type GroupedPool = {
   apyReward: number | null;
   tvlUsd: number;
   chains: string[];
+  /** First valid underlying token per chain when DeFiLlama exposes it. */
+  underlyingTokens: { chain: string; address: string }[];
 };
+
+function firstUnderlying(
+  pool: DefiLlamaPool
+): { chain: string; address: string } | null {
+  const raw = pool.underlyingTokens?.find(
+    (t) => typeof t === "string" && /^0x[a-fA-F0-9]{40}$/.test(t)
+  );
+  if (!raw || !pool.chain) return null;
+  return { chain: pool.chain, address: raw.toLowerCase() };
+}
 
 export function groupPoolsByProduct(pools: DefiLlamaPool[]): GroupedPool[] {
   const map = new Map<string, GroupedPool>();
@@ -59,6 +73,7 @@ export function groupPoolsByProduct(pools: DefiLlamaPool[]): GroupedPool[] {
   for (const pool of pools) {
     const key = `${pool.project}::${pool.symbol}`;
     const existing = map.get(key);
+    const token = firstUnderlying(pool);
 
     if (!existing) {
       map.set(key, {
@@ -70,6 +85,7 @@ export function groupPoolsByProduct(pools: DefiLlamaPool[]): GroupedPool[] {
         apyReward: pool.apyReward ?? null,
         tvlUsd: pool.tvlUsd,
         chains: [pool.chain],
+        underlyingTokens: token ? [token] : [],
       });
       continue;
     }
@@ -82,6 +98,14 @@ export function groupPoolsByProduct(pools: DefiLlamaPool[]): GroupedPool[] {
     }
     if (!existing.chains.includes(pool.chain)) {
       existing.chains.push(pool.chain);
+    }
+    if (
+      token &&
+      !existing.underlyingTokens.some(
+        (t) => t.chain.toLowerCase() === token.chain.toLowerCase()
+      )
+    ) {
+      existing.underlyingTokens.push(token);
     }
   }
 
