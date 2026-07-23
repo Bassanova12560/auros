@@ -17,7 +17,7 @@ export default function WattPage() {
   return (
     <>
       <AiFirstPageJsonLd path="/watt" />
-      <FocusPageShell path="/watt" width="4xl">
+      <FocusPageShell path="/watt" width="3xl">
         <ContentPageLayout
           product="Resource Layer"
           eyebrow="WATT · Preview"
