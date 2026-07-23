@@ -132,6 +132,33 @@ export {
 } from "./compare-selection";
 
 export {
+  COMPARE_REPORT_ROUTE,
+  buildCompareReportPath,
+  buildCompareReportUrl,
+  buildCompareDossierHref,
+  buildCompareWizardHref,
+  buildCompareSelectionCsv,
+  selectionHasGreenRelevant,
+  isGreenRelevantHubProduct,
+} from "./compare-report";
+
+export {
+  SPONSORED_SLOTS,
+  getSponsoredSlot,
+  isSponsoredProductId,
+  listSponsoredProductIds,
+} from "./sponsored";
+export type { SponsoredSlot, SponsoredLabel } from "./sponsored";
+
+export { buildCompareDeskMailto, COMPARE_DESK_EMAIL } from "./desk-lead";
+
+export {
+  PUBLIC_COMPARE_HOURLY_LIMIT,
+  buildScreenerSnapshot,
+  buildShortlistSnapshot,
+} from "./api/snapshot";
+
+export {
   highlightNumericRow,
   parseFeesCompareValue,
   compareCellHighlightClass,

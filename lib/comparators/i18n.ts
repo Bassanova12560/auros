@@ -204,6 +204,50 @@ export type ComparatorMessages = {
         fiche: string;
       };
     };
+    /** Monetization chrome — max 3 primary CTAs in panel. */
+    monetization: {
+      eyebrow: string;
+      subtitle: string;
+      reportCta: string;
+      dossierCta: string;
+      deskCta: string;
+      csvCta: string;
+      csvDone: string;
+      csvLicenceHint: string;
+      greenUpsell: string;
+    };
+    sponsored: {
+      badgeSponsored: string;
+      badgePartenariat: string;
+      hint: string;
+      stripTitle: string;
+      stripSubtitle: string;
+    };
+    alerts: {
+      eyebrow: string;
+      title: string;
+      subtitle: string;
+      emailLabel: string;
+      emailPlaceholder: string;
+      submit: string;
+      submitting: string;
+      success: string;
+      errorRateLimit: string;
+      errorEmail: string;
+      errorGeneric: string;
+    };
+    report: {
+      eyebrow: string;
+      title: string;
+      subtitle: string;
+      print: string;
+      dossierCta: string;
+      deskCta: string;
+      back: string;
+      empty: string;
+      indicative: string;
+      asOf: (date: string) => string;
+    };
     ecosystem: {
       title: string;
       dossier: string;
@@ -322,7 +366,8 @@ const FR: ComparatorMessages = {
       subtitle:
         "Après le marché : démarrez un dossier indicatif en ~4 min — score, data room plus tard, sans promesse de rendement.",
       cta: "Démarrer mon dossier",
-      greenLink: "Actif eau / énergie ? Voie Green →",
+      greenLink:
+        "Carbone, eau ou énergie dans la shortlist ? Green + CSRD check indicatif →",
     },
     dossierCta: {
       eyebrow: "Après le marché",
@@ -437,6 +482,53 @@ const FR: ComparatorMessages = {
         risk: "Risque",
         fiche: "Fiche AUROS",
       },
+    },
+    monetization: {
+      eyebrow: "Après la comparaison",
+      subtitle:
+        "Rapport indicatif partageable, dossier payant, ou intro desk — sans classement payant.",
+      reportCta: "Rapport compare",
+      dossierCta: "Dossier / data room",
+      deskCta: "Parler au desk",
+      csvCta: "Exporter CSV",
+      csvDone: "CSV téléchargé",
+      csvLicenceHint: "Export gratuit limité — licence données via Premium / API",
+      greenUpsell: "Lignes carbone / ressource → voie Green + CSRD ←",
+    },
+    sponsored: {
+      badgeSponsored: "Sponsored",
+      badgePartenariat: "Partenariat",
+      hint: "Emplacement partenariat — n’achète pas le rang APY ni le badge Verified",
+      stripTitle: "Partenariats (affichage)",
+      stripSubtitle:
+        "Slots explicites — le tri APY live/manuel reste inchangé.",
+    },
+    alerts: {
+      eyebrow: "Alertes shortlist",
+      title: "Surveiller cette sélection",
+      subtitle:
+        "Liste d’attente — on vous prévient quand les alertes APY / webhooks seront prêts.",
+      emailLabel: "Email",
+      emailPlaceholder: "vous@entreprise.com",
+      submit: "Me prévenir",
+      submitting: "Envoi…",
+      success: "Inscrit — confirmation best-effort.",
+      errorRateLimit: "Trop de tentatives — réessayez plus tard.",
+      errorEmail: "Email invalide.",
+      errorGeneric: "Échec — réessayez.",
+    },
+    report: {
+      eyebrow: "Rapport compare · indicatif",
+      title: "Compare Report",
+      subtitle:
+        "Snapshot partageable / imprimable — pas un conseil, APY non inventé.",
+      print: "Imprimer / PDF",
+      dossierCta: "Continuer vers le dossier",
+      deskCta: "Intro desk",
+      back: "Retour au hub",
+      empty: "Sélectionnez 2 à 4 produits sur /compare pour générer un rapport.",
+      indicative: "Données indicatives — vérifiez chaque plateforme avant toute décision.",
+      asOf: (date) => `As of ${date}`,
     },
     ecosystem: {
       title: "Écosystème AUROS",
@@ -887,7 +979,8 @@ const EN: ComparatorMessages = {
       subtitle:
         "After the market: start an indicative dossier in ~4 min — score now, data room later, no yield promise.",
       cta: "Start my dossier",
-      greenLink: "Water / energy asset? Green path →",
+      greenLink:
+        "Carbon, water or energy in the shortlist? Green + indicative CSRD check →",
     },
     dossierCta: {
       eyebrow: "After the market",
@@ -1002,6 +1095,51 @@ const EN: ComparatorMessages = {
         risk: "Risk",
         fiche: "AUROS sheet",
       },
+    },
+    monetization: {
+      eyebrow: "After compare",
+      subtitle:
+        "Shareable indicative report, paid dossier, or desk intro — no pay-to-rank.",
+      reportCta: "Compare report",
+      dossierCta: "Dossier / data room",
+      deskCta: "Talk to desk",
+      csvCta: "Export CSV",
+      csvDone: "CSV downloaded",
+      csvLicenceHint: "Free limited export — data licence via Premium / API",
+      greenUpsell: "Carbon / resource rows → Green + CSRD path ←",
+    },
+    sponsored: {
+      badgeSponsored: "Sponsored",
+      badgePartenariat: "Partnership",
+      hint: "Partnership slot — does not buy APY rank or Verified badge",
+      stripTitle: "Partnerships (display)",
+      stripSubtitle: "Explicit slots — live/manual APY sort is unchanged.",
+    },
+    alerts: {
+      eyebrow: "Shortlist alerts",
+      title: "Watch this selection",
+      subtitle:
+        "Waitlist — we’ll notify you when APY alerts / webhooks are ready.",
+      emailLabel: "Email",
+      emailPlaceholder: "you@company.com",
+      submit: "Notify me",
+      submitting: "Sending…",
+      success: "Joined — best-effort confirmation.",
+      errorRateLimit: "Too many attempts — try again later.",
+      errorEmail: "Invalid email.",
+      errorGeneric: "Failed — try again.",
+    },
+    report: {
+      eyebrow: "Compare report · indicative",
+      title: "Compare Report",
+      subtitle: "Shareable / printable snapshot — not advice, APY never invented.",
+      print: "Print / PDF",
+      dossierCta: "Continue to dossier",
+      deskCta: "Desk intro",
+      back: "Back to hub",
+      empty: "Select 2–4 products on /compare to generate a report.",
+      indicative: "Indicative data — verify each platform before any decision.",
+      asOf: (date) => `As of ${date}`,
     },
     ecosystem: {
       title: "AUROS ecosystem",
@@ -1452,7 +1590,8 @@ const ES: ComparatorMessages = {
       subtitle:
         "Tras el mercado: inicie un expediente indicativo en ~4 min — score ahora, data room después, sin promesa de rendimiento.",
       cta: "Empezar mi expediente",
-      greenLink: "¿Activo agua / energía? Vía Green →",
+      greenLink:
+        "¿Carbono, agua o energía en la shortlist? Green + CSRD indicativo →",
     },
     dossierCta: {
       eyebrow: "Tras el mercado",
@@ -1567,6 +1706,52 @@ const ES: ComparatorMessages = {
         risk: "Riesgo",
         fiche: "Ficha AUROS",
       },
+    },
+    monetization: {
+      eyebrow: "Tras comparar",
+      subtitle:
+        "Informe indicativo compartible, expediente de pago o intro desk — sin ranking de pago.",
+      reportCta: "Informe compare",
+      dossierCta: "Expediente / data room",
+      deskCta: "Hablar con desk",
+      csvCta: "Exportar CSV",
+      csvDone: "CSV descargado",
+      csvLicenceHint: "Exportación gratuita limitada — licencia vía Premium / API",
+      greenUpsell: "Filas carbono / recurso → vía Green + CSRD ←",
+    },
+    sponsored: {
+      badgeSponsored: "Sponsored",
+      badgePartenariat: "Partenariado",
+      hint: "Espacio de partenariado — no compra el rango APY ni el badge Verified",
+      stripTitle: "Partenariados (display)",
+      stripSubtitle: "Slots explícitos — el orden APY live/manual no cambia.",
+    },
+    alerts: {
+      eyebrow: "Alertas shortlist",
+      title: "Vigilar esta selección",
+      subtitle:
+        "Lista de espera — le avisamos cuando las alertas APY / webhooks estén listas.",
+      emailLabel: "Email",
+      emailPlaceholder: "usted@empresa.com",
+      submit: "Avisarme",
+      submitting: "Enviando…",
+      success: "Inscrito — confirmación best-effort.",
+      errorRateLimit: "Demasiados intentos — pruebe más tarde.",
+      errorEmail: "Email inválido.",
+      errorGeneric: "Error — reintente.",
+    },
+    report: {
+      eyebrow: "Informe compare · indicativo",
+      title: "Compare Report",
+      subtitle:
+        "Snapshot compartible / imprimible — no es consejo; APY nunca inventado.",
+      print: "Imprimir / PDF",
+      dossierCta: "Continuar al expediente",
+      deskCta: "Intro desk",
+      back: "Volver al hub",
+      empty: "Seleccione 2–4 productos en /compare para generar un informe.",
+      indicative: "Datos indicativos — verifique cada plataforma antes de decidir.",
+      asOf: (date) => `As of ${date}`,
     },
     ecosystem: {
       title: "Ecosistema AUROS",

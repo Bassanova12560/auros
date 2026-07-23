@@ -68,6 +68,16 @@ Last review: 2026-07-23 (compare → dossier/Green tunnel).
 | Présence marchés green-first | Page OK — `/presence` + payloads ; **suivants** : outreach Readi / KnowESG |
 | Tunnel conversion trust | OK — compare → `/start` dossier + voie Green/CSRD (max 3 CTAs), claims indicatifs, `/green/compare` next-step |
 | Comparator RWA #1 push | **In progress** — classes equity/art, filtres hub, SEO, DeFiLlama BUIDL/USYC/ACRED/HLSCOPE ; gap : TVL art/infra encore mince |
+| **Compare monetization pack** | **OK 2026-07-23** — Report `/compare/report` · desk mailto ≥2 · Sponsored badge (config vide) · CSV · alerts waitlist+webhook HTTPS · Green/CSRD soft |
+| **Compare API differentiation** | **OK 2026-07-23** — `GET/POST /api/compare` signed snapshot (`auros-compare:v1:`) · screener · eligibility composite · verify · rate-limit · docs endpoint-compare |
+
+### Next wedges (idéation — ne pas shipper tout de suite)
+
+1. Live APY-move webhooks (au-delà du ping d’inscription best-effort)
+2. Entity graph issuer↔token multi-chain (plus fin que `entity_key` plateforme+produit)
+3. CQS/CSRD scores branchés produit-par-produit quand data Green existe
+4. RapidAPI listing pack : endpoints compare public + eligibility
+5. Compare Report PDF serveur signé (au-delà de print browser)
 
 ## Backlog i18n
 

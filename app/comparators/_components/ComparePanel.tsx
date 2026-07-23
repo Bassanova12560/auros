@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useMemo, type ReactNode } from "react";
 
 import { PlatformLogo } from "./PlatformLogo";
+import { CompareMonetizationCtas } from "./CompareMonetizationCtas";
 import { useComparatorPage } from "./useComparatorPage";
 import {
   assetTypeForId,
@@ -322,6 +323,8 @@ export function ComparePanel({ open, products, onClose }: ComparePanelProps) {
         <p className="mt-4 font-mono text-[10px] leading-relaxed text-white/30">
           {hub.metaDisclaimer}
         </p>
+
+        <CompareMonetizationCtas products={products} />
       </div>
     </div>
   );

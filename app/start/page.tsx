@@ -5,6 +5,10 @@ import { ContentPageLayout } from "@/app/_components/ContentPageLayout";
 import { FocusPageShell } from "@/app/_components/FocusPageShell";
 import { AiFirstPageJsonLd } from "@/app/_components/ai-first/AiFirstPageJsonLd";
 import { PrimaryButton } from "@/app/_components/ui/PrimaryButton";
+import {
+  buildCompareWizardHref,
+  parseCompareProductIdsParam,
+} from "@/lib/comparators";
 import { metadataFromPath } from "@/lib/seo/metadata";
 
 export const START_ROUTE = "/start";
@@ -16,7 +20,16 @@ export const metadata: Metadata = {
     "Une première victoire : parcours express dossier, score instantané, ou essai Shield sans compte.",
 };
 
-export default function StartPage() {
+type PageProps = {
+  searchParams: Promise<{ compare?: string }>;
+};
+
+export default async function StartPage({ searchParams }: PageProps) {
+  const { compare } = await searchParams;
+  const ids = parseCompareProductIdsParam(compare);
+  const wizardHref = buildCompareWizardHref(ids);
+  const hasShortlist = ids.length >= 2;
+
   return (
     <>
       <AiFirstPageJsonLd path={START_ROUTE} />
@@ -27,6 +40,13 @@ export default function StartPage() {
           title="Choisissez une porte — 4 minutes"
           intro="Pas de parcours infini. Une action, un résultat. Vous pourrez approfondir ensuite."
         >
+          {hasShortlist ? (
+            <p className="mb-4 rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3 font-mono text-[11px] leading-relaxed text-white/55">
+              Shortlist compare ({ids.length}) conservée pour le parcours
+              dossier — données indicatives, sans promesse de rendement.
+            </p>
+          ) : null}
+
           <div className="space-y-4">
             <section className="rounded-xl border border-[color-mix(in_srgb,var(--auros-green-warm)_45%,transparent)] bg-[color-mix(in_srgb,var(--auros-green-warm)_10%,transparent)] px-5 py-5">
               <p className="font-mono text-[10px] uppercase tracking-wider text-[color-mix(in_srgb,var(--auros-green-warm)_80%,white)]">
@@ -39,7 +59,7 @@ export default function StartPage() {
                 8 écrans · réponses indicatives · sauvegarde auto · ~4 min
               </p>
               <div className="mt-4">
-                <PrimaryButton href="/wizard?expert=1">
+                <PrimaryButton href={wizardHref}>
                   Lancer l’express
                 </PrimaryButton>
               </div>

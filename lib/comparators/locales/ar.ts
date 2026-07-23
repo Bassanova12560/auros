@@ -90,7 +90,8 @@ export const AR: ComparatorMessages = {
       subtitle:
         "بعد السوق: ابدأ ملفاً إرشادياً خلال ~4 دقائق — درجة الآن، غرفة بيانات لاحقاً، بلا وعد بعائد.",
       cta: "ابدأ ملفي",
-      greenLink: "أصل ماء / طاقة؟ مسار Green ←",
+      greenLink:
+        "كربون أو ماء أو طاقة في القائمة؟ مسار Green + فحص CSRD إرشادي ←",
     },
     dossierCta: {
       eyebrow: "بعد السوق",
@@ -206,6 +207,51 @@ export const AR: ComparatorMessages = {
         risk: "المخاطر",
         fiche: "بطاقة AUROS",
       },
+    },
+    monetization: {
+      eyebrow: "بعد المقارنة",
+      subtitle:
+        "تقرير إرشادي قابل للمشاركة، ملف مدفوع، أو مقدمة desk — بلا ترتيب مدفوع.",
+      reportCta: "تقرير المقارنة",
+      dossierCta: "الملف / غرفة البيانات",
+      deskCta: "التحدث مع desk",
+      csvCta: "تصدير CSV",
+      csvDone: "تم تنزيل CSV",
+      csvLicenceHint: "تصدير مجاني محدود — ترخيص البيانات عبر Premium / API",
+      greenUpsell: "صفوف الكربون / الموارد → مسار Green + CSRD ←",
+    },
+    sponsored: {
+      badgeSponsored: "Sponsored",
+      badgePartenariat: "شراكة",
+      hint: "مساحة شراكة — لا تشتري ترتيب APY ولا شارة Verified",
+      stripTitle: "شراكات (عرض)",
+      stripSubtitle: "فتحات صريحة — ترتيب APY الحي/اليدوي لا يتغير.",
+    },
+    alerts: {
+      eyebrow: "تنبيهات القائمة",
+      title: "مراقبة هذا التحديد",
+      subtitle:
+        "قائمة انتظار — نُعلمك عندما تكون تنبيهات APY / webhooks جاهزة.",
+      emailLabel: "البريد",
+      emailPlaceholder: "you@company.com",
+      submit: "أعلمني",
+      submitting: "جارٍ الإرسال…",
+      success: "تم التسجيل — تأكيد أفضل جهد.",
+      errorRateLimit: "محاولات كثيرة — أعد المحاولة لاحقاً.",
+      errorEmail: "بريد غير صالح.",
+      errorGeneric: "فشل — أعد المحاولة.",
+    },
+    report: {
+      eyebrow: "تقرير مقارنة · إرشادي",
+      title: "Compare Report",
+      subtitle: "لقطة قابلة للمشاركة / الطباعة — ليست نصيحة؛ لا يُختلق APY.",
+      print: "طباعة / PDF",
+      dossierCta: "المتابعة إلى الملف",
+      deskCta: "مقدمة desk",
+      back: "العودة إلى المركز",
+      empty: "حدد 2–4 منتجات في /compare لإنشاء تقرير.",
+      indicative: "بيانات إرشادية — تحقق من كل منصة قبل أي قرار.",
+      asOf: (date) => `As of ${date}`,
     },
     ecosystem: {
       title: "منظومة AUROS",

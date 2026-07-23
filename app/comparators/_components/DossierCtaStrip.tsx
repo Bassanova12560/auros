@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { PrimaryButton } from "@/app/_components/ui/PrimaryButton";
 import { useComparatorPage } from "./useComparatorPage";
 import { DOSSIER_CTA, isCompareHubPath } from "@/lib/comparators";
+import { buildCompareDossierHref } from "@/lib/comparators/compare-report";
 import { pageCopyForId } from "@/lib/comparators/page-copy";
 import { track } from "@/lib/analytics";
 import {
@@ -13,14 +14,23 @@ import {
   GREEN_ROUTE,
 } from "@/lib/green/constants";
 
+type DossierCtaStripProps = {
+  /** When set (≥2), preserve shortlist into /start. */
+  selectedIds?: string[];
+};
+
 /** Max 3 CTAs: dossier (primary) · Green · CSRD — no ops paths. */
-export function DossierCtaStrip() {
+export function DossierCtaStrip({ selectedIds = [] }: DossierCtaStripProps) {
   const pathname = usePathname();
   const { messages, comparatorId, entry } = useComparatorPage();
   const cta = isCompareHubPath(pathname)
     ? messages.compareHub.dossierCta
     : (pageCopyForId(messages, entry?.id)?.cta ?? messages.stablecoins.cta);
   const next = messages.nextSteps;
+  const dossierHref =
+    selectedIds.length >= 2
+      ? buildCompareDossierHref(selectedIds)
+      : DOSSIER_CTA.href;
 
   return (
     <section className="border-t border-white/[0.06] px-6 py-10">
@@ -37,7 +47,7 @@ export function DossierCtaStrip() {
         </div>
         <div className="flex w-full shrink-0 flex-col items-stretch gap-2 sm:w-auto sm:items-end">
           <PrimaryButton
-            href={DOSSIER_CTA.href}
+            href={dossierHref}
             onClick={() =>
               track("comparator_dossier_cta", {
                 source: "strip",

@@ -8,6 +8,7 @@ import {
   getStablecoinRows,
 } from "@/lib/comparators";
 import { getAiFirstPageById, toPageExport } from "@/lib/ai-first";
+import { checkRateLimitAsync, getRequestIp } from "@/lib/rate-limit";
 
 export const revalidate = 3600;
 
@@ -34,9 +35,30 @@ const LOADERS: Record<
 };
 
 export async function GET(
-  _request: Request,
+  request: Request,
   context: { params: Promise<{ id: string }> }
 ) {
+  const ip = getRequestIp(request);
+  const rate = await checkRateLimitAsync(
+    `ai-first-comparators:${ip}`,
+    120,
+    3_600_000
+  );
+  if (!rate.allowed) {
+    return Response.json(
+      {
+        error: "rate_limited",
+        message: "Too many requests — use GET /api/compare or Premium /api/v1/compare",
+        meta: {
+          public: "/api/compare",
+          premium: "/api/v1/compare",
+          docs: "/developers/docs/endpoint-compare",
+        },
+      },
+      { status: 429 }
+    );
+  }
+
   const { id } = await context.params;
   const pageId = `comparator-${id}`;
   const page = getAiFirstPageById(pageId);
@@ -58,10 +80,16 @@ export async function GET(
         rowCount: live.rows.length,
         rows: live.rows.slice(0, 50),
       },
+      meta: {
+        public_compare: "/api/compare",
+        premium: "/api/v1/compare",
+        eligibility: "/api/compare/eligibility",
+      },
     },
     {
       headers: {
         "Cache-Control": "public, max-age=3600, s-maxage=3600",
+        "X-RateLimit-Remaining": String(rate.remaining),
       },
     }
   );

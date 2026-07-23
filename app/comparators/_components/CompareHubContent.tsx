@@ -13,6 +13,7 @@ import { ComparePanel } from "./ComparePanel";
 import { CompareAiAssist } from "./CompareAiAssist";
 import { CompareSelectCheckbox } from "./CompareSelectCheckbox";
 import { CompareSelectionBar } from "./CompareSelectionBar";
+import { SponsoredBadge } from "./SponsoredBadge";
 import { RiskBadge } from "./RiskBadge";
 import { useCompareSelection } from "./useCompareSelection";
 import { useComparatorPage } from "./useComparatorPage";
@@ -28,6 +29,10 @@ import {
   resolveComparatorProductLink,
   COMPARATOR_REGISTRY,
 } from "@/lib/comparators";
+import {
+  getSponsoredSlot,
+  listSponsoredProductIds,
+} from "@/lib/comparators/sponsored";
 import type { CompareHubPayload, HubProduct } from "@/lib/comparators/compare-hub";
 import type { ComparatorMessages } from "@/lib/comparators/i18n";
 import { RISK_TIER_ORDER, type RiskTier } from "@/lib/comparators/risk";
@@ -106,6 +111,12 @@ export function CompareHubContent({ payload }: CompareHubContentProps) {
   } = useCompareSelection(payload.products);
 
   const formattedDate = formatComparatorDate(payload.fetchedAt, locale);
+
+  const sponsoredProducts = useMemo(() => {
+    const ids = new Set(listSponsoredProductIds());
+    if (ids.size === 0) return [] as HubProduct[];
+    return payload.products.filter((p) => ids.has(p.row.id));
+  }, [payload.products]);
 
   const chainOptions = useMemo(() => {
     const counts = new Map<string, number>();
@@ -226,7 +237,11 @@ export function CompareHubContent({ payload }: CompareHubContentProps) {
           </p>
         </div>
         <PrimaryButton
-          href={DOSSIER_CTA.href}
+          href={
+            selectedIds.length >= 2
+              ? `/start?compare=${selectedIds.join(",")}`
+              : DOSSIER_CTA.href
+          }
           className="mt-4 shrink-0 md:mt-0"
           onClick={() =>
             track("comparator_dossier_cta", {
@@ -238,6 +253,41 @@ export function CompareHubContent({ payload }: CompareHubContentProps) {
           {copy.dossierBanner.cta}
         </PrimaryButton>
       </aside>
+
+      {sponsoredProducts.length > 0 ? (
+        <aside className="mb-8 rounded-2xl border border-sky-500/20 bg-sky-500/[0.04] p-5">
+          <p className="font-mono text-[10px] uppercase tracking-wider text-sky-200/70">
+            {copy.sponsored.stripTitle}
+          </p>
+          <p className="mt-1 text-sm text-white/50">
+            {copy.sponsored.stripSubtitle}
+          </p>
+          <ul className="mt-4 flex flex-wrap gap-3">
+            {sponsoredProducts.map((product) => {
+              const slot = getSponsoredSlot(product.row.id);
+              return (
+                <li
+                  key={product.row.id}
+                  className="flex items-center gap-2 rounded-xl border border-white/[0.08] bg-black/20 px-3 py-2"
+                >
+                  <PlatformLogo
+                    name={product.row.platform}
+                    logo={product.row.logo}
+                    size={28}
+                  />
+                  <div className="min-w-0">
+                    <p className="text-sm text-white">{product.row.platform}</p>
+                    <p className="font-mono text-[10px] text-white/45">
+                      {product.row.product}
+                    </p>
+                  </div>
+                  <SponsoredBadge label={slot?.label} />
+                </li>
+              );
+            })}
+          </ul>
+        </aside>
+      ) : null}
 
       <div className="grid gap-4 md:grid-cols-3">
         {payload.tiers.map((tierHighlight) => {
@@ -280,7 +330,10 @@ export function CompareHubContent({ payload }: CompareHubContentProps) {
                           comparatorId={best.comparatorId}
                           category={best.row.category}
                         />
-                        <ProductMetaBadges meta={best.meta} />
+                        <ProductMetaBadges
+                          meta={best.meta}
+                          productId={best.row.id}
+                        />
                       </div>
                     </div>
                   </div>
@@ -730,7 +783,7 @@ function HubDesktopRow({
           <span className="font-display text-xl tabular-nums text-white">
             {product.row.apy > 0 ? `${product.row.apy.toFixed(2)}%` : "—"}
           </span>
-          <ProductMetaBadges meta={product.meta} />
+          <ProductMetaBadges meta={product.meta} productId={product.row.id} />
         </div>
       </td>
       <td className="py-4 pr-4 text-right font-mono text-sm tabular-nums text-white/70">
@@ -817,7 +870,7 @@ function HubMobileRow({
               comparatorId={product.comparatorId}
               category={product.row.category}
             />
-            <ProductMetaBadges meta={product.meta} />
+            <ProductMetaBadges meta={product.meta} productId={product.row.id} />
             <span className="font-mono text-[10px] text-white/35">{assetType}</span>
           </div>
         </div>

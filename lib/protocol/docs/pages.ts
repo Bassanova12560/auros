@@ -657,15 +657,30 @@ const history = await client.scoreHistory(result.score_id!);`,
   },
   {
     slug: "endpoint-compare",
-    title: "POST /api/v1/compare",
+    title: "POST /api/v1/compare (+ public GET /api/compare)",
     description:
-      "Comparaison side-by-side de 2–4 produits RWA — par IDs explicites ou filtres (category, yield, risk tier, jurisdiction).",
+      "Comparaison side-by-side de 2–4 produits RWA — Premium Bearer, ou catalogue public signé (HMAC) avec screener / shortlist / eligibility.",
     category: "endpoints",
     categoryLabel: "Endpoints",
     relatedSlugs: ["endpoint-products", "guide-compliance-dashboard"],
     sections: [
       {
-        heading: "Modes de requête",
+        heading: "Public (gratuit, quota IP)",
+        paragraphs: [
+          "**GET /api/compare** — screener (filtres `risk_tier`, `source`, `jurisdiction`, `yield_min`, `max_ticket_usd`, `green_only`, `limit`).",
+          "**GET /api/compare?mode=shortlist&ids=…** ou **POST /api/compare** `{ product_ids }` — snapshot shortlist avec `as_of`, `source_type`, `entity_key`, citations, `drift` (slug_missing / stale_cache).",
+          "**GET /api/compare/eligibility?ids=…** — composite indicatif (MiCA-oriented × juridiction × green/CSRD hints). Pas un avis juridique ; APY jamais inventé.",
+          "**POST /api/compare/verify** — vérifie `content_hash` + `signature` (HMAC `auros-compare:v1:`).",
+          "Signature HMAC si `ATTEST_SIGNING_KEY` est défini ; sinon hash seul. Premium : POST /api/v1/compare (Bearer + quota mensuel).",
+        ],
+        code: `curl "${BASE}/api/compare?risk_tier=core&source=live&limit=10"
+curl "${BASE}/api/compare?mode=shortlist&ids=maple-mcusdc,backed-bib01"
+curl -X POST ${BASE}/api/compare/eligibility -H "Content-Type: application/json" \\
+  -d '{"product_ids":["maple-mcusdc","spiko-eutbl"]}'`,
+        language: "bash",
+      },
+      {
+        heading: "Modes de requête (Premium)",
         paragraphs: [
           "**Par IDs** — `product_ids` (2–4 IDs du catalogue, ordre conservé).",
           "**Par filtres** — omettez `product_ids` et passez `category`, `yield_min`, `risk_tier`, `jurisdiction`, `limit` (2–4, défaut 4). Les produits sont triés par APY décroissant.",
