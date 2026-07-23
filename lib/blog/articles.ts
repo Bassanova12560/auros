@@ -831,7 +831,7 @@ export const BLOG_ARTICLES: BlogArticle[] = [
       "renewable PPA on-chain",
       "AI data center power",
     ],
-    cta: { href: "/resource-layer", label: "Explore Auros Resource Layer" },
+    cta: { href: "/lab", label: "Open Energy Lab" },
     ctaBlocks: [
       {
         afterSection: 1,
@@ -927,7 +927,7 @@ export const BLOG_ARTICLES: BlogArticle[] = [
       "inventory thresholds",
       "HITL settlement",
     ],
-    cta: { href: "/builders", label: "Explore the protocol" },
+    cta: { href: "/lab", label: "Run the lab loop" },
     ctaBlocks: [
       {
         afterSection: 1,

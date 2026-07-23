@@ -24,6 +24,8 @@ const ROLES = [
       "Edge Linux · Mosquitto / MQTT TLS · industrial protocols · device keys · Node or Rust · Soft skills: OEM diligence",
     apply:
       "Subject: Head of IoT Integration — include prior industrial IoT or metering work + a short threat model for replay.",
+    mailto:
+      "mailto:careers@getauros.com?subject=Head%20of%20IoT%20Integration&body=GitHub%2Fportfolio%3A%0APrior%20industrial%20IoT%20or%20metering%3A%0AReplay%20threat%20model%20(short)%3A%0A",
   },
   {
     title: "Protocol Engineer — Energy Markets",
@@ -36,6 +38,8 @@ const ROLES = [
       "Solidity ^0.8.24 · OpenZeppelin UUPS · Reentrancy / Pausable · Hardhat · ethers v6 · Prefer DeFi risk literacy",
     apply:
       "Subject: Protocol Engineer – Energy Markets — link a repo with tests; note any audit participation.",
+    mailto:
+      "mailto:careers@getauros.com?subject=Protocol%20Engineer%20%E2%80%93%20Energy%20Markets&body=Repo%20with%20tests%3A%0AAudit%20participation%20(if%20any)%3A%0A",
   },
   {
     title: "Head of Resource Markets",
@@ -45,6 +49,8 @@ const ROLES = [
     impact: "Institutions judge us on clarity of depth and labels, not slogans.",
     stack: "Energy markets · RWA / crypto fluency · EU time zones",
     apply: "Subject: Head of Resource Markets — one-pager on a past market design or LP program.",
+    mailto:
+      "mailto:careers@getauros.com?subject=Head%20of%20Resource%20Markets&body=One-pager%20%2F%20past%20market%20design%20or%20LP%20program%3A%0A",
   },
   {
     title: "AI agent & markets engineer",
@@ -54,6 +60,8 @@ const ROLES = [
     impact: "Agents that can order kWh without becoming an unsupervised risk engine.",
     stack: "TypeScript · Express · ethers v6 · time-series models · rate limits / auth",
     apply: "Subject: Agent & markets engineer — sample of a hedging or forecasting system.",
+    mailto:
+      "mailto:careers@getauros.com?subject=Agent%20%26%20markets%20engineer&body=Sample%20hedging%20or%20forecasting%20system%3A%0A",
   },
 ] as const;
 
@@ -85,6 +93,9 @@ export default function CareersPage() {
                 </p>
                 <p className="mt-3 font-mono text-[11px] text-white/40">{role.stack}</p>
                 <p className="mt-4 font-mono text-[10px] text-white/30">{role.apply}</p>
+                <p className="mt-4">
+                  <AurosButton href={role.mailto}>Apply for this role</AurosButton>
+                </p>
               </li>
             ))}
           </ul>
