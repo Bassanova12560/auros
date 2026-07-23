@@ -297,6 +297,7 @@ export default function ResourceLayerPage() {
                 apply for testnet access — human review on every paid path.
               </p>
               <div className="flex flex-wrap gap-3">
+                <PrimaryButton href="/why">Why Auros</PrimaryButton>
                 <PrimaryButton href="/lab">1 · Produire (Lab)</PrimaryButton>
                 <PrimaryButton href="/producer" variant="ghost">
                   2 · Convertir (WATT)

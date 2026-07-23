@@ -1,6 +1,7 @@
 import { AmbientShell } from "./_components/ui/AmbientShell";
 import { AiFirstPageJsonLd } from "./_components/ai-first/AiFirstPageJsonLd";
 import { AurosLiveStrip } from "./_components/AurosLiveStrip";
+import { ConsoleBuildersEgg } from "./_components/ConsoleBuildersEgg";
 import { Footer } from "./_components/Footer";
 import { Hero } from "./_components/Hero";
 import { HomeSolutions } from "./_components/HomeSolutions";
@@ -20,6 +21,7 @@ export default function HomePage() {
   return (
     <AmbientShell>
       <AiFirstPageJsonLd path="/" />
+      <ConsoleBuildersEgg />
       <Nav />
       <LandingReferral />
       <main>

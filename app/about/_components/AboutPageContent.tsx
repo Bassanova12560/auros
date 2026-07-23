@@ -19,6 +19,18 @@ export function AboutPageContent() {
         {m.disclaimer}
       </p>
 
+      <section className="mt-10 border border-white/[0.08] bg-white/[0.02] px-5 py-5">
+        <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/40">
+          {locale === "fr" ? "Lettre du fondateur" : "Founder note"}
+        </p>
+        <p className="mt-3 text-sm leading-relaxed text-white/70">
+          {locale === "fr"
+            ? "Nous construisons le moteur de liquidité des ressources critiques — actifs numériques aujourd’hui, énergie et eau tokenisées demain. Pas de badges inventés, pas de volume théâtral : des démos labellées, du HITL sur le settlement, et un lab wallet que tu peux exercer sans MetaMask. Si tu es producteur, institution ou builder, écris-nous — on répond humainement."
+            : "We’re building the liquidity engine for critical resources — digital assets today, tokenized energy and water next. No invented badges, no theatrical volume: labeled demos, HITL on settlement, and a lab wallet you can exercise without MetaMask. If you’re a producer, institution, or builder, write us — a human answers."}
+        </p>
+        <p className="mt-3 font-mono text-[11px] text-white/40">— Adrien Balitrand</p>
+      </section>
+
       <dl className="mt-12 grid gap-4 sm:grid-cols-2">
         {m.credentials.map((row) => (
           <div key={row.label} className="card-flat p-5">

@@ -68,6 +68,9 @@ export function AurosLiveStrip() {
             <p className="mt-1 font-display text-sm text-white/70">
               Illustrative cockpit — not third-party audited volume.
             </p>
+            <p className="mt-1 font-mono text-[10px] text-white/30" suppressHydrationWarning>
+              Updated {new Date(snap.updatedAt).toLocaleTimeString()} · ticks every ~3s
+            </p>
           </div>
           <Link
             href="#solutions"

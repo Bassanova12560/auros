@@ -54,6 +54,44 @@ export default function PressPage() {
             </ul>
 
             <section className="space-y-3">
+              <h2 className="font-display text-xl text-white">Media kit (minimal)</h2>
+              <ul className="space-y-2 font-mono text-[12px]">
+                <li>
+                  <a
+                    href="/auros-logo.svg"
+                    download
+                    className="underline-offset-2 hover:underline"
+                  >
+                    auros-logo.svg
+                  </a>{" "}
+                  — wordmark / logo
+                </li>
+                <li>
+                  <Link href="/watt" className="underline-offset-2 hover:underline">
+                    /watt
+                  </Link>{" "}
+                  — WATT product narrative
+                </li>
+                <li>
+                  <Link href="/why" className="underline-offset-2 hover:underline">
+                    /why
+                  </Link>{" "}
+                  — why Auros (benefit-first)
+                </li>
+                <li>
+                  <Link href="/status" className="underline-offset-2 hover:underline">
+                    /status
+                  </Link>{" "}
+                  — public endpoint probes
+                </li>
+              </ul>
+              <p className="text-xs text-white/40">
+                Team photos and entity pack on written request — we do not invent registration
+                numbers on this page.
+              </p>
+            </section>
+
+            <section className="space-y-3">
               <h2 className="font-display text-xl text-white">Narrative links</h2>
               <ul className="space-y-2 font-mono text-[12px]">
                 <li>

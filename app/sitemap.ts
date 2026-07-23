@@ -100,6 +100,8 @@ const PRIORITY: Record<string, number> = {
   "/builders": 0.92,
   "/lab": 0.91,
   "/watt": 0.92,
+  "/why": 0.9,
+  "/status": 0.7,
   "/trade": 0.9,
   "/producer": 0.88,
   "/market": 0.88,

@@ -1,19 +1,30 @@
+import type { Metadata } from "next";
+
+import { ContentPageLayout } from "@/app/_components/ContentPageLayout";
 import { FocusPageShell } from "@/app/_components/FocusPageShell";
-import { getProtocolStatus } from "@/lib/protocol/status";
-import { metadataFromPath } from "@/lib/seo/metadata";
+import { AiFirstPageJsonLd } from "@/app/_components/ai-first/AiFirstPageJsonLd";
 
-import { StatusDashboard } from "./_components/StatusDashboard";
+import { StatusPanel } from "./_components/StatusPanel";
 
-export const STATUS_ROUTE = "/status";
+export const metadata: Metadata = {
+  title: "Status — AUROS",
+  description: "Public probe of AUROS protocol and ARL lab endpoints. Not a contractual SLA.",
+};
 
-export const metadata = metadataFromPath(STATUS_ROUTE);
-
-export default async function StatusPage() {
-  const initial = await getProtocolStatus();
-
+export default function StatusPage() {
   return (
-    <FocusPageShell path={STATUS_ROUTE} width="2xl">
-      <StatusDashboard initial={initial} />
-    </FocusPageShell>
+    <>
+      <AiFirstPageJsonLd path="/status" />
+      <FocusPageShell path="/status" width="3xl">
+        <ContentPageLayout
+          product="AUROS"
+          eyebrow="Status"
+          title="Service probes"
+          intro="Transparency for partners who need to know the surfaces are reachable before wiring trading or IoT."
+        >
+          <StatusPanel />
+        </ContentPageLayout>
+      </FocusPageShell>
+    </>
   );
 }
