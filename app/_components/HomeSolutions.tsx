@@ -4,8 +4,8 @@ const SOLUTIONS = [
   {
     who: "Exchanges & digital assets",
     plain: "Deep liquidity, 24/7 risk discipline, and venue-ready APIs for tokens that need real markets.",
-    cta: "Investor / diligence desk",
-    href: "/investors",
+    cta: "Open marketplace",
+    href: "/market",
   },
   {
     who: "Energy & water producers",

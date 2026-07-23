@@ -3,7 +3,9 @@ import Link from "next/link";
 
 import { ContentPageLayout } from "@/app/_components/ContentPageLayout";
 import { FocusPageShell } from "@/app/_components/FocusPageShell";
+import { NextStepStrip } from "@/app/_components/NextStepStrip";
 import { AiFirstPageJsonLd } from "@/app/_components/ai-first/AiFirstPageJsonLd";
+import { ECOSYSTEM } from "@/lib/ecosystem-neighbors";
 
 import { ProducerDashboard } from "./_components/ProducerDashboard";
 
@@ -35,6 +37,9 @@ export default function ProducerPage() {
             </Link>
           </p>
           <ProducerDashboard />
+          <div className="mt-10">
+            <NextStepStrip {...ECOSYSTEM.afterProducer} />
+          </div>
         </ContentPageLayout>
       </FocusPageShell>
     </>

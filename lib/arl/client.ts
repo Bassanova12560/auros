@@ -41,8 +41,21 @@ export type ArlClientSnapshot = {
 };
 
 async function parseJson(res: Response): Promise<ArlClientSnapshot> {
-  const body = (await res.json()) as { error?: string; message?: string } & Partial<ArlClientSnapshot>;
+  const text = await res.text();
+  let body: { error?: string; message?: string } & Partial<ArlClientSnapshot> = {};
+  try {
+    body = text ? (JSON.parse(text) as typeof body) : {};
+  } catch {
+    throw new Error(
+      res.ok
+        ? "ARL API returned non-JSON"
+        : `ARL API ${res.status} — service unavailable`,
+    );
+  }
   if (!res.ok) {
+    if (res.status === 429) {
+      throw new Error(body.message || body.error || "Rate limited — retry in a minute");
+    }
     throw new Error(body.message || body.error || `ARL API ${res.status}`);
   }
   return body as ArlClientSnapshot;

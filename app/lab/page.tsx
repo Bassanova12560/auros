@@ -3,8 +3,10 @@ import Link from "next/link";
 
 import { ContentPageLayout } from "@/app/_components/ContentPageLayout";
 import { FocusPageShell } from "@/app/_components/FocusPageShell";
-import { PrimaryButton } from "@/app/_components/ui/PrimaryButton";
+import { NextStepStrip } from "@/app/_components/NextStepStrip";
 import { AiFirstPageJsonLd } from "@/app/_components/ai-first/AiFirstPageJsonLd";
+import { ECOSYSTEM } from "@/lib/ecosystem-neighbors";
+
 import { EnergyLabSimulator } from "./_components/EnergyLabSimulator";
 
 export const metadata: Metadata = {
@@ -33,15 +35,6 @@ export default function EnergyLabPage() {
                 Producers leave vision pages when they can’t picture cashflow. This sandbox is the
                 bridge — still labeled lab, still HITL for settlement.
               </p>
-              <div className="flex flex-wrap gap-3 pt-2">
-                <PrimaryButton href="/resource-layer">Resource Layer</PrimaryButton>
-                <PrimaryButton href="/builders" variant="ghost">
-                  Builders
-                </PrimaryButton>
-                <PrimaryButton href="/producer" variant="ghost">
-                  Producer demo
-                </PrimaryButton>
-              </div>
               <p className="font-mono text-[10px] text-white/35">
                 Not financial advice · not an offtake agreement ·{" "}
                 <Link href="/legal" className="underline hover:text-white/60">
@@ -49,6 +42,8 @@ export default function EnergyLabPage() {
                 </Link>
               </p>
             </section>
+
+            <NextStepStrip {...ECOSYSTEM.afterLab} />
           </div>
         </ContentPageLayout>
       </FocusPageShell>

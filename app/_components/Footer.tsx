@@ -66,13 +66,13 @@ export function Footer() {
             </p>
             <div className="mt-5 flex flex-wrap gap-3">
               <Link
-                href="/start"
+                href="/lab"
                 className="rounded-full border border-white/20 px-3 py-1.5 font-mono text-[10px] uppercase tracking-wider text-white/70 hover:border-white/40"
               >
                 {hub.primaryCta}
               </Link>
               <Link
-                href="/developers/shield"
+                href="/start"
                 className="rounded-full border border-white/10 px-3 py-1.5 font-mono text-[10px] uppercase tracking-wider text-white/45 hover:text-white/70"
               >
                 {hub.secondaryCta}

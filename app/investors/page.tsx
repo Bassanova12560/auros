@@ -4,7 +4,9 @@ import Link from "next/link";
 import { ContentPageLayout } from "@/app/_components/ContentPageLayout";
 import { FocusPageShell } from "@/app/_components/FocusPageShell";
 import { PrimaryButton } from "@/app/_components/ui/PrimaryButton";
+import { NextStepStrip } from "@/app/_components/NextStepStrip";
 import { AiFirstPageJsonLd } from "@/app/_components/ai-first/AiFirstPageJsonLd";
+import { ECOSYSTEM } from "@/lib/ecosystem-neighbors";
 
 export const metadata: Metadata = {
   title: "Investors — AUROS diligence desk",
@@ -19,6 +21,8 @@ const SURFACES = [
   { href: "/trade", label: "Trade", status: "Live spot · advanced = session toy" },
   { href: "/agent", label: "Agent", status: "Lab spot hedge (not a cleared forward)" },
   { href: "/market", label: "Market", status: "Labeled marks · not live volume" },
+  { href: "/watt", label: "WATT", status: "Unit of account · lab wrap" },
+  { href: "/earn", label: "Earn", status: "Preview · not a yield product" },
   { href: "/builders", label: "Builders", status: "Architecture · repo · testnet path" },
   { href: "/status", label: "Status", status: "Public probes · not an SLA" },
 ] as const;
@@ -41,12 +45,6 @@ export default function InvestorsPage() {
               </PrimaryButton>
               <PrimaryButton href="/lab" variant="ghost">
                 Run the lab loop
-              </PrimaryButton>
-              <PrimaryButton href="/why" variant="ghost">
-                Why Auros
-              </PrimaryButton>
-              <PrimaryButton href="/press" variant="ghost">
-                Press
               </PrimaryButton>
             </section>
 
@@ -202,6 +200,8 @@ app/          Next.js · getauros.com + lab ledger`}
                 .
               </p>
             </section>
+
+            <NextStepStrip {...ECOSYSTEM.company} />
           </div>
         </ContentPageLayout>
       </FocusPageShell>

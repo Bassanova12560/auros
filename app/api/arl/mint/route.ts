@@ -12,7 +12,7 @@ const bodySchema = z.object({
   deviceId: z.string().max(64).optional(),
 });
 
-/** Mint lab akWh from a producer meter (oracle-gated on-chain; open here for demo). */
+/** Mint lab akWh (demo surface · IP rate-limited · not production oracle). */
 export async function POST(req: Request) {
   const ip = getRequestIp(req);
   const rate = await checkRateLimitAsync(`arl-mint:${ip}`, 40, 3_600_000);
@@ -40,6 +40,10 @@ export async function POST(req: Request) {
     return NextResponse.json(snap);
   } catch (e) {
     const msg = e instanceof Error ? e.message : "mint failed";
-    return NextResponse.json({ error: "mint_rejected", message: msg }, { status: 400 });
+    const unavailable = /unavailable|transport|corrupt|save failed/i.test(msg);
+    return NextResponse.json(
+      { error: unavailable ? "service_unavailable" : "mint_rejected", message: msg },
+      { status: unavailable ? 503 : 400 },
+    );
   }
 }

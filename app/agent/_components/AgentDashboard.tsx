@@ -17,8 +17,14 @@ type ForwardRow = {
 };
 
 const SEED_ORDERS: ForwardRow[] = [
-  { id: "FO-1021", window: "2026-07-24 06:00–10:00 UTC", mwh: 12, status: "open" },
-  { id: "FO-1018", window: "2026-07-23 18:00–22:00 UTC", mwh: 8, status: "filled" },
+  { id: "FO-demo-1", window: "Labeled sample · not live", mwh: 12, status: "open" },
+  {
+    id: "FO-demo-2",
+    window: "Labeled sample · prior lab hedge",
+    mwh: 8,
+    status: "filled",
+    detail: "Illustrative row — use form below for a real ledger buy",
+  },
 ];
 
 /**

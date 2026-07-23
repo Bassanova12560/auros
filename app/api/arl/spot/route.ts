@@ -42,6 +42,10 @@ export async function POST(req: Request) {
     return NextResponse.json(snap);
   } catch (e) {
     const msg = e instanceof Error ? e.message : "spot failed";
-    return NextResponse.json({ error: "spot_rejected", message: msg }, { status: 400 });
+    const unavailable = /unavailable|transport|corrupt|save failed/i.test(msg);
+    return NextResponse.json(
+      { error: unavailable ? "service_unavailable" : "spot_rejected", message: msg },
+      { status: unavailable ? 503 : 400 },
+    );
   }
 }

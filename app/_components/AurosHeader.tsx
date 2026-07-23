@@ -146,7 +146,7 @@ export function AurosHeader({
         </AurosButton>
       )}
       <AurosButton
-        href="/wizard?expert=1"
+        href="/lab"
       >
         {hub.primaryCta}
       </AurosButton>
@@ -410,14 +410,14 @@ export function AurosHeader({
 
             <div className="mt-8 flex flex-col gap-3 border-t border-white/[0.08] pt-6 sm:flex-row">
               <AurosButton
-                href="/wizard"
+                href="/lab"
                 className="w-full sm:w-auto"
                 onClick={() => setDrawerOpen(false)}
               >
                 {hub.primaryCta}
               </AurosButton>
               <AurosButton
-                href="/developers/shield"
+                href="/start"
                 variant="ghost"
                 showArrow={false}
                 className="w-full sm:w-auto"

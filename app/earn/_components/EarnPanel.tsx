@@ -4,12 +4,13 @@ import Link from "next/link";
 
 import { ArlLabWallet } from "@/app/_components/arl/ArlLabWallet";
 import { DemoDisclaimer } from "@/app/_components/arl/DemoDisclaimer";
+import { NextStepStrip } from "@/app/_components/NextStepStrip";
 
 const CARDS = [
   {
     title: "Spot inventory",
     body: "Hold akWh / WATT in the lab wallet — mint on /lab, wrap on /producer, sell on /trade.",
-    href: "/trade",
+    href: "/trade?market=kwh-france&side=sell",
     badge: "Live lab",
   },
   {
@@ -50,6 +51,15 @@ export function EarnPanel() {
           </li>
         ))}
       </ul>
+      <NextStepStrip
+        primary={{ href: "/trade?market=kwh-france&side=sell", label: "Trade spot (live lab)" }}
+        secondary={[{ href: "/builders", label: "Builders" }]}
+        neighbors={[
+          { href: "/producer", label: "Producer" },
+          { href: "/market", label: "Market" },
+          { href: "/investors", label: "Investors" },
+        ]}
+      />
     </div>
   );
 }

@@ -32,7 +32,7 @@ const STACK = [
   },
   {
     layer: "Agent API",
-    items: "Spot / forward / perps / options · rate-limited · operator-keyed",
+    items: "Spot / forward / perps / options · rate-limited · operator-keyed (agent-api). Site lab wallet is open demo with IP rate limits.",
   },
   {
     layer: "Surfaces",

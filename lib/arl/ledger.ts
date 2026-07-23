@@ -172,11 +172,17 @@ function ensureAccount(state: ArlLedgerState, accountId: string): ArlAccount {
 async function loadState(): Promise<{ state: ArlLedgerState; backend: ArlBackend }> {
   if (isUpstashConfigured()) {
     const res = await upstashCommand(["GET", ARL_LEDGER_KEY]);
-    if (res?.result != null && typeof res.result === "string" && res.result.length > 0) {
+    // Transport failure must not wipe production ledger with freshState + SET.
+    if (res == null) {
+      throw new Error("ARL ledger unavailable (storage transport error)");
+    }
+    if (res.result == null || res.result === "") {
+      return { state: freshState(), backend: "upstash" };
+    }
+    if (typeof res.result === "string") {
       const parsed = parseLedgerState(res.result);
-      if (parsed) {
-        return { state: parsed, backend: "upstash" };
-      }
+      if (parsed) return { state: parsed, backend: "upstash" };
+      throw new Error("ARL ledger corrupt in storage");
     }
     return { state: freshState(), backend: "upstash" };
   }
@@ -201,6 +207,7 @@ async function saveState(state: ArlLedgerState, backend: ArlBackend): Promise<Ar
     const payload = JSON.stringify(state);
     const res = await upstashCommand(["SET", ARL_LEDGER_KEY, payload]);
     if (res != null) return "upstash";
+    throw new Error("ARL ledger save failed (storage transport error)");
   }
   memoryStore().state = structuredClone(state);
   if (saveFileState(state)) {
@@ -430,4 +437,4 @@ export function resetArlLedgerMemory() {
   globalThis.__aurosArlLedger = { state, chain: Promise.resolve(), hydrated: true };
   saveFileState(state);
 }
-
+

@@ -3,9 +3,11 @@ import Link from "next/link";
 import { FocusPageShell } from "@/app/_components/FocusPageShell";
 import { ContentPageLayout } from "@/app/_components/ContentPageLayout";
 import { PrimaryButton } from "@/app/_components/ui/PrimaryButton";
+import { NextStepStrip } from "@/app/_components/NextStepStrip";
 import { AiFirstPageJsonLd } from "@/app/_components/ai-first/AiFirstPageJsonLd";
 import { ArlGlossaryStrip } from "@/app/_components/arl/PlainTerm";
 import { MintTradeDemo } from "@/app/_components/arl/MintTradeDemo";
+import { ECOSYSTEM } from "@/lib/ecosystem-neighbors";
 
 import { ResourceLayerLab } from "./_components/ResourceLayerLab";
 
@@ -290,28 +292,9 @@ export default function ResourceLayerPage() {
             <section id="get-started" className="space-y-4 scroll-mt-28">
               <h2 className="font-display text-xl text-white">Get started</h2>
               <p>
-                Don’t leave with a brochure. Run the Energy Lab, mint a demo unit, or
-                apply for testnet access — human review on every paid path.
+                Don’t leave with a brochure. Run the Energy Lab — human review on every paid path.
               </p>
-              <div className="flex flex-wrap gap-3">
-                <PrimaryButton href="/why">Why Auros</PrimaryButton>
-                <PrimaryButton href="/lab">1 · Produce (Lab)</PrimaryButton>
-                <PrimaryButton href="/producer" variant="ghost">
-                  2 · Convert (Producer)
-                </PrimaryButton>
-                <PrimaryButton href="/trade" variant="ghost">
-                  3 · Sell (Trade)
-                </PrimaryButton>
-                <PrimaryButton href="/builders" variant="ghost">
-                  Protocol
-                </PrimaryButton>
-                <a
-                  href="mailto:resources@getauros.com?subject=ARL%20testnet%20access"
-                  className="inline-flex items-center font-mono text-[11px] text-white/50 underline-offset-4 hover:text-white hover:underline"
-                >
-                  Apply for testnet access →
-                </a>
-              </div>
+              <NextStepStrip {...ECOSYSTEM.vision} />
             </section>
 
             <section className="space-y-6">

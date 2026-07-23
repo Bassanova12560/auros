@@ -26,8 +26,8 @@ const FR: HubCopy = {
   exploreAll: "Voir tout le hub",
   close: "Fermer",
   openMenu: "Menu AUROS",
-  primaryCta: "Créer mon dossier",
-  secondaryCta: "Essayer Shield",
+  primaryCta: "Ouvrir Energy Lab",
+  secondaryCta: "Créer mon dossier",
   groups: [
     {
       id: "dossier",
@@ -102,9 +102,14 @@ const FR: HubCopy = {
           description: "Architecture · repo · testnet",
         },
         {
-          href: "/green",
-          title: "AUROS Green",
-          description: "Énergie locale & label Verified",
+          href: "/watt",
+          title: "WATT",
+          description: "Energy unit of account (lab)",
+        },
+        {
+          href: "/earn",
+          title: "Earn",
+          description: "LP / capital preview",
         },
       ],
     },
@@ -226,8 +231,8 @@ const EN: HubCopy = {
   exploreAll: "Browse full hub",
   close: "Close",
   openMenu: "AUROS menu",
-  primaryCta: "Create my dossier",
-  secondaryCta: "Try Shield",
+  primaryCta: "Open Energy Lab",
+  secondaryCta: "Create dossier",
   groups: [
     {
       id: "dossier",
@@ -302,9 +307,14 @@ const EN: HubCopy = {
           description: "Architecture · repo · testnet",
         },
         {
-          href: "/green",
-          title: "AUROS Green",
-          description: "Local energy & Verified label",
+          href: "/watt",
+          title: "WATT",
+          description: "Energy unit of account (lab)",
+        },
+        {
+          href: "/earn",
+          title: "Earn",
+          description: "LP / capital preview",
         },
       ],
     },
@@ -426,8 +436,8 @@ const ES: HubCopy = {
   exploreAll: "Ver todo el hub",
   close: "Cerrar",
   openMenu: "Menú AUROS",
-  primaryCta: "Crear mi expediente",
-  secondaryCta: "Probar Shield",
+  primaryCta: "Abrir Energy Lab",
+  secondaryCta: "Crear expediente",
   groups: [
     {
       id: "dossier",
@@ -502,9 +512,14 @@ const ES: HubCopy = {
           description: "Arquitectura · repo · testnet",
         },
         {
-          href: "/green",
-          title: "AUROS Green",
-          description: "Energía local y label Verified",
+          href: "/watt",
+          title: "WATT",
+          description: "Energy unit of account (lab)",
+        },
+        {
+          href: "/earn",
+          title: "Earn",
+          description: "LP / capital preview",
         },
       ],
     },
@@ -626,7 +641,7 @@ const AR: HubCopy = {
   exploreAll: "عرض كامل المركز",
   close: "إغلاق",
   openMenu: "قائمة AUROS",
-  primaryCta: "إنشاء ملفي",
+  primaryCta: "Energy Lab",
   secondaryCta: "تجربة Shield",
   groups: [
     {
@@ -702,9 +717,14 @@ const AR: HubCopy = {
           description: "هندسة · مستودع · testnet",
         },
         {
-          href: "/green",
-          title: "AUROS Green",
-          description: "طاقة محلية وتسمية Verified",
+          href: "/watt",
+          title: "WATT",
+          description: "Energy unit of account (lab)",
+        },
+        {
+          href: "/earn",
+          title: "Earn",
+          description: "LP / capital preview",
         },
       ],
     },
@@ -826,7 +846,7 @@ const ZH: HubCopy = {
   exploreAll: "浏览完整中心",
   close: "关闭",
   openMenu: "AUROS 菜单",
-  primaryCta: "创建我的档案",
+  primaryCta: "Open Energy Lab",
   secondaryCta: "试用 Shield",
   groups: [
     {
@@ -902,9 +922,14 @@ const ZH: HubCopy = {
           description: "架构 · 仓库 · testnet",
         },
         {
-          href: "/green",
-          title: "AUROS Green",
-          description: "本地能源与 Verified 标签",
+          href: "/watt",
+          title: "WATT",
+          description: "Energy unit of account (lab)",
+        },
+        {
+          href: "/earn",
+          title: "Earn",
+          description: "LP / capital preview",
         },
       ],
     },

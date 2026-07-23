@@ -4,6 +4,7 @@ import Link from "next/link";
 import { ContentPageLayout } from "@/app/_components/ContentPageLayout";
 import { FocusPageShell } from "@/app/_components/FocusPageShell";
 import { PrimaryButton } from "@/app/_components/ui/PrimaryButton";
+import { NextStepStrip } from "@/app/_components/NextStepStrip";
 import { AiFirstPageJsonLd } from "@/app/_components/ai-first/AiFirstPageJsonLd";
 
 export const metadata: Metadata = {
@@ -78,46 +79,21 @@ export default function WhyPage() {
                 <li>Optional wrap to WATT (1:1 energy unit of account)</li>
                 <li>Spot / agent hedges settle with caps — humans approve paid paths</li>
               </ol>
-              <div className="mt-4 flex flex-wrap gap-2">
-                <PrimaryButton href="/lab">1 · Mint</PrimaryButton>
-                <PrimaryButton href="/producer" variant="ghost">
-                  2 · Wrap
-                </PrimaryButton>
-                <PrimaryButton href="/trade?market=kwh-france" variant="ghost">
-                  3 · Spot
-                </PrimaryButton>
-                <PrimaryButton href="/agent" variant="ghost">
-                  Agent hedge
-                </PrimaryButton>
-              </div>
-              <p className="font-mono text-[11px] text-white/40">
-                Deep dive:{" "}
-                <Link href="/resource-layer" className="underline-offset-2 hover:underline">
-                  /resource-layer
-                </Link>
-                {" · "}
-                <Link href="/builders" className="underline-offset-2 hover:underline">
-                  /builders
-                </Link>
-                {" · "}
-                <Link href="/status" className="underline-offset-2 hover:underline">
-                  /status
-                </Link>
-                {" · "}
-                <Link href="/blog/cross-exchange-risk-engine" className="underline-offset-2 hover:underline">
-                  risk essay
-                </Link>
-              </p>
             </section>
 
-            <section className="flex flex-wrap gap-3">
-              <PrimaryButton href="mailto:resources@getauros.com?subject=Why%20Auros">
-                Talk to the team
-              </PrimaryButton>
-              <PrimaryButton href="/#solutions" variant="ghost">
-                Choose your path
-              </PrimaryButton>
-            </section>
+            <NextStepStrip
+              primary={{ href: "/lab", label: "Run the Energy Lab" }}
+              secondary={[
+                { href: "/investors", label: "Investors" },
+                { href: "/press", label: "Press" },
+              ]}
+              neighbors={[
+                { href: "/resource-layer", label: "Vision" },
+                { href: "/builders", label: "Builders" },
+                { href: "/status", label: "Status" },
+                { href: "/careers", label: "Careers" },
+              ]}
+            />
           </div>
         </ContentPageLayout>
       </FocusPageShell>

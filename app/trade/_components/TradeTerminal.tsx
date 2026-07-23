@@ -20,6 +20,8 @@ import {
   type ArlClientSnapshot,
 } from "@/lib/arl/client";
 import { ArlLabWallet } from "@/app/_components/arl/ArlLabWallet";
+import { NextStepStrip } from "@/app/_components/NextStepStrip";
+import { ECOSYSTEM } from "@/lib/ecosystem-neighbors";
 
 type Tab = "spot" | "perps" | "options";
 
@@ -38,7 +40,7 @@ export function TradeTerminal() {
   const [tab, setTab] = useState<Tab>("spot");
   const [marketId, setMarketId] = useState<MarketId>("kwh-france");
   const [perpSide, setPerpSide] = useState<PerpSide>("long");
-  const [spotSide, setSpotSide] = useState<SpotSide>("buy");
+  const [spotSide, setSpotSide] = useState<SpotSide>("sell");
   const [margin, setMargin] = useState("1000");
   const [leverage, setLeverage] = useState("5");
   const [spotAmount, setSpotAmount] = useState("100");
@@ -80,6 +82,10 @@ export function TradeTerminal() {
     if (marketParam && SPOT_MARKETS.some((m) => m.id === marketParam)) {
       setMarketId(marketParam as MarketId);
       setTab("spot");
+    }
+    const sideParam = new URLSearchParams(window.location.search).get("side");
+    if (sideParam === "buy" || sideParam === "sell") {
+      setSpotSide(sideParam);
     }
 
     return () => window.removeEventListener(ARL_LEDGER_EVENT, onUpdate);
@@ -131,7 +137,10 @@ export function TradeTerminal() {
   }
 
   async function onSpot() {
-    if (!accountId) return;
+    if (!accountId) {
+      setError("Lab wallet still loading — wait a second, then retry");
+      return;
+    }
     setSpotBusy(true);
     setError(null);
     try {
@@ -196,6 +205,17 @@ export function TradeTerminal() {
     snap.account.balances.WATT <= 0 &&
     snap.account.balances.H2O <= 0 &&
     snap.account.balances.FLOP <= 0;
+
+  const sellBlockedReason = useMemo(() => {
+    if (!snap || spotSide !== "sell") return null;
+    const b = snap.account.balances;
+    const row = SPOT_MARKETS.find((m) => m.id === marketId);
+    if (!row) return null;
+    if (row.resourceType === "water" && b.H2O <= 0) return "No H2O inventory — use kwh-france for the energy demo";
+    if (row.resourceType === "compute" && b.FLOP <= 0) return "No FLOP inventory — pick an energy market to sell";
+    if (row.resourceType === "kwh" && b.akWh + b.WATT <= 0) return "No akWh/WATT — mint on /lab first";
+    return null;
+  }, [snap, spotSide, marketId]);
 
   return (
     <div className="space-y-8">
@@ -463,14 +483,19 @@ export function TradeTerminal() {
               <button
                 type="button"
                 onClick={() => void onSpot()}
-                disabled={spotBusy}
+                disabled={spotBusy || !accountId || Boolean(sellBlockedReason)}
                 className="w-full rounded border border-white/25 bg-white/10 py-2.5 text-sm text-white hover:bg-white/15 disabled:opacity-40"
               >
                 {spotBusy ? "Settling…" : `Settle ${spotSide} on ledger`}
               </button>
-              <p className="font-mono text-[10px] text-white/35">
-                Spot credits/debits your shared lab balances (EUR ↔ resource).
-              </p>
+              {sellBlockedReason ? (
+                <p className="font-mono text-[10px] text-amber-200/70">{sellBlockedReason}</p>
+              ) : (
+                <p className="font-mono text-[10px] text-white/35">
+                  Spot credits/debits your shared lab balances (EUR ↔ resource). Sell defaults —
+                  journey: mint → wrap → sell.
+                </p>
+              )}
             </>
           ) : null}
 
@@ -588,6 +613,8 @@ export function TradeTerminal() {
           </ul>
         </div>
       </div>
+
+      <NextStepStrip {...ECOSYSTEM.afterTrade} />
     </div>
   );
 }
