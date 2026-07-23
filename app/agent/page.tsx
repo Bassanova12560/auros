@@ -21,7 +21,7 @@ export default function AgentPage() {
           product="Resource Layer"
           eyebrow="Agent · Demo"
           title="AI & data-center agent console"
-          intro="Agents predict load and buy hedges into the shared lab wallet (EUR → akWh). Production settlement stays human-gated."
+          intro="Lab preview: a “hedge” here is a spot buy on the shared ledger (EUR → akWh), not a cleared forward. Production settlement stays human-gated — see /builders for the agent API path and /producer for wrap."
         >
           <AgentDashboard />
         </ContentPageLayout>

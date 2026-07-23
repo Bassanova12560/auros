@@ -170,6 +170,21 @@ export function AgentDashboard() {
           </div>
         </form>
       </section>
+
+      <p className="font-mono text-[11px] text-white/40">
+        Protocol / wrap:{" "}
+        <Link href="/builders" className="underline-offset-2 hover:text-white hover:underline">
+          /builders
+        </Link>
+        {" · "}
+        <Link href="/producer" className="underline-offset-2 hover:text-white hover:underline">
+          /producer
+        </Link>
+        {" · "}
+        <Link href="/trade" className="underline-offset-2 hover:text-white hover:underline">
+          /trade
+        </Link>
+      </p>
     </div>
   );
 }

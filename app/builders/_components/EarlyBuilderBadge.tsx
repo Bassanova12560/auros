@@ -2,10 +2,13 @@
 
 import { useEffect, useMemo, useState } from "react";
 
+import { getOrCreateArlAccountId } from "@/lib/arl/client";
+
 type Claim = {
   handle: string;
   email?: string;
   wallet?: string;
+  labAccountId?: string;
   claimedAt: string;
   code: string;
 };
@@ -35,11 +38,13 @@ export function EarlyBuilderBadge() {
   const [handle, setHandle] = useState("");
   const [email, setEmail] = useState("");
   const [wallet, setWallet] = useState("");
+  const [labAccountId, setLabAccountId] = useState<string | null>(null);
   const [claim, setClaim] = useState<Claim | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     try {
+      setLabAccountId(getOrCreateArlAccountId());
       const raw = window.localStorage.getItem(STORAGE_KEY);
       if (raw) setClaim(JSON.parse(raw) as Claim);
     } catch {
@@ -78,6 +83,7 @@ export function EarlyBuilderBadge() {
       handle: h,
       email: e || undefined,
       wallet: w || undefined,
+      labAccountId: labAccountId || getOrCreateArlAccountId(),
       claimedAt: new Date().toISOString(),
       code: makeCode(h),
     };
@@ -108,6 +114,11 @@ export function EarlyBuilderBadge() {
             {" · "}
             {new Date(claim.claimedAt).toLocaleDateString()}
           </p>
+          {claim.labAccountId ? (
+            <p className="font-mono text-[10px] text-white/35">
+              Lab account · {claim.labAccountId}
+            </p>
+          ) : null}
           <ol className="list-decimal space-y-1 pl-4 text-xs text-white/55">
             <li>Email your code to the waitlist (button below)</li>
             <li>
@@ -116,11 +127,12 @@ export function EarlyBuilderBadge() {
                 /lab
               </a>{" "}
               and mint into your lab wallet
+              {claim.labAccountId ? ` (${claim.labAccountId.slice(0, 12)}…)` : null}
             </li>
             <li>Read protocol notes on GitHub after access approval</li>
           </ol>
           <a
-            href={`mailto:resources@getauros.com?subject=Early%20Builder%20${encodeURIComponent(claim.code)}&body=Handle%3A%20${encodeURIComponent(claim.handle)}%0AEmail%3A%20${encodeURIComponent(claim.email ?? "")}%0ACode%3A%20${encodeURIComponent(claim.code)}%0AWallet%3A%20${encodeURIComponent(claim.wallet ?? "")}%0A`}
+            href={`mailto:resources@getauros.com?subject=Early%20Builder%20${encodeURIComponent(claim.code)}&body=Handle%3A%20${encodeURIComponent(claim.handle)}%0AEmail%3A%20${encodeURIComponent(claim.email ?? "")}%0ACode%3A%20${encodeURIComponent(claim.code)}%0AWallet%3A%20${encodeURIComponent(claim.wallet ?? "")}%0ALabAccountId%3A%20${encodeURIComponent(claim.labAccountId ?? "")}%0A`}
             className="inline-flex font-mono text-[11px] text-emerald-100/80 underline-offset-2 hover:text-white hover:underline"
           >
             Register code for waitlist →
@@ -184,6 +196,14 @@ export function EarlyBuilderBadge() {
           </button>
           {preview ? (
             <p className="font-mono text-[10px] text-white/30">Preview · {preview}</p>
+          ) : null}
+          {labAccountId ? (
+            <p className="font-mono text-[10px] text-white/30">
+              Linked lab wallet · {labAccountId} ·{" "}
+              <a href="/lab" className="underline-offset-2 hover:underline">
+                open /lab
+              </a>
+            </p>
           ) : null}
         </div>
       )}

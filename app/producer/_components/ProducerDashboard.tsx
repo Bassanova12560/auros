@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 
 import { ArlLabWallet } from "@/app/_components/arl/ArlLabWallet";
@@ -97,7 +98,12 @@ export function ProducerDashboard() {
       <DemoDisclaimer />
 
       <section className="space-y-3">
-        <h2 className="font-display text-base font-medium text-white">Devices</h2>
+        <div className="flex flex-wrap items-baseline justify-between gap-2">
+          <h2 className="font-display text-base font-medium text-white">Devices</h2>
+          <span className="font-mono text-[10px] uppercase tracking-wider text-amber-200/70">
+            Demo devices · not live meters
+          </span>
+        </div>
         <ul className="divide-y divide-white/[0.06] rounded-xl border border-white/[0.08]">
           {DEVICES.map((d) => (
             <li key={d.id}>
@@ -123,7 +129,7 @@ export function ProducerDashboard() {
       <section className="space-y-4 rounded-xl border border-white/[0.08] px-4 py-4">
         <h2 className="font-display text-base font-medium text-white">1 · Mint akWh</h2>
         <p className="text-xs text-white/45">
-          Crédite ton lab wallet depuis le meter sélectionné (oracle-gated on-chain plus tard).
+          Credits your lab wallet from the selected demo meter (oracle-gated on-chain later).
         </p>
         <div className="flex flex-wrap items-end gap-3">
           <label className="space-y-1 font-mono text-[10px] uppercase text-white/40">
@@ -148,7 +154,7 @@ export function ProducerDashboard() {
       <section className="space-y-4 rounded-xl border border-white/[0.08] px-4 py-4">
         <h2 className="font-display text-base font-medium text-white">2 · Convert → WATT</h2>
         <p className="text-xs text-white/45">
-          Même économie que WattCoin.sol — lock akWh in vault, mint WATT 1:1.
+          Same economics as WattCoin.sol — lock akWh in vault, mint WATT 1:1.
         </p>
         <div className="flex flex-wrap items-end gap-3">
           <label className="space-y-1 font-mono text-[10px] uppercase text-white/40">
@@ -176,10 +182,28 @@ export function ProducerDashboard() {
             Protocol vault {fmt(snap.vaultAkWh, 2)} akWh · supply {fmt(snap.wattSupply, 2)} WATT
           </p>
         ) : null}
+        <p className="text-xs text-white/50">
+          Next:{" "}
+          <Link href="/trade?market=kwh-france" className="underline-offset-2 hover:text-white hover:underline">
+            Settle spot on /trade
+          </Link>
+        </p>
       </section>
 
       {error ? <p className="text-xs text-rose-300/90">{error}</p> : null}
-      {note ? <p className="text-xs text-emerald-300/80">{note}</p> : null}
+      {note ? (
+        <div className="space-y-2">
+          <p className="text-xs text-emerald-300/80">{note}</p>
+          {note.includes("WATT") && note.includes("Wrapped") ? (
+            <Link
+              href="/trade?market=kwh-france"
+              className="inline-flex font-mono text-[11px] text-white/70 underline-offset-2 hover:text-white hover:underline"
+            >
+              Continue → Trade spot →
+            </Link>
+          ) : null}
+        </div>
+      ) : null}
 
       {snap?.recent?.length ? (
         <section className="space-y-2">

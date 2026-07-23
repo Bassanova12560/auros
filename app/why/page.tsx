@@ -78,6 +78,18 @@ export default function WhyPage() {
                 <li>Optional wrap to WATT (1:1 energy unit of account)</li>
                 <li>Spot / agent hedges settle with caps — humans approve paid paths</li>
               </ol>
+              <div className="mt-4 flex flex-wrap gap-2">
+                <PrimaryButton href="/lab">1 · Mint</PrimaryButton>
+                <PrimaryButton href="/producer" variant="ghost">
+                  2 · Wrap
+                </PrimaryButton>
+                <PrimaryButton href="/trade?market=kwh-france" variant="ghost">
+                  3 · Spot
+                </PrimaryButton>
+                <PrimaryButton href="/agent" variant="ghost">
+                  Agent hedge
+                </PrimaryButton>
+              </div>
               <p className="font-mono text-[11px] text-white/40">
                 Deep dive:{" "}
                 <Link href="/resource-layer" className="underline-offset-2 hover:underline">
@@ -88,8 +100,12 @@ export default function WhyPage() {
                   /builders
                 </Link>
                 {" · "}
-                <Link href="/resource-layer/faq" className="underline-offset-2 hover:underline">
-                  FAQ
+                <Link href="/status" className="underline-offset-2 hover:underline">
+                  /status
+                </Link>
+                {" · "}
+                <Link href="/blog/cross-exchange-risk-engine" className="underline-offset-2 hover:underline">
+                  risk essay
                 </Link>
               </p>
             </section>

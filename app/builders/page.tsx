@@ -65,6 +65,49 @@ export default function BuildersPage() {
               <PrimaryButton href="/trade" variant="ghost">
                 Open trade terminal
               </PrimaryButton>
+              <PrimaryButton href="/status" variant="ghost">
+                System status
+              </PrimaryButton>
+            </section>
+
+            <section className="space-y-3 rounded-lg border border-white/[0.08] bg-white/[0.02] px-4 py-4">
+              <h2 className="font-display text-xl text-white">5-minute site demo</h2>
+              <p>
+                No clone required. Run the labeled loop on getauros.com — same lab ledger across
+                pages.
+              </p>
+              <ol className="list-decimal space-y-1.5 pl-5 text-white/60">
+                <li>
+                  <Link href="/lab" className="underline-offset-2 hover:underline">
+                    /lab
+                  </Link>{" "}
+                  — mint akWh into your browser lab wallet
+                </li>
+                <li>
+                  <Link href="/producer" className="underline-offset-2 hover:underline">
+                    /producer
+                  </Link>{" "}
+                  — wrap akWh → WATT 1:1
+                </li>
+                <li>
+                  <Link href="/trade?market=kwh-france" className="underline-offset-2 hover:underline">
+                    /trade
+                  </Link>{" "}
+                  — settle spot (or{" "}
+                  <Link href="/agent" className="underline-offset-2 hover:underline">
+                    /agent
+                  </Link>{" "}
+                  for a lab hedge buy)
+                </li>
+              </ol>
+              <p className="font-mono text-[10px] text-white/35">
+                Live checks:{" "}
+                <Link href="/status" className="underline-offset-2 hover:underline">
+                  /status
+                </Link>
+                {" · "}
+                caps &amp; HITL on paid paths
+              </p>
             </section>
 
             <section className="space-y-4">
@@ -150,6 +193,10 @@ Users ──HTTPS──► Next.js (getauros.com)`}
                   {" · "}
                   <Link href="/lab" className="underline-offset-2 hover:underline">
                     Energy Lab
+                  </Link>
+                  {" · "}
+                  <Link href="/status" className="underline-offset-2 hover:underline">
+                    Status
                   </Link>
                   {" · "}
                   <a

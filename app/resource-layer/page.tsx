@@ -25,8 +25,8 @@ const JOURNEY = [
   {
     n: "02",
     title: "Convert",
-    body: "Wrap akWh → WATT 1:1 (energy unit of account for machines).",
-    href: "/watt",
+    body: "Wrap akWh → WATT 1:1 on Producer (energy unit of account).",
+    href: "/producer",
   },
   {
     n: "03",
@@ -43,7 +43,7 @@ const PILLARS = [
   },
   {
     title: "Instant Liquidity",
-    body: "Bootstrap each new resource unit into a deep market (Uniswap V3 target) seeded by the Auros liquidity engine.",
+    body: "Bootstrap each new resource unit into a market pool (Uniswap V3 is an integration target) seeded by the Auros liquidity engine — labeled demos until pilots clear.",
   },
   {
     title: "Machine-Ready API",
@@ -239,15 +239,12 @@ export default function ResourceLayerPage() {
             <section className="space-y-3">
               <h2 className="font-display text-xl text-white">Manifesto</h2>
               <p>
-                We are building the settlement layer for the machine economy. AI
-                agents, robots, and autonomous devices will trade resources
-                on-chain with deep liquidity provided by Auros.
-              </p>
-              <p>
-                Concrete picture: your EV — or a GPU rack — buys kWh automatically
-                overnight through the agent API while you sleep. Forecast →
-                forward order → meter-backed settlement. Humans still gate paid
-                and compliance-sensitive steps.
+                Settlement layer for the machine economy: agents and devices trade
+                metered resources with Auros liquidity — humans still gate paid and
+                compliance-sensitive steps.{" "}
+                <Link href="/why" className="underline-offset-2 hover:text-white hover:underline">
+                  Why Auros →
+                </Link>
               </p>
             </section>
 
@@ -298,12 +295,12 @@ export default function ResourceLayerPage() {
               </p>
               <div className="flex flex-wrap gap-3">
                 <PrimaryButton href="/why">Why Auros</PrimaryButton>
-                <PrimaryButton href="/lab">1 · Produire (Lab)</PrimaryButton>
+                <PrimaryButton href="/lab">1 · Produce (Lab)</PrimaryButton>
                 <PrimaryButton href="/producer" variant="ghost">
-                  2 · Convertir (WATT)
+                  2 · Convert (Producer)
                 </PrimaryButton>
                 <PrimaryButton href="/trade" variant="ghost">
-                  3 · Vendre (Trade)
+                  3 · Sell (Trade)
                 </PrimaryButton>
                 <PrimaryButton href="/builders" variant="ghost">
                   Protocol
