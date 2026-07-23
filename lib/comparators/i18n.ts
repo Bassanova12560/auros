@@ -241,6 +241,7 @@ export type ComparatorMessages = {
       title: string;
       subtitle: string;
       print: string;
+      downloadPdf: string;
       dossierCta: string;
       deskCta: string;
       back: string;
@@ -522,7 +523,8 @@ const FR: ComparatorMessages = {
       title: "Compare Report",
       subtitle:
         "Snapshot partageable / imprimable — pas un conseil, APY non inventé.",
-      print: "Imprimer / PDF",
+      print: "Imprimer",
+      downloadPdf: "PDF signé",
       dossierCta: "Continuer vers le dossier",
       deskCta: "Intro desk",
       back: "Retour au hub",
@@ -1133,7 +1135,8 @@ const EN: ComparatorMessages = {
       eyebrow: "Compare report · indicative",
       title: "Compare Report",
       subtitle: "Shareable / printable snapshot — not advice, APY never invented.",
-      print: "Print / PDF",
+      print: "Print",
+      downloadPdf: "Signed PDF",
       dossierCta: "Continue to dossier",
       deskCta: "Desk intro",
       back: "Back to hub",
@@ -1745,7 +1748,8 @@ const ES: ComparatorMessages = {
       title: "Compare Report",
       subtitle:
         "Snapshot compartible / imprimible — no es consejo; APY nunca inventado.",
-      print: "Imprimir / PDF",
+      print: "Imprimir",
+      downloadPdf: "PDF firmado",
       dossierCta: "Continuar al expediente",
       deskCta: "Intro desk",
       back: "Volver al hub",

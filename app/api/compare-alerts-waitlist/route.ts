@@ -38,8 +38,9 @@ export async function POST(req: Request) {
     ok: true,
     message: "waitlist_joined",
     delivery: "best_effort",
-    note: "APY-move webhooks coming — registration persisted; confirmation ping is best-effort",
+    note: "Watcher persisted — live APY/TVL moves delivered best-effort when thresholds hit (schema auros.compare.alerts.move.v1)",
     channel: row.channel,
     webhook_ping_ok: webhookPing.ok,
+    move_event: "compare.alerts.apy_move",
   });
 }

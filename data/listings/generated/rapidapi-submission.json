@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-23T21:32:27.984Z",
+  "generatedAt": "2026-07-23T22:10:29.177Z",
   "api": {
     "name": "AUROS Protocol",
     "description": "The RWA Intelligence Layer — score MiCA readiness (0–100), browse 120+ tokenized RWA products, rank jurisdictions, and generate compliance checklists. Static rules, <200ms, no LLM. Indicative only.",
@@ -20,6 +20,24 @@
       "method": "GET",
       "path": "/api/v1/products",
       "description": "Paginated RWA product catalog with APY, TVL, chains, jurisdiction filters"
+    },
+    {
+      "name": "Public Compare Screener",
+      "method": "GET",
+      "path": "/api/compare",
+      "description": "Indicative RWA screener / shortlist snapshot with entity_id, source citations, HMAC proof (auros-compare:v1:). Rate-limited; APY never invented."
+    },
+    {
+      "name": "Compare Eligibility",
+      "method": "GET",
+      "path": "/api/compare/eligibility",
+      "description": "Indicative eligibility composite (MiCA-oriented × jurisdiction × Green CQS/CSRD when data exists). Not legal advice."
+    },
+    {
+      "name": "Compare Verify",
+      "method": "POST",
+      "path": "/api/compare/verify",
+      "description": "Verify compare snapshot / report content_hash + HMAC signature"
     },
     {
       "name": "Jurisdictions",

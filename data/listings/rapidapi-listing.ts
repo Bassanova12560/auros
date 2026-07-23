@@ -40,6 +40,29 @@ export const RAPIDAPI_LISTING = {
       description: "Paginated RWA product catalog with APY, TVL, chains, jurisdiction filters",
     },
     {
+      name: "Public Compare Screener",
+      method: "GET",
+      path: "/api/compare",
+      description:
+        "Indicative RWA screener / shortlist snapshot with entity_id, source citations, HMAC proof (auros-compare:v1:). Rate-limited; APY never invented.",
+      authRequired: false,
+    },
+    {
+      name: "Compare Eligibility",
+      method: "GET",
+      path: "/api/compare/eligibility",
+      description:
+        "Indicative eligibility composite (MiCA-oriented × jurisdiction × Green CQS/CSRD when data exists). Not legal advice.",
+      authRequired: false,
+    },
+    {
+      name: "Compare Verify",
+      method: "POST",
+      path: "/api/compare/verify",
+      description: "Verify compare snapshot / report content_hash + HMAC signature",
+      authRequired: false,
+    },
+    {
       name: "Jurisdictions",
       method: "GET",
       path: "/api/v1/jurisdictions",

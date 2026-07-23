@@ -1,7 +1,7 @@
 import type { HubProduct } from "../compare-hub";
-import { productDedupeKey } from "../compare-hub";
 import { isSponsoredProductId } from "../sponsored";
 import { isGreenRelevantHubProduct } from "../compare-report";
+import { resolveCompareEntity } from "../entity-graph";
 import { SITE_URL } from "../site";
 import type { RiskTier } from "../risk";
 
@@ -18,6 +18,12 @@ export type CompareApiProduct = {
   id: string;
   /** Cross-chain / cross-class entity identity (platform+product). */
   entity_key: string;
+  /** Stable entity id: ent:{issuer_key}:{product_slug} */
+  entity_id: string;
+  /** Canonical issuer slug (aliases collapsed). */
+  issuer_key: string;
+  /** Parent issuer when known (soft graph). */
+  parent_issuer: string | null;
   platform: string;
   product: string;
   category: string;
@@ -59,9 +65,13 @@ export function toCompareApiProduct(
   const path = product.comparatorHref.startsWith("http")
     ? product.comparatorHref
     : `${SITE_URL}${product.comparatorHref}`;
+  const entity = resolveCompareEntity(product);
   return {
     id: product.row.id,
-    entity_key: productDedupeKey(product),
+    entity_key: entity.entity_key,
+    entity_id: entity.entity_id,
+    issuer_key: entity.issuer_key,
+    parent_issuer: entity.parent_issuer,
     platform: product.row.platform,
     product: product.row.product,
     category: product.row.category,

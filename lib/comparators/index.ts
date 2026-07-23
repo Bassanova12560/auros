@@ -143,6 +143,31 @@ export {
 } from "./compare-report";
 
 export {
+  resolveCompareEntity,
+  normalizeIssuerKey,
+  dedupeByEntityId,
+} from "./entity-graph";
+export type { CompareEntityIdentity } from "./entity-graph";
+
+export {
+  resolveCompareCqs,
+  resolveCompareCsrd,
+} from "./green-cqs-bridge";
+
+export {
+  APY_MOVE_THRESHOLD_PP,
+  TVL_MOVE_THRESHOLD_PCT,
+  COMPARE_ALERTS_MOVE_SCHEMA,
+  detectMovesForProducts,
+  buildMovePayload,
+  buildIdempotencyKey,
+} from "./alerts-apy-moves";
+export type {
+  CompareAlertMove,
+  CompareAlertsMovePayload,
+} from "./alerts-apy-moves";
+
+export {
   SPONSORED_SLOTS,
   getSponsoredSlot,
   isSponsoredProductId,

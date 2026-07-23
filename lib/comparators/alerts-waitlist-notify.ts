@@ -29,7 +29,7 @@ export async function notifyCompareAlertsWaitlistSignup(
     from: resendFrom(),
     to,
     subject: `[AUROS Compare] Alerts waitlist — ${data.channel} · ${data.productIds.length} ids`,
-    html: `<p>Nouvelle inscription alertes comparateur (best-effort — pas encore de webhooks APY live).</p>
+    html: `<p>Nouvelle inscription alertes comparateur (watcher persisté — moves APY/TVL best-effort via cron).</p>
 <ul>
 <li>Channel : ${data.channel}</li>
 <li>Email : ${data.email || "—"}</li>

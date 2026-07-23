@@ -1,6 +1,6 @@
 /**
  * Compare shortlist alerts — email waitlist and/or webhook URL.
- * Delivery is best-effort / notify-when-ready (not live APY webhooks yet).
+ * Registration persists watchers; live APY/TVL moves via cron (alerts-apy-moves).
  */
 
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
@@ -100,6 +100,18 @@ export function parseCompareAlertsWaitlistInput(raw: unknown):
   };
 }
 
+export function listCompareAlertsWatchers(): CompareAlertsWaitlistEntry[] {
+  try {
+    if (!existsSync(FILE)) return [];
+    const parsed = JSON.parse(
+      readFileSync(FILE, "utf8")
+    ) as CompareAlertsWaitlistEntry[];
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+}
+
 export function appendCompareAlertsWaitlist(
   entry: Omit<CompareAlertsWaitlistEntry, "createdAt">
 ): CompareAlertsWaitlistEntry {
@@ -107,17 +119,7 @@ export function appendCompareAlertsWaitlist(
     ...entry,
     createdAt: new Date().toISOString(),
   };
-  let all: CompareAlertsWaitlistEntry[] = [];
-  try {
-    if (existsSync(FILE)) {
-      const parsed = JSON.parse(
-        readFileSync(FILE, "utf8")
-      ) as CompareAlertsWaitlistEntry[];
-      if (Array.isArray(parsed)) all = parsed;
-    }
-  } catch {
-    all = [];
-  }
+  const all = listCompareAlertsWatchers();
   all.push(row);
   try {
     if (!existsSync(DATA_DIR)) mkdirSync(DATA_DIR, { recursive: true });
@@ -143,10 +145,12 @@ export async function pingCompareAlertsWebhook(
       body: JSON.stringify({
         event: "compare.alerts.waitlist.registered",
         delivery: "best_effort",
-        note: "APY move webhooks coming — this is registration confirmation only",
+        note: "Registration confirmation — live moves use event compare.alerts.apy_move (schema auros.compare.alerts.move.v1)",
         product_ids: entry.productIds,
         locale: entry.locale,
         created_at: entry.createdAt,
+        move_event: "compare.alerts.apy_move",
+        move_schema: "auros.compare.alerts.move.v1",
       }),
       signal: AbortSignal.timeout(5_000),
     });

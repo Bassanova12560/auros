@@ -1,7 +1,7 @@
 # Manager backlog — AUROS
 
 Living priorities. Manager owns this; update when shipping or discovering debt.
-Last review: 2026-07-23 (compare → dossier/Green tunnel).
+Last review: 2026-07-24 (compare wedges: alerts moves · entity · CQS · RapidAPI · PDF).
 
 ## P0 — risque / trust
 
@@ -69,15 +69,14 @@ Last review: 2026-07-23 (compare → dossier/Green tunnel).
 | Tunnel conversion trust | OK — compare → `/start` dossier + voie Green/CSRD (max 3 CTAs), claims indicatifs, `/green/compare` next-step |
 | Comparator RWA #1 push | **In progress** — classes equity/art, filtres hub, SEO, DeFiLlama BUIDL/USYC/ACRED/HLSCOPE ; gap : TVL art/infra encore mince |
 | **Compare monetization pack** | **OK 2026-07-23** — Report `/compare/report` · desk mailto ≥2 · Sponsored badge (config vide) · CSV · alerts waitlist+webhook HTTPS · Green/CSRD soft |
-| **Compare API differentiation** | **OK 2026-07-23** — `GET/POST /api/compare` signed snapshot (`auros-compare:v1:`) · screener · eligibility composite · verify · rate-limit · docs endpoint-compare |
+| **Compare API differentiation** | **OK 2026-07-23** — `GET/POST /api/compare` signed snapshot (`auros-compare:v1:`) · screener · eligibility · verify · rate-limit · docs endpoint-compare |
+| **Compare next wedges** | **OK 2026-07-24** — Live APY/TVL moves (`auros.compare.alerts.move.v1` + cron) · entity_id/issuer_key · CQS/CSRD soft-join Green · RapidAPI compare endpoints · signed report PDF |
 
-### Next wedges (idéation — ne pas shipper tout de suite)
+### Deferred / thin
 
-1. Live APY-move webhooks (au-delà du ping d’inscription best-effort)
-2. Entity graph issuer↔token multi-chain (plus fin que `entity_key` plateforme+produit)
-3. CQS/CSRD scores branchés produit-par-produit quand data Green existe
-4. RapidAPI listing pack : endpoints compare public + eligibility
-5. Compare Report PDF serveur signé (au-delà de print browser)
+- Entity graph: aliases + `entity_id` shipped ; full multi-chain token address graph still thin
+- CQS only when Green carbon profile maps (toucan/klima/moss/flowcarbon…) — no invention
+- Serverless: watcher/snapshot file persist may be ephemeral on Vercel — best-effort (same as waitlist)
 
 ## Backlog i18n
 

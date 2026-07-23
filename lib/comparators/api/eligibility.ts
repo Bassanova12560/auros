@@ -1,10 +1,16 @@
 /**
  * Indicative eligibility composite — never legal advice, never invent APY.
- * Combines compare fields × MiCA-oriented flags × jurisdiction hints × green hooks.
+ * Combines compare fields × MiCA-oriented flags × jurisdiction hints × green/CQS hooks.
  */
 
 import type { HubProduct } from "../compare-hub";
 import { isGreenRelevantHubProduct } from "../compare-report";
+import {
+  resolveCompareCqs,
+  resolveCompareCsrd,
+  type CompareCqsAttachment,
+  type CompareCsrdAttachment,
+} from "../green-cqs-bridge";
 import { toCompareApiProduct } from "./catalog";
 import { buildCompareProof, type CompareProof } from "./signing";
 import { SITE_URL } from "../site";
@@ -32,7 +38,10 @@ export type GreenEligibilityFlags = {
   green_relevant: boolean;
   carbon_token_hint: boolean;
   csrd_path_suggested: boolean;
-  cqs_data_available: false;
+  /** True only when a Green carbon profile was resolved. */
+  cqs_data_available: boolean;
+  cqs: CompareCqsAttachment | null;
+  csrd: CompareCsrdAttachment;
   green_href: string;
   csrd_href: string;
 };
@@ -40,6 +49,9 @@ export type GreenEligibilityFlags = {
 export type EligibilityProduct = {
   product_id: string;
   entity_key: string;
+  entity_id: string;
+  issuer_key: string;
+  parent_issuer: string | null;
   as_of: string;
   compare: ReturnType<typeof toCompareApiProduct>;
   mica: MicaOrientedFlags;
@@ -82,7 +94,7 @@ function regionFromJurisdiction(raw: string | null): JurisdictionHint["region"] 
   if (EU_HINTS.some((h) => j.includes(h)) || j === "eu" || j.includes("europe")) {
     return "EU";
   }
-  if (j.includes("us") || j.includes("united states") || j.includes("cayman")) {
+  if (j.includes("us") || j.includes("united states") || j.includes("wyoming")) {
     return "US";
   }
   if (j.includes("uk") || j.includes("united kingdom") || j.includes("britain")) {
@@ -140,11 +152,15 @@ function greenFlags(product: HubProduct): GreenEligibilityFlags {
   const carbon_token_hint = /toucan|klima|moss|flowcarbon|bct|nct|mco2|carbon/.test(
     hay
   );
+  const cqs = resolveCompareCqs(product);
+  const csrd = resolveCompareCsrd(product, green_relevant, carbon_token_hint);
   return {
     green_relevant,
     carbon_token_hint,
-    csrd_path_suggested: green_relevant || carbon_token_hint,
-    cqs_data_available: false,
+    csrd_path_suggested: csrd.path_suggested,
+    cqs_data_available: Boolean(cqs),
+    cqs,
+    csrd,
     green_href: `${SITE_URL}/green`,
     csrd_href: `${SITE_URL}/green/csrd-check`,
   };
@@ -156,11 +172,15 @@ export function buildEligibilityForProduct(
 ): EligibilityProduct {
   const raw = product.meta.jurisdiction ?? null;
   const region = regionFromJurisdiction(raw);
+  const compare = toCompareApiProduct(product, asOf);
   return {
     product_id: product.row.id,
-    entity_key: toCompareApiProduct(product, asOf).entity_key,
+    entity_key: compare.entity_key,
+    entity_id: compare.entity_id,
+    issuer_key: compare.issuer_key,
+    parent_issuer: compare.parent_issuer,
     as_of: asOf,
-    compare: toCompareApiProduct(product, asOf),
+    compare,
     mica: micaFlags(product, region),
     jurisdiction: {
       raw,

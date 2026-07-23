@@ -667,17 +667,47 @@ const history = await client.scoreHistory(result.score_id!);`,
       {
         heading: "Public (gratuit, quota IP)",
         paragraphs: [
-          "**GET /api/compare** — screener (filtres `risk_tier`, `source`, `jurisdiction`, `yield_min`, `max_ticket_usd`, `green_only`, `limit`).",
-          "**GET /api/compare?mode=shortlist&ids=…** ou **POST /api/compare** `{ product_ids }` — snapshot shortlist avec `as_of`, `source_type`, `entity_key`, citations, `drift` (slug_missing / stale_cache).",
-          "**GET /api/compare/eligibility?ids=…** — composite indicatif (MiCA-oriented × juridiction × green/CSRD hints). Pas un avis juridique ; APY jamais inventé.",
+          "**GET /api/compare** — screener (filtres `risk_tier`, `source`, `jurisdiction`, `yield_min`, `max_ticket_usd`, `green_only`, `limit`). Chaque produit expose `entity_key`, `entity_id` (`ent:{issuer}:{product}`), `issuer_key`, `parent_issuer`.",
+          "**GET /api/compare?mode=shortlist&ids=…** ou **POST /api/compare** `{ product_ids }` — snapshot shortlist avec `as_of`, `source_type`, citations, `drift` (slug_missing / stale_cache).",
+          "**GET /api/compare/eligibility?ids=…** — composite indicatif (MiCA-oriented × juridiction × green). Quand un profil Green carbone existe : `green.cqs_data_available=true` + scores CQS / hints CSRD (indicatif, fail soft sinon).",
+          "**GET /api/compare/report/pdf?compare=id1,id2** — PDF shortlist attesté HMAC (`auros.compare.report.pdf.v1`) ; disclaimer indicatif ; APY jamais inventé.",
           "**POST /api/compare/verify** — vérifie `content_hash` + `signature` (HMAC `auros-compare:v1:`).",
           "Signature HMAC si `ATTEST_SIGNING_KEY` est défini ; sinon hash seul. Premium : POST /api/v1/compare (Bearer + quota mensuel).",
+          "Alertes shortlist : inscription `POST /api/compare-alerts-waitlist` ; moves live event `compare.alerts.apy_move` schema `auros.compare.alerts.move.v1` (best-effort webhook HTTPS et/ou email).",
         ],
         code: `curl "${BASE}/api/compare?risk_tier=core&source=live&limit=10"
 curl "${BASE}/api/compare?mode=shortlist&ids=maple-mcusdc,backed-bib01"
+curl "${BASE}/api/compare/eligibility?ids=toucan-bct-nct,maple-mcusdc"
+curl "${BASE}/api/compare/report/pdf?compare=maple-mcusdc,backed-bib01&locale=en" -o report.pdf
 curl -X POST ${BASE}/api/compare/eligibility -H "Content-Type: application/json" \\
   -d '{"product_ids":["maple-mcusdc","spiko-eutbl"]}'`,
         language: "bash",
+      },
+      {
+        heading: "Payload alertes APY/TVL (webhook)",
+        paragraphs: [
+          "Quand un watcher a un mouvement significatif (APY ≥ 0,25 pp ou TVL ≥ 5 % et ≥ 100k USD), POST HTTPS best-effort :",
+        ],
+        code: `{
+  "event": "compare.alerts.apy_move",
+  "schema": "auros.compare.alerts.move.v1",
+  "delivery": "best_effort",
+  "as_of": "2026-07-24T00:00:00.000Z",
+  "watcher_product_ids": ["maple-mcusdc"],
+  "moves": [{
+    "product_id": "maple-mcusdc",
+    "entity_id": "ent:maple:mcusdc",
+    "field": "apy",
+    "previous": 8.1,
+    "current": 8.5,
+    "delta": 0.4,
+    "source_type": "live",
+    "note": "indicative_never_invented"
+  }],
+  "idempotency_key": "…",
+  "policy": { "never_invent_apy": true, "indicative_only": true }
+}`,
+        language: "json",
       },
       {
         heading: "Modes de requête (Premium)",

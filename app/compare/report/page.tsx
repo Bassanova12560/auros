@@ -85,7 +85,11 @@ export default async function CompareReportPage({ searchParams }: PageProps) {
           </div>
           <div className="flex flex-wrap gap-2 print:hidden">
             {products.length >= COMPARE_REPORT_MIN ? (
-              <PrintReportButton label={copy.print} />
+              <PrintReportButton
+                label={copy.print}
+                pdfLabel={copy.downloadPdf}
+                pdfHref={`/api/compare/report/pdf?compare=${ids.join(",")}&locale=${locale}`}
+              />
             ) : null}
             <PrimaryButton
               href={dossierHref}
