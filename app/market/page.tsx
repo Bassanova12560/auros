@@ -5,7 +5,6 @@ import { ContentPageLayout } from "@/app/_components/ContentPageLayout";
 import { FocusPageShell } from "@/app/_components/FocusPageShell";
 import { NextStepStrip } from "@/app/_components/NextStepStrip";
 import { AiFirstPageJsonLd } from "@/app/_components/ai-first/AiFirstPageJsonLd";
-import { ECOSYSTEM } from "@/lib/ecosystem-neighbors";
 
 import { MarketTable } from "./_components/MarketTable";
 
@@ -26,11 +25,7 @@ export default function MarketPage() {
           intro="Indicative marks from the same index as /trade. Open a row to settle spot on your lab wallet — volumes are labels, not claimed exchange volume."
         >
           <MarketTable />
-          <NextStepStrip
-            primary={{ href: "/trade?market=kwh-france&side=sell", label: "Open trade terminal" }}
-            secondary={[{ href: "/lab", label: "Mint first", hint: "if empty wallet" }]}
-            neighbors={ECOSYSTEM.afterTrade.neighbors}
-          />
+          <NextStepStrip preset="afterTrade" />
           <p className="mt-4 font-mono text-[10px] text-white/30">
             Walkthrough:{" "}
             <Link href="/builders" className="underline-offset-2 hover:underline">

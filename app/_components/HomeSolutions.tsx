@@ -1,44 +1,27 @@
+"use client";
+
 import Link from "next/link";
 
-const SOLUTIONS = [
-  {
-    who: "Exchanges & digital assets",
-    plain: "Deep liquidity, 24/7 risk discipline, and venue-ready APIs for tokens that need real markets.",
-    cta: "Open marketplace",
-    href: "/market",
-  },
-  {
-    who: "Energy & water producers",
-    plain: "Turn metered production into units you can sell — faster paths to buyers, labeled demos first.",
-    cta: "Open Energy Lab",
-    href: "/lab",
-  },
-  {
-    who: "Developers & AI agents",
-    plain: "Build on the Resource Layer: protocol surfaces, agent API, and a shared lab wallet.",
-    cta: "Builders / testnet",
-    href: "/builders",
-  },
-] as const;
+import { useLocale } from "@/app/_components/i18n/LocaleProvider";
+import { getArlUi } from "@/lib/arl/ui-i18n";
 
 /**
- * Homepage solutions — one card per audience, one CTA each. Reduces choice paralysis.
+ * Homepage solutions — one card per audience, locale-aware.
  */
 export function HomeSolutions() {
+  const { locale } = useLocale();
+  const m = getArlUi(locale).homeSolutions;
+
   return (
-    <section id="solutions" className="scroll-mt-24 px-4 py-14 md:px-6" aria-label="Solutions by audience">
+    <section id="solutions" className="scroll-mt-24 px-4 py-14 md:px-6" aria-label={m.title}>
       <div className="mx-auto max-w-6xl">
         <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-white/40">
-          Pick your path
+          {m.eyebrow}
         </p>
-        <h2 className="mt-2 font-display text-2xl text-white md:text-3xl">
-          Who are you here for?
-        </h2>
-        <p className="mt-2 max-w-2xl text-sm leading-relaxed text-white/50">
-          One liquidity engine. Three doors. No jargon maze — choose the path that matches your job.
-        </p>
+        <h2 className="mt-2 font-display text-2xl text-white md:text-3xl">{m.title}</h2>
+        <p className="mt-2 max-w-2xl text-sm leading-relaxed text-white/50">{m.intro}</p>
         <ul className="mt-8 grid gap-4 md:grid-cols-3">
-          {SOLUTIONS.map((s) => (
+          {m.doors.map((s) => (
             <li
               key={s.who}
               className="flex flex-col border border-white/[0.08] bg-white/[0.02] px-5 py-5"
@@ -55,9 +38,9 @@ export function HomeSolutions() {
           ))}
         </ul>
         <p className="mt-6 text-xs text-white/35">
-          Preparing a classic RWA dossier (real estate, art, receivables)?{" "}
+          {m.dossierHint}{" "}
           <Link href="/start" className="underline-offset-2 hover:underline">
-            Start readiness in ~4 min
+            {m.dossierCta}
           </Link>
           .
         </p>

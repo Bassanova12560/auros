@@ -51,15 +51,7 @@ export function EarnPanel() {
           </li>
         ))}
       </ul>
-      <NextStepStrip
-        primary={{ href: "/trade?market=kwh-france&side=sell", label: "Trade spot (live lab)" }}
-        secondary={[{ href: "/builders", label: "Builders" }]}
-        neighbors={[
-          { href: "/producer", label: "Producer" },
-          { href: "/market", label: "Market" },
-          { href: "/investors", label: "Investors" },
-        ]}
-      />
+      <NextStepStrip preset="afterTrade" />
     </div>
   );
 }

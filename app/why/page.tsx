@@ -80,19 +80,7 @@ export default function WhyPage() {
               </ol>
             </section>
 
-            <NextStepStrip
-              primary={{ href: "/lab", label: "Run the Energy Lab" }}
-              secondary={[
-                { href: "/investors", label: "Investors" },
-                { href: "/press", label: "Press" },
-              ]}
-              neighbors={[
-                { href: "/resource-layer", label: "Vision" },
-                { href: "/builders", label: "Builders" },
-                { href: "/status", label: "Status" },
-                { href: "/careers", label: "Careers" },
-              ]}
-            />
+            <NextStepStrip preset="company" />
           </div>
         </ContentPageLayout>
       </FocusPageShell>

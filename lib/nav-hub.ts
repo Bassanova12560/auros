@@ -642,7 +642,7 @@ const AR: HubCopy = {
   close: "إغلاق",
   openMenu: "قائمة AUROS",
   primaryCta: "Energy Lab",
-  secondaryCta: "تجربة Shield",
+  secondaryCta: "إنشاء ملفي",
   groups: [
     {
       id: "dossier",
@@ -846,8 +846,8 @@ const ZH: HubCopy = {
   exploreAll: "浏览完整中心",
   close: "关闭",
   openMenu: "AUROS 菜单",
-  primaryCta: "Open Energy Lab",
-  secondaryCta: "试用 Shield",
+  primaryCta: "打开 Energy Lab",
+  secondaryCta: "创建档案",
   groups: [
     {
       id: "dossier",

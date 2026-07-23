@@ -5,7 +5,6 @@ import { ContentPageLayout } from "@/app/_components/ContentPageLayout";
 import { FocusPageShell } from "@/app/_components/FocusPageShell";
 import { NextStepStrip } from "@/app/_components/NextStepStrip";
 import { AiFirstPageJsonLd } from "@/app/_components/ai-first/AiFirstPageJsonLd";
-import { ECOSYSTEM } from "@/lib/ecosystem-neighbors";
 
 import { EnergyLabSimulator } from "./_components/EnergyLabSimulator";
 
@@ -43,7 +42,7 @@ export default function EnergyLabPage() {
               </p>
             </section>
 
-            <NextStepStrip {...ECOSYSTEM.afterLab} />
+            <NextStepStrip preset="afterLab" />
           </div>
         </ContentPageLayout>
       </FocusPageShell>

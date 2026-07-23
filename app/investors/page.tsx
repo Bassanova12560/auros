@@ -6,7 +6,6 @@ import { FocusPageShell } from "@/app/_components/FocusPageShell";
 import { PrimaryButton } from "@/app/_components/ui/PrimaryButton";
 import { NextStepStrip } from "@/app/_components/NextStepStrip";
 import { AiFirstPageJsonLd } from "@/app/_components/ai-first/AiFirstPageJsonLd";
-import { ECOSYSTEM } from "@/lib/ecosystem-neighbors";
 
 export const metadata: Metadata = {
   title: "Investors — AUROS diligence desk",
@@ -201,7 +200,7 @@ app/          Next.js · getauros.com + lab ledger`}
               </p>
             </section>
 
-            <NextStepStrip {...ECOSYSTEM.company} />
+            <NextStepStrip preset="company" />
           </div>
         </ContentPageLayout>
       </FocusPageShell>

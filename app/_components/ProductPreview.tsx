@@ -3,12 +3,17 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
 
+import { useLocale } from "@/app/_components/i18n/LocaleProvider";
+import { getArlUi } from "@/lib/arl/ui-i18n";
 import { fadeUp, staggerContainer } from "@/lib/motion";
 
 /**
- * Hero visual aligned with liquidity / Resource Layer story (not RWA dossier).
+ * Hero visual aligned with liquidity / Resource Layer story (locale-aware).
  */
 export function ProductPreview() {
+  const { locale } = useLocale();
+  const p = getArlUi(locale).preview;
+
   return (
     <motion.div
       className="w-full lg:max-w-md lg:flex-1"
@@ -20,10 +25,10 @@ export function ProductPreview() {
         <div className="bezel-inner p-5 md:p-6">
           <motion.div variants={fadeUp} className="flex items-center justify-between">
             <p className="font-mono text-[9px] uppercase tracking-[0.24em] text-white/45">
-              Lab wallet · preview
+              {p.eyebrow}
             </p>
             <span className="rounded-full border border-white/15 px-2 py-0.5 font-mono text-[8px] uppercase tracking-wider text-white/50">
-              No MetaMask
+              {p.badge}
             </span>
           </motion.div>
 
@@ -46,11 +51,7 @@ export function ProductPreview() {
           </motion.div>
 
           <motion.ol variants={fadeUp} className="mt-6 space-y-0 border border-white/[0.08]">
-            {[
-              { n: "1", title: "Produce", hint: "Mint akWh · /lab" },
-              { n: "2", title: "Convert", hint: "Wrap → WATT · /producer" },
-              { n: "3", title: "Sell", hint: "Spot settle · /trade" },
-            ].map((step, i) => (
+            {p.steps.map((step, i) => (
               <li
                 key={step.n}
                 className={`flex items-center gap-3 px-3 py-3 ${
@@ -77,7 +78,7 @@ export function ProductPreview() {
               href="/lab"
               className="block w-full rounded border border-white/25 bg-white/10 py-2.5 text-center font-mono text-[10px] uppercase tracking-wider text-white hover:bg-white/15"
             >
-              Start in Energy Lab →
+              {p.cta}
             </Link>
           </motion.div>
         </div>

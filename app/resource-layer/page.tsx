@@ -7,7 +7,6 @@ import { NextStepStrip } from "@/app/_components/NextStepStrip";
 import { AiFirstPageJsonLd } from "@/app/_components/ai-first/AiFirstPageJsonLd";
 import { ArlGlossaryStrip } from "@/app/_components/arl/PlainTerm";
 import { MintTradeDemo } from "@/app/_components/arl/MintTradeDemo";
-import { ECOSYSTEM } from "@/lib/ecosystem-neighbors";
 
 import { ResourceLayerLab } from "./_components/ResourceLayerLab";
 
@@ -294,7 +293,7 @@ export default function ResourceLayerPage() {
               <p>
                 Don’t leave with a brochure. Run the Energy Lab — human review on every paid path.
               </p>
-              <NextStepStrip {...ECOSYSTEM.vision} />
+              <NextStepStrip preset="vision" />
             </section>
 
             <section className="space-y-6">

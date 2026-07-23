@@ -21,7 +21,6 @@ import {
 } from "@/lib/arl/client";
 import { ArlLabWallet } from "@/app/_components/arl/ArlLabWallet";
 import { NextStepStrip } from "@/app/_components/NextStepStrip";
-import { ECOSYSTEM } from "@/lib/ecosystem-neighbors";
 
 type Tab = "spot" | "perps" | "options";
 
@@ -614,7 +613,7 @@ export function TradeTerminal() {
         </div>
       </div>
 
-      <NextStepStrip {...ECOSYSTEM.afterTrade} />
+      <NextStepStrip preset="afterTrade" />
     </div>
   );
 }
