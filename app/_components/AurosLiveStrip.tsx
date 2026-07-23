@@ -70,10 +70,10 @@ export function AurosLiveStrip() {
             </p>
           </div>
           <Link
-            href="/builders"
+            href="#solutions"
             className="font-mono text-[10px] uppercase tracking-wider text-white/45 underline-offset-4 hover:text-white hover:underline"
           >
-            Builders / protocol →
+            Choose your path →
           </Link>
         </div>
         <dl className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-3">

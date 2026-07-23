@@ -1,33 +1,36 @@
 import Link from "next/link";
 
 const LINKS = [
-  { href: "/resource-layer", label: "Vision" },
+  { href: "/resource-layer", label: "Why resources" },
   { href: "/watt", label: "WATT" },
   { href: "/lab", label: "Lab" },
-  { href: "/builders", label: "Builders" },
   { href: "/trade", label: "Trade" },
 ] as const;
 
 /**
- * Homepage band — ARL + WATT signal for institutional / producer visitors.
+ * Homepage continuation — same liquidity engine, next frontier (not a second company).
  */
 export function ResourceLayerBanner() {
   return (
     <section
-      className="border-y border-white/[0.06] px-4 py-6 md:px-6"
-      aria-label="Auros Resource Layer"
+      className="border-y border-white/[0.06] px-4 py-8 md:px-6"
+      aria-label="Resource Layer continuation"
     >
-      <div className="mx-auto flex max-w-6xl flex-col gap-5">
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <div className="mx-auto max-w-6xl space-y-4">
+        <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-white/40">
+          Same engine · next frontier
+        </p>
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-2xl">
-            <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-white/40">
-              Resource Layer
+            <p className="font-display text-xl text-white md:text-2xl">
+              Tokenized energy, water, and compute use the same liquidity discipline.
             </p>
-            <p className="mt-2 font-display text-base font-medium text-white md:text-lg">
-              Tokenize metered resources. Route liquidity. Serve machine orders.
-            </p>
-            <p className="mt-1 text-sm leading-relaxed text-white/45">
-              Energy, water, compute-linked power — demos labeled, settlement HITL-gated.
+            <p className="mt-2 text-sm leading-relaxed text-white/45">
+              Metered production → lab wallet → spot. Powered by{" "}
+              <Link href="/watt" className="text-white/70 underline-offset-2 hover:underline">
+                WATT
+              </Link>{" "}
+              (preview — not a public sale). Demos labeled; settlement stays HITL.
             </p>
           </div>
           <nav className="flex flex-wrap gap-x-5 gap-y-2 font-mono text-[10px] uppercase tracking-[0.16em] text-white/45">
@@ -41,21 +44,6 @@ export function ResourceLayerBanner() {
               </Link>
             ))}
           </nav>
-        </div>
-
-        <div className="flex flex-col gap-2 border-t border-white/[0.06] pt-4 sm:flex-row sm:items-center sm:justify-between">
-          <p className="text-sm text-white/55">
-            <span className="font-display text-white">Powered by WATT</span>
-            {" — "}
-            the energy stablecoin machines will trade (1:1 akWh collateral design · preview, not a
-            public sale).
-          </p>
-          <Link
-            href="/watt"
-            className="shrink-0 font-mono text-[10px] uppercase tracking-[0.16em] text-white/55 underline-offset-2 hover:text-white hover:underline"
-          >
-            WATT explainer →
-          </Link>
         </div>
       </div>
     </section>

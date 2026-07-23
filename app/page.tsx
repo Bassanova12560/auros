@@ -3,6 +3,7 @@ import { AiFirstPageJsonLd } from "./_components/ai-first/AiFirstPageJsonLd";
 import { AurosLiveStrip } from "./_components/AurosLiveStrip";
 import { Footer } from "./_components/Footer";
 import { Hero } from "./_components/Hero";
+import { HomeSolutions } from "./_components/HomeSolutions";
 import { IntegrationTargetsStrip } from "./_components/IntegrationTargetsStrip";
 import { LandingReferral } from "./_components/LandingReferral";
 import { Nav } from "./_components/Nav";
@@ -13,8 +14,7 @@ import { metadataFromPath } from "@/lib/seo/metadata";
 export const metadata = metadataFromPath("/");
 
 /**
- * Landing: one primary path — hero CTA → wizard.
- * Depth (score, how-it-works, discover, trust, green) lives on dedicated routes.
+ * Landing: one liquidity story → live proof → three audience paths → resource frontier.
  */
 export default function HomePage() {
   return (
@@ -24,8 +24,9 @@ export default function HomePage() {
       <LandingReferral />
       <main>
         <Hero />
-        <ResourceLayerBanner />
         <AurosLiveStrip />
+        <HomeSolutions />
+        <ResourceLayerBanner />
         <IntegrationTargetsStrip />
         <TrustStrip />
       </main>
