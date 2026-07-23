@@ -8,6 +8,8 @@ export type RwaIndexCategoryId =
   | "real_estate"
   | "private_credit"
   | "commodities"
+  | "private_equity"
+  | "art"
   | "green";
 
 export const RWA_INDEX_CATEGORY_ORDER: RwaIndexCategoryId[] = [
@@ -16,6 +18,8 @@ export const RWA_INDEX_CATEGORY_ORDER: RwaIndexCategoryId[] = [
   "real_estate",
   "private_credit",
   "commodities",
+  "private_equity",
+  "art",
   "green",
 ];
 
@@ -25,6 +29,8 @@ export const COMPARATOR_TO_INDEX_CATEGORY: Record<ComparatorId, RwaIndexCategory
   immobilier: "real_estate",
   "private-credit": "private_credit",
   "matieres-premieres": "commodities",
+  "private-equity": "private_equity",
+  "art-collectibles": "art",
 };
 
 export type ApyStats = {

@@ -21,16 +21,28 @@ export const COMMODITY_PROJECTS: Record<string, CommodityProjectMeta> = {
     link: "https://agrotoken.io",
     category: "agricultural",
   },
-  "ondo-global-markets": {
-    name: "Ondo Finance",
-    link: "https://ondo.finance/global-markets",
-    category: "precious_metals",
-    logo: "/logos/ondo.png",
-  },
   "cache-gold": {
     name: "Cache Gold",
     link: "https://cache.gold",
     category: "precious_metals",
+  },
+  "paxos-gold": {
+    name: "Paxos",
+    link: "https://paxos.com/paxgold",
+    category: "precious_metals",
+    logo: "/logos/paxos.png",
+  },
+  "tether-gold": {
+    name: "Tether",
+    link: "https://gold.tether.to",
+    category: "precious_metals",
+    logo: "/logos/tether.png",
+  },
+  "matrixdock-xaum": {
+    name: "Matrixdock",
+    link: "https://matrixdock.com",
+    category: "precious_metals",
+    logo: "/logos/matrixdock.png",
   },
 };
 

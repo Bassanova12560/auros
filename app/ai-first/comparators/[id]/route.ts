@@ -1,8 +1,10 @@
 import {
+  getArtRows,
   getBondRows,
   getCommodityRows,
   getImmobilierRows,
   getPrivateCreditRows,
+  getPrivateEquityRows,
   getStablecoinRows,
 } from "@/lib/comparators";
 import { getAiFirstPageById, toPageExport } from "@/lib/ai-first";
@@ -18,6 +20,17 @@ const LOADERS: Record<
   bonds: getBondRows,
   commodities: getCommodityRows,
   "private-credit": getPrivateCreditRows,
+  "private-equity": getPrivateEquityRows,
+  art: getArtRows,
+  compare: async () => {
+    const { getCompareHubPayload } = await import("@/lib/comparators/compare-hub");
+    const payload = await getCompareHubPayload();
+    return {
+      rows: payload.products.map((p) => p.row),
+      fetchedAt: payload.fetchedAt,
+      source: "hub",
+    };
+  },
 };
 
 export async function GET(

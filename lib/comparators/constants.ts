@@ -30,12 +30,20 @@ export const COMMODITIES_REVALIDATE_SECONDS = 3600;
 export const PRIVATE_CREDIT_CACHE_KEY = "auros-private-credit-rows";
 export const PRIVATE_CREDIT_REVALIDATE_SECONDS = 3600;
 
+export const PRIVATE_EQUITY_CACHE_KEY = "auros-private-equity-rows";
+export const PRIVATE_EQUITY_REVALIDATE_SECONDS = 3600;
+
+export const ART_CACHE_KEY = "auros-art-rows";
+export const ART_REVALIDATE_SECONDS = 3600;
+
 export type ComparatorPageId =
   | "stablecoins"
   | "immobilier"
   | "obligations"
   | "matieres-premieres"
-  | "private-credit";
+  | "private-credit"
+  | "private-equity"
+  | "art-collectibles";
 
 /** Legacy French paths → 301 to English slugs */
 export const LEGACY_COMPARATOR_REDIRECTS = [
@@ -47,8 +55,12 @@ export const LEGACY_COMPARATOR_REDIRECTS = [
     destination: "/commodities",
   },
   {
-    source: "/comparateurs/private-equity",
+    source: "/comparateurs/private-credit",
     destination: "/private-credit",
+  },
+  {
+    source: "/comparateurs/private-equity",
+    destination: "/private-equity",
   },
   {
     source: "/comparateurs/art-collectibles",

@@ -93,6 +93,8 @@ const FR: RwaIndexCopy = {
     real_estate: "Immobilier tokenisé",
     private_credit: "Private credit",
     commodities: "Matières premières",
+    private_equity: "Equity / PE",
+    art: "Art & collectibles",
     green: "Green / carbone",
   },
 };
@@ -146,6 +148,8 @@ const EN: RwaIndexCopy = {
     real_estate: "Tokenized real estate",
     private_credit: "Private credit",
     commodities: "Commodities",
+    private_equity: "Equity / PE",
+    art: "Art & collectibles",
     green: "Green / carbon",
   },
 };
@@ -200,6 +204,8 @@ const ES: RwaIndexCopy = {
     real_estate: "Inmobiliario tokenizado",
     private_credit: "Private credit",
     commodities: "Materias primas",
+    private_equity: "Equity / PE",
+    art: "Arte y coleccionables",
     green: "Green / carbono",
   },
 };

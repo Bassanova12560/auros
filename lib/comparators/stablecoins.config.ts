@@ -63,6 +63,16 @@ export const STABLECOIN_PROJECTS: Record<string, StablecoinProjectMeta> = {
     category: "treasury",
     logo: "/logos/backed.png",
   },
+  "blackrock-buidl": {
+    name: "BlackRock BUIDL",
+    link: "https://www.securitize.io",
+    category: "treasury",
+  },
+  "circle-usyc": {
+    name: "Circle USYC",
+    link: "https://usyc.hashnote.com",
+    category: "treasury",
+  },
 };
 
 export const DEFILLAMA_PROJECT_SLUGS = Object.keys(STABLECOIN_PROJECTS);

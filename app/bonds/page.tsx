@@ -6,16 +6,16 @@ import { COMPARATOR_ROUTES, getBondRows } from "@/lib/comparators";
 import { absoluteUrl } from "@/lib/comparators/site";
 
 export const metadata: Metadata = {
-  title: "Tokenized Bonds Comparator | AUROS",
+  title: "Tokenized Bonds & T-Bill Comparator | AUROS",
   description:
-    "Compare tokenized bond products and treasury funds — live APY and TVL via DeFiLlama. Updated hourly.",
+    "Compare tokenized bonds, T-Bills and treasury funds — OUSG, BUIDL, carbon-linked Green rows. Live DeFiLlama APY; manual sources labeled. Educational only.",
   alternates: {
     canonical: COMPARATOR_ROUTES.bonds,
   },
   openGraph: {
-    title: "Tokenized Bonds Comparator | AUROS",
+    title: "Tokenized Bonds & T-Bill Comparator | AUROS",
     description:
-      "Compare tokenized bonds, T-Bills and treasury tokens — sorted by APY.",
+      "Side-by-side tokenized bonds and treasuries — APY, TVL, chain, source freshness.",
     url: absoluteUrl(COMPARATOR_ROUTES.bonds),
     siteName: "AUROS",
     type: "website",

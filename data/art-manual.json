@@ -1,0 +1,68 @@
+[
+  {
+    "id": "masterworks-bluechip",
+    "project": "masterworks",
+    "platform": "Masterworks",
+    "product": "Art fractionné (blue-chip)",
+    "apy": 0,
+    "tvlUsd": 0,
+    "chains": ["Off-chain"],
+    "link": "https://www.masterworks.com",
+    "affiliate_link": "",
+    "logo": "",
+    "category": "fine_art",
+    "jurisdiction": "US"
+  },
+  {
+    "id": "particle-watches",
+    "project": "particle",
+    "platform": "Particle",
+    "product": "Montres & collectibles",
+    "apy": 0,
+    "tvlUsd": 0,
+    "chains": ["Ethereum"],
+    "link": "https://www.particlecollection.com",
+    "affiliate_link": "",
+    "logo": "",
+    "category": "collectibles"
+  },
+  {
+    "id": "artory-registry",
+    "project": "artory",
+    "platform": "Artory",
+    "product": "Registre & provenance art",
+    "apy": 0,
+    "tvlUsd": 0,
+    "chains": ["Ethereum"],
+    "link": "https://www.artory.com",
+    "affiliate_link": "",
+    "logo": "",
+    "category": "fine_art"
+  },
+  {
+    "id": "propy-collectibles",
+    "project": "propy-nft",
+    "platform": "Propy",
+    "product": "Titres & collectibles tokenisés",
+    "apy": 0,
+    "tvlUsd": 0,
+    "chains": ["Ethereum"],
+    "link": "https://propy.com",
+    "affiliate_link": "",
+    "logo": "",
+    "category": "collectibles"
+  },
+  {
+    "id": "async-art",
+    "project": "async-art",
+    "platform": "Async Art",
+    "product": "Œuvres programmables",
+    "apy": 0,
+    "tvlUsd": 0,
+    "chains": ["Ethereum"],
+    "link": "https://async.art",
+    "affiliate_link": "",
+    "logo": "",
+    "category": "fine_art"
+  }
+]

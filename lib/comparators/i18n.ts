@@ -128,6 +128,17 @@ export type ComparatorMessages = {
       all: string;
       under500: string;
       under5000: string;
+      class: string;
+      risk: string;
+      source: string;
+      sourceLive: string;
+      sourceManual: string;
+      chain: string;
+      apy: string;
+      apyAny: string;
+      apyPositive: string;
+      apyOver5: string;
+      apyOver10: string;
     };
     sort: {
       label: string;
@@ -138,7 +149,7 @@ export type ComparatorMessages = {
       instant: string;
       days: (n: number) => string;
     };
-    table: {
+      table: {
       protocol: string;
       product: string;
       apy: string;
@@ -147,8 +158,13 @@ export type ComparatorMessages = {
       fees: string;
       risk: string;
       assetType: string;
+      tvl: string;
+      source: string;
+      chain: string;
       view: string;
     };
+    selectionPrompt: string;
+    faqTitle: string;
     noResults: string;
     metaDisclaimer: string;
     footerDisclaimer: string;
@@ -182,6 +198,9 @@ export type ComparatorMessages = {
         jurisdiction: string;
         accredited: string;
         chain: string;
+        tvl: string;
+        source: string;
+        risk: string;
         fiche: string;
       };
     };
@@ -207,6 +226,8 @@ export type ComparatorMessages = {
     obligations: string;
     matieresPremieres: string;
     privateCredit: string;
+    privateEquity: string;
+    artCollectibles: string;
   };
   tabs: {
     stablecoins: string;
@@ -214,6 +235,8 @@ export type ComparatorMessages = {
     obligations: string;
     matieresPremieres: string;
     privateCredit: string;
+    privateEquity: string;
+    artCollectibles: string;
     soon: string;
   };
   stablecoins: ComparatorPageCopy;
@@ -221,6 +244,8 @@ export type ComparatorMessages = {
   obligations: ComparatorPageCopy;
   matieresPremieres: ComparatorPageCopy;
   privateCredit: ComparatorPageCopy;
+  privateEquity: ComparatorPageCopy;
+  artCollectibles: ComparatorPageCopy;
   footer: {
     dossier: string;
     legal: string;
@@ -269,9 +294,9 @@ const FR: ComparatorMessages = {
     eyebrow: "Hub · Tous les comparateurs",
     title: "Rendements RWA par profil de risque",
     subtitle:
-      "Vue agrégée des cinq comparateurs AUROS — le meilleur rendement est affiché par niveau de risque, pas en un seul classement global.",
+      "Vue agrégée des comparateurs AUROS — equity, crédit, immo, bonds, commodities, art. Meilleur rendement affiché par niveau de risque, pas en un seul classement global.",
     disclaimer:
-      "Profils indicatifs. Chaque produit a ses propres conditions d'accès, liquidité et régulation.",
+      "Profils indicatifs. Live = DeFiLlama ; manuel = catalogue curaté. Chaque produit a ses propres conditions d'accès, liquidité et régulation.",
     tiers: {
       conservative: {
         label: "Conservateur",
@@ -329,10 +354,21 @@ const FR: ComparatorMessages = {
       networkError: "Erreur réseau",
     },
     filters: {
-      label: "Filtrer par minimum",
+      label: "Filtrer",
       all: "Tous",
       under500: "Minimum < 500 $",
       under5000: "Minimum < 5 000 $",
+      class: "Classe",
+      risk: "Risque",
+      source: "Source",
+      sourceLive: "Live DeFiLlama",
+      sourceManual: "Manuel",
+      chain: "Chaîne",
+      apy: "APY",
+      apyAny: "Tous APY",
+      apyPositive: "APY > 0",
+      apyOver5: "APY ≥ 5 %",
+      apyOver10: "APY ≥ 10 %",
     },
     sort: {
       label: "Trier par",
@@ -352,8 +388,14 @@ const FR: ComparatorMessages = {
       fees: "Frais",
       risk: "Profil",
       assetType: "Type d'actif",
+      tvl: "TVL",
+      source: "Source",
+      chain: "Chaîne",
       view: "Voir",
     },
+    selectionPrompt:
+      "Sélectionnez 2 à 4 produits pour une comparaison côte à côte (APY, TVL, risque, source).",
+    faqTitle: "Questions fréquentes",
     noResults: "Aucun produit ne correspond à ces filtres.",
     metaDisclaimer:
       "Minimum, liquidité et frais indicatifs — vérifiez les conditions exactes sur chaque plateforme avant d'investir.",
@@ -390,6 +432,9 @@ const FR: ComparatorMessages = {
         jurisdiction: "Juridiction",
         accredited: "Accrédité",
         chain: "Chaîne",
+        tvl: "TVL",
+        source: "Source",
+        risk: "Risque",
         fiche: "Fiche AUROS",
       },
     },
@@ -416,6 +461,8 @@ const FR: ComparatorMessages = {
     obligations: "Obligations",
     matieresPremieres: "Matières premières",
     privateCredit: "Crédit privé",
+    privateEquity: "Equity / PE",
+    artCollectibles: "Art & collectibles",
   },
   tabs: {
     stablecoins: "Stablecoins",
@@ -423,6 +470,8 @@ const FR: ComparatorMessages = {
     obligations: "Obligations",
     matieresPremieres: "Matières premières",
     privateCredit: "Crédit privé",
+    privateEquity: "Equity / PE",
+    artCollectibles: "Art",
     soon: "Bientôt",
   },
   stablecoins: {
@@ -664,6 +713,103 @@ const FR: ComparatorMessages = {
     footerDisclaimer:
       "APY via DeFiLlama, mise à jour horaire. Crédit privé — risque élevé, pas un conseil en investissement.",
   },
+  privateEquity: {
+    tool: "private equity",
+    eyebrow: "Comparateur · Fonds & actions",
+    title: "Equity & private equity tokenisés",
+    subtitle:
+      "Fonds PE / alt et actions tokenisées — Securitize, Ondo Global Markets, Backed, Swarm. APY 0 si aucun coupon public honnête.",
+    disclaimer:
+      "Beaucoup de produits equity n'ont pas de rendement fixe. Sources manuelles vs live clairement étiquetées.",
+    stats: {
+      bestApy: "Meilleur rendement",
+      totalTvl: "TVL / AUM",
+      products: "Produits comparés",
+      protocols: (n) => `${n} protocole${n > 1 ? "s" : ""}`,
+      liveSource: (date) => `DeFiLlama · ${date}`,
+      cacheSource: (date) => `Catalogue · ${date}`,
+    },
+    filters: {
+      all: "Tous",
+      funds: "Fonds PE",
+      public_equity: "Actions",
+      infrastructure: "Infrastructure",
+    },
+    table: {
+      protocol: "Protocole",
+      product: "Produit",
+      apy: "APY",
+      tvl: "TVL",
+      chain: "Chaîne",
+      view: "Voir",
+      viewPlatform: "Voir la plateforme",
+      search: "Rechercher…",
+      sortBy: "Trier par",
+      topBadge: "Meilleur rendement",
+      manual: "manuel",
+      manualHint: "Donnée non indexée DeFiLlama",
+      noResults: "Aucun produit ne correspond à votre recherche.",
+      productsCount: (n) => `${n} produit${n > 1 ? "s" : ""}`,
+      viewPlatformAria: (platform) => `Voir ${platform}`,
+    },
+    cta: {
+      eyebrow: "Après le marché",
+      title: "Vous tokenisez des fonds ou des actions ?",
+      subtitle:
+        "4 parties · ~4 min · indicatif — démarrez le dossier, complétez plus tard.",
+      button: "Démarrer mon dossier",
+    },
+    footerDisclaimer:
+      "Données live DeFiLlama + catalogue manuel. Pas un conseil en investissement — vérifiez chaque émetteur.",
+  },
+  artCollectibles: {
+    tool: "art",
+    eyebrow: "Comparateur · Art & collectibles",
+    title: "Art & collectibles tokenisés",
+    subtitle:
+      "Plateformes d'art fractionné et collectibles on-chain — Masterworks, Particle, Artory. Pas de rendements inventés.",
+    disclaimer:
+      "L'art RWA n'offre souvent pas de coupon. Comparez accès, conservation et liquidité — chiffres indicatifs.",
+    stats: {
+      bestApy: "Meilleur rendement",
+      totalTvl: "Références",
+      products: "Produits comparés",
+      protocols: (n) => `${n} plateforme${n > 1 ? "s" : ""}`,
+      liveSource: (date) => `DeFiLlama · ${date}`,
+      cacheSource: (date) => `Catalogue · ${date}`,
+    },
+    filters: {
+      all: "Tous",
+      fine_art: "Beaux-arts",
+      collectibles: "Collectibles",
+    },
+    table: {
+      protocol: "Plateforme",
+      product: "Produit",
+      apy: "APY",
+      tvl: "TVL",
+      chain: "Chaîne",
+      view: "Voir",
+      viewPlatform: "Voir la plateforme",
+      search: "Rechercher…",
+      sortBy: "Trier par",
+      topBadge: "Meilleur rendement",
+      manual: "manuel",
+      manualHint: "Donnée non indexée DeFiLlama",
+      noResults: "Aucun produit ne correspond à votre recherche.",
+      productsCount: (n) => `${n} produit${n > 1 ? "s" : ""}`,
+      viewPlatformAria: (platform) => `Voir ${platform}`,
+    },
+    cta: {
+      eyebrow: "Après le marché",
+      title: "Vous tokenisez de l'art ou des collectibles ?",
+      subtitle:
+        "4 parties · ~4 min · indicatif — démarrez le dossier, complétez plus tard.",
+      button: "Démarrer mon dossier",
+    },
+    footerDisclaimer:
+      "Catalogue curaté, APY 0 si aucun coupon public. Pas un conseil en investissement.",
+  },
   footer: {
     dossier: "Dossier",
     legal: "Mentions légales",
@@ -713,9 +859,9 @@ const EN: ComparatorMessages = {
     eyebrow: "Hub · All comparators",
     title: "RWA yields by risk profile",
     subtitle:
-      "Aggregated view across all five AUROS comparators — best yield is shown per risk tier, not in one global ranking.",
+      "Aggregated view across AUROS comparators — equity, credit, real estate, bonds, commodities, art. Best yield per risk tier, not one global ranking.",
     disclaimer:
-      "Indicative profiles. Each product has its own access terms, liquidity and regulation.",
+      "Indicative profiles. Live = DeFiLlama; manual = curated catalog. Each product has its own access terms, liquidity and regulation.",
     tiers: {
       conservative: {
         label: "Conservative",
@@ -773,10 +919,21 @@ const EN: ComparatorMessages = {
       networkError: "Network error",
     },
     filters: {
-      label: "Filter by minimum",
+      label: "Filters",
       all: "All",
       under500: "Minimum < $500",
       under5000: "Minimum < $5,000",
+      class: "Class",
+      risk: "Risk",
+      source: "Source",
+      sourceLive: "Live DeFiLlama",
+      sourceManual: "Manual",
+      chain: "Chain",
+      apy: "APY",
+      apyAny: "Any APY",
+      apyPositive: "APY > 0",
+      apyOver5: "APY ≥ 5%",
+      apyOver10: "APY ≥ 10%",
     },
     sort: {
       label: "Sort by",
@@ -796,8 +953,14 @@ const EN: ComparatorMessages = {
       fees: "Fees",
       risk: "Profile",
       assetType: "Asset type",
+      tvl: "TVL",
+      source: "Source",
+      chain: "Chain",
       view: "View",
     },
+    selectionPrompt:
+      "Select 2–4 products for side-by-side compare (APY, TVL, risk, source).",
+    faqTitle: "FAQ",
     noResults: "No products match these filters.",
     metaDisclaimer:
       "Minimum, liquidity and fees are indicative — check exact terms on each platform before investing.",
@@ -834,6 +997,9 @@ const EN: ComparatorMessages = {
         jurisdiction: "Jurisdiction",
         accredited: "Accredited",
         chain: "Chain",
+        tvl: "TVL",
+        source: "Source",
+        risk: "Risk",
         fiche: "AUROS sheet",
       },
     },
@@ -860,6 +1026,8 @@ const EN: ComparatorMessages = {
     obligations: "Bonds",
     matieresPremieres: "Commodities",
     privateCredit: "Private credit",
+    privateEquity: "Equity / PE",
+    artCollectibles: "Art & collectibles",
   },
   tabs: {
     stablecoins: "Stablecoins",
@@ -867,6 +1035,8 @@ const EN: ComparatorMessages = {
     obligations: "Bonds",
     matieresPremieres: "Commodities",
     privateCredit: "Private credit",
+    privateEquity: "Equity / PE",
+    artCollectibles: "Art",
     soon: "Soon",
   },
   stablecoins: {
@@ -1108,6 +1278,103 @@ const EN: ComparatorMessages = {
     footerDisclaimer:
       "APY via DeFiLlama, hourly updates. Private credit — high risk, not investment advice.",
   },
+  privateEquity: {
+    tool: "private equity",
+    eyebrow: "Comparator · Funds & stocks",
+    title: "Tokenized equity & private equity",
+    subtitle:
+      "PE / alt funds and tokenized stocks — Securitize, Ondo Global Markets, Backed, Swarm. APY 0 when no honest public coupon exists.",
+    disclaimer:
+      "Many equity products have no fixed yield. Manual vs live sources are clearly labeled.",
+    stats: {
+      bestApy: "Best yield",
+      totalTvl: "TVL / AUM",
+      products: "Products compared",
+      protocols: (n) => `${n} protocol${n === 1 ? "" : "s"}`,
+      liveSource: (date) => `DeFiLlama · ${date}`,
+      cacheSource: (date) => `Catalog · ${date}`,
+    },
+    filters: {
+      all: "All",
+      funds: "PE funds",
+      public_equity: "Public equity",
+      infrastructure: "Infrastructure",
+    },
+    table: {
+      protocol: "Protocol",
+      product: "Product",
+      apy: "APY",
+      tvl: "TVL",
+      chain: "Chain",
+      view: "View",
+      viewPlatform: "View platform",
+      search: "Search…",
+      sortBy: "Sort by",
+      topBadge: "Best yield",
+      manual: "manual",
+      manualHint: "Not indexed on DeFiLlama",
+      noResults: "No products match your search.",
+      productsCount: (n) => `${n} product${n === 1 ? "" : "s"}`,
+      viewPlatformAria: (platform) => `View ${platform}`,
+    },
+    cta: {
+      eyebrow: "After the market",
+      title: "Tokenizing funds or equities?",
+      subtitle:
+        "4 parts · ~4 min · indicative — start the dossier, complete later.",
+      button: "Start my dossier",
+    },
+    footerDisclaimer:
+      "Live DeFiLlama + manual catalog. Not investment advice — verify each issuer.",
+  },
+  artCollectibles: {
+    tool: "art",
+    eyebrow: "Comparator · Art & collectibles",
+    title: "Tokenized art & collectibles",
+    subtitle:
+      "Fractional art and on-chain collectibles — Masterworks, Particle, Artory. No invented yields.",
+    disclaimer:
+      "Art RWAs usually have no coupon. Compare access, custody and liquidity — figures are indicative.",
+    stats: {
+      bestApy: "Best yield",
+      totalTvl: "References",
+      products: "Products compared",
+      protocols: (n) => `${n} platform${n === 1 ? "" : "s"}`,
+      liveSource: (date) => `DeFiLlama · ${date}`,
+      cacheSource: (date) => `Catalog · ${date}`,
+    },
+    filters: {
+      all: "All",
+      fine_art: "Fine art",
+      collectibles: "Collectibles",
+    },
+    table: {
+      protocol: "Platform",
+      product: "Product",
+      apy: "APY",
+      tvl: "TVL",
+      chain: "Chain",
+      view: "View",
+      viewPlatform: "View platform",
+      search: "Search…",
+      sortBy: "Sort by",
+      topBadge: "Best yield",
+      manual: "manual",
+      manualHint: "Not indexed on DeFiLlama",
+      noResults: "No products match your search.",
+      productsCount: (n) => `${n} product${n === 1 ? "" : "s"}`,
+      viewPlatformAria: (platform) => `View ${platform}`,
+    },
+    cta: {
+      eyebrow: "After the market",
+      title: "Tokenizing art or collectibles?",
+      subtitle:
+        "4 parts · ~4 min · indicative — start the dossier, complete later.",
+      button: "Start my dossier",
+    },
+    footerDisclaimer:
+      "Curated catalog; APY 0 when no public coupon. Not investment advice.",
+  },
   footer: {
     dossier: "Dossier",
     legal: "Legal notice",
@@ -1157,9 +1424,9 @@ const ES: ComparatorMessages = {
     eyebrow: "Hub · Todos los comparadores",
     title: "Rendimientos RWA por perfil de riesgo",
     subtitle:
-      "Vista agregada de los cinco comparadores AUROS — el mejor rendimiento se muestra por nivel de riesgo, no en un único ranking global.",
+      "Vista agregada de los comparadores AUROS — equity, crédito, inmobiliario, bonos, commodities, arte. Mejor rendimiento por nivel de riesgo.",
     disclaimer:
-      "Perfiles indicativos. Cada producto tiene sus propias condiciones de acceso, liquidez y regulación.",
+      "Perfiles indicativos. Live = DeFiLlama; manual = catálogo curado. Cada producto tiene sus propias condiciones de acceso, liquidez y regulación.",
     tiers: {
       conservative: {
         label: "Conservador",
@@ -1217,10 +1484,21 @@ const ES: ComparatorMessages = {
       networkError: "Error de red",
     },
     filters: {
-      label: "Filtrar por mínimo",
+      label: "Filtros",
       all: "Todos",
       under500: "Mínimo < 500 $",
       under5000: "Mínimo < 5 000 $",
+      class: "Clase",
+      risk: "Riesgo",
+      source: "Fuente",
+      sourceLive: "Live DeFiLlama",
+      sourceManual: "Manual",
+      chain: "Cadena",
+      apy: "APY",
+      apyAny: "Cualquier APY",
+      apyPositive: "APY > 0",
+      apyOver5: "APY ≥ 5 %",
+      apyOver10: "APY ≥ 10 %",
     },
     sort: {
       label: "Ordenar por",
@@ -1240,8 +1518,14 @@ const ES: ComparatorMessages = {
       fees: "Comisiones",
       risk: "Perfil",
       assetType: "Tipo de activo",
+      tvl: "TVL",
+      source: "Fuente",
+      chain: "Cadena",
       view: "Ver",
     },
+    selectionPrompt:
+      "Seleccione 2–4 productos para comparar lado a lado (APY, TVL, riesgo, fuente).",
+    faqTitle: "Preguntas frecuentes",
     noResults: "Ningún producto coincide con estos filtros.",
     metaDisclaimer:
       "Mínimo, liquidez y comisiones indicativos — verifique las condiciones exactas en cada plataforma antes de invertir.",
@@ -1278,6 +1562,9 @@ const ES: ComparatorMessages = {
         jurisdiction: "Jurisdicción",
         accredited: "Acreditado",
         chain: "Cadena",
+        tvl: "TVL",
+        source: "Fuente",
+        risk: "Riesgo",
         fiche: "Ficha AUROS",
       },
     },
@@ -1304,6 +1591,8 @@ const ES: ComparatorMessages = {
     obligations: "Bonos",
     matieresPremieres: "Materias primas",
     privateCredit: "Crédito privado",
+    privateEquity: "Equity / PE",
+    artCollectibles: "Arte y coleccionables",
   },
   tabs: {
     stablecoins: "Stablecoins",
@@ -1311,6 +1600,8 @@ const ES: ComparatorMessages = {
     obligations: "Bonos",
     matieresPremieres: "Materias primas",
     privateCredit: "Crédito privado",
+    privateEquity: "Equity / PE",
+    artCollectibles: "Arte",
     soon: "Pronto",
   },
   stablecoins: {
@@ -1552,6 +1843,103 @@ const ES: ComparatorMessages = {
     footerDisclaimer:
       "APY vía DeFiLlama, actualización horaria. Crédito privado — alto riesgo, no es asesoramiento financiero.",
   },
+  privateEquity: {
+    tool: "private equity",
+    eyebrow: "Comparador · Fondos y acciones",
+    title: "Equity y private equity tokenizados",
+    subtitle:
+      "Fondos PE / alt y acciones tokenizadas — Securitize, Ondo, Backed, Swarm. APY 0 si no hay cupón público honesto.",
+    disclaimer:
+      "Muchos productos equity no tienen rendimiento fijo. Fuentes manuales vs live etiquetadas.",
+    stats: {
+      bestApy: "Mejor rendimiento",
+      totalTvl: "TVL / AUM",
+      products: "Productos comparados",
+      protocols: (n) => `${n} protocolo${n === 1 ? "" : "s"}`,
+      liveSource: (date) => `DeFiLlama · ${date}`,
+      cacheSource: (date) => `Catálogo · ${date}`,
+    },
+    filters: {
+      all: "Todos",
+      funds: "Fondos PE",
+      public_equity: "Acciones",
+      infrastructure: "Infraestructura",
+    },
+    table: {
+      protocol: "Protocolo",
+      product: "Producto",
+      apy: "APY",
+      tvl: "TVL",
+      chain: "Cadena",
+      view: "Ver",
+      viewPlatform: "Ver plataforma",
+      search: "Buscar…",
+      sortBy: "Ordenar por",
+      topBadge: "Mejor rendimiento",
+      manual: "manual",
+      manualHint: "No indexado en DeFiLlama",
+      noResults: "Ningún producto coincide con su búsqueda.",
+      productsCount: (n) => `${n} producto${n === 1 ? "" : "s"}`,
+      viewPlatformAria: (platform) => `Ver ${platform}`,
+    },
+    cta: {
+      eyebrow: "Tras el mercado",
+      title: "¿Tokeniza fondos o acciones?",
+      subtitle:
+        "4 partes · ~4 min · indicativo — empiece el expediente, complete después.",
+      button: "Empezar mi expediente",
+    },
+    footerDisclaimer:
+      "Live DeFiLlama + catálogo manual. No es asesoramiento financiero.",
+  },
+  artCollectibles: {
+    tool: "art",
+    eyebrow: "Comparador · Arte y coleccionables",
+    title: "Arte y coleccionables tokenizados",
+    subtitle:
+      "Arte fraccionado y coleccionables on-chain — Masterworks, Particle, Artory. Sin rendimientos inventados.",
+    disclaimer:
+      "El arte RWA suele no tener cupón. Compare acceso, custodia y liquidez — cifras indicativas.",
+    stats: {
+      bestApy: "Mejor rendimiento",
+      totalTvl: "Referencias",
+      products: "Productos comparados",
+      protocols: (n) => `${n} plataforma${n === 1 ? "" : "s"}`,
+      liveSource: (date) => `DeFiLlama · ${date}`,
+      cacheSource: (date) => `Catálogo · ${date}`,
+    },
+    filters: {
+      all: "Todos",
+      fine_art: "Bellas artes",
+      collectibles: "Coleccionables",
+    },
+    table: {
+      protocol: "Plataforma",
+      product: "Producto",
+      apy: "APY",
+      tvl: "TVL",
+      chain: "Cadena",
+      view: "Ver",
+      viewPlatform: "Ver plataforma",
+      search: "Buscar…",
+      sortBy: "Ordenar por",
+      topBadge: "Mejor rendimiento",
+      manual: "manual",
+      manualHint: "No indexado en DeFiLlama",
+      noResults: "Ningún producto coincide con su búsqueda.",
+      productsCount: (n) => `${n} producto${n === 1 ? "" : "s"}`,
+      viewPlatformAria: (platform) => `Ver ${platform}`,
+    },
+    cta: {
+      eyebrow: "Tras el mercado",
+      title: "¿Tokeniza arte o coleccionables?",
+      subtitle:
+        "4 partes · ~4 min · indicativo — empiece el expediente, complete después.",
+      button: "Empezar mi expediente",
+    },
+    footerDisclaimer:
+      "Catálogo curado; APY 0 si no hay cupón público. No es asesoramiento financiero.",
+  },
   footer: {
     dossier: "Expediente",
     legal: "Aviso legal",
@@ -1607,6 +1995,10 @@ export function assetTypeForId(
       return m.assetTypes.matieresPremieres;
     case "private-credit":
       return m.assetTypes.privateCredit;
+    case "private-equity":
+      return m.assetTypes.privateEquity;
+    case "art-collectibles":
+      return m.assetTypes.artCollectibles;
     default:
       return id;
   }
@@ -1624,6 +2016,10 @@ export function tabLabelForId(m: ComparatorMessages, id: string): string {
       return m.tabs.matieresPremieres;
     case "private-credit":
       return m.tabs.privateCredit;
+    case "private-equity":
+      return m.tabs.privateEquity;
+    case "art-collectibles":
+      return m.tabs.artCollectibles;
     default:
       return id;
   }

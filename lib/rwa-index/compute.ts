@@ -22,6 +22,8 @@ const CATEGORY_HREFS: Record<RwaIndexCategoryId, string> = {
   real_estate: COMPARATOR_ROUTES.realEstate,
   private_credit: COMPARATOR_ROUTES.privateCredit,
   commodities: COMPARATOR_ROUTES.commodities,
+  private_equity: COMPARATOR_ROUTES.privateEquity,
+  art: COMPARATOR_ROUTES.art,
   green: "/green/compare",
 };
 
@@ -107,10 +109,14 @@ function buildCategoryRow(
 
   const stats = apyStatsFromRows(rows);
   const isIllustrative =
-    id === "commodities" && stats.productsWithYield === 0;
+    (id === "commodities" || id === "art" || id === "private_equity") &&
+    stats.productsWithYield === 0;
 
   if (isIllustrative) {
-    const bench = YIELD_BENCHMARKS.commodities;
+    const bench =
+      id === "private_equity"
+        ? YIELD_BENCHMARKS.private_credit
+        : YIELD_BENCHMARKS.commodities;
     return {
       id,
       compareHref: CATEGORY_HREFS[id],
@@ -129,6 +135,8 @@ function buildCategoryRow(
     real_estate: "Hub immobilier — loyers nets indicatifs catalogue AUROS.",
     private_credit: "Hub private credit — Maple, Centrifuge, Goldfinch, etc.",
     commodities: "Hub matières premières — exposition prix, APY hub souvent nul.",
+    private_equity: "Hub equity / PE — fonds Securitize et actions tokenisées.",
+    art: "Hub art & collectibles — plateformes curatées, APY souvent nul.",
   };
 
   return {

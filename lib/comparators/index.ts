@@ -1,5 +1,7 @@
 export type { ComparatorSummary } from "./stats";
 export type {
+  ArtCategory,
+  ArtRow,
   BondCategory,
   BondRow,
   CommodityCategory,
@@ -7,6 +9,8 @@ export type {
   ComparatorProductRow,
   PrivateCreditCategory,
   PrivateCreditRow,
+  PrivateEquityCategory,
+  PrivateEquityRow,
   RealEstateCategory,
   RealEstateRow,
   StablecoinCategory,
@@ -19,6 +23,8 @@ export type { ImmobilierPayload } from "./immobilier";
 export type { BondsPayload } from "./bonds";
 export type { CommoditiesPayload } from "./commodities";
 export type { PrivateCreditPayload } from "./private-credit";
+export type { PrivateEquityPayload } from "./private-equity";
+export type { ArtPayload } from "./art";
 export type { ComparatorEntry, ComparatorId } from "./registry";
 export type { ComparatorMessages } from "./i18n";
 export type { ComparatorPageId } from "./constants";
@@ -31,6 +37,8 @@ export {
   BONDS_REVALIDATE_SECONDS,
   COMMODITIES_REVALIDATE_SECONDS,
   PRIVATE_CREDIT_REVALIDATE_SECONDS,
+  PRIVATE_EQUITY_REVALIDATE_SECONDS,
+  ART_REVALIDATE_SECONDS,
   LEGACY_COMPARATOR_REDIRECTS,
 } from "./constants";
 
@@ -84,11 +92,25 @@ export {
   resolvePrivateCreditLink,
 } from "./build-private-credit";
 
+export {
+  buildPrivateEquityFallback,
+  buildPrivateEquityPayload,
+  resolvePrivateEquityLink,
+} from "./build-private-equity";
+
+export {
+  buildArtFallback,
+  buildArtPayload,
+  resolveArtLink,
+} from "./build-art";
+
 export { getStablecoinRows } from "./stablecoins";
 export { getImmobilierRows } from "./immobilier";
 export { getBondRows } from "./bonds";
 export { getCommodityRows } from "./commodities";
 export { getPrivateCreditRows } from "./private-credit";
+export { getPrivateEquityRows } from "./private-equity";
+export { getArtRows } from "./art";
 export {
   getCompareHubPayload,
   productDedupeKey,
@@ -171,3 +193,17 @@ export {
   PRIVATE_CREDIT_PROJECTS,
   DEFILLAMA_PRIVATE_CREDIT_SLUGS,
 } from "./private-credit.config";
+
+export {
+  PRIVATE_EQUITY_PROJECTS,
+  DEFILLAMA_PRIVATE_EQUITY_SLUGS,
+} from "./private-equity.config";
+
+export { ART_PROJECTS, DEFILLAMA_ART_SLUGS } from "./art.config";
+
+export {
+  buildComparatorFaqJsonLd,
+  buildComparatorItemListJsonLd,
+  COMPARE_HUB_FAQS,
+} from "./seo-jsonld";
+export type { ComparatorFaqItem } from "./seo-jsonld";

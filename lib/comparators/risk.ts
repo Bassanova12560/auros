@@ -31,6 +31,11 @@ export function resolveRiskTier(
     case "private-credit":
       if (category === "prime") return "core";
       return "advanced";
+    case "private-equity":
+      if (category === "public_equity") return "core";
+      return "advanced";
+    case "art-collectibles":
+      return "advanced";
     default:
       return "core";
   }
@@ -42,8 +47,10 @@ export const COMPARATOR_CROSS_LINKS: Record<
   ComparatorId[]
 > = {
   stablecoins: ["obligations", "private-credit"],
-  immobilier: ["stablecoins", "obligations"],
+  immobilier: ["stablecoins", "private-equity"],
   obligations: ["stablecoins", "private-credit"],
-  "matieres-premieres": ["obligations", "stablecoins"],
-  "private-credit": ["obligations", "stablecoins"],
+  "matieres-premieres": ["obligations", "private-equity"],
+  "private-credit": ["obligations", "private-equity"],
+  "private-equity": ["private-credit", "obligations"],
+  "art-collectibles": ["private-equity", "matieres-premieres"],
 };

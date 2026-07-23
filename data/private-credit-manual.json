@@ -67,7 +67,7 @@
   },
   {
     "id": "clearpool-usdc",
-    "project": "clearpool",
+    "project": "clearpool-lending",
     "platform": "Clearpool",
     "product": "USDC",
     "apy": 8.5,

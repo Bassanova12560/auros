@@ -7,16 +7,16 @@ import { getStablecoinRows } from "@/lib/comparators";
 import { absoluteUrl } from "@/lib/comparators/site";
 
 export const metadata: Metadata = {
-  title: "RWA Stablecoins Comparator | AUROS",
+  title: "RWA Stablecoins & Treasury Comparator | AUROS",
   description:
-    "Compare RWA-backed stablecoins — live APY and TVL via DeFiLlama. Updated hourly.",
+    "Compare RWA-backed stablecoins and treasury tokens (BUIDL, USYC, Ondo) — live DeFiLlama APY/TVL plus labeled manual rows. Updated hourly. Educational only.",
   alternates: {
     canonical: COMPARATOR_ROUTES.stablecoins,
   },
   openGraph: {
-    title: "RWA Stablecoins Comparator | AUROS",
+    title: "RWA Stablecoins & Treasury Comparator | AUROS",
     description:
-      "Compare RWA-backed stablecoins — live APY and TVL via DeFiLlama.",
+      "Side-by-side stablecoin and treasury RWA yields — live vs manual sources labeled.",
     url: absoluteUrl(COMPARATOR_ROUTES.stablecoins),
     siteName: "AUROS",
     type: "website",

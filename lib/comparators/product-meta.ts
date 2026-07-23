@@ -572,6 +572,38 @@ const COMPARATOR_CATEGORY_DEFAULTS: Record<ComparatorId, CategoryDefaults> = {
       accreditedOnly: true,
     },
   },
+  "private-equity": {
+    funds: {
+      minInvestmentUsd: 25_000,
+      liquidityDays: 180,
+      fees: "1–2%",
+      accreditedOnly: true,
+    },
+    public_equity: {
+      minInvestmentUsd: 100,
+      liquidityDays: 1,
+      fees: "0.2–1%",
+    },
+    infrastructure: {
+      minInvestmentUsd: 10_000,
+      liquidityDays: 90,
+      fees: "1%",
+      accreditedOnly: true,
+    },
+  },
+  "art-collectibles": {
+    fine_art: {
+      minInvestmentUsd: 1000,
+      liquidityDays: 365,
+      fees: "1–3%",
+      accreditedOnly: true,
+    },
+    collectibles: {
+      minInvestmentUsd: 100,
+      liquidityDays: 90,
+      fees: "2–5%",
+    },
+  },
 };
 
 const COMPARATOR_DEFAULTS: Record<ComparatorId, ProductMetaInput> = {
@@ -588,6 +620,17 @@ const COMPARATOR_DEFAULTS: Record<ComparatorId, ProductMetaInput> = {
     liquidityDays: 90,
     fees: "1%",
     accreditedOnly: true,
+  },
+  "private-equity": {
+    minInvestmentUsd: 5000,
+    liquidityDays: 90,
+    fees: "1%",
+    accreditedOnly: true,
+  },
+  "art-collectibles": {
+    minInvestmentUsd: 500,
+    liquidityDays: 180,
+    fees: "2%",
   },
 };
 

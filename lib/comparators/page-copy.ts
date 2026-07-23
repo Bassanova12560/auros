@@ -17,6 +17,10 @@ export function getPageCopy(
       return messages.matieresPremieres;
     case "private-credit":
       return messages.privateCredit;
+    case "private-equity":
+      return messages.privateEquity;
+    case "art-collectibles":
+      return messages.artCollectibles;
   }
 }
 
@@ -35,6 +39,10 @@ export function pageCopyForId(
       return messages.matieresPremieres;
     case "private-credit":
       return messages.privateCredit;
+    case "private-equity":
+      return messages.privateEquity;
+    case "art-collectibles":
+      return messages.artCollectibles;
     default:
       return null;
   }
@@ -58,6 +66,8 @@ export function comparatorIdToPageId(
     case "obligations":
     case "matieres-premieres":
     case "private-credit":
+    case "private-equity":
+    case "art-collectibles":
       return id;
     default:
       return null;

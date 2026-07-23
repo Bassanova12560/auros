@@ -66,12 +66,28 @@ export const BOND_PROJECTS: Record<string, BondProjectMeta> = {
     link: "https://usyc.hashnote.com",
     category: "sovereign",
   },
+  "circle-usyc": {
+    name: "Circle USYC",
+    link: "https://usyc.hashnote.com",
+    category: "sovereign",
+  },
+  "blackrock-buidl": {
+    name: "BlackRock BUIDL",
+    link: "https://www.securitize.io",
+    category: "sovereign",
+  },
   wisdomtree: {
     name: "WisdomTree",
     link: "https://www.wisdomtree.com/investments/digital-assets",
     category: "sovereign",
   },
   "matrixdock-sbtb": {
+    name: "Matrixdock",
+    link: "https://matrixdock.com",
+    category: "sovereign",
+    logo: "/logos/matrixdock.png",
+  },
+  "matrixdock-stbt": {
     name: "Matrixdock",
     link: "https://matrixdock.com",
     category: "sovereign",
@@ -87,36 +103,6 @@ export const BOND_PROJECTS: Record<string, BondProjectMeta> = {
     name: "Bitbond",
     link: "https://www.bitbond.com",
     category: "corporate",
-  },
-  "swarm-markets": {
-    name: "Swarm Markets",
-    link: "https://swarm.com",
-    category: "structured",
-  },
-  "mt-pelerin": {
-    name: "Mt Pelerin",
-    link: "https://www.mtpelerin.com",
-    category: "structured",
-  },
-  "hamilton-lane": {
-    name: "Hamilton Lane",
-    link: "https://www.securitize.io",
-    category: "structured",
-  },
-  "apollo-securitize": {
-    name: "Apollo",
-    link: "https://www.securitize.io",
-    category: "structured",
-  },
-  "kkr-securitize": {
-    name: "KKR",
-    link: "https://www.securitize.io",
-    category: "structured",
-  },
-  "blackstone-securitize": {
-    name: "Blackstone",
-    link: "https://www.securitize.io",
-    category: "structured",
   },
   toucan: {
     name: "Toucan Protocol",

@@ -9,6 +9,7 @@ import {
   assetTypeForId,
   formatLiquidity,
   formatMinInvestment,
+  formatTvl,
   resolveComparatorProductLink,
 } from "@/lib/comparators";
 import {
@@ -154,6 +155,33 @@ export function ComparePanel({ open, products, onClose }: ComparePanelProps) {
       render: (product) => (
         <span className="font-mono text-xs text-white/70">
           {chainLabel(product.row.chains)}
+        </span>
+      ),
+    },
+    {
+      key: "tvl",
+      label: copy.rows.tvl,
+      render: (product) => (
+        <span className="font-mono text-sm tabular-nums text-white/80">
+          {product.row.tvlUsd > 0 ? formatTvl(product.row.tvlUsd) : "—"}
+        </span>
+      ),
+    },
+    {
+      key: "source",
+      label: copy.rows.source,
+      render: (product) => (
+        <span className="font-mono text-xs text-white/70">
+          {product.row.live ? hub.filters.sourceLive : hub.filters.sourceManual}
+        </span>
+      ),
+    },
+    {
+      key: "risk",
+      label: copy.rows.risk,
+      render: (product) => (
+        <span className="font-mono text-xs text-white/70">
+          {messages.risk[product.riskTier]}
         </span>
       ),
     },

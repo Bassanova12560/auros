@@ -39,19 +39,6 @@
     "category": "precious_metals"
   },
   {
-    "id": "ondo-global-markets",
-    "project": "ondo-global-markets",
-    "platform": "Ondo Finance",
-    "product": "Actions US tokenisées",
-    "apy": 0,
-    "tvlUsd": 250000000,
-    "chains": ["Ethereum", "Solana", "Polygon"],
-    "link": "https://ondo.finance/global-markets",
-    "affiliate_link": "",
-    "logo": "/logos/ondo.png",
-    "category": "precious_metals"
-  },
-  {
     "id": "agrotoken-soja",
     "project": "agrotoken",
     "platform": "Agrotoken",
@@ -76,5 +63,19 @@
     "affiliate_link": "",
     "logo": "",
     "category": "precious_metals"
+  },
+  {
+    "id": "perth-mint-gold",
+    "project": "perth-mint",
+    "platform": "Perth Mint",
+    "product": "PMGT",
+    "apy": 0,
+    "tvlUsd": 0,
+    "chains": ["Ethereum"],
+    "link": "https://www.perthmint.com",
+    "affiliate_link": "",
+    "logo": "",
+    "category": "precious_metals",
+    "jurisdiction": "Australia"
   }
 ]

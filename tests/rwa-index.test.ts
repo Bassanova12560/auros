@@ -92,7 +92,7 @@ describe("buildRwaIndexPayload", () => {
     assert.equal(payload.editionIso, "2026-06-01");
     assert.equal(payload.totalProducts, 3);
     assert.equal(payload.activeJurisdictions, 8);
-    assert.equal(payload.categories.length, 6);
+    assert.equal(payload.categories.length, 8);
 
     const bonds = payload.categories.find((c) => c.id === "bonds");
     assert.ok(bonds);

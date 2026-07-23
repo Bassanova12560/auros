@@ -22,9 +22,11 @@ import {
   formatComparatorDate,
   formatLiquidity,
   formatMinInvestment,
+  formatTvl,
   matchesMinInvestmentFilter,
   productDedupeKey,
   resolveComparatorProductLink,
+  COMPARATOR_REGISTRY,
 } from "@/lib/comparators";
 import type { CompareHubPayload, HubProduct } from "@/lib/comparators/compare-hub";
 import type { ComparatorMessages } from "@/lib/comparators/i18n";
@@ -36,7 +38,11 @@ type CompareHubContentProps = {
 };
 
 type MinInvestmentFilter = "all" | "under500" | "under5000";
-type SortColumn = "apy" | "minInvestment" | "liquidity" | "fees";
+type ClassFilter = "all" | HubProduct["comparatorId"];
+type RiskFilter = "all" | RiskTier;
+type SourceFilter = "all" | "live" | "manual";
+type ApyFilter = "all" | "positive" | "over5" | "over10";
+type SortColumn = "apy" | "minInvestment" | "liquidity" | "fees" | "tvl";
 type SortDirection = "asc" | "desc";
 
 function parseFeesSortValue(fees: string): number {
@@ -80,6 +86,11 @@ export function CompareHubContent({ payload }: CompareHubContentProps) {
   const copy = messages.compareHub;
   const riskLabels = messages.risk;
   const [minFilter, setMinFilter] = useState<MinInvestmentFilter>("all");
+  const [classFilter, setClassFilter] = useState<ClassFilter>("all");
+  const [riskFilter, setRiskFilter] = useState<RiskFilter>("all");
+  const [sourceFilter, setSourceFilter] = useState<SourceFilter>("all");
+  const [chainFilter, setChainFilter] = useState<string>("all");
+  const [apyFilter, setApyFilter] = useState<ApyFilter>("all");
   const [sortColumn, setSortColumn] = useState<SortColumn>("apy");
   const [sortDirection, setSortDirection] = useState<SortDirection>("desc");
   const {
@@ -96,19 +107,49 @@ export function CompareHubContent({ payload }: CompareHubContentProps) {
 
   const formattedDate = formatComparatorDate(payload.fetchedAt, locale);
 
+  const chainOptions = useMemo(() => {
+    const counts = new Map<string, number>();
+    for (const product of payload.products) {
+      for (const chain of product.row.chains) {
+        counts.set(chain, (counts.get(chain) ?? 0) + 1);
+      }
+    }
+    return [...counts.entries()]
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 8)
+      .map(([chain]) => chain);
+  }, [payload.products]);
+
   function toggleSort(column: SortColumn) {
     if (sortColumn === column) {
       setSortDirection((direction) => (direction === "asc" ? "desc" : "asc"));
     } else {
       setSortColumn(column);
-      setSortDirection(column === "apy" ? "desc" : "asc");
+      setSortDirection(column === "apy" || column === "tvl" ? "desc" : "asc");
     }
   }
 
   const filteredProducts = useMemo(() => {
-    const list = payload.products.filter((product) =>
-      matchesMinInvestmentFilter(product.meta, minFilter)
-    );
+    const list = payload.products.filter((product) => {
+      if (!matchesMinInvestmentFilter(product.meta, minFilter)) return false;
+      if (classFilter !== "all") {
+        const ids = product.comparatorIds ?? [product.comparatorId];
+        if (!ids.includes(classFilter)) return false;
+      }
+      if (riskFilter !== "all") {
+        const tiers = product.riskTiers ?? [product.riskTier];
+        if (!tiers.includes(riskFilter)) return false;
+      }
+      if (sourceFilter === "live" && !product.row.live) return false;
+      if (sourceFilter === "manual" && product.row.live) return false;
+      if (chainFilter !== "all" && !product.row.chains.includes(chainFilter)) {
+        return false;
+      }
+      if (apyFilter === "positive" && product.row.apy <= 0) return false;
+      if (apyFilter === "over5" && product.row.apy < 5) return false;
+      if (apyFilter === "over10" && product.row.apy < 10) return false;
+      return true;
+    });
 
     const dir = sortDirection === "asc" ? 1 : -1;
     return [...list].sort((a, b) => {
@@ -122,11 +163,23 @@ export function CompareHubContent({ payload }: CompareHubContentProps) {
             (parseFeesSortValue(a.meta.fees) - parseFeesSortValue(b.meta.fees)) *
             dir
           );
+        case "tvl":
+          return (a.row.tvlUsd - b.row.tvlUsd) * dir;
         default:
           return (a.row.apy - b.row.apy) * dir;
       }
     });
-  }, [payload.products, minFilter, sortColumn, sortDirection]);
+  }, [
+    payload.products,
+    minFilter,
+    classFilter,
+    riskFilter,
+    sourceFilter,
+    chainFilter,
+    apyFilter,
+    sortColumn,
+    sortDirection,
+  ]);
 
   return (
     <>
@@ -257,30 +310,169 @@ export function CompareHubContent({ payload }: CompareHubContentProps) {
 
       <section className="mt-10 md:mt-14">
         <div className="mb-5 space-y-4">
+          <p className="rounded-xl border border-white/[0.08] bg-white/[0.03] px-4 py-3 font-mono text-[11px] leading-relaxed text-white/55">
+            {copy.selectionPrompt}
+          </p>
+
           <fieldset>
             <legend className="mb-2 font-mono text-[10px] uppercase tracking-wider text-white/35">
-              {copy.filters.label}
+              {copy.filters.class}
             </legend>
             <div className="flex flex-wrap gap-2">
-              {(
-                [
-                  ["all", copy.filters.all],
-                  ["under500", copy.filters.under500],
-                  ["under5000", copy.filters.under5000],
-                ] as const
-              ).map(([value, label]) => (
+              <FilterRadio
+                name="class"
+                value="all"
+                checked={classFilter === "all"}
+                onChange={() => setClassFilter("all")}
+              >
+                {copy.filters.all}
+              </FilterRadio>
+              {COMPARATOR_REGISTRY.map((entry) => (
                 <FilterRadio
-                  key={value}
-                  name="min-investment"
-                  value={value}
-                  checked={minFilter === value}
-                  onChange={() => setMinFilter(value)}
+                  key={entry.id}
+                  name="class"
+                  value={entry.id}
+                  checked={classFilter === entry.id}
+                  onChange={() => setClassFilter(entry.id)}
                 >
-                  {label}
+                  {assetTypeForId(messages, entry.id)}
                 </FilterRadio>
               ))}
             </div>
           </fieldset>
+
+          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+            <fieldset>
+              <legend className="mb-2 font-mono text-[10px] uppercase tracking-wider text-white/35">
+                {copy.filters.risk}
+              </legend>
+              <div className="flex flex-wrap gap-2">
+                {(
+                  [
+                    ["all", copy.filters.all],
+                    ["conservative", riskLabels.conservative],
+                    ["core", riskLabels.core],
+                    ["advanced", riskLabels.advanced],
+                  ] as const
+                ).map(([value, label]) => (
+                  <FilterRadio
+                    key={value}
+                    name="risk"
+                    value={value}
+                    checked={riskFilter === value}
+                    onChange={() => setRiskFilter(value)}
+                  >
+                    {label}
+                  </FilterRadio>
+                ))}
+              </div>
+            </fieldset>
+
+            <fieldset>
+              <legend className="mb-2 font-mono text-[10px] uppercase tracking-wider text-white/35">
+                {copy.filters.source}
+              </legend>
+              <div className="flex flex-wrap gap-2">
+                {(
+                  [
+                    ["all", copy.filters.all],
+                    ["live", copy.filters.sourceLive],
+                    ["manual", copy.filters.sourceManual],
+                  ] as const
+                ).map(([value, label]) => (
+                  <FilterRadio
+                    key={value}
+                    name="source"
+                    value={value}
+                    checked={sourceFilter === value}
+                    onChange={() => setSourceFilter(value)}
+                  >
+                    {label}
+                  </FilterRadio>
+                ))}
+              </div>
+            </fieldset>
+
+            <fieldset>
+              <legend className="mb-2 font-mono text-[10px] uppercase tracking-wider text-white/35">
+                {copy.filters.apy}
+              </legend>
+              <div className="flex flex-wrap gap-2">
+                {(
+                  [
+                    ["all", copy.filters.apyAny],
+                    ["positive", copy.filters.apyPositive],
+                    ["over5", copy.filters.apyOver5],
+                    ["over10", copy.filters.apyOver10],
+                  ] as const
+                ).map(([value, label]) => (
+                  <FilterRadio
+                    key={value}
+                    name="apy"
+                    value={value}
+                    checked={apyFilter === value}
+                    onChange={() => setApyFilter(value)}
+                  >
+                    {label}
+                  </FilterRadio>
+                ))}
+              </div>
+            </fieldset>
+          </div>
+
+          <div className="grid gap-4 md:grid-cols-2">
+            <fieldset>
+              <legend className="mb-2 font-mono text-[10px] uppercase tracking-wider text-white/35">
+                {copy.filters.label}
+              </legend>
+              <div className="flex flex-wrap gap-2">
+                {(
+                  [
+                    ["all", copy.filters.all],
+                    ["under500", copy.filters.under500],
+                    ["under5000", copy.filters.under5000],
+                  ] as const
+                ).map(([value, label]) => (
+                  <FilterRadio
+                    key={value}
+                    name="min-investment"
+                    value={value}
+                    checked={minFilter === value}
+                    onChange={() => setMinFilter(value)}
+                  >
+                    {label}
+                  </FilterRadio>
+                ))}
+              </div>
+            </fieldset>
+
+            <fieldset>
+              <legend className="mb-2 font-mono text-[10px] uppercase tracking-wider text-white/35">
+                {copy.filters.chain}
+              </legend>
+              <div className="flex flex-wrap gap-2">
+                <FilterRadio
+                  name="chain"
+                  value="all"
+                  checked={chainFilter === "all"}
+                  onChange={() => setChainFilter("all")}
+                >
+                  {copy.filters.all}
+                </FilterRadio>
+                {chainOptions.map((chain) => (
+                  <FilterRadio
+                    key={chain}
+                    name="chain"
+                    value={chain}
+                    checked={chainFilter === chain}
+                    onChange={() => setChainFilter(chain)}
+                  >
+                    {chain}
+                  </FilterRadio>
+                ))}
+              </div>
+            </fieldset>
+          </div>
         </div>
 
         <p className="mb-5 font-mono text-[10px] leading-relaxed text-white/30">
@@ -288,7 +480,7 @@ export function CompareHubContent({ payload }: CompareHubContentProps) {
         </p>
 
         <div className="hidden overflow-x-auto lg:block">
-          <table className="w-full min-w-[960px] border-collapse text-left">
+          <table className="w-full min-w-[1100px] border-collapse text-left">
             <thead>
               <tr className="border-b border-white/[0.08]">
                 <th className="w-10 pb-3 font-mono text-[10px] uppercase tracking-wider text-white/35">
@@ -309,6 +501,20 @@ export function CompareHubContent({ payload }: CompareHubContentProps) {
                   align="right"
                 />
                 <SortableHeader
+                  label={copy.table.tvl}
+                  column="tvl"
+                  activeColumn={sortColumn}
+                  direction={sortDirection}
+                  onSort={toggleSort}
+                  align="right"
+                />
+                <th className="pb-3 font-mono text-[10px] uppercase tracking-wider text-white/35">
+                  {copy.table.chain}
+                </th>
+                <th className="pb-3 font-mono text-[10px] uppercase tracking-wider text-white/35">
+                  {copy.table.source}
+                </th>
+                <SortableHeader
                   label={copy.table.minInvestment}
                   column="minInvestment"
                   activeColumn={sortColumn}
@@ -322,16 +528,6 @@ export function CompareHubContent({ payload }: CompareHubContentProps) {
                   direction={sortDirection}
                   onSort={toggleSort}
                 />
-                <SortableHeader
-                  label={copy.table.fees}
-                  column="fees"
-                  activeColumn={sortColumn}
-                  direction={sortDirection}
-                  onSort={toggleSort}
-                />
-                <th className="pb-3 font-mono text-[10px] uppercase tracking-wider text-white/35">
-                  {copy.comparePanel.rows.jurisdiction}
-                </th>
                 <th className="pb-3 font-mono text-[10px] uppercase tracking-wider text-white/35">
                   {copy.table.risk}
                 </th>
@@ -537,17 +733,23 @@ function HubDesktopRow({
           <ProductMetaBadges meta={product.meta} />
         </div>
       </td>
+      <td className="py-4 pr-4 text-right font-mono text-sm tabular-nums text-white/70">
+        {product.row.tvlUsd > 0 ? formatTvl(product.row.tvlUsd) : "—"}
+      </td>
+      <td className="py-4 pr-4 font-mono text-xs text-white/55">
+        {product.row.chains.slice(0, 2).join(", ")}
+        {product.row.chains.length > 2
+          ? ` +${product.row.chains.length - 2}`
+          : ""}
+      </td>
+      <td className="py-4 pr-4 font-mono text-[10px] uppercase tracking-wider text-white/45">
+        {product.row.live ? copy.filters.sourceLive : copy.filters.sourceManual}
+      </td>
       <td className="py-4 pr-4 font-mono text-sm tabular-nums text-white/70">
         {formatMinInvestment(product.meta.minInvestmentUsd)}
       </td>
       <td className="py-4 pr-4 font-mono text-sm text-white/70">
         {formatLiquidity(product.meta.liquidityDays, copy.liquidity)}
-      </td>
-      <td className="py-4 pr-4 font-mono text-xs text-white/55">
-        {product.meta.fees}
-      </td>
-      <td className="py-4 pr-4 font-mono text-sm text-white/70">
-        {product.meta.jurisdiction ?? copy.comparePanel.notAvailable}
       </td>
       <td className="py-4 pr-4">
         <RiskBadge
@@ -637,13 +839,21 @@ function HubMobileRow({
         className="block transition active:bg-white/[0.04]"
       >
         <div className="grid grid-cols-2 gap-px border-t border-white/[0.06] bg-white/[0.06]">
+          <MetaCell label={copy.table.tvl}>
+            {product.row.tvlUsd > 0 ? formatTvl(product.row.tvlUsd) : "—"}
+          </MetaCell>
+          <MetaCell label={copy.table.source}>
+            {product.row.live ? copy.filters.sourceLive : copy.filters.sourceManual}
+          </MetaCell>
           <MetaCell label={copy.table.minInvestment}>
             {formatMinInvestment(product.meta.minInvestmentUsd)}
           </MetaCell>
           <MetaCell label={copy.table.liquidity}>
             {formatLiquidity(product.meta.liquidityDays, copy.liquidity)}
           </MetaCell>
-          <MetaCell label={copy.table.fees}>{product.meta.fees}</MetaCell>
+          <MetaCell label={copy.table.chain}>
+            {product.row.chains.slice(0, 2).join(", ") || "—"}
+          </MetaCell>
           <MetaCell label={copy.comparePanel.rows.jurisdiction}>
             {product.meta.jurisdiction ?? copy.comparePanel.notAvailable}
           </MetaCell>

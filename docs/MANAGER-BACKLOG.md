@@ -67,6 +67,7 @@ Last review: 2026-07-23 (compare → dossier/Green tunnel).
 | Liquidity waitlist | OK — `/liquidity` |
 | Présence marchés green-first | Page OK — `/presence` + payloads ; **suivants** : outreach Readi / KnowESG |
 | Tunnel conversion trust | OK — compare → `/start` dossier + voie Green/CSRD (max 3 CTAs), claims indicatifs, `/green/compare` next-step |
+| Comparator RWA #1 push | **In progress** — classes equity/art, filtres hub, SEO, DeFiLlama BUIDL/USYC/ACRED/HLSCOPE ; gap : TVL art/infra encore mince |
 
 ## Backlog i18n
 

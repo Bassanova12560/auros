@@ -1,11 +1,17 @@
 import { COMPARATOR_ROUTES } from "./constants";
+import { getArtRows } from "./art";
 import { getBondRows } from "./bonds";
 import { getCommodityRows } from "./commodities";
 import { getImmobilierRows } from "./immobilier";
 import { getPrivateCreditRows } from "./private-credit";
+import { getPrivateEquityRows } from "./private-equity";
 import { getStablecoinRows } from "./stablecoins";
 import { resolveProductMeta, type ResolvedProductMeta } from "./product-meta";
-import { resolveRiskTier, RISK_TIER_ORDER, type RiskTier } from "./risk";
+import {
+  resolveRiskTier as resolveRisk,
+  RISK_TIER_ORDER,
+  type RiskTier,
+} from "./risk";
 import type { ComparatorId } from "./registry";
 import type { ComparatorProductRow } from "./types";
 
@@ -38,6 +44,8 @@ export const COMPARATOR_HREFS: Record<ComparatorId, string> = {
   obligations: COMPARATOR_ROUTES.bonds,
   "matieres-premieres": COMPARATOR_ROUTES.commodities,
   "private-credit": COMPARATOR_ROUTES.privateCredit,
+  "private-equity": COMPARATOR_ROUTES.privateEquity,
+  "art-collectibles": COMPARATOR_ROUTES.art,
 };
 
 export function rowsToHubProducts(
@@ -48,7 +56,7 @@ export function rowsToHubProducts(
     row,
     comparatorId,
     comparatorHref: COMPARATOR_HREFS[comparatorId],
-    riskTier: resolveRiskTier(comparatorId, row.category),
+    riskTier: resolveRisk(comparatorId, row.category),
     meta: resolveProductMeta(comparatorId, row),
   }));
 }
@@ -57,13 +65,7 @@ function toHubProducts(
   rows: ComparatorProductRow[],
   comparatorId: ComparatorId
 ): HubProduct[] {
-  return rows.map((row) => ({
-    row,
-    comparatorId,
-    comparatorHref: COMPARATOR_HREFS[comparatorId],
-    riskTier: resolveRiskTier(comparatorId, row.category),
-    meta: resolveProductMeta(comparatorId, row),
-  }));
+  return rowsToHubProducts(rows, comparatorId);
 }
 
 export function productDedupeKey(product: HubProduct): string {
@@ -126,14 +128,23 @@ function buildTierHighlights(products: HubProduct[]): TierHighlight[] {
 }
 
 export async function getCompareHubPayload(): Promise<CompareHubPayload> {
-  const [stablecoins, immobilier, bonds, commodities, privateCredit] =
-    await Promise.all([
-      getStablecoinRows(),
-      getImmobilierRows(),
-      getBondRows(),
-      getCommodityRows(),
-      getPrivateCreditRows(),
-    ]);
+  const [
+    stablecoins,
+    immobilier,
+    bonds,
+    commodities,
+    privateCredit,
+    privateEquity,
+    art,
+  ] = await Promise.all([
+    getStablecoinRows(),
+    getImmobilierRows(),
+    getBondRows(),
+    getCommodityRows(),
+    getPrivateCreditRows(),
+    getPrivateEquityRows(),
+    getArtRows(),
+  ]);
 
   const fetchedAt = [
     stablecoins.fetchedAt,
@@ -141,6 +152,8 @@ export async function getCompareHubPayload(): Promise<CompareHubPayload> {
     bonds.fetchedAt,
     commodities.fetchedAt,
     privateCredit.fetchedAt,
+    privateEquity.fetchedAt,
+    art.fetchedAt,
   ].sort((a, b) => b.localeCompare(a))[0];
 
   const products = dedupeHubProducts([
@@ -149,6 +162,8 @@ export async function getCompareHubPayload(): Promise<CompareHubPayload> {
     ...toHubProducts(bonds.rows, "obligations"),
     ...toHubProducts(commodities.rows, "matieres-premieres"),
     ...toHubProducts(privateCredit.rows, "private-credit"),
+    ...toHubProducts(privateEquity.rows, "private-equity"),
+    ...toHubProducts(art.rows, "art-collectibles"),
   ]).sort((a, b) => b.row.apy - a.row.apy);
 
   return {

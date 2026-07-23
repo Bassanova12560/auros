@@ -18,24 +18,33 @@ const COMPARATOR_DEFS: ComparatorDef[] = [
   {
     id: "comparator-compare",
     path: COMPARATOR_ROUTES.compare,
-    title: "RWA Yields by Risk Profile | AUROS Compare",
+    title: "RWA Comparator — Yields by Risk, Class & Source | AUROS",
     description:
-      "Comparez 120+ produits RWA tokenisés : immobilier, T-Bills, crédit privé, carbone. Filtres par juridiction, rendement et ticket minimum.",
+      "Compare tokenized RWA products across treasuries, real estate, private credit, equity, commodities and art. Live DeFiLlama vs curated manual rows — educational only.",
     summary:
-      "Hub comparatif agrégé : rendements RWA tokenisés par profil de risque (conservateur → dynamique). Point d'entrée vers les comparateurs spécialisés AUROS.",
-    keywords: ["RWA yields", "compare tokenized assets", "risk profile"],
-    intents: ["Quels rendements RWA par niveau de risque ?"],
+      "Hub comparatif agrégé : rendements RWA tokenisés par profil de risque, classe d'actif et source (live vs manuel). Point d'entrée vers les comparateurs spécialisés AUROS.",
+    keywords: [
+      "RWA comparator",
+      "RWA yields",
+      "compare tokenized assets",
+      "risk profile",
+      "DeFiLlama RWA",
+    ],
+    intents: [
+      "Quels rendements RWA par niveau de risque ?",
+      "Comparer des produits RWA tokenisés",
+    ],
     assetClass: "multi",
   },
   {
     id: "comparator-stablecoins",
     path: COMPARATOR_ROUTES.stablecoins,
-    title: "Tokenized Stablecoins Comparator | AUROS",
+    title: "RWA Stablecoins & Treasury Comparator | AUROS",
     description:
-      "Compare tokenized stablecoin and treasury products — live APY and TVL. Updated hourly.",
+      "Compare RWA-backed stablecoins and treasury tokens — live APY and TVL via DeFiLlama, manual rows labeled. Updated hourly.",
     summary:
       "Comparateur stablecoins et trésorerie tokenisée : APY et TVL en direct (DeFiLlama + données manuelles). Mis à jour toutes les heures.",
-    keywords: ["tokenized stablecoins", "T-Bills tokenized", "USDC yield", "treasury tokens"],
+    keywords: ["tokenized stablecoins", "T-Bills tokenized", "BUIDL", "USYC", "treasury tokens"],
     intents: ["Meilleur rendement stablecoin tokenisé ?", "Comparer T-Bills on-chain"],
     assetClass: "stablecoins",
   },
@@ -44,22 +53,22 @@ const COMPARATOR_DEFS: ComparatorDef[] = [
     path: COMPARATOR_ROUTES.realEstate,
     title: "Tokenized Real Estate Comparator | AUROS",
     description:
-      "Compare tokenized real estate platforms — yields, TVL and minimum investment.",
+      "Compare tokenized real estate platforms — indicative yields, AUM, chains and access. Educational RWA comparison.",
     summary:
       "Comparateur immobilier tokenisé : plateformes RWA immo, rendements indicatifs, ticket minimum. Données live + références marché.",
-    keywords: ["tokenized real estate", "RWA immobilier", "Brickken", "RealT"],
+    keywords: ["tokenized real estate", "RWA immobilier", "RealT", "Lofty"],
     intents: ["Quelles plateformes immobilier tokenisé ?", "Rendement immo RWA"],
     assetClass: "real_estate",
   },
   {
     id: "comparator-bonds",
     path: COMPARATOR_ROUTES.bonds,
-    title: "Tokenized Bonds Comparator | AUROS",
+    title: "Tokenized Bonds & T-Bill Comparator | AUROS",
     description:
-      "Compare tokenized bond products and treasury funds — live APY and TVL via DeFiLlama.",
+      "Compare tokenized bonds, T-Bills and treasury funds — OUSG, BUIDL, carbon-linked structured rows with Green links. Live APY via DeFiLlama.",
     summary:
-      "Comparateur obligations tokenisées : OUSG, mini-bonds, produits trésorerie — APY/TVL live.",
-    keywords: ["tokenized bonds", "OUSG", "ondo", "treasury token"],
+      "Comparateur obligations tokenisées : OUSG, T-Bills, BUIDL et liens carbone Green — APY/TVL live + catalogue manuel.",
+    keywords: ["tokenized bonds", "OUSG", "BUIDL", "treasury token", "RWA bonds"],
     intents: ["Comparer obligations tokenisées", "Rendement bonds RWA"],
     assetClass: "bonds",
   },
@@ -68,10 +77,10 @@ const COMPARATOR_DEFS: ComparatorDef[] = [
     path: COMPARATOR_ROUTES.commodities,
     title: "Tokenized Commodities Comparator | AUROS",
     description:
-      "Compare tokenized commodities — gold, agricultural and precious metals RWA.",
+      "Compare tokenized gold and agricultural RWAs — PAXG, XAUT, LandX. Honest APY 0 when no coupon.",
     summary:
       "Comparateur matières premières tokenisées : or, métaux, produits agricoles on-chain.",
-    keywords: ["tokenized gold", "commodities RWA", "LandX"],
+    keywords: ["tokenized gold", "commodities RWA", "PAXG", "LandX"],
     intents: ["Tokenisation or ou matières premières ?"],
     assetClass: "commodities",
   },
@@ -80,12 +89,36 @@ const COMPARATOR_DEFS: ComparatorDef[] = [
     path: COMPARATOR_ROUTES.privateCredit,
     title: "Tokenized Private Credit Comparator | AUROS",
     description:
-      "Compare tokenized private credit pools — APY, TVL and protocol risk.",
+      "Compare on-chain private credit — Maple, Centrifuge, Apollo ACRED, Hamilton Lane HLSCOPE. Live DeFiLlama APY.",
     summary:
-      "Comparateur crédit privé tokenisé : Maple, Centrifuge, Goldfinch et pools DeFi RWA.",
-    keywords: ["tokenized private credit", "RWA lending", "Maple Finance"],
+      "Comparateur crédit privé tokenisé : Maple, Centrifuge, Goldfinch et fonds Securitize indexés DeFiLlama.",
+    keywords: ["tokenized private credit", "RWA lending", "Maple Finance", "ACRED"],
     intents: ["Rendement crédit privé tokenisé ?"],
     assetClass: "private_credit",
+  },
+  {
+    id: "comparator-private-equity",
+    path: COMPARATOR_ROUTES.privateEquity,
+    title: "Tokenized Private Equity & Stocks Comparator | AUROS",
+    description:
+      "Compare tokenized PE funds and public equity RWAs — Securitize funds, Ondo stocks, Backed ETFs. Manual vs live labeled.",
+    summary:
+      "Comparateur equity / PE tokenisé : fonds Securitize, actions Ondo/Backed/Swarm. APY 0 si aucun coupon public.",
+    keywords: ["tokenized equity", "private equity RWA", "Ondo Global Markets", "Securitize"],
+    intents: ["Comparer equity tokenisé", "Fonds PE on-chain"],
+    assetClass: "private_equity",
+  },
+  {
+    id: "comparator-art",
+    path: COMPARATOR_ROUTES.art,
+    title: "Tokenized Art & Collectibles Comparator | AUROS",
+    description:
+      "Compare tokenized art and collectibles platforms — Masterworks, Particle, Artory. No invented yields.",
+    summary:
+      "Comparateur art & collectibles tokenisés : plateformes fractionnées, sans rendements inventés.",
+    keywords: ["tokenized art", "fractional art", "RWA collectibles", "Masterworks"],
+    intents: ["Comparer art tokenisé"],
+    assetClass: "art",
   },
 ];
 
@@ -100,7 +133,7 @@ export function buildComparatorPages(): AiFirstPage[] {
       contentType: "comparator",
       language: "en",
       indexable: true,
-      lastUpdated: "2026-05-29",
+      lastUpdated: "2026-07-23",
       keywords: c.keywords,
       intents: c.intents,
       audience: ["investisseurs", "analystes RWA", "family office", "trésorerie"],

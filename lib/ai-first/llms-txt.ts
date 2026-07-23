@@ -24,7 +24,7 @@ export function buildLlmsTxt(pages: AiFirstPage[], full = false): string {
     "- **Gratuit** — Comparateur 8 juridictions (/jurisdictions) : « Où structurer mon émission RWA ? »",
     "- **5 000 €** — Starter Kit phase 0 (/jurisdictions/starter-kit) : memo juridiction SPV + régulateur",
     "- **Tarifs** — /pricing : grille Gratuit · Starter Kit 5 000 € · Launch sur devis",
-    "- **Comparateurs rendements** — /compare, /stablecoins, /real-estate, /bonds, /commodities, /private-credit",
+    "- **Comparateurs rendements** — /compare, /stablecoins, /real-estate, /bonds, /commodities, /private-credit, /private-equity, /art-collectibles",
     "- **Copilot** — /copilot : assistant RWA/Green/Watts/ChargeFlow (lecture seule, indicatif)",
     "- **Data terminal** — /data/terminal : indices RWA & Green",
     "",

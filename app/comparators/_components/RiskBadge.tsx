@@ -1,6 +1,4 @@
-"use client";
-
-import { resolveRiskTier, type RiskTier } from "@/lib/comparators/risk";
+import { resolveRiskTier as resolveRisk, type RiskTier } from "@/lib/comparators/risk";
 import type { ComparatorId } from "@/lib/comparators/registry";
 import { useComparatorPage } from "./useComparatorPage";
 
@@ -20,7 +18,7 @@ export function RiskBadge({
   category: string;
 }) {
   const { messages } = useComparatorPage();
-  const tier = resolveRiskTier(comparatorId, category);
+  const tier = resolveRisk(comparatorId, category);
   const label = messages.risk[tier];
 
   return (

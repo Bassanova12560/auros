@@ -5,7 +5,9 @@ export type ComparatorId =
   | "immobilier"
   | "obligations"
   | "matieres-premieres"
-  | "private-credit";
+  | "private-credit"
+  | "private-equity"
+  | "art-collectibles";
 
 export type ComparatorEntry = {
   id: ComparatorId;
@@ -39,6 +41,16 @@ export const COMPARATOR_REGISTRY: ComparatorEntry[] = [
     id: "private-credit",
     href: COMPARATOR_ROUTES.privateCredit,
     tool: "private credit",
+  },
+  {
+    id: "private-equity",
+    href: COMPARATOR_ROUTES.privateEquity,
+    tool: "private equity",
+  },
+  {
+    id: "art-collectibles",
+    href: COMPARATOR_ROUTES.art,
+    tool: "art",
   },
 ];
 

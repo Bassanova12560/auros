@@ -26,16 +26,30 @@
     "category": "treasury"
   },
   {
-    "id": "backed-bcspx",
-    "project": "backed-finance",
-    "platform": "Backed Finance",
-    "product": "bCSPX",
+    "id": "usual-usd0",
+    "project": "usual",
+    "platform": "Usual",
+    "product": "USD0 / USD0++",
     "apy": 0,
-    "tvlUsd": 28000000,
+    "tvlUsd": 0,
     "chains": ["Ethereum"],
-    "link": "https://backed.fi/products/bCSPX",
+    "link": "https://usual.money",
     "affiliate_link": "",
-    "logo": "/logos/backed.png",
+    "logo": "",
     "category": "mixed"
+  },
+  {
+    "id": "spiko-stable",
+    "project": "spiko",
+    "platform": "Spiko",
+    "product": "MMFs tokenisés EU",
+    "apy": 0,
+    "tvlUsd": 0,
+    "chains": ["Ethereum", "Polygon"],
+    "link": "https://www.spiko.finance",
+    "affiliate_link": "",
+    "logo": "",
+    "category": "treasury",
+    "jurisdiction": "France"
   }
 ]

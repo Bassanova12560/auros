@@ -10,6 +10,8 @@ const CATEGORY_MAP: Record<string, ComparatorId | ComparatorId[]> = {
   bonds: "obligations",
   commodities: "matieres-premieres",
   private_credit: "private-credit",
+  private_equity: "private-equity",
+  art: "art-collectibles",
 };
 
 const COMPARATOR_TO_API_CATEGORY: Record<ComparatorId, string> = {
@@ -18,6 +20,8 @@ const COMPARATOR_TO_API_CATEGORY: Record<ComparatorId, string> = {
   obligations: "bonds",
   "matieres-premieres": "commodities",
   "private-credit": "private_credit",
+  "private-equity": "private_equity",
+  "art-collectibles": "art",
 };
 
 export function hubToProductItem(product: HubProduct): ProductItem {

@@ -138,6 +138,8 @@ const FR: StateOfRwaIssuersCopy = {
     real_estate: "Immobilier tokenisé",
     private_credit: "Private credit",
     commodities: "Matières premières",
+    private_equity: "Equity / PE",
+    art: "Art & collectibles",
     green: "Green / carbone",
   },
   micaSignals: {
@@ -245,6 +247,8 @@ const EN: StateOfRwaIssuersCopy = {
     real_estate: "Tokenized real estate",
     private_credit: "Private credit",
     commodities: "Commodities",
+    private_equity: "Equity / PE",
+    art: "Art & collectibles",
     green: "Green / carbon",
   },
   pdf: {

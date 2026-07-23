@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-23T17:05:57.644Z",
+  "generatedAt": "2026-07-23T21:32:27.936Z",
   "project": {
     "slug": "auros",
     "name": "AUROS",
@@ -88,18 +88,20 @@
     }
   },
   "catalog": {
-    "totalProducts": 92,
-    "uniquePlatforms": 47,
-    "defillamaSlugs": 51,
-    "manualEntries": 46,
+    "totalProducts": 114,
+    "uniquePlatforms": 59,
+    "defillamaSlugs": 65,
+    "manualEntries": 55,
     "byAssetClass": {
-      "commodities": 10,
-      "bonds": 37,
-      "stablecoins": 10,
-      "real_estate": 18,
-      "private_credit": 17
+      "commodities": 12,
+      "private_credit": 20,
+      "art": 9,
+      "stablecoins": 14,
+      "private_equity": 15,
+      "bonds": 26,
+      "real_estate": 18
     },
-    "note": "Compare hub /compare deduplicates and merges live pools; expect 120+ at runtime.",
+    "note": "Compare hub /compare deduplicates and merges live pools; runtime count grows with DeFiLlama coverage.",
     "liveHubProductCount": null
   },
   "trackableProducts": [
@@ -124,24 +126,44 @@
       "externalLink": "https://agrotoken.io"
     },
     {
-      "id": "defillama-apollo-securitize",
+      "id": "defillama-apollo-diversified-credit-securitize-fund",
       "platform": "Apollo",
-      "product": "apollo-securitize",
-      "assetClass": "bonds",
-      "defillamaSlug": "apollo-securitize",
+      "product": "apollo-diversified-credit-securitize-fund",
+      "assetClass": "private_credit",
+      "defillamaSlug": "apollo-diversified-credit-securitize-fund",
       "source": "defillama_config",
-      "aurosPage": "https://getauros.com/bonds",
+      "aurosPage": "https://getauros.com/private-credit",
       "externalLink": "https://www.securitize.io"
     },
     {
-      "id": "apollo-diversified",
-      "platform": "Apollo",
-      "product": "Diversified Credit",
-      "assetClass": "bonds",
-      "defillamaSlug": "apollo-securitize",
+      "id": "defillama-artory",
+      "platform": "Artory",
+      "product": "artory",
+      "assetClass": "art",
+      "defillamaSlug": "artory",
+      "source": "defillama_config",
+      "aurosPage": "https://getauros.com/art-collectibles",
+      "externalLink": "https://www.artory.com"
+    },
+    {
+      "id": "artory-registry",
+      "platform": "Artory",
+      "product": "Registre & provenance art",
+      "assetClass": "art",
+      "defillamaSlug": "artory",
       "source": "manual",
-      "aurosPage": "https://getauros.com/bonds",
-      "externalLink": "https://www.securitize.io"
+      "aurosPage": "https://getauros.com/art-collectibles",
+      "externalLink": "https://www.artory.com"
+    },
+    {
+      "id": "async-art",
+      "platform": "Async Art",
+      "product": "Œuvres programmables",
+      "assetClass": "art",
+      "defillamaSlug": "async-art",
+      "source": "manual",
+      "aurosPage": "https://getauros.com/art-collectibles",
+      "externalLink": "https://async.art"
     },
     {
       "id": "defillama-backed-finance",
@@ -157,10 +179,10 @@
       "id": "backed-bcspx",
       "platform": "Backed Finance",
       "product": "bCSPX",
-      "assetClass": "bonds",
+      "assetClass": "private_equity",
       "defillamaSlug": "backed-finance",
       "source": "manual",
-      "aurosPage": "https://getauros.com/bonds",
+      "aurosPage": "https://getauros.com/private-equity",
       "externalLink": "https://backed.fi/products/bCSPX"
     },
     {
@@ -194,23 +216,33 @@
       "externalLink": "https://www.bitbond.com"
     },
     {
+      "id": "defillama-blackrock-buidl",
+      "platform": "BlackRock BUIDL",
+      "product": "blackrock-buidl",
+      "assetClass": "stablecoins",
+      "defillamaSlug": "blackrock-buidl",
+      "source": "defillama_config",
+      "aurosPage": "https://getauros.com/stablecoins",
+      "externalLink": "https://www.securitize.io"
+    },
+    {
       "id": "defillama-blackstone-securitize",
       "platform": "Blackstone",
       "product": "blackstone-securitize",
-      "assetClass": "bonds",
+      "assetClass": "private_equity",
       "defillamaSlug": "blackstone-securitize",
       "source": "defillama_config",
-      "aurosPage": "https://getauros.com/bonds",
+      "aurosPage": "https://getauros.com/private-equity",
       "externalLink": "https://www.securitize.io"
     },
     {
       "id": "blackstone-breit",
       "platform": "Blackstone",
       "product": "BREIT",
-      "assetClass": "bonds",
+      "assetClass": "private_equity",
       "defillamaSlug": "blackstone-securitize",
       "source": "manual",
-      "aurosPage": "https://getauros.com/bonds",
+      "aurosPage": "https://getauros.com/private-equity",
       "externalLink": "https://www.securitize.io"
     },
     {
@@ -314,6 +346,16 @@
       "externalLink": "https://centrifuge.io"
     },
     {
+      "id": "defillama-circle-usyc",
+      "platform": "Circle USYC",
+      "product": "circle-usyc",
+      "assetClass": "stablecoins",
+      "defillamaSlug": "circle-usyc",
+      "source": "defillama_config",
+      "aurosPage": "https://getauros.com/stablecoins",
+      "externalLink": "https://usyc.hashnote.com"
+    },
+    {
       "id": "defillama-clearpool",
       "platform": "Clearpool",
       "product": "clearpool",
@@ -324,11 +366,21 @@
       "externalLink": "https://clearpool.finance"
     },
     {
+      "id": "defillama-clearpool-lending",
+      "platform": "Clearpool",
+      "product": "clearpool-lending",
+      "assetClass": "private_credit",
+      "defillamaSlug": "clearpool-lending",
+      "source": "defillama_config",
+      "aurosPage": "https://getauros.com/private-credit",
+      "externalLink": "https://clearpool.finance"
+    },
+    {
       "id": "clearpool-usdc",
       "platform": "Clearpool",
       "product": "USDC",
       "assetClass": "private_credit",
-      "defillamaSlug": "clearpool",
+      "defillamaSlug": "clearpool-lending",
       "source": "manual",
       "aurosPage": "https://getauros.com/private-credit",
       "externalLink": "https://clearpool.finance"
@@ -352,6 +404,26 @@
       "source": "defillama_config",
       "aurosPage": "https://getauros.com/private-credit",
       "externalLink": "https://credix.finance"
+    },
+    {
+      "id": "defillama-dinari",
+      "platform": "Dinari",
+      "product": "dinari",
+      "assetClass": "private_equity",
+      "defillamaSlug": "dinari",
+      "source": "defillama_config",
+      "aurosPage": "https://getauros.com/private-equity",
+      "externalLink": "https://dinari.com"
+    },
+    {
+      "id": "dinari-dshares",
+      "platform": "Dinari",
+      "product": "dShares (actions US)",
+      "assetClass": "private_equity",
+      "defillamaSlug": "dinari",
+      "source": "manual",
+      "aurosPage": "https://getauros.com/private-equity",
+      "externalLink": "https://dinari.com"
     },
     {
       "id": "defillama-estate-protocol",
@@ -442,23 +514,13 @@
       "externalLink": "https://goldfinch.finance"
     },
     {
-      "id": "defillama-hamilton-lane",
+      "id": "defillama-hamilton-lane-senior-credit-opportunities-securitize-fund",
       "platform": "Hamilton Lane",
-      "product": "hamilton-lane",
-      "assetClass": "bonds",
-      "defillamaSlug": "hamilton-lane",
+      "product": "hamilton-lane-senior-credit-opportunities-securitize-fund",
+      "assetClass": "private_credit",
+      "defillamaSlug": "hamilton-lane-senior-credit-opportunities-securitize-fund",
       "source": "defillama_config",
-      "aurosPage": "https://getauros.com/bonds",
-      "externalLink": "https://www.securitize.io"
-    },
-    {
-      "id": "hamilton-lane-scope",
-      "platform": "Hamilton Lane",
-      "product": "SCOPE",
-      "assetClass": "bonds",
-      "defillamaSlug": "hamilton-lane",
-      "source": "manual",
-      "aurosPage": "https://getauros.com/bonds",
+      "aurosPage": "https://getauros.com/private-credit",
       "externalLink": "https://www.securitize.io"
     },
     {
@@ -505,20 +567,20 @@
       "id": "kkr-healthcare",
       "platform": "KKR",
       "product": "Health Care Fund",
-      "assetClass": "bonds",
+      "assetClass": "private_equity",
       "defillamaSlug": "kkr-securitize",
       "source": "manual",
-      "aurosPage": "https://getauros.com/bonds",
+      "aurosPage": "https://getauros.com/private-equity",
       "externalLink": "https://www.securitize.io"
     },
     {
       "id": "defillama-kkr-securitize",
       "platform": "KKR",
       "product": "kkr-securitize",
-      "assetClass": "bonds",
+      "assetClass": "private_equity",
       "defillamaSlug": "kkr-securitize",
       "source": "defillama_config",
-      "aurosPage": "https://getauros.com/bonds",
+      "aurosPage": "https://getauros.com/private-equity",
       "externalLink": "https://www.securitize.io"
     },
     {
@@ -570,6 +632,26 @@
       "externalLink": "https://landx.fi"
     },
     {
+      "id": "libre-capital-pe",
+      "platform": "Libre Capital",
+      "product": "Fonds PE tokenisés",
+      "assetClass": "private_equity",
+      "defillamaSlug": "libre-capital",
+      "source": "manual",
+      "aurosPage": "https://getauros.com/private-equity",
+      "externalLink": "https://www.librecapital.com"
+    },
+    {
+      "id": "defillama-libre-capital",
+      "platform": "Libre Capital",
+      "product": "libre-capital",
+      "assetClass": "private_equity",
+      "defillamaSlug": "libre-capital",
+      "source": "defillama_config",
+      "aurosPage": "https://getauros.com/private-equity",
+      "externalLink": "https://www.librecapital.com"
+    },
+    {
       "id": "lofty-portfolio",
       "platform": "Lofty.ai",
       "product": "Biens locatifs US",
@@ -610,6 +692,26 @@
       "externalLink": "https://maple.finance"
     },
     {
+      "id": "masterworks-bluechip",
+      "platform": "Masterworks",
+      "product": "Art fractionné (blue-chip)",
+      "assetClass": "art",
+      "defillamaSlug": "masterworks",
+      "source": "manual",
+      "aurosPage": "https://getauros.com/art-collectibles",
+      "externalLink": "https://www.masterworks.com"
+    },
+    {
+      "id": "defillama-masterworks",
+      "platform": "Masterworks",
+      "product": "masterworks",
+      "assetClass": "art",
+      "defillamaSlug": "masterworks",
+      "source": "defillama_config",
+      "aurosPage": "https://getauros.com/art-collectibles",
+      "externalLink": "https://www.masterworks.com"
+    },
+    {
       "id": "defillama-matrixdock-sbtb",
       "platform": "Matrixdock",
       "product": "matrixdock-sbtb",
@@ -617,6 +719,26 @@
       "defillamaSlug": "matrixdock-sbtb",
       "source": "defillama_config",
       "aurosPage": "https://getauros.com/bonds",
+      "externalLink": "https://matrixdock.com"
+    },
+    {
+      "id": "defillama-matrixdock-stbt",
+      "platform": "Matrixdock",
+      "product": "matrixdock-stbt",
+      "assetClass": "bonds",
+      "defillamaSlug": "matrixdock-stbt",
+      "source": "defillama_config",
+      "aurosPage": "https://getauros.com/bonds",
+      "externalLink": "https://matrixdock.com"
+    },
+    {
+      "id": "defillama-matrixdock-xaum",
+      "platform": "Matrixdock",
+      "product": "matrixdock-xaum",
+      "assetClass": "commodities",
+      "defillamaSlug": "matrixdock-xaum",
+      "source": "defillama_config",
+      "aurosPage": "https://getauros.com/commodities",
       "externalLink": "https://matrixdock.com"
     },
     {
@@ -671,20 +793,20 @@
       "id": "mt-pelerin-equity",
       "platform": "Mt Pelerin",
       "product": "Actions PME",
-      "assetClass": "bonds",
+      "assetClass": "private_equity",
       "defillamaSlug": "mt-pelerin",
       "source": "manual",
-      "aurosPage": "https://getauros.com/bonds",
+      "aurosPage": "https://getauros.com/private-equity",
       "externalLink": "https://www.mtpelerin.com"
     },
     {
       "id": "defillama-mt-pelerin",
       "platform": "Mt Pelerin",
       "product": "mt-pelerin",
-      "assetClass": "bonds",
+      "assetClass": "private_equity",
       "defillamaSlug": "mt-pelerin",
       "source": "defillama_config",
-      "aurosPage": "https://getauros.com/bonds",
+      "aurosPage": "https://getauros.com/private-equity",
       "externalLink": "https://www.mtpelerin.com"
     },
     {
@@ -701,20 +823,20 @@
       "id": "ondo-global-markets",
       "platform": "Ondo Finance",
       "product": "Actions US tokenisées",
-      "assetClass": "commodities",
+      "assetClass": "private_equity",
       "defillamaSlug": "ondo-global-markets",
       "source": "manual",
-      "aurosPage": "https://getauros.com/commodities",
+      "aurosPage": "https://getauros.com/private-equity",
       "externalLink": "https://ondo.finance/global-markets"
     },
     {
       "id": "defillama-ondo-global-markets",
       "platform": "Ondo Finance",
       "product": "ondo-global-markets",
-      "assetClass": "commodities",
+      "assetClass": "private_equity",
       "defillamaSlug": "ondo-global-markets",
       "source": "defillama_config",
-      "aurosPage": "https://getauros.com/commodities",
+      "aurosPage": "https://getauros.com/private-equity",
       "externalLink": "https://ondo.finance/global-markets"
     },
     {
@@ -768,6 +890,26 @@
       "externalLink": "https://openeden.com"
     },
     {
+      "id": "particle-watches",
+      "platform": "Particle",
+      "product": "Montres & collectibles",
+      "assetClass": "art",
+      "defillamaSlug": "particle",
+      "source": "manual",
+      "aurosPage": "https://getauros.com/art-collectibles",
+      "externalLink": "https://www.particlecollection.com"
+    },
+    {
+      "id": "defillama-particle",
+      "platform": "Particle",
+      "product": "particle",
+      "assetClass": "art",
+      "defillamaSlug": "particle",
+      "source": "defillama_config",
+      "aurosPage": "https://getauros.com/art-collectibles",
+      "externalLink": "https://www.particlecollection.com"
+    },
+    {
       "id": "paxos-paxg",
       "platform": "Paxos",
       "product": "PAXG",
@@ -776,6 +918,46 @@
       "source": "manual",
       "aurosPage": "https://getauros.com/commodities",
       "externalLink": "https://paxos.com/paxgold"
+    },
+    {
+      "id": "defillama-paxos-gold",
+      "platform": "Paxos",
+      "product": "paxos-gold",
+      "assetClass": "commodities",
+      "defillamaSlug": "paxos-gold",
+      "source": "defillama_config",
+      "aurosPage": "https://getauros.com/commodities",
+      "externalLink": "https://paxos.com/paxgold"
+    },
+    {
+      "id": "perth-mint-gold",
+      "platform": "Perth Mint",
+      "product": "PMGT",
+      "assetClass": "commodities",
+      "defillamaSlug": "perth-mint",
+      "source": "manual",
+      "aurosPage": "https://getauros.com/commodities",
+      "externalLink": "https://www.perthmint.com"
+    },
+    {
+      "id": "defillama-propy-nft",
+      "platform": "Propy",
+      "product": "propy-nft",
+      "assetClass": "art",
+      "defillamaSlug": "propy-nft",
+      "source": "defillama_config",
+      "aurosPage": "https://getauros.com/art-collectibles",
+      "externalLink": "https://propy.com"
+    },
+    {
+      "id": "propy-collectibles",
+      "platform": "Propy",
+      "product": "Titres & collectibles tokenisés",
+      "assetClass": "art",
+      "defillamaSlug": "propy-nft",
+      "source": "manual",
+      "aurosPage": "https://getauros.com/art-collectibles",
+      "externalLink": "https://propy.com"
     },
     {
       "id": "realt-portfolio",
@@ -828,6 +1010,26 @@
       "externalLink": "https://republic.com/note"
     },
     {
+      "id": "spiko-eutbl",
+      "platform": "Spiko",
+      "product": "EUTBL / USTBL",
+      "assetClass": "bonds",
+      "defillamaSlug": "spiko",
+      "source": "manual",
+      "aurosPage": "https://getauros.com/bonds",
+      "externalLink": "https://www.spiko.finance"
+    },
+    {
+      "id": "spiko-stable",
+      "platform": "Spiko",
+      "product": "MMFs tokenisés EU",
+      "assetClass": "stablecoins",
+      "defillamaSlug": "spiko",
+      "source": "manual",
+      "aurosPage": "https://getauros.com/stablecoins",
+      "externalLink": "https://www.spiko.finance"
+    },
+    {
       "id": "stegx-hedera",
       "platform": "StegX",
       "product": "Portefeuille EU + US",
@@ -871,20 +1073,20 @@
       "id": "defillama-swarm-markets",
       "platform": "Swarm Markets",
       "product": "swarm-markets",
-      "assetClass": "bonds",
+      "assetClass": "private_equity",
       "defillamaSlug": "swarm-markets",
       "source": "defillama_config",
-      "aurosPage": "https://getauros.com/bonds",
+      "aurosPage": "https://getauros.com/private-equity",
       "externalLink": "https://swarm.com"
     },
     {
       "id": "swarm-bafin",
       "platform": "Swarm Markets",
       "product": "TSLA / AAPL tokenisés",
-      "assetClass": "bonds",
+      "assetClass": "private_equity",
       "defillamaSlug": "swarm-markets",
       "source": "manual",
-      "aurosPage": "https://getauros.com/bonds",
+      "aurosPage": "https://getauros.com/private-equity",
       "externalLink": "https://swarm.com"
     },
     {
@@ -906,6 +1108,16 @@
       "source": "manual",
       "aurosPage": "https://getauros.com/real-estate",
       "externalLink": "https://www.tangible.store"
+    },
+    {
+      "id": "defillama-tether-gold",
+      "platform": "Tether",
+      "product": "tether-gold",
+      "assetClass": "commodities",
+      "defillamaSlug": "tether-gold",
+      "source": "defillama_config",
+      "aurosPage": "https://getauros.com/commodities",
+      "externalLink": "https://gold.tether.to"
     },
     {
       "id": "tether-xaut",
@@ -966,6 +1178,16 @@
       "externalLink": "https://truefi.io"
     },
     {
+      "id": "usual-usd0",
+      "platform": "Usual",
+      "product": "USD0 / USD0++",
+      "assetClass": "stablecoins",
+      "defillamaSlug": "usual",
+      "source": "manual",
+      "aurosPage": "https://getauros.com/stablecoins",
+      "externalLink": "https://usual.money"
+    },
+    {
       "id": "defillama-vaneck-treasury-fund",
       "platform": "VanEck",
       "product": "vaneck-treasury-fund",
@@ -1018,30 +1240,39 @@
   ],
   "defillamaIndexedProtocols": [
     "agrotoken",
-    "apollo-securitize",
+    "apollo-diversified-credit-securitize-fund",
+    "artory",
     "backed-finance",
     "bitbond",
+    "blackrock-buidl",
     "blackstone-securitize",
     "blocksquare",
     "cache-gold",
     "centrifuge-protocol",
+    "circle-usyc",
     "clearpool",
+    "clearpool-lending",
     "credix",
+    "dinari",
     "estate-protocol",
     "figure",
     "flowcarbon",
     "franklin-templeton",
     "goldfinch",
-    "hamilton-lane",
+    "hamilton-lane-senior-credit-opportunities-securitize-fund",
     "hashnote",
     "huma-finance",
     "kkr-securitize",
     "klima-dao",
     "landshare",
     "landx-finance",
+    "libre-capital",
     "lofty",
     "maple",
+    "masterworks",
     "matrixdock-sbtb",
+    "matrixdock-stbt",
+    "matrixdock-xaum",
     "moss-earth",
     "mt-pelerin",
     "nest-credit",
@@ -1050,6 +1281,9 @@
     "openeden-hybond",
     "openeden-tbill",
     "openeden-usdo",
+    "particle",
+    "paxos-gold",
+    "propy-nft",
     "realt-tokens",
     "realtyx",
     "stegx",
@@ -1057,6 +1291,7 @@
     "superstate-ustb",
     "swarm-markets",
     "tangible",
+    "tether-gold",
     "theo-network-thbill",
     "toucan",
     "truefi",

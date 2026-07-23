@@ -46,6 +46,18 @@ export type RealEstateRow = ComparatorProductRow & {
   category: RealEstateCategory;
 };
 
+export type PrivateEquityCategory = "funds" | "public_equity" | "infrastructure";
+
+export type PrivateEquityRow = ComparatorProductRow & {
+  category: PrivateEquityCategory;
+};
+
+export type ArtCategory = "fine_art" | "collectibles";
+
+export type ArtRow = ComparatorProductRow & {
+  category: ArtCategory;
+};
+
 export const STABLECOIN_CATEGORY_LABELS: Record<StablecoinCategory, string> = {
   treasury: "Trésorerie",
   credit: "Crédit",

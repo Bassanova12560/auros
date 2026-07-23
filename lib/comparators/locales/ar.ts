@@ -121,10 +121,21 @@ export const AR: ComparatorMessages = {
       networkError: "خطأ في الشبكة",
     },
     filters: {
-      label: "تصفية حسب الحد الأدنى",
+      label: "تصفية",
       all: "الكل",
       under500: "الحد الأدنى < 500 $",
       under5000: "الحد الأدنى < 5٬000 $",
+      class: "الفئة",
+      risk: "المخاطر",
+      source: "المصدر",
+      sourceLive: "Live DeFiLlama",
+      sourceManual: "يدوي",
+      chain: "السلسلة",
+      apy: "APY",
+      apyAny: "كل APY",
+      apyPositive: "APY > 0",
+      apyOver5: "APY ≥ 5%",
+      apyOver10: "APY ≥ 10%",
     },
     sort: {
       label: "ترتيب حسب",
@@ -144,8 +155,14 @@ export const AR: ComparatorMessages = {
       fees: "الرسوم",
       risk: "الملف",
       assetType: "نوع الأصل",
+      tvl: "TVL",
+      source: "المصدر",
+      chain: "السلسلة",
       view: "عرض",
     },
+    selectionPrompt:
+      "حدّد منتجين إلى 4 للمقارنة جنباً إلى جنب (APY وTVL والمخاطر والمصدر).",
+    faqTitle: "أسئلة شائعة",
     noResults: "لا توجد منتجات تطابق هذه التصفية.",
     metaDisclaimer:
       "الحد الأدنى والسيولة والرسوم إرشادية — تحقق من الشروط الدقيقة على كل منصة قبل الاستثمار.",
@@ -184,6 +201,9 @@ export const AR: ComparatorMessages = {
         jurisdiction: "الولاية القضائية",
         accredited: "معتمد",
         chain: "السلسلة",
+        tvl: "TVL",
+        source: "المصدر",
+        risk: "المخاطر",
         fiche: "بطاقة AUROS",
       },
     },
@@ -210,6 +230,8 @@ export const AR: ComparatorMessages = {
     obligations: "سندات",
     matieresPremieres: "سلع",
     privateCredit: "ائتمان خاص",
+    privateEquity: "أسهم / PE",
+    artCollectibles: "فن ومقتنيات",
   },
   tabs: {
     stablecoins: "عملات مستقرة",
@@ -217,6 +239,8 @@ export const AR: ComparatorMessages = {
     obligations: "سندات",
     matieresPremieres: "سلع",
     privateCredit: "ائتمان خاص",
+    privateEquity: "أسهم / PE",
+    artCollectibles: "فن",
     soon: "قريباً",
   },
   stablecoins: {
@@ -372,6 +396,70 @@ export const AR: ComparatorMessages = {
     },
     footerDisclaimer:
       "APY عبر DeFiLlama، تحديث ساعي. ائتمان خاص — مخاطر مرتفعة، ليست نصيحة استثمارية.",
+  },
+  privateEquity: {
+    tool: "private equity",
+    eyebrow: "مقارن · صناديق وأسهم",
+    title: "أسهم وPE مرمّزة",
+    subtitle:
+      "صناديق PE وأسهم مرمّزة — Securitize وOndo وBacked وSwarm. APY 0 إن لم يوجد كوبون عام موثوق.",
+    disclaimer:
+      "كثير من منتجات الأسهم بلا عائد ثابت. المصادر اليدوية مقابل المباشرة موسومة بوضوح.",
+    stats: {
+      bestApy: "أفضل عائد",
+      totalTvl: "TVL / AUM",
+      products: "منتجات مُقارنة",
+      protocols: (n) =>
+        n === 1 ? "بروتوكول واحد" : `${n} بروتوكولات`,
+      liveSource: (date) => `DeFiLlama · ${date}`,
+      cacheSource: (date) => `كتالوج · ${date}`,
+    },
+    filters: {
+      all: "الكل",
+      funds: "صناديق PE",
+      public_equity: "أسهم",
+      infrastructure: "بنية تحتية",
+    },
+    table: pageTable,
+    cta: {
+      ...dossierCtaBase,
+      title: "هل ترمّز صناديق أو أسهماً؟",
+    },
+    footerDisclaimer:
+      "DeFiLlama مباشرة + كتالوج يدوي. ليست نصيحة استثمارية.",
+  },
+  artCollectibles: {
+    tool: "art",
+    eyebrow: "مقارن · فن ومقتنيات",
+    title: "فن ومقتنيات مرمّزة",
+    subtitle:
+      "فن مجزأ ومقتنيات على السلسلة — Masterworks وParticle وArtory. بلا عوائد مخترعة.",
+    disclaimer:
+      "فن RWA غالباً بلا كوبون. قارن الوصول والحفظ والسيولة — أرقام إرشادية.",
+    stats: {
+      bestApy: "أفضل عائد",
+      totalTvl: "مراجع",
+      products: "منتجات مُقارنة",
+      protocols: (n) =>
+        n === 1 ? "منصة واحدة" : `${n} منصات`,
+      liveSource: (date) => `DeFiLlama · ${date}`,
+      cacheSource: (date) => `كتالوج · ${date}`,
+    },
+    filters: {
+      all: "الكل",
+      fine_art: "فنون جميلة",
+      collectibles: "مقتنيات",
+    },
+    table: {
+      ...pageTable,
+      protocol: "المنصة",
+    },
+    cta: {
+      ...dossierCtaBase,
+      title: "هل ترمّز فناً أو مقتنيات؟",
+    },
+    footerDisclaimer:
+      "كتالوج منسّق؛ APY 0 إن لم يوجد كوبون عام. ليست نصيحة استثمارية.",
   },
   footer: {
     dossier: "الملف",

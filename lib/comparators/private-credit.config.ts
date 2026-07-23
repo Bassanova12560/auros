@@ -55,10 +55,28 @@ export const PRIVATE_CREDIT_PROJECTS: Record<string, PrivateCreditProjectMeta> =
     link: "https://huma.finance",
     category: "emerging",
   },
+  /** DeFiLlama project slug (not `clearpool`). */
+  "clearpool-lending": {
+    name: "Clearpool",
+    link: "https://clearpool.finance",
+    category: "prime",
+  },
   clearpool: {
     name: "Clearpool",
     link: "https://clearpool.finance",
     category: "prime",
+  },
+  "apollo-diversified-credit-securitize-fund": {
+    name: "Apollo",
+    link: "https://www.securitize.io",
+    category: "prime",
+    symbols: ["ACRED"],
+  },
+  "hamilton-lane-senior-credit-opportunities-securitize-fund": {
+    name: "Hamilton Lane",
+    link: "https://www.securitize.io",
+    category: "prime",
+    symbols: ["HLSCOPE"],
   },
 };
 

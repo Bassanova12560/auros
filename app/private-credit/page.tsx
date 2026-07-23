@@ -8,11 +8,12 @@ import { absoluteUrl } from "@/lib/comparators/site";
 export const metadata: Metadata = {
   title: "Tokenized Private Credit Comparator | AUROS",
   description:
-    "Compare on-chain private credit pools — Maple, Goldfinch, Nest Credit and Centrifuge. Live APY via DeFiLlama.",
+    "Compare on-chain private credit — Maple, Centrifuge, Clearpool, Apollo ACRED, Hamilton Lane HLSCOPE. Live DeFiLlama APY. Educational only.",
   alternates: { canonical: COMPARATOR_ROUTES.privateCredit },
   openGraph: {
     title: "Tokenized Private Credit Comparator | AUROS",
-    description: "Compare private credit RWA yields — sorted by APY.",
+    description:
+      "Side-by-side private credit RWA yields — risk, TVL, chain, live vs manual.",
     url: absoluteUrl(COMPARATOR_ROUTES.privateCredit),
     siteName: "AUROS",
     type: "website",

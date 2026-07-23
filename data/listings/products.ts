@@ -2,11 +2,15 @@ import bondsManual from "@/data/bonds-manual.json";
 import commoditiesManual from "@/data/commodities-manual.json";
 import immobilierManual from "@/data/immobilier-manual.json";
 import privateCreditManual from "@/data/private-credit-manual.json";
+import privateEquityManual from "@/data/private-equity-manual.json";
+import artManual from "@/data/art-manual.json";
 import stablecoinsManual from "@/data/stablecoins-manual.json";
+import { ART_PROJECTS } from "@/lib/comparators/art.config";
 import { BOND_PROJECTS } from "@/lib/comparators/bonds.config";
 import { COMMODITY_PROJECTS } from "@/lib/comparators/commodities.config";
 import { IMMOBILIER_PROJECTS } from "@/lib/comparators/immobilier.config";
 import { PRIVATE_CREDIT_PROJECTS } from "@/lib/comparators/private-credit.config";
+import { PRIVATE_EQUITY_PROJECTS } from "@/lib/comparators/private-equity.config";
 import { STABLECOIN_PROJECTS } from "@/lib/comparators/stablecoins.config";
 import { COMPARATOR_ROUTES } from "@/lib/comparators/constants";
 import { absoluteUrl } from "@/lib/comparators/site";
@@ -46,6 +50,11 @@ const ASSET_CLASS_ROUTES: Record<string, string> = {
   alternative: COMPARATOR_ROUTES.privateCredit,
   precious_metals: COMPARATOR_ROUTES.commodities,
   agricultural: COMPARATOR_ROUTES.commodities,
+  funds: COMPARATOR_ROUTES.privateEquity,
+  public_equity: COMPARATOR_ROUTES.privateEquity,
+  infrastructure: COMPARATOR_ROUTES.privateEquity,
+  fine_art: COMPARATOR_ROUTES.art,
+  collectibles: COMPARATOR_ROUTES.art,
 };
 
 function routeForCategory(category: string): string {
@@ -88,6 +97,8 @@ export function getTrackableProducts(): TrackableProduct[] {
     ...manualToProducts(bondsManual, "bonds"),
     ...manualToProducts(immobilierManual, "real_estate"),
     ...manualToProducts(privateCreditManual, "private_credit"),
+    ...manualToProducts(privateEquityManual, "private_equity"),
+    ...manualToProducts(artManual, "art"),
     ...manualToProducts(stablecoinsManual, "stablecoins"),
     ...manualToProducts(commoditiesManual, "commodities"),
   ];
@@ -102,6 +113,12 @@ export function getTrackableProducts(): TrackableProduct[] {
       "private_credit",
       COMPARATOR_ROUTES.privateCredit
     ),
+    ...configSlugsToProducts(
+      PRIVATE_EQUITY_PROJECTS,
+      "private_equity",
+      COMPARATOR_ROUTES.privateEquity
+    ),
+    ...configSlugsToProducts(ART_PROJECTS, "art", COMPARATOR_ROUTES.art),
   ];
 
   const seen = new Set<string>();
@@ -137,7 +154,7 @@ export function getTrackableProductsSummary() {
     manualEntries: products.filter((p) => p.source === "manual").length,
     byAssetClass: byClass,
     /** Live hub may exceed this via grouped DeFiLlama pools at runtime. */
-    note: "Compare hub /compare deduplicates and merges live pools; expect 120+ at runtime.",
+    note: "Compare hub /compare deduplicates and merges live pools; runtime count grows with DeFiLlama coverage.",
   };
 }
 
@@ -149,5 +166,7 @@ export const DEFILLAMA_INDEXED_PROTOCOLS = [
     ...Object.keys(IMMOBILIER_PROJECTS),
     ...Object.keys(COMMODITY_PROJECTS),
     ...Object.keys(PRIVATE_CREDIT_PROJECTS),
+    ...Object.keys(PRIVATE_EQUITY_PROJECTS),
+    ...Object.keys(ART_PROJECTS),
   ]),
 ].sort();
