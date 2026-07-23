@@ -268,6 +268,14 @@ export type GreenMessages = {
     emptyNote: string;
     aurosCompareCta: string;
     registryCta: string;
+    nextStep: {
+      eyebrow: string;
+      title: string;
+      subtitle: string;
+      dossierCta: string;
+      csrdCta: string;
+      greenHubCta: string;
+    };
     registrySectionTitle: string;
     registrySectionIntro: string;
     exportCsv: string;
@@ -1142,6 +1150,15 @@ const FR: GreenMessages = {
     emptyNote: "Aucune ligne pour le moment.",
     aurosCompareCta: "Comparateur RWA général →",
     registryCta: "Consulter le registre public",
+    nextStep: {
+      eyebrow: "Après le marché green",
+      title: "Structurer un actif eau / énergie ?",
+      subtitle:
+        "Check CSRD indicatif, ou dossier RWA en ~4 min — 4 parties, sans promesse de rendement.",
+      dossierCta: "Démarrer mon dossier",
+      csrdCta: "Check CSRD →",
+      greenHubCta: "Hub Green →",
+    },
     registrySectionTitle: "Registre AUROS Green",
     registrySectionIntro:
       "Projets passés revue RTMS — cas pilotes pédagogiques clairement identifiés, distincts des références marché ci-dessous.",
@@ -2090,6 +2107,15 @@ const EN: GreenMessages = {
     emptyNote: "No rows at this time.",
     aurosCompareCta: "General RWA comparator →",
     registryCta: "Browse public registry",
+    nextStep: {
+      eyebrow: "After the green market",
+      title: "Structuring a water / energy asset?",
+      subtitle:
+        "Indicative CSRD check, or RWA dossier in ~4 min — 4 parts, no yield promise.",
+      dossierCta: "Start my dossier",
+      csrdCta: "CSRD check →",
+      greenHubCta: "Green hub →",
+    },
     registrySectionTitle: "AUROS Green registry",
     registrySectionIntro:
       "RTMS-reviewed projects — pedagogical pilot cases clearly marked, separate from market references below.",
@@ -3040,6 +3066,15 @@ const ES: GreenMessages = {
     emptyNote: "Sin filas por el momento.",
     aurosCompareCta: "Comparador RWA general →",
     registryCta: "Consultar registro público",
+    nextStep: {
+      eyebrow: "Tras el mercado green",
+      title: "¿Estructura un activo agua / energía?",
+      subtitle:
+        "Check CSRD indicativo, o expediente RWA en ~4 min — 4 partes, sin promesa de rendimiento.",
+      dossierCta: "Empezar mi expediente",
+      csrdCta: "Check CSRD →",
+      greenHubCta: "Hub Green →",
+    },
     registrySectionTitle: "Registro AUROS Green",
     registrySectionIntro:
       "Proyectos revisados RTMS — casos piloto pedagógicos claramente identificados, distintos de las referencias de mercado abajo.",

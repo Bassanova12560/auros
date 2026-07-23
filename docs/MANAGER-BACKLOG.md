@@ -1,15 +1,15 @@
 # Manager backlog — AUROS
 
 Living priorities. Manager owns this; update when shipping or discovering debt.
-Last review: 2026-07-22 (Cash machine closeout + Benchmark + Agent tools).
+Last review: 2026-07-23 (compare → dossier/Green tunnel).
 
 ## P0 — risque / trust
 
 | Item | Statut |
 |------|--------|
 | `ATTEST_SIGNING_KEY` prod | OK |
-| Lab soft cookie (`ARL_LAB_SIGNING_KEY`) | OK — HttpOnly `auros_arl_lab` · mutations bind cookie |
-| Ops gate (`OPS_SESSION_SECRET`) | OK — `/ops/login` → cookie · `/ops/copilot` 404 sans session · plus de Bearer dans l’UI |
+| Lab soft cookie (`ARL_LAB_SIGNING_KEY`) | Code OK — **Action user** : confirmer clé **dédiée** sur Vercel Production (pas seulement fallback `CRON_SECRET`) + redeploy |
+| Ops gate (`OPS_SESSION_SECRET`) | Code OK — **Action user** : idem Vercel Production + tester `/ops/login` → cookie · `/ops/copilot` 404 sans session |
 
 ## P0 — Toll / machine à cash
 
@@ -47,6 +47,7 @@ Last review: 2026-07-22 (Cash machine closeout + Benchmark + Agent tools).
 |------|--------|
 | Repo GitHub **privé** | **Bloqué** — `gh auth login` puis `gh repo edit --visibility private` |
 | Upstash rate limits | **Action user** — `docs/UPSTASH-SETUP.md` (Vercel env) |
+| Listings green `/presence` | **Action user** — soumettre dossiers prêts (DeFiLlama RWA, RWA.xyz, ClimateTechList) ; pas de badge « Listed on » avant confirmation |
 
 ## P0 — Green cash / DNA / institutionnel
 
@@ -64,7 +65,8 @@ Last review: 2026-07-22 (Cash machine closeout + Benchmark + Agent tools).
 | Funnel + express wizard + care HITL | OK |
 | Coach post-score + mémoire Copilot consentie | OK |
 | Liquidity waitlist | OK — `/liquidity` |
-| Présence marchés green-first | OK — `/presence` + `data/listings/green-markets.ts` · dossiers prêts (pas de faux « Listed on ») |
+| Présence marchés green-first | Page OK — `/presence` + payloads ; **suivants** : outreach Readi / KnowESG |
+| Tunnel conversion trust | OK — compare → `/start` dossier + voie Green/CSRD (max 3 CTAs), claims indicatifs, `/green/compare` next-step |
 
 ## Backlog i18n
 

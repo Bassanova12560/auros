@@ -159,10 +159,16 @@ export function CompareHubContent({ payload }: CompareHubContentProps) {
           </p>
           <p className="mt-3">
             <Link
-              href="/tools/mica-checker"
+              href="/green"
               className="font-mono text-[11px] text-white/40 underline-offset-2 hover:text-white/65 hover:underline"
+              onClick={() =>
+                track("comparator_green_cta", {
+                  source: "compare_hub_banner",
+                  comparator: "compare",
+                })
+              }
             >
-              {copy.micaCheckerLink}
+              {copy.dossierBanner.greenLink}
             </Link>
           </p>
         </div>

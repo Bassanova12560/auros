@@ -69,6 +69,12 @@ export type ComparatorMessages = {
     title: string;
     explore: string;
   };
+  /** Soft next steps on compare surfaces — max 3 CTAs with primary dossier. */
+  nextSteps: {
+    phasesHint: string;
+    green: string;
+    csrd: string;
+  };
   compareHub: {
     tool: string;
     eyebrow: string;
@@ -90,6 +96,7 @@ export type ComparatorMessages = {
       title: string;
       subtitle: string;
       cta: string;
+      greenLink: string;
     };
     /** Strip CTA when on /compare (maps to ComparatorPageCopy.cta shape). */
     dossierCta: {
@@ -181,6 +188,7 @@ export type ComparatorMessages = {
     ecosystem: {
       title: string;
       dossier: string;
+      green: string;
       dashboard: string;
       score: string;
       partners: string;
@@ -230,7 +238,7 @@ export type ComparatorMessages = {
 const FR: ComparatorMessages = {
   languageAria: "Langue",
   nav: {
-    dossierCta: "Préparer mon dossier avec Auros",
+    dossierCta: "Démarrer mon dossier",
     dossierShort: "Mon dossier",
     comparatorsAria: "Comparateurs Auros",
   },
@@ -249,6 +257,12 @@ const FR: ComparatorMessages = {
   crossLinks: {
     title: "Aussi comparé sur AUROS",
     explore: "Explorer le comparateur →",
+  },
+  nextSteps: {
+    phasesHint:
+      "4 parties · ~4 min · indicatif — Actif → Stratégie → Conformité → Récap. Pas un audit.",
+    green: "Voie Green · eau & énergie →",
+    csrd: "Check CSRD indicatif →",
   },
   compareHub: {
     tool: "compare",
@@ -280,14 +294,17 @@ const FR: ComparatorMessages = {
     totalProducts: (n) => `${n} produit${n > 1 ? "s" : ""} unique${n > 1 ? "s" : ""}`,
     dossierBanner: {
       title: "Vous structurez un actif RWA ?",
-      subtitle: "Préparez votre dossier d'admission en quelques minutes — score, data room, conformité.",
-      cta: "Préparer mon dossier",
+      subtitle:
+        "Après le marché : démarrez un dossier indicatif en ~4 min — score, data room plus tard, sans promesse de rendement.",
+      cta: "Démarrer mon dossier",
+      greenLink: "Actif eau / énergie ? Voie Green →",
     },
     dossierCta: {
-      eyebrow: "Auros Dossier",
-      title: "Vous structurez un actif RWA ?",
-      subtitle: "Préparez votre dossier d'admission en quelques minutes.",
-      button: "Préparer mon dossier avec Auros",
+      eyebrow: "Après le marché",
+      title: "Passez du comparateur au dossier",
+      subtitle:
+        "4 parties · ~4 min · indicatif. Vous complétez ensuite avec votre conseil.",
+      button: "Démarrer mon dossier",
     },
     micaCheckerLink: "Test MiCA indicatif →",
     askCopilot: "Poser une question au Copilot →",
@@ -378,7 +395,8 @@ const FR: ComparatorMessages = {
     },
     ecosystem: {
       title: "Écosystème AUROS",
-      dossier: "Préparer un dossier",
+      dossier: "Démarrer un dossier",
+      green: "AUROS Green",
       dashboard: "Mes dossiers",
       score: "Score d'admission",
       partners: "Partenaires & ressources",
@@ -442,10 +460,11 @@ const FR: ComparatorMessages = {
       viewPlatformAria: (platform) => `Voir ${platform}`,
     },
     cta: {
-      eyebrow: "Auros Dossier",
+      eyebrow: "Après le marché",
       title: "Vous tokenisez vos propres actifs ?",
-      subtitle: "Préparez votre dossier RWA en quelques minutes.",
-      button: "Préparer mon dossier avec Auros",
+      subtitle:
+        "4 parties · ~4 min · indicatif — démarrez le dossier, complétez plus tard.",
+      button: "Démarrer mon dossier",
     },
     footerDisclaimer:
       "APY via DeFiLlama, mise à jour horaire. Rendements indicatifs — pas un conseil en investissement. Vérifiez les conditions sur chaque plateforme.",
@@ -490,10 +509,11 @@ const FR: ComparatorMessages = {
       viewPlatformAria: (platform) => `Voir ${platform}`,
     },
     cta: {
-      eyebrow: "Auros Dossier",
+      eyebrow: "Après le marché",
       title: "Vous tokenisez de l'immobilier ?",
-      subtitle: "Préparez votre dossier RWA en quelques minutes.",
-      button: "Préparer mon dossier avec Auros",
+      subtitle:
+        "4 parties · ~4 min · indicatif — démarrez le dossier, complétez plus tard.",
+      button: "Démarrer mon dossier",
     },
     footerDisclaimer:
       "Rendements indicatifs issus des données publiques des plateformes. Pas un conseil en investissement — vérifiez fiscalité, liquidité et régulation.",
@@ -538,10 +558,11 @@ const FR: ComparatorMessages = {
       viewPlatformAria: (platform) => `Voir ${platform}`,
     },
     cta: {
-      eyebrow: "Auros Dossier",
+      eyebrow: "Après le marché",
       title: "Vous tokenisez des obligations ?",
-      subtitle: "Préparez votre dossier RWA en quelques minutes.",
-      button: "Préparer mon dossier avec Auros",
+      subtitle:
+        "4 parties · ~4 min · indicatif — démarrez le dossier, complétez plus tard.",
+      button: "Démarrer mon dossier",
     },
     footerDisclaimer:
       "APY via DeFiLlama et données publiques, mise à jour horaire. Rendements indicatifs — pas un conseil en investissement.",
@@ -585,10 +606,11 @@ const FR: ComparatorMessages = {
       viewPlatformAria: (platform) => `Voir ${platform}`,
     },
     cta: {
-      eyebrow: "Auros Dossier",
+      eyebrow: "Après le marché",
       title: "Vous tokenisez des matières premières ?",
-      subtitle: "Préparez votre dossier RWA en quelques minutes.",
-      button: "Préparer mon dossier avec Auros",
+      subtitle:
+        "4 parties · ~4 min · indicatif — démarrez le dossier, complétez plus tard.",
+      button: "Démarrer mon dossier",
     },
     footerDisclaimer:
       "APY via DeFiLlama et données publiques. Rendements indicatifs — pas un conseil en investissement.",
@@ -633,10 +655,11 @@ const FR: ComparatorMessages = {
       viewPlatformAria: (platform) => `Voir ${platform}`,
     },
     cta: {
-      eyebrow: "Auros Dossier",
+      eyebrow: "Après le marché",
       title: "Vous structurez du crédit privé ?",
-      subtitle: "Préparez votre dossier RWA en quelques minutes.",
-      button: "Préparer mon dossier avec Auros",
+      subtitle:
+        "4 parties · ~4 min · indicatif — démarrez le dossier, complétez plus tard.",
+      button: "Démarrer mon dossier",
     },
     footerDisclaimer:
       "APY via DeFiLlama, mise à jour horaire. Crédit privé — risque élevé, pas un conseil en investissement.",
@@ -659,7 +682,7 @@ const FR: ComparatorMessages = {
 const EN: ComparatorMessages = {
   languageAria: "Language",
   nav: {
-    dossierCta: "Prepare my dossier with Auros",
+    dossierCta: "Start my dossier",
     dossierShort: "My dossier",
     comparatorsAria: "Auros comparators",
   },
@@ -678,6 +701,12 @@ const EN: ComparatorMessages = {
   crossLinks: {
     title: "Also compared on AUROS",
     explore: "Explore comparator →",
+  },
+  nextSteps: {
+    phasesHint:
+      "4 parts · ~4 min · indicative — Asset → Strategy → Compliance → Recap. Not an audit.",
+    green: "Green path · water & energy →",
+    csrd: "Indicative CSRD check →",
   },
   compareHub: {
     tool: "compare",
@@ -709,14 +738,17 @@ const EN: ComparatorMessages = {
     totalProducts: (n) => `${n} unique product${n === 1 ? "" : "s"}`,
     dossierBanner: {
       title: "Structuring an RWA asset?",
-      subtitle: "Prepare your admission dossier in minutes — score, data room, compliance.",
-      cta: "Prepare my dossier",
+      subtitle:
+        "After the market: start an indicative dossier in ~4 min — score now, data room later, no yield promise.",
+      cta: "Start my dossier",
+      greenLink: "Water / energy asset? Green path →",
     },
     dossierCta: {
-      eyebrow: "Auros Dossier",
-      title: "Structuring an RWA asset?",
-      subtitle: "Prepare your admission dossier in minutes.",
-      button: "Prepare my dossier with Auros",
+      eyebrow: "After the market",
+      title: "From comparator to dossier",
+      subtitle:
+        "4 parts · ~4 min · indicative. You complete later with your advisor.",
+      button: "Start my dossier",
     },
     micaCheckerLink: "Indicative MiCA check →",
     askCopilot: "Ask Copilot a question →",
@@ -807,7 +839,8 @@ const EN: ComparatorMessages = {
     },
     ecosystem: {
       title: "AUROS ecosystem",
-      dossier: "Prepare a dossier",
+      dossier: "Start a dossier",
+      green: "AUROS Green",
       dashboard: "My dossiers",
       score: "Admission score",
       partners: "Partners & resources",
@@ -871,10 +904,11 @@ const EN: ComparatorMessages = {
       viewPlatformAria: (platform) => `View ${platform}`,
     },
     cta: {
-      eyebrow: "Auros Dossier",
+      eyebrow: "After the market",
       title: "Tokenizing your own assets?",
-      subtitle: "Prepare your RWA dossier in minutes.",
-      button: "Prepare my dossier with Auros",
+      subtitle:
+        "4 parts · ~4 min · indicative — start the dossier, complete later.",
+      button: "Start my dossier",
     },
     footerDisclaimer:
       "APY via DeFiLlama, hourly updates. Indicative yields — not investment advice. Check terms on each platform.",
@@ -919,10 +953,11 @@ const EN: ComparatorMessages = {
       viewPlatformAria: (platform) => `View ${platform}`,
     },
     cta: {
-      eyebrow: "Auros Dossier",
+      eyebrow: "After the market",
       title: "Tokenizing real estate?",
-      subtitle: "Prepare your RWA dossier in minutes.",
-      button: "Prepare my dossier with Auros",
+      subtitle:
+        "4 parts · ~4 min · indicative — start the dossier, complete later.",
+      button: "Start my dossier",
     },
     footerDisclaimer:
       "Indicative yields from public platform data. Not investment advice — check tax, liquidity and regulation.",
@@ -967,10 +1002,11 @@ const EN: ComparatorMessages = {
       viewPlatformAria: (platform) => `View ${platform}`,
     },
     cta: {
-      eyebrow: "Auros Dossier",
+      eyebrow: "After the market",
       title: "Tokenizing bonds?",
-      subtitle: "Prepare your RWA dossier in minutes.",
-      button: "Prepare my dossier with Auros",
+      subtitle:
+        "4 parts · ~4 min · indicative — start the dossier, complete later.",
+      button: "Start my dossier",
     },
     footerDisclaimer:
       "APY via DeFiLlama and public sources, hourly updates. Indicative yields — not investment advice.",
@@ -1014,10 +1050,11 @@ const EN: ComparatorMessages = {
       viewPlatformAria: (platform) => `View ${platform}`,
     },
     cta: {
-      eyebrow: "Auros Dossier",
+      eyebrow: "After the market",
       title: "Tokenizing commodities?",
-      subtitle: "Prepare your RWA dossier in minutes.",
-      button: "Prepare my dossier with Auros",
+      subtitle:
+        "4 parts · ~4 min · indicative — start the dossier, complete later.",
+      button: "Start my dossier",
     },
     footerDisclaimer:
       "APY via DeFiLlama and public sources. Indicative yields — not investment advice.",
@@ -1062,10 +1099,11 @@ const EN: ComparatorMessages = {
       viewPlatformAria: (platform) => `View ${platform}`,
     },
     cta: {
-      eyebrow: "Auros Dossier",
+      eyebrow: "After the market",
       title: "Structuring private credit?",
-      subtitle: "Prepare your RWA dossier in minutes.",
-      button: "Prepare my dossier with Auros",
+      subtitle:
+        "4 parts · ~4 min · indicative — start the dossier, complete later.",
+      button: "Start my dossier",
     },
     footerDisclaimer:
       "APY via DeFiLlama, hourly updates. Private credit — high risk, not investment advice.",
@@ -1088,7 +1126,7 @@ const EN: ComparatorMessages = {
 const ES: ComparatorMessages = {
   languageAria: "Idioma",
   nav: {
-    dossierCta: "Preparar mi expediente con Auros",
+    dossierCta: "Empezar mi expediente",
     dossierShort: "Mi expediente",
     comparatorsAria: "Comparadores Auros",
   },
@@ -1107,6 +1145,12 @@ const ES: ComparatorMessages = {
   crossLinks: {
     title: "También comparado en AUROS",
     explore: "Explorar comparador →",
+  },
+  nextSteps: {
+    phasesHint:
+      "4 partes · ~4 min · indicativo — Activo → Estrategia → Cumplimiento → Resumen. No es una auditoría.",
+    green: "Vía Green · agua y energía →",
+    csrd: "Check CSRD indicativo →",
   },
   compareHub: {
     tool: "compare",
@@ -1138,14 +1182,17 @@ const ES: ComparatorMessages = {
     totalProducts: (n) => `${n} producto${n === 1 ? "" : "s"} único${n === 1 ? "" : "s"}`,
     dossierBanner: {
       title: "¿Estructura un activo RWA?",
-      subtitle: "Prepare su expediente de admisión en minutos — score, data room, cumplimiento.",
-      cta: "Preparar mi expediente",
+      subtitle:
+        "Tras el mercado: inicie un expediente indicativo en ~4 min — score ahora, data room después, sin promesa de rendimiento.",
+      cta: "Empezar mi expediente",
+      greenLink: "¿Activo agua / energía? Vía Green →",
     },
     dossierCta: {
-      eyebrow: "Auros Expediente",
-      title: "¿Estructura un activo RWA?",
-      subtitle: "Prepare su expediente de admisión en minutos.",
-      button: "Preparar mi expediente con Auros",
+      eyebrow: "Tras el mercado",
+      title: "Del comparador al expediente",
+      subtitle:
+        "4 partes · ~4 min · indicativo. Completa después con su asesor.",
+      button: "Empezar mi expediente",
     },
     micaCheckerLink: "Test MiCA indicativo →",
     askCopilot: "Hacer una pregunta al Copilot →",
@@ -1236,7 +1283,8 @@ const ES: ComparatorMessages = {
     },
     ecosystem: {
       title: "Ecosistema AUROS",
-      dossier: "Preparar expediente",
+      dossier: "Empezar expediente",
+      green: "AUROS Green",
       dashboard: "Mis expedientes",
       score: "Score de admisión",
       partners: "Socios y recursos",
@@ -1300,10 +1348,11 @@ const ES: ComparatorMessages = {
       viewPlatformAria: (platform) => `Ver ${platform}`,
     },
     cta: {
-      eyebrow: "Auros Expediente",
+      eyebrow: "Tras el mercado",
       title: "¿Tokeniza sus propios activos?",
-      subtitle: "Prepare su expediente RWA en minutos.",
-      button: "Preparar mi expediente con Auros",
+      subtitle:
+        "4 partes · ~4 min · indicativo — empiece el expediente, complete después.",
+      button: "Empezar mi expediente",
     },
     footerDisclaimer:
       "APY vía DeFiLlama, actualización horaria. Rendimientos indicativos — no es asesoramiento financiero. Verifique condiciones en cada plataforma.",
@@ -1348,10 +1397,11 @@ const ES: ComparatorMessages = {
       viewPlatformAria: (platform) => `Ver ${platform}`,
     },
     cta: {
-      eyebrow: "Auros Expediente",
+      eyebrow: "Tras el mercado",
       title: "¿Tokeniza inmuebles?",
-      subtitle: "Prepare su expediente RWA en minutos.",
-      button: "Preparar mi expediente con Auros",
+      subtitle:
+        "4 partes · ~4 min · indicativo — empiece el expediente, complete después.",
+      button: "Empezar mi expediente",
     },
     footerDisclaimer:
       "Rendimientos indicativos de datos públicos de plataformas. No es asesoramiento financiero — verifique fiscalidad, liquidez y regulación.",
@@ -1396,10 +1446,11 @@ const ES: ComparatorMessages = {
       viewPlatformAria: (platform) => `Ver ${platform}`,
     },
     cta: {
-      eyebrow: "Auros Expediente",
+      eyebrow: "Tras el mercado",
       title: "¿Tokeniza bonos?",
-      subtitle: "Prepare su expediente RWA en minutos.",
-      button: "Preparar mi expediente con Auros",
+      subtitle:
+        "4 partes · ~4 min · indicativo — empiece el expediente, complete después.",
+      button: "Empezar mi expediente",
     },
     footerDisclaimer:
       "APY vía DeFiLlama y fuentes públicas, actualización horaria. Rendimientos indicativos — no es asesoramiento financiero.",
@@ -1443,10 +1494,11 @@ const ES: ComparatorMessages = {
       viewPlatformAria: (platform) => `Ver ${platform}`,
     },
     cta: {
-      eyebrow: "Auros Expediente",
+      eyebrow: "Tras el mercado",
       title: "¿Tokeniza materias primas?",
-      subtitle: "Prepare su expediente RWA en minutos.",
-      button: "Preparar mi expediente con Auros",
+      subtitle:
+        "4 partes · ~4 min · indicativo — empiece el expediente, complete después.",
+      button: "Empezar mi expediente",
     },
     footerDisclaimer:
       "APY vía DeFiLlama y fuentes públicas. Rendimientos indicativos — no es asesoramiento financiero.",
@@ -1491,10 +1543,11 @@ const ES: ComparatorMessages = {
       viewPlatformAria: (platform) => `Ver ${platform}`,
     },
     cta: {
-      eyebrow: "Auros Expediente",
+      eyebrow: "Tras el mercado",
       title: "¿Estructura crédito privado?",
-      subtitle: "Prepare su expediente RWA en minutos.",
-      button: "Preparar mi expediente con Auros",
+      subtitle:
+        "4 partes · ~4 min · indicativo — empiece el expediente, complete después.",
+      button: "Empezar mi expediente",
     },
     footerDisclaimer:
       "APY vía DeFiLlama, actualización horaria. Crédito privado — alto riesgo, no es asesoramiento financiero.",

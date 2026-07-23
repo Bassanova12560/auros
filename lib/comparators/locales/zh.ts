@@ -19,15 +19,15 @@ const pageTable = {
 };
 
 const dossierCtaBase = {
-  eyebrow: "Auros 档案",
-  subtitle: "几分钟内准备您的 RWA 档案。",
-  button: "用 Auros 准备我的档案",
+  eyebrow: "看完市场之后",
+  subtitle: "4 个部分 · 约 4 分钟 · 示意 — 先启动档案，稍后补全。",
+  button: "开始我的档案",
 };
 
 export const ZH: ComparatorMessages = {
   languageAria: "语言",
   nav: {
-    dossierCta: "用 Auros 准备我的档案",
+    dossierCta: "开始我的档案",
     dossierShort: "我的档案",
     comparatorsAria: "Auros 比较器",
   },
@@ -46,6 +46,12 @@ export const ZH: ComparatorMessages = {
   crossLinks: {
     title: "AUROS 上也在比较",
     explore: "探索比较器 →",
+  },
+  nextSteps: {
+    phasesHint:
+      "4 个部分 · 约 4 分钟 · 示意 — 资产 → 策略 → 合规 → 汇总。不是审计。",
+    green: "Green 路径 · 水与能源 →",
+    csrd: "示意性 CSRD 检测 →",
   },
   compareHub: {
     tool: "compare",
@@ -76,14 +82,16 @@ export const ZH: ComparatorMessages = {
     totalProducts: (n) => `${n} 个独立产品`,
     dossierBanner: {
       title: "正在结构化 RWA 资产？",
-      subtitle: "几分钟内准备准入档案 — 评分、资料室、合规。",
-      cta: "准备我的档案",
+      subtitle:
+        "看完市场后：约 4 分钟启动示意档案 — 先评分，资料室稍后，无收益承诺。",
+      cta: "开始我的档案",
+      greenLink: "水 / 能源资产？Green 路径 →",
     },
     dossierCta: {
-      eyebrow: "Auros 档案",
-      title: "正在结构化 RWA 资产？",
-      subtitle: "几分钟内准备您的准入档案。",
-      button: "用 Auros 准备我的档案",
+      eyebrow: "看完市场之后",
+      title: "从比较器到档案",
+      subtitle: "4 个部分 · 约 4 分钟 · 示意。之后可与顾问一起补全。",
+      button: "开始我的档案",
     },
     micaCheckerLink: "示意性 MiCA 检测 →",
     askCopilot: "向 Copilot 提问 →",
@@ -171,7 +179,8 @@ export const ZH: ComparatorMessages = {
     },
     ecosystem: {
       title: "AUROS 生态",
-      dossier: "准备档案",
+      dossier: "开始档案",
+      green: "AUROS Green",
       dashboard: "我的档案",
       score: "准入评分",
       partners: "合作伙伴与资源",

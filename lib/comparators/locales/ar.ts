@@ -20,15 +20,16 @@ const pageTable = {
 };
 
 const dossierCtaBase = {
-  eyebrow: "ملف Auros",
-  subtitle: "جهّز ملف RWA الخاص بك في دقائق.",
-  button: "إعداد ملفي مع Auros",
+  eyebrow: "بعد السوق",
+  subtitle:
+    "4 أجزاء · ~4 دقائق · إرشادي — ابدأ الملف، وأكمل لاحقاً.",
+  button: "ابدأ ملفي",
 };
 
 export const AR: ComparatorMessages = {
   languageAria: "اللغة",
   nav: {
-    dossierCta: "إعداد ملفي مع Auros",
+    dossierCta: "ابدأ ملفي",
     dossierShort: "ملفي",
     comparatorsAria: "مقارنات Auros",
   },
@@ -47,6 +48,12 @@ export const AR: ComparatorMessages = {
   crossLinks: {
     title: "يُقارَن أيضاً على AUROS",
     explore: "استكشاف المقارن ←",
+  },
+  nextSteps: {
+    phasesHint:
+      "4 أجزاء · ~4 دقائق · إرشادي — الأصل → الاستراتيجية → الامتثال → الملخص. ليس تدقيقاً.",
+    green: "مسار Green · ماء وطاقة ←",
+    csrd: "فحص CSRD إرشادي ←",
   },
   compareHub: {
     tool: "compare",
@@ -81,14 +88,16 @@ export const AR: ComparatorMessages = {
     dossierBanner: {
       title: "هل تُهيكل أصلاً من نوع RWA؟",
       subtitle:
-        "جهّز ملف القبول في دقائق — درجة، غرفة بيانات، امتثال.",
-      cta: "إعداد ملفي",
+        "بعد السوق: ابدأ ملفاً إرشادياً خلال ~4 دقائق — درجة الآن، غرفة بيانات لاحقاً، بلا وعد بعائد.",
+      cta: "ابدأ ملفي",
+      greenLink: "أصل ماء / طاقة؟ مسار Green ←",
     },
     dossierCta: {
-      eyebrow: "ملف Auros",
-      title: "هل تُهيكل أصلاً من نوع RWA؟",
-      subtitle: "جهّز ملف القبول في دقائق.",
-      button: "إعداد ملفي مع Auros",
+      eyebrow: "بعد السوق",
+      title: "من المقارن إلى الملف",
+      subtitle:
+        "4 أجزاء · ~4 دقائق · إرشادي. تُكمل لاحقاً مع مستشارك.",
+      button: "ابدأ ملفي",
     },
     micaCheckerLink: "فحص MiCA إرشادي ←",
     askCopilot: "اطرح سؤالاً على Copilot ←",
@@ -180,7 +189,8 @@ export const AR: ComparatorMessages = {
     },
     ecosystem: {
       title: "منظومة AUROS",
-      dossier: "إعداد ملف",
+      dossier: "ابدأ ملفاً",
+      green: "AUROS Green",
       dashboard: "ملفاتي",
       score: "درجة القبول",
       partners: "الشركاء والموارد",

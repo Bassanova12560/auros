@@ -10,8 +10,9 @@ export const COMPARATOR_ROUTES = {
   art: "/art-collectibles",
 } as const;
 
+/** Post-market conversion — chooser (~4 min) before full wizard. */
 export const DOSSIER_CTA = {
-  href: "/wizard",
+  href: "/start",
 } as const;
 
 export const STABLECOINS_CACHE_KEY = "auros-stablecoin-rows";

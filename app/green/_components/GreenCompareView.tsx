@@ -22,6 +22,8 @@ import {
 
   GREEN_REGISTRY_ROUTE,
 
+  GREEN_CSRD_CHECK_ROUTE,
+
   getGreenMessages,
 
   greenVerifyPath,
@@ -98,6 +100,8 @@ import {
   GreenSectionTitle,
 
   GreenTierBadge,
+
+  greenBtnClass,
 
 } from "./green-ui";
 
@@ -1268,6 +1272,35 @@ export function GreenCompareView({
       </div>
 
 
+
+            <section className="mt-10 rounded-2xl border border-emerald-500/25 bg-emerald-500/[0.04] p-5 md:flex md:items-center md:justify-between md:gap-6">
+        <div>
+          <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-emerald-500/80">
+            {c.nextStep.eyebrow}
+          </p>
+          <p className="mt-2 font-display text-base text-white">{c.nextStep.title}</p>
+          <p className="mt-1 max-w-xl text-sm text-white/55">{c.nextStep.subtitle}</p>
+        </div>
+        <div className="mt-4 flex shrink-0 flex-col items-stretch gap-2 sm:items-end md:mt-0">
+          <Link href="/start" className={greenBtnClass}>
+            {c.nextStep.dossierCta}
+          </Link>
+          <div className="flex flex-wrap gap-x-4 gap-y-1">
+            <Link
+              href={GREEN_CSRD_CHECK_ROUTE}
+              className="font-mono text-[11px] uppercase tracking-wider text-emerald-500 hover:text-emerald-400"
+            >
+              {c.nextStep.csrdCta}
+            </Link>
+            <Link
+              href={GREEN_ROUTE}
+              className="font-mono text-[11px] uppercase tracking-wider text-emerald-500 hover:text-emerald-400"
+            >
+              {c.nextStep.greenHubCta}
+            </Link>
+          </div>
+        </div>
+      </section>
 
       <GreenDisclaimer>{m.disclaimer}</GreenDisclaimer>
 

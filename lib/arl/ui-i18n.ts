@@ -67,6 +67,7 @@ export type ArlUiCopy = {
     afterProducer: { primary: NextLink; secondary: NextLink[]; neighbors: NextLink[] };
     afterTrade: { primary: NextLink; secondary: NextLink[]; neighbors: NextLink[] };
     afterAgent: { primary: NextLink; secondary: NextLink[]; neighbors: NextLink[] };
+    afterCompare: { primary: NextLink; secondary: NextLink[]; neighbors: NextLink[] };
     company: { primary: NextLink; secondary: NextLink[]; neighbors: NextLink[] };
     vision: { primary: NextLink; secondary: NextLink[]; neighbors: NextLink[] };
   };
@@ -197,6 +198,14 @@ const FR: ArlUiCopy = {
         { href: "/market", label: "Market" },
         { href: "/investors", label: "Investisseurs" },
       ],
+    },
+    afterCompare: {
+      primary: { href: "/start", label: "Démarrer mon dossier (~4 min)" },
+      secondary: [
+        { href: "/green", label: "Voie Green", hint: "eau & énergie" },
+        { href: "/green/csrd-check", label: "Check CSRD" },
+      ],
+      neighbors: [],
     },
     company: {
       primary: { href: "/lab", label: "Lancer la boucle lab" },
@@ -352,6 +361,14 @@ const EN: ArlUiCopy = {
         { href: "/market", label: "Market" },
         { href: "/investors", label: "Investors" },
       ],
+    },
+    afterCompare: {
+      primary: { href: "/start", label: "Start my dossier (~4 min)" },
+      secondary: [
+        { href: "/green", label: "Green path", hint: "water & energy" },
+        { href: "/green/csrd-check", label: "CSRD check" },
+      ],
+      neighbors: [],
     },
     company: {
       primary: { href: "/lab", label: "Run the lab loop" },
@@ -509,6 +526,14 @@ const ES: ArlUiCopy = {
         { href: "/investors", label: "Inversores" },
       ],
     },
+    afterCompare: {
+      primary: { href: "/start", label: "Empezar mi expediente (~4 min)" },
+      secondary: [
+        { href: "/green", label: "Vía Green", hint: "agua y energía" },
+        { href: "/green/csrd-check", label: "Check CSRD" },
+      ],
+      neighbors: [],
+    },
     company: {
       primary: { href: "/lab", label: "Lanzar el loop lab" },
       secondary: [
@@ -665,6 +690,14 @@ const AR: ArlUiCopy = {
         { href: "/investors", label: "المستثمرون" },
       ],
     },
+    afterCompare: {
+      primary: { href: "/start", label: "ابدأ ملفي (~4 دقائق)" },
+      secondary: [
+        { href: "/green", label: "مسار Green", hint: "ماء وطاقة" },
+        { href: "/green/csrd-check", label: "فحص CSRD" },
+      ],
+      neighbors: [],
+    },
     company: {
       primary: { href: "/lab", label: "تشغيل حلقة Lab" },
       secondary: [
@@ -819,6 +852,14 @@ const ZH: ArlUiCopy = {
         { href: "/market", label: "Market" },
         { href: "/investors", label: "投资者" },
       ],
+    },
+    afterCompare: {
+      primary: { href: "/start", label: "开始我的档案（约 4 分钟）" },
+      secondary: [
+        { href: "/green", label: "Green 路径", hint: "水与能源" },
+        { href: "/green/csrd-check", label: "CSRD 检测" },
+      ],
+      neighbors: [],
     },
     company: {
       primary: { href: "/lab", label: "运行 Lab 闭环" },

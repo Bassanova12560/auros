@@ -56,7 +56,7 @@ export function ComparatorFooter() {
           ) : null}
           <span className="hidden h-3 w-px bg-white/10 sm:block" aria-hidden />
           <Link
-            href="/wizard"
+            href="/start"
             className="font-mono text-[10px] text-white/40 transition hover:text-white"
           >
             {messages.footer.dossier}
@@ -80,10 +80,16 @@ export function ComparatorFooter() {
             </p>
             <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2">
               <Link
-                href="/wizard"
+                href="/start"
                 className="font-mono text-[10px] text-white/40 transition hover:text-white"
               >
                 {messages.compareHub.ecosystem.dossier}
+              </Link>
+              <Link
+                href="/green"
+                className="font-mono text-[10px] text-white/40 transition hover:text-white"
+              >
+                {messages.compareHub.ecosystem.green}
               </Link>
               <Link
                 href="/dashboard"
@@ -102,12 +108,6 @@ export function ComparatorFooter() {
                 className="font-mono text-[10px] text-white/40 transition hover:text-white"
               >
                 {messages.compareHub.ecosystem.jurisdictions}
-              </Link>
-              <Link
-                href="/partners"
-                className="font-mono text-[10px] text-white/40 transition hover:text-white"
-              >
-                {messages.compareHub.ecosystem.partners}
               </Link>
             </div>
           </div>
