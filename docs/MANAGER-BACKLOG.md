@@ -1,7 +1,9 @@
 # Manager backlog — AUROS
 
+> **INTERNAL** — Living priorities for operators. Prefer **private** GitHub (`docs/REPO-VISIBILITY.md`). Do not paste secret names, cron maps, or ops URLs into public changelogs.
+
 Living priorities. Manager owns this; update when shipping or discovering debt.
-Last review: 2026-07-30 (Academy hub 3 schools MVP · GO secrets).
+Last review: 2026-07-30 (GitHub vitrine harden · Academy hub · GO secrets).
 
 ## P0 — Academy hub (MVP 2026-07-30)
 
@@ -17,11 +19,11 @@ Last review: 2026-07-30 (Academy hub 3 schools MVP · GO secrets).
 
 | Item | Statut |
 |------|--------|
-| `ATTEST_SIGNING_KEY` prod | **OK** — présent Vercel Production |
-| `CRON_SECRET` prod | **OK** — présent Vercel Production |
-| Resend (`RESEND_API_KEY` / FROM / INTERNAL) | **OK** — présent Vercel Production |
-| Lab soft cookie (`ARL_LAB_SIGNING_KEY`) | **OK 2026-07-30** — clé **dédiée** générée + set Vercel Production (sensitive) · redeploy `getauros.com` |
-| Ops gate (`OPS_SESSION_SECRET`) | **OK 2026-07-30** — clé **dédiée** générée + set Vercel Production (sensitive) · redeploy ; **Action user** : tester `/ops/login` → cookie (smoke GET a renvoyé 404 — vérifier chemin / obscurité volontaire) |
+| Attest signing key prod | **OK** — présent Vercel Production |
+| Cron auth secret prod | **OK** — présent Vercel Production |
+| Resend (API / FROM / INTERNAL) | **OK** — présent Vercel Production |
+| Lab soft cookie signing | **OK 2026-07-30** — clé dédiée Vercel Production · redeploy `getauros.com` |
+| Ops session gate | **OK 2026-07-30** — clé dédiée Vercel Production · redeploy ; smoke manuel login ops |
 
 ## P0 — Toll / machine à cash
 
@@ -57,13 +59,14 @@ Last review: 2026-07-30 (Academy hub 3 schools MVP · GO secrets).
 
 | Item | Statut |
 |------|--------|
-| Repo GitHub **privé** | **Bloqué** — `gh` non authentifié (2026-07-30) : `gh auth login` puis `gh repo edit Bassanova12560/auros --visibility private` |
-| Upstash rate limits + compare alert store | **Bloqué user** — `UPSTASH_REDIS_REST_URL` + `UPSTASH_REDIS_REST_TOKEN` **absents** Vercel Production **et** `.env.local` ; `infra-status` → `upstash.configured: false` ; follow `docs/UPSTASH-SETUP.md` puis redeploy |
-| Hobby cron blocker | **Mitigé 2026-07-30** — `compare-apy-alerts` passé de `*/6` → `0 5 * * *` (1×/jour) pour déploiements Hobby ; Pro pour cadence 6h |
-| Barrel `node:fs` client break | **Fix 2026-07-30** — retiré `alerts-apy-moves` du barrel `@/lib/comparators` (bloquait Turbopack builds) |
-| Prod redeploy secrets | **OK 2026-07-30** — `vercel redeploy` → aliased https://getauros.com ; fresh builds après fix barrel |
-| Listings green `/presence` | Page + packs **prêts** (`data/listings/generated/*`) — **Action user** : soumettre (DeFiLlama RWA, RWA.xyz, ClimateTechList, RapidAPI) ; pas de badge « Listed on » avant confirmation ; pas d’envoi auto depuis agent |
-| Sponsored compare slots | **Action user** — config vide volontaire ; remplir seulement avec **vrais deals** (pas de fake partners) |
+| Repo GitHub **privé** | **P0 action user** — API montrait **public** (2026-07-30) ; `gh` non auth ici → `gh auth login` puis `gh repo edit Bassanova12560/auros --visibility private` · sinon Settings → Danger Zone · voir `docs/REPO-VISIBILITY.md` (recommandation : privé + vitrine LinkedIn / getauros.com) |
+| Upstash rate limits + compare alert store | **Bloqué user** — REST URL + token absents Vercel Production **et** `.env.local` ; follow `docs/UPSTASH-SETUP.md` puis redeploy |
+| Hobby cron blocker | **Mitigé 2026-07-30** — compare APY alerts cadence réduite pour Hobby ; Pro pour cadence plus fine |
+| Barrel `node:fs` client break | **Fix 2026-07-30** — retiré `alerts-apy-moves` du barrel `@/lib/comparators` |
+| Prod redeploy secrets | **OK 2026-07-30** — redeploy aliased https://getauros.com |
+| GitHub showcase harden | **OK 2026-07-30** — README vitrine · SECURITY · sanitize docs ops · `.gitignore` renforcé |
+| Listings green `/presence` | Page + packs **prêts** — **Action user** : soumettre listings ; pas de badge « Listed on » avant confirmation |
+| Sponsored compare slots | **Action user** — config vide volontaire ; vrais deals seulement |
 
 ## P0 — Green cash / DNA / institutionnel
 

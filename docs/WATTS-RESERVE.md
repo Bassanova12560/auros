@@ -46,15 +46,5 @@
 
 ## Example (demo)
 
-```bash
-curl -X POST https://getauros.com/api/v1/watts/secondary/demo \
-  -H "Content-Type: application/json" \
-  -d '{
-    "indicative_price_eur": 1200,
-    "energy_kwh": 100,
-    "zone": { "country": "FR" },
-    "firmness": "firm",
-    "label": "Bundle demo",
-    "compare_ref_id": "example-product-id"
-  }'
-```
+Use the public Green / Chargeflow UI or authenticated lab tools for secondary demo flows.  
+Do **not** publish production curl recipes with live payload shapes in changelogs or external docs.

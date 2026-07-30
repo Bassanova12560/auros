@@ -1,129 +1,56 @@
-﻿# AUROS Green — sans GitHub ni DATABASE_URL
+﻿# AUROS Green — ops without GitHub
 
-Vous n’avez **pas besoin de GitHub** pour que le site et les opérations Green tournent en production. Une seule commande locale après modification du code, plus des **crons Vercel** pour tout le reste.
+> **INTERNAL / OPERATOR DOC** — Do not republish cron schedules, admin paths, or auth header recipes in public channels, changelogs, or LinkedIn. Prefer private repo visibility for this file.
 
-Prérequis Vercel (une fois) : variable d’environnement **`CRON_SECRET`** sur le projet — Vercel envoie alors `Authorization: Bearer <CRON_SECRET>` sur chaque cron.
+You do **not** need GitHub for the site and Green operations to run in production. Deploy with Vercel CLI from a trusted machine; keep secrets only in Vercel / `.env.local`.
 
-## Automatisation complète
-
-### Ce qui tourne tout seul (Vercel Cron)
-
-| Horaire (UTC) | Route | Rôle |
-|---------------|-------|------|
-| Tous les jours 06:30 | `/api/cron/green-health` | Smoke HTTP des pages Green clés (logs + 503 si KO) |
-| Tous les jours 10:00 | `/api/cron/green-label-reminders` | Relances dossiers label incomplets |
-| Lundi 07:00 | `/api/cron/green-label-export-weekly` | Export CSV hebdo vers ops (e-mail) |
-| Dimanche 04:00 | `/api/admin/bootstrap-green-market?seedOnly=1` | Re-seed marché (sans migrations SQL lourdes) |
-
-Autres crons du projet (hors Green pur) : jurisdiction 08:00, academy 09:00 — voir `vercel.json`.
-
-Aucune action manuelle pour : relances label, export hebdo, seed hebdo marché, surveillance pages Green.
-
-### Après chaque changement de code (une commande)
+## After each code change
 
 ```powershell
 cd C:\Users\adrie\auros
 npm run green:deploy
 ```
 
-Enchaîne : `test:green` → `build` → `vercel --prod --yes` → `green:sync` (seed Supabase via clés `.env.local`).
+Runs: `test:green` → `build` → `vercel --prod` → `green:sync` (Supabase seed via local env).
 
-Équivalent tout-en-un avec contrôle santé :
+All-in-one with health check:
 
 ```powershell
 .\scripts\green-autopilot.ps1
 ```
 
-Options :
+Options: `-HealthOnly` · `-SyncOnly` · `-SkipDeploy`
 
-- `-HealthOnly` — `npm run green:health` seulement  
-- `-SyncOnly` — seed marché seulement  
-- `-SkipDeploy` — sync + health sans redeploy  
+Linux/macOS: `./scripts/green-autopilot.sh`
 
-Sous Linux/macOS :
-
-```bash
-chmod +x scripts/green-autopilot.sh
-./scripts/green-autopilot.sh
-```
-
-### Vérifier la prod à la main
+## Verify production (public pages)
 
 ```powershell
 npm run green:health
 ```
 
-Teste : `/green/register`, `/green/market`, `/green/label`, `/green/compare`, `/green/rtms-assistant` (URL depuis `AUROS_PROD_URL`, `NEXT_PUBLIC_SITE_URL` ou prod par défaut).
+Smoke-tests public Green pages (URL from `AUROS_PROD_URL`, `NEXT_PUBLIC_SITE_URL`, or prod default). Browser check: [https://getauros.com/green/market](https://getauros.com/green/market).
 
-### Planifier en local (sans GitHub)
-
-**Windows — Planificateur de tâches**
-
-1. Action : `powershell.exe -NoProfile -ExecutionPolicy Bypass -File C:\Users\adrie\auros\scripts\green-autopilot.ps1 -SkipDeploy`  
-2. Déclencheur : hebdomadaire (ex. dimanche 05:00) si vous voulez un sync local en plus du cron Vercel.  
-3. Répertoire de départ : `C:\Users\adrie\auros`  
-4. Compte avec accès à `.env.local` (variables Supabase + optionnel `CRON_SECRET`).
-
-**Linux/macOS — cron**
-
-```cron
-0 5 * * 0 cd /chemin/vers/auros && ./scripts/green-autopilot.sh --skip-deploy >> /tmp/green-autopilot.log 2>&1
-```
-
-Pour publier du code depuis une machine de build : remplacez `--skip-deploy` par l’appel complet (sans flag).
-
-## Ce qui a été fait pour vous (référence)
-
-- `npm run green:sync` — synchronise le marché vert via Supabase (pas besoin de `DATABASE_URL` si le script réussit).
-- Crons prod avec `CRON_SECRET` (Bearer automatique côté Vercel).
-- `npm run green:health` — smoke pages publiques.
-
-## Pour mettre à jour le site (code déployé)
-
-```powershell
-npm run green:deploy
-```
-
-ou, sans tests ni seed :
-
-```powershell
-npx vercel --prod --yes
-```
-
-Aucun compte GitHub : Vercel CLI + session locale.
-
-## Pour re-seeder le marché vert (données)
+## Re-seed green market data
 
 ```powershell
 npm run green:sync
 ```
 
-Prérequis : `NEXT_PUBLIC_SUPABASE_URL` et `SUPABASE_SECRET_KEY` dans `.env.local`.
+Requires Supabase URL + service role in `.env.local`. Never paste secrets into chat or tickets.
 
-Message attendu : *« No SQL credentials — seeding via service role »* puis *« Green marketplace seed complete »*.
+## Scheduled work
 
-Optionnel (prod) : bootstrap HTTP via auth ops interne — **ne pas** coller de secrets dans le chat ni documenter les URLs d’admin publiquement.
+Production scheduling and operator bootstrap use **authenticated internal tooling** configured in the host (Vercel). Do **not** document route maps, Bearer recipes, or secret names in public READMEs.
 
-## GitHub (optionnel)
+## GitHub (optional)
 
-- Workflow `.github/workflows/green.yml` : CI + bootstrap si vous utilisez GitHub plus tard.
-- **Non requis** pour prod, crons, seed ni deploy.
+CI workflows under `.github/workflows/` are optional. Not required for prod deploy or seed.
 
 ## DATABASE_URL
 
-- **Optionnel** si `npm run green:sync` fonctionne avec URL Supabase + clé secrète.
-- Migrations lourdes : déjà en prod ; cron hebdo `?seedOnly=1` ne fait que le seed.
-
-## Vérifier que tout va bien
-
-```powershell
-npm run green:health
-```
-
-Ou navigateur : [https://auros-delta.vercel.app/green/market](https://auros-delta.vercel.app/green/market).
-
-En cas de souci : `npm run green:sync`, puis bootstrap HTTP ci-dessus, puis `npm run green:deploy` si le code a changé.
+Optional if `npm run green:sync` succeeds with Supabase URL + secret key. Heavy migrations are applied separately by operators.
 
 ---
 
-*Résumé : gardez `.env.local` hors git ; secrets uniquement sur Vercel ; une commande `green:deploy` après code.*
+*Keep `.env.local` out of git. Secrets only on Vercel / local env.*

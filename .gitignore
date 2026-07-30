@@ -44,18 +44,29 @@ yarn-error.log*
 .env
 .env.*
 !.env.example
+!.env*.example
+
+# local data / signing / alert stores
+.data/
+**/.data/
 
 # vercel / local dumps
 .vercel
 .vercel-*
 .env.vercel*
+*.vercel.json.bak
+vercel-env*.txt
+vercel-env*.json
 
-# scratch / scrape artifacts
+# scratch / scrape / dumps
 tmp/
 tmp-*
 tmp*.json
+*.dump
+*.dump.sql
 *-prod.html
 *-tmp.html
+*-scrape.html
 compare.html
 compare-tmp.html
 dashboard-prod.html
@@ -64,6 +75,7 @@ green.html
 how-prod.html
 trust-prod.html
 scripts/tmp-*
+docs/GITHUB_SSH_PUBLIC_KEY.txt
 
 # typescript
 *.tsbuildinfo

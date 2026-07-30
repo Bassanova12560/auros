@@ -1,49 +1,24 @@
 # ARL security notes
 
-Defense-in-depth for the Auros Resource Layer stack. Demos remain mock/HITL — these controls reduce abuse surface before mainnet settlement.
+> **INTERNAL** — High-level operator reminders only. Do not publish control inventories, header names, or rate-limit constants in public READMEs or trust pages.
 
-## Agent API (`agent-api/`)
+Defense-in-depth for the Auros Resource Layer. Demos remain mock / HITL — treat dashboards as non-settlement until audited.
 
-| Control | Detail |
-|---------|--------|
-| Agent ID | `X-Agent-ID` required unless `AGENT_ID_REQUIRED=false`; schema blocks newlines / injection |
-| Rate limits | Global + stricter mutate limits (`RATE_LIMIT_*`) |
-| CORS | Allowlist via `CORS_ORIGINS` |
-| Headers | `nosniff`, `DENY` frame, `no-store`, permissions policy |
-| Body size | JSON capped at 32kb |
-| Operator key | `ARL_OPERATOR_KEY` / `AUROS_LIQUIDITY_API_KEY` for mark-price, insurance report, compute mint, provide-liquidity |
-| Validation | Zod + strict eth addresses / index ids |
-| Secrets | Timing-safe compare for API keys |
-| Health | `/health` exempt from agent-id (probes) |
+## Principles
 
-## IoT bridge (`iot-bridge/`)
+- **Least privilege** on operator and agent credentials; rotate if shared or leaked.  
+- **Never commit** `.env` — templates only (`.env.example`).  
+- **Public surfaces** expose product APIs and demos; internal mutate / bootstrap paths stay authenticated and undocumented publicly.  
+- **IoT / MQTT** : prefer TLS + device auth; insecure TLS only for local lab.  
+- **Protocol** : upgradeability, pause, and oracle guards are design concerns for mainnet — not a public checklist to map.
 
-| Control | Detail |
-|---------|--------|
-| Auth | ECDSA production signatures + device allowlist / registry |
-| Freshness | Timestamp skew window (`IOT_MAX_SKEW_MS`) |
-| Replay | Digest cache of processed messages |
-| Size | Payload byte cap |
-| Rate | Per-device mint rate (`IOT_DEVICE_RATE_PER_MIN`) |
-| Topic | Topic device id must match payload |
+## Responsible disclosure
 
-## Protocol (`protocol/`)
+See root [SECURITY.md](../SECURITY.md) — **security@getauros.com**.
 
-| Control | Detail |
-|---------|--------|
-| Upgradeability | UUPS + owner-gated `_authorizeUpgrade` |
-| Reentrancy | Guard on mint / trade / lend paths |
-| Pause | Pausable on critical contracts |
-| Oracle | Circuit-breaker on index price jumps; `setPriceForced` owner-only |
-| Futures | `MAX_MARGIN`, `MAX_OPEN_INTEREST`, leverage caps |
-| Options | Expiry window, size/premium caps, no self-trade |
-| Lending | LTV 50% MVP + `MAX_BORROW` per borrow |
-| Proofs | `ResourceOracle` marks used proofs |
+## Ops checklist (operators)
 
-## Ops checklist
-
-1. Never commit `.env` — use `.env.example` only.
-2. Set long random `ARL_OPERATOR_KEY` in any shared/staging deploy.
-3. Restrict `CORS_ORIGINS` to production origins.
-4. Prefer MQTT auth + TLS; avoid `MQTT_TLS_INSECURE=true` outside local lab.
-5. Treat UI dashboards as demos until settlement is audited and HITL-gated.
+1. Secrets only in host env / secret managers.  
+2. Restrict CORS / origins to known production hosts.  
+3. Keep settlement paths human-gated until audit + policy allow.  
+4. Prefer private GitHub for this monorepo — see `docs/REPO-VISIBILITY.md`.

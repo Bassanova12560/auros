@@ -123,7 +123,7 @@ Sans clé IA : scoring rule-based amélioré uniquement (comportement valide).
 ## Sprint 10 — shipped 2026-06-03
 
 - **Compare depuis fiche annonce** — bouton « Ajouter au comparateur » sur `/green/market/offer/[id]` ; sélection persistée localStorage + URL `?offers=` (max 4) ; section annonces marketplace sur `/green/compare` ; i18n FR/EN/ES.
-- **Notifications e-mail statut label** — e-mail candidat sur transition `pending → in_review` et `in_review → rejected` (Resend) ; API admin `/api/admin/green-label-status` ; boutons ops « Mettre en revue » / « Rejeter » ; une notification par transition (approved déjà couvert à la publication).
+- **Notifications e-mail statut label** — e-mail candidat sur transition `pending → in_review` et `in_review → rejected` (Resend) ; outils ops authentifiés pour revue / rejet ; une notification par transition (approved déjà couvert à la publication).
 - **Registre — fiches projet** — `/green/registry/project/[id]` : nom, statut, lieu, description, niveau RTMS ; liens depuis la liste registre ; SEO + sitemap + catalogue AI-first.
 - **Tests** — `tests/green-sprint10.test.ts` (`npm run test:green`).
 
@@ -138,21 +138,21 @@ Sans clé IA : scoring rule-based amélioré uniquement (comportement valide).
 
 - **Registre — export CSV filtré** — bouton « Exporter CSV » sur `/green/registry` ; exporte les projets visibles (filtre `?tier=` + recherche client) ; i18n FR/EN/ES.
 - **Compare — lien de partage public** — « Copier le lien de comparaison » sur `/green/compare` ; URL encode `?offers=` + `?countries=` (pays des annonces sélectionnées) ; pas de snapshot serveur (MVP URL).
-- **Label — relance dossier incomplet** — e-mail candidat si PDF manquant ou champs requis absents après 24 h (cron `/api/cron/green-label-reminders`) ; max 1 relance par candidature (`reminder_sent_at`, migration `0021`) ; locale `preferred_locale` ; bouton ops « Relance dossier » dans `/green/admin`.
+- **Label — relance dossier incomplet** — e-mail candidat si PDF manquant ou champs requis absents après 24 h (job planifié) ; max 1 relance par candidature (`reminder_sent_at`, migration `0021`) ; locale `preferred_locale` ; action ops « Relance dossier ».
 - **Tests** — `tests/green-sprint12.test.ts` (`npm run test:green`).
 
 ## Sprint 13 — shipped 2026-06-03
 
 - **Registre — export PDF filtré** — bouton « Exporter PDF » à côté du CSV sur `/green/registry` ; mêmes projets visibles (`?tier=` + recherche) ; `registry-pdf.tsx` (@react-pdf/renderer) ; i18n FR/EN/ES.
 - **Compare — filtre pays depuis URL** — `?countries=France,Portugal` restaure la sélection pays dans l’UI ; filtre la section registre du comparateur ; synchronisation URL + lien de partage.
-- **Label — 2e relance après 7 jours** — si dossier toujours incomplet 7 jours après la 1re relance (`reminder_sent_at`), e-mail de rappel final ; max 2 relances (`second_reminder_sent_at`, migration `0022`) ; cron `/api/cron/green-label-reminders` ; locale `preferred_locale`.
+- **Label — 2e relance après 7 jours** — si dossier toujours incomplet 7 jours après la 1re relance (`reminder_sent_at`), e-mail de rappel final ; max 2 relances (`second_reminder_sent_at`, migration `0022`) ; job planifié ; locale `preferred_locale`.
 - **Tests** — `tests/green-sprint13.test.ts` (`npm run test:green`).
 
 ## Sprint 14 — shipped 2026-06-03
 
 - **Registre — export PDF enrichi** — métadonnées (projets, Verified, pilotes, experts) ; colonnes localisation, niveau RTMS, extrait description ; section experts certifiés ; `registry-pdf.tsx` ; i18n FR/EN/ES.
 - **Compare — snapshot serveur** — `POST /api/green/compare-snapshot` (rate limit) ; table `green_compare_snapshots` (migration `0023`, TTL 30 j) ; `/green/compare/s/[id]` restaure pays + offres + lignes RWA ; bouton « Lien snapshot » ; repli URL params inchangé.
-- **Label — stats relances ops** — tableau de bord sur `/green/admin` : incomplet sans relance, relance 1, relance 2, dossier complet ; `GET /api/admin/green-label-reminder-stats`.
+- **Label — stats relances ops** — tableau de bord ops authentifié : incomplet sans relance, relance 1, relance 2, dossier complet.
 - **Tests** — `tests/green-sprint14.test.ts` (`npm run test:green`).
 
 ## Sprint 15 — shipped 2026-06-03
@@ -173,7 +173,7 @@ Sans clé IA : scoring rule-based amélioré uniquement (comportement valide).
 
 - **Registre — export PDF signature serveur HMAC** — pied de page `sig={hmac}` via `GREEN_EXPORT_SIGNING_KEY` ou `ops auth` ; repli SHA256 seul sans clé ; `GET /api/green/sign-registry-export?hash=` + `GET /api/green/verify-registry-export?hash=&sig=` ; i18n FR/EN/ES.
 - **Compare — page snapshot expiré / introuvable** — `/green/compare/s/[id]` affiche une page dédiée (pas 404 générique) avec CTA vers `/green/compare` si TTL dépassé ou id absent ; i18n FR/EN/ES.
-- **Label — export CSV hebdomadaire ops (cron)** — `GET /api/cron/green-label-export-weekly` (lundi 07:00 UTC, `vercel.json`) ; CSV candidatures par e-mail Resend vers `OPS_EMAIL` ou `RESEND_INTERNAL_EMAIL` ; filtre `all` ou `incomplete` (`GREEN_LABEL_WEEKLY_EXPORT_FILTER`) ; auth `ops auth`.
+- **Label — export CSV hebdomadaire ops** — job planifié ; CSV candidatures par e-mail Resend vers boîte ops configurée ; filtre configurable ; auth ops.
 - **Tests** — `tests/green-sprint17.test.ts` (`npm run test:green`).
 
 ## Sprint 18 — shipped 2026-06-03

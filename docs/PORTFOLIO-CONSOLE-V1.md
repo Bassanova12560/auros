@@ -28,7 +28,7 @@ Computed in snapshot (`lib/green/portfolio-alerts.ts`):
 - `proof_stream_silent` / `proof_stream_stale` (>30d)  
 - `listing_pending` · `demo_tier` · `document_expired`  
 
-Backfill DNA seeds: `POST /api/admin/backfill-asset-dna` (Bearer `CRON_SECRET`).
+DNA backfill / scheduled digests: **authenticated internal tooling only** — do not document admin/cron routes or auth headers in public channels.
 
 ## Watchlists + digest
 
@@ -36,8 +36,8 @@ Backfill DNA seeds: `POST /api/admin/backfill-asset-dna` (Bearer `CRON_SECRET`).
 |---------|------|
 | Subscribe | `POST /api/v1/green/portfolio/watchlist` `{ email, assetDnaIds?, locale? }` |
 | Unsubscribe | `/green/portfolio/unsubscribe?token=…` (one-click in digest footer) |
-| Cron | `GET /api/cron/portfolio-watchlist-digest` (daily 13:00 UTC) |
-| Storage | `.data/portfolio-watchlists.json` + `green_portfolio_watchlists` |
+| Digest | Scheduled operator job (host-configured) |
+| Storage | durable store when configured · local `.data` for lab only |
 
 | White-label KPIs | `/embed/portfolio` | iframe (`frame-ancestors *`) |
 | Spec | [`INSTITUTIONAL-AUTH-V0.md`](./INSTITUTIONAL-AUTH-V0.md) | SSO / on-prem path |

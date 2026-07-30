@@ -11,7 +11,7 @@ Full narrative: [docs/WHITEPAPER.md](docs/WHITEPAPER.md) · Pitch: [docs/PITCH.m
 | Component | Path | Role |
 |-----------|------|------|
 | **Protocol** | `protocol/` | Hardhat — `ResourceToken`, `ResourceOracle`, `DeviceRegistry` |
-| **Agent API** | `agent-api/` | Forward orders, hedging cron, mint monitor, market stubs |
+| **Agent API** | `agent-api/` | HTTP API for agents / market stubs (auth required for mutates) |
 | **IoT bridge** | MQTT → oracle (see `docker-compose.yml`) | Telemetry ingress |
 | **Site / app** | `app/` | Next.js UI — vision page + mock consoles |
 

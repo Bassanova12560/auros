@@ -1,49 +1,129 @@
-# AUROS — RWA Tokenization Platform
+# AUROS
 
-Luxury-minimal Next.js app: free asset score, 10-step wizard, AI dossier generation (Groq), PDF export.
+[![CI](https://github.com/Bassanova12560/auros/actions/workflows/ci.yml/badge.svg)](https://github.com/Bassanova12560/auros/actions/workflows/ci.yml)
 
-## Auros Resource Layer (ARL)
+**B2B RWA readiness infrastructure** — structure tokenization dossiers, compare market products, and explore green / energy resource layers — without claiming on-chain issuance or brokerage.
 
-Monorepo packages for tokenized physical resources + machine economy — see [`ARL-README.md`](./ARL-README.md).
+Product site: **[getauros.com](https://getauros.com)** · Responsible disclosure: [SECURITY.md](./SECURITY.md)
 
-| Path | Role |
-|------|------|
-| `protocol/` | Hardhat — ResourceToken, Oracle, WattCoin, AUR, Bridge, Water rights |
-| `agent-api/` | Express API for AI/IoT agents |
-| `iot-bridge/` | MQTT Proof-of-Resource bridge |
-| `/resource-layer` | Vision page (+ `/producer`, `/agent`, `/market` demos) |
+---
 
-## Stack
+## One-liner
 
-- Next.js App Router · TypeScript · Tailwind CSS v4
-- Framer Motion · Groq (`llama3-8b-8192`) · `@react-pdf/renderer`
+AUROS helps issuers, advisors, and operators go from **asset description → readiness score → data-room dossier**, with an open **RWA comparator** and a **green / energy resource** product layer (metering, labels, academy).
 
-## Setup
+We prepare the upstream case. Platforms and counsel handle issuance.
+
+---
+
+## Architecture (high level)
+
+```mermaid
+flowchart LR
+  subgraph Public["Public surfaces"]
+    Web["Next.js app<br/>getauros.com"]
+    Compare["RWA Comparator"]
+    Green["Green / energy layer"]
+    Academy["Academy"]
+  end
+
+  subgraph Core["Core services"]
+    Score["Scoring & readiness"]
+    Dossier["Dossier + PDF"]
+    API["Signed compare / Green APIs"]
+  end
+
+  subgraph Data["Data & auth"]
+    Auth["Clerk"]
+    DB["Supabase"]
+  end
+
+  Web --> Score
+  Web --> Dossier
+  Compare --> API
+  Green --> API
+  Academy --> Auth
+  Score --> DB
+  Dossier --> DB
+  API --> DB
+  Auth --> Web
+```
+
+Optional Resource Layer packages (`protocol/`, `agent-api/`, IoT bridge) sit beside the main app for metered physical resources — see [`ARL-README.md`](./ARL-README.md). Demos remain human-gated where settlement matters.
+
+---
+
+## Public products
+
+| Product | What it is | Try it |
+|---------|------------|--------|
+| **RWA readiness** | Score, wizard, AI-assisted dossier, PDF | [Start](https://getauros.com/start) · [Wizard](https://getauros.com/wizard) |
+| **Comparator** | Cross-product RWA screener, signed snapshots, reports | [Compare](https://getauros.com/compare) |
+| **Green / energy** | Labels, market, CSRD-oriented tools, resource narratives | [Green](https://getauros.com/green) · [Resource layer](https://getauros.com/resource-layer) |
+| **Academy** | Tokenized resources / trading / machine-economy tracks | [Academy](https://getauros.com/academy) |
+| **Lab** | Experimental / demo consoles (not production settlement) | [Lab surfaces](https://getauros.com/resource-layer) |
+
+Developer-facing docs (public product APIs only): [Developers](https://getauros.com/developers)
+
+---
+
+## Tech stack
+
+- **App:** Next.js (App Router) · TypeScript · Tailwind CSS · Framer Motion  
+- **Auth / data:** Clerk · Supabase (RLS-oriented persistence)  
+- **Document:** `@react-pdf/renderer` · streaming generation  
+- **Engineering highlights:** signed compare snapshots (`auros-compare:v1:`), rate-limited public APIs, Vitest/node test suite, CI on push  
+- **Resource layer (optional packages):** Hardhat protocol stubs · agent HTTP API · MQTT proof bridge  
+
+Languages: TypeScript (primary), Solidity (protocol package), Python (optional SDK package).
+
+---
+
+## Try it (public URLs only)
+
+| Surface | URL |
+|---------|-----|
+| Home | https://getauros.com |
+| Compare | https://getauros.com/compare |
+| Green hub | https://getauros.com/green |
+| Academy | https://getauros.com/academy |
+| Resource layer | https://getauros.com/resource-layer |
+| Security / disclosure | https://getauros.com/security |
+
+No ops recipes, cron maps, or internal tooling in this README.
+
+---
+
+## Local development (contributors / diligence)
 
 ```bash
 npm install
-cp .env.example .env.local
-# Set GROQ_API_KEY in .env.local
+cp .env.example .env.local   # fill only what you need — never commit secrets
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000).
+Open [http://localhost:3000](http://localhost:3000). Use `.env.example` as the variable catalog; real keys stay in Vercel / local env only.
 
-**WSL :** si tu vois `Cannot find module '../lightningcss.linux-x64-gnu.node'`, réinstalle les deps **depuis WSL** (`rm -rf node_modules .next && npm install`). Voir [docs/DEV-WSL.md](docs/DEV-WSL.md).
+WSL note: if `lightningcss` native bindings fail, reinstall deps from WSL — see `docs/DEV-WSL.md`.
 
-## Flow
+---
 
-1. **/** — Describe asset → `/api/score` → score, yield, platform
-2. **/wizard** — 10 steps, auto-save `localStorage` key `auros_wizard`
-3. **Generate** — `/api/generate` streams 6 sections (SSE)
-4. **PDF** — `/api/pdf` downloads dossier
+## Repository posture
 
-## Routes
+This monorepo is the **application source**. Prefer **private** GitHub visibility for the main codebase (secrets history, ops docs, unpaid strategy). A polished README still works when selectively opening the repo or mirroring a thin public showcase (`auros-docs` / docs site).
 
-| Path | Description |
-|------|-------------|
-| `/` | Homepage + score widget |
-| `/wizard` | Multi-step form + generation |
-| `/dashboard` | Placeholder |
+See [`docs/REPO-VISIBILITY.md`](./docs/REPO-VISIBILITY.md).
 
-No authentication in this version.
+---
+
+## Contact & diligence
+
+- Product / partnerships: via [getauros.com](https://getauros.com) contact surfaces  
+- Security: **security@getauros.com** (see [SECURITY.md](./SECURITY.md))  
+- Contributions: not an open-contribution OSS project today; diligence reviewers — ask for a scoped walkthrough rather than public issue dumps of internals  
+
+---
+
+## License
+
+Proprietary — all rights reserved. `package.json` marks the package as `private`. Contact AUROS for commercial licensing discussions.

@@ -25,14 +25,13 @@ npx vercel env add UPSTASH_REDIS_REST_TOKEN production
 npx vercel deploy --prod
 ```
 
-4. Vérif :
+4. Vérif (opérateur, machine de confiance) :
 
 ```bash
 npm run prod:check
-curl https://getauros.com/api/v1/toll/infra-status
 ```
 
-Doit afficher `upstash.configured: true` et `reachable: true`.
+Confirmer via les outils internes authentifiés que Redis est configuré et joignable — **ne pas** publier d’URLs de probe ni de recettes curl.
 
 ## Code
 

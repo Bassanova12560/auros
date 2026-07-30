@@ -1,9 +1,11 @@
 # Opérations solo (sans console admin)
 
+> **INTERNAL** — Operator runbook. Prefer private repo. No public curl / admin maps.
+
 ## Changer le statut d’un dossier
 
 Dans Supabase → Table Editor → `dossiers` → colonne `status`,  
-ou en CLI :
+ou en CLI (machine de confiance, `.env.local` chargé) :
 
 ```bash
 npm run ops:status -- <uuid-dossier> in_review fr
@@ -19,4 +21,4 @@ Supabase → `dossiers` → filtre `status = submitted`.
 
 ## Toi seul sur le projet
 
-Pas d’interface `/admin` — moins de surface à sécuriser. Tout passe par Supabase + ce script + votre boîte `RESEND_INTERNAL_EMAIL`.
+Pas d’interface admin publique documentée — moins de surface. Revue via Supabase + scripts ops + boîte interne Resend.
