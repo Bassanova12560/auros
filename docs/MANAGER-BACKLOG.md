@@ -1,7 +1,7 @@
 # Manager backlog — AUROS
 
 Living priorities. Manager owns this; update when shipping or discovering debt.
-Last review: 2026-07-24 (durable alerts · entity addresses · CQS maps · RapidAPI · env audit).
+Last review: 2026-07-30 (GO: Vercel secrets · redeploy · Hobby cron · gh private still blocked).
 
 ## P0 — risque / trust
 
@@ -10,8 +10,8 @@ Last review: 2026-07-24 (durable alerts · entity addresses · CQS maps · Rapid
 | `ATTEST_SIGNING_KEY` prod | **OK** — présent Vercel Production |
 | `CRON_SECRET` prod | **OK** — présent Vercel Production |
 | Resend (`RESEND_API_KEY` / FROM / INTERNAL) | **OK** — présent Vercel Production |
-| Lab soft cookie (`ARL_LAB_SIGNING_KEY`) | Code OK — **Action user** : confirmer clé **dédiée** sur Vercel Production (pas seulement fallback `CRON_SECRET`) + redeploy |
-| Ops gate (`OPS_SESSION_SECRET`) | Code OK — **Action user** : ajouter Vercel Production + tester `/ops/login` → cookie · `/ops/copilot` 404 sans session |
+| Lab soft cookie (`ARL_LAB_SIGNING_KEY`) | **OK 2026-07-30** — clé **dédiée** générée + set Vercel Production (sensitive) · redeploy `getauros.com` |
+| Ops gate (`OPS_SESSION_SECRET`) | **OK 2026-07-30** — clé **dédiée** générée + set Vercel Production (sensitive) · redeploy ; **Action user** : tester `/ops/login` → cookie (smoke GET a renvoyé 404 — vérifier chemin / obscurité volontaire) |
 
 ## P0 — Toll / machine à cash
 
@@ -47,9 +47,11 @@ Last review: 2026-07-24 (durable alerts · entity addresses · CQS maps · Rapid
 
 | Item | Statut |
 |------|--------|
-| Repo GitHub **privé** | **Bloqué** — `gh` non authentifié (`gh auth login` puis `gh repo edit --visibility private`) |
-| Upstash rate limits + compare alert store | **Action user** — `UPSTASH_REDIS_REST_URL` + `UPSTASH_REDIS_REST_TOKEN` **absents** de Vercel Production (`docs/UPSTASH-SETUP.md`) |
-| Listings green `/presence` | **Action user** — soumettre dossiers prêts (DeFiLlama RWA, RWA.xyz, ClimateTechList, RapidAPI hub) ; pas de badge « Listed on » avant confirmation |
+| Repo GitHub **privé** | **Bloqué** — `gh` non authentifié (2026-07-30) : `gh auth login` puis `gh repo edit Bassanova12560/auros --visibility private` |
+| Upstash rate limits + compare alert store | **Bloqué user** — `UPSTASH_REDIS_REST_URL` + `UPSTASH_REDIS_REST_TOKEN` **absents** Vercel Production **et** `.env.local` ; `infra-status` → `upstash.configured: false` ; follow `docs/UPSTASH-SETUP.md` puis redeploy |
+| Hobby cron blocker | **Mitigé 2026-07-30** — `compare-apy-alerts` passé de `*/6` → `0 5 * * *` (1×/jour) pour déploiements Hobby ; Pro pour cadence 6h |
+| Prod redeploy secrets | **OK 2026-07-30** — `vercel redeploy` → aliased https://getauros.com (fresh `vercel --prod` échouait sur cron Hobby avant mitigation) |
+| Listings green `/presence` | Page + packs **prêts** (`data/listings/generated/*`) — **Action user** : soumettre (DeFiLlama RWA, RWA.xyz, ClimateTechList, RapidAPI) ; pas de badge « Listed on » avant confirmation ; pas d’envoi auto depuis agent |
 | Sponsored compare slots | **Action user** — config vide volontaire ; remplir seulement avec **vrais deals** (pas de fake partners) |
 
 ## P0 — Green cash / DNA / institutionnel
