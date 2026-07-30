@@ -12,6 +12,10 @@ import {
   ACADEMY_REGISTRY_ROUTE,
 } from "@/lib/academy";
 import { getAcademyMessages } from "@/lib/academy/i18n";
+import {
+  getAcademyHubMessages,
+  type ResolvedSchool,
+} from "@/lib/academy/curriculum";
 
 import { AcademyWaitlistForm } from "./AcademyWaitlistForm";
 
@@ -23,22 +27,25 @@ const TIER_META = [
 
 type AcademyHomeViewProps = {
   tallyUrl?: string | null;
+  schools: ResolvedSchool[];
 };
 
-export function AcademyHomeView({ tallyUrl }: AcademyHomeViewProps) {
+export function AcademyHomeView({ tallyUrl, schools }: AcademyHomeViewProps) {
   const { locale } = useLocale();
   const m = getAcademyMessages(locale);
+  const hub = getAcademyHubMessages(locale);
+  const firstSchool = schools[0];
 
   return (
     <div className="page-inner page-inner--6xl mx-auto px-4 pb-16 pt-10 md:px-6">
       <header className="max-w-3xl">
         <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-white/40">
-          {m.home.eyebrow}
+          {hub.schoolsEyebrow}
         </p>
         <h1 className="mt-4 font-display text-4xl font-semibold tracking-tight text-white md:text-5xl">
           {m.home.title}
         </h1>
-        <p className="mt-5 text-lg leading-relaxed text-white/55">{m.home.intro}</p>
+        <p className="mt-5 text-lg leading-relaxed text-white/55">{hub.schoolsIntro}</p>
         <ul className="mt-6 flex flex-wrap gap-2">
           {m.home.teaserHighlights.map((item) => (
             <li
@@ -49,12 +56,60 @@ export function AcademyHomeView({ tallyUrl }: AcademyHomeViewProps) {
             </li>
           ))}
         </ul>
-        <div className="mt-10">
-          <PrimaryButton href={ACADEMY_FUNDAMENTALS_ROUTE}>{m.home.startFree}</PrimaryButton>
+        <div className="mt-10 flex flex-wrap gap-4">
+          {firstSchool && (
+            <PrimaryButton href={`/academy/${firstSchool.slug}`}>
+              {hub.startLearning}
+            </PrimaryButton>
+          )}
+          <Link
+            href={ACADEMY_FUNDAMENTALS_ROUTE}
+            className="inline-flex items-center font-mono text-[11px] tracking-wide text-white/45 transition hover:text-white/75"
+          >
+            {m.home.startFree}
+          </Link>
         </div>
       </header>
 
-      <div className="mt-14 grid gap-5 lg:grid-cols-3">
+      <h2 className="mt-16 font-mono text-[10px] uppercase tracking-[0.2em] text-white/40">
+        {hub.schoolsTitle}
+      </h2>
+      <div className="mt-6 grid gap-5 lg:grid-cols-3">
+        {schools.map((school) => (
+          <BezelCard key={school.id} innerClassName="flex h-full flex-col p-6 md:p-8" animate>
+            <p className="font-mono text-[10px] uppercase tracking-wider text-white/40">
+              {school.shortName} · 101 → 301
+            </p>
+            <h3 className="mt-3 font-display text-xl font-semibold text-white">
+              {school.name}
+            </h3>
+            <p className="mt-2 text-sm font-medium text-white/70">{school.tagline}</p>
+            <p className="mt-3 flex-1 text-sm leading-relaxed text-white/45">
+              {school.description}
+            </p>
+            <div className="mt-8 flex flex-wrap gap-4">
+              <Link
+                href={`/academy/${school.slug}`}
+                className="font-mono text-[11px] tracking-wide text-emerald-300/80 transition hover:text-emerald-200"
+              >
+                {hub.startLearning} →
+              </Link>
+              <Link
+                href={`/academy/${school.slug}/101`}
+                className="font-mono text-[11px] tracking-wide text-white/40 transition hover:text-white/70"
+              >
+                {hub.explore} 101 →
+              </Link>
+            </div>
+          </BezelCard>
+        ))}
+      </div>
+
+      <h2 className="mt-16 font-mono text-[10px] uppercase tracking-[0.2em] text-white/40">
+        {hub.certificationsEyebrow}
+      </h2>
+      <p className="mt-3 max-w-2xl text-sm text-white/50">{hub.certificationsTitle}</p>
+      <div className="mt-6 grid gap-5 lg:grid-cols-3">
         {TIER_META.map(({ id, path, status }) => {
           const tier = m.tiers[id];
           return (
@@ -62,7 +117,7 @@ export function AcademyHomeView({ tallyUrl }: AcademyHomeViewProps) {
               <p className="font-mono text-[10px] uppercase tracking-wider text-white/40">
                 {tier.price}
               </p>
-              <h2 className="mt-3 font-display text-xl font-semibold text-white">{tier.name}</h2>
+              <h3 className="mt-3 font-display text-xl font-semibold text-white">{tier.name}</h3>
               <p className="mt-2 text-sm font-medium text-white/70">{tier.headline}</p>
               <p className="mt-3 flex-1 text-sm leading-relaxed text-white/45">
                 {tier.description}
@@ -95,9 +150,7 @@ export function AcademyHomeView({ tallyUrl }: AcademyHomeViewProps) {
         </h2>
         <div className="mt-6 grid gap-8 md:grid-cols-2">
           <div>
-            <p className="font-mono text-[10px] uppercase tracking-wider text-white/35">
-              ✓
-            </p>
+            <p className="font-mono text-[10px] uppercase tracking-wider text-white/35">✓</p>
             <ul className="mt-3 space-y-2 text-sm text-white/55">
               {m.home.scopeMeasures.map((item) => (
                 <li key={item}>{item}</li>
@@ -105,13 +158,12 @@ export function AcademyHomeView({ tallyUrl }: AcademyHomeViewProps) {
             </ul>
           </div>
           <div>
-            <p className="font-mono text-[10px] uppercase tracking-wider text-white/35">
-              —
-            </p>
+            <p className="font-mono text-[10px] uppercase tracking-wider text-white/35">—</p>
             <ul className="mt-3 space-y-2 text-sm text-white/45">
               {m.home.scopeDoesNot.map((item) => (
                 <li key={item}>{item}</li>
               ))}
+              <li>{hub.nftDeferred}</li>
             </ul>
           </div>
         </div>
@@ -122,6 +174,7 @@ export function AcademyHomeView({ tallyUrl }: AcademyHomeViewProps) {
           {m.home.verifyTitle}
         </h2>
         <p className="mt-3 text-sm text-white/55">{m.home.verifyBody}</p>
+        <p className="mt-4 text-xs text-white/35">{hub.diplomaNote}</p>
         <p className="mt-4">
           <Link href={ACADEMY_REGISTRY_ROUTE} className="text-sm text-white/55 hover:text-white/80">
             {m.home.registryLink}
@@ -129,7 +182,10 @@ export function AcademyHomeView({ tallyUrl }: AcademyHomeViewProps) {
         </p>
       </BezelCard>
 
-      <p className="mt-10 max-w-2xl text-xs leading-relaxed text-white/35">{m.disclaimer}</p>
+      <p className="mt-10 max-w-2xl text-xs leading-relaxed text-white/35">
+        {hub.educationalDisclaimer}
+      </p>
+      <p className="mt-3 max-w-2xl text-xs leading-relaxed text-white/30">{m.disclaimer}</p>
     </div>
   );
 }

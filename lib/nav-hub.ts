@@ -173,7 +173,7 @@ const FR: HubCopy = {
         {
           href: "/academy",
           title: "Academy",
-          description: "Formation tokenisation",
+          description: "Écoles RWA · certification",
         },
         {
           href: "/pricing",
@@ -388,7 +388,7 @@ const EN: HubCopy = {
         {
           href: "/academy",
           title: "Academy",
-          description: "Tokenization training",
+          description: "RWA schools · certification",
         },
         {
           href: "/pricing",
@@ -603,7 +603,7 @@ const ES: HubCopy = {
         {
           href: "/academy",
           title: "Academy",
-          description: "Formación tokenización",
+          description: "Escuelas RWA · certificación",
         },
         {
           href: "/pricing",
@@ -818,7 +818,7 @@ const AR: HubCopy = {
         {
           href: "/academy",
           title: "الأكاديمية",
-          description: "تدريب على التوكنة",
+          description: "مدارس RWA · شهادة",
         },
         {
           href: "/pricing",
@@ -1033,7 +1033,7 @@ const ZH: HubCopy = {
         {
           href: "/academy",
           title: "学院",
-          description: "通证化培训",
+          description: "RWA 学院 · 认证",
         },
         {
           href: "/pricing",

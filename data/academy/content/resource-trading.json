@@ -1,0 +1,551 @@
+{
+  "id": "resource-trading",
+  "slug": "resource-trading",
+  "order": 2,
+  "name": {
+    "fr": "Trading & liquidité des ressources",
+    "en": "Resource Trading & Liquidity"
+  },
+  "shortName": {
+    "fr": "Trading",
+    "en": "Trading"
+  },
+  "tagline": {
+    "fr": "Marchés power/eau, market-making et desk énergie — sans promettre l'exécution de deals.",
+    "en": "Power/water markets, market-making, and energy desk — without promising deal execution."
+  },
+  "description": {
+    "fr": "École marchés : comprendre liquidité, spreads, MM algorithmique et le rôle d'un desk sur une plateforme type AUROS. Contenu éducatif — AUROS n'est pas un broker d'énergie et n'exécute pas vos deals.",
+    "en": "Markets school: liquidity, spreads, algo MM, and the role of a desk on an AUROS-style platform. Educational — AUROS is not an energy broker and does not execute your deals."
+  },
+  "fellowNote": {
+    "fr": "Fellow trading (simulation desk) prévu plus tard — non ouvert dans ce MVP.",
+    "en": "Trading Fellow (desk simulation) planned later — not open in this MVP."
+  },
+  "modules": [
+    {
+      "id": "rt-101",
+      "level": 101,
+      "slug": "101",
+      "title": {
+        "fr": "101 — Marchés power & eau",
+        "en": "101 — Power & water markets"
+      },
+      "summary": {
+        "fr": "Unités, horizons temporels et frictions de liquidité sur les marchés de ressources.",
+        "en": "Units, time horizons, and liquidity frictions in resource markets."
+      },
+      "estimatedMinutes": 26,
+      "tracks": ["energy-producer", "water-utility", "bank-risk", "counsel-issuer"],
+      "lessons": [
+        {
+          "id": "rt-101-l1",
+          "title": {
+            "fr": "Horizons : spot, forward, capacité",
+            "en": "Horizons: spot, forward, capacity"
+          },
+          "body": {
+            "fr": "Les marchés power distinguent livraison immédiate, contrats forward et produits de capacité. L'eau et les droits associés sont souvent moins standardisés : contrats bilatéraux, concessions, marchés de droits régionaux. Tokeniser sans clarifier l'horizon crée des mismatches de duration.\n\nPour un desk, la première question n'est pas « quel chain ID » mais « quelle livraison, quelle granularité, quel contrepartie risk ».",
+            "en": "Power markets distinguish immediate delivery, forwards, and capacity products. Water and related rights are often less standardized: bilateral contracts, concessions, regional rights markets. Tokenizing without clarifying horizon creates duration mismatches.\n\nFor a desk, the first question is not “which chain ID” but “what delivery, what granularity, what counterparty risk”."
+          },
+          "keyTakeaways": {
+            "fr": [
+              "Clarifier horizon avant chain",
+              "L'eau est souvent moins standardisée que le power",
+              "Duration mismatch = risque caché"
+            ],
+            "en": [
+              "Clarify horizon before chain",
+              "Water is often less standardized than power",
+              "Duration mismatch = hidden risk"
+            ]
+          }
+        },
+        {
+          "id": "rt-101-l2",
+          "title": {
+            "fr": "Liquidité réelle vs liquidité affichée",
+            "en": "Real liquidity vs displayed liquidity"
+          },
+          "body": {
+            "fr": "Un carnet affiché sur un screen n'égale pas une capacité à sortir une position sans impact. Sur RWA ressources, la liquidité dépend de la standardisation du droit, de la qualité oracle, et du pool d'acheteurs éligibles (souvent institutionnel).\n\nLes waitlists liquidité produit (/liquidity) signalent une intention — pas une promesse de marché profond. Comparez les structures avec /compare de façon indicative.",
+            "en": "A displayed order book is not the ability to exit without impact. In resource RWA, liquidity depends on right standardization, oracle quality, and the eligible buyer pool (often institutional).\n\nProduct liquidity waitlists (/liquidity) signal intent — not a deep-market promise. Use /compare indicatively when comparing structures."
+          },
+          "keyTakeaways": {
+            "fr": [
+              "Liquidité affichée ≠ exécutable",
+              "Pool d'acheteurs éligibles compte autant que le carnet",
+              "Waitlist ≠ marché profond"
+            ],
+            "en": [
+              "Displayed liquidity ≠ executable",
+              "Eligible buyer pool matters as much as the book",
+              "Waitlist ≠ deep market"
+            ]
+          },
+          "labLinks": [
+            {
+              "href": "/compare",
+              "label": {
+                "fr": "Compare (indicatif)",
+                "en": "Compare (indicative)"
+              }
+            },
+            {
+              "href": "/liquidity",
+              "label": {
+                "fr": "Liquidity waitlist",
+                "en": "Liquidity waitlist"
+              }
+            }
+          ]
+        }
+      ],
+      "quiz": {
+        "passScore": 2,
+        "questions": [
+          {
+            "id": "rt-101-q1",
+            "prompt": {
+              "fr": "Avant de choisir une chain pour un produit power tokenisé, prioriser…",
+              "en": "Before choosing a chain for a tokenized power product, prioritize…"
+            },
+            "options": [
+              {
+                "id": "a",
+                "label": {
+                  "fr": "Horizon de livraison et granularité",
+                  "en": "Delivery horizon and granularity"
+                }
+              },
+              {
+                "id": "b",
+                "label": {
+                  "fr": "Uniquement le prix du gas",
+                  "en": "Only gas price"
+                }
+              },
+              {
+                "id": "c",
+                "label": {
+                  "fr": "Le nombre de followers Discord",
+                  "en": "Discord follower count"
+                }
+              }
+            ],
+            "correctOptionId": "a"
+          },
+          {
+            "id": "rt-101-q2",
+            "prompt": {
+              "fr": "La liquidité affichée sur un carnet…",
+              "en": "Displayed order-book liquidity…"
+            },
+            "options": [
+              {
+                "id": "a",
+                "label": {
+                  "fr": "Garantit une sortie sans impact",
+                  "en": "Guarantees an impact-free exit"
+                }
+              },
+              {
+                "id": "b",
+                "label": {
+                  "fr": "Peut surestimer la liquidité exécutable",
+                  "en": "Can overstate executable liquidity"
+                }
+              },
+              {
+                "id": "c",
+                "label": {
+                  "fr": "Remplace le risque de contrepartie",
+                  "en": "Replaces counterparty risk"
+                }
+              }
+            ],
+            "correctOptionId": "b"
+          },
+          {
+            "id": "rt-101-q3",
+            "prompt": {
+              "fr": "AUROS exécute-t-il vos deals énergie dans ce parcours ?",
+              "en": "Does AUROS execute your energy deals in this path?"
+            },
+            "options": [
+              {
+                "id": "a",
+                "label": {
+                  "fr": "Oui, en tant que broker agréé",
+                  "en": "Yes, as a licensed broker"
+                }
+              },
+              {
+                "id": "b",
+                "label": {
+                  "fr": "Non — formation et outils, pas d'exécution de deals",
+                  "en": "No — training and tools, not deal execution"
+                }
+              },
+              {
+                "id": "c",
+                "label": {
+                  "fr": "Oui, via NFT automatique",
+                  "en": "Yes, via automatic NFT"
+                }
+              }
+            ],
+            "correctOptionId": "b"
+          }
+        ]
+      }
+    },
+    {
+      "id": "rt-201",
+      "level": 201,
+      "slug": "201",
+      "title": {
+        "fr": "201 — Market-making algorithmique",
+        "en": "201 — Algorithmic market-making"
+      },
+      "summary": {
+        "fr": "Spreads, inventaire, inventaire de risque et limites d'un MM sur actifs ressources.",
+        "en": "Spreads, inventory, risk inventory, and limits of MM on resource assets."
+      },
+      "estimatedMinutes": 30,
+      "tracks": ["bank-risk", "platform-builder", "agent-engineer", "energy-producer"],
+      "lessons": [
+        {
+          "id": "rt-201-l1",
+          "title": {
+            "fr": "Spread, inventaire, adverse selection",
+            "en": "Spread, inventory, adverse selection"
+          },
+          "body": {
+            "fr": "Un market maker cite bid/ask, gère un inventaire et subit l'adverse selection quand des acteurs mieux informés tradent contre lui. Sur RWA ressources, l'information asymétrique porte souvent sur l'oracle, la maintenance d'actif, ou l'éligibilité réglementaire — pas seulement sur le prix spot.\n\nÉlargir le spread n'est pas « de la cupidité » : c'est souvent le prix de l'incertitude de mesure et de règlement.",
+            "en": "A market maker quotes bid/ask, manages inventory, and suffers adverse selection when better-informed actors trade against them. In resource RWA, information asymmetry often sits in the oracle, asset maintenance, or regulatory eligibility — not only spot price.\n\nWidening the spread is not “greed”: it is often the price of measurement and settlement uncertainty."
+          },
+          "keyTakeaways": {
+            "fr": [
+              "MM = spread + inventaire + risque d'info",
+              "Asymétrie oracle / éligibilité = coût de spread",
+              "Ressources ≠ crypto liquides 24/7"
+            ],
+            "en": [
+              "MM = spread + inventory + info risk",
+              "Oracle / eligibility asymmetry = spread cost",
+              "Resources ≠ 24/7 liquid crypto"
+            ]
+          }
+        },
+        {
+          "id": "rt-201-l2",
+          "title": {
+            "fr": "Limites, kill-switch, conformité desk",
+            "en": "Limits, kill-switch, desk compliance"
+          },
+          "body": {
+            "fr": "Un MM algo sérieux a des limites de position, un kill-switch, et une piste d'audit. Sur une plateforme type AUROS, le « desk » est un rôle produit / ops — pas une licence de trading réglementée par défaut.\n\nLes ingénieurs agents doivent traiter les quotes comme des propositions sous politiques (eligibility, wallet, reputation) — voir les modules Machine Economy et les outils Toll/Green quand disponibles.",
+            "en": "A serious algo MM has position limits, a kill-switch, and an audit trail. On an AUROS-style platform, the “desk” is a product/ops role — not a regulated trading license by default.\n\nAgent engineers should treat quotes as proposals under policies (eligibility, wallet, reputation) — see Machine Economy modules and Toll/Green tools when available."
+          },
+          "keyTakeaways": {
+            "fr": [
+              "Limites + kill-switch = non négociables",
+              "Desk produit ≠ licence broker",
+              "Quotes sous politiques d'éligibilité"
+            ],
+            "en": [
+              "Limits + kill-switch are non-negotiable",
+              "Product desk ≠ broker license",
+              "Quotes under eligibility policies"
+            ]
+          },
+          "labLinks": [
+            {
+              "href": "/builders",
+              "label": {
+                "fr": "Builders (démo)",
+                "en": "Builders (demo)"
+              }
+            }
+          ]
+        }
+      ],
+      "quiz": {
+        "passScore": 2,
+        "questions": [
+          {
+            "id": "rt-201-q1",
+            "prompt": {
+              "fr": "Sur RWA ressources, l'adverse selection peut venir de…",
+              "en": "In resource RWA, adverse selection can come from…"
+            },
+            "options": [
+              {
+                "id": "a",
+                "label": {
+                  "fr": "Uniquement du design de la page web",
+                  "en": "Only the webpage design"
+                }
+              },
+              {
+                "id": "b",
+                "label": {
+                  "fr": "Oracle, maintenance d'actif, éligibilité",
+                  "en": "Oracle, asset maintenance, eligibility"
+                }
+              },
+              {
+                "id": "c",
+                "label": {
+                  "fr": "Le choix de la police de caractères",
+                  "en": "Font choice"
+                }
+              }
+            ],
+            "correctOptionId": "b"
+          },
+          {
+            "id": "rt-201-q2",
+            "prompt": {
+              "fr": "Un kill-switch MM est…",
+              "en": "An MM kill-switch is…"
+            },
+            "options": [
+              {
+                "id": "a",
+                "label": {
+                  "fr": "Optionnel si le volume est faible",
+                  "en": "Optional if volume is low"
+                }
+              },
+              {
+                "id": "b",
+                "label": {
+                  "fr": "Un contrôle opérationnel essentiel",
+                  "en": "An essential operational control"
+                }
+              },
+              {
+                "id": "c",
+                "label": {
+                  "fr": "Interdit par toutes les régulations",
+                  "en": "Banned by all regulations"
+                }
+              }
+            ],
+            "correctOptionId": "b"
+          },
+          {
+            "id": "rt-201-q3",
+            "prompt": {
+              "fr": "Le « energy desk » AUROS dans ce contenu est…",
+              "en": "The AUROS “energy desk” in this content is…"
+            },
+            "options": [
+              {
+                "id": "a",
+                "label": {
+                  "fr": "Une licence broker universelle",
+                  "en": "A universal broker license"
+                }
+              },
+              {
+                "id": "b",
+                "label": {
+                  "fr": "Un rôle produit / ops illustratif, pas une licence de trading",
+                  "en": "An illustrative product/ops role, not a trading license"
+                }
+              },
+              {
+                "id": "c",
+                "label": {
+                  "fr": "Une garantie de spread zéro",
+                  "en": "A zero-spread guarantee"
+                }
+              }
+            ],
+            "correctOptionId": "b"
+          }
+        ]
+      }
+    },
+    {
+      "id": "rt-301",
+      "level": 301,
+      "slug": "301",
+      "title": {
+        "fr": "301 — Desk énergie sur plateforme AUROS",
+        "en": "301 — Energy desk on an AUROS platform"
+      },
+      "summary": {
+        "fr": "Orchestrer éligibilité, preuves et parcours dossier — sans broker ni exécution.",
+        "en": "Orchestrate eligibility, proofs, and dossier flow — without brokering or execution."
+      },
+      "estimatedMinutes": 28,
+      "tracks": ["bank-risk", "platform-builder", "counsel-issuer"],
+      "lessons": [
+        {
+          "id": "rt-301-l1",
+          "title": {
+            "fr": "Le desk comme couche de décision",
+            "en": "The desk as a decision layer"
+          },
+          "body": {
+            "fr": "Sur une plateforme RWA ressources, le desk agrège signaux : score indicatif, éligibilité, preuves Green/DNA, état du dossier. Il priorise — il n'achète ni ne vend pour le compte du client dans ce modèle éducatif.\n\nLes banques utilisent des politiques (policy / eligibility) pour filtrer ; les builders exposent des APIs ; le counsel vérifie que les claims UI restent indicatifs.",
+            "en": "On a resource RWA platform, the desk aggregates signals: indicative score, eligibility, Green/DNA proofs, dossier state. It prioritizes — it does not buy or sell for the client in this educational model.\n\nBanks use policies (policy / eligibility) to filter; builders expose APIs; counsel checks that UI claims stay indicative."
+          },
+          "keyTakeaways": {
+            "fr": [
+              "Desk = priorisation, pas exécution",
+              "Politiques d'éligibilité avant marketing",
+              "Claims UI indicatifs"
+            ],
+            "en": [
+              "Desk = prioritization, not execution",
+              "Eligibility policies before marketing",
+              "Indicative UI claims"
+            ]
+          },
+          "labLinks": [
+            {
+              "href": "/start",
+              "label": {
+                "fr": "Dossier /start",
+                "en": "Dossier /start"
+              }
+            },
+            {
+              "href": "/green",
+              "label": {
+                "fr": "Green hub",
+                "en": "Green hub"
+              }
+            }
+          ]
+        },
+        {
+          "id": "rt-301-l2",
+          "title": {
+            "fr": "De la formation au flux opérationnel",
+            "en": "From training to operational flow"
+          },
+          "body": {
+            "fr": "Après ce module, le chemin produit typique est : certification Fondamentaux Academy (attestation), puis /start pour un dossier, /lab ou /compare pour explorer. Soft upsell — max trois CTA, sans promesse de liquidité instantanée.\n\nNFT de certificat on-chain live et white-label B2B restent différés / lab — ne pas les présenter comme live.",
+            "en": "After this module, the typical product path is: Academy Fundamentals certification (attestation), then /start for a dossier, /lab or /compare to explore. Soft upsell — max three CTAs, no instant-liquidity promise.\n\nLive on-chain certificate NFTs and B2B white-label remain deferred / lab — do not present them as live."
+          },
+          "keyTakeaways": {
+            "fr": [
+              "Fondamentaux → dossier → labs",
+              "Max 3 CTA soft",
+              "NFT cert live = différé / lab"
+            ],
+            "en": [
+              "Fundamentals → dossier → labs",
+              "Max 3 soft CTAs",
+              "Live cert NFT = deferred / lab"
+            ]
+          }
+        }
+      ],
+      "quiz": {
+        "passScore": 2,
+        "questions": [
+          {
+            "id": "rt-301-q1",
+            "prompt": {
+              "fr": "Dans ce modèle éducatif, le desk AUROS…",
+              "en": "In this educational model, the AUROS desk…"
+            },
+            "options": [
+              {
+                "id": "a",
+                "label": {
+                  "fr": "Exécute les ordres clients",
+                  "en": "Executes client orders"
+                }
+              },
+              {
+                "id": "b",
+                "label": {
+                  "fr": "Priorise avec des signaux (éligibilité, preuves, dossier)",
+                  "en": "Prioritizes using signals (eligibility, proofs, dossier)"
+                }
+              },
+              {
+                "id": "c",
+                "label": {
+                  "fr": "Garantit un fill à 100 %",
+                  "en": "Guarantees 100% fill"
+                }
+              }
+            ],
+            "correctOptionId": "b"
+          },
+          {
+            "id": "rt-301-q2",
+            "prompt": {
+              "fr": "Le mint NFT de certificat on-chain live est…",
+              "en": "Live on-chain certificate NFT minting is…"
+            },
+            "options": [
+              {
+                "id": "a",
+                "label": {
+                  "fr": "Inclus et live pour tous les modules MVP",
+                  "en": "Included and live for all MVP modules"
+                }
+              },
+              {
+                "id": "b",
+                "label": {
+                  "fr": "Différé / lab — pas présenté comme live",
+                  "en": "Deferred / lab — not presented as live"
+                }
+              },
+              {
+                "id": "c",
+                "label": {
+                  "fr": "Obligatoire pour lire les leçons",
+                  "en": "Required to read lessons"
+                }
+              }
+            ],
+            "correctOptionId": "b"
+          },
+          {
+            "id": "rt-301-q3",
+            "prompt": {
+              "fr": "Après un module trading, un bon soft upsell AUROS est…",
+              "en": "After a trading module, a good AUROS soft upsell is…"
+            },
+            "options": [
+              {
+                "id": "a",
+                "label": {
+                  "fr": "Promettre 35 % de rendement",
+                  "en": "Promise 35% yield"
+                }
+              },
+              {
+                "id": "b",
+                "label": {
+                  "fr": "Pointer vers /start, /lab ou /compare (max 3 CTA)",
+                  "en": "Point to /start, /lab or /compare (max 3 CTAs)"
+                }
+              },
+              {
+                "id": "c",
+                "label": {
+                  "fr": "Lister des partenaires fictifs",
+                  "en": "List fictional partners"
+                }
+              }
+            ],
+            "correctOptionId": "b"
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,108 @@
+[
+  {
+    "id": "energy-producer",
+    "name": {
+      "fr": "Producteur d'énergie",
+      "en": "Energy producer"
+    },
+    "blurb": {
+      "fr": "Actifs de génération, PPA, oracles de capacité et tokenisation de flux énergétiques.",
+      "en": "Generation assets, PPAs, capacity oracles, and tokenizing energy cashflows."
+    },
+    "recommended": [
+      "tokenized-resources:101",
+      "tokenized-resources:201",
+      "resource-trading:101",
+      "resource-trading:201",
+      "machine-economy:101"
+    ]
+  },
+  {
+    "id": "water-utility",
+    "name": {
+      "fr": "Opérateur eau / utility",
+      "en": "Water utility"
+    },
+    "blurb": {
+      "fr": "Concessions, débits contractés, reporting hydrologique et marchés de droits.",
+      "en": "Concessions, contracted flows, hydrological reporting, and rights markets."
+    },
+    "recommended": [
+      "tokenized-resources:101",
+      "tokenized-resources:201",
+      "resource-trading:101",
+      "tokenized-resources:301"
+    ]
+  },
+  {
+    "id": "bank-risk",
+    "name": {
+      "fr": "Banque / desk risque",
+      "en": "Bank / risk desk"
+    },
+    "blurb": {
+      "fr": "Éligibilité, liquidité, MM algorithmique et contrôles M2M pour desks institutionnels.",
+      "en": "Eligibility, liquidity, algo MM, and M2M controls for institutional desks."
+    },
+    "recommended": [
+      "resource-trading:101",
+      "resource-trading:201",
+      "resource-trading:301",
+      "tokenized-resources:301",
+      "machine-economy:201"
+    ]
+  },
+  {
+    "id": "counsel-issuer",
+    "name": {
+      "fr": "Conseil / émetteur",
+      "en": "Counsel / issuer"
+    },
+    "blurb": {
+      "fr": "Gouvernance on-chain, cadres juridiques, data room et structuration d'émission.",
+      "en": "On-chain governance, legal frameworks, data rooms, and issuance structuring."
+    },
+    "recommended": [
+      "tokenized-resources:101",
+      "tokenized-resources:301",
+      "resource-trading:101",
+      "machine-economy:301"
+    ]
+  },
+  {
+    "id": "platform-builder",
+    "name": {
+      "fr": "Builder plateforme",
+      "en": "Platform builder"
+    },
+    "blurb": {
+      "fr": "Contrats, oracles, desks énergie et rails de settlement pour produits AUROS.",
+      "en": "Contracts, oracles, energy desks, and settlement rails for AUROS-style products."
+    },
+    "recommended": [
+      "tokenized-resources:201",
+      "resource-trading:201",
+      "resource-trading:301",
+      "machine-economy:201",
+      "machine-economy:301"
+    ]
+  },
+  {
+    "id": "agent-engineer",
+    "name": {
+      "fr": "Ingénieur agents / IA",
+      "en": "Agent / AI engineer"
+    },
+    "blurb": {
+      "fr": "Consommation énergétique de l'IA, agents acheteurs et settlement machine-to-machine.",
+      "en": "AI energy use, buyer agents, and machine-to-machine settlement."
+    },
+    "recommended": [
+      "machine-economy:101",
+      "machine-economy:201",
+      "machine-economy:301",
+      "resource-trading:201",
+      "tokenized-resources:201"
+    ]
+  }
+]

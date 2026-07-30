@@ -1,0 +1,551 @@
+{
+  "id": "tokenized-resources",
+  "slug": "tokenized-resources",
+  "order": 1,
+  "name": {
+    "fr": "Ressources tokenisées (RWA)",
+    "en": "Tokenized Resources (RWA)"
+  },
+  "shortName": {
+    "fr": "RWA",
+    "en": "RWA"
+  },
+  "tagline": {
+    "fr": "Énergie, eau et environnement — de l'actif physique au jeton gouverné.",
+    "en": "Energy, water, and environment — from physical asset to governed token."
+  },
+  "description": {
+    "fr": "École fondatrice AUROS : comprendre comment des ressources réelles (MW, m³, crédits environnementaux) deviennent des droits tokenisés avec oracles, contrats et garde-fous juridiques. Contenu éducatif — pas un conseil d'investissement ou juridique.",
+    "en": "AUROS founding school: how real resources (MW, m³, environmental credits) become tokenized rights with oracles, contracts, and legal guardrails. Educational only — not investment or legal advice."
+  },
+  "fellowNote": {
+    "fr": "Parcours Fellow (projet capstone) prévu plus tard — non ouvert dans ce MVP.",
+    "en": "Fellow path (capstone project) planned later — not open in this MVP."
+  },
+  "modules": [
+    {
+      "id": "tr-101",
+      "level": 101,
+      "slug": "101",
+      "title": {
+        "fr": "101 — Ressources réelles & droits tokenisés",
+        "en": "101 — Real resources & tokenized rights"
+      },
+      "summary": {
+        "fr": "Vocabulaire RWA appliqué à l'énergie et à l'eau : ce qui est tokenisé (droit, cashflow, crédit) vs l'actif physique.",
+        "en": "RWA vocabulary for energy and water: what is tokenized (right, cashflow, credit) vs the physical asset."
+      },
+      "estimatedMinutes": 28,
+      "tracks": ["energy-producer", "water-utility", "counsel-issuer", "platform-builder"],
+      "lessons": [
+        {
+          "id": "tr-101-l1",
+          "title": {
+            "fr": "Ce que l'on tokenise vraiment",
+            "en": "What you actually tokenize"
+          },
+          "body": {
+            "fr": "Un parc solaire ou une concession d'eau reste un actif physique. Le jeton représente en général un droit économique ou contractuel : part de cashflow PPA, unité de capacité réservée, crédit environnemental, ou droit de prélèvement. Confondre l'actif et le droit crée des attentes irréalistes chez les investisseurs et des risques de conformité.\n\nEn pratique RWA ressources, on documente (1) l'origine de la ressource, (2) le titre juridique du droit, (3) le mécanisme de mesure (compteur, débit, certificat), (4) qui détient la garde et qui peut forcer l'exécution. Sans ces quatre briques, un « token énergie » n'est qu'une représentation marketing.",
+            "en": "A solar park or water concession remains a physical asset. The token usually represents an economic or contractual right: PPA cashflow share, reserved capacity unit, environmental credit, or withdrawal right. Confusing the asset with the right creates unrealistic investor expectations and compliance risk.\n\nIn resource RWA practice you document (1) resource origin, (2) legal title to the right, (3) measurement (meter, flow, certificate), (4) custody and enforcement. Without those four bricks, an “energy token” is marketing theatre."
+          },
+          "keyTakeaways": {
+            "fr": [
+              "Token ≠ actif physique — c'est un droit mesurable",
+              "Quatre briques : origine, titre, mesure, exécution",
+              "Les claims marketing sans data room sont un signal de risque"
+            ],
+            "en": [
+              "Token ≠ physical asset — it is a measurable right",
+              "Four bricks: origin, title, measurement, enforcement",
+              "Marketing claims without a data room are a risk signal"
+            ]
+          }
+        },
+        {
+          "id": "tr-101-l2",
+          "title": {
+            "fr": "Énergie, eau, environnement — trois classes, une logique",
+            "en": "Energy, water, environment — three classes, one logic"
+          },
+          "body": {
+            "fr": "L'énergie se prête aux unités temporelles (MWh livrés, MW réservés). L'eau s'exprime souvent en volumes contractés et en qualité/disponibilité. Les crédits environnementaux (REC, carbone) sont déjà des unités de conformité — la tokenisation y ajoute surtout traçabilité et règlement.\n\nAUROS positionne ces classes dans un même tunnel décisionnel : détecter la ressource, décider la structure, prouver la mesure. Les outils Lab / Compare / Green du produit illustrent des démos — ils ne remplacent pas une due diligence.",
+            "en": "Energy fits time-bound units (delivered MWh, reserved MW). Water often uses contracted volumes plus quality/availability. Environmental credits (RECs, carbon) are already compliance units — tokenization mainly adds traceability and settlement.\n\nAUROS places these classes in one decision tunnel: detect the resource, decide the structure, prove the measurement. Product Lab / Compare / Green tools are labeled demos — they do not replace diligence."
+          },
+          "keyTakeaways": {
+            "fr": [
+              "Unités différentes, même exigence de preuve",
+              "Tunnel Détecter → Décider → Prouver",
+              "Les widgets produit sont des labs, pas des attestations"
+            ],
+            "en": [
+              "Different units, same proof requirement",
+              "Detect → Decide → Prove tunnel",
+              "Product widgets are labs, not attestations"
+            ]
+          },
+          "labLinks": [
+            {
+              "href": "/lab",
+              "label": {
+                "fr": "Energy Lab (démo)",
+                "en": "Energy Lab (demo)"
+              }
+            },
+            {
+              "href": "/green",
+              "label": {
+                "fr": "Hub Green (indicatif)",
+                "en": "Green hub (indicative)"
+              }
+            }
+          ]
+        }
+      ],
+      "quiz": {
+        "passScore": 2,
+        "questions": [
+          {
+            "id": "tr-101-q1",
+            "prompt": {
+              "fr": "Que représente le plus souvent un jeton RWA sur une centrale ?",
+              "en": "What does an RWA token on a power plant most often represent?"
+            },
+            "options": [
+              {
+                "id": "a",
+                "label": {
+                  "fr": "La propriété physique de chaque panneau",
+                  "en": "Physical ownership of every panel"
+                }
+              },
+              {
+                "id": "b",
+                "label": {
+                  "fr": "Un droit économique / contractuel mesurable",
+                  "en": "A measurable economic / contractual right"
+                }
+              },
+              {
+                "id": "c",
+                "label": {
+                  "fr": "Une garantie de rendement sans risque",
+                  "en": "A risk-free yield guarantee"
+                }
+              }
+            ],
+            "correctOptionId": "b"
+          },
+          {
+            "id": "tr-101-q2",
+            "prompt": {
+              "fr": "Quelle brique manque le plus souvent dans un pitch « token eau » fragile ?",
+              "en": "Which brick is most often missing in a fragile “water token” pitch?"
+            },
+            "options": [
+              {
+                "id": "a",
+                "label": {
+                  "fr": "Un logo blockchain",
+                  "en": "A blockchain logo"
+                }
+              },
+              {
+                "id": "b",
+                "label": {
+                  "fr": "Titre juridique du droit + mesure vérifiable",
+                  "en": "Legal title to the right + verifiable measurement"
+                }
+              },
+              {
+                "id": "c",
+                "label": {
+                  "fr": "Un whitepaper de 80 pages",
+                  "en": "An 80-page whitepaper"
+                }
+              }
+            ],
+            "correctOptionId": "b"
+          },
+          {
+            "id": "tr-101-q3",
+            "prompt": {
+              "fr": "Les outils Lab / Green AUROS dans ce parcours sont…",
+              "en": "AUROS Lab / Green tools in this path are…"
+            },
+            "options": [
+              {
+                "id": "a",
+                "label": {
+                  "fr": "Des agréments régulateurs",
+                  "en": "Regulator approvals"
+                }
+              },
+              {
+                "id": "b",
+                "label": {
+                  "fr": "Des démos / aides pédagogiques étiquetées",
+                  "en": "Labeled demos / learning aids"
+                }
+              },
+              {
+                "id": "c",
+                "label": {
+                  "fr": "Des preuves on-chain de deals réels",
+                  "en": "On-chain proofs of live deals"
+                }
+              }
+            ],
+            "correctOptionId": "b"
+          }
+        ]
+      }
+    },
+    {
+      "id": "tr-201",
+      "level": 201,
+      "slug": "201",
+      "title": {
+        "fr": "201 — Contrats intelligents & oracles ressources",
+        "en": "201 — Smart contracts & resource oracles"
+      },
+      "summary": {
+        "fr": "Comment les contrats et oracles relient mesure terrain et état on-chain — et où ça casse.",
+        "en": "How contracts and oracles connect field measurement to on-chain state — and where it breaks."
+      },
+      "estimatedMinutes": 32,
+      "tracks": ["energy-producer", "water-utility", "platform-builder", "agent-engineer"],
+      "lessons": [
+        {
+          "id": "tr-201-l1",
+          "title": {
+            "fr": "Oracle = pont de confiance, pas magie",
+            "en": "Oracle = trust bridge, not magic"
+          },
+          "body": {
+            "fr": "Un smart contract ne « voit » pas un compteur. Un oracle publie une valeur (MWh, m³, prix) que le contrat consomme. La qualité du système dépend de la source (télémétrie, certificateur, marché), de la fréquence, des seuils d'erreur et de qui peut contester.\n\nPour les ressources, les échecs classiques sont : oracle unique, retard de publication, unité mal définie (brut vs net), et absence de procédure de dispute. Un design sérieux documente le fallback off-chain autant que le happy path on-chain.",
+            "en": "A smart contract cannot “see” a meter. An oracle publishes a value (MWh, m³, price) the contract consumes. System quality depends on source (telemetry, certifier, market), frequency, error bands, and who can dispute.\n\nClassic resource failures: single oracle, publish lag, poorly defined units (gross vs net), and no dispute path. Serious design documents the off-chain fallback as carefully as the on-chain happy path."
+          },
+          "keyTakeaways": {
+            "fr": [
+              "Le contrat consomme une valeur publiée — il ne mesure pas",
+              "Source, fréquence, erreur, dispute = design oracle",
+              "Prévoir le fallback off-chain"
+            ],
+            "en": [
+              "The contract consumes a published value — it does not measure",
+              "Source, frequency, error, dispute = oracle design",
+              "Plan the off-chain fallback"
+            ]
+          }
+        },
+        {
+          "id": "tr-201-l2",
+          "title": {
+            "fr": "Contrats : mint, settlement, pause",
+            "en": "Contracts: mint, settlement, pause"
+          },
+          "body": {
+            "fr": "Les patterns utiles pour RWA ressources : mint conditionné à une preuve de droit, settlement périodique sur oracle, pause/circuit-breaker opérationnel, et rôles séparés (émetteur, opérateur oracle, gardien pause). Éviter les admin keys omnipotentes sans audit trail.\n\nLes builders AUROS peuvent s'entraîner sur des labs produit — ce ne sont pas des contrats de production ni une invitation à déployer sans revue juridique.",
+            "en": "Useful patterns for resource RWA: mint gated by proof of right, periodic settlement on oracle, operational pause/circuit-breaker, and separated roles (issuer, oracle operator, pause guardian). Avoid omnipotent admin keys without an audit trail.\n\nAUROS builders can practice on product labs — these are not production contracts or a license to deploy without legal review."
+          },
+          "keyTakeaways": {
+            "fr": [
+              "Rôles séparés > clé admin unique",
+              "Pause opérationnelle fait partie du design",
+              "Labs ≠ contrats de production"
+            ],
+            "en": [
+              "Separated roles > single admin key",
+              "Operational pause is part of the design",
+              "Labs ≠ production contracts"
+            ]
+          },
+          "labLinks": [
+            {
+              "href": "/builders",
+              "label": {
+                "fr": "Builders (démo)",
+                "en": "Builders (demo)"
+              }
+            }
+          ]
+        }
+      ],
+      "quiz": {
+        "passScore": 2,
+        "questions": [
+          {
+            "id": "tr-201-q1",
+            "prompt": {
+              "fr": "Un oracle ressources sert principalement à…",
+              "en": "A resource oracle mainly…"
+            },
+            "options": [
+              {
+                "id": "a",
+                "label": {
+                  "fr": "Remplacer le titre juridique",
+                  "en": "Replace legal title"
+                }
+              },
+              {
+                "id": "b",
+                "label": {
+                  "fr": "Publier une valeur mesurée que le contrat peut consommer",
+                  "en": "Publish a measured value the contract can consume"
+                }
+              },
+              {
+                "id": "c",
+                "label": {
+                  "fr": "Garantir le prix de revente du jeton",
+                  "en": "Guarantee the token’s resale price"
+                }
+              }
+            ],
+            "correctOptionId": "b"
+          },
+          {
+            "id": "tr-201-q2",
+            "prompt": {
+              "fr": "Quel risque oracle est le plus critique pour un débit d'eau tokenisé ?",
+              "en": "Which oracle risk is most critical for a tokenized water flow?"
+            },
+            "options": [
+              {
+                "id": "a",
+                "label": {
+                  "fr": "Couleur du logo du dashboard",
+                  "en": "Dashboard logo color"
+                }
+              },
+              {
+                "id": "b",
+                "label": {
+                  "fr": "Unité mal définie et absence de dispute",
+                  "en": "Ill-defined unit and no dispute path"
+                }
+              },
+              {
+                "id": "c",
+                "label": {
+                  "fr": "Trop de documentation",
+                  "en": "Too much documentation"
+                }
+              }
+            ],
+            "correctOptionId": "b"
+          },
+          {
+            "id": "tr-201-q3",
+            "prompt": {
+              "fr": "Un circuit-breaker / pause sur un contrat RWA…",
+              "en": "A circuit-breaker / pause on an RWA contract…"
+            },
+            "options": [
+              {
+                "id": "a",
+                "label": {
+                  "fr": "Est un signe de faiblesse à éviter absolument",
+                  "en": "Is a weakness that must always be avoided"
+                }
+              },
+              {
+                "id": "b",
+                "label": {
+                  "fr": "Peut être un contrôle opérationnel légitime si les rôles sont documentés",
+                  "en": "Can be a legitimate operational control if roles are documented"
+                }
+              },
+              {
+                "id": "c",
+                "label": {
+                  "fr": "Rend le jeton automatiquement conforme MiCA",
+                  "en": "Automatically makes the token MiCA-compliant"
+                }
+              }
+            ],
+            "correctOptionId": "b"
+          }
+        ]
+      }
+    },
+    {
+      "id": "tr-301",
+      "level": 301,
+      "slug": "301",
+      "title": {
+        "fr": "301 — Gouvernance & cadre juridique",
+        "en": "301 — Governance & legal frame"
+      },
+      "summary": {
+        "fr": "Gouvernance on-chain, limites réglementaires et ce qu'une attestation Academy ne remplace pas.",
+        "en": "On-chain governance, regulatory limits, and what an Academy attestation does not replace."
+      },
+      "estimatedMinutes": 30,
+      "tracks": ["counsel-issuer", "bank-risk", "water-utility", "energy-producer"],
+      "lessons": [
+        {
+          "id": "tr-301-l1",
+          "title": {
+            "fr": "Gouvernance : qui décide quoi",
+            "en": "Governance: who decides what"
+          },
+          "body": {
+            "fr": "La gouvernance RWA ressources mélange votes on-chain, conseils off-chain, covenants de dette et autorités sectorielles (énergie, eau). Un token de gouvernance sans mapping clair vers les pouvoirs juridiques réels crée un écart de représentation.\n\nDocumentez : quorum, délais, veto opérationnel, et ce qui reste hors chaîne (contrats SPV, autorisations). Les banques et counsel regardent d'abord ce mapping, pas le design du NFT.",
+            "en": "Resource RWA governance mixes on-chain votes, off-chain boards, debt covenants, and sector authorities (energy, water). A governance token without a clear map to real legal powers creates a representation gap.\n\nDocument quorum, timelines, operational veto, and what stays off-chain (SPV contracts, permits). Banks and counsel look at that map first — not NFT design."
+          },
+          "keyTakeaways": {
+            "fr": [
+              "Mapper pouvoirs on-chain ↔ juridiques",
+              "Documenter veto et hors-chaîne",
+              "Le design NFT n'est pas la gouvernance"
+            ],
+            "en": [
+              "Map on-chain powers ↔ legal powers",
+              "Document veto and off-chain scope",
+              "NFT design is not governance"
+            ]
+          }
+        },
+        {
+          "id": "tr-301-l2",
+          "title": {
+            "fr": "Limites honnêtes : formation ≠ agrément",
+            "en": "Honest limits: training ≠ license"
+          },
+          "body": {
+            "fr": "AUROS Academy délivre des attestations de compréhension et des diplômes PDF optionnels. Ce n'est pas un agrément AMF/CSSF/VARA, ni un conseil juridique, ni une Qualiopi, ni une affiliation universitaire. Les parcours Fellow / NFT on-chain live / white-label B2B sont des pistes ultérieures — pas des promesses du MVP.\n\nPour un émetteur réel : counsel local, data room, et outils produit (/start, /compare) comme aides — pas comme substituts.",
+            "en": "AUROS Academy issues comprehension attestations and optional PDF diplomas. It is not an AMF/CSSF/VARA license, legal advice, Qualiopi accreditation, or university affiliation. Fellow paths / live on-chain NFTs / B2B white-label are later tracks — not MVP promises.\n\nFor a real issuer: local counsel, data room, and product tools (/start, /compare) as aids — not substitutes."
+          },
+          "keyTakeaways": {
+            "fr": [
+              "Attestation indicative, pas agrément",
+              "Pas de fake partenaires / Qualiopi",
+              "Counsel + data room restent obligatoires pour émettre"
+            ],
+            "en": [
+              "Indicative attestation, not a license",
+              "No fake partners / Qualiopi",
+              "Counsel + data room remain mandatory to issue"
+            ]
+          },
+          "labLinks": [
+            {
+              "href": "/start",
+              "label": {
+                "fr": "Démarrer un dossier (outil)",
+                "en": "Start a dossier (tool)"
+              }
+            },
+            {
+              "href": "/compare",
+              "label": {
+                "fr": "Comparer (indicatif)",
+                "en": "Compare (indicative)"
+              }
+            }
+          ]
+        }
+      ],
+      "quiz": {
+        "passScore": 2,
+        "questions": [
+          {
+            "id": "tr-301-q1",
+            "prompt": {
+              "fr": "Un token de gouvernance RWA sans mapping juridique…",
+              "en": "An RWA governance token without a legal map…"
+            },
+            "options": [
+              {
+                "id": "a",
+                "label": {
+                  "fr": "Suffit pour remplacer le conseil d'administration",
+                  "en": "Is enough to replace the board"
+                }
+              },
+              {
+                "id": "b",
+                "label": {
+                  "fr": "Crée un écart de représentation risqué",
+                  "en": "Creates a risky representation gap"
+                }
+              },
+              {
+                "id": "c",
+                "label": {
+                  "fr": "Est automatiquement conforme partout en UE",
+                  "en": "Is automatically compliant across the EU"
+                }
+              }
+            ],
+            "correctOptionId": "b"
+          },
+          {
+            "id": "tr-301-q2",
+            "prompt": {
+              "fr": "AUROS Academy (MVP) prétend-elle être Qualiopi / université agréée ?",
+              "en": "Does AUROS Academy (MVP) claim Qualiopi / university accreditation?"
+            },
+            "options": [
+              {
+                "id": "a",
+                "label": {
+                  "fr": "Oui, agrément État",
+                  "en": "Yes, state accreditation"
+                }
+              },
+              {
+                "id": "b",
+                "label": {
+                  "fr": "Non — formation indicative, attestation de compréhension",
+                  "en": "No — indicative training, comprehension attestation"
+                }
+              },
+              {
+                "id": "c",
+                "label": {
+                  "fr": "Oui, via NFT on-chain live",
+                  "en": "Yes, via live on-chain NFT"
+                }
+              }
+            ],
+            "correctOptionId": "b"
+          },
+          {
+            "id": "tr-301-q3",
+            "prompt": {
+              "fr": "Avant d'émettre un RWA ressources réel, la priorité reste…",
+              "en": "Before issuing a real resource RWA, the priority remains…"
+            },
+            "options": [
+              {
+                "id": "a",
+                "label": {
+                  "fr": "Counsel + data room + structure juridique",
+                  "en": "Counsel + data room + legal structure"
+                }
+              },
+              {
+                "id": "b",
+                "label": {
+                  "fr": "Uniquement un quiz Academy",
+                  "en": "An Academy quiz alone"
+                }
+              },
+              {
+                "id": "c",
+                "label": {
+                  "fr": "Un thread Twitter",
+                  "en": "A Twitter thread"
+                }
+              }
+            ],
+            "correctOptionId": "a"
+          }
+        ]
+      }
+    }
+  ]
+}

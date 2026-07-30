@@ -1,0 +1,551 @@
+{
+  "id": "machine-economy",
+  "slug": "machine-economy",
+  "order": 3,
+  "name": {
+    "fr": "Économie machine & agents IA",
+    "en": "Machine Economy & AI Agents"
+  },
+  "shortName": {
+    "fr": "Agents",
+    "en": "Agents"
+  },
+  "tagline": {
+    "fr": "Consommation énergétique de l'IA, agents acheteurs et settlement M2M — en lab responsable.",
+    "en": "AI energy use, buyer agents, and M2M settlement — in a responsible lab."
+  },
+  "description": {
+    "fr": "École agents : lier charge de calcul, achat de capacité et rails de règlement machine-to-machine. Contenu éducatif — les labs d'agents ne sont pas des bots de trading live ni une offre d'investissement.",
+    "en": "Agents school: connect compute load, capacity purchasing, and machine-to-machine settlement rails. Educational — agent labs are not live trading bots or an investment offer."
+  },
+  "fellowNote": {
+    "fr": "Fellow agents (projet capstone M2M) prévu plus tard — non ouvert dans ce MVP.",
+    "en": "Agents Fellow (M2M capstone) planned later — not open in this MVP."
+  },
+  "modules": [
+    {
+      "id": "me-101",
+      "level": 101,
+      "slug": "101",
+      "title": {
+        "fr": "101 — IA, énergie et coût réel",
+        "en": "101 — AI, energy, and real cost"
+      },
+      "summary": {
+        "fr": "Pourquoi l'empreinte énergétique et le coût de capacité comptent pour les agents et les desks.",
+        "en": "Why energy footprint and capacity cost matter for agents and desks."
+      },
+      "estimatedMinutes": 24,
+      "tracks": ["agent-engineer", "energy-producer", "platform-builder", "bank-risk"],
+      "lessons": [
+        {
+          "id": "me-101-l1",
+          "title": {
+            "fr": "Compute = demande énergétique",
+            "en": "Compute = energy demand"
+          },
+          "body": {
+            "fr": "L'inférence et l'entraînement déplacent une demande de capacité électrique et de refroidissement. Tokeniser ou « agentifier » sans budget énergétique crée des systèmes qui optimisent un prix de token tout en ignorant la contrainte physique.\n\nPour AUROS, le lien utile est : capacité mesurable → droit / réservation → preuve. Les Watts / Green tools sont des aides produit — pas une mesure réglementaire universelle.",
+            "en": "Inference and training shift demand for electric capacity and cooling. Tokenizing or “agentifying” without an energy budget creates systems that optimize a token price while ignoring the physical constraint.\n\nFor AUROS, the useful link is: measurable capacity → right / reservation → proof. Watts / Green tools are product aids — not a universal regulatory meter."
+          },
+          "keyTakeaways": {
+            "fr": [
+              "Les agents héritent d'une contrainte énergétique",
+              "Mesure → droit → preuve",
+              "Outils produit ≠ métrologie réglementaire"
+            ],
+            "en": [
+              "Agents inherit an energy constraint",
+              "Measure → right → proof",
+              "Product tools ≠ regulatory metrology"
+            ]
+          },
+          "labLinks": [
+            {
+              "href": "/lab",
+              "label": {
+                "fr": "Energy Lab (démo)",
+                "en": "Energy Lab (demo)"
+              }
+            },
+            {
+              "href": "/green",
+              "label": {
+                "fr": "Green / Watts (indicatif)",
+                "en": "Green / Watts (indicative)"
+              }
+            }
+          ]
+        },
+        {
+          "id": "me-101-l2",
+          "title": {
+            "fr": "Budgets et politiques avant autonomie",
+            "en": "Budgets and policies before autonomy"
+          },
+          "body": {
+            "fr": "Un agent acheteur sans plafond de dépense, sans liste d'instruments autorisés et sans kill-switch est un incident en attente. En lab, on commence par des politiques strictes (montant max, contreparties allowlist, horaires).\n\nL'autonomie se gagne après observabilité — pas avant.",
+            "en": "A buyer agent without a spend cap, allowed-instrument list, and kill-switch is an incident waiting to happen. In lab, start with strict policies (max amount, allowlisted counterparties, time windows).\n\nAutonomy is earned after observability — not before."
+          },
+          "keyTakeaways": {
+            "fr": [
+              "Plafond + allowlist + kill-switch",
+              "Observabilité avant autonomie",
+              "Lab ≠ trading live"
+            ],
+            "en": [
+              "Cap + allowlist + kill-switch",
+              "Observability before autonomy",
+              "Lab ≠ live trading"
+            ]
+          }
+        }
+      ],
+      "quiz": {
+        "passScore": 2,
+        "questions": [
+          {
+            "id": "me-101-q1",
+            "prompt": {
+              "fr": "Pourquoi l'énergie compte pour les agents IA ?",
+              "en": "Why does energy matter for AI agents?"
+            },
+            "options": [
+              {
+                "id": "a",
+                "label": {
+                  "fr": "Parce que le compute crée une demande de capacité réelle",
+                  "en": "Because compute creates real capacity demand"
+                }
+              },
+              {
+                "id": "b",
+                "label": {
+                  "fr": "Parce que les tokens n'ont pas de prix",
+                  "en": "Because tokens have no price"
+                }
+              },
+              {
+                "id": "c",
+                "label": {
+                  "fr": "Parce que l'IA n'utilise jamais d'électricité",
+                  "en": "Because AI never uses electricity"
+                }
+              }
+            ],
+            "correctOptionId": "a"
+          },
+          {
+            "id": "me-101-q2",
+            "prompt": {
+              "fr": "Avant d'augmenter l'autonomie d'un agent acheteur…",
+              "en": "Before increasing a buyer agent’s autonomy…"
+            },
+            "options": [
+              {
+                "id": "a",
+                "label": {
+                  "fr": "Retirer tous les plafonds",
+                  "en": "Remove all caps"
+                }
+              },
+              {
+                "id": "b",
+                "label": {
+                  "fr": "Mettre politiques, observabilité et kill-switch",
+                  "en": "Put policies, observability, and kill-switch in place"
+                }
+              },
+              {
+                "id": "c",
+                "label": {
+                  "fr": "Publier un yield garanti",
+                  "en": "Publish a guaranteed yield"
+                }
+              }
+            ],
+            "correctOptionId": "b"
+          },
+          {
+            "id": "me-101-q3",
+            "prompt": {
+              "fr": "Les labs agents de ce parcours sont…",
+              "en": "Agent labs in this path are…"
+            },
+            "options": [
+              {
+                "id": "a",
+                "label": {
+                  "fr": "Des bots de trading live",
+                  "en": "Live trading bots"
+                }
+              },
+              {
+                "id": "b",
+                "label": {
+                  "fr": "Des environnements pédagogiques / démo",
+                  "en": "Educational / demo environments"
+                }
+              },
+              {
+                "id": "c",
+                "label": {
+                  "fr": "Des offres d'investissement",
+                  "en": "Investment offers"
+                }
+              }
+            ],
+            "correctOptionId": "b"
+          }
+        ]
+      }
+    },
+    {
+      "id": "me-201",
+      "level": 201,
+      "slug": "201",
+      "title": {
+        "fr": "201 — Lab agent acheteur",
+        "en": "201 — Buyer agent lab"
+      },
+      "summary": {
+        "fr": "Spécifier un agent qui propose un achat de capacité sous politiques — sans exécution live.",
+        "en": "Specify an agent that proposes a capacity purchase under policies — without live execution."
+      },
+      "estimatedMinutes": 30,
+      "tracks": ["agent-engineer", "platform-builder", "bank-risk"],
+      "lessons": [
+        {
+          "id": "me-201-l1",
+          "title": {
+            "fr": "Boucle : observer → proposer → attendre approbation",
+            "en": "Loop: observe → propose → await approval"
+          },
+          "body": {
+            "fr": "Un lab agent acheteur sérieux : (1) lit des signaux (prix indicatif, capacité, éligibilité), (2) propose une action structurée, (3) attend une approbation humaine ou une politique déterministe. Le « apply » automatique sur des scores ou des deals est hors scope (voir posture Copilot AUROS : pas d'édition auto).\n\nDocumentez les inputs, la décision, et la raison du refus — c'est la base d'un audit M2M.",
+            "en": "A serious buyer-agent lab: (1) reads signals (indicative price, capacity, eligibility), (2) proposes a structured action, (3) awaits human approval or a deterministic policy. Automatic “apply” on scores or deals is out of scope (see AUROS Copilot posture: no auto-edit).\n\nDocument inputs, decision, and refusal reason — that is the basis of an M2M audit."
+          },
+          "keyTakeaways": {
+            "fr": [
+              "Proposer ≠ exécuter",
+              "Approbation humaine ou politique déterministe",
+              "Tracer refus et inputs"
+            ],
+            "en": [
+              "Propose ≠ execute",
+              "Human approval or deterministic policy",
+              "Trace refusals and inputs"
+            ]
+          }
+        },
+        {
+          "id": "me-201-l2",
+          "title": {
+            "fr": "Interfaces produit utiles au lab",
+            "en": "Product interfaces useful to the lab"
+          },
+          "body": {
+            "fr": "Builders, Toll eligibility, et parcours /start fournissent des surfaces pour expérimenter des politiques. Traitez-les comme des APIs / UIs de lab : rate limits, claims indicatifs, pas de secrets ops dans le contenu pédagogique.\n\nNe documentez jamais de recettes d'attaque ou de chemins admin dans l'Academy.",
+            "en": "Builders, Toll eligibility, and /start flows provide surfaces to experiment with policies. Treat them as lab APIs / UIs: rate limits, indicative claims, no ops secrets in training content.\n\nNever document attack recipes or admin paths in the Academy."
+          },
+          "keyTakeaways": {
+            "fr": [
+              "Surfaces produit = lab, pas backdoor",
+              "Pas de secrets ops dans le contenu",
+              "Claims indicatifs"
+            ],
+            "en": [
+              "Product surfaces = lab, not backdoor",
+              "No ops secrets in content",
+              "Indicative claims"
+            ]
+          },
+          "labLinks": [
+            {
+              "href": "/builders",
+              "label": {
+                "fr": "Builders",
+                "en": "Builders"
+              }
+            },
+            {
+              "href": "/start",
+              "label": {
+                "fr": "Start dossier",
+                "en": "Start dossier"
+              }
+            }
+          ]
+        }
+      ],
+      "quiz": {
+        "passScore": 2,
+        "questions": [
+          {
+            "id": "me-201-q1",
+            "prompt": {
+              "fr": "Dans un lab agent acheteur responsable, l'étape critique après « proposer » est…",
+              "en": "In a responsible buyer-agent lab, the critical step after “propose” is…"
+            },
+            "options": [
+              {
+                "id": "a",
+                "label": {
+                  "fr": "Exécuter immédiatement sans trace",
+                  "en": "Execute immediately with no trail"
+                }
+              },
+              {
+                "id": "b",
+                "label": {
+                  "fr": "Attendre approbation humaine ou politique déterministe",
+                  "en": "Await human approval or a deterministic policy"
+                }
+              },
+              {
+                "id": "c",
+                "label": {
+                  "fr": "Publier la clé privée",
+                  "en": "Publish the private key"
+                }
+              }
+            ],
+            "correctOptionId": "b"
+          },
+          {
+            "id": "me-201-q2",
+            "prompt": {
+              "fr": "Le contenu Academy doit-il exposer des chemins admin / secrets ops ?",
+              "en": "Should Academy content expose admin paths / ops secrets?"
+            },
+            "options": [
+              {
+                "id": "a",
+                "label": {
+                  "fr": "Oui, pour la transparence totale",
+                  "en": "Yes, for total transparency"
+                }
+              },
+              {
+                "id": "b",
+                "label": {
+                  "fr": "Non — moindre exposition",
+                  "en": "No — least exposure"
+                }
+              },
+              {
+                "id": "c",
+                "label": {
+                  "fr": "Seulement en commentaire HTML",
+                  "en": "Only in HTML comments"
+                }
+              }
+            ],
+            "correctOptionId": "b"
+          },
+          {
+            "id": "me-201-q3",
+            "prompt": {
+              "fr": "« Apply » automatique sur scores / deals dans la posture AUROS…",
+              "en": "Automatic “apply” on scores / deals in AUROS posture…"
+            },
+            "options": [
+              {
+                "id": "a",
+                "label": {
+                  "fr": "Est encouragé partout",
+                  "en": "Is encouraged everywhere"
+                }
+              },
+              {
+                "id": "b",
+                "label": {
+                  "fr": "Est hors scope — pas d'édition auto",
+                  "en": "Is out of scope — no auto-edit"
+                }
+              },
+              {
+                "id": "c",
+                "label": {
+                  "fr": "Remplace le counsel",
+                  "en": "Replaces counsel"
+                }
+              }
+            ],
+            "correctOptionId": "b"
+          }
+        ]
+      }
+    },
+    {
+      "id": "me-301",
+      "level": 301,
+      "slug": "301",
+      "title": {
+        "fr": "301 — Settlement machine-to-machine",
+        "en": "301 — Machine-to-machine settlement"
+      },
+      "summary": {
+        "fr": "Preuves, finalité et limites du règlement M2M pour ressources et agents.",
+        "en": "Proofs, finality, and limits of M2M settlement for resources and agents."
+      },
+      "estimatedMinutes": 28,
+      "tracks": ["agent-engineer", "platform-builder", "counsel-issuer", "bank-risk"],
+      "lessons": [
+        {
+          "id": "me-301-l1",
+          "title": {
+            "fr": "Finalité : on-chain vs obligation juridique",
+            "en": "Finality: on-chain vs legal obligation"
+          },
+          "body": {
+            "fr": "Un règlement on-chain peut être final au sens du ledger et néanmoins contestable juridiquement si le droit sous-jacent ou la mesure sont défectueux. Le M2M ne supprime pas le besoin de titres, de contrats et de juridictions — il accélère le mouvement d'unités déjà définies.\n\nLes banques et counsel exigent souvent un mapping explicite entre événement machine et obligation off-chain.",
+            "en": "On-chain settlement can be final in the ledger sense and still legally contestable if the underlying right or measurement is defective. M2M does not remove the need for titles, contracts, and jurisdictions — it accelerates movement of already-defined units.\n\nBanks and counsel often require an explicit map between machine events and off-chain obligations."
+          },
+          "keyTakeaways": {
+            "fr": [
+              "Finalité ledger ≠ immunité juridique",
+              "Mapper événement machine ↔ obligation",
+              "M2M accélère, ne crée pas le titre"
+            ],
+            "en": [
+              "Ledger finality ≠ legal immunity",
+              "Map machine event ↔ obligation",
+              "M2M accelerates; it does not create title"
+            ]
+          }
+        },
+        {
+          "id": "me-301-l2",
+          "title": {
+            "fr": "MVP vs suite : NFT, white-label, présentiel",
+            "en": "MVP vs later: NFT, white-label, in-person"
+          },
+          "body": {
+            "fr": "Ce hub MVP livre : 3 écoles, modules 101/201/301, filtres métier, quiz, progression authentifiée, chemin vers attestation Fondamentaux + diplôme PDF payant existant. Différé : Qualiopi, NFT certificat live, white-label B2B, sessions présentiel, Fellow capstone.\n\nSoyez explicites avec vos équipes — c'est un avantage de confiance, pas une faiblesse.",
+            "en": "This MVP hub ships: 3 schools, 101/201/301 modules, métier filters, quizzes, authenticated progress, path to Fundamentals attestation + existing paid PDF diploma. Deferred: Qualiopi, live certificate NFT, B2B white-label, in-person sessions, Fellow capstone.\n\nBe explicit with your teams — honesty is a trust advantage, not a weakness."
+          },
+          "keyTakeaways": {
+            "fr": [
+              "MVP = écoles + quiz + progress + cert existante",
+              "Qualiopi / NFT live / white-label = plus tard",
+              "L'honnêteté produit est un différenciateur"
+            ],
+            "en": [
+              "MVP = schools + quiz + progress + existing cert",
+              "Qualiopi / live NFT / white-label = later",
+              "Product honesty is a differentiator"
+            ]
+          },
+          "labLinks": [
+            {
+              "href": "/academy/fondamentaux",
+              "label": {
+                "fr": "Certification Fondamentaux",
+                "en": "Fundamentals certification"
+              }
+            }
+          ]
+        }
+      ],
+      "quiz": {
+        "passScore": 2,
+        "questions": [
+          {
+            "id": "me-301-q1",
+            "prompt": {
+              "fr": "La finalité on-chain d'un settlement M2M…",
+              "en": "On-chain finality of an M2M settlement…"
+            },
+            "options": [
+              {
+                "id": "a",
+                "label": {
+                  "fr": "Supprime tout risque juridique",
+                  "en": "Removes all legal risk"
+                }
+              },
+              {
+                "id": "b",
+                "label": {
+                  "fr": "N'équivaut pas automatiquement à une immunité juridique",
+                  "en": "Does not automatically equal legal immunity"
+                }
+              },
+              {
+                "id": "c",
+                "label": {
+                  "fr": "Crée le titre de propriété à elle seule",
+                  "en": "Alone creates property title"
+                }
+              }
+            ],
+            "correctOptionId": "b"
+          },
+          {
+            "id": "me-301-q2",
+            "prompt": {
+              "fr": "Dans le MVP Academy, le NFT certificat on-chain live est…",
+              "en": "In the Academy MVP, the live on-chain certificate NFT is…"
+            },
+            "options": [
+              {
+                "id": "a",
+                "label": {
+                  "fr": "Livré et revendiqué comme live",
+                  "en": "Shipped and claimed as live"
+                }
+              },
+              {
+                "id": "b",
+                "label": {
+                  "fr": "Différé / lab — pas revendiqué live",
+                  "en": "Deferred / lab — not claimed live"
+                }
+              },
+              {
+                "id": "c",
+                "label": {
+                  "fr": "Obligatoire pour chaque leçon",
+                  "en": "Required for every lesson"
+                }
+              }
+            ],
+            "correctOptionId": "b"
+          },
+          {
+            "id": "me-301-q3",
+            "prompt": {
+              "fr": "Qualiopi / white-label B2B / présentiel dans ce hub…",
+              "en": "Qualiopi / B2B white-label / in-person in this hub…"
+            },
+            "options": [
+              {
+                "id": "a",
+                "label": {
+                  "fr": "Sont présentés comme déjà obtenus",
+                  "en": "Are presented as already obtained"
+                }
+              },
+              {
+                "id": "b",
+                "label": {
+                  "fr": "Sont explicitement différés",
+                  "en": "Are explicitly deferred"
+                }
+              },
+              {
+                "id": "c",
+                "label": {
+                  "fr": "Remplacent le diplôme PDF 39 €",
+                  "en": "Replace the €39 PDF diploma"
+                }
+              }
+            ],
+            "correctOptionId": "b"
+          }
+        ]
+      }
+    }
+  ]
+}

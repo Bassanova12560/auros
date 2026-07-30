@@ -1,7 +1,17 @@
 # Manager backlog — AUROS
 
 Living priorities. Manager owns this; update when shipping or discovering debt.
-Last review: 2026-07-30 (GO: Vercel secrets · redeploy · Hobby cron · gh private still blocked).
+Last review: 2026-07-30 (Academy hub 3 schools MVP · GO secrets).
+
+## P0 — Academy hub (MVP 2026-07-30)
+
+| Item | Statut |
+|------|--------|
+| 3 écoles 101/201/301 + leçons + quiz | **OK** — `/academy` · `tokenized-resources` · `resource-trading` · `machine-economy` |
+| Filtres métier (6 tracks) | **OK** — `data/academy/tracks.json` |
+| Progress Clerk + Supabase | **OK** — `/api/academy/progress` · migr. `0057` (**appliquer prod**) |
+| Cert + diplôme PDF 39 € / établissement 249 € | **OK** — existant + CTAs hub |
+| Différé | Qualiopi · NFT cert live · Fellow · white-label · présentiel — voir `docs/ACADEMY-HUB.md` |
 
 ## P0 — risque / trust
 

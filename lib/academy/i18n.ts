@@ -150,14 +150,14 @@ const fr: AcademyCoreMessages = {
     languageAria: "Langue",
   },
   home: {
-    eyebrow: "Formation · Attestation vérifiable",
+    eyebrow: "Trois écoles · Attestation vérifiable",
     title: "AUROS Academy",
     intro:
-      "Commencez par la certification Fondamentaux (gratuite). Les parcours Praticien et équipe ne sont pas encore ouverts.",
+      "Apprenez les RWA ressources (énergie, eau, agents) via trois écoles 101→301, puis certifiez-vous avec Fondamentaux (gratuit).",
     teaserHighlights: [
-      "Quiz ~20 min · FR / EN / ES",
-      "Attestation vérifiable 90 jours",
-      "Diplôme PDF optionnel",
+      "3 écoles · modules 101–301",
+      "Filtres métier · FR / EN",
+      "Attestation 90 j · diplôme PDF optionnel",
     ],
     verifyTitle: "Vérifier une attestation",
     verifyBody:
@@ -361,14 +361,14 @@ const en: AcademyCoreMessages = {
     languageAria: "Language",
   },
   home: {
-    eyebrow: "Training · Verifiable certificate",
+    eyebrow: "Three schools · Verifiable attestation",
     title: "AUROS Academy",
     intro:
-      "Start with the free Fundamentals certification. Practitioner and team tracks are not open yet.",
+      "Learn resource RWA (energy, water, agents) across three 101→301 schools, then certify with free Fundamentals.",
     teaserHighlights: [
-      "~20 min quiz · FR / EN / ES",
-      "Verifiable 90-day certificate",
-      "Optional PDF diploma",
+      "3 schools · modules 101–301",
+      "Métier filters · FR / EN",
+      "90-day attestation · optional PDF diploma",
     ],
     verifyTitle: "Verify a certificate",
     verifyBody:
@@ -572,14 +572,14 @@ const es: AcademyCoreMessages = {
     languageAria: "Idioma",
   },
   home: {
-    eyebrow: "Formación · Certificado verificable",
+    eyebrow: "Tres escuelas · Atestación verificable",
     title: "AUROS Academy",
     intro:
-      "Empiece por la certificación Fundamentos (gratuita). Los recorridos Practicante y equipo aún no están abiertos.",
+      "Aprenda RWA de recursos (energía, agua, agentes) en tres escuelas 101→301, luego certifíquese con Fundamentos (gratis).",
     teaserHighlights: [
-      "Quiz ~20 min · FR / EN / ES",
-      "Certificado verificable 90 días",
-      "Diploma PDF opcional",
+      "3 escuelas · módulos 101–301",
+      "Filtros métier · FR / EN",
+      "Atestación 90 d · diploma PDF opcional",
     ],
     verifyTitle: "Verificar un certificado",
     verifyBody:

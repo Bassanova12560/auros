@@ -7,6 +7,13 @@ export const ACADEMY_RENEW_ROUTE = "/academy/renew";
 export const ACADEMY_DIPLOMA_SUCCESS_ROUTE = "/academy/diploma/success";
 export const ACADEMY_REGISTRY_ROUTE = "/academy/registry";
 
+/** Curriculum hub schools — distinct from certification tiers. */
+export const ACADEMY_SCHOOL_ROUTES = {
+  "tokenized-resources": "/academy/tokenized-resources",
+  "resource-trading": "/academy/resource-trading",
+  "machine-economy": "/academy/machine-economy",
+} as const;
+
 export type AcademyTierId = "fundamentals" | "praticien" | "entreprise";
 
 export type AcademyTierStatus = "available" | "partial" | "soon";
