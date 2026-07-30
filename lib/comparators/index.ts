@@ -154,18 +154,8 @@ export {
   resolveCompareCsrd,
 } from "./green-cqs-bridge";
 
-export {
-  APY_MOVE_THRESHOLD_PP,
-  TVL_MOVE_THRESHOLD_PCT,
-  COMPARE_ALERTS_MOVE_SCHEMA,
-  detectMovesForProducts,
-  buildMovePayload,
-  buildIdempotencyKey,
-} from "./alerts-apy-moves";
-export type {
-  CompareAlertMove,
-  CompareAlertsMovePayload,
-} from "./alerts-apy-moves";
+/* alerts-apy-moves is server-only (node:fs / Resend) — import from
+   `@/lib/comparators/alerts-apy-moves` directly, never via this barrel. */
 
 export {
   SPONSORED_SLOTS,

@@ -60,7 +60,8 @@ Last review: 2026-07-30 (Academy hub 3 schools MVP · GO secrets).
 | Repo GitHub **privé** | **Bloqué** — `gh` non authentifié (2026-07-30) : `gh auth login` puis `gh repo edit Bassanova12560/auros --visibility private` |
 | Upstash rate limits + compare alert store | **Bloqué user** — `UPSTASH_REDIS_REST_URL` + `UPSTASH_REDIS_REST_TOKEN` **absents** Vercel Production **et** `.env.local` ; `infra-status` → `upstash.configured: false` ; follow `docs/UPSTASH-SETUP.md` puis redeploy |
 | Hobby cron blocker | **Mitigé 2026-07-30** — `compare-apy-alerts` passé de `*/6` → `0 5 * * *` (1×/jour) pour déploiements Hobby ; Pro pour cadence 6h |
-| Prod redeploy secrets | **OK 2026-07-30** — `vercel redeploy` → aliased https://getauros.com (fresh `vercel --prod` échouait sur cron Hobby avant mitigation) |
+| Barrel `node:fs` client break | **Fix 2026-07-30** — retiré `alerts-apy-moves` du barrel `@/lib/comparators` (bloquait Turbopack builds) |
+| Prod redeploy secrets | **OK 2026-07-30** — `vercel redeploy` → aliased https://getauros.com ; fresh builds après fix barrel |
 | Listings green `/presence` | Page + packs **prêts** (`data/listings/generated/*`) — **Action user** : soumettre (DeFiLlama RWA, RWA.xyz, ClimateTechList, RapidAPI) ; pas de badge « Listed on » avant confirmation ; pas d’envoi auto depuis agent |
 | Sponsored compare slots | **Action user** — config vide volontaire ; remplir seulement avec **vrais deals** (pas de fake partners) |
 
